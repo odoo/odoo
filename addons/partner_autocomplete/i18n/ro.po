@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* partner_autocomplete
+# * partner_autocomplete
 #
 # Translators:
 # Dorin Hongu <dhongu@gmail.com>, 2022
@@ -9,26 +9,28 @@
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
-#
+# Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2023\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"PO-Revision-Date: 2025-12-09 14:05+0000\n"
+"Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
+"partner_autocomplete/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__additional_info
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__additional_info
-msgid "Additional info"
-msgstr "Informații adiționale"
+#: model:iap.service,description:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Automatically enrich your contact base with corporate data."
+msgstr "Îmbogățiți automat baza de contacte cu date corporative."
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -38,21 +40,8 @@ msgstr "Cumpără mai mult credit"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_company
-msgid "Companies"
-msgstr "Companii"
-
-#. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr "Companie auto-completată de serviciul Odoo Partner Autocomplete"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__partner_gid
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__partner_gid
-msgid "Company database ID"
-msgstr "ID-ul bazei de date a companiei"
+msgid "Company"
+msgstr ""
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_config_settings
@@ -65,17 +54,16 @@ msgid "Contact"
 msgstr "Contact"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__create_uid
-msgid "Created by"
-msgstr "Creat de"
+#: model:ir.model,website_form_label:partner_autocomplete.model_res_partner
+msgid "Create a Customer"
+msgstr "Creați un client"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__create_date
-msgid "Created on"
-msgstr "Creat în"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_ir_http__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nume afișat"
 
@@ -83,6 +71,11 @@ msgstr "Nume afișat"
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__iap_enrich_auto_done
 msgid "Enrich Done"
 msgstr "Îmbogățire efectuată"
+
+#. module: partner_autocomplete
+#: model:iap.service,unit_name:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Enrichments"
+msgstr "Îmbogățiri"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_ir_http
@@ -101,7 +94,11 @@ msgid "IAP Partner Autocomplete API"
 msgstr "API-ul de auto-completare a partenerilor IAP"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_ir_http__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -109,21 +106,6 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__partner_autocomplete_insufficient_credit
 msgid "Insufficient credit"
 msgstr "Credit insuficient"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__synched
-msgid "Is synched"
-msgstr "Este sincronizat"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__write_uid
-msgid "Last Updated by"
-msgstr "Ultima actualizare făcută de"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__write_date
-msgid "Last Updated on"
-msgstr "Ultima actualizare pe"
 
 #. module: partner_autocomplete
 #. odoo-python
@@ -138,31 +120,10 @@ msgid "Not enough credits for Partner Autocomplete"
 msgstr "Nu sunt suficiente credite pentru completarea automată a partenerului"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__partner_id
-msgid "Partner"
-msgstr "Partener"
-
-#. module: partner_autocomplete
-#: model:ir.model,name:partner_autocomplete.model_res_partner_autocomplete_sync
-msgid "Partner Autocomplete Sync"
-msgstr "Sincronizare auto-completare partener"
-
-#. module: partner_autocomplete
-#: model:ir.actions.server,name:partner_autocomplete.ir_cron_partner_autocomplete_ir_actions_server
-msgid "Partner Autocomplete: Sync with remote DB"
-msgstr ""
-
-#. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr "Partener creat de serviciul de auto-completare a partenerilor Odoo"
-
-#. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
-msgid "Placeholder"
-msgstr "Substitut"
+msgid "Search Worldwide 🌎"
+msgstr "Căutare la nivel mondial 🌎"
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -182,3 +143,9 @@ msgstr "Setați token-ul contului"
 #: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 msgid "Test mode"
 msgstr "Mod test"
+
+#. module: partner_autocomplete
+#. odoo-python
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+msgid "Unable to enrich company (no credit was consumed)."
+msgstr "Imposibil de îmbogăți compania (nu s-a consumat credit)."

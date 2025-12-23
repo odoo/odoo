@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* purchase_requisition
+# * purchase_requisition
 #
 # Translators:
 # Matej Mijoč, 2022
@@ -15,20 +15,33 @@
 # Tina Milas, 2022
 # Martin Trigaux, 2022
 # Bole <bole@dajmi5.com>, 2023
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2023\n"
-"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"PO-Revision-Date: 2025-11-10 13:17+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
+"purchase_requisition/hr/>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "$50"
+msgstr "$50"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "$500"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
@@ -36,54 +49,39 @@ msgid "'Purchase Agreement - %s' % (object.name)"
 msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Agreement Deadline:</strong><br/>"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "02/16/2024"
 msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Date</strong>"
-msgstr "<strong>Datum</strong>"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "12/25/2024"
+msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Description</strong>"
-msgstr "<strong>Opis</strong>"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "2023-09-15"
+msgstr "2023-09-15"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Product UoM</strong>"
-msgstr "<strong>JM proizvoda</strong>"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "<span><strong>From</strong></span>"
+msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Qty</strong>"
-msgstr "<strong>Kol</strong>"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "<span><strong>to</strong></span>"
+msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Reference </strong>"
-msgstr "<strong>Vezna oznaka</strong>"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "<strong>Contact:</strong><br/>"
+msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Scheduled Date</strong>"
-msgstr "<strong>Planirani datum</strong>"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Scheduled Ordering Date:</strong><br/>"
-msgstr "<strong>Planirani datum naručivanja:</strong><br/>"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Source:</strong><br/>"
-msgstr "<strong>Izvor:</strong><br/>"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Vendor </strong>"
-msgstr "<strong>Dobavljač </strong>"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "<strong>Reference:</strong><br/>"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
@@ -91,7 +89,7 @@ msgid "Action Needed"
 msgstr "Potrebna dodatna radnja"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__active
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__active
 msgid "Active"
 msgstr "Aktivan"
 
@@ -106,6 +104,11 @@ msgid "Activity Exception Decoration"
 msgstr "Dekoracija iznimke aktivnosti"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_plans_ids
+msgid "Activity Plans"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
 msgid "Activity State"
 msgstr "Status aktivnosti"
@@ -117,35 +120,32 @@ msgstr "Ikona tipa aktivnosti"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Agreement"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
-msgid "Agreement Deadline"
-msgstr "Krajnji rok dogovora"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__exclusive
-msgid "Agreement Selection Type"
-msgstr "Vrsta odabira dogovora"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__type_id
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__name
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_type
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__requisition_type
 msgid "Agreement Type"
 msgstr "Tip dogovora"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Agreement Validity"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Agreement Validity:"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__alternative_po_ids
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__alternative_po_ids
 msgid "Alternative POs"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__alternative_po_count
-msgid "Alternative Po Count"
 msgstr ""
 
 #. module: purchase_requisition
@@ -155,7 +155,11 @@ msgstr ""
 
 #. module: purchase_requisition
 #. odoo-python
-#: code:addons/purchase_requisition/models/purchase.py:0
+#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
+msgid "Alternative Purchase Orders"
+msgstr ""
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 msgid "Alternative Warning"
 msgstr ""
@@ -173,12 +177,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution_search
-msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Analitička distribucija"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_precision
@@ -186,8 +185,8 @@ msgid "Analytic Precision"
 msgstr "Preciznost analitike"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_search
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Archived"
 msgstr "Arhivirano"
 
@@ -197,25 +196,27 @@ msgid "Attachment Count"
 msgstr "Broj priloga"
 
 #. module: purchase_requisition
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__open
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__open
-msgid "Bid Selection"
-msgstr "Izbor ponude"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "BO00004"
+msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_id
-#: model:purchase.requisition.type,name:purchase_requisition.type_single
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__requisition_type__blanket_order
 msgid "Blanket Order"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
-#: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Blanket Orders"
 msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Buyer"
+msgstr "Kupac"
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_create_alternative_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Cancel"
@@ -228,7 +229,6 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__cancel
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__cancel
 msgid "Cancelled"
 msgstr "Otkazano"
 
@@ -239,17 +239,12 @@ msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
-msgid "Category"
-msgstr "Kategorija"
-
-#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Choose"
 msgstr "Odaberite"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__partner_id
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__partner_ids
 msgid "Choose a vendor for alternative PO"
 msgstr ""
 
@@ -270,15 +265,34 @@ msgstr "Zatvori"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__done
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__done
 msgid "Closed"
 msgstr "Zatvoren"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Code"
+msgstr "Kod"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__company_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__company_id
 msgid "Company"
 msgstr "Tvrtka"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__company_currency_id
+msgid "Company Currency"
+msgstr "Valuta tvrtke:"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__price_total_cc
+msgid "Company Subtotal"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
+msgid "Company Total"
+msgstr "Tvrtka ukupno"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -292,21 +306,19 @@ msgid "Compare Product Lines"
 msgstr ""
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_res_config_settings
+msgid "Config Settings"
+msgstr "Postavke"
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
 msgstr "Potvrdi"
 
 #. module: purchase_requisition
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__in_progress
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__in_progress
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__confirmed
 msgid "Confirmed"
 msgstr "Potvrđeno"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "Konverzija jedinica mjere može se vršiti samo za jedinice mjere koje pripadaju istoj kategoriji. Konverzija će se izvršiti temeljem omjera jedinica mjere."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
@@ -322,9 +334,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid ""
-"Create a call for tender by adding alternative request for quotations to different vendors.\n"
-"                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
-"                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
+"Create a call for tender by adding alternative requests for quotation to "
+"different vendors.                                 Make your choice by "
+"selecting the best combination of lead time, OTD and/or total "
+"amount.                                 By comparing product lines you can "
+"also decide to order some products from one vendor and others from another "
+"vendor."
 msgstr ""
 
 #. module: purchase_requisition
@@ -339,7 +354,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__create_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__create_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__create_uid
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
@@ -349,14 +363,8 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__create_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__create_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__create_date
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__create_date
 msgid "Created on"
 msgstr "Kreirano"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
-msgid "Creation Blocked"
-msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__currency_id
@@ -364,39 +372,44 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_description_variants
-msgid "Custom Description"
-msgstr "Prilagođeni opis"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Date"
+msgstr "Datum"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
-msgid "Data for new quotations"
-msgstr "Podaci za nove ponude"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__schedule_date
-msgid "Delivery Date"
-msgstr "Datum dostave"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Demo Reference"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__description
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_description_variants
 msgid "Description"
 msgstr "Opis"
 
 #. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
+msgid "Discard"
+msgstr "Odbaci"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_product__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_name
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Naziv"
 
 #. module: purchase_requisition
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__none
-msgid "Do not create RfQ lines automatically"
-msgstr "Ne kreiraj automatski stavke za ZZP"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Analitički račun distribucije"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -405,10 +418,27 @@ msgstr "Riješeno"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__draft
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__draft
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Draft"
 msgstr "Nacrt"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
+msgid "End Date"
+msgstr "Završni datum"
+
+#. module: purchase_requisition
+#. odoo-python
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+msgid ""
+"End date cannot be earlier than start date. Please check dates for "
+"agreements: %s"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Expected on"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
@@ -429,7 +459,8 @@ msgstr "Font awesome ikona npr. fa-tasks"
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specific period\n"
-"            (e.g. a year) and you order products within this agreement to benefit\n"
+"            (e.g. a year) and you order products within this agreement to "
+"benefit\n"
 "            from the negotiated prices."
 msgstr ""
 
@@ -439,29 +470,21 @@ msgid "Future Activities"
 msgstr "Buduće aktivnosti"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Group By"
-msgstr "Grupiraj po"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__has_alternatives
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_kpis_tree_inherit_purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_tree_inherit_purchase_requisition
-msgid "Has Alternatives"
-msgstr ""
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__has_message
 msgid "Has Message"
 msgstr "Ima poruku"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_product__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__id
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
@@ -487,19 +510,10 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
-msgid "If the chosen vendor or if any of the products in the original PO have a blocking warning then we prevent creation of alternative PO. This is because normally these fields are cleared w/warning message within form view, but we cannot recreate that in this case."
-msgstr ""
-
-#. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
-msgid "If this is checked, the product quantities of the original PO will be copied"
+msgid ""
+"If this is checked, the product quantities of the original PO will be copied"
 msgstr ""
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "In negotiation"
-msgstr "U pregovorima"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
@@ -517,7 +531,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__write_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__write_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__write_uid
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__write_uid
 msgid "Last Updated by"
 msgstr "Promijenio"
 
@@ -527,7 +540,6 @@ msgstr "Promijenio"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__write_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__write_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__write_date
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__write_date
 msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
@@ -537,13 +549,18 @@ msgid "Late Activities"
 msgstr "Posljednje aktivnosti"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__line_copy
-msgid "Lines"
-msgstr "Stavke"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form_purchase_requisition
+msgid "Link RFQs together and compare them"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Link to Existing RfQ"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:res.groups,name:purchase_requisition.group_purchase_alternatives
+msgid "Manage Purchase Alternatives"
 msgstr ""
 
 #. module: purchase_requisition
@@ -555,6 +572,16 @@ msgstr "Greška pri isporuci poruke"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
 msgid "Messages"
 msgstr "Poruke"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Mitchell Admin"
+msgstr "Mitchell Admin"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "My Activities"
+msgstr "Moje aktivnosti"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__my_activity_date_deadline
@@ -570,6 +597,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Name, TIN, Email, or Reference"
 msgstr "Ime, TIN, e-pošta ili referenca"
+
+#. module: purchase_requisition
+#. odoo-python
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+msgid "New"
+msgstr "Novi"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -624,19 +657,13 @@ msgstr "Broj grešaka"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Broj poruka koje zahtijevaju aktivnost"
+msgid "Number of messages requiring action"
+msgstr "Broj poruka koje zahtijevaju radnju"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Broj poruka sa greškama pri isporuci"
-
-#. module: purchase_requisition
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__ongoing
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__ongoing
-msgid "Ongoing"
-msgstr "U tijeku"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__order_ids
@@ -645,14 +672,19 @@ msgstr "Narudžba"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__qty_ordered
-msgid "Ordered Quantities"
-msgstr "Naručene količine"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Ordered"
+msgstr "Naručeno"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__ordering_date
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
 msgstr "Datum naručivanja"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Orders"
+msgstr "Nalozi"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
@@ -670,20 +702,11 @@ msgid "POs to Confirm"
 msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "Price Unit"
-msgstr "Jedinična cijena"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__product_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_id
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Product"
 msgstr "Proizvod"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_id
-msgid "Product Unit of Measure"
-msgstr "JM proizvoda"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -691,7 +714,7 @@ msgid "Product Variant"
 msgstr "Varijanta proizvoda"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Products"
 msgstr "Proizvodi"
@@ -707,17 +730,23 @@ msgid "Purchase Agreement"
 msgstr "Dogovor o nabavi"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_tree
-msgid "Purchase Agreement Types"
-msgstr "Tipovi dogovora o nabavi"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Purchase Agreement:"
+msgstr ""
 
 #. module: purchase_requisition
+#: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
+#: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Purchase Agreements"
 msgstr "Dogovori o nabavi"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_res_config_settings__group_purchase_alternatives
+msgid "Purchase Alternatives"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__purchase_group_id
@@ -745,9 +774,9 @@ msgid "Purchase Orders"
 msgstr "Nalozi u nabavi"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
-msgid "Purchase Orders with requisition"
-msgstr "Nalozi sa zahtjevnicama"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Purchase Reference"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
@@ -767,21 +796,25 @@ msgid "Purchase Requisition Line"
 msgstr "Stavka zahtjeva za nabavom"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
-msgid "Purchase Requisition Type"
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__requisition_type__purchase_template
+msgid "Purchase Template"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__is_quantity_copy
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__is_quantity_copy
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__quantity_copy
-msgid "Quantities"
-msgstr "Količine"
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Purchase Templates"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_qty
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Quantity"
 msgstr "Količina"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "RFQ"
+msgstr "ZZP"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -791,21 +824,17 @@ msgstr "ZZP/Nalozi"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Ocjene"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__reference
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Reference"
 msgstr "Vezna oznaka"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "Reference:"
-msgstr "Vezna oznaka:"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
@@ -816,16 +845,6 @@ msgstr "Zahtjev za ponudom"
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
 msgid "Request for Quotations"
 msgstr "Zahtjev za ponudom"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "Requests for Quotation Details"
-msgstr "Detalji zahtjeva za ponudom"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
-msgid "Requisition"
-msgstr "Zahtjevnica"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -843,52 +862,14 @@ msgid "SMS Delivery error"
 msgstr "Greška u slanju SMSa"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__schedule_date
-msgid "Scheduled Date"
-msgstr "Planirani datum"
-
-#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Purchase Agreements"
 msgstr "Traži dogovore o nabavi"
 
 #. module: purchase_requisition
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
-msgid "Select multiple RFQ (non-exclusive)"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
-msgid "Select only one RFQ (exclusive)"
-msgstr "Odaberi samo jedan ZZP (isključivo)"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__exclusive
-msgid ""
-"Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel the remaining purchase order.\n"
-"\n"
-"                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
-msgid "Sequence"
-msgstr "Sekvenca"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
-msgid "Set active to false to hide the Purchase Agreement Types without removing it."
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
-msgid "Set quantities manually"
-msgstr "Ručno postavi količine"
-
-#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Show all records which has next action date is before today"
-msgstr "Prikazuje sve zapise kojima je sljedeći datum akcije prije danas"
+msgid "Show all records whose next activity date is past"
+msgstr "Prikaži sve zapise čiji je sljedeći datum aktivnosti prošao"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -899,13 +880,14 @@ msgstr ""
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
-msgid "Some quantities were not cleared because their status is not a RFQ status."
+msgid ""
+"Some quantities were not cleared because their status is not a RFQ status."
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
-msgid "Source Document"
-msgstr "Izvorni dokument"
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_start
+msgid "Start Date"
+msgstr "Početni datum"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -913,12 +895,8 @@ msgid "Start a new purchase agreement"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state_blanket_order
-msgid "State Blanket Order"
-msgstr ""
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Status"
 msgstr "Status"
@@ -957,19 +935,8 @@ msgid "Terms and Conditions"
 msgstr "Odredbe i uvjeti"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__schedule_date
-msgid "The expected and scheduled delivery date where all the products are received"
-msgstr "Očekivani i planirani datum dostave kada će se primiti svi proizvodi"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
 msgid "The original PO that this alternative PO is being created for."
-msgstr ""
-
-#. module: purchase_requisition
-#. odoo-python
-#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
-msgid "The vendor you have selected or at least one of the products you are copying from the original order has a blocking warning on it and cannot be selected to create an alternative."
 msgstr ""
 
 #. module: purchase_requisition
@@ -981,13 +948,19 @@ msgstr ""
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
-msgid "There is already an open blanket order for this supplier. We suggest you complete this open blanket order, instead of creating a new one."
+msgid ""
+"There is already an open blanket order for this supplier. We suggest you "
+"complete this open blanket order, instead of creating a new one."
 msgstr ""
 
 #. module: purchase_requisition
 #. odoo-python
-#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
-msgid "This is a blocking warning!\n"
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+msgid ""
+"To close this purchase requisition, cancel related Requests for Quotation.\n"
+"\n"
+"Imagine the mess if someone confirms these duplicates: double the order, "
+"double the trouble :)"
 msgstr ""
 
 #. module: purchase_requisition
@@ -997,6 +970,7 @@ msgstr "Današnje aktivnosti"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Total"
 msgstr "Ukupno"
 
@@ -1006,33 +980,20 @@ msgid "Type of the exception activity on record."
 msgstr "Vrsta aktivnosti iznimke na zapisu."
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_id
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Unit"
+msgstr "Jedinica"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__price_unit
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Unit Price"
 msgstr "Jedinična cijena"
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
-msgid "UoM"
-msgstr "UoM"
-
-#. module: purchase_requisition
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__copy
-msgid "Use lines of agreement"
-msgstr "Koristi stavke dogovora"
-
-#. module: purchase_requisition
-#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__copy
-msgid "Use quantities of agreement"
-msgstr "Koristi količine dogovora"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
-msgid "Validate"
-msgstr "Odobri"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__vendor_id
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__partner_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__partner_ids
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Vendor"
 msgstr "Dobavljač"
@@ -1075,8 +1036,9 @@ msgid "Website communication history"
 msgstr "Povijest komunikacije Web stranice"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
-msgid "Whether or not this purchase order is linked to another purchase order as an alternative."
+#. odoo-python
+#: code:addons/purchase_requisition/models/purchase.py:0
+msgid "What about the alternative Requests for Quotations?"
 msgstr ""
 
 #. module: purchase_requisition
@@ -1098,30 +1060,37 @@ msgstr ""
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
-msgid "You cannot confirm agreement '%s' because there is no product line."
+msgid ""
+"You cannot change the Agreement Type or Company of a not draft purchase "
+"agreement."
 msgstr ""
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
-msgid "You cannot confirm the blanket order without price."
+msgid "You cannot confirm a blanket order with lines missing a price."
 msgstr ""
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
-msgid "You cannot confirm the blanket order without quantity."
+msgid "You cannot confirm a blanket order with lines missing a quantity."
 msgstr ""
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
-msgid "You have to cancel or validate every RfQ before closing the purchase requisition."
-msgstr "Morate otkazati ili ovjeriti svaki ZZP prije zatvaranja zahtjeva za nabavom."
+msgid ""
+"You cannot confirm agreement '%(agreement)s' because it does not contain any "
+"product lines."
+msgstr ""
 
 #. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
-msgid "alternative request for quotations are still open, do you want to cancel them?"
+#. odoo-python
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+msgid ""
+"You cannot have a negative or unit price of 0 for an already confirmed "
+"blanket order."
 msgstr ""
 
 #. module: purchase_requisition

@@ -1,0 +1,114 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project_stock_account
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-09-16 04:49+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/"
+"project_stock_account/ca/>\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: project_stock_account
+#. odoo-python
+#: code:addons/project_stock_account/models/stock_move.py:0
+msgid ""
+"'%(missing_plan_names)s' analytic plan(s) required on the project '%"
+"(project_name)s' linked to the stock picking."
+msgstr ""
+"Plans analítics '%(missing_plan_names)s' necessaris al projecte '%"
+"(project_name)s' vinculats al moviment d'estoc."
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_stock_picking_type__analytic_costs
+msgid "Analytic Costs"
+msgstr "Costos analítics"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Línia analítica"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_account_analytic_applicability
+msgid "Analytic Plan's Applicabilities"
+msgstr "Aplicabilitats del pla analític"
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_line__category
+msgid "Category"
+msgstr "Categoria"
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_applicability__display_name
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:project_stock_account.field_project_project__display_name
+#: model:ir.model.fields,field_description:project_stock_account.field_stock_move__display_name
+#: model:ir.model.fields,field_description:project_stock_account.field_stock_picking_type__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "Domini"
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_applicability__id
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:project_stock_account.field_project_project__id
+#: model:ir.model.fields,field_description:project_stock_account.field_stock_move__id
+#: model:ir.model.fields,field_description:project_stock_account.field_stock_picking_type__id
+msgid "ID"
+msgstr ""
+
+#. module: project_stock_account
+#: model:ir.model.fields.selection,name:project_stock_account.selection__account_analytic_line__category__picking_entry
+msgid "Inventory Transfer"
+msgstr "Trasllat d'inventari"
+
+#. module: project_stock_account
+#. odoo-python
+#: code:addons/project_stock_account/models/project_project.py:0
+msgid "Materials"
+msgstr "Materials"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Tipus de picking"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_project_project
+msgid "Project"
+msgstr "Projecte"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_stock_move
+msgid "Stock Move"
+msgstr "Moviment d'estoc"
+
+#. module: project_stock_account
+#: model:ir.model.fields.selection,name:project_stock_account.selection__account_analytic_applicability__business_domain__stock_picking
+msgid "Stock Picking"
+msgstr "Empaquetat d'estoc"
+
+#. module: project_stock_account
+#: model:ir.model.fields,help:project_stock_account.field_stock_picking_type__analytic_costs
+msgid ""
+"Validating stock pickings will generate analytic entries for the selected "
+"project. Products set for re-invoicing will also be billed to the customer."
+msgstr ""
+"La validació dels moviments d'estoc generarà assentaments analítics per al "
+"projecte seleccionat. Els productes configurats per tornar a ser facturats "
+"es facturaran al client."

@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* bus
+# * bus
 #
 # Translators:
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
@@ -9,25 +9,45 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Jiří Podhorecký, 2022
 # Michal Veselý <michal@veselyberanek.net>, 2022
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Michal Veselý <michal@veselyberanek.net>, 2022\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"PO-Revision-Date: 2025-09-16 10:03+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/bus/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: bus
-#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
-msgid "Away"
-msgstr "Pryč"
+#: model:ir.model,name:bus.model_res_groups
+msgid "Access Groups"
+msgstr "Přístupové skupiny"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_attachment
+msgid "Attachment"
+msgstr "Příloha"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.js:0
+msgid ""
+"Bus logs contain confidential information and must only be shared with "
+"trusted recipients."
+msgstr ""
+
+#. module: bus
+#: model:ir.model,name:bus.model_bus_listener_mixin
+msgid "Can send messages via bus.bus"
+msgstr "Může odesílat zprávy prostřednictvím bus.bus"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__channel
@@ -45,53 +65,86 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: bus
+#: model:ir.model,website_form_label:bus.model_res_partner
+msgid "Create a Customer"
+msgstr "Vytvořit zákazníka"
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
-msgstr "Vytvořeno od"
+msgstr "Vytvořeno uživatelem"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
 msgid "Created on"
-msgstr "Vytvořeno"
+msgstr "Vytvořeno dne"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.js:0
+msgid "Discard"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
-#: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
+#: model:ir.model.fields,field_description:bus.field_bus_listener_mixin__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_http__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_model__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:bus.field_res_groups__display_name
+#: model:ir.model.fields,field_description:bus.field_res_partner__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users_settings__display_name
 msgid "Display Name"
-msgstr "Zobrazované jméno"
+msgstr "Zobrazovací název"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.js:0
+msgid "Download"
+msgstr ""
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.xml:0
+msgid "Download logs"
+msgstr "Stáhnout záznamy"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.xml:0
+msgid "Enable Bus Logging"
+msgstr ""
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP Routing"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
-#: model:ir.model.fields,field_description:bus.field_bus_presence__id
+#: model:ir.model.fields,field_description:bus.field_bus_listener_mixin__id
+#: model:ir.model.fields,field_description:bus.field_ir_attachment__id
+#: model:ir.model.fields,field_description:bus.field_ir_http__id
+#: model:ir.model.fields,field_description:bus.field_ir_model__id
+#: model:ir.model.fields,field_description:bus.field_ir_websocket__id
+#: model:ir.model.fields,field_description:bus.field_res_groups__id
+#: model:ir.model.fields,field_description:bus.field_res_partner__id
+#: model:ir.model.fields,field_description:bus.field_res_users__id
+#: model:ir.model.fields,field_description:bus.field_res_users_settings__id
 msgid "ID"
 msgstr "ID"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence__status
-#: model:ir.model.fields,field_description:bus.field_res_partner__im_status
-#: model:ir.model.fields,field_description:bus.field_res_users__im_status
-msgid "IM Status"
-msgstr "IM Status"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
-msgid "Last Poll"
-msgstr "Poslední průzkum"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence__last_presence
-msgid "Last Presence"
-msgstr "Poslední přítomnost"
-
-#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
+msgstr "Naposledy upraveno uživatelem"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
-msgstr "Naposled upraveno"
+msgstr "Naposledy upraveno dne"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__message
@@ -100,24 +153,25 @@ msgstr "Zpráva"
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_model
-msgid "Models"
-msgstr "Modely"
-
-#. module: bus
-#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
-msgid "Offline"
-msgstr "Nepřipojeno"
-
-#. module: bus
-#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
-msgid "Online"
-msgstr "Online"
+msgid "Model"
+msgstr ""
 
 #. module: bus
 #. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
 msgid "Refresh"
 msgstr "Obnovit"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr ""
 
 #. module: bus
 #. odoo-javascript
@@ -126,27 +180,41 @@ msgid "The page appears to be out of date."
 msgstr "Stránka se zdá být zastaralá."
 
 #. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "The page is out of date"
+msgstr ""
+
+#. module: bus
 #: model:ir.model,name:bus.model_res_users
 msgid "User"
 msgstr "Uživatel"
 
 #. module: bus
-#: model:ir.model,name:bus.model_bus_presence
-msgid "User Presence"
-msgstr "Přítomnost uživatele"
+#: model:ir.model,name:bus.model_res_users_settings
+msgid "User Settings"
+msgstr "Uživatelské nastavení"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
-msgid "Users"
-msgstr "Uživatelé"
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.js:0
+msgid "You're about to download the bus logs"
+msgstr ""
 
 #. module: bus
 #. odoo-python
 #: code:addons/bus/controllers/home.py:0
-msgid "Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted "
+"users it is important to change it immediately for security reasons. I will "
+"keep nagging you about it!"
 msgstr ""
+"Vaše heslo je výchozí (admin)! Pokud je tento systém vystaven nedůvěryhodným "
+"uživatelům, je důležité jej z bezpečnostních důvodů okamžitě změnit. Budu "
+"vás o tom pořád otravovat!"
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "zpráva zpracování websocketu"

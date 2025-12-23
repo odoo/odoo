@@ -1,27 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* im_livechat
+# * im_livechat
 #
 # Translators:
 # Uros Kalajdzic <ukalajdzic@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-03 08:43+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, "
-"2022\n"
-"Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
-"Language: sr\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 19:19+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
+"odoo-19/im_livechat/sr_Latn/>\n"
+"Language: sr@latin\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: im_livechat
 #. odoo-python
@@ -30,7 +31,7 @@ msgid "\"%s\" is not a valid email."
 msgstr "\"%s\" nije ispravan email."
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_list
 msgid "# Messages"
 msgstr "# Poruka"
 
@@ -40,19 +41,24 @@ msgid "# Ratings"
 msgstr "# Ocena"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__nbr_channel
-msgid "# of Sessions"
-msgstr "# Sesija"
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__message_count
+msgid "# of Messages per Session"
+msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_speaker
-msgid "# of speakers"
-msgstr "# sagovornika"
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_count
+msgid "# of Sessions with Calls"
+msgstr ""
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "% Happy"
-msgstr "% Srećnih"
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__number_of_calls
+msgid "# of Sessions with calls"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
+msgid "# of calls"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating
@@ -61,23 +67,15 @@ msgstr "% sreće"
 
 #. module: im_livechat
 #. odoo-python
-#: code:addons/im_livechat/models/discuss_channel.py:0
-msgid ""
-"%(new_line)sType %(bold_start)s:shortcut%(bold_end)s to insert a canned "
-"response in your message."
+#: code:addons/im_livechat/models/chatbot_script_step.py:0
+msgid "%(title)s - Step %(sequence)d"
 msgstr ""
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script.py:0
 msgid "%s (copy)"
-msgstr ""
-
-#. module: im_livechat
-#. odoo-python
-#: code:addons/im_livechat/models/chatbot_script_step.py:0
-msgid "%s has joined"
-msgstr "%s se pridružio/la"
+msgstr "%s (kopija)"
 
 #. module: im_livechat
 #. odoo-python
@@ -107,21 +105,6 @@ msgstr ""
 "* 'Sakrij' krije chat dugme na stranicama.\n"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
-msgid ", on the"
-msgstr ", na"
-
-#. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__day_number
-msgid "1 is Monday, 7 is Sunday"
-msgstr "1 je Ponedeljak, 7 je Nedelja"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
-msgid "<i class=\"fa fa-mail-reply me-2\" title=\"Reply\"/>"
-msgstr ""
-
-#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid ""
 "<i class=\"fa fa-smile-o text-success\" title=\"Percentage of happy "
@@ -133,27 +116,41 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Nazad na uređivački mod"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<i title=\"Remove operator\" class=\"fa fa-fw fa-lg fa-close\"/>"
+msgstr "<i title=\"Ukloni operatera\" class=\"fa fa-fw fa-lg fa-close\"/>"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "<span class=\"fw-bold\">Country: </span>"
 msgstr ""
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
-msgid "<span style=\"font-size: 10px;\">Livechat Conversation</span><br/>"
-msgstr "<span style=\"font-size: 10px;\">Livechat konverzacija</span><br/>"
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "<span class=\"o_stat_text\">Happy</span>"
+msgstr ""
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
-msgid "<span>Best regards,</span><br/><br/>"
-msgstr "<span>Srdačan pozdrav,</span><br/><br/>"
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "<span class=\"o_stat_text\">Sessions</span>"
+msgstr ""
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
-msgid "<span>Hello,</span><br/>Here's a copy of your conversation with"
-msgstr "<span>Zdravo,</span><br/>Evo kopije vaše konverzacije sa"
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid ""
+"<span groups=\"im_livechat.im_livechat_group_manager\">Configure Channel</"
+"span>\n"
+"                                <span groups=\"!"
+"im_livechat.im_livechat_group_manager\">View Channel</span>"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "<span>Ongoing Sessions:</span>"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -205,25 +202,19 @@ msgid "<span>You are currently testing</span>"
 msgstr "<span>Vi trenutno testirate</span>"
 
 #. module: im_livechat
-#: model:ir.model.constraint,message:im_livechat.constraint_chatbot_message__unique_mail_message_id
+#: model:ir.model.constraint,message:im_livechat.constraint_chatbot_message_unique_mail_message_id
 msgid "A mail.message can only be linked to a single chatbot message"
 msgstr "Jedna mail.message može biti povezana sa samo jednom chatbot porukom"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__is_without_answer
-msgid ""
-"A session is without answer if the operator did not answer. \n"
-"                                       If the visitor is also the operator, "
-"the session will always be answered."
-msgstr ""
-"Sesija je bez odgovora, ako operate nije odgovorio. \n"
-"                                       Ako je posetilaci ujedno i operater, "
-"sesija će uvek biti odgovorena."
+#: model:ir.model,name:im_livechat.model_res_groups
+msgid "Access Groups"
+msgstr "Grupe za pristup"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Potrebna akcija"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__active
@@ -231,30 +222,105 @@ msgid "Active"
 msgstr "Aktivno"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/expertise_tags_autocomplete.js:0
+msgid "Add expertise"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Add the following code to the &lt;head&gt; section of your website:"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Add your notes here..."
+msgstr ""
+
+#. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_manager
 msgid "Administrator"
 msgstr "Administrator"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/feedback_panel/transcript_sender.xml:0
-msgid "An error occurred. Please try again."
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel_member__livechat_member_type__agent
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__livechat_member_type__agent
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Agent"
 msgstr ""
 
 #. module: im_livechat
-#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_redirect
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__agent_expertise_ids
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__agent_expertise_ids
+msgid "Agent Expertise"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_agent_history_action
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_partner_ids
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__user_ids
+#: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_agent
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Agents"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_history_ids
+msgid "Agents (History)"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__available_operator_ids_count
+msgid "Agents Connected"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Agents who are inactive in Odoo for more than 30 minutes will be considered "
+"disconnected."
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_all_conversations
+msgid "All Conversations"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+msgid "All countries"
+msgstr "Sve zemlje"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Alternatively, share this URL with your customers or suppliers via email:"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__always
+msgid "Always"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/transcript_sender.xml:0
+msgid "An error occurred. Please try again."
+msgstr "Dogodila se greška. Molimo pokušajte ponovo."
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_redirect
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_redirect_demo
 msgid "And tadaaaa here you go! 🌟"
 msgstr "I tadaaaa izvolite! 🌟"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
-msgid "Anonymous"
-msgstr "Anoniman"
-
-#. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__anonymous_name
-msgid "Anonymous Name"
-msgstr "Ime anonimnog/ne"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__name
@@ -280,17 +346,17 @@ msgstr "Da li ste u matriksu?"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Brojač priloga"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__available_operator_ids
 msgid "Available Operator"
-msgstr ""
+msgstr "Dostupni operater"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
-msgid "Avatar"
-msgstr "Avatar"
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__avatar_128
+msgid "Avatar 128"
+msgstr "Avatar 128"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_avg
@@ -304,39 +370,13 @@ msgid "Average Rating (%)"
 msgstr "Prosečna ocena (%)"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__duration
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__duration
-msgid "Average duration"
-msgstr "Prosečno trajanje"
-
-#. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_message
-msgid "Average message"
-msgstr "Prosečna poruka"
-
-#. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__rating
-msgid "Average rating"
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__rating
-msgid "Average rating given by the visitor"
-msgstr ""
-
-#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__time_to_answer
-msgid "Average time in seconds to give the first answer to the visitor"
-msgstr "Prosečno vreme u sekundama za davanje prvog odgovora posetiocu"
+msgid "Average time in hours to give the first answer to the visitor"
+msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__time_to_answer
-msgid "Average time to give the first answer to the visitor"
-msgstr "Prosečno vreme za davanje prvog odgovora posetiocu"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
-msgid "Bad Ratings"
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+msgid "Bot"
 msgstr ""
 
 #. module: im_livechat
@@ -345,9 +385,24 @@ msgid "Bot Operator"
 msgstr "Bot Operater"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_bot_partner_ids
+msgid "Bots"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_bot_history_ids
+msgid "Bots (History)"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_background_color
 msgid "Button Background Color"
 msgstr "Pozadinska boja dugmeta"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Button Colors"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text_color
@@ -355,48 +410,57 @@ msgid "Button Text Color"
 msgstr "Boja teksta dugmeta"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_duration_hour
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__call_duration_hour
+msgid "Call Duration"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_history_ids
+msgid "Call History"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.canned_responses
 msgid "Canned Responses"
 msgstr "Pripremljeni odgovori"
 
 #. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel_member_history.py:0
+msgid ""
+"Cannot create history as it is only available for live chats: %(histories)s."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__livechat_channel_id
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__livechat_channel_id
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Channel"
 msgstr "Kanal"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "Channel Header Color"
-msgstr "Boja zaglavlja kanala"
-
-#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_discuss_channel_member
 msgid "Channel Member"
-msgstr ""
+msgstr "Član kanala"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__channel_name
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
 msgid "Channel Name"
 msgstr "Ime kanala"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_form
 msgid "Channel Rule"
 msgstr "Pravilo kanala"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "Channel Rules"
-msgstr "Pravila kanala"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__channel_type
@@ -408,11 +472,6 @@ msgstr "Vrsta kanala"
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
 msgid "Channels"
 msgstr "Kanali"
-
-#. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__input_placeholder
-msgid "Chat Input Placeholder"
-msgstr "Chat prostor za unos"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__channel_type
@@ -429,9 +488,26 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__chatbot_script_id
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__chatbot_script_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__chatbot_script_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__chatbot_script_id
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel_member__livechat_member_type__bot
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__livechat_member_type__bot
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Chatbot"
 msgstr "Chatbot"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__chatbot_answers_path
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Chatbot Answers"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__chatbot_answers_path_str
+msgid "Chatbot Answers (String)"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__chatbot_current_step_id
@@ -455,6 +531,10 @@ msgstr "Chatbot ime"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__chatbot_script_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__chatbot_script_id
+#: model:ir.model.fields,field_description:im_livechat.field_res_partner__chatbot_script_ids
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__chatbot_script_ids
 msgid "Chatbot Script"
 msgstr "Chatbot skripta"
 
@@ -474,28 +554,48 @@ msgid "Chatbot Step"
 msgstr "Chatbot kjorak"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Chatbot answers"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.chatbot_config
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Chatbots"
 msgstr "Chatbot-ovi"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Choose the live chat channel you want to display on your website."
+msgstr ""
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_chrome_demo
+msgid "Chrome"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
 msgid "Close"
 msgstr "Zatvori"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
-msgid "Close conversation"
-msgstr "Zatvori konverzaciju"
+#: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_end_dt_status_constraint
+msgid "Closed Live Chat session should not have a status."
+msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__technical_name
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
-msgid "Code"
-msgstr "Kod"
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+msgid "Comment"
+msgstr "Komentar"
+
+#. module: im_livechat
+#: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_max_sessions_mode_greater_than_zero
+msgid "Concurrent session number should be greater than zero."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_config
@@ -503,32 +603,32 @@ msgid "Configuration"
 msgstr "Podešavanje"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Configure Channel"
-msgstr ""
-
-#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
 msgid "Contact"
 msgstr "Kontakt"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
+msgid "Continue"
+msgstr "Nastavi"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__channel_id
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__channel_id
 msgid "Conversation"
 msgstr "Konverzacija"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
-msgid "Conversation ended..."
-msgstr "Konverzacija je završena..."
+#: code:addons/im_livechat/static/src/core/public_web/discuss_channel_model_patch.js:0
+msgid "Conversation has ended"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
-msgid "Conversation with %s"
-msgstr "Konverzacija sa %s"
+msgid "Conversation with %(agent)s"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations
@@ -536,15 +636,18 @@ msgid "Conversations handled"
 msgstr "Obrađene konverzacije"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid ""
-"Copy and paste this code into your website, within the &lt;head&gt; tag:"
-msgstr ""
-"Kopirajte i nalepite ovaj kod u svoj website, između &lt;head&gt; oznaka:"
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__country_ids
+msgid "Countries"
+msgstr "Zemlje"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__country_id
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__country_ids
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_country_id
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Country"
 msgstr "Zemlja"
 
@@ -555,8 +658,14 @@ msgstr "Zemlja posetioca"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__country_id
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_member_history__session_country_id
 msgid "Country of the visitor of the channel"
 msgstr "Zemlja posetioca kanala"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_kanban
+msgid "Country:"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
@@ -564,10 +673,9 @@ msgid "Create a Chatbot"
 msgstr "Kreiraj Chatbot"
 
 #. module: im_livechat
-#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
-msgid "Create a channel and start chatting to fill up your history."
+#: model:ir.model,website_form_label:im_livechat.model_res_partner
+msgid "Create a Customer"
 msgstr ""
-"Kreirajte kanal i počnite da chat-ujete da biste popunili svoju istoriju."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__create_uid
@@ -575,7 +683,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__create_uid
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__create_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__create_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__create_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__create_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
@@ -585,36 +695,74 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__create_date
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__create_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__create_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__create_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__create_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__create_date
 msgid "Created on"
 msgstr "Kreirano"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__visitor_partner_id
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+msgid "Customer"
+msgstr "Kupac"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_customer_guest_ids
+msgid "Customers (Guests)"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_customer_history_ids
+msgid "Customers (History)"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_customer_partner_ids
+msgid "Customers (Partners)"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
-msgid "Creation date"
-msgstr "Datum kreiranja"
+msgid "Date"
+msgstr "Datum"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "Date:"
+msgstr "Datum:"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-msgid "Creation date (hour)"
-msgstr "Datum kreiranja (sat)"
+msgid "Date: Last month"
+msgstr ""
 
 #. module: im_livechat
-#: model:ir.actions.act_window,name:im_livechat.rating_rating_action_livechat_report
-#: model:ir.ui.menu,name:im_livechat.rating_rating_menu_livechat
-msgid "Customer Ratings"
-msgstr "Ocene korisnika"
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Date: Last week"
+msgstr ""
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Day of Week"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_week_day
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_week_day
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__day_number
-msgid "Day Number"
-msgstr "Broj dana"
-
-#. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__days_of_activity
-msgid "Days of activity"
-msgstr "Dani aktivnosti"
+msgid "Day of the Week"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_background_color
@@ -632,32 +780,15 @@ msgid "Default text color of the Livechat button"
 msgstr "Podrazumevana boja teksta na Livechat dugmetu"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text
-msgid "Default text displayed on the Livechat Support Button"
-msgstr "Podrazumevani tekst prikazan na dugmetu za Livechat podršku"
-
-#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__title_color
 msgid "Default title color of the channel once open"
 msgstr "Podrazumevana boja naslova kanala kada se otvori"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_config_action
 msgid "Define a new website live chat channel"
 msgstr "Definišite novi live chat kanala za website"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid ""
-"Define rules for your live support channel. You can apply an action for the "
-"given URL, and per country.<br/>To identify the country, GeoIP must be "
-"installed on your server, otherwise, the countries of the rule will not be "
-"taken into account."
-msgstr ""
-"Definišite pravila za svoj kanal podrške. Možete primeniti radnju za dati "
-"URL i po zemlji. <br/>Da biste identifikovali zemlju, GeoIP mora biti "
-"instaliran na vašem serveru, u suprotnom zemlje pravila neće biti uzete u "
-"obzir."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
@@ -671,10 +802,15 @@ msgstr ""
 "biti uzet u obzir."
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+msgid "Description"
+msgstr "Opis"
+
+#. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 msgid "Did we correctly answer your question?"
-msgstr ""
+msgstr "Da li smo ispravno odgovorili na vaše pitanje?"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_digest_digest
@@ -682,9 +818,14 @@ msgid "Digest"
 msgstr "Pregled"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/views/discuss_channel_list/discuss_channel_list_view_controller.js:0
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_demo
+#: model:im_livechat.expertise,name:im_livechat.chatbot_script_expertise_discuss_demo
 msgid "Discuss"
+msgstr "Diskusija"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_livechat_demo
+msgid "Discuss and Livechat"
 msgstr ""
 
 #. module: im_livechat
@@ -698,39 +839,73 @@ msgstr "Kanal diskusije"
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_call_history__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_rtc_session__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__display_name
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_mail_message__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_rating_rating__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_res_groups__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_res_partner__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Do not redirect visitors"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Download"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+msgid "Download a copy of this conversation"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/livechat_button.xml:0
 msgid "Drag to Move"
-msgstr ""
+msgstr "Prevucite da biste premestili"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__duration
 msgid "Duration"
-msgstr ""
+msgstr "Trajanje"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
-msgid "Duration of Session (min)"
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__duration
+msgid "Duration (min)"
 msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__duration
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__duration
-msgid "Duration of the conversation (in seconds)"
-msgstr "Trajanje konverzacije (u sekundama)"
+msgid "Duration of the conversation (in minutes)"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__duration
 msgid "Duration of the session in hours"
+msgstr "Trajanje sesije u satima"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "Duration:"
 msgstr ""
 
 #. module: im_livechat
@@ -739,15 +914,65 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__chatbot_only_if_no_operator
-msgid "Enable the bot only if there is no operator available"
-msgstr "Omogući bot-a samo ako nema dostupnih operatera"
+#. odoo-python
+#: code:addons/im_livechat/models/chatbot_script_step.py:0
+msgid "Email: "
+msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__chatbot_only_if_no_operator
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
-msgid "Enabled only if no operator"
-msgstr "Omogući samo ako nema operatera"
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__chatbot_enabled_condition
+msgid "Enable ChatBot"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__escalated
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__escalated
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Escalated"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/channel_invitation_patch.xml:0
+#: code:addons/im_livechat/static/src/core/web/expertise_tags_autocomplete.xml:0
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model:ir.actions.act_window,name:im_livechat.expertise_action
+#: model:ir.ui.menu,name:im_livechat.expertise_menu
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
+#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
+msgid "Expertise"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_kanban
+msgid "Expertise:"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_list
+msgid "Expertises"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_expertise_ids
+msgid "Expertises used in this session"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_expertises
+msgid "Expertises used in this session (String)"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
@@ -756,8 +981,18 @@ msgid "Explain your note"
 msgstr "Objasnite svoju belešku"
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_ir_binary
-msgid "File streaming helper model for controllers"
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "FOR OTHER WEBSITES"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "FOR WEBSITES BUILT WITH ODOO"
+msgstr ""
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_firefox_demo
+msgid "Firefox"
 msgstr ""
 
 #. module: im_livechat
@@ -778,23 +1013,12 @@ msgstr "Upozorenje prvog koraka"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Pratioci"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid ""
-"For websites built with the Odoo CMS, go to Website &gt; Configuration &gt; "
-"Settings and select the Website Live Chat Channel you want to add to your "
-"website."
-msgstr ""
-"Za website-ove napravljene pomoću Odoo CMS-a, idite na Website &gt; "
-"Konfiguracija &gt; Podešavanja i izaberite Website Live Chat kanal koji "
-"želite da dodate na svoj website."
+msgstr "Pratioci (Partneri)"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__forward_operator
@@ -812,6 +1036,18 @@ msgid "Free Input (Multi-Line)"
 msgstr "Slobodan unos (Više linija)"
 
 #. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__4
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__5
+msgid "Friday"
+msgstr "Petak"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
+msgid "Give your feedback"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
 msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
@@ -821,33 +1057,57 @@ msgstr ""
 "poklapaju za dati url/zemlju, biće izabrano ono sa najnižim rednim brojem."
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
+"<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
+"<strong>Marketing.</strong>"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/views/discuss_template.xml:0
+msgid "Go to Sessions"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__guest_id
+msgid "Guest"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__handled_by_agent
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
-msgid "Good Ratings"
+msgid "Handled by Agent"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__handled_by_bot
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Handled by Bot"
 msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
-msgid "Group By..."
-msgstr "Grupiši po..."
+msgid "Happy"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__has_call
+msgid "Has Call"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Ima poruku"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__has_access_livechat
 msgid "Has access to Livechat"
-msgstr ""
-
-#. module: im_livechat
-#. odoo-python
-#: code:addons/im_livechat/models/im_livechat_channel.py:0
-#: model:im_livechat.channel,button_text:im_livechat.im_livechat_channel_data
-msgid "Have a Question? Chat with us."
-msgstr "Imate pitanje? Chat-ujte sa nama."
+msgstr "Ima prstup Livechat-u"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__header_background_color
@@ -857,6 +1117,45 @@ msgstr "Pozadinska boja zaglavlja"
 #. module: im_livechat
 #: model:im_livechat.channel,default_message:im_livechat.im_livechat_channel_data
 msgid "Hello, how may I help you?"
+msgstr "Zdravo, kako mogu da pomognem?"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__help_status__provided
+msgid "Help Provided"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_providing_help_history
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__agent_providing_help_history
+msgid "Help Provided (Agent)"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__help_status__requested
+msgid "Help Requested"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_requesting_help_history
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__agent_requesting_help_history
+msgid "Help Requested (Agent)"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__help_status
+msgid "Help Status"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_looking_for_help_action
+msgid ""
+"Help out by joining requests from teammates, or mark your own conversations "
+"as needing help."
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "Here's a copy of your conversation with"
 msgstr ""
 
 #. module: im_livechat
@@ -865,19 +1164,30 @@ msgid "Hide"
 msgstr "Sakrij"
 
 #. module: im_livechat
-#: model:ir.actions.act_window,name:im_livechat.discuss_channel_action
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
 msgid "History"
 msgstr "Istorija"
 
 #. module: im_livechat
-#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing
+#: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_partner_id_or_guest_3b134909
+msgid "History should either be linked to a partner or a guest but not both"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_demo
 msgid ""
 "Hmmm, let me check if I can find someone that could help you with that..."
 msgstr ""
 "Hmmm, samo da proverim da li mogu da nađem nekoga ko bi mogao da vam pomogne "
 "u vezi sa tim..."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Hour of Day"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_hour
@@ -887,31 +1197,31 @@ msgstr "Sat početka Datum sesije"
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: model:im_livechat.channel,default_message:im_livechat.support_bot_channel_demo
 msgid "How may I help you?"
 msgstr "Kako mogu da vam pomognem?"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "How to use the Website Live Chat widget?"
-msgstr "Kako da koristite website Live Chat vidžet?"
-
-#. module: im_livechat
-#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available_demo
 msgid "Hu-ho, it looks like none of our operators are available 🙁"
 msgstr "Uh-uh, izgleda da nijedan od naših operatera nije dostupan 🙁"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking_demo
 msgid "I am just looking around"
 msgstr "Samo razgledam"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_documentation
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_documentation_demo
 msgid "I am looking for your documentation"
 msgstr "Tražim vašu dokumentaciju"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_pricing
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_pricing_demo
 msgid "I have a pricing question"
 msgstr "Imam pitanje o ceni"
 
@@ -920,32 +1230,57 @@ msgstr "Imam pitanje o ceni"
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__id
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__id
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__id
+#: model:ir.model.fields,field_description:im_livechat.field_digest_digest__id
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_call_history__id
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__id
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__id
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_rtc_session__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__id
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__id
+#: model:ir.model.fields,field_description:im_livechat.field_ir_websocket__id
+#: model:ir.model.fields,field_description:im_livechat.field_mail_message__id
+#: model:ir.model.fields,field_description:im_livechat.field_rating_rating__id
+#: model:ir.model.fields,field_description:im_livechat.field_res_groups__id
+#: model:ir.model.fields,field_description:im_livechat.field_res_partner__id
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__id
+#: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__id
 msgid "ID"
 msgstr "ID"
 
 #. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_chatbot_message__user_raw_script_answer_id
+msgid "Id of the script answer. Useful for statistics when answer is deleted."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Ako je označeno, nove poruke zahtevaju vašu pažnju."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_has_error
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
+msgstr "Ako je označeno, neke poruke imaju grešku u isporuci."
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__max_sessions_mode
+msgid ""
+"If limited, operators will only handle the selected number of sessions at a "
+"time."
 msgstr ""
 
 #. module: im_livechat
-#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit_demo
 msgid "If you need anything else, feel free to get back in touch"
 msgstr "Ako vam treba još nešto, slobodno se javite ponovo"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__image_1920
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__image_128
 msgid "Image"
 msgstr "Slika"
 
@@ -970,8 +1305,52 @@ msgid "Image 512"
 msgstr "Slika 512"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "In Call"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/views/boolean_phone/boolean_phone.xml:0
+msgid "In a Call"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/views/boolean_phone/boolean_phone.js:0
+msgid "In call"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/discuss_channel_model_patch.js:0
+#: code:addons/im_livechat/static/src/core/web/store_service_patch.js:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__in_progress
+msgid "In progress"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: code:addons/im_livechat/static/src/core/web/thread_actions.js:0
+msgid "Information"
+msgstr "Informacija"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+msgid ""
+"Invalid URL '%s'. The Review Link must start with 'http://' or 'https://'."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_is_follower
 msgid "Is Follower"
+msgstr "Je Pratilac"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator
+msgid "Is Forward Operator"
 msgstr ""
 
 #. module: im_livechat
@@ -980,14 +1359,9 @@ msgid "Is Forward Operator Child"
 msgstr "Da li je Prosledi operateru podređeno"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_active
-msgid "Is livechat ongoing?"
-msgstr "Da li je livechat u toku?"
-
-#. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_anonymous
-msgid "Is visitor anonymous"
-msgstr "Da li je posetilac anoniman"
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_is_escalated
+msgid "Is session escalated"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -996,14 +1370,24 @@ msgstr "Pridruži se"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/livechat_channel_model.js:0
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
 msgid "Join %s"
-msgstr ""
+msgstr "Priključi se %s"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Join Channel"
 msgstr "Pridruži se kanalu"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_discuss_call_history
+msgid "Keep the call history"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_channel_member_history
+msgid "Keep the channel member history"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations_value
@@ -1022,16 +1406,56 @@ msgstr "Kpi vrednost Livechat odgovora"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/channel_invitation_patch.xml:0
-#: code:addons/im_livechat/static/src/core/web/channel_member_list_patch.xml:0
+#: code:addons/im_livechat/static/src/core/web/channel_member_patch.xml:0
 msgid "Lang"
+msgstr "Jezik"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_lang_id
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__lang_id
+msgid "Lang of the visitor of the channel."
 msgstr ""
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
-msgid "Last 24h"
-msgstr "Poslednjih 24h"
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_lang_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__lang_id
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+msgid "Language"
+msgstr "Jezik"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_kanban
+msgid "Language:"
+msgstr "Jezik:"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Languages"
+msgstr "Jezici"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Last 24 Hours"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Last 30 Days"
+msgstr "Poslednjih 30 dana"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Last 365 Days"
+msgstr "Poslednjih 365 dana"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Last 7 Days"
+msgstr "Poslednjih 7 dana"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__write_uid
@@ -1039,7 +1463,9 @@ msgstr "Poslednjih 24h"
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__write_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__write_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__write_uid
 msgid "Last Updated by"
 msgstr "Poslednje izmenio/la"
 
@@ -1049,9 +1475,18 @@ msgstr "Poslednje izmenio/la"
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__write_date
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__write_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__write_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__write_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__write_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__write_date
 msgid "Last Updated on"
 msgstr "Poslednje ažuriranje dana"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Learn how to display a live chat bubble on your website and start chatting "
+"with visitors in a few easy steps."
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -1060,9 +1495,9 @@ msgstr "Napusti"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/livechat_channel_model.js:0
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
 msgid "Leave %s"
-msgstr ""
+msgstr "Napusti %s"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1070,16 +1505,94 @@ msgid "Leave Channel"
 msgstr "Napusti kanal"
 
 #. module: im_livechat
-#: model:ir.module.category,name:im_livechat.module_category_im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/close_confirmation.xml:0
+#: code:addons/im_livechat/static/src/core/public_web/thread_model_patch.js:0
+msgid "Leaving will end the live chat. Do you want to proceed?"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_module_info_expert_text_step_demo
+msgid "Let me check if I can connect you with the right expert..."
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__limited
+msgid "Limited"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
+#: model:res.groups.privilege,name:im_livechat.res_groups_privilege_live_chat
 #: model_terms:ir.ui.view,arch_db:im_livechat.digest_digest_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:im_livechat.view_partner_form
 msgid "Live Chat"
 msgstr "Live Chat"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Live Chat Button"
 msgstr "Live Chat dugme"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_config_action
+#: model:ir.ui.menu,name:im_livechat.livechat_channels_config
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_list
+msgid "Live Chat Channels"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/discuss_channel.py:0
+#: model:ir.actions.report,name:im_livechat.action_report_livechat_conversation
+msgid "Live Chat Conversation"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_expertise
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_expertise_ids
+#: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__livechat_expertise_ids
+msgid "Live Chat Expertise"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.view_partner_form
+msgid "Live Chat History"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
+#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
+msgid "Live Chat Name"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_note
+msgid "Live Chat Note"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_failure
+msgid "Live Chat Session Failure"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Live Chat Window"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_patch.js:0
+msgid "Live Chats"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_livechat_channel_id
+msgid "Live chat channel"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
@@ -1088,38 +1601,34 @@ msgstr "Pretraga LiveChat kanala"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/discuss_app_model_patch.js:0
-#: code:addons/im_livechat/static/src/core/web/messaging_menu_patch.js:0
-#: code:addons/im_livechat/static/src/core/web/thread_icon_patch.xml:0
-#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
+#: code:addons/im_livechat/static/src/core/public_web/discuss_app/discuss_app_model_patch.js:0
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_livechat_demo
+#: model:im_livechat.expertise,name:im_livechat.chatbot_script_expertise_livechat_demo
 msgid "Livechat"
 msgstr "Livechat"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "Livechat Button"
-msgstr "Livechat dugme"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "Livechat Button Color"
-msgstr "Boja Livechat dugmeta"
-
-#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel
-#: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_channel_ids
 msgid "Livechat Channel"
 msgstr "Livechat kanal"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__livechat_channel_count
+#: model:ir.model.fields,field_description:im_livechat.field_res_partner__livechat_channel_count
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_channel_count
 msgid "Livechat Channel Count"
 msgstr "Brojač Livechat kanala"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_channel_member_history_ids
+msgid "Livechat Channel Member History"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
-msgid "Livechat Channel Rules"
-msgstr "Pravila Livechat kanala"
+msgid "Livechat Channel Rule"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__channel_type__livechat
@@ -1127,13 +1636,44 @@ msgid "Livechat Conversation"
 msgstr "Livechat konverzacija"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_expertise_ids
+msgid "Livechat Expertise"
+msgstr ""
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.unit_embed_suite
 msgid "Livechat External Tests"
+msgstr "Livechat eksterni testovi"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_is_in_call
+msgid "Livechat Is In Call"
 msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_lang_ids
 msgid "Livechat Languages"
+msgstr "Livechat jezici"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_matches_self_expertise
+msgid "Livechat Matches Self Expertise"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_matches_self_lang
+msgid "Livechat Matches Self Lang"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__livechat_member_history_ids
+msgid "Livechat Member History"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__livechat_member_type
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__livechat_member_type
+msgid "Livechat Member Type"
 msgstr ""
 
 #. module: im_livechat
@@ -1142,32 +1682,31 @@ msgid "Livechat Operator ID is required for a channel of type livechat."
 msgstr "ID Livechat operatera je obavezan za kanal tipa livechat."
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_outcome
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_outcome
+msgid "Livechat Outcome"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_call_history__livechat_participant_history_ids
+msgid "Livechat Participant History"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_status
+msgid "Livechat Status"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
 msgid "Livechat Support Channel Report"
 msgstr "Izveštaj Livechat kanala podrške"
 
 #. module: im_livechat
-#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
-#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
-msgid ""
-"Livechat Support Channel Statistics allows you to easily check and analyse "
-"your company livechat session performance. Extract information about the "
-"missed sessions, the audience, the duration of a session, etc."
-msgstr ""
-"Statistika kanala Livechat podrške vam omogućava da lako proverite i "
-"analizirate performanse sesija livechat-ova svoje kompanije. Izvucite "
-"informacije o propuštenim sesijama, publici, trajanju sesije itd."
-
-#. module: im_livechat
-#: model:ir.model,name:im_livechat.model_im_livechat_report_operator
-msgid "Livechat Support Operator Report"
-msgstr "Izveštaj operatera Livechat podrške"
-
-#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_pivot
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_graph
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_pivot
 msgid "Livechat Support Statistics"
 msgstr "Statistika Livechat podrške"
 
@@ -1178,24 +1717,67 @@ msgid "Livechat Username"
 msgstr "Livechat korisničko ime"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "Livechat Window"
-msgstr "Livechat prozor"
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__livechat_lang_ids
 msgid "Livechat languages"
+msgstr "Livechat jezici"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.discuss_channel_looking_for_help_action
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_looking_for_help
+msgid "Looking for Help"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_active
-msgid "Livechat session is active until visitor leaves the conversation."
-msgstr "Livechat sesija je aktivno sve dok posetilac ne napusti konverzaciju"
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/discuss_app/discuss_app_model_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/discuss_channel_model_patch.js:0
+#: code:addons/im_livechat/static/src/core/web/store_service_patch.js:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__need_help
+msgid "Looking for help"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_discuss_channel_rtc_session
+msgid "Mail RTC session"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
 msgid "Matching order"
 msgstr "Redosled poklapanja"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions
+msgid "Maximum Sessions"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__max_sessions
+msgid "Maximum number of concurrent sessions per operator."
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__member_id
+msgid "Member"
+msgstr "Član"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_member_history_action
+#: model:ir.ui.menu,name:im_livechat.menu_member_history
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_tree
+msgid "Member History"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_tree
+msgid "Member Type"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_member_id_unique
+msgid "Members can only be linked to one history"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_message
@@ -1206,34 +1788,97 @@ msgstr "Poruka"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Greška u isporuci poruke"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_ids
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
 msgid "Messages"
+msgstr "Poruke"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_message
+msgid "Messages per Session"
 msgstr ""
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
-msgid "Messages per session"
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "Messages:"
 msgstr ""
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-msgid "Missed sessions"
-msgstr "Propuštene sesije"
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__0
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__1
+msgid "Monday"
+msgstr "Ponedeljak"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+msgid "My Expertise"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
+msgid "My Languages"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "My Sessions"
-msgstr ""
+msgstr "Moje sesije"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__name
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__name
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_list
 msgid "Name"
 msgstr "Ime"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: model:im_livechat.channel,button_text:im_livechat.im_livechat_channel_data
+#: model:im_livechat.channel,button_text:im_livechat.support_bot_channel_demo
+msgid "Need help? Chat with us."
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Neutral"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_answer
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__no_answer
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__no_answer
+msgid "Never Answered"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+msgid "New Session"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__block_assignment_during_call
+msgid "No Chats During Call"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_failure
+msgid "No Failure"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1242,30 +1887,69 @@ msgid "No available collaborator, please try again later."
 msgstr "Nema dostupnih saradnika, molimo pokušajte kasnije."
 
 #. module: im_livechat
-#: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
-msgid "No customer ratings on live chat session yet"
-msgstr "Još uvek nema ocena korisnika za live chat sesiju"
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/views/discuss_template.xml:0
+msgid "No conversation found"
+msgstr ""
 
 #. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_looking_for_help_action
+msgid "No conversations found"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action_from_livechat_channel
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_agent_history_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_time_to_answer_action
 msgid "No data yet!"
 msgstr "Još uvek nema podataka!"
 
 #. module: im_livechat
 #. odoo-python
-#: code:addons/im_livechat/models/discuss_channel.py:0
+#: code:addons/im_livechat/models/res_partner.py:0
 msgid "No history found"
 msgstr "Nije pronađena istorija"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_agent
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__no_agent
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__no_agent
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "No one Available"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Not Answered"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_note
+msgid ""
+"Note about the session, visible to all internal users having access to the "
+"session."
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Notes"
+msgstr "Beleške"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "Notification text"
+msgid "Notification Text"
 msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Broj akcija"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__chatbot_script_count
@@ -1273,24 +1957,24 @@ msgid "Number of Chatbot"
 msgstr "Broj Chatbot-ova"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__ongoing_session_count
+msgid "Number of Ongoing Sessions"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_ongoing_session_count
+msgid "Number of Ongoing sessions"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
 msgid "Number of conversation"
 msgstr "Broj konverzacija"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__days_of_activity
-msgid "Number of days since the first session of the operator"
-msgstr "Broj dana od prve sesije operatera"
-
-#. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_speaker
-msgid "Number of different speakers"
-msgstr "Broj različitih sagovornika"
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
@@ -1300,29 +1984,37 @@ msgstr "Broj poruka u konverzaciji"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Broj poruka koje zahtevaju akciju"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Broj poruka sa greškom u isporuci"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+#: model:chatbot.script,title:im_livechat.chatbot_script_welcome_bot_demo
 msgid "Odoo"
 msgstr "Odoo"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
-#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
-msgid "Online Chat Language"
+#: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_channel_id_guest_id_unique
+msgid "One guest can only be linked to one history on a channel"
 msgstr ""
 
 #. module: im_livechat
+#: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_channel_id_partner_id_unique
+msgid "One partner can only be linked to one history on a channel"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Ongoing"
+msgstr "U toku"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
-msgid "Online Chat Name"
-msgstr "Online Chat ime"
+msgid "Ongoing Sessions"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__triggering_answer_ids
@@ -1330,44 +2022,42 @@ msgid "Only If"
 msgstr "Samo ako"
 
 #. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+msgid "Only Live Chat operators can join Live Chat channels"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__only_if_operator
+msgid "Only when an operator is available"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__only_if_no_operator
+msgid "Only when no operator is available"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__auto_popup
 msgid "Open automatically"
 msgstr "Otvori automatski"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
-msgid "Open automatically timer"
-msgstr "Otvori automatski tajmer"
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_operator_id
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__partner_id
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Operator"
 msgstr "Operater"
 
 #. module: im_livechat
-#: model:ir.actions.act_window,name:im_livechat.im_livechat_report_operator_action
-#: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_operator
-msgid "Operator Analysis"
-msgstr "Analiza operatera"
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__operator_expertise_ids
+msgid "Operator Expertise"
+msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__user_ids
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__user_ids
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
 msgid "Operators"
 msgstr "Operateri"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid ""
-"Operators that do not show any activity In Odoo for more than 30 minutes "
-"will be considered as disconnected."
-msgstr ""
-"Operateri koji ne pokazuju nikakvu aktivnost u Odoo-u više od 30 minuta će "
-"se smatrati diskonektovanima."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_answer_view_tree
@@ -1381,27 +2071,21 @@ msgid "Options"
 msgstr "Opcije"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_mail_mail__parent_author_name
-#: model:ir.model.fields,field_description:im_livechat.field_mail_message__parent_author_name
-msgid "Parent Author Name"
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_mail_mail__parent_body
-#: model:ir.model.fields,field_description:im_livechat.field_mail_message__parent_body
-msgid "Parent Body"
-msgstr ""
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
-msgid "Participant"
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Outcome"
 msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_list
 msgid "Participants"
-msgstr ""
+msgstr "Učesnici"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__partner_id
+msgid "Partner"
+msgstr "Partner"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
@@ -1416,24 +2100,14 @@ msgstr "Telefon"
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
-msgid "Please call me on: "
-msgstr "Molim pozovite me na:"
+msgid "Phone: "
+msgstr ""
 
 #. module: im_livechat
-#. odoo-python
-#: code:addons/im_livechat/models/chatbot_script_step.py:0
-msgid "Please contact me on: "
-msgstr "Molim kontaktirajte me na:"
-
-#. module: im_livechat
-#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking_demo
 msgid "Please do! If there is anything we can help with, let us know"
 msgstr "Molim vas! Ako postoji nešto u čemu možemo da pomognemo, javite nam"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
-msgid "Powered by"
-msgstr "Platformu pokreće"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_selection
@@ -1442,12 +2116,28 @@ msgstr "Pitanje"
 
 #. module: im_livechat
 #. odoo-python
-#: code:addons/im_livechat/controllers/main.py:0
+#: code:addons/im_livechat/models/discuss_channel.py:0
 #: model:ir.model,name:im_livechat.model_rating_rating
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__rating_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Rating"
 msgstr "Ocene"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_pivot
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_pivot
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_list
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
+msgid "Rating (%)"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_avg_text
@@ -1477,8 +2167,14 @@ msgstr "Ocena zadovoljstva"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_text
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_list
 msgid "Rating Text"
 msgstr "Tekst ocene"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__rating
+msgid "Rating Value"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_count
@@ -1486,22 +2182,21 @@ msgid "Rating count"
 msgstr "Brojač ocena"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__rating_text
+msgid "Rating text"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_ids
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_ids
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Ratings"
 msgstr "Ocene"
 
 #. module: im_livechat
-#: model:ir.actions.act_window,name:im_livechat.rating_rating_action_livechat
-msgid "Ratings for livechat channel"
-msgstr "Ocene za livechat kanal"
-
-#. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/feedback_panel/transcript_sender.xml:0
-msgid "Receive a copy of this conversation."
-msgstr ""
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+msgid "Receive a copy of this conversation"
+msgstr "Primite kopiju ovog razgovora"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__redirect_link
@@ -1521,20 +2216,40 @@ msgid "Related Mail Message"
 msgstr "Povezana mail poruka"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
-msgid "Replied to"
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_channel_actions_patch.xml:0
+#: code:addons/im_livechat/static/src/core/web/discuss_app/sidebar/category_patch.xml:0
+msgid "Relevant to your expertise"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__remaining_session_capacity
+msgid "Remaining Session Capacity"
 msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
-msgid "Report"
-msgstr "Izveštaj"
+msgid "Reporting"
+msgstr "Izveštavanje"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/js/colors_reset_button/colors_reset_button.xml:0
 msgid "Reset to default colors"
 msgstr "Resetuj na podrazumevane boje"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__response_time_hour
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__time_to_answer
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_pivot
+msgid "Response Time"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
+msgid "Response Time (hh:mm:ss)"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1549,14 +2264,25 @@ msgid "Restarting conversation..."
 msgstr "Restartovanje konverzacije..."
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__review_link
+msgid "Review Link"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rule_ids
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Rules"
 msgstr "Pravila"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_has_sms_error
 msgid "SMS Delivery error"
+msgstr "Greška u dostavi SMS-a"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_safari_demo
+msgid "Safari"
 msgstr ""
 
 #. module: im_livechat
@@ -1565,21 +2291,21 @@ msgid "Satisfaction Rate"
 msgstr "Ocena zadovoljstva"
 
 #. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__5
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__6
+msgid "Saturday"
+msgstr "Subota"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Save your Channel to get your configuration widget."
 msgstr "Sačuvajte svoj kanal da biste dobili svoj vidžet za podešavanje."
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
-msgid "Say something"
-msgstr "Recite nešto"
-
-#. module: im_livechat
-#. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/composer_patch.js:0
 msgid "Say something..."
-msgstr ""
+msgstr "Recite nešto..."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
@@ -1602,13 +2328,23 @@ msgid "Script Steps"
 msgstr "Koraci skripte"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+msgid "Search Agent"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_search
+msgid "Search History"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "Search history"
 msgstr "Pretraži istoriju"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Search report"
 msgstr "Pretraži izveštaj"
 
@@ -1620,14 +2356,14 @@ msgstr "Pogledaj 15 poslednjih posećenih stranica"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
-msgid "Select an option above"
-msgstr "Izaberite opciju iznad"
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+msgid "Send"
+msgstr "Pošalji"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
-msgid "Send"
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Send conversation"
 msgstr ""
 
 #. module: im_livechat
@@ -1637,11 +2373,17 @@ msgid "Sequence"
 msgstr "Niz"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_list
 msgid "Session Date"
 msgstr "Datum sesije"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_duration_hour
+msgid "Session Duration"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
@@ -1649,34 +2391,63 @@ msgid "Session Form"
 msgstr "Obrazac sesije"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Session Limits"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_outcome
+msgid "Session Outcome"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_start_hour
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_start_hour
+msgid "Session Start Hour"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_end_dt
+msgid "Session end date"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_end_dt
+msgid ""
+"Session is closed when either the visitor or the last agent leaves the "
+"conversation."
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_percentage
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__percentage_of_calls
+msgid "Session with Calls (%)"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.discuss_channel_action
+#: model:ir.actions.act_window,name:im_livechat.discuss_channel_action_from_livechat_channel
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_time_to_answer_action
-#: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
-msgid "Session Statistics"
-msgstr "Statistike sesije"
-
-#. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_unrated
-msgid "Session not rated"
-msgstr "Sesija nije ocenjena"
-
-#. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_without_answer
-msgid "Session(s) without answer"
-msgstr "Sesija(e) bez odgovora"
-
-#. module: im_livechat
-#: model:ir.actions.act_window,name:im_livechat.discuss_channel_action_from_livechat_channel
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__channel_ids
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_sessions
+#: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_pivot
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_list
 msgid "Sessions"
 msgstr "Sesije"
 
 #. module: im_livechat
-#: model:ir.ui.menu,name:im_livechat.session_history
-msgid "Sessions History"
-msgstr "Istorija sesija"
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions_mode
+msgid "Sessions per Operator"
+msgstr ""
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_setup_demo
+msgid "Setup"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
@@ -1694,15 +2465,31 @@ msgid "Show with notification"
 msgstr "Prikaži sa notifikacijom"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/thread_actions.js:0
+msgid "Someone has already joined this conversation"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__source_id
 msgid "Source"
 msgstr "Izvorno"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
+#: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
+msgid "Spoken Languages"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__start_date
 msgid "Start Date of session"
 msgstr "Datum početka sesije"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_minutes
+msgid "Start Date of session, truncated to minutes"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_hour
@@ -1710,14 +2497,64 @@ msgid "Start Hour of session"
 msgstr "Sat početka sesije"
 
 #. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action_from_livechat_channel
+msgid "Start a conversation to populate your chat history."
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Status"
+msgstr "Status"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "Status:"
+msgstr "Status:"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__step_type
 msgid "Step Type"
 msgstr "Vrsta koraka"
 
 #. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/chatbot_script.py:0
+msgid "Step of type 'Question' must have answers."
+msgstr ""
+
+#. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/composer_patch.xml:0
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__no_failure
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__no_failure
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "Success"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__6
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__0
+msgid "Sunday"
+msgstr "Nedelja"
+
+#. module: im_livechat
+#: model:chatbot.script,title:im_livechat.chatbot_script_support_bot_demo
+msgid "Support Bot"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/composer_patch.js:0
 msgid "Tab to next livechat"
+msgstr "Tab na naredni livechat"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.livechat_technical
+msgid "Technical"
 msgstr ""
 
 #. module: im_livechat
@@ -1729,16 +2566,6 @@ msgstr "Tekst"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text
 msgid "Text of the Button"
 msgstr "Tekst dugmeta"
-
-#. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__input_placeholder
-msgid "Text that prompts the user to initiate the chat."
-msgstr "Tekst koji traži od korisnika da započne chat."
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "Text to display on the notification"
-msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1753,9 +2580,9 @@ msgstr "Kanal pravila"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/feedback_panel/transcript_sender.xml:0
+#: code:addons/im_livechat/static/src/core/common/transcript_sender.xml:0
 msgid "The conversation was sent."
-msgstr ""
+msgstr "Konverzacija je poslata."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__country_ids
@@ -1790,28 +2617,13 @@ msgstr ""
 "na umu da će se skripta završiti ako je link spoljašnji za livechat website)."
 
 #. module: im_livechat
-#: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat
-msgid "There is no rating for this channel at the moment"
-msgstr "Trenutno nema ocena za ovaj kanal"
-
-#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_lang_ids
 msgid ""
 "These languages, in addition to your main language, will be used to assign "
 "you to Live Chat sessions."
 msgstr ""
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
-msgid "This Month"
-msgstr ""
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
-msgid "This Week"
-msgstr "Ove nedelje"
+"Ovi jezici, pored vašeg glavnog jezika, biće korišćeni za vaše dodeljivanje "
+"LiveChat sesijama."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__default_message
@@ -1823,18 +2635,35 @@ msgstr ""
 "započne novi razgovor."
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/chat_window_patch.xml:0
+#: code:addons/im_livechat/static/src/core/public_web/discuss_content_patch.xml:0
+msgid "This livechat conversation has ended"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
 msgid "This username will be used as your name in the livechat channels."
 msgstr "Ovo korisničko ime će biti korišćeno kao vaše ime u livechat kanalima."
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__time_to_answer
-msgid "Time to answer"
-msgstr "Vreme za odgovor"
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__3
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__4
+msgid "Thursday"
+msgstr "Četvrtak"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_member_history__session_duration_hour
+msgid "Time spent by the persona in the session in hours"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
+msgid "Time to Open"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__time_to_answer
 msgid "Time to answer (sec)"
 msgstr "Vreme za odgovor (sec)"
 
@@ -1855,9 +2684,40 @@ msgid "Title Color"
 msgstr "Boja naslova"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-msgid "Treated sessions"
-msgstr "Tretirane sesije"
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"To apply the rule only to certain pages of your website, enter a URL regex "
+"like /shop. This will match any page that starts with /shop, such as /shop/"
+"product. Leave the field empty to apply the rule to all pages.<br/>\n"
+"                                    For on-premise databases, GeoIP must be "
+"installed on your server to geolocate visitors. Without it, rules that "
+"include country restrictions will be ignored."
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_agent_history_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_time_to_answer_action
+msgid ""
+"Track and improve live chat performance with insights on session activity, "
+"response times, customer ratings, and call interactions."
+msgstr ""
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_troubleshooting_demo
+msgid "Troubleshooting"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__1
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__2
+msgid "Tuesday"
+msgstr "Utorak"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Turn on the <strong>Live Chat</strong> feature."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -1880,18 +2740,35 @@ msgstr "UUID"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
-msgid "Unrated"
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Unhappy"
 msgstr ""
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel_member_history.py:0
+#: code:addons/im_livechat/report/im_livechat_report_channel.py:0
+msgid "Unknown"
+msgstr "Nepoznato"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__unlimited
+msgid "Unlimited"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
+msgid "Unrated"
+msgstr "Neocenjeno"
 
 #. module: im_livechat
 #: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
 msgid ""
 "Use canned responses to define templates of messages in the livechat app. To "
-"load a canned response, start your sentence with ':' and select the template."
+"load a canned response, start your sentence with '::' and select the "
+"template."
 msgstr ""
-"Koristite unapred pripremljene odgovore da biste definisali šablone poruka u "
-"livechat aplikaciji. Da biste učitali unapred pripremljeni odgovor, "
-"započnite rečenicu sa „:“ i izaberite šablon."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users
@@ -1905,6 +2782,11 @@ msgstr "Korisnik"
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__user_livechat_username
 msgid "User Livechat Username"
 msgstr "Korisničko ime korisnika Livechat-a"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__user_raw_script_answer_id
+msgid "User Raw Script Answer"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users_settings
@@ -1923,22 +2805,56 @@ msgstr "Neobrađen odgovor korisnika"
 
 #. module: im_livechat
 #. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "View Contact"
+msgstr ""
+
+#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/controllers/main.py:0
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
-#: code:addons/im_livechat/static/src/embed/common/livechat_service.js:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel_member__livechat_member_type__visitor
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__livechat_member_type__visitor
 msgid "Visitor"
 msgstr "Posetilac"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_happy
-msgid "Visitor is Happy"
-msgstr "Posetilac je zadovoljan"
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
+msgid "Visitor is disconnected"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
+msgid "Visitor is disconnected since %(time)s"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
+msgid "Visitor is disconnected since yesterday at %(time)s"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Visitor left the conversation."
+msgstr "Posetilac je napustio konverzaciju."
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__review_link
+msgid ""
+"Visitors who leave a positive review will be redirected to this optional "
+"link."
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/discuss_channel_model_patch.js:0
+#: code:addons/im_livechat/static/src/core/web/store_service_patch.js:0
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__waiting
+msgid "Waiting for customer"
 msgstr ""
 
 #. module: im_livechat
@@ -1947,19 +2863,20 @@ msgid "Web Page"
 msgstr "Web stranica"
 
 #. module: im_livechat
-#: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
-msgid "Website Live Chat Channels"
-msgstr "Website Live Chat kanali"
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Website poruke"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Istorija website komunikacije"
+
+#. module: im_livechat
+#: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__2
+#: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__3
+msgid "Wednesday"
+msgstr "Sreda"
 
 #. module: im_livechat
 #: model:chatbot.script,title:im_livechat.chatbot_script_welcome_bot
@@ -1972,14 +2889,57 @@ msgid "Welcome Message"
 msgstr "Poruka dobrodošlice"
 
 #. module: im_livechat
-#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_welcome
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_welcome
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_welcome_demo
 msgid "Welcome to CompanyName! 👋"
+msgstr "Dobro došli u ImeKompanije! 👋"
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_initial_step_demo
+msgid "Welcome to the Support! How can I assist you today?"
 msgstr ""
 
 #. module: im_livechat
-#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch_demo
 msgid "What are you looking for?"
 msgstr "Šta tražite?"
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_troubleshooting_step_browser_demo
+msgid "What browser are you using?"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_module_selection_demo
+msgid "What module are you interested in?"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_chatbot_script_step__operator_expertise_ids
+#: model:ir.model.fields,help:im_livechat.field_res_users__livechat_expertise_ids
+#: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_expertise_ids
+msgid ""
+"When forwarding live chat conversations, the chatbot will prioritize users "
+"with matching expertise."
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__has_call
+msgid "Whether the session had a call"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_res_users__livechat_is_in_call
+msgid ""
+"Whether the user is in a call, only available if the user is in a live chat "
+"agent"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__block_assignment_during_call
+msgid "While on a call, agents will not receive new conversations."
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1987,7 +2947,13 @@ msgid "Widget"
 msgstr "Vidžet"
 
 #. module: im_livechat
-#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Window Colors"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
+#: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email_demo
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
 msgstr ""
@@ -1996,9 +2962,26 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-python
+#: code:addons/im_livechat/controllers/channel.py:0
+msgid "Write expertises: Only LINK and UNLINK commands are allowed."
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/close_confirmation.xml:0
+msgid "Yes, leave conversation"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "You"
+msgstr "Ti"
+
+#. module: im_livechat
+#. odoo-python
 #: code:addons/im_livechat/controllers/attachment.py:0
 msgid "You are not allowed to upload attachments on this channel."
-msgstr ""
+msgstr "Nije vam dozvoljeno da otpremate priloge na ovaj kanal."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
@@ -2011,6 +2994,7 @@ msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_config_action
 msgid ""
 "You can create channels for each website on which you want\n"
 "                to integrate the website live chat widget, allowing your "
@@ -2025,26 +3009,32 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/livechat_channel_model.js:0
+#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_category_patch.xml:0
+msgid "You have joined this live chat channel"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
 msgid "You joined %s."
-msgstr ""
+msgstr "Priključili ste se %s."
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/livechat_channel_model.js:0
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
 msgid "You left %s."
-msgstr ""
+msgstr "Napustili ste %s."
 
 #. module: im_livechat
-#: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
-msgid "Your chatter history is empty"
-msgstr "Vaša chat istorija je prazna"
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "at"
+msgstr "u"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/channel_member_list_patch.xml:0
+#: code:addons/im_livechat/static/src/core/web/channel_member_patch.xml:0
 msgid "country"
-msgstr ""
+msgstr "zemlja"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
@@ -2068,21 +3058,36 @@ msgstr "npr. Zdravo, kako mogu da pomognem?"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "e.g. Need help? Chat with us."
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
 msgstr "npr. TvojWebsite.com"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/feedback_panel/transcript_sender.xml:0
+#: code:addons/im_livechat/static/src/core/web/channel_invitation_patch.xml:0
+msgid "in a call"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_category_patch.xml:0
+msgid "joined"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/transcript_sender.xml:0
 msgid "mail@example.com"
 msgstr "mail@example.com"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "or copy this url and send it by email to your customers or suppliers:"
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "on"
 msgstr ""
-"ili kopirajte ovaj url i pošaljite ga mail-om svojim korisnicima i "
-"dobavljačima:"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
@@ -2090,158 +3095,6 @@ msgid "seconds"
 msgstr "sekunde"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
-msgid "{{author_name}}"
-msgstr "{{author_name}}"
-
-#~ msgid " (copy)"
-#~ msgstr " (kopija)"
-
-#~ msgid "%s and %s are typing..."
-#~ msgstr "%s i %s kucaju..."
-
-#~ msgid "%s is typing..."
-#~ msgstr "%s kuca..."
-
-#~ msgid "%s, %s and more are typing..."
-#~ msgstr "%s, %s i drugi kucaju..."
-
-#~ msgid "-------- Show older messages --------"
-#~ msgstr "-------- Prikaži starije poruke --------"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-user\" role=\"img\" aria-label=\"User\" title=\"User\"/>"
-#~ msgstr ""
-#~ "<i class=\"fa fa-user\" role=\"img\" aria-label=\"User\" title=\"User\"/>"
-
-#~ msgid "Ask something ..."
-#~ msgstr "Pitajte nešto..."
-
-#~ msgid "Attendees"
-#~ msgstr "Učesnici"
-
-#~ msgid "Bad"
-#~ msgstr "Loše"
-
-#~ msgid ""
-#~ "Canned responses allow you to insert prewritten responses in\n"
-#~ "                your messages by typing <i>:shortcut</i>. The shortcut "
-#~ "is\n"
-#~ "                replaced directly in your message, so that you can still "
-#~ "edit\n"
-#~ "                it before sending."
-#~ msgstr ""
-#~ "Unapred pripremljeni odgovori vam omogućavaju da umetnete spremne "
-#~ "odgovore u\n"
-#~ "                vaše poruke tako što ćete ukucati <i>:shortcut</i>. "
-#~ "Prečica je\n"
-#~ "                zamenena direktno uva šoj poruci, tako da još uvek možete "
-#~ "da je uređujete\n"
-#~ "                pre slanja."
-
-#~ msgid "Chat with one of our collaborators"
-#~ msgstr "Chat-ujte sa nekim od naših saradnika"
-
-#~ msgid "Close chat window"
-#~ msgstr "Zatvori chat prozor"
-
-#~ msgid "Conversation Sent"
-#~ msgstr "Konverzacija je poslata"
-
-#~ msgid "Create a new canned response"
-#~ msgstr "Kreiraj novi pripremljeni odgovor"
-
-#~ msgid "Creation Date"
-#~ msgstr "Datum kreiranja"
-
-#~ msgid "Good"
-#~ msgstr "Dobro"
-
-#~ msgid "Invalid email address"
-#~ msgstr "Neispravna email adresa"
-
-#~ msgid "Is category livechat open"
-#~ msgstr "Da li je livechat kategorija otvorena"
-
-#~ msgid "Listeners of a Channel"
-#~ msgstr "Slušaoci kanala"
-
-#~ msgid "Loading older messages..."
-#~ msgstr "Učitava starije poruke..."
-
-#~ msgid "New messages"
-#~ msgstr "Nove poruke"
-
-#~ msgid "No operator available"
-#~ msgstr "Nema dostupnih operatera"
-
-#~ msgid "Note by"
-#~ msgstr "Beleška od"
-
-#~ msgid "OK"
-#~ msgstr "U redu"
-
-#~ msgid "Oops! Something went wrong."
-#~ msgstr "Ups! Nešto je krenulo naopako."
-
-#~ msgid ""
-#~ "Operators\n"
-#~ "                                            <br/>\n"
-#~ "                                            <i class=\"fa fa-comments\" "
-#~ "role=\"img\" aria-label=\"Comments\" title=\"Comments\"/>"
-#~ msgstr ""
-#~ "Operateri\n"
-#~ "                                            <br/>\n"
-#~ "                                            <i class=\"fa fa-comments\" "
-#~ "role=\"img\" aria-label=\"Comments\" title=\"Comments\"/>"
-
-#~ msgid "Please check your internet connection."
-#~ msgstr "Molimo vas da proverite sovju internet konekciju."
-
-#~ msgid "Please wait"
-#~ msgstr "Molimo sačekajte"
-
-#~ msgid "Please wait..."
-#~ msgstr "Molimo sačekajte..."
-
-#~ msgid "Rating: %s"
-#~ msgstr "Ocena: %s"
-
-#~ msgid "Receive a copy of this conversation"
-#~ msgstr "Primite kopiju ovog razgovora"
-
-#~ msgid "Restart"
-#~ msgstr "Ponovo pokreni"
-
-#~ msgid "Session expired... Please refresh and try again."
-#~ msgstr "Sesija je istekla... Molimo osvežite stranicu i pokušajte ponovo."
-
-#~ msgid "Today"
-#~ msgstr "Danas"
-
-#~ msgid "Try again"
-#~ msgstr "Pokušajte ponovo"
-
-#~ msgid ""
-#~ "Type <b>:shortcut</b> to insert a canned response in your message.<br>"
-#~ msgstr ""
-#~ "Ukucajte <b>:shortcut</b> da umetnete pripremeni odgovor u svoju poruku."
-#~ "<br>"
-
-#~ msgid "Visitor has left the conversation."
-#~ msgstr "Posetilac je napustio konverzaciju."
-
-#~ msgid "Yesterday"
-#~ msgstr "Juče"
-
-#~ msgid "chatbot_image"
-#~ msgstr "chatbot_image"
-
-#~ msgid "is typing"
-#~ msgstr "kuca"
-
-#~ msgid "read less"
-#~ msgstr "čitaj manje"
-
-#~ msgid "read more"
-#~ msgstr "čitaj više"
+#: model:ir.model,name:im_livechat.model_ir_websocket
+msgid "websocket message handling"
+msgstr ""

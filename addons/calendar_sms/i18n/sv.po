@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* calendar_sms
+# * calendar_sms
 #
 # Translators:
 # Han Wong <han.wong@vertel.se>, 2022
@@ -10,20 +10,22 @@
 # Martin Trigaux, 2022
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2022\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-09-16 21:38+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
+"calendar_sms/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
@@ -36,6 +38,13 @@ msgid "Calendar Event: Reminder"
 msgstr "Kalenderhändelse: påminnelse"
 
 #. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
 msgid "Event Alarm"
 msgstr "Händelsealarm"
@@ -43,7 +52,7 @@ msgstr "Händelsealarm"
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr "Hanterare för händelsealarm"
+msgstr "Hanterare för Händelsealarm"
 
 #. module: calendar_sms
 #. odoo-python
@@ -53,15 +62,19 @@ msgstr "Kalenderpåminnelse: %(name)s, %(time)s."
 
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
-msgid "Event reminder: {{ object.name }}, {{ object.get_display_time_tz(object.partner_id.tz) }}"
+msgid ""
+"Event reminder: {{ object.name }}, "
+"{{ object.get_display_time_tz(object.partner_id.tz) }}"
 msgstr ""
+"Påminnelse om evenemang: {{ object.name }}, "
+"{{ object.get_display_time_tz(object.partner_id.tz) }}"
 
 #. module: calendar_sms
-#. odoo-python
-#: code:addons/calendar_sms/models/calendar_alarm.py:0
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_notify_responsible
-msgid "Notify Responsible"
-msgstr ""
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__id
+msgid "ID"
+msgstr "ID"
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
@@ -79,14 +92,10 @@ msgid "SMS Text Message"
 msgstr "SMS textmeddelande"
 
 #. module: calendar_sms
-#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
-msgid "Send SMS"
-msgstr "Skicka SMS"
-
-#. module: calendar_sms
 #. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
-msgid "Send SMS Text Message"
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
+msgid "Send SMS"
 msgstr "Skicka SMS"
 
 #. module: calendar_sms
@@ -103,7 +112,7 @@ msgstr "Mall som används för att återge innehåll på SMS-påminnelser."
 #. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
 msgid "There are no attendees on these events"
-msgstr "Det finns inga deltagare på dessa evenemang"
+msgstr "Det finns inga deltagare på dessa händelser"
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type

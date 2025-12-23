@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* crm_iap_mine
+# * crm_iap_mine
 #
 # Translators:
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
@@ -9,25 +9,30 @@
 # krnkris, 2022
 # gezza <geza.nagy@oregional.hu>, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2023\n"
-"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-11-16 15:08+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
+"crm_iap_mine/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: crm_iap_mine
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-msgid "%d credits will be consumed to find %d companies."
+msgid ""
+"%(credit_count)d credits will be consumed to find %(company_count)d "
+"companies."
 msgstr ""
 
 #. module: crm_iap_mine
@@ -40,16 +45,12 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
-"    <p>There are no more credits on your IAP Lead Generation account.<br>\n"
-"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br></p>\n"
+"    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
+"    You can charge your IAP Lead Generation account in the settings of the "
+"CRM app.<br/></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
-msgstr ""
-
-#. module: crm_iap_mine
-#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
-msgid "<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Your request did not return any result (no credits were used). Try removing some filters.</span>"
 msgstr ""
 
 #. module: crm_iap_mine
@@ -65,6 +66,13 @@ msgstr ""
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "<span class=\"o_stat_text\">Opportunities</span>"
+msgstr ""
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid ""
+"<span invisible=\"error_type != 'no_result'\">Your request did not return "
+"any result (no credits were used). Try removing some filters.</span>"
 msgstr ""
 
 #. module: crm_iap_mine
@@ -105,7 +113,7 @@ msgstr ""
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Visszavonás"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_162
@@ -116,7 +124,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__color
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__color
 msgid "Color Index"
-msgstr "Színjegyzék"
+msgstr "Szín index"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_163
@@ -151,7 +159,7 @@ msgstr ""
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_3
 msgid "Consulting"
-msgstr ""
+msgstr "Tanácsadás"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_30_155
@@ -185,6 +193,11 @@ msgid "Create a Lead Mining Request"
 msgstr ""
 
 #. module: crm_iap_mine
+#: model:ir.model,website_form_label:crm_iap_mine.model_crm_lead
+msgid "Create an Opportunity"
+msgstr "Lehetőség létrehozása"
+
+#. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_uid
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_uid
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_uid
@@ -205,7 +218,7 @@ msgstr "Létrehozva"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_4
 msgid "Customer Service"
-msgstr ""
+msgstr "Vásárlói ügyfélszolgálat"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -213,16 +226,12 @@ msgid "Default Tags"
 msgstr "Alapértelmezett címkék"
 
 #. module: crm_iap_mine
-#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_lead_label
-msgid "Display Lead Label"
-msgstr ""
-
-#. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
@@ -246,12 +255,12 @@ msgstr "Piszkozat"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_5
 msgid "Education"
-msgstr ""
+msgstr "Tanulmányok"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
 msgid "Email"
-msgstr "E-mail"
+msgstr "Email"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_138_156
@@ -287,7 +296,7 @@ msgstr ""
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_7
 msgid "Finance"
-msgstr ""
+msgstr "Pénzügy"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_153_154
@@ -307,7 +316,6 @@ msgstr "Forrás"
 #. module: crm_iap_mine
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_mine/models/crm_lead.py:0
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_case_kanban_view_leads
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_lead_view_tree_lead
@@ -328,11 +336,6 @@ msgid "Generated Lead / Opportunity"
 msgstr ""
 
 #. module: crm_iap_mine
-#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
-msgid "Group By"
-msgstr "Csoportosítás"
-
-#. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_160
 msgid "Health Care Equipment & Services"
 msgstr ""
@@ -348,9 +351,14 @@ msgid "Helper methods for crm_iap_mine modules"
 msgstr ""
 
 #. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "How many leads would you like?"
+msgstr ""
+
+#. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_10
 msgid "Human Resources"
-msgstr ""
+msgstr "Személyügy"
 
 #. module: crm_iap_mine
 #: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
@@ -364,8 +372,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__id
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__id
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "ID"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_168
@@ -413,7 +422,12 @@ msgstr "Frissítette"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__write_date
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__write_date
 msgid "Last Updated on"
-msgstr "Frissítve ekkor"
+msgstr "Frissítve"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_lead
+msgid "Lead"
+msgstr "Érdeklődés"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_contacts_credits
@@ -428,7 +442,7 @@ msgstr ""
 #. module: crm_iap_mine
 #: model:ir.ui.menu,name:crm_iap_mine.crm_menu_lead_generation
 msgid "Lead Generation"
-msgstr ""
+msgstr "Érdeklődés generálás"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__lead_mining_request_id
@@ -448,11 +462,6 @@ msgid "Lead Total Credits"
 msgstr ""
 
 #. module: crm_iap_mine
-#: model:ir.model,name:crm_iap_mine.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Érdeklődés/Lehetőség"
-
-#. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Leads"
@@ -461,7 +470,7 @@ msgstr "Érdeklődések"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_12
 msgid "Legal"
-msgstr ""
+msgstr "Jogi"
 
 #. module: crm_iap_mine
 #. odoo-javascript
@@ -472,7 +481,7 @@ msgstr ""
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_13
 msgid "Marketing"
-msgstr ""
+msgstr "Marketing"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_148
@@ -493,6 +502,12 @@ msgstr "Név"
 #. module: crm_iap_mine
 #: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_seniority_name_uniq
 msgid "Name already exists!"
+msgstr ""
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_lead.py:0
+msgid "Need help reaching your target?"
 msgstr ""
 
 #. module: crm_iap_mine
@@ -531,7 +546,7 @@ msgstr ""
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_14
 msgid "Operations"
-msgstr ""
+msgstr "Műveletek"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__opportunity
@@ -553,7 +568,7 @@ msgstr ""
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_15
 msgid "Owner"
-msgstr ""
+msgstr "Tulajdonos"
 
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_role
@@ -593,7 +608,7 @@ msgstr ""
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_17
 msgid "Product"
-msgstr ""
+msgstr "Termék"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_18
@@ -619,7 +634,7 @@ msgstr ""
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_21
 msgid "Research"
-msgstr ""
+msgstr "Kutatás"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_152
@@ -656,7 +671,7 @@ msgstr ""
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_22
 msgid "Sale"
-msgstr ""
+msgstr "Értékesítés"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__team_id
@@ -699,7 +714,7 @@ msgstr "Állapotok"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__state
 msgid "Status"
-msgstr "Állapot"
+msgstr "Státusz"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -746,12 +761,9 @@ msgstr "Típus"
 #. module: crm_iap_mine
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-msgid "Up to %d additional credits will be consumed to identify %d contacts per company."
-msgstr ""
-
-#. module: crm_iap_mine
-#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
-msgid "What do you need?"
+msgid ""
+"Up to %(credit_count)d additional credits will be consumed to identify %"
+"(contact_count)d contacts per company."
 msgstr ""
 
 #. module: crm_iap_mine

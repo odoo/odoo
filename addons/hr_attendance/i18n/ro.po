@@ -1,25 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_attendance
+# * hr_attendance
 #
 # Translators:
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2022
 # Dorin Hongu <dhongu@gmail.com>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Ioan Muntean <imuntean@information-systems.ro>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"PO-Revision-Date: 2025-11-27 09:02+0000\n"
+"Last-Translator: Ioan Muntean <imuntean@information-systems.ro>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
+"hr_attendance/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_attendance
 #. odoo-python
@@ -29,64 +34,132 @@ msgstr "Ora de ieșire nu poate fi mai mică decât ora de intrare."
 
 #. module: hr_attendance
 #. odoo-python
-#: code:addons/hr_attendance/models/hr_attendance.py:0
-msgid "%(empl_name)s from %(check_in)s"
-msgstr "%(empl_name)s din %(check_in)s"
+#: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
+msgid "%(nb_hours)d h / %(period)s"
+msgstr "%(nb_hours)d h / %(period)s"
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
-msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
-msgstr "%(empl_name)s de la %(check_in)s la %(check_out)s"
+msgid "%(worked_hours)s (%(check_in)s-%(check_out)s)"
+msgstr "%(worked_hours)s (%(check_in)s-%(check_out)s)"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "%(hours)s hours, %(minutes)s minutes"
-msgstr ""
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "'Buy an RFID Device'"
+msgstr "Cumpărați un dispozitiv RFID"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/my_attendances/my_attendances.xml:0
-msgid ": Your user should be linked to an employee to use attendance."
-msgstr ": Utilizatorul dvs. trebuie să fie asociat unui angajat pentru a utiliza prezența."
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "'Read the Documentation'"
+msgstr "Citiți documentația"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
-msgid "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid ""
-"<span class=\"o_stat_text\">\n"
-"                            Last Month\n"
-"                        </span>"
+"<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" "
+"title=\"Period\"/>"
 msgstr ""
-"<span class=\"o_stat_text\">\n"
-"                            Ultima lună\n"
-"                        </span>"
+"<i class=\"fa fa-calendar me-1\" aria-label=\"Perioadă\" role=\"img\" "
+"title=\"Perioadă\"/>"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
-msgid "<span class=\"o_stat_text\">Extra Hours</span>"
-msgstr "<span class=\"o_stat_text\">Ore suplimentare</span>"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
-msgid "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success me-1\" role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
-msgstr "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success me-1\" role=\"img\" aria-label=\"Disponibil\" title=\"Disponibil\"/>"
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Installation Manual"
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Manual de instalare"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 msgid ""
-"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"<span class=\"fa fa-circle text-success me-1\" role=\"img\" aria-"
+"label=\"Available\" title=\"Available\"/>"
+msgstr ""
+"<span class=\"fa fa-circle text-success me-1\" role=\"img\" aria-"
+"label=\"Disponibil\" title=\"Disponibil\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+msgid ""
+"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not "
+"available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
-"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Indisponibil\" title=\"Indisponibil\">\n"
+"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-"
+"label=\"Indisponibil\" title=\"Indisponibil\">\n"
 "                                    </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid ""
+"<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type not "
+"in ['work_days', 'non_work_days']\">Between</span>"
+msgstr ""
+"<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type not "
+"in ['work_days', 'non_work_days']\">Între</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"me-2\">Time Period </span>"
+msgstr "<span class=\"me-2\">Perioadă de timp </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"me-2\">Time Period</span>"
+msgstr "<span class=\"me-2\">Perioadă de timp</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"me-2\">Tolerance</span>"
+msgstr "<span class=\"me-2\">Toleranță</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"ms-2\">Hours</span>"
+msgstr "<span class=\"ms-2\">Ore</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"<span class=\"ms-2\">Minutes</span>\n"
+"                                <br/>\n"
+"                                <br/>"
+msgstr ""
+"<span class=\"ms-2\">Minute</span>\n"
+"                                <br/>\n"
+"                                <br/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employee_public_view_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                Monthly Hours\n"
+"                            </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Ore lunar\n"
+"                            </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Monthly Hours\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Ore lunar\n"
+"                        </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid ""
+"<span colspan=\"2\" class=\"mb-3 fw-bold\">The hours will be considered "
+"extra and submitted to approval.</span>"
+msgstr ""
+"<span colspan=\"2\" class=\"mb-3 fw-bold\">Orele vor fi considerate "
+"suplimentare și supuse aprobării.</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -95,40 +168,53 @@ msgstr "<span> Minute</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid ""
-"<span> Minutes</span>\n"
-"                                <br/>\n"
-"                                <br/>"
-msgstr ""
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span> seconds</span>"
-msgstr ""
+msgstr "<span> secunde</span>"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__absence_management
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__absence_management
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "<span>Time Period </span>"
-msgstr "<span>Perioada de timp </span>"
+msgid "Absence Management"
+msgstr "Gestionare absențe"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Activate the count of employees' extra hours."
-msgstr "Activați numărarea orelor suplimentare ale angajaților."
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+msgid "Absent"
+msgstr "Absent"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "Action"
+msgstr "Acțiune"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_needaction
+msgid "Action Needed"
+msgstr "Acțiune necesară"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__active
+msgid "Active"
+msgstr "Activ"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Active Employees"
+msgstr "Angajați activi"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid ""
-"Add a few employees to be able to select an employee here and perform his check in / check out.\n"
+"Add a few employees to be able to select an employee here and perform his "
+"check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
-"Adăugați câțiva angajați pentru a putea selecta un angajat aici și efectua check-in / check-out.\n"
+"Adăugați câțiva angajați pentru a putea selecta un angajat aici și efectua "
+"check-in / check-out.\n"
 "                Pentru a crea angajați, accesați meniul Angajați."
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__adjustment
-msgid "Adjustment"
-msgstr "Ajustare"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
@@ -136,45 +222,131 @@ msgid "Administrator"
 msgstr "Administrator"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Allow a period of time (around working hours) where extra time will not be counted, in benefit of the company"
-msgstr "Permite o perioadă de timp (în jurul orelor de lucru) în care timpul suplimentar nu va fi numărat, în beneficiul companiei"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Allow a period of time (around working hours) where extra time will not be deducted, in benefit of the employee"
-msgstr "Permite o perioadă de timp (în jurul orelor de lucru) în care timpul suplimentar nu va fi dedus, în beneficiul angajatului"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
-msgid "Amount of extra hours"
-msgstr "Cantitatea de ore suplimentare"
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+msgid "All"
+msgstr "Tot"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "An apple a day keeps the doctor away"
-msgstr "Un măr pe zi ține doctorul departe"
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.js:0
+msgid "All departments"
+msgstr "Toate departamentele"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Allow Users to Check in/out from Odoo."
+msgstr "Permiteți utilizatorilor să efectueze check-in/out din Odoo."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"counted, in benefit of the company"
+msgstr ""
+"Permite o perioadă de timp (în jurul orelor de lucru) în care timpul "
+"suplimentar nu va fi numărat, în beneficiul companiei"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"deducted, in benefit of the employee"
+msgstr ""
+"Permite o perioadă de timp (în jurul orelor de lucru) în care timpul "
+"suplimentar nu va fi dedus, în beneficiul angajatului"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow the collection of GPS location, IP address, and browser/device details "
+"used to track employee access and attendance"
+msgstr ""
+"Permiteți colectarea locației GPS, a adresei IP și a detaliilor browserului/"
+"dispozitivului utilizate pentru a urmări accesul și prezența angajaților"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__rule_ids
+msgid "Applied Rules"
+msgstr "Reguli aplicate"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
+msgid "Approve"
+msgstr "Aprobă"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Approve Extra Hours"
+msgstr "Aprobă ore suplimentare"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "Approve all overtimes for the same employee and date"
+msgstr ""
+"Aprobați toate orele suplimentare pentru același angajat și la aceeași dată"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__approved
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_line__status__approved
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+msgid "Approved"
+msgstr "Aprobat(a)"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_overtime_validation__by_manager
+msgid "Approved by Manager"
+msgstr "Aprobat de manager"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
+msgid "Archived"
+msgstr "Arhivat"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Archived Employees"
+msgstr "Angajați arhivați"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "At Work"
+msgstr "La muncă"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
+msgid "At least one rule"
+msgstr "Cel puțin o regulă"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_attachment_count
+msgid "Attachment Count"
+msgstr "Număr atașamente"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Another good day's work! See you soon!"
-msgstr "Încă o zi bună de muncă! Ne vedem în curând!"
-
-#. module: hr_attendance
-#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_pivot
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Attendance"
 msgstr "Prezență"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action_filtered
-msgid "Attendance Analysis"
-msgstr "Analiză prezențe"
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_manager_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_manager_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employee_search_view
+msgid "Attendance Approver"
+msgstr "Aprobator de prezență"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_from_systray
+msgid "Attendance From Systray"
+msgstr "Participare din Systray"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_delay
@@ -183,41 +355,113 @@ msgid "Attendance Kiosk Delay"
 msgstr "Întârziere la punctul de prezență"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_key
+msgid "Attendance Kiosk Key"
+msgstr "Prezență Kiosk Key"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_url
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_url
+msgid "Attendance Kiosk Url"
+msgstr "Prezență Kiosk Url"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_mode
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_mode
 msgid "Attendance Mode"
 msgstr "Modul de prezență"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
-msgid "Attendance Overtime"
-msgstr "Prezență în timpul programului"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_report
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_graph
-msgid "Attendance Statistics"
-msgstr "Statistici prezență"
+#: model:ir.model,name:hr_attendance.model_hr_attendance_overtime_line
+msgid "Attendance Overtime Line"
+msgstr "Linia de prezență pentru ore suplimentare"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
-#: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_state
 msgid "Attendance Status"
 msgstr "Stare Prezență"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Attendance with barcode"
+msgstr "Prezență cu cod de bare"
+
+#. module: hr_attendance
+#: model:ir.actions.server,name:hr_attendance.hr_attendance_check_out_cron_ir_actions_server
+msgid "Attendance: Automatically check-out employees"
+msgstr "Prezență: Ieșire automată angajați"
+
+#. module: hr_attendance
+#: model:ir.actions.server,name:hr_attendance.hr_attendance_absence_cron_ir_actions_server
+msgid "Attendance: Detect Absences for employees"
+msgstr "Prezență: Detectare absențe pentru angajați"
+
+#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_overview
-#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_attendances_overview
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_reporting
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_attendance_reporting
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
+#: model:res.groups.privilege,name:hr_attendance.res_groups_privilege_attendances
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances"
 msgstr "Prezențe"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_employee.py:0
+msgid "Attendances This Month"
+msgstr "Prezențe în această lună"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Attendances from Backend"
+msgstr "Prezențe din Backend"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_tolerance
+msgid "Auto Check Out Tolerance"
+msgstr "Toleranță ieșire automată"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__auto_check_out
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out
+msgid "Automatic Check Out"
+msgstr "Ieșire automată"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__auto_check_out
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Automatic Check-Out"
+msgstr "Ieșire automată"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_overtime_validation__no_validation
+msgid "Automatically Approved"
+msgstr "Aprobat automat"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Automatically Check-Out Employees based on their working schedule with an "
+"additional tolerance. Does not apply to employees with a flexible working "
+"schedule."
+msgstr ""
+"Ieșire automată a angajaților pe baza programului de lucru cu o toleranță "
+"suplimentară. Nu se aplică angajaților cu program flexibil."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Automatically Checked-Out"
+msgstr "Ieșit automat"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+msgid "Back"
+msgstr "Înapoi"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
@@ -226,9 +470,32 @@ msgstr "Camera spate"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
-msgid "Barcode"
-msgstr "Cod de bare"
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
+msgid "Badge assigned successfully!"
+msgstr "Badge atribuit cu succes!"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.js:0
+msgid "Badge updated: "
+msgstr "Badge actualizat: "
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Badge with Barcode"
+msgstr "Badge cu cod de bare"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Badge with Barcode on Tablet"
+msgstr "Badge cu cod de bare pe tabletă"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
+msgid "Balance"
+msgstr "Sold"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode
@@ -247,22 +514,83 @@ msgid "Barcode Source"
 msgstr "Sursă cod de bare"
 
 #. module: hr_attendance
-#. odoo-python
-#: code:addons/hr_attendance/models/hr_attendance.py:0
-msgid "Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s"
-msgstr "Nu se poate crea o nouă prezență pentru %(empl_name)s, angajatul nu a ieșit după %(datetime)s"
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_rule__base_off
+msgid ""
+"Base for overtime calculation.\n"
+"Use 'Quantity' when overtime hours are those in excess of a certain amount "
+"per day/week.\n"
+"Use 'Timing' when overtime hours happen on specific days or at specific times"
+msgstr ""
+"Baza de calcul pentru orele suplimentare.\n"
+"Folosiți 'Cantitate' atunci când orele suplimentare sunt cele care depășesc "
+"un anumit număr e zi/săptămână.\n"
+"Folosește 'Timp' atunci când orele suplimentare au loc în anumite zile sau "
+"la anumite ore"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__base_off
+msgid "Based Off"
+msgstr "Bazat pe"
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__in_location
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__out_location
+msgid "Based on GPS-Coordinates if available or on IP Address"
+msgstr "Pe baza coordonatelor GPS, dacă sunt disponibile, sau pe adresa IP"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+msgid "Before"
+msgstr "Înainte"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_browser
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "Browser"
+msgstr "Browser"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__can_edit
+msgid "Can Edit"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Can be converted as Time Off (cfr Time Off configuration)."
+msgstr "Poate fi convertit ca timp liber (vezi configurarea Timp Liber)."
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
-msgid "Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s"
-msgstr "Nu se poate crea o nouă prezență pentru %(empl_name)s , angajatul este deja intrat de la %(datetime)s"
+msgid ""
+"Cannot create new attendance record for %(empl_name)s, the employee hasn't "
+"checked out since %(datetime)s"
+msgstr ""
+"Nu se poate crea o nouă prezență pentru %(empl_name)s, angajatul nu a ieșit "
+"după %(datetime)s"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+msgid ""
+"Cannot create new attendance record for %(empl_name)s, the employee was "
+"already checked in on %(datetime)s"
+msgstr ""
+"Nu se poate crea o nouă prezență pentru %(empl_name)s , angajatul este deja "
+"intrat de la %(datetime)s"
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_employee.py:0
-msgid "Cannot perform check out on %(empl_name)s, could not find corresponding check in. Your attendances have probably been modified manually by human resources."
-msgstr "Nu se poate efectua check-out-ul lui%(empl_name)s, Nu s-a putut găsi înregistrarea corespunzătoare. Participanții dvs. au fost probabil modificați manual de resurse umane."
+msgid ""
+"Cannot perform check out on %(empl_name)s, could not find corresponding "
+"check in. Your attendances have probably been modified manually by human "
+"resources."
+msgstr ""
+"Nu se poate efectua check-out-ul lui%(empl_name)s, Nu s-a putut găsi "
+"înregistrarea corespunzătoare. Participanții dvs. au fost probabil "
+"modificați manual de resurse umane."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -272,18 +600,11 @@ msgstr "Check IN"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__check_in
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_in
-#: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_in
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_check_in
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Check In"
 msgstr "Intrare"
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
-msgid "Check In / Check Out"
-msgstr "Intrare / Ieșire"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -294,15 +615,22 @@ msgstr "Check OUT"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_out
-#: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_out
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_check_out
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Check Out"
 msgstr "Ieșire"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Check-In/Out in Kiosk Mode"
-msgstr "Check-In/Out în mod Kiosk"
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+msgid "Check in"
+msgstr "Check in"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+msgid "Check out"
+msgstr "Check out"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
@@ -310,9 +638,21 @@ msgid "Checked in"
 msgstr "Intrat"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Checked in at"
+msgstr "Intrat la"
+
+#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_out
 msgid "Checked out"
 msgstr "Ieșit"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Checked out at"
+msgstr "Ieșire la"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -320,26 +660,40 @@ msgid "Choose how long the greeting message will be displayed."
 msgstr "Alegeți cât timp va fi afișat mesajul de salut."
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_res_company
-msgid "Companies"
-msgstr "Companii"
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Choose how to record attendances"
+msgstr "Alegeți cum să înregistrați prezențele"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__company_id
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__company_id
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Close"
+msgstr "Închide"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__color
+msgid "Color"
+msgstr "Color"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_company
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__company_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__company_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__company_id
 msgid "Company"
 msgstr "Companie"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Company Logo"
 msgstr "Siglă comanie"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Compare attendance with working hours set on employee."
-msgstr "Comparați prezența cu orele de lucru stabilite pentru angajat."
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "Condition"
+msgstr "Condiție"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_config_settings
@@ -347,25 +701,44 @@ msgid "Config Settings"
 msgstr "Setări de configurare"
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_configuration
 msgid "Configuration"
 msgstr "Configurare"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_overtime
-#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_overtime
-msgid "Count Extra Hours"
-msgstr "Numără orele suplimentare"
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
+msgid "Confirm"
+msgstr "Confirmă"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Count of Extra Hours"
-msgstr "Numărul de ore suplimentare"
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Connect an RFID reader, and scan a token."
+msgstr "Conectați un cititor RFID și scanați un token."
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Count of extra hours is considered from this date. Potential extra hours prior to this date are not considered."
-msgstr "Numărul de ore suplimentare este considerat de la această dată. Orele suplimentare potențiale înainte de această dată nu sunt luate în considerare."
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_ruleset__rate_combination_mode
+msgid ""
+"Controls how the rates from the different rules that apply are combined.\n"
+"  Max: use the highest rate. (e.g.: combined for 150% and 120 = 150%)\n"
+"  Sum: sum the *extra* pay (i.e. above 100%).\n"
+"    e.g.: combined rate for 150% & 120% = 100% (baseline) + (150-100)% + "
+"(120-100)% = 170%\n"
+msgstr ""
+"Controlează modul în care sunt combinate ratele din diferitele reguli "
+"aplicabile.\n"
+"  Maxim: utilizați cea mai mare rată. (de exemplu: combinate pentru 150% și "
+"120 = 150%)\n"
+"  Suma: însumează plata *suplimentară* (adică peste 100%).\n"
+"    e.g.: rată combinată pentru 150% și 120% = 100% (valoarea de bază) + "
+"(150-100)% + (120-100)% = 170%\n"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__country_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
+msgid "Country"
+msgstr "Țară"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -373,19 +746,47 @@ msgid "Create a new employee"
 msgstr "Creați un nou angajat"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
+msgid "Create the name of the new employee below"
+msgstr "Create the name of the new employee below"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_uid
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__create_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__create_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__create_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__create_uid
 msgid "Created by"
 msgstr "Creat de"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_date
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__create_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__create_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__create_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__create_date
 msgid "Created on"
 msgstr "Creat în"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__date
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "Currently Working"
+msgstr "Lucrează în prezent"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_dashboard
+msgid "Dashboard"
+msgstr "Tablou de bord"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__date
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Date"
+msgstr "Dată"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__date
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__quantity_period__day
 msgid "Day"
 msgstr "Zi"
 
@@ -400,15 +801,69 @@ msgid "Define the way the user will be identified by the application."
 msgstr "Definiți modul în care utilizatorul va fi identificat de aplicație."
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "Definition"
+msgstr "Definiție"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__department_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Department"
 msgstr "Departament"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__description
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__description
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "Description"
+msgstr "Descriere"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__device_tracking_enabled
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_device_tracking
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_device_tracking
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Device & Location Tracking"
+msgstr "Urmărirea dispozitivului și a locației"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
+msgid "Difference"
+msgstr "Diferență"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_extra_hours
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__display_extra_hours
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_display_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_display_overtime
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Display Extra Hours"
+msgstr "Afișează ore suplimentare"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Display Extra Hours in Kiosk mode and on User profile."
+msgstr ""
+"Afișează ore suplimentare în modul Kiosk și în profilul utilizatorului."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Display Extra Hours."
+msgstr "Afișează ore suplimentare."
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__display_name
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__display_name
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_version__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_ir_http__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__display_name
 msgid "Display Name"
 msgstr "Nume afișat"
 
@@ -420,82 +875,189 @@ msgstr "Afișează timpul"
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
-msgid "Do not have access, user cannot edit the attendances that are not his own."
+msgid ""
+"Do not have access, user cannot edit the attendances that are not his own."
 msgstr ""
+"Nu are acces, utilizatorul nu poate edita prezențele care nu sunt ale sale."
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
-msgstr "Devreme la culcare și devreme să se ridice, face un om sănătos, bogat și înțelept"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
-msgstr "Mâncați micul dejun ca rege, masa de prânz ca negustor și cina ca un cerșetor"
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "Duration to exceed:"
+msgstr "Durata de depășit:"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__employee_id
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__employee_id
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 msgid "Employee"
 msgstr "Angajat"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__group_attendance_use_pin
-msgid "Employee PIN"
-msgstr "PIN angajat"
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+msgid "Employee Avatar"
+msgstr "Avatar angajat"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_version
+msgid "Employee Contract"
+msgstr "Contract angajat"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_use_pin
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_use_pin
+msgid "Employee PIN Identification"
+msgstr "Identificare PIN angajat"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__employee_tolerance
+msgid "Employee Tolerance"
+msgstr "Toleranța angajaților"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Employee attendances"
 msgstr "Prezența salariaților"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
+msgid "Employee created successfully!"
+msgstr "Angajat creat cu succes!"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
+msgid "Employee name is required."
+msgstr "Numele angajatului este obligatoriu."
+
+#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_employee
 msgid "Employees"
 msgstr "Angajați"
 
 #. module: hr_attendance
-#: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
-msgid "Enable PIN use"
-msgstr "Activare utilizare PIN"
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__employer_tolerance
+msgid "Employer Tolerance"
+msgstr "Toleranța angajatorului"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_action
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__overtime_hours
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
+msgid "Enter Badge Number"
+msgstr "Introduceți număr badge"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
+msgid "Error creating employee: "
+msgstr "Eroare la crearea angajatului: "
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
+msgid "Error: "
+msgstr "Eroare: "
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "Error: could not find corresponding employee."
+msgstr "Eroare: nu am putut găsi angajatul corespunzător."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Errors"
+msgstr "Erori"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
+msgid "Expected Hours"
+msgstr "Ore așteptate"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__duration
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_employee_simple_tree_view
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Extra Hours"
 msgstr "Ore suplimentare"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration_real
-msgid "Extra Hours (Real)"
-msgstr "Ore suplimentare (reale)"
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__manual_duration
+msgid "Extra Hours (encoded)"
+msgstr "Ore suplimentare (înregistrate)"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_start_date
-#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_start_date
-msgid "Extra Hours Starting Date"
-msgstr "Data de începere a orelelor suplimentare"
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
+msgid "Extra Hours Rules"
+msgstr "Reguli pentru ore suplimentare"
 
 #. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
-msgid "Extra-hours including the threshold duration"
-msgstr "Ore suplimentare incluzând durata pragului"
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_overtime_validation
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_overtime_validation
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Extra Hours Validation"
+msgstr "Validare ore suplimentare"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "First come, first served"
-msgstr "Primul venit, primul servit"
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Extra hours"
+msgstr "Ore suplimentare"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
+msgid "Failed to create employee."
+msgstr "Nu s-a putut crea angajatul."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.js:0
+msgid "Failed to update badge: "
+msgstr "Nu s-a putut actualiza badge-ul: "
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_follower_ids
+msgid "Followers"
+msgstr "Urmăritori"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Urmăritori (Parteneri)"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.xml:0
+msgid "For"
+msgstr "Pentru"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__timing_start
+msgid "From"
+msgstr "De la"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+msgid "From %s"
+msgstr "De la %s"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
+msgid "From Employee"
+msgstr "De la angajat"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__front
@@ -503,87 +1065,79 @@ msgid "Front Camera"
 msgstr "Camera frontală"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Glad to have you back, it's been a while!"
-msgstr "Mă bucur că te-am întors, a trecut ceva timp!"
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "GPS Coordinates"
+msgstr "Coordonate GPS"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Generate new URL"
+msgstr "Generează URL nou"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_list
+msgid "Get working hours from contract"
+msgstr "Obțineți orele de lucru din contract"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Good afternoon"
-msgstr "Bună seara"
+#: code:addons/hr_attendance/static/src/components/card_layout/card_layout.xml:0
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "Go back"
+msgstr "Înapoi"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Good evening"
-msgstr "Bună ziua"
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Goodbye"
+msgstr "La revedere"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Good morning"
-msgstr "Bună dimineața"
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_own
+msgid ""
+"Grants users permission to modify their own attendance entries that are "
+"pending approval."
+msgstr ""
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Good night"
-msgstr "Noapte bună"
+#: model:ir.model,name:hr_attendance.model_ir_http
+msgid "HTTP Routing"
+msgstr "Rutare HTTP"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Group By"
-msgstr "Grupează după"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
-msgid "HR Attendance Search"
-msgstr "Căutare prezență angajați"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Have a good afternoon"
-msgstr "O după-amiază bună"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Have a good day!"
-msgstr "Să aveți o zi bună!"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Have a good evening"
-msgstr "Să aveți o seară plăcută"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "Have a nice lunch!"
-msgstr "Poftă bună!"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
-msgid "Hours"
-msgstr "Ore"
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__has_message
+msgid "Has Message"
+msgstr "Are mesaj"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month
-#: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month
 msgid "Hours Last Month"
 msgstr "Ore Luna Trecută"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_display
-#: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month_display
 msgid "Hours Last Month Display"
 msgstr "Afișare Ore Luna Trecută"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month_overtime
+msgid "Hours Last Month Overtime"
+msgstr "Ore suplimentare luna trecută"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_previously_today
+msgid "Hours Previously Today"
+msgstr "Ore anterioare astăzi"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Hours Previously Today:"
+msgstr "Ore anterioare astăzi:"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
@@ -592,9 +1146,15 @@ msgid "Hours Today"
 msgstr "Ore Astăzi"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__worked_hours
-msgid "Hours Worked"
-msgstr "Ore lucrate"
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Hours Today:"
+msgstr "Ore astăzi:"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__expected_hours_from_contract
+msgid "Hours from employee schedule"
+msgstr "Ore din programul angajatului"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -603,27 +1163,136 @@ msgstr "Căutare prezență angajați"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__id
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__id
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_version__id
+#: model:ir.model.fields,field_description:hr_attendance.field_ir_http__id
+#: model:ir.model.fields,field_description:hr_attendance.field_ir_websocket__id
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__id
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_ip_address
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "IP Address"
+msgstr "Adresă IP"
+
+#. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Identify Manually"
 msgstr "Identificat Manual"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "If a job is worth doing, it is worth doing well!"
-msgstr "Dacă o treabă merită făcută, merită să o faci bine!"
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"If checked, days not covered by an attendance will be visible in the Report. "
+"Does not apply to employees with a flexible working schedule."
+msgstr ""
+"Dacă este bifat, zilele neacoperite de o prezență vor fi vizibile în raport. "
+"Nu se aplică angajaților cu program de lucru flexibil."
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Dacă este bifat, mesajele noi necesită atenția dvs."
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_has_error
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Dacă este bifat, unele mesaje au o eroare de livrare."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "If the employee works"
+msgstr "Dacă angajatul lucrează"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "If the worked hours on a"
+msgstr "Dacă orele lucrate pe o"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_location
+msgid "In Location"
+msgstr "În locația"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__information_display
+msgid "Information"
+msgstr "Informații"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Input Mode (In)"
+msgstr "Mod introducere (Intrare)"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Input Mode (Out)"
+msgstr "Mod introducere (Ieșire)"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Install"
+msgstr "Instalare"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Invalid request"
+msgstr "Cerere invalidă"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_is_follower
+msgid "Is Follower"
+msgstr "Este urmăritor"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__is_manager
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__is_manager
+msgid "Is Manager"
+msgstr "Este Manager"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__is_own
+msgid "Is Own"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__kiosk
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__kiosk
+msgid "Kiosk"
+msgstr "Kiosk"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_action_open_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Kiosk Mode"
 msgstr "Mod chioșc"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Kiosk Mode Adress"
+msgstr "Adresă mod chioșc"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Kiosk Settings"
+msgstr "Setări chioșc"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Last 3 Months"
+msgstr "Ultimele 3 luni"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
@@ -632,16 +1301,105 @@ msgid "Last Attendance"
 msgstr "Ultima pezență"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_worked_hours
+msgid "Last Attendance Worked Hours"
+msgstr "Ultima prezență ore lucrate"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__write_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__write_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__write_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__write_uid
 msgid "Last Updated by"
 msgstr "Ultima actualizare făcută de"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_date
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__write_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__write_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__write_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__write_date
 msgid "Last Updated on"
 msgstr "Ultima actualizare pe"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_latitude
+msgid "Latitude"
+msgstr "Latitudine"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Latitude (In)"
+msgstr "Latitudine (Intrare)"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Latitude (Out)"
+msgstr "Latitudine (Ieșire)"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__linked_overtime_ids
+msgid "Linked Overtime"
+msgstr "Ore suplimentare legate"
+
+#. module: hr_attendance
+#: model:ir.actions.server,name:hr_attendance.action_load_demo_data
+msgid "Load demo data"
+msgstr "Încărcare date Demonstrative"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "Load sample data"
+msgstr "Încarcă date de probă"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Location"
+msgstr "Locație"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
+msgid "Longitude"
+msgstr "Longitudine"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Longitude (In)"
+msgstr "Longitudine (Intrare)"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Longitude (Out)"
+msgstr "Longitudine (Ieșire)"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_management_action
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances_management
+msgid "Management"
+msgstr "Management"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Manager"
+msgstr "Manager"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__manual
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__manual
+msgid "Manual"
+msgstr "Manual"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Manual Attendance"
+msgstr "Prezență manuală"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Manual Attendance or with barcode"
+msgstr "Prezență manuală sau cu cod de bare"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__manual
@@ -649,9 +1407,15 @@ msgid "Manual Selection"
 msgstr "Selectare Manuală"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_ir_ui_menu
-msgid "Menu"
-msgstr "Meniu"
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Manually (optional PIN)"
+msgstr "Manual (PIN opțional)"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_ruleset__rate_combination_mode__max
+msgid "Maximum Rate"
+msgstr "Rată maximă"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -659,36 +1423,212 @@ msgid "Message"
 msgstr "Mesaj"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_has_error
+msgid "Message Delivery error"
+msgstr "Eroare la livrarea mesajului"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_ids
+msgid "Messages"
+msgstr "Mesaje"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Method"
+msgstr "Metodă"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
+msgid "Missing Data"
+msgstr "Date lipsă"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.js:0
+msgid "Missing Employee ID"
+msgstr "Lipsă ID Angajat"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_mode
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "Mode"
+msgstr "Mod"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Modes"
+msgstr "Moduri"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
 msgstr "Prezența mea"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "No Check Out"
-msgstr "Fără ieșire"
+msgid "My Team"
+msgstr "Echipa mea"
 
 #. module: hr_attendance
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__name
+msgid "Name"
+msgstr "Nume"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "New Set-up (Employee/Badge)"
+msgstr "Configurare nouă (Angajat/Badge)"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_management_action
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_reporting
 msgid "No attendance records found"
 msgstr "Nu există înregistrări despre prezență"
 
 #. module: hr_attendance
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
-msgid "No attendance records to display"
-msgstr "Nu există înregistrări de prezență de afișat"
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.js:0
+msgid "No barcode received"
+msgstr "Nu s-a primit niciun cod de bare."
 
 #. module: hr_attendance
-#. odoo-python
-#: code:addons/hr_attendance/models/hr_employee.py:0
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
 msgid "No employee corresponding to Badge ID '%(barcode)s.'"
 msgstr "Niciun angajat care să corespundă acestui Badge ID '%(barcode)s.'"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Număr acțiuni"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_has_error_counter
+msgid "Number of errors"
+msgstr "Număr erori"
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Număr de mesaje care necesită acțiune"
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Număr de mesaje cu eroare de livrare"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "OK"
+msgstr "OK"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Odoo Logo"
+msgstr "Logo Odoo"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/hr_presence_status/hr_attendance_presence_status.js:0
+msgid "Off-Hours"
+msgstr ""
+
+#. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
 msgid "Officer: Manage all attendances"
-msgstr ""
+msgstr "Ofițer: Gestionează toate prezențele"
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_officer
+msgid "Officer: Manage attendances"
+msgstr "Ofițer: Gestionarea prezențelor"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__timing_type__non_work_days
+msgid "On any non-working day"
+msgstr "În orice zi nelucrătoare"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__timing_type__work_days
+msgid "On any working day"
+msgstr "În orice zi lucrătoare"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+msgid "On site"
+msgstr "La fața locului"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_onboarding
+msgid "Onboarding"
+msgstr "Înrolare"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+msgid "Online"
+msgstr "Activ"
+
+#. module: hr_attendance
+#: model:ir.actions.server,name:hr_attendance.open_kiosk_url
+msgid "Open Kiosk Url"
+msgstr "Deschide Kiosk Url"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_browser
+msgid "Out Browser"
+msgstr "Browser-ul de Ieșire"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_ip_address
+msgid "Out Ip Address"
+msgstr "Adresă IP de Ieșire"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_latitude
+msgid "Out Latitude"
+msgstr "Latitudine de Ieșire"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_location
+msgid "Out Location"
+msgstr "Locație de ieșire"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_longitude
+msgid "Out Longitude"
+msgstr "Longitudine de Ieșire"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_mode
+msgid "Out Mode"
+msgstr "Mod Ieșire"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
+msgid "Outside Schedule: %(schedule_name)s"
+msgstr "Program în afara programului: %(schedule_name)s"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__timing_type__schedule
+msgid "Outside of a specific schedule"
+msgstr "În afara unui program specific"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
+msgid "Over Time"
+msgstr "Timp peste program"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
@@ -696,24 +1636,291 @@ msgid "Overtime"
 msgstr "Suplimentare"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "Overtime Details"
+msgstr "Detalii ore suplimentare"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_overtime_rule
+msgid "Overtime Rule"
+msgstr "Regula orelor suplimentare"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_rule_action
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
+msgid "Overtime Rules"
+msgstr "Reguli pentru ore suplimentare"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_overtime_ruleset
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "Overtime Ruleset"
+msgstr "Set de reguli pentru ore suplimentare"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_overtime_rulesets
+msgid "Overtime Rulesets"
+msgstr "Seturi de reguli pentru ore suplimentare"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_status
+msgid "Overtime Status"
+msgstr "Stare ore suplimentare"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__amount_rate
+msgid "Overtime pay rate"
+msgstr "Rata de plată a orelor suplimentare"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_overview
+msgid "Overview"
+msgstr "Imagine de ansamblu"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__paid
+msgid "Pay Extra Hours"
+msgstr "Plată ore suplimentare"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "Pay extra hours"
+msgstr "Plată ore suplimentare"
+
+#. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/my_attendances/my_attendances.xml:0
-msgid "Please contact your administrator."
-msgstr "Vă rugăm să contactați administratorul."
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "Please enter your PIN to"
+msgstr "Vă rugăm să introduceți codul PIN la"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "Please return to the main menu."
+msgstr "Vă rugăm să reveniți la meniul principal."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
+msgid "Please select an employee and enter a badge number."
+msgstr "Vă rugăm să selectați un angajat și să introduceți numărul badge-ului."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Powered by"
+msgstr "Cu sprijinul"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/hr_presence_status/hr_attendance_presence_status.js:0
+msgid "Present (untracked)"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
+msgid "Print"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
+msgid "Print It"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
+msgid "Provide a description or sources for this ruleset."
+msgstr "Furnizați o descriere sau surse pentru acest set de reguli."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee_public
 msgid "Public Employee"
-msgstr "Angajați Publici "
+msgstr "Angajați Publici"
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__base_off__quantity
+msgid "Quantity"
+msgstr "Cantitate"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__quantity_period
+msgid "Quantity Period"
+msgstr "Cantitate Perioadă"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "RFID Token with reader"
+msgstr "Token RFID cu cititor"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "RFID Token with reader on tablet"
+msgstr "Token RFID cu cititor pe tabletă"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "RFID/Badge Number"
+msgstr "Număr RFID/badge"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__amount_rate
+msgid "Rate"
+msgstr "Rată"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__rate_combination_mode
+msgid "Rate Combination Mode"
+msgstr "Mod de combinare a ratelor"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_list
+msgid "Rate Mode"
+msgstr "Mod Rată"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__rating_ids
+msgid "Ratings"
+msgstr "Evaluări"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "Read a badge"
+msgstr "Citește un badge"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "Ready to track attendances ?"
+msgstr "Gata să urmăriți prezențele?"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
+msgid "Refuse"
+msgstr "Refuzați"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Refuse Extra Hours"
+msgstr "Refuză ore suplimentare"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "Refuse all overtimes for the same employee and date"
+msgstr ""
+"Refuzați toate orele suplimentare pentru același angajat și la aceeași dată"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__refused
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_line__status__refused
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+msgid "Refused"
+msgstr "Respins"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
+msgid "Regenerate overtimes"
+msgstr "Regenerați orele suplimentare"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
+msgid "Regenerate overtimes for this ruleset"
+msgstr "Regenerați orele suplimentare pentru aceste reguli"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_reporting
 msgid "Reporting"
 msgstr "Raportare"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__rule_ids
+msgid "Rule"
+msgstr "Regulă"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
+msgid "Rule '%(name)s' is based off quantity, but the period is not specified"
+msgstr ""
+"Regula '%(name)s' se bazează pe cantitate, dar perioada nu este specificată."
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
+msgid ""
+"Rule '%(name)s' is based off quantity, but the usual amount of work hours is "
+"not specified"
+msgstr ""
+"Regula ''%(name)s se bazează pe cantitate, dar numărul obișnuit de ore "
+"lucrate nu este specificat."
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
+msgid ""
+"Rule '%(name)s' is based off timing, but the work schedule is not specified"
+msgstr ""
+"Regula '%(name)s' se bazează pe timp, dar programul de lucru nu este "
+"specificat."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "Rule Name"
+msgstr "Numele regulii"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__rules_count
+msgid "Rules Count"
+msgstr "Număr de reguli"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__ruleset_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__ruleset_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_version__ruleset_id
+msgid "Ruleset"
+msgstr "Set de reguli"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
+msgid "Ruleset Name"
+msgstr "Nume set de reguli"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
+msgid "Ruleset Search"
+msgstr "Cautare set de reguli"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_ruleset_action
+msgid "Rulesets"
+msgstr "Seturi de reguli"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Eroare la livrarea SMS"
+
+#. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
+#: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.xml:0
+msgid "Scan Badge"
+msgstr "Scanează badge"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.xml:0
+msgid "Scan or Tap your badge"
+msgstr "Scanează sau atinge badge-ul tău"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Scan your badge"
 msgstr "Scanați ecusonul dvs."
 
@@ -723,58 +1930,231 @@ msgid "Scanner"
 msgstr "Scaner"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__resource_calendar_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "Schedule"
+msgstr "Programare"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+msgid "Search..."
+msgstr "Caută..."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
+msgid "Select Employee Without Badge"
+msgstr "Selectați angajat fără badge"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "Select a ruleset to manage overtime."
+msgstr "Selectați un set de reguli pentru gestionarea orelor suplimentare."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Select on Tablet"
+msgstr "Selectează pe tabletă"
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_own
+msgid "Self Attendance Edit"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__sequence
+msgid "Sequence"
+msgstr "Secvență"
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
-msgstr "Setați codurile PIN în formularul cu detalii despre angajați (în fila Setări HR)."
+msgstr ""
+"Setați codurile PIN în formularul cu detalii despre angajați (în fila Setări "
+"HR)."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
+msgid "Set the Badge"
+msgstr "Setați badge-ul"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
+msgid "Set-up"
+msgstr "Configurare"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
 msgid "Settings"
 msgstr "Setări"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid "Start from"
-msgstr "Start de la"
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "Sign out"
+msgstr "Iesire"
 
 #. module: hr_attendance
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+msgid "Since"
+msgstr "De când"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__time_start
+msgid "Start"
+msgstr "Start"
+
+#. module: hr_attendance
+#: model:ir.model.constraint,message:hr_attendance.constraint_hr_attendance_overtime_line_overtime_start_before_end
+msgid "Starting time should be before end time."
+msgstr "Ora de pornire ar trebui să fie înainte de ora de sfârșit."
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__status
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_employee_simple_tree_view
+msgid "Status"
+msgstr "Stare"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__time_stop
+msgid "Stop"
+msgstr "Stop"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_ruleset__rate_combination_mode__sum
+msgid "Sum of all rates"
+msgstr "Suma tuturor ratelor"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__systray
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__systray
+msgid "Systray"
+msgstr "Systray"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__technical
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__technical
+msgid "Technical"
+msgstr "Tehnic"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "The attendance records of your employees will be displayed here."
 msgstr "Prezențele angajaților dvs. vor fi afișate aici."
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
-msgid "The early bird catches the worm"
-msgstr "Cine se scoală de dimineață departe ajunge"
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_management_action
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_reporting
+msgid "The attendance reporting of your employees will be displayed here."
+msgstr "Raportul de prezență al angajaților dvs. va fi afișat aici."
 
 #. module: hr_attendance
-#: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
-msgid "The user will be able to open the kiosk mode and validate the employee PIN."
-msgstr "Utilizatorul va putea să deschidă modul chioșc și să valideze PIN-ul angajatului."
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "The rule is based on"
+msgstr "Regula se bazează pe"
 
 #. module: hr_attendance
-#: model:res.groups,comment:hr_attendance.group_hr_attendance
-msgid "The user will gain access to the human resources attendance menu, enabling him to manage his own attendance."
-msgstr "Utilizatorul va avea acces la meniul de prezență a resurselor umane, permițându-i să își gestioneze propria prezență."
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__attendance_manager_id
+#: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_manager_id
+#: model:ir.model.fields,help:hr_attendance.field_hr_employee_public__attendance_manager_id
+msgid ""
+"The user set in Attendance will access the attendance of the employee "
+"through the dedicated app and will be able to edit them."
+msgstr ""
+"Utilizatorul setat în Attendance va avea acces la prezențele angajatului "
+"prin intermediul aplicației dedicate și va putea să le editeze."
 
 #. module: hr_attendance
-#: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
-msgid "The user will have to enter his PIN to check in and out manually at the company screen."
-msgstr "Utilizatorul va trebui să introducă codul PIN pentru a intra și ieși manual pe ecranul companiei."
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_user
+msgid ""
+"The user will have access to all attendance records and reports for all "
+"employees."
+msgstr ""
+"Utilizatorul va avea acces la toate înregistrările și rapoartele de prezență "
+"pentru toți angajații."
+
+#. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_own_reader
+msgid ""
+"The user will have access to his own attendances on his user / employee "
+"profile"
+msgstr ""
+"Utilizatorul va avea acces la propriile prezențe pe profilul său de "
+"utilizator/angajat"
+
+#. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_officer
+msgid ""
+"The user will have access to the attendance records and reporting of "
+"employees where he's set as an attendance manager"
+msgstr ""
+"Utilizatorul va avea acces la înregistrările și rapoartele de prezență ale "
+"angajaților pentru care este setat ca manager de prezență"
 
 #. module: hr_attendance
 #. odoo-python
-#: code:addons/hr_attendance/models/hr_employee.py:0
-msgid "To activate Kiosk mode without pin code, you must have access right as an Officer or above in the Attendance app. Please contact your administrator."
-msgstr "Pentru a activa modul Kiosk fără cod PIN, trebuie să aveți drepturi de acces ca Ofițer sau mai sus în aplicația Prezență. Vă rugăm să contactați administratorul."
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+msgid ""
+"This attendance was automatically checked out because the employee exceeded "
+"the allowed time for their scheduled work hours."
+msgstr ""
+"Această prezență a fost închisă automat deoarece angajatul a depășit timpul "
+"permis pentru programul său de lucru."
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+msgid ""
+"This attendance was automatically created to cover an unjustified absence on "
+"that day."
+msgstr ""
+"Această prezență a fost creată automat pentru a acoperi o absență "
+"nejustificată în acea zi."
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__base_off__timing
+msgid "Timing"
+msgstr "Sincronizare"
+
+#. module: hr_attendance
+#: model:ir.model.constraint,message:hr_attendance.constraint_hr_attendance_overtime_rule_timing_start_is_hour
+msgid "Timing Start is an hour of the day"
+msgstr "Începerea cronometrării este la o oră din zi"
+
+#. module: hr_attendance
+#: model:ir.model.constraint,message:hr_attendance.constraint_hr_attendance_overtime_rule_timing_stop_is_hour
+msgid "Timing Stop is an hour of the day"
+msgstr "Începerea cronometrării este la o oră din zi"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__timing_type
+msgid "Timing Type"
+msgstr "Tip cronometrare"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__timing_stop
+msgid "To"
+msgstr "Către"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__to_approve
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_line__status__to_approve
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+msgid "To Approve"
+msgstr "De aprobat"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/my_attendances/my_attendances.xml:0
-msgid "Today's work hours:"
-msgstr "Programul de lucru de astăzi:"
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Today"
+msgstr "Astăzi"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
@@ -791,73 +2171,158 @@ msgid "Tolerance Time In Favor Of Employee"
 msgstr "Timpul de toleranță în favoarea angajatului"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Total"
+msgstr "Total"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__total_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__total_overtime
-#: model:ir.model.fields,field_description:hr_attendance.field_res_users__total_overtime
 msgid "Total Overtime"
 msgstr "Timp suplimentar total"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+msgid "Total today"
+msgstr "Total astăzi"
+
+#. module: hr_attendance
+#: model:ir.actions.server,name:hr_attendance.action_try_kiosk
+msgid "Try kiosk"
+msgstr "Încearcă chioșcul"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "Try the backend and reporting:"
+msgstr "Încercați backend-ul și raportarea:"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "Try the kiosk"
+msgstr "Încearcă chioșcul"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "Try the top"
+msgstr "Încearcă partea de sus"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/controllers/main.py:0
+msgid "Unknown"
+msgstr "Necunoscut"
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes (defined on the Employee's profile) to check-in."
-msgstr "Utilizați coduri PIN (definite în profilul angajatului) pentru a intra."
+msgstr ""
+"Utilizați coduri PIN (definite în profilul angajatului) pentru a intra."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Use this url to access your kiosk mode from any device."
+msgstr ""
+"Folosiți acest url pentru a accesa modul chioșc de pe orice dispozitiv."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users
-#: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "User"
 msgstr "Operator"
 
 #. module: hr_attendance
-#: model:res.groups,name:hr_attendance.group_hr_attendance_kiosk
-msgid "User: Only kiosk mode"
-msgstr ""
+#: model:res.groups,name:hr_attendance.group_hr_attendance_own_reader
+msgid "User: Read his own attendances"
+msgstr "Utilizator: Își citește propriile prezențe"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__expected_hours
+msgid "Usual work hours"
+msgstr "Ore obișnuite de lucru"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/my_attendances/my_attendances.xml:0
-msgid "Want to check out?"
-msgstr "Doriți să ieșiți?"
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
+msgid "Validation Error"
+msgstr "Eroare de validare"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+msgid "View on Maps"
+msgstr "Vezi pe hartă"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__website_message_ids
+msgid "Website Messages"
+msgstr "Mesaje website"
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance__website_message_ids
+msgid "Website communication history"
+msgstr "Istoric comunicare website"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__quantity_period__week
+msgid "Week"
+msgstr "Săptămână"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/my_attendances/my_attendances.xml:0
-msgid "Warning"
-msgstr "Atenție"
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "Welcome"
+msgstr "Welcome"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
-msgid "Welcome to"
-msgstr "Bun venit la"
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__timing_type__leave
+msgid "When employee is off"
+msgstr "Când angajatul este liber"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/client_action/my_attendances/my_attendances.xml:0
-msgid "Welcome!"
-msgstr "Bine ați venit!"
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "With a tolerance in favor of the employer of"
+msgstr "Cu o toleranță în favoarea angajatorului"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_employee_simple_tree_view
 msgid "Work Hours"
 msgstr "Ore de Lucru"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
+msgid "Worked Extra Hours"
+msgstr "Ore suplimentare lucrate"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Worked Hours"
 msgstr "Ore lucrare"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
-msgid "Worked hours last month"
-msgstr "Ore de lucru luna trecută"
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
+msgid "Worked Time"
+msgstr "Timp lucrat"
 
 #. module: hr_attendance
-#. odoo-python
-#: code:addons/hr_attendance/models/hr_employee.py:0
-msgid "Wrong PIN"
-msgstr "PIN greșit"
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "Worked hours this month"
+msgstr "Ore lucrate luna aceasta"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
+msgid "Wrong Pin"
+msgstr "Pin greșit"
 
 #. module: hr_attendance
 #. odoo-python
@@ -866,6 +2331,100 @@ msgid "You cannot duplicate an attendance."
 msgstr "Nu puteți duplica o prezență"
 
 #. module: hr_attendance
-#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
-msgid "Your attendance records will be displayed here."
-msgstr "Înregistrările dvs. de prezență vor fi afișate aici."
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+msgid "You don't have the rights to execute that action."
+msgstr "Nu aveți drepturile necesare pentru a executa această acțiune."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "a specific duration"
+msgstr "o durată specifică"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "and"
+msgstr "și"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "check in"
+msgstr "intrare"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+msgid "check out"
+msgstr "ieșire"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
+msgid "day"
+msgstr "zi"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
+msgid "e.g. John Doe"
+msgstr "ex. John Doe"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
+msgid "e.g. Legal Rules"
+msgstr "de exemplu, norme juridice"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "e.g. Over 8 hours daily"
+msgstr "de exemplu, peste 8 ore zilnic"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "exceed"
+msgstr "depăși"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "hours"
+msgstr "ore"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "icon (e.g for work from home)"
+msgstr "iconiță (ex: pentru lucru de acasă)"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+msgid "or"
+msgstr "sau"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "the amount defined on the contract"
+msgstr "cantitatea stabilită în contract"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_ir_websocket
+msgid "websocket message handling"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
+msgid "week"
+msgstr "săptămână"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "with a rate of"
+msgstr "cu o rată de"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "with optional PIN code"
+msgstr "cu cod PIN opțional"
