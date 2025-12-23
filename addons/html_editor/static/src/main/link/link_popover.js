@@ -17,6 +17,7 @@ import {
     getButtonSize,
     getButtonType,
 } from "@html_editor/utils/button_style";
+import { trapFocus } from "@html_editor/utils/dom_traversal";
 
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
@@ -249,14 +250,10 @@ export class LinkPopover extends Component {
             this.onClickApply();
         } else if (ev.key == "Tab") {
             ev.preventDefault();
-            const focusableElements = [
-                ...this.editingWrapper.el.querySelectorAll("input, select, button:not([disabled])"),
-            ];
-            const currentIndex = focusableElements.indexOf(document.activeElement);
-            const nextIndex =
-                (currentIndex + (ev.shiftKey ? -1 : 1) + focusableElements.length) %
-                focusableElements.length;
-            focusableElements[nextIndex].focus();
+            const focusableElements = this.editingWrapper.el.querySelectorAll(
+                "input, select, button:not([disabled])"
+            );
+            trapFocus(focusableElements, ev.shiftKey);
         }
     }
 
