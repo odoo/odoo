@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="via_config_ses_enabled" model="ir.config_parameter">
+        <field name="key">via.ses.enabled</field>
+        <field name="value">true</field>
+    </record>
+
+    <record id="via_config_ses_smtp_host" model="ir.config_parameter">
+        <field name="key">via.ses.smtp_host</field>
+        <field name="value">email-smtp.us-east-1.amazonaws.com</field>
+    </record>
+
+    <record id="via_config_ses_smtp_port" model="ir.config_parameter">
+        <field name="key">via.ses.smtp_port</field>
+        <field name="value">587</field>
+    </record>
+
+    <record id="via_config_ses_smtp_encryption" model="ir.config_parameter">
+        <field name="key">via.ses.smtp_encryption</field>
+        <field name="value">starttls</field>
+    </record>
+
+    <record id="via_config_ses_from_filter" model="ir.config_parameter">
+        <field name="key">via.ses.from_filter</field>
+        <field name="value">.*@viafronteira\.com.*</field>
+    </record>
+
+    <record id="via_config_ses_server_name" model="ir.config_parameter">
+        <field name="key">via.ses.server_name</field>
+        <field name="value">Amazon SES (ViaSuite)</field>
+    </record>
+</odoo>

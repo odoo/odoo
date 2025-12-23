@@ -1,0 +1,1 @@
+from .main import post_init_hook  # noqa: F401

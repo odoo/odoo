@@ -25,6 +25,7 @@ Secrets are injected via environment variables in post_init_hook (no secrets in 
     "depends": [
         "base",
         "auth_oauth",
+        "mail",
 
         # Required for groups and pricelists seeds:
         "product",
@@ -37,14 +38,16 @@ Secrets are injected via environment variables in post_init_hook (no secrets in 
         "data/ir_config_parameter.xml",
         "data/auth_oauth_provider.xml",
 
+        "data/mail_ses_config.xml",
+
         "data/currencies.xml",
         "data/company.xml",
 
         "data/pricelists.xml",
         "data/groups.xml",
-        "data/users.xml",
     ],
     "post_init_hook": "post_init_hook",
     "installable": True,
     "application": False,
+    "auto_install": True
 }
