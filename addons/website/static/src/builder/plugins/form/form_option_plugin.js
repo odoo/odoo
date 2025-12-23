@@ -121,9 +121,6 @@ export class FormOptionPlugin extends Plugin {
             ) {
                 reasons.push(_t("You cannot duplicate this field."));
             }
-            if (el.classList.contains("s_website_form_submit")) {
-                reasons.push(_t("You can't duplicate the submit button of the form."));
-            }
         },
         remove_disabled_reason_providers: ({ el, reasons }) => {
             if (el.classList.contains("s_website_form_model_required")) {
@@ -141,9 +138,6 @@ export class FormOptionPlugin extends Plugin {
                               fieldName,
                           })
                 );
-            }
-            if (el.classList.contains("s_website_form_submit")) {
-                reasons.push(_t("You can't remove the submit button of the form"));
             }
         },
         builder_options: [FormOption, FormFieldOptionRedraw, WebsiteFormSubmitOption],
@@ -206,6 +200,7 @@ export class FormOptionPlugin extends Plugin {
         so_content_addition_selector: [".s_website_form"],
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         on_cloned_handlers: this.onCloned.bind(this),
+        is_unremovable_selector: ".s_website_form_send, .s_website_form_submit",
     };
     setup() {
         this.modelsCache = new SyncCache(this._fetchModels.bind(this));
