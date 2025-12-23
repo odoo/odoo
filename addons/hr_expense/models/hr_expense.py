@@ -865,7 +865,7 @@ class HrExpense(models.Model):
             'line_ids': [Command.create(line) for line in move_lines],
             'attachment_ids': [
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
-                for attachment in self.message_main_attachment_id]
+                for attachment in self.attachment_ids]
         }
 
     def _prepare_move_lines_vals(self):
