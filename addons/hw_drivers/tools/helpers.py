@@ -268,15 +268,31 @@ def get_img_name():
 
 
 def get_ip():
+    """Get the local IP address of the IoT Box by creating
+    a dummy connection to the gateway or Google DNS.
+    """
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        s.connect(('8.8.8.8', 1))  # Google DNS
+        s.connect((get_gateway() or '8.8.8.8', 1))  # Google DNS
         return s.getsockname()[0]
     except OSError as e:
         _logger.warning("Could not get local IP address: %s", e)
         return None
     finally:
         s.close()
+
+
+def get_gateway():
+    """Get the router IP address (default gateway)
+
+    :return: The IP address of the default gateway or None if it can't be determined
+    """
+    gws = netifaces.gateways()
+    default = gws.get("default", {})
+    gw = default.get(netifaces.AF_INET)
+    if gw:
+        return gw[0]
+    return None
 
 
 def get_mac_address():
