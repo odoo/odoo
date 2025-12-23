@@ -199,6 +199,9 @@
         <ImStatus t-if="partner" persona="partner"/>
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="partner.name"/>
+            <t t-if="option.thread and partner.name !== option.thread.getPersonaName(partner)">
+                "<t t-esc="option.thread.getPersonaName(partner)"/>"
+            </t>
         </strong>
         <span t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</span>
     </t>
