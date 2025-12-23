@@ -179,16 +179,6 @@ class ResPartner(models.Model):
 
         return edi_identification == participant_identifier and service_href.startswith(smp_nemhandel_url)
 
-    def _check_document_type_support(self, participant_info, ubl_cii_format):
-        if self._deduce_country_code() != 'DK':
-            return super()._check_document_type_support(participant_info, ubl_cii_format)
-
-        service_references = participant_info.findall(
-            '{*}ServiceMetadataReferenceCollection/{*}ServiceMetadataReference'
-        )
-        document_type = self.env['account.edi.xml.ubl_21']._get_customization_ids()[ubl_cii_format]
-        return any(document_type in parse.unquote_plus(service.attrib.get('href', '')) for service in service_references)
-
     def _update_nemhandel_state_per_company(self, vals=None):
         partners = self.env['res.partner']
         if vals is None:
