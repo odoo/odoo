@@ -384,15 +384,6 @@ class AccountEdiUBL(models.AbstractModel):
                     (1 if allowance_charge_values['is_charge'] else -1) * allowance_charge_values['amount']
                     for allowance_charge_values in ubl_values[f'allowance_charges_excise{suffix}']
                 )
-                + (
-                    (1 if ubl_values[f'allowance_charge_discount{suffix}']['is_charge'] else -1)
-                    * ubl_values[f'allowance_charge_discount{suffix}']['amount']
-                    if (
-                        ubl_values[f'allowance_charge_discount{suffix}']
-                        and ubl_values[f'allowance_charge_discount{suffix}']['amount'] < 0.0
-                    )
-                    else 0.0
-                )
             )
             ubl_values[f'line_extension_amount{suffix}'] = amount
 
@@ -859,7 +850,7 @@ class AccountEdiUBL(models.AbstractModel):
             '_currency': currency,
             'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
             'cbc:MultiplierFactorNumeric': {'_text': abs(percent)},
-            'cbc:AllowanceChargeReasonCode': {'_text': '95'},
+            'cbc:AllowanceChargeReasonCode': {'_text': '95' if amount > 0.0 else 'ADK'},
             'cbc:AllowanceChargeReason': {'_text': _("Discount")},
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
