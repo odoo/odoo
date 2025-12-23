@@ -1,26 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_geolocalize
+# * base_geolocalize
 #
 # Translators:
 # Martin Trigaux, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Jolien De Paepe, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-11-14 08:58+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
+"base_geolocalize/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
@@ -32,10 +35,12 @@ msgstr "API"
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 msgid ""
 "API key for GeoCoding (Places) required.\n"
-"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
+"for more information."
 msgstr ""
 "API key voor GeoCoding (Plaatsen) vereist.\n"
-"Bezoek https://developers.google.com/maps/documentation/geocoding/get-api-key voor meer informatie."
+"Bezoek https://developers.google.com/maps/documentation/geocoding/get-api-"
+"key voor meer informatie."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
@@ -55,12 +60,17 @@ msgstr "Berekenen op basis van adres"
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configuratie instellingen"
+msgstr "Configuratie-instellingen"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
 msgid "Contact"
 msgstr "Contact"
+
+#. module: base_geolocalize
+#: model:ir.model,website_form_label:base_geolocalize.model_res_partner
+msgid "Create a Customer"
+msgstr "Een klant aanmaken"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_uid
@@ -74,14 +84,17 @@ msgstr "Aangemaakt op"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-msgid "Error with geolocation server:"
-msgstr "Error met geolocatie server:"
+msgid "Error with geolocation server: %s"
+msgstr "Fout met geolocatieserver %s"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
@@ -112,10 +125,13 @@ msgstr "Datum geolocatie"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
 msgid "Google Map API Key"
-msgstr "Google Map API key"
+msgstr "Google Maps API Key"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -156,6 +172,12 @@ msgid "No match found for %(partner_names)s address(es)."
 msgstr "Geen overeenkomst gevonden voor %(partner_names)s adres(sen)."
 
 #. module: base_geolocalize
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+msgid "OpenStreetMap calls disabled in testing environment."
+msgstr "Aanroepen van OpenStreetMap zijn uitgeschakeld in de testomgeving."
+
+#. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignment"
 msgstr "Partnertoekenning"
@@ -180,7 +202,7 @@ msgstr "Lokalisatie vernieuwen"
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
 msgid "Technical Name"
-msgstr ""
+msgstr "Technische naam"
 
 #. module: base_geolocalize
 #. odoo-python
@@ -203,14 +225,24 @@ msgstr ""
 "Geocoding, Maps Static, Maps Javascript.\n"
 
 #. module: base_geolocalize
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+msgid "Unknown"
+msgstr "Onbekend"
+
+#. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Updated on:"
 msgstr "Bijgewerkt op:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
-msgid "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
-msgstr "Bezoek https://developers.google.com/maps/documentation/geocoding/get-api-key voor meer informatie"
+msgid ""
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
+"for more information."
+msgstr ""
+"Bezoek https://developers.google.com/maps/documentation/geocoding/get-api-"
+"key voor meer informatie."
 
 #. module: base_geolocalize
 #. odoo-python

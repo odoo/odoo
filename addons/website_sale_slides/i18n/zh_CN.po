@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_sale_slides
+# * website_sale_slides
 #
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
@@ -8,20 +8,23 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # digitalliuzg8888, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"PO-Revision-Date: 2025-12-20 09:47+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
+"projects/odoo-19/website_sale_slides/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_option_buy_course_now
@@ -34,30 +37,19 @@ msgid "<i class=\"fa fa-shopping-cart\"/> Add to Cart"
 msgstr "<i class=\"fa fa-shopping-cart\"/> 添加到购物车"
 
 #. module: website_sale_slides
-#: model:ir.model.fields,help:website_sale_slides.field_product_product__detailed_type
-#: model:ir.model.fields,help:website_sale_slides.field_product_template__detailed_type
-msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
-"A consumable product is a product for which stock is not managed.\n"
-"A service is a non-material product you provide."
-msgstr ""
-"可库存商品是指在库存中受存量管控的产品。 要使用此项目您必须安装库存模块。\n"
-"可消耗商品是指不受库存量管控的产品。\n"
-"服务是指您提供的非产品类服务业务。"
-
-#. module: website_sale_slides
 #. odoo-python
 #: code:addons/website_sale_slides/models/product_product.py:0
-msgid "Access to: %s%s"
-msgstr ""
+msgid "Access to: %(new_line)s%(channel_list)s"
+msgstr "可访问：%(new_line)s%(channel_list)s"
 
 #. module: website_sale_slides
 #: model:product.template,name:website_sale_slides.product_course_channel_5_product_template
 msgid "Basics of Furniture Creation"
-msgstr ""
+msgstr "家具创作的基础知识"
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+#. odoo-javascript
+#: code:addons/website_sale_slides/static/src/website_builder/course_page_option.xml:0
 msgid "Buy Now Button"
 msgstr "立即购买按钮"
 
@@ -80,17 +72,18 @@ msgstr "一旦您的课程开始销售，请回来报告您的收入。"
 
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_slide_channel
-#: model:ir.model.fields.selection,name:website_sale_slides.selection__product_template__detailed_type__course
 msgid "Course"
 msgstr "课程"
 
 #. module: website_sale_slides
+#: model:ir.model.fields.selection,name:website_sale_slides.selection__product_template__service_tracking__course
 #: model:product.template,name:website_sale_slides.default_product_course_product_template
 msgid "Course Access"
 msgstr "课程访问权"
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+#. odoo-javascript
+#: code:addons/website_sale_slides/static/src/website_builder/course_page_option_plugin.js:0
 msgid "Course Page"
 msgstr "课程网页"
 
@@ -105,9 +98,15 @@ msgid "Courses"
 msgstr "课程"
 
 #. module: website_sale_slides
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_template__service_tracking
+msgid "Create on Order"
+msgstr ""
+
+#. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__currency_id
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: website_sale_slides
 #: model:product.template,name:website_sale_slides.product_course_channel_6_product_template
@@ -118,6 +117,15 @@ msgstr "DIY家具课程"
 #: model:ir.model.fields,help:website_sale_slides.field_slide_channel__enroll
 msgid "Defines how people can enroll to your Course."
 msgstr "定义用户如何注册您的课程。"
+
+#. module: website_sale_slides
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale_slides.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_slides.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__enroll
@@ -131,6 +139,21 @@ msgid "Free Preview"
 msgstr "免费预览"
 
 #. module: website_sale_slides
+#. odoo-python
+#: code:addons/website_sale_slides/models/product_template.py:0
+msgid "Grant access to the eLearning course linked to this product."
+msgstr "授予此产品连结的电子学习课程访问权限。"
+
+#. module: website_sale_slides
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale_slides.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_slides.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__id
+msgid "ID"
+msgstr ""
+
+#. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
 msgid "Join this Course"
 msgstr "加入这个课程"
@@ -138,13 +161,15 @@ msgstr "加入这个课程"
 #. module: website_sale_slides
 #. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
-msgid "Leaving the course and re-enrolling afterwards means that you'll be charged again."
+msgid ""
+"Leaving the course and re-enrolling afterwards means that you'll be charged "
+"again."
 msgstr "离开课程并在之后重新注册意味着您将会被重复收费。"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
 msgid "Log in"
-msgstr ""
+msgstr "登录"
 
 #. module: website_sale_slides
 #: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
@@ -164,7 +189,7 @@ msgstr "一旦您的订单付款和确认，您将可以访问："
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
 msgid "Prerequisite:"
-msgstr ""
+msgstr "先修课程："
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_slides_list_slide
@@ -176,12 +201,6 @@ msgstr "预览"
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_id
 msgid "Product"
 msgstr "产品"
-
-#. module: website_sale_slides
-#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__detailed_type
-#: model:ir.model.fields,field_description:website_sale_slides.field_product_template__detailed_type
-msgid "Product Type"
-msgstr "产品类型"
 
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_product_product
@@ -210,6 +229,11 @@ msgid "Sales Order"
 msgstr "销售订单"
 
 #. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: website_sale_slides
 #. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
 msgid "Sign in"
@@ -224,7 +248,7 @@ msgstr "登录并购买课程以参加测试"
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
 msgid "Sign up"
-msgstr ""
+msgstr "注册"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
@@ -239,7 +263,7 @@ msgstr "照顾树木课程"
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
 msgid "There are some"
-msgstr ""
+msgstr "有一些"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_main
@@ -261,17 +285,6 @@ msgstr "总收入"
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_sale_revenues
 msgid "Total revenues"
 msgstr "总收入"
-
-#. module: website_sale_slides
-#: model:ir.model,name:website_sale_slides.model_website
-msgid "Website"
-msgstr "网站"
-
-#. module: website_sale_slides
-#. odoo-python
-#: code:addons/website_sale_slides/models/slide_channel.py:0
-msgid "You are not allowed to add members to this course. Please contact the course responsible or an administrator."
-msgstr ""
 
 #. module: website_sale_slides
 #. odoo-python
@@ -302,7 +315,7 @@ msgstr "未发布。"
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
 msgid "prerequisite courses."
-msgstr ""
+msgstr "先修课程。"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message

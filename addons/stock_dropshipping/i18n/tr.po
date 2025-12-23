@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_dropshipping
+# * stock_dropshipping
 #
 # Translators:
 # Murat Kaplan <muratk@projetgrup.com>, 2022
@@ -8,25 +8,46 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # Martin Trigaux, 2022
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"PO-Revision-Date: 2025-11-28 12:49+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"stock_dropshipping/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_res_company
-msgid "Companies"
-msgstr "Şirketler"
+msgid "Company"
+msgstr ""
+
+#. module: stock_dropshipping
+#: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_move__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_replenish_mixin__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "İsim Göster"
 
 #. module: stock_dropshipping
 #: model:ir.model.fields.selection,name:stock_dropshipping.selection__stock_picking_type__code__dropship
@@ -47,7 +68,23 @@ msgstr "Transit Satış Sayısı"
 #: model:ir.ui.menu,name:stock_dropshipping.dropship_picking
 #: model_terms:ir.ui.view,arch_db:stock_dropshipping.view_picking_internal_search_inherit_stock_dropshipping
 msgid "Dropships"
-msgstr ""
+msgstr "Dropships"
+
+#. module: stock_dropshipping
+#: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_lot__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_move__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_replenish_mixin__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_rule__id
+msgid "ID"
+msgstr "ID"
 
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__is_dropship
@@ -55,14 +92,29 @@ msgid "Is a Dropship"
 msgstr "Transit Satış mı"
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_lot
+msgid "Lot/Serial"
+msgstr "Lot/Seri"
+
+#. module: stock_dropshipping
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__code
+msgid "Operation Category"
+msgstr ""
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_picking_type
 msgid "Picking Type"
 msgstr "Toplama Türü"
 
 #. module: stock_dropshipping
-#: model:ir.model,name:stock_dropshipping.model_procurement_group
-msgid "Procurement Group"
-msgstr "Tedarik Grubu"
+#: model:ir.model,name:stock_dropshipping.model_stock_replenish_mixin
+msgid "Product Replenish Mixin"
+msgstr "Ürün Yenileme Karışımı"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_product_product
+msgid "Product Variant"
+msgstr "Ürün Varyantı"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_purchase_order
@@ -85,16 +137,21 @@ msgid "Sales Order Line"
 msgstr "Satış Sipariş Satırı"
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_stock_move
+msgid "Stock Move"
+msgstr "Stok Hareketi"
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_rule
 msgid "Stock Rule"
 msgstr "Stok Kuralı"
 
 #. module: stock_dropshipping
-#: model:ir.model,name:stock_dropshipping.model_stock_picking
-msgid "Transfer"
-msgstr "Transfer"
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.stock_picking_type_kanban
+msgid "To Validate"
+msgstr "Onaylanacak"
 
 #. module: stock_dropshipping
-#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__code
-msgid "Type of Operation"
-msgstr ""
+#: model:ir.model,name:stock_dropshipping.model_stock_picking
+msgid "Transfer"
+msgstr "Aktarım"

@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* contacts
+# * contacts
 #
 # Translators:
 # Martin Trigaux, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
-"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-10-21 10:57+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/contacts/"
+"it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_action_res_partner_bank_form
@@ -37,14 +41,14 @@ msgid "Configuration"
 msgstr "Configurazione"
 
 #. module: contacts
+#: model:ir.model,name:contacts.model_res_partner
+msgid "Contact"
+msgstr "Contatto"
+
+#. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_partner_category_form
 msgid "Contact Tags"
 msgstr "Etichette contatto"
-
-#. module: contacts
-#: model:ir.ui.menu,name:contacts.menu_partner_title_contact
-msgid "Contact Titles"
-msgstr "Qualifiche contatto"
 
 #. module: contacts
 #: model:ir.actions.act_window,name:contacts.action_contacts
@@ -66,12 +70,29 @@ msgstr "Raggruppamento nazioni"
 #. module: contacts
 #: model_terms:ir.actions.act_window,help:contacts.action_contacts
 msgid "Create a Contact in your address book"
-msgstr "Crea un contatto nella tua rubrica"
+msgstr "Crea un contatto nella rubrica"
+
+#. module: contacts
+#: model:ir.model,website_form_label:contacts.model_res_partner
+msgid "Create a Customer"
+msgstr "Crea cliente"
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_partner__display_name
+#: model:ir.model.fields,field_description:contacts.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_state_partner
 msgid "Fed. States"
-msgstr "Regioni/Stati Federali"
+msgstr "Prov./Stati fed."
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_partner__id
+#: model:ir.model.fields,field_description:contacts.field_res_users__id
+msgid "ID"
+msgstr "ID"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_industry_menu
@@ -86,7 +107,8 @@ msgstr "Localizzazione"
 #. module: contacts
 #: model_terms:ir.actions.act_window,help:contacts.action_contacts
 msgid "Odoo helps you track all activities related to your contacts."
-msgstr "Odoo ti aiuta a tracciare tutte le attività relative ai tuoi contatti."
+msgstr ""
+"Odoo aiuta a tenere traccia di tutte le attività relative ai propri contatti."
 
 #. module: contacts
 #: model:ir.model,name:contacts.model_res_users

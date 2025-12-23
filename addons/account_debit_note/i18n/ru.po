@@ -1,26 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_debit_note
+# * account_debit_note
 #
 # Translators:
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-12-05 18:08+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
+"account_debit_note/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
 msgid "<span class=\"o_stat_text\">Debit Notes</span>"
-msgstr "<span class=\"o_stat_text\" >Дебетовые ноты</span>"
+msgstr "<span class=\"o_stat_text\">Дебетовые ноты</span>"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
@@ -31,6 +37,15 @@ msgstr "Мастер добавления дебетовых авизо"
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Cancel"
 msgstr "Отменить"
+
+#. module: account_debit_note
+#: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
+msgid ""
+"Check this box if you don't want to share the same sequence for invoices and "
+"debit notes made from this journal"
+msgstr ""
+"Установите этот флажок, если вы не хотите использовать единую нумерацию для "
+"счетов и дебетовых авизо, созданных из этого журнала"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
@@ -51,15 +66,17 @@ msgstr "Создать дебетовую ноту"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано:"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания:"
 
 #. module: account_debit_note
-#: model:ir.actions.server,name:account_debit_note.action_move_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_filter_debit
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_line_filter_debit
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
 msgid "Debit Note"
 msgstr "Дебет-нота"
 
@@ -75,17 +92,26 @@ msgstr "Дебет Примечание Дата"
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_ids
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_ids
-#: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_note_ids
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_invoice_filter_debit
 msgid "Debit Notes"
 msgstr "Дебетовые ноты"
 
 #. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_journal__debit_sequence
+msgid "Dedicated Debit Note Sequence"
+msgstr "Отдельная нумерация для дебетовых авизо"
+
+#. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__display_name
+#: model:ir.model.fields,field_description:account_debit_note.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__id
+#: model:ir.model.fields,field_description:account_debit_note.field_account_journal__id
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__id
 msgid "ID"
 msgstr "ID"
 
@@ -96,8 +122,17 @@ msgstr "Если пустой, используйте журнал записи 
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
-msgid "In case you need to do corrections for every line, it can be in handy to copy them.  We won't copy them for debit notes from credit notes. "
-msgstr "Если вам нужно внести исправления для каждой строки, можно скопировать их. Мы не будем копировать их для дебетовых заметок из кредитных заметок. "
+msgid ""
+"In case you need to do corrections for every line, it can be in handy to "
+"copy them.  We won't copy them for debit notes from credit notes. "
+msgstr ""
+"Если вам нужно внести исправления для каждой строки, можно скопировать их. "
+"Мы не будем копировать их для дебетовых заметок из кредитных заметок. "
+
+#. module: account_debit_note
+#: model:ir.model,name:account_debit_note.model_account_journal
+msgid "Journal"
+msgstr "Журнал"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
@@ -112,12 +147,12 @@ msgstr "Тип журнала"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последнее обновление:"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления:"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_ids
@@ -132,14 +167,12 @@ msgstr "Тип перемещения"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_count
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_count
-#: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_note_count
 msgid "Number of Debit Notes"
 msgstr "Количество дебетовых нот"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_id
-#: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_origin_id
 msgid "Original Invoice Debited"
 msgstr "Оригинальный счет-фактура дебетован"
 
@@ -160,13 +193,12 @@ msgstr ""
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_bank_statement_line__debit_note_ids
 #: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
-#: model:ir.model.fields,help:account_debit_note.field_account_payment__debit_note_ids
 msgid "The debit notes created for this invoice"
 msgstr "Дебет-ноты, созданные для этого счета"
 
 #. module: account_debit_note
 #. odoo-python
-#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#: code:addons/account_debit_note/models/account_move.py:0
 msgid "This debit note was created from: %s"
 msgstr "Этот дебет-нот был создан из: %s"
 
@@ -178,8 +210,13 @@ msgstr "Использовать специальный журнал"
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
-msgid "You can make a debit note only for a Customer Invoice, a Customer Credit Note, a Vendor Bill or a Vendor Credit Note."
-msgstr "Вы можете создать дебетовую заметку только для счета-фактуры клиента, кредитной накладной клиента, счета поставщика или кредитной накладной поставщика."
+msgid ""
+"You can make a debit note only for a Customer Invoice, a Customer Credit "
+"Note, a Vendor Bill or a Vendor Credit Note."
+msgstr ""
+"Вы можете создать дебетовую заметку только для счета-фактуры клиента, "
+"кредитной накладной клиента, счета поставщика или кредитной накладной "
+"поставщика."
 
 #. module: account_debit_note
 #. odoo-python
@@ -190,5 +227,15 @@ msgstr "Позволяется дебетовать только опублик�
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
-msgid "You can't make a debit note for an invoice that is already linked to a debit note."
-msgstr "Вы не можете создать дебетовую заметку для счета-фактуры, который уже связан с дебетовой заметкой."
+msgid ""
+"You can't make a debit note for an invoice that is already linked to a debit "
+"note."
+msgstr ""
+"Вы не можете создать дебетовую заметку для счета-фактуры, который уже связан "
+"с дебетовой заметкой."
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/models/account_move.py:0
+msgid "debit_origin_id"
+msgstr "debit_origin_id"

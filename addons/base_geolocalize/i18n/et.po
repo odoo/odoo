@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_geolocalize
+# * base_geolocalize
 #
 # Translators:
 # Martin Trigaux, 2022
@@ -12,20 +12,22 @@
 # Aveli Kannel <aveli@avalah.ee>, 2022
 # Anna, 2023
 # JanaAvalah, 2023
-#
+# Kristina Pešehodko <kristina@avalah.ee>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: JanaAvalah, 2023\n"
-"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-11-05 09:23+0000\n"
+"Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/"
+"base_geolocalize/et/>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
@@ -37,10 +39,12 @@ msgstr "API"
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 msgid ""
 "API key for GeoCoding (Places) required.\n"
-"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
+"for more information."
 msgstr ""
 "Geokodeerimis (kohtade) API-võti on vajalik.\n"
-"Lisateabe saamiseks külastage: https://developers.google.com/maps/documentation/geocoding/get-api-key."
+"Lisateabe saamiseks külastage: https://developers.google.com/maps/"
+"documentation/geocoding/get-api-key."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
@@ -68,6 +72,11 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: base_geolocalize
+#: model:ir.model,website_form_label:base_geolocalize.model_res_partner
+msgid "Create a Customer"
+msgstr "Lisa klient"
+
+#. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_uid
 msgid "Created by"
 msgstr "Loonud"
@@ -79,14 +88,17 @@ msgstr "Loomise kuupäev"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Näidatav nimi"
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-msgid "Error with geolocation server:"
-msgstr "Viga geograafilise asukoha serveriga"
+msgid "Error with geolocation server: %s"
+msgstr "Geolokatsiooni serveri viga: %s"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
@@ -117,10 +129,13 @@ msgstr "Geograafilise asukoha kuupäev"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
 msgid "Google Map API Key"
-msgstr "Google Map API Key"
+msgstr "Google Map API võti"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -161,6 +176,12 @@ msgid "No match found for %(partner_names)s address(es)."
 msgstr "%(partner_names)s aadressi(de)le ei leitud vastet."
 
 #. module: base_geolocalize
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+msgid "OpenStreetMap calls disabled in testing environment."
+msgstr "OpenStreetMap’i päringud on testkeskkonnas keelatud."
+
+#. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignment"
 msgstr "Partneri määramine"
@@ -185,7 +206,7 @@ msgstr "Uuenda lokalisatsiooni"
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
 msgid "Technical Name"
-msgstr ""
+msgstr "Tehniline nimi"
 
 #. module: base_geolocalize
 #. odoo-python
@@ -199,13 +220,19 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
-"Unable to geolocate, received the error:\n"
+"Ei õnnestunud geolokatsiooni määrata, ilmus viga:\n"
 "%s\n"
 "\n"
-"Google made this a paid feature.\n"
-"You should first enable billing on your Google account.\n"
-"Then, go to Developer Console, and enable the APIs:\n"
+"Google muutis selle funktsiooni tasuliseks.\n"
+"Esmalt luba arveldus oma Google’i kontol.\n"
+"Seejärel ava Developer Console ja aktiveeri järgmised API-d:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
+
+#. module: base_geolocalize
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+msgid "Unknown"
+msgstr "Teadmata"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -214,8 +241,12 @@ msgstr "Viimati uuendatud:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
-msgid "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
-msgstr "Mine lehele https://developers.google.com/maps/documentation/geocoding/get-api-key , et saada rohkem infot."
+msgid ""
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
+"for more information."
+msgstr ""
+"Mine lehele https://developers.google.com/maps/documentation/geocoding/get-"
+"api-key , et saada rohkem infot."
 
 #. module: base_geolocalize
 #. odoo-python

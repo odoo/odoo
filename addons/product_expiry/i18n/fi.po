@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* product_expiry
+# * product_expiry
 #
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
@@ -10,25 +10,61 @@
 # Jussi Lehto <jussi@gulfeo.com>, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"PO-Revision-Date: 2025-11-05 08:51+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"product_expiry/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/models/production_lot.py:0
+msgid "\t--Expire on %(date)s--"
+msgstr "\t--Vanhenee %(date)s--"
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/models/production_lot.py:0
+msgid "\t--Expired--"
+msgstr "\t--Vanhentunut--"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-msgid "<span class=\"badge text-bg-danger\" attrs=\"{'invisible': [('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
-msgstr "<span class=\"badge text-bg-danger\" attrs=\"{'invisible': [('product_expiry_alert', '=', False)]}\">Vanhentumishuomautus</span>"
+msgid ""
+"<span class=\"badge rounded-pill float-end text-bg-warning\" invisible=\"not "
+"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)"
+"\">Expiring</span>\n"
+"            <span class=\"badge rounded-pill float-end text-bg-danger\" "
+"invisible=\"not product_expiry_alert\">Expired</span>"
+msgstr ""
+"<span class=\"badge rounded-pill float-end text-bg-warning\" invisible=\"not "
+"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)"
+"\">Vanhenemassa</span>\n"
+"            <span class=\"badge rounded-pill float-end text-bg-danger\" "
+"invisible=\"not product_expiry_alert\">Vanhentunut</span>"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
+msgid ""
+"<span title=\"Alert\" class=\"fa fa-exclamation-triangle text-danger me-2\" "
+"invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
+"expiration_date\"/>"
+msgstr ""
+"<span title=\"Alert\" class=\"fa fa-exclamation-triangle text-danger me-2\" "
+"invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
+"expiration_date\"/>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
@@ -48,9 +84,46 @@ msgid "Alert Date"
 msgstr "Hälytyspäivä"
 
 #. module: product_expiry
-#: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
+#. odoo-python
+#: code:addons/product_expiry/models/production_lot.py:0
 msgid "Alert Date Reached"
 msgstr "Hälytyspäivämäärä saavutettu"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
+msgid "Alert Lots"
+msgstr "Erät hälytyksillä"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid "Alert from"
+msgstr "Hälytys"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__available_quantity
+msgid "Available Quantity"
+msgstr "Saatavilla oleva määrä"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__free_qty
+msgid ""
+"Available quantity (computed as Quantity On Hand - reserved quantity - "
+"quantity to remove)\n"
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
+msgstr ""
+"Saatavilla oleva määrä (lasketaan kaavalla Saatavilla oleva määrä - varattu "
+"määrä - poistettava määrä)\n"
+"Jos kontekstissa on vain yksi Varastopaikka, tämä kattaa tavarat, jotka on "
+"varastoitu kyseiseen paikkaan tai sen alisteisiin paikkoihin.\n"
+"Jos kontekstissa on vain yksi varasto, tämä kattaa tavarat, jotka on "
+"varastoitu tämän varaston varastopaikkaan tai sen alisteisiin paikkoihin.\n"
+"Muussa tapauksessa tämä kattaa tavarat, jotka on varastoitu kaikkiin tyypin "
+"\"sisäinen\" varastopaikkoihin."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
@@ -64,14 +137,14 @@ msgid "Best Before Date"
 msgstr "Parasta ennen päiväys"
 
 #. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid "Best before"
+msgstr "Parasta ennen"
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_date
 msgid "Best before Date"
 msgstr "Parasta ennen päiväys"
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_quant_reserve_line
-msgid "Choose quantity to reserve from each stock quant"
-msgstr ""
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_config_settings
@@ -107,8 +180,12 @@ msgstr "Luotu"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__alert_date
-msgid "Date to determine the expired lots and serial numbers using the filter \"Expiration Alerts\"."
-msgstr "Päivämäärä määrittää vanhentuneet erät ja sarjanumerot suodattimen \"Vanhentumishälytykset\" avulla."
+msgid ""
+"Date to determine the expired lots and serial numbers using the filter "
+"\"Expiration Alerts\"."
+msgstr ""
+"Päivämäärä määrittää vanhentuneet erät ja sarjanumerot suodattimen "
+"\"Vanhentumishälytykset\" avulla."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -133,6 +210,17 @@ msgstr "Näyttää viimeinen voimassaolopäivä toimituskirjoissa"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_report_stock_quantity__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_forecasted_product_product__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_rule__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
@@ -142,7 +230,11 @@ msgid "Exp."
 msgstr "Vanh."
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid "Expiration"
+msgstr "Vanhentuminen"
+
+#. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
 msgid "Expiration Alerts"
 msgstr "Vanhentumishälytykset"
@@ -153,7 +245,6 @@ msgstr "Vanhentumishälytykset"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__expiration_date
-#: model:ir.model.fields,field_description:product_expiry.field_stock_quant_reserve_line__expiration_date
 #: model_terms:ir.ui.view,arch_db:product_expiry.stock_report_delivery_document_inherit_product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Expiration Date"
@@ -165,9 +256,25 @@ msgid "Expiration dates will appear on the delivery slip"
 msgstr "Viimeiset voimassaolopäivät näkyvät lähetysluettelossa"
 
 #. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
+msgid "Expiration:"
+msgstr "Vanhentuminen:"
+
+#. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Expired Lot(s)"
 msgstr "Vanhentuneet erä(t)"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
+msgid "Expired Lots"
+msgstr "Vanhentuneet erät"
+
+#. module: product_expiry
+#. odoo-javascript
+#: code:addons/product_expiry/static/src/forecasted_details.xml:0
+msgid "Expired Stock"
+msgstr "Vanhentunut varasto"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
@@ -175,7 +282,53 @@ msgid "Expiry has been reminded"
 msgstr "Vanhentumisesta on muistutettu"
 
 #. module: product_expiry
+#: model:product.removal,name:product_expiry.removal_fefo
+msgid "First Expiry First Out (FEFO)"
+msgstr "First Expiry First Out (FEFO)"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__virtual_available
+msgid ""
+"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming - "
+"Quantity to Remove)\n"
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
+msgstr ""
+"Ennustettu määrä (lasketaan kaavalla Saatavilla oleva määrä - Lähtevät + "
+"Saapuvat - Poistettavat määrät) \n"
+"Jos käytössä on yksi varastopaikka, tämä sisältää siellä ja sen alisteisissa "
+"sijainneissa olevat tuotteet.\n"
+"Jos käytössä on yksi varasto, tämä sisältää varaston varastopaikassa ja sen "
+"alapaikoissa olevat tuotteet.\n"
+"Muussa tapauksessa tämä sisältää kaikki tyypin 'sisäinen' varastopaikat."
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__virtual_available
+msgid "Forecasted Quantity"
+msgstr "Ennustettu määrä"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__free_qty
+msgid "Free To Use Quantity "
+msgstr "Vapaasti käytettävä määrä "
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__id
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__id
+#: model:ir.model.fields,field_description:product_expiry.field_report_stock_quantity__id
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_forecasted_product_product__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_picking__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_rule__id
 msgid "ID"
 msgstr "ID"
 
@@ -205,33 +358,62 @@ msgid "Lot/Serial"
 msgstr "Erä/sarja"
 
 #. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_quant_reserve
-msgid "Manually reserve stock"
-msgstr ""
-
-#. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__expiration_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__expiration_time
-msgid "Number of days after the receipt of the products (from the vendor or in stock after production) after which the goods may become dangerous and must not be consumed. It will be computed on the lot/serial number."
-msgstr "Niiden päivien lukumäärä tuotteiden vastaanottamisesta (myyjältä tai varastossa tuotannon jälkeen), joiden jälkeen tuotteet voivat muuttua vaarallisiksi eikä niitä saa käyttää. Lasketaan erä- tai sarjanumeron perusteella."
+msgid ""
+"Number of days after the receipt of the products (from the vendor or in "
+"stock after production) after which the goods may become dangerous and must "
+"not be consumed. It will be computed on the lot/serial number."
+msgstr ""
+"Niiden päivien lukumäärä tuotteiden vastaanottamisesta (myyjältä tai "
+"varastossa tuotannon jälkeen), joiden jälkeen tuotteet voivat muuttua "
+"vaarallisiksi eikä niitä saa käyttää. Lasketaan erä- tai sarjanumeron "
+"perusteella."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
-msgid "Number of days before the Expiration Date after which an alert should be raised on the lot/serial number. It will be computed on the lot/serial number."
-msgstr "Niiden päivien lukumäärä ennen viimeistä voimassaolopäivää, joiden jälkeen erästä/sarjanumerosta on annettava hälytys. Lasketaan erän- tai sarjanumeron perusteella."
+msgid ""
+"Number of days before the Expiration Date after which an alert should be "
+"raised on the lot/serial number. It will be computed on the lot/serial "
+"number."
+msgstr ""
+"Niiden päivien lukumäärä ennen viimeistä voimassaolopäivää, joiden jälkeen "
+"erästä/sarjanumerosta on annettava hälytys. Lasketaan erän- tai sarjanumeron "
+"perusteella."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
-msgid "Number of days before the Expiration Date after which the goods should be removed from the stock. It will be computed on the lot/serial number."
-msgstr "Niiden päivien lukumäärä ennen viimeistä voimassaolopäivää, jonka jälkeen tavarat on poistettava varastosta. Lasketaan erä- tai sarjanumeron perusteella."
+msgid ""
+"Number of days before the Expiration Date after which the goods should be "
+"removed from the stock and not be counted in the Fresh On Hand Stock "
+"anymore.It will be computed on the lot/serial number."
+msgstr ""
+"Päivien määrä ennen viimeistä käyttöpäivää, kun tuotteet tulisi poistaa "
+"varastosta, jotta niitä ei enää laskettaisi tuoreeseen käytettävissä olevaan "
+"saldoon. Tämä lasketaan erän/sarjanumeron perusteella."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_time
-msgid "Number of days before the Expiration Date after which the goods starts deteriorating, without being dangerous yet. It will be computed on the lot/serial number."
-msgstr "Niiden päivien lukumäärä ennen viimeistä voimassaolopäivää, joiden jälkeen tavarat alkavat huonontua, mutta eivät ole vielä vaarallisia. Lasketaan erä- tai sarjanumeron perusteella."
+msgid ""
+"Number of days before the Expiration Date after which the goods starts "
+"deteriorating, without being dangerous yet. It will be computed on the lot/"
+"serial number."
+msgstr ""
+"Niiden päivien lukumäärä ennen viimeistä voimassaolopäivää, joiden jälkeen "
+"tavarat alkavat huonontua, mutta eivät ole vielä vaarallisia. Lasketaan erä- "
+"tai sarjanumeron perusteella."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__available_quantity
+msgid ""
+"On hand quantity which hasn't been reserved on a transfer and is still "
+"fresh, in the default unit of measure of the product"
+msgstr ""
+"Saatavilla oleva varasto, jota ei ole varattu siirtoon ja joka on yhä "
+"käyttökelpoinen, tuotteen oletusyksikössä"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
@@ -240,13 +422,8 @@ msgstr "Keräily"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
-msgid "Proceed except for expired one"
-msgstr "Käsittele, paitsi jos vanhentunut"
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_procurement_group
-msgid "Procurement Group"
-msgstr "Hankintaryhmä"
+msgid "Proceed except expired"
+msgstr "Jatka, paitsi vanhentuneet"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
@@ -271,16 +448,23 @@ msgstr "Tuotevariaatio"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
-msgid "Quants"
-msgstr "Määrät"
+msgid "Quant"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__removal_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Removal Date"
 msgstr "Poistopäivä"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
+msgid "Removal:"
+msgstr "Poistaminen:"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
@@ -291,6 +475,21 @@ msgstr "Näytä eränumerot"
 #: model:ir.model,name:product_expiry.model_stock_move
 msgid "Stock Move"
 msgstr "Varastosiirto"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_report_stock_quantity
+msgid "Stock Quantity Report"
+msgstr "Varastosaldoraportti"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_forecasted_product_product
+msgid "Stock Replenishment Report"
+msgstr "Varaston täydennyksen raportti"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_rule
+msgid "Stock Rule"
+msgstr "Varastosääntö"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__product_expiry_alert
@@ -308,32 +507,51 @@ msgstr "Tämän erän tai sarjanumeron hälytyspäivä on saavutettu"
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__expiration_date
-#: model:ir.model.fields,help:product_expiry.field_stock_quant_reserve_line__expiration_date
-msgid "This is the date on which the goods with this Serial Number may become dangerous and must not be consumed."
-msgstr "Päivämäärä, jolloin tämän sarjanumeron tuotteista tulee vaarallisia eikä niitä pitäisi nauttia."
+msgid ""
+"This is the date on which the goods with this Serial Number may become "
+"dangerous and must not be consumed."
+msgstr ""
+"Päivämäärä, jolloin tämän sarjanumeron tuotteista tulee vaarallisia eikä "
+"niitä pitäisi nauttia."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__removal_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
-msgid "This is the date on which the goods with this Serial Number should be removed from the stock. This date will be used in FEFO removal strategy."
-msgstr "Tämä on päivämäärä, jolloin kyseisellä sarjanumerolla varustetut tavarat on poistettava varastosta. Tätä päivämäärää käytetään FEFO-poistostrategiassa."
+msgid ""
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock and not be counted in the Fresh On Hand Stock "
+"anymore. This date will be used in FEFO removal strategy."
+msgstr ""
+"Tämä on päivämäärä, jolloin tämän sarjanumeron tuotteet tulee poistaa "
+"varastosta, eikä niitä enää lasketa tuoreeseen käytettävissä olevaan "
+"saldoon. Tätä päivämäärää käytetään FEFO-poistostrategiassa."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date
-msgid "This is the date on which the goods with this Serial Number start deteriorating, without being dangerous yet."
-msgstr "Päivämäärä, jolloin tämän sarjanumeron tuotteet alkavat huonontua ilman, että niistä tulee vaarallisia."
+msgid ""
+"This is the date on which the goods with this Serial Number start "
+"deteriorating, without being dangerous yet."
+msgstr ""
+"Päivämäärä, jolloin tämän sarjanumeron tuotteet alkavat huonontua ilman, "
+"että niistä tulee vaarallisia."
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_detailed_operation_tree_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_operation_tree_expiry
-msgid "This lot is expired"
-msgstr "Tämä erä on vanhentunut"
+#. odoo-javascript
+#: code:addons/product_expiry/static/src/forecasted_header.xml:0
+msgid "To Remove"
+msgstr "Poistettava"
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_detailed_operation_tree_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_operation_tree_expiry
-msgid "This lot is expired."
-msgstr "Tämä erä on vanhentunut."
+#. odoo-javascript
+#: code:addons/product_expiry/static/src/forecasted_details.xml:0
+msgid "To remove now"
+msgstr "Poistettava nyt"
+
+#. module: product_expiry
+#. odoo-javascript
+#: code:addons/product_expiry/static/src/forecasted_details.xml:0
+msgid "To remove on"
+msgstr "Poistettava päivänä"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking
@@ -347,7 +565,6 @@ msgstr "Siirto"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move__use_expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__use_expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__use_expiration_date
-#: model:ir.model.fields,field_description:product_expiry.field_stock_quant_reserve__show_expiry
 msgid "Use Expiration Date"
 msgstr "Käytä vanhentumispäivää"
 
@@ -358,9 +575,13 @@ msgstr "Käytä vanhentumispäivää"
 #: model:ir.model.fields,help:product_expiry.field_stock_move__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
-#: model:ir.model.fields,help:product_expiry.field_stock_quant_reserve__show_expiry
-msgid "When this box is ticked, you have the possibility to specify dates to manage product expiration, on the product and on the corresponding lot/serial numbers"
-msgstr "Kun valittu, voit määrittää päivämäärät tuotteen ja vastaavien erien/sarjanumeroiden vanhenemispäivämäärien hallitsemiseksi"
+msgid ""
+"When this box is ticked, you have the possibility to specify dates to manage "
+"product expiration, on the product and on the corresponding lot/serial "
+"numbers"
+msgstr ""
+"Kun valittu, voit määrittää päivämäärät tuotteen ja vastaavien erien/"
+"sarjanumeroiden vanhenemispäivämäärien hallitsemiseksi"
 
 #. module: product_expiry
 #. odoo-python
@@ -369,14 +590,20 @@ msgid ""
 "You are going to deliver some product expired lots.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"Toimitat jonkin tuotteen vanhentuneita eriä.\n"
+"Haluatko varmasti jatkaa?"
 
 #. module: product_expiry
 #. odoo-python
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
 msgid ""
-"You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is "
+"expired or should at least be removed from stock.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"Olet toimittamassa tuotetta %(product_name)s, %(lot_name)s, joka on "
+"vanhentunut tai joka tulisi ainakin poistaa varastosta.\n"
+"Haluatko varmasti jatkaa?"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -480,3 +707,8 @@ msgid ""
 msgstr ""
 "^FS\n"
 "^FO100,250^BY3"
+
+#. module: product_expiry
+#: model:product.removal,method:product_expiry.removal_fefo
+msgid "fefo"
+msgstr "FEFO"

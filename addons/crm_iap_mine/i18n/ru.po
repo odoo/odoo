@@ -1,27 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* crm_iap_mine
+# * crm_iap_mine
 #
 # Translators:
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-10-29 05:46+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
+"crm_iap_mine/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: crm_iap_mine
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-msgid "%d credits will be consumed to find %d companies."
-msgstr "%d кредиты будут потрачены на поиск %d компаний."
+msgid ""
+"%(credit_count)d credits will be consumed to find %(company_count)d "
+"companies."
+msgstr ""
+"%(credit_count)d кредиты будут потрачены на поиск %(company_count)d компаний."
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
@@ -33,16 +42,19 @@ msgstr "<b>Контакты</b>"
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
-"    <p>There are no more credits on your IAP Lead Generation account.<br>\n"
-"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br></p>\n"
+"    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
+"    You can charge your IAP Lead Generation account in the settings of the "
+"CRM app.<br/></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p>Уважаемый,</p>\n"
-"    <p>На вашем аккаунте IAP Lead Generation больше нет кредитов.<br>\n"
-"    Вы можете пополнить счет IAP Lead Generation в настройках приложения CRM.<br></p>\n"
+"    <p>Здравствуйте!</p>\n"
+"    <p>У вас закончились кредиты для встроенных покупок в аккаунте для "
+"Лидогенерации.<br/>\n"
+"    Вы можете пополнить счет данного аккаунта в настройках модуля CRM Odoo."
+"<br/></p>\n"
 "    <p>С наилучшими пожеланиями,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
@@ -50,12 +62,13 @@ msgstr ""
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
-msgstr "<span class=\"col-md-6\">Дополнительные контакты для каждой компании</span>"
+msgstr ""
+"<span class=\"col-md-6\">Дополнительные контакты для каждой компании</span>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "<span class=\"o_stat_text\">Leads</span>"
-msgstr "<span class=\"o_stat_text\">Потенциальные Клиенты</span>"
+msgstr "<span class=\"o_stat_text\">Потенциальные Клиенты (Лиды)</span>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -64,8 +77,12 @@ msgstr "<span class=\"o_stat_text\">Возможности</span>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
-msgid "<span invisible=\"error_type != 'no_result'\">Your request did not return any result (no credits were used). Try removing some filters.</span>"
-msgstr "<span invisible=\"error_type != 'no_result'\">Ваш запрос не дал результатов (кредиты не были использованы). Попробуйте снять некоторые фильтры.</span>"
+msgid ""
+"<span invisible=\"error_type != 'no_result'\">Your request did not return "
+"any result (no credits were used). Try removing some filters.</span>"
+msgstr ""
+"<span invisible=\"error_type != 'no_result'\">Ваш запрос не дал результатов "
+"(кредиты не были использованы). Попробуйте снять некоторые фильтры.</span>"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_238
@@ -100,7 +117,7 @@ msgstr "CRM IAP Lead Industry"
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_mining_request
 msgid "CRM Lead Mining Request"
-msgstr "CRM Запрос на добычу свинца"
+msgstr "CRM Запрос на добычу Лидов"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -182,7 +199,12 @@ msgstr "Страны"
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 msgid "Create a Lead Mining Request"
-msgstr "Создайте запрос на добычу свинца"
+msgstr "Создайте запрос на добычу лидов"
+
+#. module: crm_iap_mine
+#: model:ir.model,website_form_label:crm_iap_mine.model_crm_lead
+msgid "Create an Opportunity"
+msgstr "Создать возможность"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_uid
@@ -191,7 +213,7 @@ msgstr "Создайте запрос на добычу свинца"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_uid
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано:"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_date
@@ -200,7 +222,7 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_date
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания:"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_4
@@ -213,16 +235,12 @@ msgid "Default Tags"
 msgstr "Теги по умолчанию"
 
 #. module: crm_iap_mine
-#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_lead_label
-msgid "Display Lead Label"
-msgstr "Этикетка с изображением свинца"
-
-#. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
@@ -256,7 +274,7 @@ msgstr "Email"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_138_156
 msgid "Energy & Utilities "
-msgstr "Энергетика и коммунальные  услуги"
+msgstr "Энергетика и коммунальные  услуги "
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_6
@@ -319,17 +337,13 @@ msgstr "Генерировать лиды"
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 msgid "Generate new leads based on their country, industry, size, etc."
-msgstr "Генерируйте новые ссылки на основе данных о стране, отрасли, размере и т. д."
+msgstr ""
+"Генерируйте новые Лиды на основе данных о стране, отрасли, размере и т. д."
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
 msgid "Generated Lead / Opportunity"
 msgstr "Сгенерированный лид/возможность"
-
-#. module: crm_iap_mine
-#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
-msgid "Group By"
-msgstr "Группировать по"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_160
@@ -349,7 +363,7 @@ msgstr "Вспомогательные методы для модулей crm_ia
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "How many leads would you like?"
-msgstr "Сколько зацепок вы хотите получить?"
+msgstr "Сколько Лидов вы хотите получить?"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_10
@@ -360,7 +374,7 @@ msgstr "HR"
 #: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
 #: model:mail.template,subject:crm_iap_mine.lead_generation_no_credits
 msgid "IAP Lead Generation Notification"
-msgstr "Уведомление о генерации свинца IAP"
+msgstr "Уведомление о генерации лидов IAP"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__id
@@ -368,13 +382,15 @@ msgstr "Уведомление о генерации свинца IAP"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__id
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__id
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__id
 msgid "ID"
 msgstr "ID"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_168
 msgid "Independent Power and Renewable Electricity Producers"
-msgstr "Независимые производители электроэнергии и возобновляемых источников энергии"
+msgstr ""
+"Независимые производители электроэнергии и возобновляемых источников энергии"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__industry_ids
@@ -408,7 +424,7 @@ msgstr "Недостаточно средств"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__write_uid
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последнее обновление:"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__write_date
@@ -417,17 +433,22 @@ msgstr "Последнее обновление"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__write_date
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления:"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_lead
+msgid "Lead"
+msgstr "Лид"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_contacts_credits
 msgid "Lead Contacts Credits"
-msgstr "Ведущие контакты Кредиты"
+msgstr "Лиды контакты (Баллы)"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_credits
 msgid "Lead Credits"
-msgstr "Ведущие кредиты"
+msgstr "Баллы на Лиды"
 
 #. module: crm_iap_mine
 #: model:ir.ui.menu,name:crm_iap_mine.crm_menu_lead_generation
@@ -438,23 +459,18 @@ msgstr "Генерация Лидов"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__lead_mining_request_id
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Lead Mining Request"
-msgstr "Запрос на добычу свинца"
+msgstr "Запрос на добычу Лидов"
 
 #. module: crm_iap_mine
 #: model:ir.actions.act_window,name:crm_iap_mine.crm_iap_lead_mining_request_action
 #: model:ir.ui.menu,name:crm_iap_mine.crm_iap_lead_mining_request_menu_action
 msgid "Lead Mining Requests"
-msgstr "Запросы на добычу свинца"
+msgstr "Запрос на Поиск Лидов"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_total_credits
 msgid "Lead Total Credits"
-msgstr "Ведущий Всего кредитов"
-
-#. module: crm_iap_mine
-#: model:ir.model,name:crm_iap_mine.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Потенциальные сделки"
+msgstr "Лиды Всего баллов"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__lead
@@ -471,7 +487,9 @@ msgstr "Юридическая информация"
 #. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 msgid "Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
-msgstr "Ищете новые возможности?<br>Попробуйте инструмент \" <b>Генерация свинца</b> \"."
+msgstr ""
+"Ищете новые возможности?<br>Попробуйте инструмент \" <b>Генерация лидов</b> "
+"\"."
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_13
@@ -756,8 +774,12 @@ msgstr "Тип"
 #. module: crm_iap_mine
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-msgid "Up to %d additional credits will be consumed to identify %d contacts per company."
-msgstr "До %d дополнительных кредитов будет потрачено на выявление %d контактов для каждой компании."
+msgid ""
+"Up to %(credit_count)d additional credits will be consumed to identify %"
+"(contact_count)d contacts per company."
+msgstr ""
+"До %(credit_count)d дополнительных кредитов будет потрачено на выявление %"
+"(contact_count)d контактов для каждой компании."
 
 #. module: crm_iap_mine
 #. odoo-javascript

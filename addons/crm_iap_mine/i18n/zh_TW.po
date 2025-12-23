@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* crm_iap_mine
-# 
+# * crm_iap_mine
+#
 # Translators:
 # Tony Ng, 2025
 # Wil Odoo, 2025
-# 
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-09-16 08:10+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/crm_iap_mine/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -39,7 +42,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
 "    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
-"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/></p>\n"
+"    You can charge your IAP Lead Generation account in the settings of the "
+"CRM app.<br/></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
@@ -47,7 +51,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>你好！</p>\n"
 "    <p>閣下的 IAP 潛在客戶生成賬戶，已沒有剩餘點數。<br/>\n"
-"    你可前往「客戶關係」應用程式的設定頁面，為 IAP 潛在客戶生成賬戶增值點數。<br/></p>\n"
+"    你可前往「客戶關係」應用程式的設定頁面，為 IAP 潛在客戶生成賬戶增值點數。"
+"<br/></p>\n"
 "    <p>順祝  安康</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
@@ -73,8 +78,8 @@ msgid ""
 "<span invisible=\"error_type != 'no_result'\">Your request did not return "
 "any result (no credits were used). Try removing some filters.</span>"
 msgstr ""
-"<span invisible=\"error_type != "
-"'no_result'\">您的請求未返回任何結果（未使用積分）。請嘗試移除一些篩選條件。</span>"
+"<span invisible=\"error_type != 'no_result'\">您的請求未返回任何結果（未使用"
+"積分）。請嘗試移除一些篩選條件。</span>"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_238
@@ -266,7 +271,7 @@ msgstr "電郵"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_138_156
 msgid "Energy & Utilities "
-msgstr "能源與公用事業"
+msgstr "能源與公用事業 "
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_6
@@ -335,11 +340,6 @@ msgstr "根據國家、行業、規模等生成新的潛在客戶。"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
 msgid "Generated Lead / Opportunity"
 msgstr "已生成的潛在客戶/銷售機會"
-
-#. module: crm_iap_mine
-#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
-msgid "Group By"
-msgstr "分組依據"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_160
@@ -481,8 +481,7 @@ msgstr "法律"
 #. module: crm_iap_mine
 #. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
-msgid ""
-"Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
+msgid "Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
 msgstr "想尋求更多銷售機會？<br>試試「<b>潛在客戶生成</b>」工具！"
 
 #. module: crm_iap_mine
@@ -559,7 +558,7 @@ msgstr "製程"
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__opportunity
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Opportunities"
-msgstr "商機/線索"
+msgstr "商機"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -769,9 +768,11 @@ msgstr "類型"
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 msgid ""
-"Up to %(credit_count)d additional credits will be consumed to identify "
-"%(contact_count)d contacts per company."
-msgstr "將額外消耗最多 %(credit_count)d 個點數，才可識別每間公司內的 %(contact_count)d 名聯絡人。"
+"Up to %(credit_count)d additional credits will be consumed to identify %"
+"(contact_count)d contacts per company."
+msgstr ""
+"將額外消耗最多 %(credit_count)d 個點數，才可識別每間公司內的 %"
+"(contact_count)d 名聯絡人。"
 
 #. module: crm_iap_mine
 #. odoo-javascript
