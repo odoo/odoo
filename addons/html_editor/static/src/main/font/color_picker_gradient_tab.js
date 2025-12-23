@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { applyOpacityToGradient, isColorGradient } from "@web/core/utils/colors";
@@ -39,6 +39,15 @@ export class ColorPickerGradientTab extends Component {
         });
         this.applyOpacityToGradient = applyOpacityToGradient;
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
+        this.customGradientButton = useRef("customGradientButton");
+        useEffect(
+            () => {
+                if (this.state.showGradientPicker) {
+                    this.customGradientButton.el.focus();
+                }
+            },
+            () => [this.state.showGradientPicker]
+        );
     }
 
     getCurrentGradientColor() {
