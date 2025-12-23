@@ -200,6 +200,8 @@ class AccountMove(models.Model):
 
     def _add_purchase_order_lines(self, purchase_order_lines):
         """ Creates new invoice lines from purchase order lines """
+        if not purchase_order_lines:
+            return
         self.ensure_one()
         new_line_ids = self.env['account.move.line']
 
