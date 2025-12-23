@@ -223,7 +223,7 @@ class StockMove(models.Model):
         # TODO: Start from global value
         if not self.purchase_line_id:
             return super()._get_value_from_quotation(quantity, at_date)
-        price_unit = self.purchase_line_id._get_stock_move_price_unit()
+        price_unit = self.purchase_line_id._get_stock_move_price_unit(self.date)
         uom_quantity = self.product_uom._compute_quantity(quantity, self.product_id.uom_id)
         quantity = min(quantity, uom_quantity)
         value = price_unit * quantity
