@@ -268,7 +268,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
             currency=self.other_currency,
         )
         json_data = invoice._l10n_vn_edi_generate_invoice_json()
-        self.assertEqual(json_data['generalInvoiceInfo']['exchangeRate'], 0.5)
+        self.assertEqual(json_data['generalInvoiceInfo']['exchangeRate'], "0.50")
 
     @freeze_time('2024-01-01')
     def test_send_and_print(self):
