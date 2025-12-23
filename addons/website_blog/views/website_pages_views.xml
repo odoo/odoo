@@ -11,27 +11,32 @@
                     <field name="is_published" widget="website_redirect_button"/>
                 </div>
                 <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                <group name="blog_details">
-                    <field name="blog_id"/>
-                    <field name="name" placeholder="Blog Post Title"/>
-                    <field name="subtitle" placeholder="Blog Subtitle"/>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
-                    <field name="website_id" groups="website.group_multi_website"/>
+                <group>
+                    <h1>
+                        <field name="name" nolabel="1" placeholder="Blog Post Title"/>
+                    </h1>
                 </group>
-                <group name="publishing_details" string="Publishing Options">
-                    <group>
-                        <field name="author_id"/>
-                        <field name="create_date" groups="base.group_no_one"/>
-                        <field name="visits"/>
-                        <field name="write_uid"/>
-                        <field name="write_date"/>
-                        <field name="publish_on" invisible="1"/> <!-- Needed for next fields and elements -->
-                        <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"/>
-                        <label invisible="website_published" for="publish_on" string="Publish on"/>
-                        <div invisible="website_published" class="o_row">
-                            <field name="publish_on" widget="datetime"/>
-                            <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
-                        </div>
+                <group>
+                    <group name="blog_details">
+                        <field name="blog_id"/>
+                        <field name="subtitle" placeholder="Blog Subtitle"/>
+                        <field name="teaser" placeholder="Blog Teaser" help="Shown as a preview on the /blog page"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
+                        <field name="website_id" groups="website.group_multi_website"/>
+                    </group>
+                    <group name="publishing_details" string="Publishing Options">
+                            <field name="author_id"/>
+                            <field name="create_date" groups="base.group_no_one"/>
+                            <field name="visits"/>
+                            <field name="write_uid"/>
+                            <field name="write_date"/>
+                            <field name="publish_on" invisible="1"/> <!-- Needed for next fields and elements -->
+                            <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"/>
+                            <label invisible="website_published" for="publish_on" string="Publish on"/>
+                            <div invisible="website_published" class="o_row">
+                                <field name="publish_on" widget="datetime"/>
+                                <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
+                            </div>
                     </group>
                 </group>
                 <notebook>
