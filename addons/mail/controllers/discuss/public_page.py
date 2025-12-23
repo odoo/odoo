@@ -108,6 +108,8 @@ class PublicPageController(http.Controller):
         if guest and not guest_already_known:
             store.add_global_values(is_welcome_page_displayed=True)
             channel = channel.with_context(guest=guest)
+        if self.env.user._is_internal():
+            return request.redirect(f"/odoo/action-mail.action_discuss?active_id={channel.id}")
         return self._response_discuss_public_template(store, channel)
 
     def _response_discuss_public_template(self, store: Store, channel):
