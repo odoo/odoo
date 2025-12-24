@@ -53,7 +53,6 @@
         </xpath>
     </template>
 
-    <!-- Insert JSON-LD markup data for SEO. -->
     <template id="website_sale.website_sale_layout" inherit_id="website.layout" priority="1">
         <body position="before">
             <t
@@ -67,21 +66,10 @@
             />
         </body>
         <head position="inside">
-            <!-- Company markup data, in all pages. -->
-            <t t-set="base_url" t-value="website.get_base_url()"/>
-            <script t-if="res_company and website" type="application/ld+json" >
-{
-    "@context": "http://schema.org",
-    "@type": "Organization",
-    "name": "<t t-out="res_company.name"/>",
-    "logo": "<t t-out="'%s/logo.png?company=%s' % (base_url, res_company.id)"/>",
-    "url": "<t t-out="base_url"/>"
-}
-            </script>
-
-             <!-- Product markup data, on product pages. -->
+            <!-- Insert JSON-LD markup data for SEO. -->
             <script
-                t-if="product_markup_data" type="application/ld+json" t-out="product_markup_data"
+                type="application/ld+json"
+                t-out="markup_data_json or website and website._get_ecommerce_store_markup_json()"
             />
         </head>
     </template>

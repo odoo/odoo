@@ -538,6 +538,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values.update({'all_tags': all_tags, 'tags': tags})
         if category:
             values['main_object'] = category
+            values['markup_data_json'] = json_scriptsafe.dumps([
+                website._prepare_ecommerce_store_markup_data(),
+                self._prepare_breadcrumb_markup_data(website.get_base_url(), category)
+            ], indent=2)
         values.update(self._get_additional_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
@@ -803,16 +807,19 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return product.sudo()._is_add_to_cart_allowed()
 
     def _prepare_product_values(self, product, category, **kwargs):
+        website = request.website
         ProductCategory = request.env['product.public.category']
-        product_markup_data = [product._to_markup_data(request.website)]
         category = (
             (category and ProductCategory.browse(int(category)).exists())
             or product.public_categ_ids[:1]
         )
+        markup_data = [
+            website._prepare_ecommerce_store_markup_data(), product._to_markup_data(website)
+        ]
         if category:
             # Add breadcrumb's SEO data.
-            product_markup_data.append(self._prepare_breadcrumb_markup_data(
-                request.website.get_base_url(), category, product.name
+            markup_data.append(self._prepare_breadcrumb_markup_data(
+                website.get_base_url(), category
             ))
 
         if (last_attributes_search := request.session.get('attribute_values', [])):
@@ -842,7 +849,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             combination_info = product._get_combination_info()
 
         # Needed to trigger the recently viewed product rpc
-        view_track = request.website.viewref("website_sale.product").track
+        view_track = website.viewref("website_sale.product").track
 
         return {
             'categories': ProductCategory.search([('parent_id', '=', False)]),
@@ -853,43 +860,29 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'product': product,
             'product_variant': request.env['product.product'].browse(combination_info['product_id']),
             'view_track': view_track,
-            'product_markup_data': json_scriptsafe.dumps(product_markup_data, indent=2),
+            'markup_data_json': json_scriptsafe.dumps(markup_data, indent=2),
             'shop_path': SHOP_PATH,
         }
 
-    def _prepare_breadcrumb_markup_data(self, base_url, category, product_name):
-        """ Generate JSON-LD markup data for the given product category.
+    def _prepare_breadcrumb_markup_data(self, base_url, category):
+        """Generate JSON-LD breadcrumb markup data for the given category.
 
         See https://schema.org/BreadcrumbList.
 
         :param str base_url: The base URL of the current website.
         :param product.public.category category: The current product category.
-        :param str product_name: The name of the current product.
         :return: The JSON-LD markup data.
         :rtype: dict
         """
         return {
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
-            'itemListElement': [
-                {
-                    '@type': 'ListItem',
-                    'position': 1,
-                    'name': 'All Products',
-                    'item': f'{base_url}{self._get_shop_path()}',
-                },
-                {
-                    '@type': 'ListItem',
-                    'position': 2,
-                    'name': category.name,
-                    'item': f'{base_url}{self._get_shop_path(category)}',
-                },
-                {
-                    '@type': 'ListItem',
-                    'position': 3,
-                    'name': product_name,
-                }
-            ]
+            'itemListElement': [{
+                '@type': 'ListItem',
+                'position': i,
+                'name': cat.name,
+                'item': f'{base_url}{self._get_shop_path(cat)}',
+            } for i, cat in enumerate(category.parents_and_self, start=1)],
         }
 
     @route(
