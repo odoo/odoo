@@ -555,6 +555,7 @@ class TestTrackingInternals(MailCommon):
             ('datetime_field', 'datetime', False, now),
             ('float_field', 'float', 0, 3.22),
             ('float_field_with_digits', 'float', 0, 3.00001),
+            ('html_field', 'html', False, '<p>Html Value</p>'),
             ('integer_field', 'integer', 0, 42),
             ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner),
             ('monetary_field', 'monetary', False, (42.42, self.env.ref('base.USD'))),
@@ -748,14 +749,6 @@ class TestTrackingInternals(MailCommon):
             self.env['mail.tracking.value']._create_tracking_values(
                 '', 'Test',
                 'not_existing_field', {'string': 'Test', 'type': 'char'},
-                test_record,
-            )
-
-        # raise on unsupported field type
-        with self.assertRaises(NotImplementedError):
-            self.env['mail.tracking.value']._create_tracking_values(
-                '', '<p>Html</p>',
-                'html_field', {'string': 'HTML', 'type': 'html'},
                 test_record,
             )
 

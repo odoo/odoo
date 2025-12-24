@@ -4,6 +4,7 @@
 from datetime import datetime
 
 from odoo import api, fields, models, _
+from odoo.addons.mail.tools.text import text_diff_summary
 
 
 class MailTracking(models.Model):
@@ -104,6 +105,15 @@ class MailTracking(models.Model):
                 'old_value_char': ', '.join(initial_value.mapped('display_name')) if initial_value else '',
                 'new_value_char': ', '.join(new_value.mapped('display_name')) if new_value else '',
             })
+        elif col_info['type'] == 'html':
+            initial_text = str(initial_value or '').replace('&nbsp;', ' ')
+            new_text = str(new_value or '').replace('&nbsp;', ' ')
+            if initial_text != new_text:
+                initial_summary, new_summary = text_diff_summary(initial_text, new_text)
+                values.update({
+                    'old_value_char': initial_summary or '',
+                    'new_value_char': new_summary or '',
+                })
         else:
             raise NotImplementedError(f'Unsupported tracking on field {field.name} (type {col_info["type"]}')
 
