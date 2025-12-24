@@ -82,3 +82,18 @@ class TestExpression(TransactionCase):
             self.assertTrue(res.id, 'The resource was successfully created')
             self.assertEqual(res.date_from, Datetime.to_string(date_from))
             self.assertEqual(res.date_to, Datetime.to_string(date_to))
+
+    def test_avg_hours_per_day_with_attendance_dates(self):
+        """
+        Ensure that setting a start or end date on an attendance line does not
+        affect the average hours per day computation.
+        """
+        calendar = self.env.ref('resource.resource_calendar_std')
+        self.assertEqual(calendar.hours_per_day, 8.0)
+
+        with Form(calendar) as calendar_form:
+            with calendar_form.attendance_ids.edit(0) as line_form:
+                line_form.date_from = Datetime.now()
+
+        # Average hours per day must remain unchanged
+        self.assertEqual(calendar.hours_per_day, 8.0)
