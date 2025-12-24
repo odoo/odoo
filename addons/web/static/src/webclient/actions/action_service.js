@@ -214,10 +214,12 @@ export function makeActionManager(env, router = _router) {
                 }
                 if (actionState.model) {
                     controller.action.type = "ir.actions.act_window";
+                    controller.action.res_model = actionState.model;
                     controller.props.resModel = actionState.model;
                 }
                 if (actionState.resId) {
                     controller.action.type ||= "ir.actions.act_window";
+                    controller.action.res_model = actionState.model;
                     controller.props.resId = actionState.resId;
                     controller.currentState.resId = actionState.resId;
                     controller.props.type = "form";
@@ -336,7 +338,7 @@ export function makeActionManager(env, router = _router) {
         const currentController = _getCurrentController();
         let action = null;
         if (currentController) {
-            if (currentController.virtual) {
+            if (currentController.virtual && currentController.action.id) {
                 try {
                     action = await _loadAction(currentController.action.id);
                 } catch (error) {
@@ -350,7 +352,10 @@ export function makeActionManager(env, router = _router) {
                     }
                 }
             } else {
-                action = JSON.parse(currentController.action._originalAction);
+                action =
+                    (currentController.action._originalAction &&
+                        JSON.parse(currentController.action._originalAction)) ||
+                    Object.assign({}, currentController.action);
             }
         }
         return action;
@@ -578,9 +583,21 @@ export function makeActionManager(env, router = _router) {
             } else {
                 // This is a window action on a multi-record view => restores it from
                 // the session storage
-                if (lastAction.res_model === state.model) {
+                if (!lastAction.res_id && lastAction.res_model === state.model) {
                     actionRequest = lastAction;
                     options.viewType = state.view_type;
+                } else {
+                    //Maybe retrive here the displayName of the Model ? (or after ?)
+                    actionRequest = {
+                        res_model: state.model,
+                        type: "ir.actions.act_window",
+                        views: [
+                            [false, "list"],
+                            [false, "form"],
+                        ], // why list ? ... because !! did we always add a form ?
+                        view_mode: "list,form",
+                    };
+                    options.view_type = "list";
                 }
             }
         }
@@ -789,7 +806,7 @@ export function makeActionManager(env, router = _router) {
                 views: action.views,
                 viewSwitcherEntries,
             },
-            displayName: action.display_name || action.name || "",
+            displayName: action.display_name || action.name || action.res_model || "",
         };
     }
 

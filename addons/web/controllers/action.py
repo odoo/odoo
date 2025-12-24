@@ -102,8 +102,9 @@ class Action(Controller):
                         else:
                             results.append({'display_name': Model.browse(record_id).display_name})
                     else:
-                        # This case cannot be produced by the web client
-                        raise BadRequest('Actions with a model should also have a resId')
+                        # We can put the Model._description but it's not translated ! (need to check how)
+                        # But if we put the description we will have a difference between the last or one of the breadcrumb
+                        results.append({'display_name': Model._name})
                 else:
                     raise BadRequest('Actions should have either an action (id or path) or a model')
             except (MissingActionError, MissingError, AccessError) as exc:

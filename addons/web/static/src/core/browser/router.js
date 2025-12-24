@@ -216,14 +216,14 @@ function urlToState(urlObj) {
                 action.action = part;
             }
 
-            if (action.resId && action.action) {
+            if (action.resId) {
                 actions.push(omit(action, "resId"));
             }
-            // Don't create actions for models without resId unless they're the last one.
-            // If the last one is a model but doesn't have a view_type, the action service will not mount it anyway.
-            if (action.action || action.resId || i === splitPath.length - 1) {
-                actions.push(action);
-            }
+            // // Don't create actions for models without resId unless they're the last one.
+            // // If the last one is a model but doesn't have a view_type, the action service will not mount it anyway.
+            // if (action.action || action.resId || i === splitPath.length - 1) {
+            actions.push(action);
+            // }
         }
         const activeAction = actions.at(-1);
         if (activeAction) {
