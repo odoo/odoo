@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, modules, _
-from odoo.tools import config
+from odoo import api, fields, models, modules
 
 
 class ResPartner(models.Model):
@@ -57,8 +56,8 @@ class ResPartner(models.Model):
         if partners_not_geo_localized:
             self.env.user._bus_send("simple_notification", {
                 'type': 'danger',
-                'title': _("Warning"),
-                'message': _('No match found for %(partner_names)s address(es).',
+                'title': self.env._("Warning"),
+                'message': self.env._('No match found for %(partner_names)s address(es).',
                              partner_names=', '.join(partners_not_geo_localized.mapped('display_name')))
             })
         return True

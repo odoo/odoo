@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import models
 
 
 class IrModuleModule(models.Model):
@@ -12,7 +12,7 @@ class IrModuleModule(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'name': _('Activation Request of "%s"', self.shortdesc),
+            'name': self.env._('Activation Request of "%s"', self.shortdesc),
             'view_mode': 'form',
             'res_model': 'base.module.install.request',
             'context': {'default_module_id': self.id},

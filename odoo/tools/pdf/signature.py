@@ -22,7 +22,6 @@ except ImportError:
     Certificate = None
     load_pem_x509_certificate = None
 
-from odoo import _
 from odoo.addons.base.models.res_company import ResCompany
 from odoo.addons.base.models.res_users import ResUsers
 from odoo.tools.pdf import PdfReader, PdfWriter, ArrayObject, ByteStringObject, DictionaryObject, NameObject, NumberObject, create_string_object, DecodedStreamObject as StreamObject

@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import models, fields, api, _
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -32,9 +32,9 @@ class IrModelFields(models.Model):
         if 'serialization_field_id' in vals or 'name' in vals:
             for field in self:
                 if 'serialization_field_id' in vals and field.serialization_field_id.id != vals['serialization_field_id']:
-                    raise UserError(_('Changing the storing system for field "%s" is not allowed.', field.name))
+                    raise UserError(self.env._('Changing the storing system for field "%s" is not allowed.', field.name))
                 if field.serialization_field_id and (field.name != vals['name']):
-                    raise UserError(_('Renaming sparse field "%s" is not allowed', field.name))
+                    raise UserError(self.env._('Renaming sparse field "%s" is not allowed', field.name))
 
         return super(IrModelFields, self).write(vals)
 
@@ -62,7 +62,7 @@ class IrModelFields(models.Model):
                 try:
                     value = existing[(model_name, field.sparse)][0] if field.sparse else None
                 except KeyError:
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         'Serialization field "%(serialization_field)s" not found for sparse field %(sparse_field)s!',
                         serialization_field=field.sparse,
                         sparse_field=field,

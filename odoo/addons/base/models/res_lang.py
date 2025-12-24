@@ -7,7 +7,7 @@ import re
 from collections.abc import Mapping
 from typing import Any, Literal
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -154,7 +154,7 @@ class ResLang(models.CachedModel):
     def _check_active(self):
         # do not check during installation
         if self.env.registry.ready and not self.search_count([]):
-            raise ValidationError(_('At least one language must be active.'))
+            raise ValidationError(self.env._('At least one language must be active.'))
 
     @api.constrains('time_format', 'date_format')
     def _check_format(self):
@@ -162,7 +162,7 @@ class ResLang(models.CachedModel):
             for pattern in lang._disallowed_datetime_patterns:
                 if (lang.time_format and pattern in lang.time_format) or \
                         (lang.date_format and pattern in lang.date_format):
-                    raise ValidationError(_('Invalid date/time format directive specified. '
+                    raise ValidationError(self.env._('Invalid date/time format directive specified. '
                                             'Please refer to the list of allowed directives, '
                                             'displayed when you edit a language.'))
 
@@ -170,8 +170,8 @@ class ResLang(models.CachedModel):
     def _onchange_format(self):
         warning = {
             'warning': {
-                'title': _("Using 24-hour clock format with AM/PM can cause issues."),
-                'message': _("Changing to 12-hour clock format instead."),
+                'title': self.env._("Using 24-hour clock format with AM/PM can cause issues."),
+                'message': self.env._("Changing to 12-hour clock format instead."),
                 'type': 'notification'
             }
         }
@@ -357,7 +357,7 @@ class ResLang(models.CachedModel):
         # TODO use directly _get_active_langs().grouped()
         fnames = ('id', *self._cached_data_fields)
         if field not in fnames:
-            raise UserError(_('Field "%s" is not cached', field))
+            raise UserError(self.env._('Field "%s" is not cached', field))
         if field == 'code':
             langs = self.sudo()._get_active_langs()
             return LangDataDict({
@@ -388,14 +388,14 @@ class ResLang(models.CachedModel):
     def write(self, vals):
         lang_codes = self.mapped('code')
         if 'code' in vals and any(code != vals['code'] for code in lang_codes):
-            raise UserError(_("Language code cannot be modified."))
+            raise UserError(self.env._("Language code cannot be modified."))
         if vals.get('active') == False:
             if self.env['res.users'].with_context(active_test=True).search_count([('lang', 'in', lang_codes)], limit=1):
-                raise UserError(_("Cannot deactivate a language that is currently used by users."))
+                raise UserError(self.env._("Cannot deactivate a language that is currently used by users."))
             if self.env['res.partner'].with_context(active_test=True).search_count([('lang', 'in', lang_codes)], limit=1):
-                raise UserError(_("Cannot deactivate a language that is currently used by contacts."))
+                raise UserError(self.env._("Cannot deactivate a language that is currently used by contacts."))
             if self.env['res.users'].with_context(active_test=False).search_count([('lang', 'in', lang_codes)], limit=1):
-                raise UserError(_("You cannot archive the language in which Odoo was setup as it is used by automated processes."))
+                raise UserError(self.env._("You cannot archive the language in which Odoo was setup as it is used by automated processes."))
             # delete linked ir.default specifying default partner's language
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
@@ -427,35 +427,35 @@ class ResLang(models.CachedModel):
     def _unlink_except_default_lang(self):
         for language in self:
             if language.code == 'en_US':
-                raise UserError(_("Base Language 'en_US' can not be deleted."))
+                raise UserError(self.env._("Base Language 'en_US' can not be deleted."))
             ctx_lang = self.env.context.get('lang')
             if ctx_lang and (language.code == ctx_lang):
-                raise UserError(_("You cannot delete the language which is the user's preferred language."))
+                raise UserError(self.env._("You cannot delete the language which is the user's preferred language."))
             if language.active:
-                raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
+                raise UserError(self.env._("You cannot delete the language which is Active!\nPlease de-activate the language first."))
 
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
         for record, vals in zip(self, vals_list):
             if "name" not in default:
-                vals["name"] = _("%s (copy)", record.name)
+                vals["name"] = self.env._("%s (copy)", record.name)
             if "code" not in default:
-                vals["code"] = _("%s (copy)", record.code)
+                vals["code"] = self.env._("%s (copy)", record.code)
             if "url_code" not in default:
-                vals["url_code"] = _("%s (copy)", record.url_code)
+                vals["url_code"] = self.env._("%s (copy)", record.url_code)
         return vals_list
 
     def format(self, percent: str, value, grouping: bool = False) -> str:
         """ Format() will return the language-specific output for float values"""
         self.ensure_one()
         if percent[0] != '%':
-            raise ValueError(_("format() must be given exactly one %char format specifier"))
+            raise ValueError(self.env._("format() must be given exactly one %char format specifier"))
 
         formatted = percent % value
 
         if self not in self._get_active_langs():
-            raise UserError(_("The language %s is not installed.", self.name))
+            raise UserError(self.env._("The language %s is not installed.", self.name))
         decimal_point = self.decimal_point
         # floats and decimal ints need special action!
         if grouping:
@@ -479,7 +479,7 @@ class ResLang(models.CachedModel):
     def action_activate_langs(self):
         """ Activate the selected languages """
         self.action_unarchive()
-        message = _("The languages that you selected have been successfully installed. Users can choose their favorite language in their preferences.")
+        message = self.env._("The languages that you selected have been successfully installed. Users can choose their favorite language in their preferences.")
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',

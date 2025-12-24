@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import ormcache
 
@@ -28,7 +28,7 @@ class PropertiesBaseDefinition(models.Model):
                 definition.display_name = False
                 continue
 
-            definition.display_name = _(
+            definition.display_name = self.env._(
                 "%s Properties",
                 self.env[definition.properties_field_id.model]._description,
             )
@@ -37,12 +37,12 @@ class PropertiesBaseDefinition(models.Model):
     def _check_properties_field_id(self):
         if invalid_fields := self.mapped("properties_field_id").filtered(lambda f: f.ttype != 'properties'):
             raise ValidationError(
-                _("The definition needs to be linked to a properties field. Those fields are not: %s.", ', '.join(invalid_fields.mapped('name')))
+                self.env._("The definition needs to be linked to a properties field. Those fields are not: %s.", ', '.join(invalid_fields.mapped('name')))
             )
 
     def write(self, vals):
         if 'properties_field_id' in vals:
-            raise AccessError(_("You can not change the field of a base definition"))
+            raise AccessError(self.env._("You can not change the field of a base definition"))
         return super().write(vals)
 
     def _get_definition_for_property_field(self, model_name, field_name):

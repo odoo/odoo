@@ -16,11 +16,10 @@ from hashlib import sha256
 from itertools import chain
 from zoneinfo import ZoneInfo
 
-from lxml import etree
 from markupsafe import Markup
 from passlib.context import CryptContext as _CryptContext
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
@@ -95,7 +94,7 @@ def check_identity(fn):
     @wraps(fn)
     def wrapped(self, *args, **kwargs):
         if not request:
-            raise UserError(_("This method can only be accessed over HTTP"))
+            raise UserError(self.env._("This method can only be accessed over HTTP"))
 
         if request.session.get('identity-check-last', 0) > time.time() - 10 * 60:
             # update identity-check-last like github?
@@ -118,7 +117,7 @@ def check_identity(fn):
             'type': 'ir.actions.act_window',
             'res_model': 'res.users.identitycheck',
             'res_id': w.id,
-            'name': _("Access Control"),
+            'name': self.env._("Access Control"),
             'target': 'new',
             'views': [(False, 'form')],
             'context': {'dialog_size': 'medium'},
@@ -386,7 +385,7 @@ class ResUsers(models.Model):
     @api.depends_context('uid')
     def _compute_email_domain_placeholder(self):
         domain = email_domain_extract(self.env.user.email)
-        self.email_domain_placeholder = _('e.g. %(placeholder)s', placeholder=f'email@{domain}') if domain else _('Email')
+        self.email_domain_placeholder = self.env._('e.g. %(placeholder)s', placeholder=f'email@{domain}') if domain else self.env._('Email')
 
     def _compute_password(self):
         for user in self:
@@ -403,7 +402,7 @@ class ResUsers(models.Model):
                 # To change their own password, users must use the client-specific change password wizard,
                 # so that the new password is immediately used for further RPC requests, otherwise the user
                 # will face unexpected 'Access Denied' exceptions.
-                raise UserError(_('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
+                raise UserError(self.env._('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
             else:
                 user.password = user.new_password
 
@@ -485,7 +484,7 @@ class ResUsers(models.Model):
         for user in self.filtered(lambda u: u.active):
             if user.company_id not in user.company_ids:
                 raise ValidationError(
-                    _('Company %(company_name)s is not in the allowed companies for user %(user_name)s (%(company_allowed)s).',
+                    self.env._('Company %(company_name)s is not in the allowed companies for user %(user_name)s (%(company_allowed)s).',
                       company_name=user.company_id.name,
                       user_name=user.name,
                       company_allowed=', '.join(user.mapped('company_ids.name')))
@@ -495,14 +494,14 @@ class ResUsers(models.Model):
     def _check_action_id(self):
         action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
         if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
-            raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
+            raise ValidationError(self.env._('The "App Switcher" action cannot be selected as home action.'))
         # We use sudo() because  "Access rights" admins can't read action models
         for user in self.sudo():
             if user.action_id.type == "ir.actions.client":
                 # Prevent using reload actions.
                 action = self.env["ir.actions.client"].browse(user.action_id.id)  # magic
                 if action.tag == "reload":
-                    raise ValidationError(_('The "%s" action cannot be selected as home action.', action.name))
+                    raise ValidationError(self.env._('The "%s" action cannot be selected as home action.', action.name))
 
             elif user.action_id.type == "ir.actions.act_window":
                 # Restrict actions that include 'active_id' in their context.
@@ -511,7 +510,7 @@ class ResUsers(models.Model):
                     continue
                 if "active_id" in action.context:
                     raise ValidationError(
-                        _('The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.', action.name)
+                        self.env._('The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.', action.name)
                     )
 
     @api.constrains('group_ids')
@@ -523,7 +522,7 @@ class ResUsers(models.Model):
         for user in self:
             disjoint_groups = user.all_group_ids & user_type_groups
             if len(disjoint_groups) > 1:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "User %(user)s cannot be at the same time in exclusive groups %(groups)s.",
                     user=repr(user.name),
                     groups=", ".join(repr(g.display_name) for g in disjoint_groups),
@@ -534,7 +533,7 @@ class ResUsers(models.Model):
         if not self.env.registry._init_modules:
             return  # ignore the constraint when updating the module 'base'
         if not self.env.ref('base.group_system').user_ids:
-            raise ValidationError(_("You must have at least an administrator user."))
+            raise ValidationError(self.env._("You must have at least an administrator user."))
 
     @api.model
     def _has_field_access(self, field, operation):
@@ -568,9 +567,9 @@ class ResUsers(models.Model):
 
     def write(self, vals):
         if vals.get('active') and SUPERUSER_ID in self._ids:
-            raise UserError(_("You cannot activate the superuser."))
+            raise UserError(self.env._("You cannot activate the superuser."))
         if vals.get('active') == False and self.env.uid in self._ids:  # noqa: E712
-            raise UserError(_("You cannot deactivate the user you're currently logged in as."))
+            raise UserError(self.env._("You cannot deactivate the user you're currently logged in as."))
 
         if vals.get('active'):
             # unarchive partners before unarchiving the users
@@ -614,15 +613,15 @@ class ResUsers(models.Model):
         portal_user_template = self.env.ref('base.template_portal_user_id', False)
         public_user = self.env.ref('base.public_user', False)
         if SUPERUSER_ID in self.ids:
-            raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
+            raise UserError(self.env._('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         user_admin = self.env.ref('base.user_admin', raise_if_not_found=False)
         if user_admin and user_admin in self:
-            raise UserError(_('You cannot delete the admin user because it is utilized in various places (such as security configurations,...). Instead, archive it.'))
+            raise UserError(self.env._('You cannot delete the admin user because it is utilized in various places (such as security configurations,...). Instead, archive it.'))
         self.env.registry.clear_cache()
         if portal_user_template and portal_user_template in self:
-            raise UserError(_('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))
+            raise UserError(self.env._('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))
         if public_user and public_user in self:
-            raise UserError(_("Deleting the public user is not allowed. Deleting this profile will compromise critical functionalities."))
+            raise UserError(self.env._("Deleting the public user is not allowed. Deleting this profile will compromise critical functionalities."))
 
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
@@ -651,9 +650,9 @@ class ResUsers(models.Model):
         vals_list = super().copy_data(default=default)
         for user, vals in zip(self, vals_list):
             if ('name' not in default) and ('partner_id' not in default):
-                vals['name'] = _("%s (copy)", user.name)
+                vals['name'] = self.env._("%s (copy)", user.name)
             if 'login' not in default:
-                vals['login'] = _("%s (copy)", user.login)
+                vals['login'] = self.env._("%s (copy)", user.login)
         return vals_list
 
     @api.model
@@ -884,7 +883,7 @@ class ResUsers(models.Model):
     def _change_password(self, new_passwd):
         new_passwd = new_passwd.strip()
         if not new_passwd:
-            raise UserError(_("Setting empty passwords is not allowed for security reasons!"))
+            raise UserError(self.env._("Setting empty passwords is not allowed for security reasons!"))
 
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         _logger.info(
@@ -908,7 +907,7 @@ class ResUsers(models.Model):
         """
         non_portal_users = self.filtered(lambda user: not user.share)
         if non_portal_users:
-            raise AccessDenied(_(
+            raise AccessDenied(self.env._(
                 'Only the portal users can delete their accounts. '
                 'The user(s) %s can not be deleted.',
                 ', '.join(non_portal_users.mapped('name')),
@@ -1043,7 +1042,7 @@ class ResUsers(models.Model):
         if not (self.env.su or self == self.env.user or self.env.user._has_group('base.group_user')):
             # this prevents RPC calls from non-internal users to retrieve
             # information about other users
-            raise AccessError(_("You can ony call user.has_group() with your current user."))
+            raise AccessError(self.env._("You can ony call user.has_group() with your current user."))
 
         result = self._has_group(group_ext_id)
         if group_ext_id == 'base.group_no_one':
@@ -1081,7 +1080,7 @@ class ResUsers(models.Model):
         }
         if len(self) > 1:
             action.update({
-                'name': _('Users'),
+                'name': self.env._('Users'),
                 'view_mode': 'list,form',
                 'views': [[None, 'list'], [view_id, 'form']],
                 'domain': [('id', 'in', self.ids)],
@@ -1097,7 +1096,7 @@ class ResUsers(models.Model):
     def action_show_groups(self):
         self.ensure_one()
         return {
-            'name': _('Groups'),
+            'name': self.env._('Groups'),
             'view_mode': 'list,form',
             'res_model': 'res.groups',
             'type': 'ir.actions.act_window',
@@ -1109,7 +1108,7 @@ class ResUsers(models.Model):
     def action_show_accesses(self):
         self.ensure_one()
         return {
-            'name': _('Access Rights'),
+            'name': self.env._('Access Rights'),
             'view_mode': 'list,form',
             'res_model': 'ir.model.access',
             'type': 'ir.actions.act_window',
@@ -1121,7 +1120,7 @@ class ResUsers(models.Model):
     def action_show_rules(self):
         self.ensure_one()
         return {
-            'name': _('Record Rules'),
+            'name': self.env._('Record Rules'),
             'view_mode': 'list,form',
             'res_model': 'ir.rule',
             'type': 'ir.actions.act_window',
@@ -1237,7 +1236,7 @@ class ResUsers(models.Model):
                     "https://www.odoo.com/documentation/latest/administration/install/deploy.html#https for details.",
                     source
                 )
-            raise AccessDenied(_("Too many login failures, please wait a bit before trying again."))
+            raise AccessDenied(self.env._("Too many login failures, please wait a bit before trying again."))
 
         try:
             yield
@@ -1363,7 +1362,7 @@ class ResUsersIdentitycheck(models.TransientModel):
             }
             self.create_uid._check_credentials(credential, {'interactive': True})
         except AccessDenied:
-            raise UserError(_("Incorrect Password, try again or click on Forgot Password to reset your password."))
+            raise UserError(self.env._("Incorrect Password, try again or click on Forgot Password to reset your password."))
 
     def run_check(self):
         # The password must be in the context with the key name `'password'`
@@ -1433,7 +1432,7 @@ class ChangePasswordOwn(models.TransientModel):
     @api.constrains('new_password', 'confirm_password')
     def _check_password_confirmation(self):
         if self.confirm_password != self.new_password:
-            raise ValidationError(_("The new password and its confirmation must be identical."))
+            raise ValidationError(self.env._("The new password and its confirmation must be identical."))
 
     @check_identity
     def change_password(self):
@@ -1506,7 +1505,7 @@ class ResUsersApikeys(models.Model):
                self.mapped('scope'), self.env.user.login, self.env.uid, ip)
             self.sudo().unlink()
             return {'type': 'ir.actions.act_window_close'}
-        raise AccessError(_("You can not remove API keys unless they're yours or you are a system user"))
+        raise AccessError(self.env._("You can not remove API keys unless they're yours or you are a system user"))
 
     def _check_credentials(self, *, scope, key):
         assert scope and key, "scope and key required"
@@ -1534,10 +1533,10 @@ class ResUsersApikeys(models.Model):
         if self.env.is_system():
             return
         if not date:
-            raise ValidationError(_("The API key must have an expiration date"))
+            raise ValidationError(self.env._("The API key must have an expiration date"))
         max_duration = max(group.api_key_duration for group in self.env.user.all_group_ids) or 1.0
         if date > datetime.datetime.now() + datetime.timedelta(days=max_duration):
-            raise ValidationError(_("You cannot exceed %(duration)s days.", duration=max_duration))
+            raise ValidationError(self.env._("You cannot exceed %(duration)s days.", duration=max_duration))
 
     def _generate(self, scope, name, expiration_date):
         """Generates an api key.
@@ -1626,7 +1625,7 @@ class ResUsersApikeysDescription(models.TransientModel):
         except UserError as error:
             warning = {
                 'type': 'notification',
-                'title': _('The API key duration is not correct.'),
+                'title': self.env._('The API key duration is not correct.'),
                 'message': error.args[0]
             }
             return {'warning': warning}
@@ -1649,7 +1648,7 @@ class ResUsersApikeysDescription(models.TransientModel):
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'res.users.apikeys.show',
-            'name': _('API Key Ready'),
+            'name': self.env._('API Key Ready'),
             'views': [(False, 'form')],
             'target': 'new',
             'context': {
@@ -1659,7 +1658,7 @@ class ResUsersApikeysDescription(models.TransientModel):
 
     def check_access_make_key(self):
         if not self.env.user._is_internal():
-            raise AccessError(_("Only internal users can create API keys"))
+            raise AccessError(self.env._("Only internal users can create API keys"))
 
 
 class ResUsersApikeysShow(models.AbstractModel):

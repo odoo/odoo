@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 from .base_automation import get_webhook_request_payload
@@ -29,7 +29,7 @@ class IrActionsServer(models.Model):
 
         if self.base_automation_id and self.model_id != self.base_automation_id.model_id:
             warnings.append(
-                _("Model of action %(action_name)s should match the one from automated rule %(rule_name)s.",
+                self.env._("Model of action %(action_name)s should match the one from automated rule %(rule_name)s.",
                     action_name=self.name,
                     rule_name=self.base_automation_id.name
                     )

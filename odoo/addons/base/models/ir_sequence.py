@@ -2,7 +2,7 @@
 import logging
 from datetime import datetime, timedelta
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import SQL
 
@@ -228,7 +228,7 @@ class IrSequence(models.Model):
             interpolated_prefix = _interpolate(self.prefix, d)
             interpolated_suffix = _interpolate(self.suffix, d)
         except (ValueError, TypeError, KeyError):
-            raise UserError(_('Invalid prefix or suffix for sequence “%s”', self.name))
+            raise UserError(self.env._('Invalid prefix or suffix for sequence “%s”', self.name))
         return interpolated_prefix, interpolated_suffix
 
     def get_next_char(self, number_next):

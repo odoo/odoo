@@ -21,7 +21,7 @@ from PIL import Image, ImageFile
 from lxml import etree
 from markupsafe import Markup
 
-from odoo import api, fields, models, modules, tools, _
+from odoo import api, fields, models, modules, tools
 from odoo.exceptions import UserError, AccessError, RedirectWarning, ValidationError
 from odoo.fields import Domain
 from odoo.http import request, root
@@ -473,7 +473,7 @@ class IrActionsReport(models.Model):
             return [None] * len(bodies)
         wkhtmltoimage_version = _wkhtml().wkhtmltoimage_version
         if not wkhtmltoimage_version or wkhtmltoimage_version < parse_version('0.12.0'):
-            raise UserError(_('wkhtmltoimage 0.12.0^ is required in order to render images from html'))
+            raise UserError(self.env._('wkhtmltoimage 0.12.0^ is required in order to render images from html'))
         command_args = [
             '--disable-local-file-access', '--disable-javascript',
             '--quiet',
@@ -497,7 +497,7 @@ class IrActionsReport(models.Model):
                 # start and block, no need for parallelism for now
                 completed_process = subprocess.run(wkhtmltoimage, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, check=False, encoding='utf-8')
                 if completed_process.returncode:
-                    message = _(
+                    message = self.env._(
                         'Wkhtmltoimage failed (error code: %(error_code)s). Message: %(error_message_end)s',
                         error_code=completed_process.returncode,
                         error_message_end=completed_process.stderr[-1000:],
@@ -624,15 +624,15 @@ class IrActionsReport(models.Model):
                         if not _wkhtml().is_patched_qt:
                             if modules.module.current_test:
                                 raise unittest.SkipTest("Unable to convert multiple documents via wkhtmltopdf using unpatched QT")
-                            raise UserError(_("Tried to convert multiple documents in wkhtmltopdf using unpatched QT"))
+                            raise UserError(self.env._("Tried to convert multiple documents in wkhtmltopdf using unpatched QT"))
 
                     _logger.warning("wkhtmltopdf: %s", err)
                 case c:
-                    message = _(
+                    message = self.env._(
                         'Wkhtmltopdf failed (error code: %(error_code)s). Memory limit too low or maximum file number of subprocess reached. Message : %(message)s',
                         error_code=c,
                         message=err[-1000:],
-                    ) if c == -11 else _(
+                    ) if c == -11 else self.env._(
                         'Wkhtmltopdf failed (error code: %(error_code)s). Message: %(message)s',
                         error_code=c,
                         message=err[-1000:],
@@ -788,7 +788,7 @@ class IrActionsReport(models.Model):
         return view_obj._render_template(template, values).encode()
 
     def _handle_merge_pdfs_error(self, error=None, error_stream=None):
-        raise UserError(_("Odoo is unable to merge the generated PDFs."))
+        raise UserError(self.env._("Odoo is unable to merge the generated PDFs."))
 
     @api.model
     def _merge_pdfs(self, streams, handle_error=_handle_merge_pdfs_error):
@@ -804,7 +804,7 @@ class IrActionsReport(models.Model):
         try:
             writer.write(result_stream)
         except PdfReadError:
-            raise UserError(_("Odoo is unable to merge the generated PDFs."))
+            raise UserError(self.env._("Odoo is unable to merge the generated PDFs."))
         return result_stream
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
@@ -861,7 +861,7 @@ class IrActionsReport(models.Model):
                 # the call should be catched before (cf /report/check_wkhtmltopdf) but
                 # if get_pdf is called manually (email template), the check could be
                 # bypassed
-                raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
+                raise UserError(self.env._("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
 
             # Disable the debug mode in the PDF rendering in order to not split the assets bundle
             # into separated files to load. This is done because of an issue in wkhtmltopdf
@@ -877,7 +877,7 @@ class IrActionsReport(models.Model):
             bodies, html_ids, header, footer, specific_paperformat_args = report_sudo.with_context(**additional_context)._prepare_html(html, report_model=report_sudo.model)
 
             if not has_duplicated_ids and report_sudo.attachment and set(res_ids_wo_stream) != set(html_ids):
-                raise UserError(_(
+                raise UserError(self.env._(
                     "Report template “%s” has an issue, please contact your administrator. \n\n"
                     "Cannot separate file to save as attachment because the report's template does not contain the"
                     " attributes 'data-oe-model' and 'data-oe-id' as part of the div with 'article' classname.",
@@ -1071,7 +1071,7 @@ class IrActionsReport(models.Model):
         if error_record_ids:
             action = {
                 'type': 'ir.actions.act_window',
-                'name': _('Problematic record(s)'),
+                'name': self.env._('Problematic record(s)'),
                 'res_model': report_sudo.model,
                 'domain': [('id', 'in', error_record_ids)],
                 'views': [(False, 'list'), (False, 'form')],
@@ -1083,9 +1083,9 @@ class IrActionsReport(models.Model):
                     'res_id': error_record_ids[0],
                 })
             raise RedirectWarning(
-                message=_('Odoo is unable to merge the generated PDFs because of %(num_errors)s corrupted file(s)', num_errors=num_errors),
+                message=self.env._('Odoo is unable to merge the generated PDFs because of %(num_errors)s corrupted file(s)', num_errors=num_errors),
                 action=action,
-                button_text=_('View Problematic Record(s)'),
+                button_text=self.env._('View Problematic Record(s)'),
             )
 
         for stream in streams_to_merge:

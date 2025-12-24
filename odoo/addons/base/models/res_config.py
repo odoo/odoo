@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import re
-from ast import literal_eval
 
-from odoo import api, models, _
+from odoo import api, models
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 
 _logger = logging.getLogger(__name__)
@@ -156,7 +155,7 @@ class ResConfigSettings(models.TransientModel):
         )
 
     def copy(self, default=None):
-        raise UserError(_("Cannot duplicate configuration!"))
+        raise UserError(self.env._("Cannot duplicate configuration!"))
 
     @api.model
     def _install_modules(self, modules):
@@ -360,7 +359,7 @@ class ResConfigSettings(models.TransientModel):
         """
         self.ensure_one()
         if not self.env.is_admin():
-            raise AccessError(_("Only administrators can change the settings"))
+            raise AccessError(self.env._("Only administrators can change the settings"))
 
         self = self.with_context(active_test=False)
         classified = self._get_classified_fields()
@@ -380,7 +379,7 @@ class ResConfigSettings(models.TransientModel):
             return {
                 'type': 'ir.actions.act_window',
                 'target': 'new',
-                'name': _('Uninstall modules'),
+                'name': self.env._('Uninstall modules'),
                 'view_mode': 'form',
                 'res_model': 'base.module.uninstall',
                 'context': {
@@ -465,7 +464,7 @@ class ResConfigSettings(models.TransientModel):
 
         .. code-block:: python
 
-            raise env['ir..config.settings'](_(
+            raise env['ir..config.settings'](self.env._(
                 "Error: this action is prohibited. You should check the "
                 "field %(field:sale.config.settings.fetchmail_lead)s in "
                 "%(menu:sales_team.menu_sale_config)s."))
@@ -516,7 +515,7 @@ class ResConfigSettings(models.TransientModel):
 
         # 3/ substitute and return the result
         if (action_id):
-            return RedirectWarning(msg % values, action_id, _('Go to the configuration panel'))
+            return RedirectWarning(msg % values, action_id, self.env._('Go to the configuration panel'))
         return UserError(msg % values)
 
     @api.model_create_multi
@@ -557,7 +556,7 @@ class ResConfigSettings(models.TransientModel):
         template_user_id = self.env['ir.config_parameter'].sudo().get_int('base.template_portal_user_id')
         template_user = self.env['res.users'].browse(template_user_id)
         if not template_user.exists():
-            raise UserError(_('Invalid template user. It seems it has been deleted.'))
+            raise UserError(self.env._('Invalid template user. It seems it has been deleted.'))
         action['res_id'] = template_user_id
         action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
         return action

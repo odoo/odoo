@@ -2,8 +2,9 @@
 
 import ipaddress
 
-from odoo import _, SUPERUSER_ID
+from odoo import SUPERUSER_ID
 from odoo.http import request
+
 from odoo.addons.web.controllers.home import Home as WebHome
 
 
@@ -23,7 +24,7 @@ def _admin_password_warn(uid):
         "simple_notification",
         {
             "type": "danger",
-            "message": _(
+            "message": self.env._(
                 "Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"
             ),
             "sticky": True,
