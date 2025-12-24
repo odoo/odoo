@@ -446,3 +446,38 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         leave = [vals for vals in work_entries_vals if vals['work_entry_type_id'] != work_entry_type_attendance_id]
         self.assertEqual(sum(vals['duration'] for vals in work), 49, "It should be 49 hours of work this month for this contract")
         self.assertEqual(sum(vals['duration'] for vals in leave), 28, "It should be 28 hours of leave this month for this contract")
+
+    def test_leave_change_working_schedule(self):
+        calendar_20h = self.env['resource.calendar'].create({
+            'name': '20h calendar',
+            'attendance_ids': [
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12}),
+            ],
+        })
+        self.work_entry_type_leave.requires_allocation = False
+        self.contract_cdi.resource_calendar_id = calendar_20h
+        leave = self.env['hr.leave'].create({
+            'name': 'Holiday!!',
+            'employee_id': self.jules_emp.id,
+            'work_entry_type_id': self.work_entry_type_leave.id,
+            'request_date_from': date(2019, 10, 10),
+            'request_date_to': date(2019, 10, 10),
+        })
+        leave.action_approve()
+        work_entries_vals = self.contract_cdi.generate_work_entries(date(2019, 10, 10), date(2019, 10, 10))
+        self.assertEqual(len(work_entries_vals), 1)
+        self.assertEqual(work_entries_vals[0]['leave_ids'], leave)
+        self.assertEqual(work_entries_vals[0]['work_entry_type_id'], self.work_entry_type_leave)
+        self.assertEqual(work_entries_vals[0]['duration'], 4.0)
+        self.assertEqual(work_entries_vals[0]['date'], date(2019, 10, 10))
+        self.contract_cdi.resource_calendar_id = self.calendar_40h
+        work_entries_vals = self.contract_cdi.generate_work_entries(date(2019, 10, 10), date(2019, 10, 10))
+        self.assertEqual(len(work_entries_vals), 1)
+        self.assertEqual(work_entries_vals[0]['leave_ids'], leave)
+        self.assertEqual(work_entries_vals[0]['work_entry_type_id'], self.work_entry_type_leave)
+        self.assertEqual(work_entries_vals[0]['duration'], 8.0)
+        self.assertEqual(work_entries_vals[0]['date'], date(2019, 10, 10))
