@@ -30,7 +30,7 @@
                 <input class="o_input form-control border text-center text-bg-light"
                         type="number"
                         t-att-value="quantity"
-                        t-on-change="this.env.setQuantity"
+                        t-on-input="this.env.setQuantity"
                         t-on-focus="_onFocus"
                 />
                 <button class="btn btn-primary border"

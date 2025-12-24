@@ -15,7 +15,7 @@
                 name="sale_quantity"
                 type="number"
                 t-att-value="props.quantity"
-                t-on-change="setQuantity"/>
+                t-on-input="setQuantity"/>
             <button
                 t-attf-class="btn btn-secondary {{ props.btnClasses or 'd-none d-md-inline-block' }}"
                 name="sale_quantity_button_plus"
