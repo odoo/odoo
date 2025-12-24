@@ -1009,6 +1009,69 @@
         <field name="category" eval="'absence'"/>
     </record>
 
+    <record id="l10n_be_work_entry_type_cp302_night_work" model="hr.work.entry.type">
+        <field name="name">Night Work</field>
+        <field name="code">ATTN</field>
+        <field name="display_code">ATTN</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="category" eval="'working_time'"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_cp302_sunday_work" model="hr.work.entry.type">
+        <field name="name">Sunday Work</field>
+        <field name="code">SUNW</field>
+        <field name="display_code">SUNW</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="category" eval="'working_time'"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_cp302_public_holiday_work" model="hr.work.entry.type">
+        <field name="name">Public Holiday Work</field>
+        <field name="code">PHW</field>
+        <field name="display_code">PHW</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="category" eval="'working_time'"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_cp302_temporary_unemployment" model="hr.work.entry.type">
+        <field name="name">Temporary Unemployment</field>
+        <field name="code">TEMPUNEMP</field>
+        <field name="display_code">TEMPUNEMP</field>
+        <field name="color">5</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="category" eval="'absence'"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_cp302_flexible_work_cat2" model="hr.work.entry.type">
+        <field name="name">Flexible Work Cat 2</field>
+        <field name="code">FWC2</field>
+        <field name="display_code">FWC2</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="category" eval="'working_time'"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_cp302_flexible_work_cat34" model="hr.work.entry.type">
+        <field name="name">Flexible Work Cat 3/4</field>
+        <field name="code">FWC34</field>
+        <field name="display_code">FWC34</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="category" eval="'working_time'"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_cp302_flexible_work_cat5plus" model="hr.work.entry.type">
+        <field name="name">Flexible Work Cat 5+</field>
+        <field name="code">FWC5+</field>
+        <field name="display_code">FWC5+</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="category" eval="'working_time'"/>
+    </record>
+
 <!-- CH : Switzerland -->
     <record id="l10n_ch_work_entry_type_bank_holiday" model="hr.work.entry.type">
         <field name="name">Public Holiday</field>
