@@ -53,6 +53,8 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         with freeze_time('2025-09-03 13:00:00'):
             employee._compute_leave_status()
             self.assertFalse(employee.is_absent)
+            self.assertEqual(employee.leave_date_from, leave_0.request_date_from)
+            self.assertEqual(employee.leave_date_to, employee._get_first_working_interval_batch({employee.id: leave_0.date_to}).get(employee.id).date())
 
         with self.assertRaises(ValidationError):
             leave_1 = self.env['hr.leave'].create({
@@ -80,6 +82,10 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         with freeze_time('2025-09-03 13:00:00'):
             employee._compute_leave_status()
             self.assertTrue(employee.is_absent)
+
+        with freeze_time('2025-09-04 13:00:00'):
+            employee._compute_leave_status()
+            self.assertFalse(employee.is_absent)
 
     def test_type_creation_right(self):
         # HrUser creates some holiday statuses -> crash because only HrManagers should do this
