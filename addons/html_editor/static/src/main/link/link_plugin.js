@@ -1008,7 +1008,10 @@ export class LinkPlugin extends Plugin {
             !this.dependencies.delete.isUnremovable(endLink) &&
             multipleLinks
         ) {
-            focusNode = this.dependencies.split.splitAroundUntil(focusNode, endLink);
+            focusNode = this.dependencies.split.splitAroundUntil(
+                focusNode,
+                closestElement(focusNode, "a")
+            );
             focusOffset = direction === DIRECTIONS.RIGHT ? nodeSize(focusNode) : 0;
             this.dependencies.selection.setSelection(
                 { anchorNode, anchorOffset, focusNode, focusOffset },
