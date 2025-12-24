@@ -116,7 +116,8 @@ export class LinkSelectionPlugin extends Plugin {
 
         if (
             singleLinkInSelection &&
-            this.isLinkEligibleForVisualIndication(singleLinkInSelection)
+            this.isLinkEligibleForVisualIndication(singleLinkInSelection) &&
+            this.document.activeElement === this.editable
         ) {
             singleLinkInSelection.classList.add("o_link_in_selection");
         }
