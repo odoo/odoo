@@ -43,6 +43,11 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             'xsi': "http://www.w3.org/2001/XMLSchema-instance",
         }
 
+        cls.ubl_namespaces = {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+        }
+
         cls.reverse_charge_tax = cls.company_data['default_tax_sale'].copy({
             'name': 'Reverse charge tax',
             'ubl_cii_tax_category_code': 'AE',
@@ -684,9 +689,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         builder = invoice.partner_id.commercial_partner_id._get_edi_builder('nlcius')
         xml_content = builder._export_invoice(invoice)[0]
         xml_tree = etree.fromstring(xml_content)
-        scheme_ID = xml_tree.find('.//cac:PartyLegalEntity/cbc:CompanyID[@schemeID]', {
-            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
-            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"})
+        scheme_ID = xml_tree.find('.//cac:PartyLegalEntity/cbc:CompanyID[@schemeID]', self.ubl_namespaces)
         self.assertEqual(scheme_ID.attrib.get("schemeID"), "0190")
 
     def test_facturx_use_correct_vat(self):
@@ -758,3 +761,26 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             "rsm": "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
         })
         self.assertEqual(node[0].text, self.company.vat, "Company VAT fallback")
+
+    def test_partner_name_in_xml(self):
+        """
+        Test that invoice contacts without specific names use their parent partner's
+        name in the XML output, avoiding the 'Invoice address' suffix from display_name.
+        """
+        partner = self.env['res.partner'].create({
+            'parent_id': self.partner_a.id,
+            'type': 'invoice'
+        })
+        invoice = self.env['account.move'].create({
+            'partner_id': partner.id,
+            'move_type': 'out_invoice',
+            'invoice_date': "2025-12-23",
+            'invoice_date_due': "2025-12-31",
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        invoice.action_post()
+
+        xml_content = self.env['account.edi.xml.ubl_20']._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_content)
+        partner_name = xml_tree.find('.//cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name', self.ubl_namespaces)
+        self.assertEqual(partner_name.text, 'partner_a')
