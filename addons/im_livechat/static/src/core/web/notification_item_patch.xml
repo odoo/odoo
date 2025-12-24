@@ -3,7 +3,7 @@
     <t t-inherit="mail.NotificationItem" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o-mail-NotificationItem-avatarContainer')]" position="inside">
             <t t-if="props.thread?.channel?.channel_type === 'livechat'" t-call="im_livechat.LivechatStatusLabelOfThread">
-                <t t-set="templateParams" t-value="{ livechatThread: props.thread }"/>
+                <t t-set="templateParams" t-value="{ livechatThread: props.thread, small: true }"/>
             </t>
         </xpath>
     </t>
