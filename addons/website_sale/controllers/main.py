@@ -272,6 +272,70 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """Allow to configure the product page URL's query string."""
         return {}
 
+    def _to_markup_data(self, category=None):
+        """ Generate JSON-LD markup data for the current product.
+
+        :param website website: The current website.
+        :return: The JSON-LD markup data.
+        :rtype: dict
+        """
+        website = request.website
+        company = website.company_id
+        socials = [
+                website.social_twitter,
+                website.social_facebook,
+                website.social_github,
+                website.social_linkedin,
+                website.social_youtube,
+                website.social_instagram,
+                website.social_tiktok,
+            ]
+        base_url = website.get_base_url()
+        shop_path = self._get_shop_path(category)
+        main_markup_data = {
+            '@context': 'https://schema.org',
+            'name': website.name,
+            'url': f'{base_url}{shop_path}',
+            'owner': {
+                '@type': 'Organization',
+                'name': company.name,
+                'url': company.website,
+                'logo': f'{base_url}/logo.png?company={company}',
+                'email': company.email,
+                'address': {
+                    '@type': 'PostalAddress',
+                    'streetAddress': company.street,
+                    'addressLocality': company.city,
+                    'postalCode': company.zip,
+                    'addressCountry': company.country_id.code,
+                },
+                'sameAs': [
+                   social for social in socials if social
+                ],
+            },
+        }
+
+        if category:
+            breadcrumb_elements = [{
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Shop',
+                'item': base_url,
+            }]
+            for i, cat in enumerate(category.parents_and_self, start=2):
+                breadcrumb_elements.append({
+                    '@type': 'ListItem',
+                    'position': i,
+                    'name': cat.name,
+                    'item': f'{base_url}{self._get_shop_path(cat)}',
+                })
+            main_markup_data['breadcrumb'] = {
+                    '@context': 'https://schema.org',
+                    '@type': 'BreadcrumbList',
+                    'itemListElement': breadcrumb_elements,
+                }
+        return main_markup_data
+
     @route(
         [
             SHOP_PATH,
@@ -466,7 +530,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     ('attribute_id.visibility', '=', 'visible'),
                 ],
                 groupby=['attribute_id'],
-                order='attribute_id'
+                order='attribute_id',
             )
             attribute_ids = [attribute.id for attribute, in attributes_grouped]
             attributes = ProductAttribute.browse(attribute_ids)
@@ -520,6 +584,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values.update({'all_tags': all_tags, 'tags': tags})
         if category:
             values['main_object'] = category
+
+        values['main_markup_data'] = json_scriptsafe.dumps([self._to_markup_data(category)], indent=2)
         values.update(self._get_additional_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
