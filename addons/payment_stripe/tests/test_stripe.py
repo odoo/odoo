@@ -174,6 +174,24 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             onboarding_url = self.stripe.action_start_onboarding()
         self.assertEqual(onboarding_url['url'], 'https://dummy.url')
 
+    def test_country_mapping_stripe_connect(self):
+        """ Test that La Réunion (and other french territories) is supported by Stripe Connect. """
+        mapped_country_company = self.env['res.company'].create({
+            'name': 'Mapped Company',
+        })
+        with patch.object(
+            self.env.registry['payment.provider'], '_send_api_request',
+            return_value={'url': 'https://dummy.url'},
+        ) as mock, patch.object(
+            self.env.registry['payment.provider'], '_stripe_fetch_or_create_connected_account',
+            return_value={'id': 'dummy'},
+        ):
+            for country_code in const.COUNTRY_MAPPING:
+                country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
+                mapped_country_company.country_id = country
+                self.stripe.with_company(mapped_country_company).action_start_onboarding('dummy')
+            self.assertEqual(mock.call_count, len(const.COUNTRY_MAPPING))
+
     def test_only_create_webhook_if_not_already_done(self):
         """ Test that a webhook is created only if the webhook secret is not already set. """
         self.stripe.stripe_webhook_secret = False
