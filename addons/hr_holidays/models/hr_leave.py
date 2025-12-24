@@ -514,9 +514,9 @@ class HrLeave(models.Model):
             else:
                 domain_per_leave[leave] = [('country_id', 'in', [False, country.id])]
 
-        matching_types = self.env['hr.work.entry.type'].sudo().search(Domain.OR(domain_per_leave.values()))
-        for leave in self:
-            leave.work_entry_type_filter_domain = matching_types.filtered_domain(domain_per_leave[leave]).ids
+            matching_types = self.env['hr.work.entry.type'].sudo().search(Domain.OR(domain_per_leave.values()))
+            for leave in self:
+                leave.work_entry_type_filter_domain = matching_types.filtered_domain(domain_per_leave[leave]).ids
 
     @api.depends('employee_id')
     def _compute_department_id(self):
