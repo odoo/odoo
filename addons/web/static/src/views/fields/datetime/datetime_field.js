@@ -366,6 +366,11 @@ export class DateTimeField extends Component {
     onInput() {
         this.triggerIsDirty(true);
     }
+    onkeyDown(ev) {
+        if (ev.key === "ArrowDown") {
+            this.openPicker(0, true);
+        }
+    }
 }
 
 const START_DATE_FIELD_OPTION = "start_date_field";

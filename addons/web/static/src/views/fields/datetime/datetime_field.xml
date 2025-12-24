@@ -31,6 +31,7 @@
                         t-att-data-field="startDateField"
                         t-on-input="onInput"
                         t-on-focus="() => picker.activeInput = startDateField"
+                        t-on-keydown="onkeyDown"
                         t-att-title="props.warnFuture and isDateInTheFuture(0) ? futureWarningMsg : ''"
                     />
                 </t>
