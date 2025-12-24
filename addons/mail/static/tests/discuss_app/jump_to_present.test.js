@@ -16,6 +16,7 @@ import {
     scroll,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { PRESENT_VIEWPORT_THRESHOLD } from "@mail/core/common/thread";
 
@@ -44,6 +45,33 @@ test("Basic jump to present when scrolling to outdated messages", async () => {
     await click("[title='Jump to Present']");
     await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
+});
+
+test("Jump to present when pressing hotkey ArrowUp", async () => {
+    patchUiSize({ size: SIZES.XXL });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: "Non Empty Body ".repeat(100),
+            message_type: "comment",
+            model: "res.partner",
+            res_id: partnerId,
+        });
+    }
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Message", { count: 20 });
+    await contains(".o-mail-Thread");
+    expect(document.querySelector(".o-mail-Chatter").scrollHeight).toBeGreaterThan(
+        PRESENT_VIEWPORT_THRESHOLD * document.querySelector(".o-mail-Chatter").clientHeight,
+        { message: "should have enough scroll height to trigger jump to present" }
+    );
+    await contains(".o-mail-Chatter", { scroll: 0 });
+    await scroll(".o-mail-Chatter", "bottom");
+    await isInViewportOf("[title='Jump to Present']", ".o-mail-Thread");
+    await triggerHotkey("ArrowUp");
+    await contains(".o-mail-Chatter", { scroll: 0 });
 });
 
 test("Basic jump to present when scrolling to outdated messages (DESC, chatter aside)", async () => {
