@@ -8,7 +8,6 @@ import { PosPreset } from "./pos_preset.data";
 import { ResourceCalendarAttendance } from "./resource_calendar_attendance";
 import { PosOrder } from "./pos_order.data";
 import { PosOrderLine } from "./pos_order_line.data";
-import { PosPackOperationLot } from "./pos_pack_operation_lot.data";
 import { PosPayment } from "./pos_payment.data";
 import { PosPaymentMethod } from "./pos_payment_method.data";
 import { PosPrinter } from "./pos_printer.data";
@@ -38,15 +37,12 @@ import { ProductPricelist } from "./product_pricelist.data";
 import { ProductPricelistItem } from "./product_pricelist_item.data";
 import { AccountCashRounding } from "./account_cash_rounding.data";
 import { AccountFiscalPosition } from "./account_fiscal_position.data";
-import { StockPickingType } from "./stock_picking_type.data";
 import { ResCurrency } from "./res_currency.data";
 import { PosNote } from "./pos_note.data";
 import { ProductTag } from "./product_tag.data";
 import { IrModuleModule } from "./ir_module_module.data";
 import { AccountJournal } from "./account_journal.data";
 import { IrSequence } from "./ir_sequence.data";
-import { StockWarehouse } from "./stock_warehouse.data";
-import { StockRoute } from "./stock_route.data";
 import { BarcodeNomenclature } from "./barcode_nomenclature.data";
 import { ProductAttributeValue } from "./product_attribute_value.data";
 
@@ -64,7 +60,6 @@ export const hootPosModels = [
     ResourceCalendarAttendance,
     PosOrder,
     PosOrderLine,
-    PosPackOperationLot,
     PosPayment,
     PosPaymentMethod,
     PosPrinter,
@@ -88,12 +83,9 @@ export const hootPosModels = [
     ProductPricelist,
     ProductPricelistItem,
     DecimalPrecision,
-    StockWarehouse,
-    StockRoute,
     UomUom,
     AccountCashRounding,
     AccountFiscalPosition,
-    StockPickingType,
     IrSequence,
     PosNote,
     IrModuleModule,

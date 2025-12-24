@@ -1,5 +1,4 @@
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
-import { _t } from "@web/core/l10n/translation";
 const CONSOLE_COLOR = "#F5B427";
 
 export const getStrNotes = (note) => {
@@ -111,7 +110,6 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
         }
         return product.parentPosCategIds.some((id) => prepaCategoryIds.has(id));
     };
-
     // Compares the orderlines of the order with the last ones sent.
     // When one of them has changed, we add the change.
     for (const orderline of order.getOrderlines()) {
@@ -142,26 +140,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                 (oldChanges[relatedKey].note !== note ||
                     oldChanges[relatedKey].customer_note !== customerNote);
 
-            const trackingStr = orderline.product_id.tracking == "lot" ? _t("Lot:") : _t("SN:");
-            const lineDetails = {
-                uuid: orderline.uuid,
-                name: orderline.getFullProductName(),
-                basic_name: order.config_id.module_pos_restaurant
-                    ? orderline.product_id.name
-                    : orderline.product_id.display_name,
-                isCombo: Boolean(orderline?.combo_line_ids?.length),
-                combo_parent_uuid: orderline?.combo_parent_id?.uuid,
-                product_id: product.id,
-                attribute_value_names: orderline.attribute_value_ids.map((a) => a.name),
-                quantity: quantityDiff,
-                note: getStrNotes(note),
-                customer_note: customerNote,
-                pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
-                pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
-                display_name: product.display_name,
-                group: receiptLineGrouper.getGroup(orderline),
-                pack_lot_lines: orderline.pack_lot_ids?.map((l) => `${trackingStr} ${l.lot_name}`),
-            };
+            const lineDetails = LineDetailsGetter.getLineDetails(order, orderline, quantityDiff);
 
             if (quantityDiff) {
                 // if note update with qty add
@@ -247,5 +226,29 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
 export const receiptLineGrouper = {
     getGroup(orderLine) {
         // To be overridden
+    },
+};
+
+export const LineDetailsGetter = {
+    getLineDetails(order, orderline, quantityDiff) {
+        const product = orderline.getProduct();
+        return {
+            uuid: orderline.uuid,
+            name: orderline.getFullProductName(),
+            basic_name: order.config_id.module_pos_restaurant
+                ? orderline.product_id.name
+                : orderline.product_id.display_name,
+            isCombo: Boolean(orderline?.combo_line_ids?.length),
+            combo_parent_uuid: orderline?.combo_parent_id?.uuid,
+            product_id: product.id,
+            attribute_value_names: orderline.attribute_value_ids.map((a) => a.name),
+            quantity: quantityDiff,
+            note: getStrNotes(orderline.getNote()),
+            customer_note: orderline.getCustomerNote(),
+            pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
+            pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
+            display_name: product.display_name,
+            group: receiptLineGrouper.getGroup(orderline),
+        };
     },
 };

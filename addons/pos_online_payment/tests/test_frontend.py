@@ -202,7 +202,6 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
                 'price_unit': product.list_price,
                 'price_subtotal': untax,
                 'price_subtotal_incl': untax + atax,
-                'pack_lot_ids': [],
             }]],
             'payment_ids': [],
         }

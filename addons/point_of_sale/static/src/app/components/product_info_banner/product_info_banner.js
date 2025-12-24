@@ -29,7 +29,6 @@ export class ProductInfoBanner extends Component {
             free_qty: 0,
             uom: "",
         });
-
         const debouncedFetchStocks = debounce(async (product, productTemplate) => {
             let result = {};
             if (!this.props.info) {
@@ -43,11 +42,7 @@ export class ProductInfoBanner extends Component {
             }
 
             if (result) {
-                const productInfo = result.productInfo;
-                this.state.other_warehouses = productInfo.warehouses.slice(1);
-                this.state.available_quantity = productInfo.warehouses[0]?.available_quantity;
-                this.state.free_qty = productInfo.warehouses[0]?.free_qty;
-                this.state.uom = productInfo.warehouses[0]?.uom;
+                this.updateState(result.productInfo);
             }
         }, 500);
 
@@ -60,5 +55,10 @@ export class ProductInfoBanner extends Component {
             () => [this.props.product]
         );
         onWillUnmount(() => debouncedFetchStocks.cancel());
+    }
+
+    updateState(productInfo) {
+        this.state.free_qty = productInfo.free_qty;
+        this.state.uom = productInfo.uom;
     }
 }

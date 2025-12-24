@@ -32,7 +32,6 @@ export class PosOrder extends PosOrderAccounting {
         this.name = vals.name || "/";
         this.nb_print = vals.nb_print || 0;
         this.to_invoice = vals.to_invoice || false;
-        this.shipping_date = vals.shipping_date;
         this.state = vals.state || "draft";
 
         if (!vals.last_order_preparation_change) {
@@ -100,10 +99,6 @@ export class PosOrder extends PosOrderAccounting {
 
     get currency() {
         return this.config.currency_id;
-    }
-
-    get pickingType() {
-        return this.models["stock.picking.type"].getFirst();
     }
 
     get session() {
@@ -334,34 +329,10 @@ export class PosOrder extends PosOrderAccounting {
 
     setPricelist(pricelist) {
         this.pricelist_id = pricelist ? pricelist : false;
-
         const lines_to_recompute = this.getLinesToCompute();
-
         for (const line of lines_to_recompute) {
-            if (line.isLotTracked()) {
-                const related_lines = [];
-                const price = line.product_id.product_tmpl_id.getPrice(
-                    pricelist,
-                    line.getQuantity(),
-                    line.getPriceExtra(),
-                    false,
-                    line.product_id,
-                    line,
-                    related_lines
-                );
-                related_lines.forEach((line) => line.setUnitPrice(price));
-            } else {
-                const newPrice = line.product_id.product_tmpl_id.getPrice(
-                    pricelist,
-                    line.getQuantity(),
-                    line.getPriceExtra(),
-                    false,
-                    line.product_id
-                );
-                line.setUnitPrice(newPrice);
-            }
+            this.setLinePriceFromPriceList(line, pricelist);
         }
-
         const attributes_prices = {};
         const combo_parent_lines = this.lines.filter(
             (line) => line.price_type === "original" && line.combo_line_ids?.length
@@ -392,6 +363,17 @@ export class PosOrder extends PosOrderAccounting {
                 1
             );
         });
+    }
+
+    setLinePriceFromPriceList(line, pricelist) {
+        const newPrice = line.product_id.product_tmpl_id.getPrice(
+            pricelist,
+            line.getQuantity(),
+            line.getPriceExtra(),
+            false,
+            line.product_id
+        );
+        line.setUnitPrice(newPrice);
     }
 
     getFreeAndExtraChildLines(pLine) {

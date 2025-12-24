@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_pos_session_form" model="ir.ui.view">
+        <field name="name">pos.session.view.form.inherit.pos.stock</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+        <field name="arch" type="xml">
+            <button name="action_view_order" position="after">
+                <button class="oe_stat_button" name="action_stock_picking" type="object" icon="fa-truck" invisible="picking_count == 0">
+                    <field name="picking_count" widget="statinfo" string="Pickings" invisible="failed_pickings"/>
+                    <field name="picking_count" widget="statinfo" string="Pickings" class="text-danger" invisible="not failed_pickings"/>
+                </button>
+            </button>
+        </field>
+    </record>
+
+</odoo>

@@ -80,10 +80,6 @@ registry.category("web_tour.tours").add("PaymentScreenTour2", {
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Letter Tray", "1", "10"),
             ProductScreen.clickPayButton(),
-
-            // check that ship later button is present
-            { trigger: ".payment-buttons button:contains('Ship Later')" },
-            // payment line is been in case of mobile as paymentlines are required to manually enter the amount
             {
                 isActive: ["mobile"],
                 content: "click payment method",
@@ -167,23 +163,6 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
             PaymentScreen.enterPaymentLineAmount("Cash", "5", true, {
                 change: "3",
             }),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("InvoiceShipLaterAccessRight", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            ProductScreen.confirmOpeningPopup(),
-            ProductScreen.clickHomeCategory(),
-            ProductScreen.addOrderline("Whiteboard Pen", "1"),
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Acme Corporation"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickShipLaterButton(),
-            PaymentScreen.clickValidate(),
         ].flat(),
 });
 

@@ -21,19 +21,6 @@ export class ProductTemplate extends ProductTemplateAccounting {
         this.onUpdate();
     }
 
-    isAllowOnlyOneLot() {
-        return this.tracking === "lot" || !this.uom_id || !this.uom_id.is_pos_groupable;
-    }
-
-    isTracked() {
-        const pickingType = this.models["stock.picking.type"].readAll()[0];
-
-        return (
-            ["serial", "lot"].includes(this.tracking) &&
-            (pickingType.use_create_lots || pickingType.use_existing_lots)
-        );
-    }
-
     async _onScaleNotAvailable() {}
 
     isConfigurable() {

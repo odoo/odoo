@@ -49,9 +49,7 @@ class SaleReport(models.Model):
             (CASE WHEN pos.account_move IS NOT NULL THEN SUM(l.price_subtotal) ELSE 0 END)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
             AS amount_invoiced,
-            (CASE WHEN pos.account_move IS NOT NULL THEN SUM(l.price_unit * l.qty_delivered) ELSE 0 END)
-                / MIN({self._case_value_or_one('pos.currency_rate')})
-            AS untaxed_delivered_amount,
+            0 AS untaxed_delivered_amount,
             count(*) AS nbr,
             pos.name AS name,
             pos.date_order AS date,
@@ -92,9 +90,7 @@ class SaleReport(models.Model):
 
     def _available_additional_pos_fields(self):
         """Hook to replace the additional fields from sale with the one from pos_sale."""
-        return {
-            'warehouse_id': 'picking.warehouse_id',
-        }
+        return {}
 
     def _fill_pos_fields(self, additional_fields):
         """Hook to fill additional fields for the pos_sale.
@@ -119,7 +115,6 @@ class SaleReport(models.Model):
             LEFT JOIN uom_uom u ON u.id=t.uom_id
             LEFT JOIN pos_session session ON session.id = pos.session_id
             LEFT JOIN pos_config config ON config.id = session.config_id
-            LEFT JOIN stock_picking_type picking ON picking.id = config.picking_type_id
             JOIN {currency_table} ON account_currency_table.company_id = pos.company_id
             """.format(
             currency_table=self.env.cr.mogrify(currency_table).decode(self.env.cr.connection.encoding),
@@ -154,8 +149,7 @@ class SaleReport(models.Model):
             partner.zip,
             u.factor,
             pos.crm_team_id,
-            account_currency_table.rate,
-            picking.warehouse_id"""
+            account_currency_table.rate"""
 
     def _query(self):
         res = super()._query()

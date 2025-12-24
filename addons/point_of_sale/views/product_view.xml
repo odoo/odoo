@@ -213,7 +213,6 @@
                             <label for="is_storable" class="oe_inline" invisible="type != 'consu'"/>
                             <div class="o_row" invisible="type != 'consu'">
                                 <field name="is_storable"/>
-                                <field name="tracking" class="pe-1" invisible="not is_storable" groups="stock.group_production_lot"/>
                             </div>
                             <field name="list_price" widget="monetary"
                                     options="{'currency_field': 'currency_id', 'field_digits': True}"/>

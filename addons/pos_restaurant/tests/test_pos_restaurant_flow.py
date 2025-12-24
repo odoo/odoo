@@ -39,7 +39,6 @@ class TestPosRestaurantFlow(TestFrontendCommon):
             'last_order_preparation_change': '{}',
             'lines': [(0, 0, {
                 'id': 1,
-                'pack_lot_ids': [],
                 'price_unit': product_variant.lst_price,
                 'product_id': product_variant.id,
                 'price_subtotal': product_variant.lst_price,

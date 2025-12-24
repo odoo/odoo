@@ -2,7 +2,7 @@
 import qrcode
 from io import BytesIO
 from odoo import models, api, _
-from odoo.tools.misc import format_datetime, format_date
+from odoo.tools.misc import format_datetime
 from odoo.tools.image import image_data_uri
 
 
@@ -77,7 +77,6 @@ class PosOrderReceipt(models.AbstractModel):
 
             data['qty'] = int(line.qty) if float(line.qty).is_integer() else line.qty
             data['product_data'] = product_by_id[data['product_id']]
-            data['lot_names'] = line.pack_lot_ids.mapped('lot_name') if line.pack_lot_ids else False
             data['product_uom_name'] = line.product_id.uom_id.name
             data['price_subtotal_incl'] = self._order_receipt_format_currency(data['price_subtotal_incl'])
 
@@ -157,7 +156,6 @@ class PosOrderReceipt(models.AbstractModel):
                 'company_state_name': company.state_id.name if company.state_id else False,
                 'company_country_name': company.country_id.name if company.country_id else False,
                 'formated_date_order': format_datetime(self.env, self.date_order),
-                'formated_shipping_date': format_date(self.env, self.shipping_date) if self.shipping_date else False,
                 'tips_configuration': [
                     [f"{p}%", self._order_receipt_format_currency(self.amount_total * (p / 100))]
                     for p in tip_percentage

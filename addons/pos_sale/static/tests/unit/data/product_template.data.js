@@ -25,7 +25,6 @@ ProductTemplate._records = [
         uom_id: 1,
         description_sale: false,
         description: false,
-        tracking: "none",
         type: "service",
         service_tracking: "no",
         is_storable: false,
