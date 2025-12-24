@@ -431,9 +431,12 @@ class HrVersion(models.Model):
         for tz, versions in self.grouped("tz").items():
             tz = ZoneInfo(tz) if tz else UTC
             for version in versions:
+                if not version.contract_date_start:
+                    continue
                 version_start = fields.Datetime.to_datetime(version.date_start).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                 version_stop = datetime.combine(fields.Datetime.to_datetime(version.date_end or date_stop),
                                                  datetime.max.time()).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+
                 if version_stop < date_stop:
                     if version.date_generated_from != version.date_generated_to:
                         domain_to_nullify |= Domain([
