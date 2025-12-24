@@ -21,7 +21,7 @@
                 <div t-ref="opacitySliderPointer" class="o_opacity_pointer" tabindex="0" t-on-keydown="onOpacitySliderKeydown" role="slider" aria-label="Opacity" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100"/>
             </div>
         </div>
-        <div class="o_color_picker_inputs d-flex justify-content-between mb-2" t-on-change="debouncedOnChangeInputs">
+        <div class="o_color_picker_inputs d-flex justify-content-between mb-2">
             <t t-set="input_classes" t-value="'p-0 border-0 text-center font-monospace bg-transparent'" />
 
             <div class="o_hex_div d-flex align-items-baseline me-1">

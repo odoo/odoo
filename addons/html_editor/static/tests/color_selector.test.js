@@ -327,17 +327,19 @@ test("always show the current custom color", async () => {
 
     await edit("#017E84"); // === rgb(1, 126, 132)
     await animationFrame();
-    expect(".o_colorpicker_section:nth-of-type(1) button").toHaveCount(1);
-    expect(queryOne(".o_colorpicker_section:nth-of-type(1) button").style.backgroundColor).toBe(
-        "rgb(1, 126, 132)"
-    );
+    // When we edit the hex value, we only preview the color, so there should
+    // be two buttons now: the previously applied one and the preview one.
+    expect(".o_colorpicker_section:nth-of-type(1) button").toHaveCount(2);
+    expect(
+        queryOne(".o_colorpicker_section:nth-of-type(1) button.selected").style.backgroundColor
+    ).toBe("rgb(1, 126, 132)");
 
     await hover(".o_colorpicker_section:nth-of-type(2) button:first");
     await animationFrame();
-    expect(".o_colorpicker_section:first button").toHaveCount(1);
-    expect(queryOne(".o_colorpicker_section:nth-of-type(1) button").style.backgroundColor).toBe(
-        "rgb(1, 126, 132)"
-    );
+    expect(".o_colorpicker_section:first button").toHaveCount(2);
+    expect(
+        queryOne(".o_colorpicker_section:nth-of-type(1) button.selected").style.backgroundColor
+    ).toBe("rgb(1, 126, 132)");
 });
 
 test("show applied text color selected in solid color tab", async () => {
@@ -642,7 +644,6 @@ test("should be able to show preview when hovering radial type button", async ()
     // Hover for preview
     await hover("button[title='Extend to the farthest side']");
     await animationFrame();
-    expect(gradientButton.style.backgroundImage).toBe(gradientAfter);
     expect(getContent(el)).toBe(
         `<p>a<font style="background-image: ${gradientAfter};">[bcd]</font>e</p>`
     );
@@ -1387,7 +1388,7 @@ describe("color preview", () => {
         await animationFrame();
         await click(".o-select-color-foreground");
         await contains(".btn:contains('Gradient')").click();
-        await contains(".o_custom_gradient_button").click(); // Click applies the default gradient.
+        await contains(".o_custom_gradient_button").click(); // Click previews the default gradient.
         const initialGradient = queryOne(".o_custom_gradient_button").style.backgroundImage;
         await contains(".o_font_color_selector .o_color_pick_area").click();
         await animationFrame();
@@ -1401,6 +1402,85 @@ describe("color preview", () => {
         expect(".o_custom_gradient_button").not.toHaveStyle({ backgroundImage: gradient1 });
         await press("Escape"); // Close tab and cancel preview.
         await animationFrame();
-        expect("p font").toHaveStyle({ backgroundImage: initialGradient });
+        expect("font").toHaveCount(0); // Gradient was canceled
+    });
+
+    test("should preview when changing different gradient settings", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await contains(".btn:contains('Gradient')").click();
+        await contains(".o_custom_gradient_button").click();
+
+        const inputEl = queryOne(".o_color_gradient_input > input");
+        // We don't use .edit() or .fill() here because we don't want 'Enter' to
+        // be pressed, which these methods would do.
+        inputEl.value = "250";
+        inputEl.dispatchEvent(new Event("change"));
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "linear-gradient(250deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+        await contains("button:contains('Radial')").click();
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "radial-gradient(circle closest-side at 25% 25%, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+        await press("Escape"); // Close tab and cancel preview.
+        await animationFrame();
+        expect("font").toHaveCount(0); // Gradient was canceled
+    });
+
+    test("should apply the gradient when pressing Enter on an input field", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await contains(".btn:contains('Gradient')").click();
+        await contains(".o_custom_gradient_button").click();
+
+        await contains(".o_color_gradient_input > input").edit("250");
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "linear-gradient(250deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+        await press("Escape");
+        await animationFrame();
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "linear-gradient(250deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+    });
+
+    test("should preview the gradient when clicking on 'Custom' and then apply it when clicking the second time", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await contains(".btn:contains('Gradient')").click();
+        await contains(".o_custom_gradient_button").click();
+
+        await contains(".o_custom_gradient_button").click();
+        await animationFrame();
+        expect(".o_custom_gradient_button").toHaveStyle({
+            backgroundImage:
+                "linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+        // second press on "Custom" should save the gradient
+        await contains(".o_custom_gradient_button").click();
+        await press("Escape");
+        await animationFrame();
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
     });
 });
