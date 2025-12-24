@@ -45,6 +45,8 @@ class TestHrLeaveType(TestHrHolidaysCommon):
         with freeze_time('2025-09-03 13:00:00'):
             employee._compute_leave_status()
             self.assertFalse(employee.is_absent)
+            self.assertEqual(employee.leave_date_from, leave_0.request_date_from)
+            self.assertEqual(employee.leave_date_to, leave_0.employee_id._get_first_working_interval(leave_0.date_to).date())
 
         with self.assertRaises(ValidationError):
             leave_1 = self.env['hr.leave'].create({

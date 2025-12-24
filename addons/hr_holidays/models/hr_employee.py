@@ -139,22 +139,23 @@ class HrEmployee(models.Model):
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
-            ('holiday_status_id.time_type', '=', 'leave'),
             ('state', '=', 'validate'),
         ])
         leave_data = {}
         for holiday in holidays:
-            leave_data[holiday.employee_id.id] = {}
+            leave_data.setdefault(holiday.employee_id.id, {})
             leave_data[holiday.employee_id.id]['leave_date_from'] = holiday.date_from.date()
             back_on = holiday.employee_id._get_first_working_interval(holiday.date_to)
             leave_data[holiday.employee_id.id]['leave_date_to'] = back_on.date() if back_on else None
             leave_data[holiday.employee_id.id]['current_leave_state'] = holiday.state
+            leave_data[holiday.employee_id.id]['is_absent'] = leave_data[holiday.employee_id.id].get('is_absent') or holiday.holiday_status_id.time_type == 'leave'
 
         for employee in self:
-            employee.leave_date_from = leave_data.get(employee.id, {}).get('leave_date_from')
-            employee.leave_date_to = leave_data.get(employee.id, {}).get('leave_date_to')
-            employee.current_leave_state = leave_data.get(employee.id, {}).get('current_leave_state')
-            employee.is_absent = leave_data.get(employee.id) and leave_data.get(employee.id).get('current_leave_state') == 'validate'
+            employee_data = leave_data.get(employee.id, {})
+            employee.leave_date_from = employee_data.get('leave_date_from')
+            employee.leave_date_to = employee_data.get('leave_date_to')
+            employee.current_leave_state = employee_data.get('current_leave_state')
+            employee.is_absent = employee_data and employee_data.get('is_absent') and employee_data.get('current_leave_state') == 'validate'
 
     @api.depends('parent_id')
     def _compute_leave_manager(self):
