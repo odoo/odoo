@@ -198,7 +198,6 @@ class HrEmployee(models.Model):
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
-            ('work_entry_type_id.count_as', '=', 'absence'),
             ('state', '=', 'validate'),
         ], order='date_to desc')
 
@@ -207,12 +206,13 @@ class HrEmployee(models.Model):
             employee.id: holiday[0].date_to
             for employee, holiday in employee_holidays.items()
         })
-        for employee, holiday in employee_holidays.items():
-            holiday = holiday[0]
-            employee.leave_date_from = holiday.date_from.date()
-            employee.leave_date_to = employee_back_on.get(employee.id, holiday.date_to).date()
-            employee.current_leave_state = holiday.state
-            employee.is_absent = holiday.state == 'validate'
+
+        for employee, holidays in employee_holidays.items():
+            latest_holiday = holidays[0]
+            employee.leave_date_from = min(holidays.mapped('date_from')).date()
+            employee.leave_date_to = employee_back_on.get(employee.id, latest_holiday.date_to).date()
+            employee.current_leave_state = latest_holiday.state
+            employee.is_absent = any(h.work_entry_type_id.count_as == 'absence' for h in holidays)
 
         no_data = self - holidays.employee_id
         no_data.update({
