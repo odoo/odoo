@@ -279,15 +279,25 @@ class HrVersion(models.Model):
             if len(versions_by_employee.grouped('contract_date_start').keys()) > 1:
                 raise ValidationError(self.env._("Cannot modify multiple versions contract dates with different contracts at once."))
 
-        if not any(self.mapped('contract_date_start')):
-            return super().write(values)
+        multiple_versions = self
+        if values.get("contract_date_start"):
+            unique_versions = multiple_versions.filtered(lambda v: len(v.employee_id.version_ids) == 1)
+            multiple_versions -= unique_versions
+            if len(unique_versions):
+                unique_versions.with_context(sync_contract_dates=True).write({
+                    **values,
+                    "date_version": values["contract_date_start"]
+                })
+
+        if not any(multiple_versions.mapped('contract_date_start')):
+            return super(HrVersion, multiple_versions).write(values)
 
         new_vals = {
             f_name: f_value
             for f_name, f_value in values.items()
             if (f_name != 'contract_date_start' or not f_value) and f_name != 'contract_date_end'
         }
-        for employee, versions in self.grouped('employee_id').items():
+        for employee, versions in multiple_versions.grouped('employee_id').items():
 
             dates_vals = {}
             first_version = next(iter(versions), versions)
@@ -316,7 +326,7 @@ class HrVersion(models.Model):
             else:
                 versions.with_context(sync_contract_dates=True).write(dates_vals)
 
-        return super().write(new_vals)
+        return super(HrVersion, multiple_versions).write(new_vals)
 
     def get_formview_action(self, access_uid=None):
         """
