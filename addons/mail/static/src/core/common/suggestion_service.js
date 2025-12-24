@@ -117,9 +117,11 @@ export class SuggestionService {
     }
 
     searchCannedResponseSuggestions(cleanedSearchTerm) {
-        const cannedResponses = Object.values(this.store["mail.canned.response"].records).filter(
-            (cannedResponse) => cleanTerm(cannedResponse.source).includes(cleanedSearchTerm)
-        );
+        const cannedResponses = this.store["mail.canned.response"]
+            .all()
+            .filter((cannedResponse) =>
+                cleanTerm(cannedResponse.source).includes(cleanedSearchTerm)
+            );
         const sortFunc = (c1, c2) => {
             const cleanedName1 = cleanTerm(c1.source);
             const cleanedName2 = cleanTerm(c2.source);
@@ -197,9 +199,9 @@ export class SuggestionService {
     }
 
     searchRoleSuggestions(cleanedSearchTerm) {
-        const roles = Object.values(this.store["res.role"].records).filter((role) =>
-            cleanTerm(role.name).includes(cleanedSearchTerm)
-        );
+        const roles = this.store["res.role"]
+            .all()
+            .filter((role) => cleanTerm(role.name).includes(cleanedSearchTerm));
         const sortFunc = (r1, r2) => {
             const cleanedName1 = cleanTerm(r1.name);
             const cleanedName2 = cleanTerm(r2.name);
@@ -236,9 +238,9 @@ export class SuggestionService {
     }
 
     getPartnerSuggestions(thread) {
-        return Object.values(this.store["res.partner"].records).filter((partner) =>
-            this.isSuggestionValid(partner, thread)
-        );
+        return this.store["res.partner"]
+            .all()
+            .filter((partner) => this.isSuggestionValid(partner, thread));
     }
 
     searchPartnerSuggestions(cleanedSearchTerm, thread) {
@@ -306,12 +308,14 @@ export class SuggestionService {
     }
 
     searchChannelSuggestions(cleanedSearchTerm) {
-        const suggestionList = Object.values(this.store["discuss.channel"].records).filter(
-            (channel) =>
-                channel.channel_type === "channel" &&
-                channel.displayName &&
-                cleanTerm(channel.displayName).includes(cleanedSearchTerm)
-        );
+        const suggestionList = this.store["discuss.channel"]
+            .all()
+            .filter(
+                (channel) =>
+                    channel.channel_type === "channel" &&
+                    channel.displayName &&
+                    cleanTerm(channel.displayName).includes(cleanedSearchTerm)
+            );
         const sortFunc = (c1, c2) => {
             const isPublicChannel1 = c1.channel_type === "channel" && !c2.group_public_id;
             const isPublicChannel2 = c2.channel_type === "channel" && !c2.group_public_id;

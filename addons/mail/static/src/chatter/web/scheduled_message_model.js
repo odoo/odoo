@@ -5,8 +5,6 @@ import { _t } from "@web/core/l10n/translation";
 export class ScheduledMessage extends Record {
     static _name = "mail.scheduled.message";
     static id = "id";
-    /** @type {Object.<number, import("models").ScheduledMessage>} */
-    static records = {};
     /** @returns {import("models").ScheduledMessage} */
     static get(data) {
         return super.get(data);

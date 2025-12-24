@@ -17,17 +17,19 @@ const StorePatch = {
         const channelsContribution =
             this.channels.status !== "fetched"
                 ? this.initChannelsUnreadCounter
-                : Object.values(this.store["discuss.channel"].records).filter(
-                      (channel) =>
-                          channel.self_member_id?.is_pinned &&
-                          !channel.self_member_id?.mute_until_dt &&
-                          (channel.self_member_id?.message_unread_counter ||
-                              channel.message_needaction_counter)
-                  ).length;
+                : this.store["discuss.channel"]
+                      .all()
+                      .filter(
+                          (channel) =>
+                              channel.self_member_id?.is_pinned &&
+                              !channel.self_member_id?.mute_until_dt &&
+                              (channel.self_member_id?.message_unread_counter ||
+                                  channel.message_needaction_counter)
+                      ).length;
         // Needactions are already counted in the super call, but we want to discard them for channel so that there is only +1 per channel.
-        const channelsNeedactionCounter = Object.values(
-            this.store["discuss.channel"].records
-        ).reduce((acc, channel) => acc + channel.message_needaction_counter, 0);
+        const channelsNeedactionCounter = this.store["discuss.channel"]
+            .all()
+            .reduce((acc, channel) => acc + channel.message_needaction_counter, 0);
         return super.computeGlobalCounter() + channelsContribution + channelsNeedactionCounter;
     },
     /** @returns {import("models").DiscussChannel[]} */
@@ -36,7 +38,8 @@ const StorePatch = {
     },
     /** @returns {import("models").DiscussChannel[]} */
     getSelfRecentChannels() {
-        return Object.values(this["discuss.channel"].records)
+        return this["discuss.channel"]
+            .all()
             .filter((channel) => channel.self_member_id)
             .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id);
     },

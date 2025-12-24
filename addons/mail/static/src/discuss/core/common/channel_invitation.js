@@ -251,11 +251,13 @@ export class ChannelInvitation extends Component {
                     return _t("Invite");
                 }
                 if (this.selectedPartners.length === 1) {
-                    const alreadyChat = Object.values(this.store["discuss.channel"].records).some(
-                        (channel) =>
-                            channel.channel_type === "chat" &&
-                            channel.correspondent?.partner_id?.eq(this.selectedPartners[0])
-                    );
+                    const alreadyChat = this.store["discuss.channel"]
+                        .all()
+                        .some(
+                            (channel) =>
+                                channel.channel_type === "chat" &&
+                                channel.correspondent?.partner_id?.eq(this.selectedPartners[0])
+                        );
                     if (alreadyChat) {
                         return _t("Go to conversation");
                     }
