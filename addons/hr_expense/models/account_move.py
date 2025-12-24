@@ -86,7 +86,7 @@ class AccountMove(models.Model):
                     ): {
                         "balance": -sum(term_lines.mapped("balance")),
                         "amount_currency": -sum(term_lines.mapped("amount_currency")),
-                        "name": "",
+                        "name": move.payment_reference or "",
                         "account_id": move.expense_ids._get_expense_account_destination(),
                     }
                 }
