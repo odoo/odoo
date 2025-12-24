@@ -17,7 +17,6 @@ export class SaleOrder extends models.ServerModel {
             "amount_total",
             "amount_untaxed",
             "amount_unpaid",
-            "picking_ids",
             "partner_shipping_id",
             "partner_invoice_id",
             "date_order",

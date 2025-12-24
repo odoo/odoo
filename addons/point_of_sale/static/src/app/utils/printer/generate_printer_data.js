@@ -192,9 +192,6 @@ export class GeneratePrinterData {
                 unit_price: line.currencyDisplayPriceUnit,
                 product_unit_price: line.product_id.displayPriceUnit,
                 price_subtotal_incl: line.currencyDisplayPrice,
-                lot_names: line.pack_lot_ids?.length
-                    ? line.pack_lot_ids.map((l) => l.lot_name)
-                    : false,
             };
         });
     }
@@ -254,7 +251,6 @@ export class GeneratePrinterData {
                 prices: this.generateTaxData(),
                 cashier_name: this.order.getCashierName(),
                 formated_date_order: this.order.formatDateOrTime("date_order", "datetime"),
-                formated_shipping_date: this.order.formatDateOrTime("shipping_date", "date"),
             },
         };
     }

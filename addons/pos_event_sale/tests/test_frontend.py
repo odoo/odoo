@@ -28,7 +28,6 @@ class TestPoSEventSale(TestUi):
             "lines": [
                 Command.create({
                     "discount": 0,
-                    "pack_lot_ids": [],
                     "price_unit": 100.0,
                     "product_id": self.product_event.id,
                     "price_subtotal": 100.0,
@@ -74,7 +73,6 @@ class TestPoSEventSale(TestUi):
             "lines": [
                 Command.create({
                     "discount": 0,
-                    "pack_lot_ids": [],
                     "price_unit": 100.0,
                     "product_id": self.product_event.id,
                     "price_subtotal": 100.0,

@@ -44,7 +44,6 @@ class TestPoSProductsWithTax(TestPoSCommon):
             54.99,
             tax_ids=[self.taxes['tax_fixed006'].id, self.taxes['tax_fixed012'].id, self.taxes['tax21'].id],
         )
-        self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
 
     def test_orders_no_invoiced(self):
         """ Test for orders without invoice
@@ -693,7 +692,6 @@ class TestPoSProductsWithTax(TestPoSCommon):
             'group_ids': [
                 (4, self.env.ref('base.group_user').id),
                 (4, self.env.ref('point_of_sale.group_pos_user').id),
-                (4, self.env.ref('stock.group_stock_user').id),
             ],
             'tz': 'America/New_York',
             'company_id': branch_xx.id,

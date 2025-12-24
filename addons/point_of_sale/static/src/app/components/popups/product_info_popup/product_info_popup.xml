@@ -17,34 +17,15 @@
                 </h3>
                 <t t-out="this.props.productTemplate.productDescriptionMarkup" />
             </div>
-            <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="this.props.info?.productInfo?.warehouses?.length > 0">
+            <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start">
                 <div class="d-flex align-items-center gap-2">
                     <div class="d-flex flex-column">
-                        <h3 class="section-title">
-                            Inventory
-                            <t t-if="this.pos.session.update_stock_at_closing">(as of opening)</t>
-                        </h3>
+                        <h3 class="section-title">Inventory</h3>
                         <div class="section-inventory-body">
-                            <t t-foreach="this.props.info.productInfo.warehouses" t-as="warehouse" t-key="warehouse.name">
-                                <div class="d-flex flex-column flex-md-row gap-2">
-                                    <div>
-                                        <t t-out="warehouse.name" class="table-name"/>
-                                        :
-                                    </div>
-                                    <div>
-                                        <span class="me-1 fw-bolder"><t t-out="warehouse.free_qty" class="table-name"/></span>
-                                        <t t-out="warehouse.uom"/> available,
-                                    </div>
-                                    <div>
-                                        <span class="me-1 fw-bolder"><t t-out="warehouse.forecasted_quantity"/></span>
-                                        forecasted
-                                    </div>
-                                </div>
-                                <div>
-                                    On hand: <span class="me-1 fw-bolder"><t t-out="warehouse.available_quantity"/></span>
-                                    <t t-out="warehouse.uom"/>
-                                </div>
-                            </t>
+                            <div>
+                                On hand: <span class="me-1 fw-bolder"><t t-out="this.props.info.productInfo.free_qty"/></span>
+                                <t t-out="this.props.info.productInfo.uom"/>
+                            </div>
                         </div>
                     </div>
                     <button class="btn btn-lg lh-lg ms-auto text-nowrap" t-on-click="this.openSnoozeDialog" t-attf-class="{{this.state.activeSnooze ? 'btn-warning' : 'btn-secondary'}}">
@@ -56,7 +37,7 @@
                     </button>
                 </div>
             </div>
-            <div class="section-supplier mt-3 mb-4 pb-4 border-bottom text-start" t-if="this.props.info?.productInfo?.suppliers?.length > 0">
+            <div class="section-supplier mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info?.productInfo?.suppliers?.length">
                 <h3 class="section-title">Replenishment</h3>
                 <div class="section-supplier-body">
                     <t t-foreach="this.props.info.productInfo.suppliers" t-as="supplier" t-key="supplier.id">
@@ -65,7 +46,7 @@
                                 <span t-out="supplier.name" class="table-name"/>:
                             </div>
                             <span class="me-1 fw-bolder">
-                                <t t-out="supplier.delay"/> 
+                                <t t-out="supplier.delay"/>
                                 Days
                             </span>
                             <span t-if="this._hasMarginsCostsAccessRights()">

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_stock.pos_orderline_receipt_information" inherit_id="point_of_sale.pos_orderline_receipt_information">
+            <div name="extra-info" position="before">
+                <div t-if="line['lot_names']" class="text-small">
+                    <strong>Lot number: </strong>
+                    <span t-foreach="line['lot_names']" t-as="lot_name">
+                        <t t-out="lot_name"/>
+                    </span>
+                </div>
+            </div>
+        </template>
+
+        <template id="pos_stock.pos_order_receipt_footer" inherit_id="point_of_sale.pos_order_receipt_footer">
+            <xpath expr="//t[@t-call='point_of_sale.company_info_receipt']" position="before">
+                <div class="mt-2 mb-2" t-if="extra_data['formated_shipping_date']">
+                    Expected delivery: <span class="shipping-date" t-out="extra_data['formated_shipping_date']"/>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

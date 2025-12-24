@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_stock.PaymentScreenButtons" t-inherit="point_of_sale.PaymentScreenButtons" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('js_cashdrawer')]" position="after">
+            <button t-if="this.pos.config.ship_later" class="button btn btn-secondary btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.shipping_date }"
+                t-on-click="this.toggleShippingDatePicker">
+                <span t-attf-class="{{this.currentOrder.shipping_date ? 'me-auto' : 'mx-auto' }}"><i class="fa fa-clock-o me-2" />Ship Later</span>
+                <span t-if="this.currentOrder.shipping_date">
+                    <t t-out="this.currentOrder.formatDateOrTime('shipping_date', 'date')" />
+                </span>
+            </button>
+        </xpath>
+    </t>
+
+</templates>

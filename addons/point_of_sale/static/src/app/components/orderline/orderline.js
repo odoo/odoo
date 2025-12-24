@@ -70,7 +70,7 @@ export class Orderline extends Component {
 
     get infoListClasses() {
         const line = this.line;
-        if (line.customer_note || line.note || line.discount || line.packLotLines?.length) {
+        if (line.customer_note || line.note || line.discount) {
             return "gap-2 mt-1";
         }
         return "";
@@ -115,8 +115,6 @@ export class Orderline extends Component {
             productImage: this.props.showImage && imageUrl,
             taxGroup: this.props.showTaxGroup && taxGroup,
             price: this.line.currencyDisplayPrice,
-            lotLines:
-                ["lot", "serial"].includes(line.product_id.tracking) && (line.packLotLines || []),
         };
     }
 }

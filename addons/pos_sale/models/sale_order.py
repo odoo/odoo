@@ -26,7 +26,7 @@ class SaleOrder(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         return ['name', 'state', 'user_id', 'order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total', 'amount_untaxed', 'amount_unpaid',
-            'picking_ids', 'partner_shipping_id', 'partner_invoice_id', 'date_order', 'write_date', 'amount_paid']
+            'partner_shipping_id', 'partner_invoice_id', 'date_order', 'write_date', 'amount_paid']
 
     def load_sale_order_from_pos(self, config_id):
         product_ids = self.order_line.product_id.ids
@@ -130,33 +130,6 @@ class SaleOrderLine(models.Model):
             'write_date', 'product_custom_attribute_value_ids', 'order_id',
         ]
 
-    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state', 'pos_order_line_ids.refund_orderline_ids.order_id.picking_ids.state')
-    def _compute_qty_delivered(self):
-        super()._compute_qty_delivered()
-
-    def _prepare_qty_delivered(self):
-        delivered_qties = super()._prepare_qty_delivered()
-
-        def _get_pos_delivered_qty(sale_line, pos_lines):
-            if all(picking.state == "done" for picking in pos_lines.order_id.picking_ids):
-                # Sum converted quantities from POS to sale order UoM
-                return sum(self._convert_qty(sale_line, pos_line.qty, "p2s") for pos_line in pos_lines)
-            return 0
-
-        def line_filter(line):
-            return line.order_id.state not in ["cancel", "draft"]
-
-        for sale_line in self.filtered(lambda line: line.product_id.type != "service"):
-            pos_line_ids = sale_line.sudo().pos_order_line_ids
-            pos_qty = _get_pos_delivered_qty(sale_line, pos_line_ids.filtered(line_filter))
-            if pos_qty != 0:
-                delivered_qties[sale_line] += pos_qty
-
-            refund_qty = _get_pos_delivered_qty(sale_line, pos_line_ids.refund_orderline_ids.filtered(line_filter))
-            if refund_qty != 0:
-                delivered_qties[sale_line] += refund_qty
-        return delivered_qties
-
     @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.state')
     def _compute_qty_invoiced(self):
         super()._compute_qty_invoiced()
@@ -181,13 +154,8 @@ class SaleOrderLine(models.Model):
                 product_uom = sale_line.product_id.uom_id
                 sale_line_uom = sale_line.product_uom_id
                 item = sale_line.read(field_names, load=False)[0]
-                if sale_line.product_id.tracking in ['lot', 'serial']:
-                    move_lines = sale_line.move_ids.move_line_ids.filtered(lambda ml: ml.product_id.id == sale_line.product_id.id)
-                    item['lot_names'] = move_lines.lot_id.mapped('name')
-                    lot_qty_by_name = {}
-                    for line in move_lines:
-                        lot_qty_by_name[line.lot_id.name] = lot_qty_by_name.get(line.lot_id.name, 0.0) + line.quantity
-                    item['lot_qty_by_name'] = lot_qty_by_name
+                extra_items = self._get_read_converted_extra_items(sale_line)
+                item.update(extra_items)
                 if product_uom == sale_line_uom:
                     results.append(item)
                     continue
@@ -207,6 +175,9 @@ class SaleOrderLine(models.Model):
 
 
         return results
+
+    def _get_read_converted_extra_items(self, sale_line):
+        return {}
 
     @api.model
     def _convert_qty(self, sale_line, qty, direction):

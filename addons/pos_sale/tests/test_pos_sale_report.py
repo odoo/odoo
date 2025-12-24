@@ -2,13 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
-from odoo import fields
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSSaleReport(TestPoSCommon, TestPointOfSaleHttpCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.pos_user.write({
+            'group_ids': [
+                (4, cls.env.ref('sales_team.group_sale_salesman_all_leads').id),
+            ]
+        })
 
     def setUp(self):
         super(TestPoSSaleReport, self).setUp()
@@ -137,54 +144,3 @@ class TestPoSSaleReport(TestPoSCommon, TestPointOfSaleHttpCommon):
         move_id = self.env['account.move'].browse(order_ids['pos.order'][0]['account_move'])
         self.assertEqual(move_id.partner_id.id, self.customer.id)
         self.assertEqual(move_id.partner_shipping_id.id, self.other_customer.id)
-
-    def test_warehouse(self):
-
-        self.open_new_session()
-        session = self.pos_session
-        orders = []
-
-        # Process two orders
-        orders.append(self.create_ui_order_data([(self.product0, 3)]))
-        self.env['pos.order'].sync_from_ui(orders)
-
-        session.action_pos_session_closing_control()
-
-        reports = self.env['sale.report'].sudo().search([('product_id', '=', self.product0.id)], order='id', limit=2)
-        self.assertEqual(reports[0].warehouse_id.id, self.config.picking_type_id.warehouse_id.id)
-
-    def test_qty_deliverd_qty_to_deliver_in_sales_report(self):
-        """
-            Track the quantity of products ordered based on their picking state. for example : If an order is created for 3 products
-            with the option to ship later, the products will be listed under qty_to_deliver in the sales report until the picking state
-            is validated. Once validated and marked as done, the quantity will shift to qty_delivered.
-        """
-        self.config.ship_later = True
-        self.open_new_session()
-        session = self.pos_session
-
-        orders = []
-
-        orders.append(self.create_ui_order_data([(self.product0, 5, 100), (self.product0, 3)], {}, self.partner_1))
-        orders[0]['shipping_date'] = fields.Date.to_string(fields.Date.today())
-
-        order = self.env['pos.order'].sync_from_ui(orders)
-        order = self.env['pos.order'].browse(order['pos.order'][0]['id'])
-
-        session.action_pos_session_closing_control()
-
-        report = self.env['sale.report'].sudo().search([('product_id', '=', self.product0.id)], order='id')
-
-        self.assertEqual(sum(report.mapped('qty_to_deliver')), 8)
-        self.assertEqual(sum(report.mapped('qty_delivered')), 0)
-
-        order.picking_ids.move_ids.quantity = 8.0
-        order.picking_ids.button_validate()
-        # flush computations and clear the cache before checking again the report
-        self.env.flush_all()
-        self.env.transaction.clear()
-
-        report = self.env['sale.report'].sudo().search([('product_id', '=', self.product0.id)], order='id')
-
-        self.assertEqual(sum(report.mapped('qty_to_deliver')), 0)
-        self.assertEqual(sum(report.mapped('qty_delivered')), 8)

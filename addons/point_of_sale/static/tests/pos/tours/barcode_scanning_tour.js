@@ -94,10 +94,6 @@ registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
             ProductScreen.selectedOrderlineHas("Product 3"),
             scan_barcode("3760171283370"),
             ProductScreen.selectedOrderlineHas("Product 3", 2),
-
-            // Scanning lot number of product temoplate and variant have GS1 barcode should add the product to the order.
-            scan_barcode("010512364869541610784512"),
-            ProductScreen.selectedOrderlineHas("GS1 Variant Product", 1),
             Chrome.endTour(),
         ].flat(),
 });
