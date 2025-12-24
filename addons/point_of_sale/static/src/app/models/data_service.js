@@ -115,25 +115,6 @@ export class PosData extends Reactive {
     }
 
     syncDataWithIndexedDB(records) {
-        // Will separate records to remove from indexedDB and records to add
-        const dataSorter = (records, isFinalized, key) =>
-            records.reduce(
-                (acc, record) => {
-                    const finalizedState = isFinalized(record);
-
-                    if (finalizedState === undefined || finalizedState === true) {
-                        if (record[key]) {
-                            acc.remove.push(record[key]);
-                        }
-                    } else {
-                        acc.put.push(dataFormatter(record));
-                    }
-
-                    return acc;
-                },
-                { put: [], remove: [] }
-            );
-
         // This methods will add uiState to the serialized object
         const dataFormatter = (record) => {
             const serializedData = record.serialize();
@@ -141,18 +122,42 @@ export class PosData extends Reactive {
             return { ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id };
         };
 
-        const dataToDelete = {};
+        const dataToKeep = {};
+        let orderlinesToKeep = [];
 
-        for (const [model, params] of Object.entries(this.opts.databaseTable)) {
-            const modelRecords = Array.from(records[model].values());
+        const tableEntries = Object.entries(this.opts.databaseTable);
 
-            if (!modelRecords.length) {
-                continue;
+        // Pass 1: Process models that HAVE a condition
+        for (const [model, params] of tableEntries) {
+            if (!params.getRecordsBasedOnLines) {
+                const modelRecords = Array.from(records[model]?.values() || []);
+                const recordsToPut = modelRecords.filter((record) => !params.condition(record));
+
+                if (model === "pos.order.line") {
+                    orderlinesToKeep = recordsToPut;
+                }
+
+                if (recordsToPut.length) {
+                    this.indexedDB.create(model, recordsToPut.map(dataFormatter));
+                    dataToKeep[model] = recordsToPut.map((r) => r[params.key]);
+                }
             }
+        }
 
-            const data = dataSorter(modelRecords, params.condition, params.key);
-            this.indexedDB.create(model, data.put);
-            dataToDelete[model] = data.remove;
+        // Pass 2: Process models that depend on orderlines
+        for (const [model, params] of tableEntries) {
+            if (params.getRecordsBasedOnLines) {
+                const recordsToPut = params.getRecordsBasedOnLines(orderlinesToKeep);
+
+                if (recordsToPut?.length) {
+                    const uniqueRecords = [
+                        ...new Map(recordsToPut.map((r) => [r[params.key], r])).values(),
+                    ];
+
+                    this.indexedDB.create(model, uniqueRecords.map(dataFormatter));
+                    dataToKeep[model] = uniqueRecords.map((r) => r[params.key]);
+                }
+            }
         }
 
         this.indexedDB.readAll(Object.keys(this.opts.databaseTable)).then((data) => {
@@ -162,15 +167,14 @@ export class PosData extends Reactive {
 
             for (const [model, records] of Object.entries(data)) {
                 const key = this.opts.databaseTable[model].key;
-                let keysToDelete = [];
+                const keysToDelete = [];
 
-                if (dataToDelete[model]) {
-                    const keysInIndexedDB = new Set(records.map((record) => record[key]));
-                    keysToDelete = dataToDelete[model].filter((key) => keysInIndexedDB.has(key));
-                }
                 for (const record of records) {
                     const localRecord = this.models[model].get(record.id);
                     if (!localRecord) {
+                        keysToDelete.push(record[key]);
+                    }
+                    if (!dataToKeep[model] || !dataToKeep[model].includes(record[key])) {
                         keysToDelete.push(record[key]);
                     }
                 }
