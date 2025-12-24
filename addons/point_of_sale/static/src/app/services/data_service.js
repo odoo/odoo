@@ -157,35 +157,75 @@ export class PosData {
         // in the frontend and are not loaded from the backend.
         const modelsParams = Object.entries(this.opts.databaseTable);
         const data = {};
+        const dataToKeep = {};
+        let orderlinesToKeep = [];
+
         for (const [model, params] of modelsParams) {
-            const put = [];
-            const remove = [];
-            const modelData = this.models[model].getAll();
+            if (!params.getRecordsBasedOnLines) {
+                const data = this.models[model].getAll();
+                const recordsToPut = data.filter((record) => !params.condition(record));
 
-            for (const record of modelData) {
-                const isToRemove = params.condition(record);
+                if (model === "pos.order.line") {
+                    orderlinesToKeep = recordsToPut;
+                }
 
-                if (isToRemove === undefined || isToRemove === true) {
-                    if (record[params.key]) {
-                        remove.push(record[params.key]);
-                    }
-                } else {
-                    put.push(record.serializeForIndexedDB());
+                data[model] = recordsToPut;
+
+                if (recordsToPut.length) {
+                    await this.indexedDB.create(
+                        model,
+                        recordsToPut.map((r) => r.serializeForIndexedDB())
+                    );
+                    dataToKeep[model] = recordsToPut.map((r) => r[params.key]);
                 }
             }
+        }
 
-            await this.indexedDB.delete(model, remove);
-            await this.indexedDB.create(model, put);
-            data[model] = put;
+        for (const [model, params] of modelsParams) {
+            if (params.getRecordsBasedOnLines) {
+                const recordsToPut = params.getRecordsBasedOnLines(orderlinesToKeep);
 
-            if (remove.length) {
-                await this.indexedDB.delete(model, remove);
-            }
+                if (recordsToPut?.length) {
+                    const uniqueRecords = [
+                        ...new Map(recordsToPut.map((r) => [r[params.key], r])).values(),
+                    ];
 
-            if (put.length) {
-                await this.indexedDB.create(model, put);
+                    data[model] = uniqueRecords;
+
+                    await this.indexedDB.create(
+                        model,
+                        uniqueRecords.map((r) => r.serializeForIndexedDB())
+                    );
+                    dataToKeep[model] = uniqueRecords.map((r) => r[params.key]);
+                }
             }
         }
+
+        this.indexedDB.readAll(Object.keys(this.opts.databaseTable)).then((data) => {
+            if (!data) {
+                return;
+            }
+
+            for (const [model, records] of Object.entries(data)) {
+                const key = this.opts.databaseTable[model].key;
+                const keysToDelete = [];
+
+                for (const record of records) {
+                    const localRecord = this.models[model].get(record.id);
+                    if (!localRecord) {
+                        keysToDelete.push(record[key]);
+                        continue;
+                    }
+                    if (!dataToKeep[model] || !dataToKeep[model].includes(record[key])) {
+                        keysToDelete.push(record[key]);
+                    }
+                }
+
+                if (keysToDelete.length) {
+                    this.indexedDB.delete(model, keysToDelete);
+                }
+            }
+        });
 
         return data;
     }

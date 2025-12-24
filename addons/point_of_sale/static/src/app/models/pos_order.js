@@ -110,6 +110,10 @@ export class PosOrder extends PosOrderAccounting {
         return this.state !== "draft";
     }
 
+    get canBeRemovedFromIndexedDB() {
+        return (this.finalized && this.isSynced) || this.state === "cancel";
+    }
+
     get totalQuantity() {
         return this.lines.reduce((sum, line) => sum + line.getQuantity(), 0);
     }
