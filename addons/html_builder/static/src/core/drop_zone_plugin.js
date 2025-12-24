@@ -119,12 +119,18 @@ export class DropZonePlugin extends Plugin {
                 excludeNearParent,
             } = dropzoneSelector;
             if (snippetEl.matches(selector) && !snippetEl.matches(exclude)) {
+                // Allow dropzones when reordering an existing snippet, but
+                // prevents their creation inside the image gallery to avoid
+                // dropping new inner block snippets.
+                const filterTarget = (el) =>
+                    this.editable.contains(snippetEl) ||
+                    !el.closest(".o_disable_snippet_insertion");
                 if (dropNear) {
                     selectorSiblings.push(
                         ...this.getSelectorSiblings(editableAreaEls, rootEl, {
                             selector: dropNear,
                             excludeNearParent,
-                        })
+                        }).filter(filterTarget)
                     );
                 }
                 if (dropIn) {

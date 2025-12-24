@@ -161,6 +161,11 @@ class ImageGalleryOption extends Plugin {
             imageGalleryElement.classList.remove("o_nomode", "o_masonry", "o_grid", "o_slideshow");
             imageGalleryElement.classList.add(`o_${mode}`);
         }
+        if (images.length > 0) {
+            images.forEach((image) => {
+                image.classList.add("o_editable_media");
+            });
+        }
         switch (mode) {
             case "masonry":
                 this.masonry(imageGalleryElement, images);

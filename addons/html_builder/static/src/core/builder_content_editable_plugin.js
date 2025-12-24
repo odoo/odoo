@@ -16,6 +16,7 @@ export class BuilderContentEditablePlugin extends Plugin {
             "section:has(> .o_container_small, > .container, > .container-fluid)",
             ".o_not_editable",
             "[data-oe-field='arch']:empty",
+            ".o_disable_typing",
         ],
         content_editable_selectors: [
             "section > .o_container_small",
