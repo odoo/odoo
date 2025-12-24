@@ -156,7 +156,7 @@ class ProductTemplate(models.Model):
     def _load_pos_data_fields(self, config_id):
         return [
             'id', 'display_name', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name', 'list_price', 'is_favorite',
-            'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'tracking', 'type', 'service_tracking', 'is_storable',
+            'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'type', 'service_tracking', 'is_storable',
             'write_date', 'color', 'pos_sequence', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_variant_ids', 'public_description',
             'pos_optional_product_ids', 'sequence', 'product_tag_ids'
         ]
@@ -169,20 +169,11 @@ class ProductTemplate(models.Model):
             query = self._search(self._load_pos_data_domain(data, config), bypass_access=True)
             sql = SQL(
                 """
-                    WITH pm AS (
-                        SELECT pp.product_tmpl_id,
-                            MAX(sml.write_date) date
-                        FROM stock_move_line sml
-                        JOIN product_product pp ON sml.product_id = pp.id
-                        GROUP BY pp.product_tmpl_id
-                    )
                     SELECT product_template.id
                         FROM %s
-                    LEFT JOIN pm ON product_template.id = pm.product_tmpl_id
                         WHERE %s
                     ORDER BY product_template.is_favorite DESC NULLS LAST,
                         CASE WHEN product_template.type = 'service' THEN 1 ELSE 0 END DESC,
-                        pm.date DESC NULLS LAST,
                         product_template.write_date DESC
                     LIMIT %s
                 """,
@@ -363,27 +354,6 @@ class ProductTemplate(models.Model):
         price_per_pricelist_id = pricelists._price_get(template_or_variant, quantity) if pricelists else False
         pricelist_list = [{'name': pl.name, 'price': price_per_pricelist_id[pl.id]} for pl in pricelists]
 
-        # Warehouses
-        warehouse_list = [
-            {'id': w.id,
-            'name': w.name,
-            'available_quantity': template_or_variant.with_context({'warehouse_id': w.id}).qty_available,
-            'free_qty': (
-                    template_or_variant.with_context({'warehouse_id': w.id}).free_qty
-                    if product_variant
-                    else sum(self.product_variant_ids.with_context({'warehouse_id': w.id}).mapped('free_qty'))
-                ),
-            'forecasted_quantity': template_or_variant.with_context({'warehouse_id': w.id}).virtual_available,
-            'uom': template_or_variant.uom_name}
-            for w in self.env['stock.warehouse'].search([('company_id', '=', config.company_id.id)])]
-
-        if config.picking_type_id.warehouse_id:
-            # Sort the warehouse_list, prioritizing config.picking_type_id.warehouse_id
-            warehouse_list = sorted(
-                warehouse_list,
-                key=lambda w: w['id'] != config.picking_type_id.warehouse_id.id
-            )
-
         # Suppliers
         key = itemgetter('partner_id')
         supplier_list = []
@@ -406,7 +376,6 @@ class ProductTemplate(models.Model):
         return {
             'all_prices': all_prices,
             'pricelists': pricelist_list,
-            'warehouses': warehouse_list,
             'suppliers': supplier_list,
             'variants': variant_list,
             'optional_products': self.pos_optional_product_ids.read(['id', 'name', 'list_price']),

@@ -288,7 +288,7 @@ export default class OrderPaymentValidation {
             return false;
         }
 
-        if ((this.order.isToInvoice() || this.order.shipping_date) && !this.order.getPartner()) {
+        if (this.order.isToInvoice() && !this.order.getPartner()) {
             const confirmed = await ask(this.pos.dialog, {
                 title: _t("Please select the Customer"),
                 body: _t("Select a customer with a valid address."),
@@ -302,18 +302,6 @@ export default class OrderPaymentValidation {
             } else {
                 return false;
             }
-        }
-
-        const partner = this.order.getPartner();
-        if (
-            this.order.shipping_date &&
-            !(partner.name && partner.street && partner.city && partner.country_id)
-        ) {
-            this.pos.dialog.add(AlertDialog, {
-                title: _t("Incorrect address for shipping"),
-                body: _t("The selected customer needs an address."),
-            });
-            return false;
         }
 
         if (!this.order.presetRequirementsFilled) {

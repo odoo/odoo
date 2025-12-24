@@ -52,20 +52,6 @@ export class OrderSummary extends Component {
         return this.pos.selectedOrder;
     }
 
-    async editPackLotLines(line) {
-        const isAllowOnlyOneLot = line.product_id.isAllowOnlyOneLot();
-        let editedPackLotLines = [];
-        if (line.refunded_orderline_id) {
-            editedPackLotLines = await this.pos.editLotsRefund(line);
-        } else {
-            editedPackLotLines = await this.pos.editLots(
-                line.product_id,
-                line.getPackLotLinesToEdit(isAllowOnlyOneLot)
-            );
-        }
-        line.editPackLotLines(editedPackLotLines);
-    }
-
     clickLine(ev, orderline) {
         ev.stopPropagation();
         this.numberBuffer.reset();

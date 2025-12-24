@@ -356,29 +356,9 @@ export class TicketScreen extends Component {
         // Add orderline for each toRefundDetail to the destinationOrder.
         const lines = [];
         for (const refundDetail of this._getRefundableDetails(partner, order)) {
-            const refundLine = refundDetail.line;
-            const alreadyRefundedLots = refundLine.refund_orderline_ids
-                .filter((item) => !["cancel", "draft"].includes(item.order_id.state))
-                .flatMap((item) => item.pack_lot_ids)
-                .map((pack_lot) => pack_lot.lot_name);
-            const options = refundLine.pack_lot_ids
-                .map((p) => p.lot_name)
-                .filter((lotName) => !alreadyRefundedLots.includes(lotName));
-            const line = this.pos.models["pos.order.line"].create({
-                qty: -refundDetail.qty,
-                price_unit: refundLine.price_unit,
-                product_id: refundLine.product_id,
-                order_id: destinationOrder,
-                discount: refundLine.discount,
-                tax_ids: refundLine.tax_ids.map((tax) => ["link", tax]),
-                refunded_orderline_id: refundLine,
-                // Only include as many pack_lot_ids as the refunded quantity requires.
-                pack_lot_ids: options
-                    .slice(0, refundDetail.qty)
-                    .map((lotName) => ["create", { lot_name: lotName }]),
-                price_type: "automatic",
-                attribute_value_ids: refundLine.attribute_value_ids.map((attr) => ["link", attr]),
-            });
+            const line = this.pos.models["pos.order.line"].create(
+                this.getRefundLinesDetails(refundDetail, destinationOrder)
+            );
             lines.push(line);
             refundDetail.destination_order_uuid = destinationOrder.uuid;
         }
@@ -417,6 +397,21 @@ export class TicketScreen extends Component {
         this.pos.ticket_screen_mobile_pane = "left";
         destinationOrder.setScreenData({ name: "PaymentScreen" });
         this.pos.navigate("PaymentScreen", { orderUuid: destinationOrder.uuid });
+    }
+
+    getRefundLinesDetails(refundDetail, destinationOrder) {
+        const refundLine = refundDetail.line;
+        return {
+            qty: -refundDetail.qty,
+            price_unit: refundLine.price_unit,
+            product_id: refundLine.product_id,
+            order_id: destinationOrder,
+            discount: refundLine.discount,
+            tax_ids: refundLine.tax_ids.map((tax) => ["link", tax]),
+            refunded_orderline_id: refundLine,
+            price_type: "automatic",
+            attribute_value_ids: refundLine.attribute_value_ids.map((attr) => ["link", attr]),
+        };
     }
 
     async onDeleteOrder(order) {

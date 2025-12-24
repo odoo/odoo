@@ -17,16 +17,7 @@
                     <field name="has_refundable_lines" invisible="1" />
                 </header>
                 <sheet>
-                <field name="failed_pickings" invisible="1"/>
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_stock_picking"
-                        type="object"
-                        class="oe_stat_button"
-                        icon="fa-truck"
-                        invisible="picking_count == 0">
-                        <field name="picking_count" widget="statinfo" string="Pickings" invisible="failed_pickings"/>
-                        <field name="picking_count" widget="statinfo" string="Pickings" class="text-danger" invisible="not failed_pickings"/>
-                    </button>
                     <button name="action_view_invoice"
                         string="Invoice"
                         type="object"
@@ -94,7 +85,6 @@
                                 <field name="full_product_name" optional="hide" readonly="1"/>
                                 <field name="product_id" widget="product_label_section_and_note_field" />
                                 <field name="is_edited" readonly="1" column_invisible="not parent.order_edit_tracking"/>
-                                <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot" optional="hide"/>
                                 <field name="qty"/>
                                 <field name="customer_note" optional="hide"/>
                                 <field name="product_uom_id" groups="uom.group_uom"/>
@@ -121,7 +111,6 @@
                                     <field name="price_subtotal_incl" invisible="1" widget="monetary" force_save="1"/>
                                     <field name="tax_ids_after_fiscal_position" widget="many2many_tax_tags" string="Taxes"/>
                                     <field name="tax_ids" widget="many2many_tax_tags" invisible="1"/>
-                                    <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                     <field name="notice"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="full_product_name" readonly="1" />

@@ -122,7 +122,7 @@ class PosOrder(models.Model):
         self.ensure_one()
         if not draft and self.state != 'cancel':
             self.action_pos_order_paid()
-            self._create_order_picking()
+            self._compute_lines_qty_available()
             self._compute_total_cost_in_real_time()
 
         self._generate_order_invoice()
@@ -161,10 +161,6 @@ class PosOrder(models.Model):
         if order.get('partner_id'):
             self.update_order_partner(order)
             existing_order.write({'partner_id': order.get('partner_id'), 'to_invoice': order.get('to_invoice', False)})
-        # update pickings
-        if order.get('shipping_date'):
-            existing_order.write({'shipping_date': order.get('shipping_date')})
-            existing_order.picking_ids.filtered(lambda p: p.state not in ['done', 'cancel']).write({'scheduled_date': order.get('shipping_date')})
         # payments
         if order.get('payment_ids'):
             self._update_lines(order, existing_order, ['lines', 'payment_ids'])
@@ -289,13 +285,6 @@ class PosOrder(models.Model):
                 }))
         return invoice_lines
 
-    def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
-        moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
-            .mapped('picking_ids.move_ids')\
-            .filtered(lambda m: m.is_valued and m.product_id.valuation == 'real_time' and m.product_id.id == product.id)\
-            .sorted(lambda x: x.date)
-        return moves._get_price_unit()
-
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
     last_order_preparation_change = fields.Char(string='Last preparation change', help="Last printed state of the order")
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
@@ -332,11 +321,6 @@ class PosOrder(models.Model):
         'Status', readonly=True, copy=False, default='draft', index=True)
 
     account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False, index="btree_not_null")
-    picking_ids = fields.One2many('stock.picking', 'pos_order_id')
-    picking_count = fields.Integer(compute='_compute_picking_count')
-    failed_pickings = fields.Boolean(compute='_compute_picking_count')
-    picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
-    stock_reference_ids = fields.Many2many('stock.reference', 'stock_reference_pos_order_rel', 'pos_order_id', 'reference_id', string="Reference")
     preset_id = fields.Many2one('pos.preset', string='Preset')
     floating_order_name = fields.Char(string='Order Name')
     general_customer_note = fields.Text(string='General Customer Note')
@@ -351,7 +335,6 @@ class PosOrder(models.Model):
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments')
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice', copy=False)
-    shipping_date = fields.Date('Shipping Date')
     preset_time = fields.Datetime(string='Hour', help="Hour of the day for the order")
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
@@ -441,12 +424,6 @@ class PosOrder(models.Model):
         for order in self:
             order.is_invoiced = bool(order.account_move)
 
-    @api.depends('picking_ids', 'picking_ids.state')
-    def _compute_picking_count(self):
-        for order in self:
-            order.picking_count = len(order.picking_ids)
-            order.failed_pickings = bool(order.picking_ids.filtered(lambda p: p.state != 'done'))
-
     @api.depends('date_order', 'company_id', 'currency_id', 'company_id.currency_id')
     def _compute_currency_rate(self):
         for order in self:
@@ -472,20 +449,7 @@ class PosOrder(models.Model):
         """
         for order in self:
             lines = order.lines
-            if not order._should_create_picking_real_time():
-                storable_fifo_avco_lines = lines.filtered(lambda l: l._is_product_storable_fifo_avco())
-                lines -= storable_fifo_avco_lines
-            stock_moves = order.picking_ids.move_ids
-            lines._compute_total_cost(stock_moves)
-
-    def _compute_total_cost_at_session_closing(self, stock_moves):
-        """
-        Compute the margin at the end of the session. This method should be called to compute the remaining lines margin
-        containing a storable product with a fifo/avco cost method and then compute the order margin
-        """
-        for order in self:
-            storable_fifo_avco_lines = order.lines.filtered(lambda l: l._is_product_storable_fifo_avco())
-            storable_fifo_avco_lines._compute_total_cost(stock_moves)
+            lines._compute_total_cost()
 
     @api.depends('lines.margin', 'is_total_cost_computed')
     def _compute_margin(self):
@@ -701,14 +665,6 @@ class PosOrder(models.Model):
 
     def get_reference_last_part(self):
         return self.pos_reference.split('-')[-1]
-
-    def action_stock_picking(self):
-        self.ensure_one()
-        action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_ready')
-        action['display_name'] = _('Pickings')
-        action['context'] = {}
-        action['domain'] = [('id', 'in', self.picking_ids.ids)]
-        return action
 
     def action_view_invoice(self):
         invoices = self.account_move
@@ -1015,33 +971,6 @@ class PosOrder(models.Model):
                         'balance': balance,
                         'display_type': 'rounding',
                     })
-        # Stock.
-        if self.company_id.inventory_valuation == 'real_time' and self.picking_ids.ids:
-            stock_moves = self.env['stock.move'].sudo().search([
-                ('picking_id', 'in', self.picking_ids.ids),
-                ('product_id.valuation', '=', 'real_time'),
-            ])
-            for stock_move in stock_moves:
-                product_accounts = stock_move.product_id._get_product_accounts()
-                expense_account = product_accounts['expense']
-                stock_account = product_accounts['stock_valuation']
-                balance = -sum(stock_move.mapped('value'))
-                aml_vals_list_per_nature['stock'].append({
-                    'name': _("Stock variation for %s", stock_move.product_id.name),
-                    'account_id': expense_account.id,
-                    'partner_id': commercial_partner.id,
-                    'currency_id': self.company_id.currency_id.id,
-                    'amount_currency': balance,
-                    'balance': balance,
-                })
-                aml_vals_list_per_nature['stock'].append({
-                    'name': _("Stock variation for %s", stock_move.product_id.name),
-                    'account_id': stock_account.id,
-                    'partner_id': commercial_partner.id,
-                    'currency_id': self.company_id.currency_id.id,
-                    'amount_currency': -balance,
-                    'balance': -balance,
-                })
 
         # sort self.payment_ids by is_split_transaction:
         for payment_id in self.payment_ids:
@@ -1139,8 +1068,6 @@ class PosOrder(models.Model):
         self.ensure_one()
         if not (move := self.account_move):
             self.write({'to_invoice': True})
-            if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing and self.session_id.state != 'closed':
-                self._create_order_picking()
             move = self._generate_pos_order_invoice()
         return {
             'name': _('Customer Invoice'),
@@ -1303,7 +1230,6 @@ class PosOrder(models.Model):
             'pos.session': [],
             'pos.payment': self.env['pos.payment']._load_pos_data_read(self.payment_ids, config) if config else [],
             'pos.order.line': self.env['pos.order.line']._load_pos_data_read(self.lines, config) if config else [],
-            'pos.pack.operation.lot': self.env['pos.pack.operation.lot']._load_pos_data_read(self.lines.pack_lot_ids, config) if config else [],
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_data_read(self.lines.custom_attribute_value_ids, config) if config else [],
             'account.move': self.env['account.move'].sudo()._load_pos_data_read(account_moves, config) if config else [],
         }
@@ -1312,26 +1238,6 @@ class PosOrder(models.Model):
     def _get_refunded_orders(self, order):
         refunded_orderline_ids = [line[2]['refunded_orderline_id'] for line in order['lines'] if line[0] in [0, 1] and line[2].get('refunded_orderline_id')]
         return self.env['pos.order.line'].browse(refunded_orderline_ids).mapped('order_id')
-
-    def _should_create_picking_real_time(self):
-        return not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice)
-
-    def _create_order_picking(self):
-        self.ensure_one()
-        if self.shipping_date:
-            self.sudo().lines._launch_stock_rule_from_pos_order_lines()
-        else:
-            if self._should_create_picking_real_time():
-                picking_type = self.config_id.picking_type_id
-                if self.partner_id.property_stock_customer:
-                    destination_id = self.partner_id.property_stock_customer.id
-                elif not picking_type or not picking_type.default_location_dest_id:
-                    destination_id = self.env['stock.warehouse']._get_partner_locations()[0].id
-                else:
-                    destination_id = picking_type.default_location_dest_id.id
-
-                pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(destination_id, self.lines, picking_type, self.partner_id)
-                pickings.write({'pos_session_id': self.session_id.id, 'pos_order_id': self.id, 'origin': self.name})
 
     def add_payment(self, data):
         """Create a new payment for the order"""
@@ -1391,10 +1297,7 @@ class PosOrder(models.Model):
                 order._prepare_refund_values(current_session)
             )
             for line in order.lines.filtered(lambda l: l.refunded_qty < l.qty):
-                PosPackOperationLot = self.env['pos.pack.operation.lot']
-                for pack_lot in line.pack_lot_ids:
-                    PosPackOperationLot += pack_lot.copy()
-                refund_line = line.copy(line._prepare_refund_data(refund_order, PosPackOperationLot))
+                refund_line = line.copy(line._prepare_refund_data(refund_order))
                 refund_line._onchange_amount_line_all()
             refund_order._compute_prices()
             refund_orders |= refund_order
@@ -1536,25 +1439,10 @@ class PosOrder(models.Model):
     def _prepare_pos_log(self, body):
         return body
 
-
-class PosPackOperationLot(models.Model):
-    _name = 'pos.pack.operation.lot'
-    _description = "Specify product lot/serial number in pos order line"
-    _rec_name = "lot_name"
-    _inherit = ['pos.load.mixin']
-
-    pos_order_line_id = fields.Many2one('pos.order.line', index='btree_not_null')
-    order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", readonly=False)
-    lot_name = fields.Char('Lot Name')
-    product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
-
-    @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])]
-
-    @api.model
-    def _load_pos_data_fields(self, config):
-        return ['lot_name', 'pos_order_line_id', 'write_date']
+    def _compute_lines_qty_available(self):
+        for order in self:
+            lines = order.lines
+            lines._compute_qty_available()
 
 
 class AccountCashRounding(models.Model):

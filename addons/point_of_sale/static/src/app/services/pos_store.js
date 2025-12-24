@@ -12,7 +12,6 @@ import {
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { OpeningControlPopup } from "@point_of_sale/app/components/popups/opening_control_popup/opening_control_popup";
-import { SelectLotPopup } from "@point_of_sale/app/components/popups/select_lot_popup/select_lot_popup";
 import { OrderDetailsDialog } from "@point_of_sale/app/screens/ticket_screen/order_details_dialog/order_details_dialog";
 import { ProductConfiguratorPopup } from "@point_of_sale/app/components/popups/product_configurator_popup/product_configurator_popup";
 import { ComboConfiguratorPopup } from "@point_of_sale/app/components/popups/combo_configurator_popup/combo_configurator_popup";
@@ -33,7 +32,7 @@ import { normalize } from "@web/core/l10n/utils";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
-import { formatDate, deserializeDateTime } from "@web/core/l10n/dates";
+import { formatDate } from "@web/core/l10n/dates";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
 import { DebugWidget } from "../utils/debug/debug_widget";
@@ -438,7 +437,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.config = this.data.models["pos.config"].getFirst();
         this.user = this.data.models["res.users"].getFirst();
         this.currency = this.config.currency_id;
-        this.pickingType = this.data.models["stock.picking.type"].getFirst();
         this.models = this.data.models;
         this.screenState.partnerList.offsetBySearch = {
             "": this.models["res.partner"].length,
@@ -946,15 +944,6 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
-        const pack_lot_ids = await this.configureNewOrderLine(
-            productTemplate,
-            vals,
-            values,
-            order,
-            options,
-            configure
-        );
-
         // Handle price unit
         this.handlePriceUnit(values, order, vals.price_unit);
 
@@ -965,42 +954,12 @@ export class PosStore extends WithLazyGetterTrap {
             this.numberBuffer.reset();
         }
         let selectedOrderline = order.getSelectedOrderline();
-        if (options.draftPackLotLines && configure) {
-            selectedOrderline.setPackLotLines({
-                ...options.draftPackLotLines,
-                setQuantity: options.quantity === undefined,
-            });
-        }
-
         // Merge orderline if needed
         this.tryMergeOrderline(order, line, merge, selectedOrderline);
-
         selectedOrderline = order.getSelectedOrderline();
-        if (values.product_id.tracking === "lot") {
-            const productTemplate = values.product_id.product_tmpl_id;
-            const related_lines = [];
-            const price = productTemplate.getPrice(
-                order.pricelist_id,
-                values.qty,
-                values.price_extra,
-                false,
-                values.product_id,
-                selectedOrderline,
-                related_lines
-            );
-            related_lines.forEach((line) => line.setUnitPrice(price));
-        }
 
         if (configure) {
             this.numberBuffer.reset();
-        }
-
-        if (values.product_id.tracking === "serial") {
-            this.selectedOrder.getSelectedOrderline().setPackLotLines({
-                modifiedPackLotLines: pack_lot_ids.modifiedPackLotLines ?? [],
-                newPackLotLines: pack_lot_ids.newPackLotLines ?? [],
-                setQuantity: true,
-            });
         }
 
         if (configure) {
@@ -1014,45 +973,6 @@ export class PosStore extends WithLazyGetterTrap {
         }, 3000);
 
         return order.getSelectedOrderline();
-    }
-
-    async configureNewOrderLine(productTemplate, vals, values, order, opts = {}, configure = true) {
-        // In the case of a product with tracking enabled, we need to ask the user for the lot/serial number.
-        // It will return an instance of pos.pack.operation.lot
-        // ---
-        // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        const code = opts.code;
-        let pack_lot_ids = {};
-        if (values.product_tmpl_id.isTracked() && (configure || code)) {
-            const packLotLinesToEdit =
-                (!values.product_tmpl_id.isAllowOnlyOneLot() &&
-                    this.getOrder()
-                        .getOrderlines()
-                        .filter((line) => !line.getDiscount())
-                        .find((line) => line.product_id.id === values.product_id.id)
-                        ?.getPackLotLinesToEdit()) ||
-                [];
-
-            // if the lot information exists in the barcode, we don't need to ask it from the user.
-            if (code && code.type === "lot") {
-                // consider the old and new packlot lines
-                const modifiedPackLotLines = Object.fromEntries(
-                    packLotLinesToEdit.filter((item) => item.id).map((item) => [item.id, item.text])
-                );
-                const newPackLotLines = [{ lot_name: code.code }];
-                pack_lot_ids = { modifiedPackLotLines, newPackLotLines };
-            } else {
-                pack_lot_ids = await this.editLots(values.product_id, packLotLinesToEdit);
-            }
-
-            if (!pack_lot_ids) {
-                return;
-            } else {
-                const packLotLine = pack_lot_ids.newPackLotLines;
-                values.pack_lot_ids = packLotLine.map((lot) => ["create", lot]);
-            }
-        }
-        return pack_lot_ids;
     }
 
     /**
@@ -1302,7 +1222,6 @@ export class PosStore extends WithLazyGetterTrap {
             session_id: this.session,
             company_id: this.company,
             config_id: this.config,
-            picking_type_id: this.pickingType,
             user_id: this.user,
             access_token: uuidv4(),
             ticket_code: random5Chars(),
@@ -1580,37 +1499,13 @@ export class PosStore extends WithLazyGetterTrap {
 
     async pay() {
         const currentOrder = this.getOrder();
-
         if (!currentOrder.canPay()) {
             return;
         }
-
-        if (
-            currentOrder.lines.some(
-                (line) =>
-                    ["lot", "serial"].includes(line.getProduct().tracking) &&
-                    !line.hasValidProductLot()
-            ) &&
-            (this.pickingType.use_create_lots || this.pickingType.use_existing_lots)
-        ) {
-            const confirmed = await ask(this.env.services.dialog, {
-                title: _t("Some Serial/Lot Numbers are missing"),
-                body: _t(
-                    "You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?"
-                ),
-            });
-            if (confirmed) {
-                this.mobile_pane = "right";
-                this.navigate("PaymentScreen", {
-                    orderUuid: this.selectedOrderUuid,
-                });
-            }
-        } else {
-            this.mobile_pane = "right";
-            this.navigate("PaymentScreen", {
-                orderUuid: this.selectedOrderUuid,
-            });
-        }
+        this.mobile_pane = "right";
+        this.navigate("PaymentScreen", {
+            orderUuid: this.selectedOrderUuid,
+        });
     }
     async getServerOrders() {
         await this.syncAllOrders();
@@ -2112,162 +2007,6 @@ export class PosStore extends WithLazyGetterTrap {
 
         return payload;
     }
-    async editLotsRefund(line) {
-        const product = line.getProduct();
-        const packLotLinesToEdit = line.pack_lot_ids.map((p) => ({
-            id: p.id,
-            text: p.lot_name,
-        }));
-        const alreadyRefundedLots = line.refunded_orderline_id.refund_orderline_ids
-            .filter((item) => !["cancel", "draft"].includes(item.order_id.state))
-            .flatMap((item) => item.pack_lot_ids)
-            .map((p) => p.lot_name);
-        const options = line.refunded_orderline_id.pack_lot_ids
-            .map((p) => ({ id: p.id, name: p.lot_name, product_qty: line.qty }))
-            .filter((lot) => !alreadyRefundedLots.includes(lot.name));
-        const payload = await makeAwaitable(this.dialog, SelectLotPopup, {
-            title: _t("Lot/Serial number(s) required for"),
-            name: product.display_name,
-            isSingleItem: product.isAllowOnlyOneLot(),
-            array: packLotLinesToEdit,
-            options: options,
-            customInput: false,
-            uniqueValues: product.tracking === "serial",
-            isLotNameUsed: () => false,
-        });
-        if (payload) {
-            const modifiedPackLotLines = {};
-            const newPackLotLines = [];
-            for (const item of payload) {
-                if (item.id) {
-                    modifiedPackLotLines[item.id] = item.text;
-                } else {
-                    newPackLotLines.push({ lot_name: item.text });
-                }
-            }
-            return { modifiedPackLotLines, newPackLotLines };
-        } else {
-            return null;
-        }
-    }
-
-    showNotificationIfLotExpired(lotName, lotExpDate = null) {
-        const lotExpDateTime = deserializeDateTime(lotExpDate);
-        if (lotExpDateTime.isValid && lotExpDateTime.ts <= DateTime.now().ts) {
-            this.notification.add(_t("Lot/Serial %s is expired", lotName));
-        }
-    }
-    async editLots(product, packLotLinesToEdit) {
-        const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
-        let canCreateLots = this.pickingType.use_create_lots || !this.pickingType.use_existing_lots;
-
-        let existingLots = [];
-        try {
-            existingLots = await this.data.call("pos.order.line", "get_existing_lots", [
-                this.company.id,
-                this.config.id,
-                product.id,
-            ]);
-            if (!canCreateLots && (!existingLots || existingLots.length === 0)) {
-                this.dialog.add(AlertDialog, {
-                    title: _t("No existing serial/lot number"),
-                    body: _t(
-                        "There is no serial/lot number for the selected product, and their creation is not allowed from the Point of Sale app."
-                    ),
-                });
-                return null;
-            }
-        } catch (ex) {
-            logPosMessage("Store", "editLots", "Collecting existing lots failed", CONSOLE_COLOR, [
-                ex,
-            ]);
-            const confirmed = await ask(this.dialog, {
-                title: _t("Server communication problem"),
-                body: _t(
-                    "The existing serial/lot numbers could not be retrieved. \nContinue without checking the validity of serial/lot numbers ?"
-                ),
-                confirmLabel: _t("Yes"),
-                cancelLabel: _t("No"),
-            });
-            if (!confirmed) {
-                return null;
-            }
-            canCreateLots = true;
-        }
-
-        const usedLotsQty = this.models["pos.pack.operation.lot"]
-            .filter(
-                (lot) =>
-                    lot.pos_order_line_id?.product_id?.id === product.id &&
-                    lot.pos_order_line_id?.order_id?.state === "draft"
-            )
-            .reduce((acc, lot) => {
-                if (!acc[lot.lot_name]) {
-                    acc[lot.lot_name] = { total: 0, currentOrderCount: 0 };
-                }
-                acc[lot.lot_name].total += lot.pos_order_line_id?.qty || 0;
-
-                if (lot.pos_order_line_id?.order_id?.id === this.selectedOrder.id) {
-                    acc[lot.lot_name].currentOrderCount += lot.pos_order_line_id?.qty || 0;
-                }
-                return acc;
-            }, {});
-
-        // Remove lot/serial names that are already used in draft orders
-        existingLots = existingLots.filter(
-            (lot) => lot.product_qty > (usedLotsQty[lot.name]?.total || 0)
-        );
-
-        // Check if the input lot/serial name is already used in another order
-        const isLotNameUsed = (itemValue) => {
-            const totalQty = existingLots.find((lt) => lt.name == itemValue)?.product_qty || 0;
-            const usedQty = usedLotsQty[itemValue]
-                ? usedLotsQty[itemValue].total - usedLotsQty[itemValue].currentOrderCount
-                : 0;
-            return usedQty ? usedQty >= totalQty : false;
-        };
-
-        const existingLotsName = existingLots.map((l) => l.name);
-        if (!packLotLinesToEdit.length && existingLotsName.length === 1) {
-            if (existingLots[0].expiration_date) {
-                this.showNotificationIfLotExpired(
-                    existingLots[0].name,
-                    existingLots[0].expiration_date
-                );
-            }
-            // If there's only one existing lot/serial number, automatically assign it to the order line
-            return { newPackLotLines: [{ lot_name: existingLotsName[0] }] };
-        }
-        const payload = await makeAwaitable(this.dialog, SelectLotPopup, {
-            title: _t("Lot/Serial number(s) required for"),
-            name: product.display_name,
-            isSingleItem: isAllowOnlyOneLot,
-            array: packLotLinesToEdit,
-            options: existingLots,
-            customInput: canCreateLots,
-            uniqueValues: product.tracking === "serial",
-            isLotNameUsed: isLotNameUsed,
-        });
-        if (payload) {
-            for (const item of payload) {
-                if (!item.expiration_date) {
-                    continue;
-                }
-                this.showNotificationIfLotExpired(item.text, item.expiration_date);
-            }
-            // Segregate the old and new packlot lines
-            const modifiedPackLotLines = Object.fromEntries(
-                payload.filter((item) => item.id).map((item) => [item.id, item.text])
-            );
-            const newPackLotLines = payload
-                .filter((item) => !item.id)
-                .map((item) => ({ lot_name: item.text }));
-
-            return { modifiedPackLotLines, newPackLotLines };
-        } else {
-            return null;
-        }
-    }
 
     openOpeningControl() {
         if (this.shouldShowOpeningControl()) {
@@ -2717,9 +2456,9 @@ export class PosStore extends WithLazyGetterTrap {
         const productTmplsToCheck =
             mode === "full" && productTmpl
                 ? [productTmpl]
-                : this.productCombos.sort(
+                : this.productCombos?.sort(
                       (a, b) => a.product_tmpl_id.list_price - b.product_tmpl_id.list_price
-                  );
+                  ) ?? [];
 
         for (const comboProduct of productTmplsToCheck) {
             const combos = comboProduct.combo_ids;
