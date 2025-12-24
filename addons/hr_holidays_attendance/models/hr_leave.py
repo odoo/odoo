@@ -62,7 +62,7 @@ class HrLeave(models.Model):
             domain=[
                 ('holiday_status_id.overtime_deductible', '=', True),
                 ('employee_id', 'in', employees.ids),
-                ('state', '=', 'confirm'),
+                ('state', 'in', ['confirm', 'validate']),
             ],
             groupby=['employee_id'],
             aggregates=['number_of_hours_display:sum'],

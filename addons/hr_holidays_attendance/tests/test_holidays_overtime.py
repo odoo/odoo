@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, date
 
 from odoo import Command
 from odoo.tests import new_test_user
@@ -47,6 +47,13 @@ class TestHolidaysOvertime(TransactionCase):
             'requires_allocation': True,
             'employee_requests': True,
             'allocation_validation_type': 'hr',
+            'overtime_deductible': True,
+        })
+        cls.leave_type_deduct_extra_hours = cls.env['hr.leave.type'].create({
+            'name': 'Deduct Extra Hours',
+            'company_id': cls.company.id,
+            'requires_allocation': True,
+            'request_unit': 'hour',
             'overtime_deductible': True,
         })
 
@@ -184,6 +191,41 @@ class TestHolidaysOvertime(TransactionCase):
                 'state': 'confirm',
                 'date_from': time.strftime('%Y-01-01'),
                 'date_to': time.strftime('%Y-12-31'),
+            })
+
+    def test_allocation_deduction_validated_allocation(self):
+        """ Test that validated allocations are correctly deducted from the extra hours.
+        """
+        self.employee.tz = 'UTC'  # Ensure no timezone effect to prevent miscalculation
+        self.new_attendance(check_in=datetime(2025, 12, 29, 5, 0), check_out=datetime(2025, 12, 29, 23, 0))
+        self.assertEqual(self.employee.total_overtime, 9.0, "Should have 9 hours of overtime")
+
+        allocation_1 = self.env['hr.leave.allocation'].create({
+            'name': 'test allocation',
+            'holiday_status_id': self.leave_type_deduct_extra_hours.id,
+            'employee_id': self.employee.id,
+            'number_of_days_display': 8.0,
+            'state': 'confirm',
+            'date_from': date.today(),
+        })
+
+        # Check deduction in confirm state: 9 - 8 = 1
+        self._check_deductible(1)
+
+        allocation_1.action_approve()
+
+        # Check deduction in validated state: 9 - 8 = 1
+        self._check_deductible(1)
+
+        # ValidationError should be raised since employee has only 1hr OT left and trying to create 8hrs OT
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave.allocation'].create({
+            'name': 'test allocation 2',
+            'holiday_status_id': self.leave_type_deduct_extra_hours.id,
+            'employee_id': self.employee.id,
+            'number_of_days_display': 8.0,
+            'state': 'confirm',
+            'date_from': date.today(),
             })
 
     def test_allocation_check_overtime_write(self):
