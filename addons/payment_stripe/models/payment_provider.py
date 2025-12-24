@@ -135,7 +135,7 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        if self.env.company.country_id.code not in const.SUPPORTED_COUNTRIES:
+        if self._stripe_get_country(self.env.company.country_id.code) not in const.SUPPORTED_COUNTRIES:
             raise RedirectWarning(
                 _(
                     "Stripe Connect is not available in your country, please use another payment"
