@@ -39,8 +39,20 @@ export class GradientPicker extends Component {
             this.setGradientFromString(this.props.selectedGradient);
         } else {
             // initialization of the gradient with default value
-            this.onColorGradientChange();
+            this.onColorGradientPreview();
         }
+
+        // Apply the previewed custom color when the popover is closed.
+        this.props.setOnCloseCallback?.(() => {
+            this.onColorGradientChange();
+        });
+
+        this.props.setOperationCallbacks?.({
+            onApplyCallback: () => {
+                this.props.setOnCloseCallback(() => {});
+            },
+            getPreviewColor: () => this.cssGradients[this.state.type],
+        });
 
         onWillUpdateProps((newProps) => {
             if (newProps.selectedGradient) {
@@ -87,7 +99,7 @@ export class GradientPicker extends Component {
 
     selectType(type) {
         this.state.type = type;
-        this.onColorGradientChange();
+        this.onColorGradientPreview();
     }
 
     onAngleChange(ev) {
@@ -96,7 +108,7 @@ export class GradientPicker extends Component {
             const clampedAngle = Math.min(Math.max(angle, 0), 360);
             ev.target.value = clampedAngle;
             this.state.angle = clampedAngle;
-            this.onColorGradientChange();
+            this.onColorGradientPreview();
         }
     }
 
@@ -106,7 +118,7 @@ export class GradientPicker extends Component {
             const clampedValue = Math.min(Math.max(inputValue, 0), 100);
             ev.target.value = clampedValue;
             this.positions[position] = clampedValue;
-            this.onColorGradientChange();
+            this.onColorGradientPreview();
         }
     }
 
@@ -124,14 +136,14 @@ export class GradientPicker extends Component {
 
     onSizeChange(size) {
         this.state.size = size;
-        this.onColorGradientChange();
+        this.onColorGradientPreview();
     }
 
     onColorPercentageChange(colorIndex, ev) {
         this.state.currentColorIndex = colorIndex;
         this.colors[colorIndex].percentage = ev.target.value;
         this.sortColors();
-        this.onColorGradientChange();
+        this.onColorGradientPreview();
     }
 
     onGradientPreviewClick(ev) {
@@ -178,7 +190,7 @@ export class GradientPicker extends Component {
         this.state.currentColorIndex = this.colors.findIndex(
             (color) => color.percentage === percentage
         );
-        this.onColorGradientChange();
+        this.onColorGradientPreview();
     }
 
     removeColor(colorIndex) {
@@ -187,7 +199,7 @@ export class GradientPicker extends Component {
         }
         this.colors.splice(colorIndex, 1);
         this.state.currentColorIndex = 0;
-        this.onColorGradientChange();
+        this.onColorGradientPreview();
     }
 
     sortColors() {
@@ -249,11 +261,11 @@ export class GradientPicker extends Component {
         };
 
         updateAngle(ev);
-        this.onColorGradientChange();
+        this.onColorGradientPreview();
 
         const onKnobMouseMove = (ev) => {
             updateAngle(ev);
-            this.onColorGradientChange();
+            this.onColorGradientPreview();
         };
         const onKnobMouseUp = () => document.removeEventListener("mousemove", onKnobMouseMove);
 

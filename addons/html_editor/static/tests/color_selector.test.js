@@ -1331,7 +1331,7 @@ describe("color preview", () => {
         await animationFrame();
         await click(".o-select-color-foreground");
         await contains(".btn:contains('Gradient')").click();
-        await contains(".o_custom_gradient_button").click(); // Click applies the default gradient.
+        await contains(".o_custom_gradient_button").click(); // Click previews the default gradient.
         const initialGradient = queryOne(".o_custom_gradient_button").style.backgroundImage;
         await contains(".o_font_color_selector .o_color_pick_area").click();
         await animationFrame();
@@ -1345,6 +1345,30 @@ describe("color preview", () => {
         expect(".o_custom_gradient_button").not.toHaveStyle({ backgroundImage: gradient1 });
         await press("Escape"); // Close tab and cancel preview.
         await animationFrame();
-        expect("p font").toHaveStyle({ backgroundImage: initialGradient });
+        expect("font").toHaveCount(0); // Gradient was canceled
+    });
+
+    test("should preview when changing different gradient settings", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await contains(".btn:contains('Gradient')").click();
+        await contains(".o_custom_gradient_button").click();
+
+        await contains(".o_color_gradient_input>input").edit(250);
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "linear-gradient(250deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+        await contains("button:contains('Radial')").click();
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "radial-gradient(circle closest-side at 25% 25%, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+        await press("Escape"); // Close tab and cancel preview.
+        await animationFrame();
+        expect("font").toHaveCount(0); // Gradient was canceled
     });
 });

@@ -98,7 +98,6 @@ export class CustomColorPicker extends Component {
         for (const doc of documents) {
             useExternalListener(doc, "pointermove", this.throttleOnPointerMove);
             useExternalListener(doc, "pointerup", this.onPointerUp.bind(this));
-            useExternalListener(doc, "keydown", this.onEscapeKeydown.bind(this), { capture: true });
         }
         // Apply the previewed custom color when the popover is closed.
         this.props.setOnCloseCallback?.(() => {
@@ -391,7 +390,7 @@ export class CustomColorPicker extends Component {
         this._updateCssColor();
     }
     /**
-     * Trigger an event to annonce that the widget value has changed
+     * Trigger an event to announce that the widget value has changed
      *
      * @private
      */
@@ -438,8 +437,6 @@ export class CustomColorPicker extends Component {
         if (this.props.stopClickPropagation) {
             ev.stopPropagation();
         }
-        //TODO: we should remove it with legacy web_editor
-        ev.__isColorpickerClick = true;
 
         if (ev.target.dataset.colorMethod === "hex" && !this.selectedHexValue) {
             ev.target.select();
@@ -460,18 +457,6 @@ export class CustomColorPicker extends Component {
         if (this.lastFocusedSliderEl) {
             this.lastFocusedSliderEl.focus();
             this.lastFocusedSliderEl = undefined;
-        }
-    }
-    /**
-     * Removes the close callback on Escape, so that a preview is cancelled with
-     * escape instead of being applied.
-     *
-     * @param {KeydownEvent} ev
-     */
-    onEscapeKeydown(ev) {
-        const hotkey = getActiveHotkey(ev);
-        if (hotkey === "escape") {
-            this.props.setOnCloseCallback?.(() => {});
         }
     }
     /**

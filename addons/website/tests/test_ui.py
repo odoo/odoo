@@ -396,7 +396,7 @@ class TestUi(HttpCaseWithWebsiteUser):
             'name': 'test.png',
             'mimetype': 'image/png',
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_background_edition', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_background_edition', login='admin', watch=True)
 
     def test_12_edit_translated_page_redirect(self):
         lang = self.env['res.lang']._activate_lang('nl_NL')

@@ -1,10 +1,11 @@
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, useEffect, useRef, useState, useExternalListener } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
 import { cookie } from "@web/core/browser/cookie";
 import { POSITION_BUS } from "../position/position_hook";
 import { registry } from "../registry";
+import { getActiveHotkey } from "../hotkeys/hotkey_service";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
 export const DEFAULT_COLORS = [
@@ -103,6 +104,23 @@ export class ColorPicker extends Component {
             },
             () => [this.state.activeTab]
         );
+        const documents = [
+            window.top,
+            ...Array.from(window.top.frames).filter((frame) => {
+                try {
+                    const document = frame.document;
+                    return !!document;
+                } catch {
+                    // We cannot access the document (cross origin).
+                    return false;
+                }
+            }),
+        ].map((w) => w.document);
+        for (const doc of documents) {
+            useExternalListener(doc, "keydown", this.onKeyDown.bind(this), {
+                capture: true,
+            });
+        }
     }
 
     getDefaultTab() {
@@ -306,6 +324,19 @@ export class ColorPicker extends Component {
 
     isColorButton(targetEl) {
         return targetEl.tagName === "BUTTON" && !targetEl.matches(".o_colorpicker_ignore");
+    }
+
+    /**
+     * Removes the close callback on Escape, so that a preview is cancelled with
+     * escape instead of being applied.
+     *
+     * @param {KeydownEvent} ev
+     */
+    onKeyDown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey === "escape") {
+            this.props.setOnCloseCallback?.(() => {});
+        }
     }
 }
 
