@@ -32,8 +32,12 @@ export class ThreadIcon extends Component {
         this.store = useService("mail.store");
     }
 
+    get channel() {
+        return this.props.thread.channel;
+    }
+
     get correspondent() {
-        return this.props.thread.channel?.correspondent;
+        return this.channel?.correspondent;
     }
 
     get defaultChatIcon() {

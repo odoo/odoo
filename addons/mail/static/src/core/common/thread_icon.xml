@@ -4,13 +4,13 @@
     <t t-name="mail.ThreadIcon">
         <div class="o-mail-ThreadIcon d-flex justify-content-center flex-shrink-0" t-att-class="props.className">
             <t t-set="sizeClass" t-value="props.size === 'large' ? 'fa-lg' : props.size === 'small' ? 'o-xsmaller' : ''"/>
-            <t t-if="props.thread.channel?.channel_type === 'channel'">
-                <div t-if="!props.thread.group_public_id" class="fa fa-fw fa-globe" t-att-class="sizeClass" title="Public Channel"/>
+            <t t-if="channel?.channel_type === 'channel'">
+                <div t-if="!channel.group_public_id" class="fa fa-fw fa-globe" t-att-class="sizeClass" title="Public Channel"/>
             </t>
-            <t t-elif="props.thread.channel?.channel_type === 'group'">
+            <t t-elif="channel?.channel_type === 'group'">
                 <t name="group"/>
             </t>
-            <t t-elif="props.thread.channel?.channel_type?.includes('chat') and correspondent">
+            <t t-elif="channel?.channel_type?.includes('chat') and correspondent">
                 <t name="chat">
                     <t name="chat_static">
                         <ImStatus t-if="correspondent.im_status" member="correspondent" size="props.size"/>
