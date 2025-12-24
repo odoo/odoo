@@ -124,6 +124,12 @@ class AccountMove(models.Model):
         copy=False,
     )
 
+    l10n_it_convention_code = fields.Char(
+        string="Order/Convention Code",
+        size=100,
+        help=" Used to connect an individual invoice to a broader framework agreement, a specific project, or a long-term convention."
+    )
+
     def _auto_init(self):
         # Create compute stored field l10n_it_document_type and l10n_it_payment_method
         # here to avoid timeout error on large databases.
@@ -865,6 +871,7 @@ class AccountMove(models.Model):
             'origin_document_date': self.l10n_it_origin_document_date,
             'cig': self.l10n_it_cig,
             'cup': self.l10n_it_cup,
+            'convention_code': self.l10n_it_convention_code,
             'currency': self.currency_id or self.company_currency_id if not convert_to_euros else self.env.ref('base.EUR'),
             'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF18',
             'is_self_invoice': is_self_invoice,
