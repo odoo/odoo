@@ -31,6 +31,7 @@ export class ColorPickerGradientTab extends Component {
         defaultOpacity: { type: Number, optional: true },
         noTransparency: { type: Boolean, optional: true },
         selectedColor: { type: String, optional: true },
+        currentColorPreview: { type: String, optional: true },
         "*": { optional: true },
     };
     setup() {
@@ -42,6 +43,9 @@ export class ColorPickerGradientTab extends Component {
     }
 
     getCurrentGradientColor() {
+        if (isColorGradient(this.props.currentColorPreview)) {
+            return this.props.currentColorPreview;
+        }
         if (isColorGradient(this.props.selectedColor)) {
             return this.props.selectedColor;
         }
@@ -49,6 +53,13 @@ export class ColorPickerGradientTab extends Component {
 
     toggleGradientPicker() {
         this.state.showGradientPicker = !this.state.showGradientPicker;
+        if (
+            !this.state.showGradientPicker &&
+            this.props.currentColorPreview &&
+            this.props.currentColorPreview !== this.props.selectedColor
+        ) {
+            this.props.applyColor(this.props.currentColorPreview);
+        }
     }
 }
 

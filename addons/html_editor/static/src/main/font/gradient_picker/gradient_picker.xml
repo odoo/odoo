@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.GradientPicker">
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column" t-on-keydown="onKeydown">
 
             <div class="align-items-center d-flex justify-content-between my-3 o_type_row">
                 Type
@@ -159,8 +159,6 @@
             <ColorPicker
                 onColorSelect.bind="onColorChange"
                 onColorPreview.bind="onColorPreview"
-                setOnCloseCallback.bind="props.setOnCloseCallback"
-                setOperationCallbacks.bind="props.setOperationCallbacks"
                 defaultColor="this.currentColorHex"
                 selectedColor="this.currentColorHex"
                 noTransparency="props.noTransparency"

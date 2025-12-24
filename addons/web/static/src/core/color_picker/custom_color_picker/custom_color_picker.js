@@ -8,7 +8,7 @@ import {
 } from "@web/core/utils/colors";
 import { uniqueId } from "@web/core/utils/functions";
 import { clamp } from "@web/core/utils/numbers";
-import { debounce, useThrottleForAnimation } from "@web/core/utils/timing";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 import { Component, onMounted, onWillUpdateProps, useExternalListener, useRef } from "@odoo/owl";
 
@@ -64,8 +64,6 @@ export class CustomColorPicker extends Component {
         if (!this.props.selectedColor) {
             this.props.selectedColor = this.props.defaultColor;
         }
-        this.debouncedOnChangeInputs = debounce(this.onChangeInputs.bind(this), 10, true);
-
         this.elRef = useRef("el");
         this.colorPickerAreaRef = useRef("colorPickerArea");
         this.colorPickerPointerRef = useRef("colorPickerPointer");
@@ -98,7 +96,6 @@ export class CustomColorPicker extends Component {
         for (const doc of documents) {
             useExternalListener(doc, "pointermove", this.throttleOnPointerMove);
             useExternalListener(doc, "pointerup", this.onPointerUp.bind(this));
-            useExternalListener(doc, "keydown", this.onEscapeKeydown.bind(this), { capture: true });
         }
         // Apply the previewed custom color when the popover is closed.
         this.props.setOnCloseCallback?.(() => {
@@ -391,7 +388,7 @@ export class CustomColorPicker extends Component {
         this._updateCssColor();
     }
     /**
-     * Trigger an event to annonce that the widget value has changed
+     * Trigger an event to announce that the widget value has changed
      *
      * @private
      */
@@ -425,7 +422,7 @@ export class CustomColorPicker extends Component {
     onKeydown(ev) {
         if (ev.key === "Enter") {
             if (ev.target.tagName === "INPUT") {
-                this.onChangeInputs(ev);
+                this._colorSelected();
             }
             ev.preventDefault();
             this.props.onInputEnter(ev);
@@ -438,8 +435,6 @@ export class CustomColorPicker extends Component {
         if (this.props.stopClickPropagation) {
             ev.stopPropagation();
         }
-        //TODO: we should remove it with legacy web_editor
-        ev.__isColorpickerClick = true;
 
         if (ev.target.dataset.colorMethod === "hex" && !this.selectedHexValue) {
             ev.target.select();
@@ -460,18 +455,6 @@ export class CustomColorPicker extends Component {
         if (this.lastFocusedSliderEl) {
             this.lastFocusedSliderEl.focus();
             this.lastFocusedSliderEl = undefined;
-        }
-    }
-    /**
-     * Removes the close callback on Escape, so that a preview is cancelled with
-     * escape instead of being applied.
-     *
-     * @param {KeydownEvent} ev
-     */
-    onEscapeKeydown(ev) {
-        const hotkey = getActiveHotkey(ev);
-        if (hotkey === "escape") {
-            this.props.setOnCloseCallback?.(() => {});
         }
     }
     /**
@@ -647,29 +630,6 @@ export class CustomColorPicker extends Component {
         this.shouldSetSelectedColor = true;
     }
     /**
-     * Called when input value is changed -> Updates UI: Set picker and slider
-     * position and set colors.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    onChangeInputs(ev) {
-        switch (ev.target.dataset.colorMethod) {
-            case "hex":
-                // Handled by the "input" event (see "onHexColorInput").
-                return;
-            case "hsl":
-                this._updateHsl(
-                    parseInt(this.el.querySelector(".o_hue_input").value),
-                    parseInt(this.el.querySelector(".o_saturation_input").value),
-                    parseInt(this.el.querySelector(".o_lightness_input").value)
-                );
-                break;
-        }
-        this._updateUI();
-        this._colorSelected();
-    }
-    /**
      * Called when the hex color input's input event is triggered.
      *
      * @private
@@ -680,7 +640,8 @@ export class CustomColorPicker extends Component {
         if (hexColorValue.length === 6 || hexColorValue.length === 8) {
             this._updateHex(`#${hexColorValue}`);
             this._updateUI();
-            this._colorSelected();
+            this.shouldSetSelectedColor = true;
+            this.props.onColorPreview(this.colorComponents);
         }
     }
 }
