@@ -239,6 +239,53 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_order_refund_flow", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad", "2", "3"),
+            ProductScreen.addOrderline("Letter Tray", "3", "2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+            // First refund order
+            ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("-0001"),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.toRefundTextContains("To Refund: 1.00"),
+            TicketScreen.confirmRefund(),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            ProductScreen.isShown(),
+            inLeftSide([...Order.hasLine("Desk Pad", "-1")]),
+            // Second refund order
+            Chrome.createFloatingOrder(),
+            ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("-0001"),
+            TicketScreen.toRefundTextContains("Refunding"),
+            inLeftSide([...ProductScreen.clickLine("Letter Tray", "3.0")]),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.toRefundTextContains("To Refund: 1.00"),
+            TicketScreen.confirmRefund(),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            ProductScreen.isShown(),
+            // Verify refund order has only one line
+            inLeftSide([...Order.hasLine("Letter Tray", "-1")]),
+            ProductScreen.totalAmountIs("-2.20"),
+            // Delete both refunding orders
+            Chrome.clickMenuOption("Orders"),
+            TicketScreen.deleteOrder("-0002"),
+            Dialog.confirm(),
+            TicketScreen.deleteOrder("-0003"),
+            Dialog.confirm(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("-0001"),
+            TicketScreen.noLinesToRefund(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("LotTour", {
     steps: () =>
         [
