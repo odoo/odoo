@@ -257,7 +257,7 @@ class PurchaseOrderLine(models.Model):
         if not at_date:
             at_date = fields.Date.today()
         order = self.order_id
-        price_unit = self.price_unit
+        price_unit = self.price_unit_discounted
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         if self.tax_ids:
             qty = self.product_qty or 1
