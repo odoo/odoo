@@ -16,10 +16,14 @@
             <field name="name">ViaSuite Keycloak</field>
             <field name="enabled" eval="True"/>
             <field name="body">Sign in with ViaSuite</field>
-            <field name="client_id" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_CLIENT_ID', 'viasuite-odoo')"/>
-            <field name="auth_endpoint" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_BASE_URL', 'https://auth.viafronteira.com') + '/realms/' + __import__('os').getenv('VIA_SUITE_KEYCLOAK_REALM', 'via-suite') + '/protocol/openid-connect/auth'"/>
-            <field name="validation_endpoint" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_BASE_URL', 'https://auth.viafronteira.com') + '/realms/' + __import__('os').getenv('VIA_SUITE_KEYCLOAK_REALM', 'via-suite') + '/protocol/openid-connect/userinfo'"/>
-            <field name="data_endpoint" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_BASE_URL', 'https://auth.viafronteira.com') + '/realms/' + __import__('os').getenv('VIA_SUITE_KEYCLOAK_REALM', 'via-suite') + '/protocol/openid-connect/token'"/>
+            <field name="client_id">placeholder_client_id</field>
+            
+            <!-- Required fields to satisfy SQL NOT NULL constraint -->
+            <!-- These are overwritten by the Python post_init_hook -->
+            <field name="auth_endpoint">https://placeholder.com/auth</field>
+            <field name="validation_endpoint">https://placeholder.com/validation</field>
+            <field name="data_endpoint">https://placeholder.com/token</field>
+            
             <field name="scope">openid profile email</field>
             <field name="css_class">btn-primary</field>
             <field name="sequence">10</field>
@@ -28,18 +32,17 @@
         <!-- Store Keycloak configuration in system parameters for easy access -->
         <record id="ir_config_parameter_keycloak_base_url" model="ir.config_parameter">
             <field name="key">via_suite.keycloak.base_url</field>
-            <field name="value" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_BASE_URL', 'https://auth.viafronteira.com')"/>
+            <field name="value">https://auth.viafronteira.com</field>
         </record>
 
         <record id="ir_config_parameter_keycloak_realm" model="ir.config_parameter">
             <field name="key">via_suite.keycloak.realm</field>
-            <field name="value" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_REALM', 'via-suite')"/>
+            <field name="value">via-suite</field>
         </record>
 
         <record id="ir_config_parameter_keycloak_client_id" model="ir.config_parameter">
             <field name="key">via_suite.keycloak.client_id</field>
-            <field name="value" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_CLIENT_ID', 'viasuite-odoo')"/>
+            <field name="value">viasuite-odoo</field>
         </record>
-
     </data>
 </odoo>
