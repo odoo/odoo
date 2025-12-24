@@ -149,6 +149,15 @@ def post_init_hook(cr, registry):
         else:
             _logger.warning("⊘ No company found to apply defaults")
 
+        # Step 10: Configure OAuth
+        _logger.info("[10/10] Configuring OAuth...")
+        from odoo.addons.via_suite_base.hooks.oauth_config import configure_oauth
+        oauth_ok = configure_oauth(env)
+        if oauth_ok:
+            _logger.info("✓ OAuth provider configured from environment variables")
+        else:
+            _logger.warning("✗ Failed to configure OAuth provider")
+
         # Commit changes
         cr.commit()
 
