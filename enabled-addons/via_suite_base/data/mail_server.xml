@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            Amazon SES Email Server Configuration
+
+            Configuration is loaded from environment variables:
+            - VIA_SUITE_SMTP_HOST: SMTP server hostname
+            - VIA_SUITE_SMTP_PORT: SMTP server port
+            - VIA_SUITE_SMTP_USER: SMTP username (AWS Access Key)
+            - VIA_SUITE_SMTP_PASSWORD: SMTP password (AWS Secret Key)
+            - VIA_SUITE_EMAIL_FROM: Default from email address
+        -->
+
+        <record id="mail_server_viasuite_ses" model="ir.mail_server">
+            <field name="name">ViaSuite Amazon SES</field>
+            <field name="smtp_host">placeholder.smtp.host</field>
+            <field name="smtp_port">587</field>
+            <field name="smtp_encryption">starttls</field>
+            <field name="sequence">10</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <!-- Set default from email address -->
+        <!-- Logic moved to post_init_hook.py -->
+        <record id="ir_config_parameter_mail_catchall_domain" model="ir.config_parameter">
+            <field name="key">mail.catchall.domain</field>
+            <field name="value">example.com</field>
+        </record>
+
+        <record id="ir_config_parameter_mail_catchall_alias" model="ir.config_parameter">
+            <field name="key">mail.catchall.alias</field>
+            <field name="value">no-reply</field>
+        </record>
+
+        <record id="ir_config_parameter_mail_default_from" model="ir.config_parameter">
+            <field name="key">mail.default.from</field>
+            <field name="value">no-reply@example.com</field>
+        </record>
+
+    </data>
+</odoo>

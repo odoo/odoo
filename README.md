@@ -1,5 +1,6 @@
-# TODO
+# Database template definition
 
-- achar uma lib para upload de arquivos ficarem no s3 (ou outro object store cloud)
-- "data_dir" precisa ficar num filesystem distribuido acessivel por multiplos pods.
-- 
+python3 odoo-bin -c odoo.conf -d via-suite-template \
+-i via_suite_base \
+--load-language=pt_BR,es_PY,en_US,ar_SA,zh_CN
+--stop-after-init 

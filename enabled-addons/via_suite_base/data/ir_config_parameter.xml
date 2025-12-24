@@ -1,8 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="via_auth_oauth_authorization_header" model="ir.config_parameter">
-            <field name="key">auth_oauth.authorization_header</field>
-            <field name="value">1</field>
+
+        <!-- Session Configuration -->
+        <record id="ir_config_parameter_session_timeout" model="ir.config_parameter">
+            <field name="key">via_suite.session_timeout</field>
+            <field name="value">86400</field> <!-- 24 hours in seconds -->
         </record>
+
+        <!-- Audit Configuration -->
+        <record id="ir_config_parameter_audit_enabled" model="ir.config_parameter">
+            <field name="key">via_suite.audit.enabled</field>
+            <field name="value">True</field>
+        </record>
+
+        <record id="ir_config_parameter_audit_retention_days" model="ir.config_parameter">
+            <field name="key">via_suite.audit.retention_days</field>
+            <field name="value">90</field> <!-- Keep logs for 90 days -->
+        </record>
+
+        <!-- Database Filter (subdomain = database name) -->
+        <record id="ir_config_parameter_dbfilter" model="ir.config_parameter">
+            <field name="key">via_suite.dbfilter</field>
+            <field name="value">^%d$</field>
+        </record>
+
+        <!-- Cleanup Configuration -->
+        <record id="ir_config_parameter_cleanup_sessions_days" model="ir.config_parameter">
+            <field name="key">via_suite.cleanup.sessions_days</field>
+            <field name="value">30</field>
+        </record>
+
+        <record id="ir_config_parameter_cleanup_audit_days" model="ir.config_parameter">
+            <field name="key">via_suite.cleanup.audit_days</field>
+            <field name="value">90</field>
+        </record>
+
+        <!-- ViaSuite Branding -->
+        <record id="ir_config_parameter_product_name" model="ir.config_parameter">
+            <field name="key">via_suite.product_name</field>
+            <field name="value">ViaSuite</field>
+        </record>
+
+        <record id="ir_config_parameter_company_name" model="ir.config_parameter">
+            <field name="key">via_suite.company_name</field>
+            <field name="value">ViaFronteira, LLC</field>
+        </record>
+
+        <record id="ir_config_parameter_website" model="ir.config_parameter">
+            <field name="key">via_suite.website</field>
+            <field name="value">https://www.viafronteira.com</field>
+        </record>
+
     </data>
 </odoo>

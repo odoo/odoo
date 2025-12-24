@@ -1,23 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <data noupdate="1">
 
-        <record id="via_oauth_provider_keycloak" model="auth.oauth.provider">
-            <field name="name">Keycloak</field>
-            <field name="enabled">True</field>
+        <!--
+            Keycloak OAuth Provider Configuration
 
-            <!-- Default placeholders - overwritten by post_init_hook if env vars provided -->
-            <field name="client_id">via-suite</field>
+            Configuration is loaded from environment variables:
+            - VIA_SUITE_KEYCLOAK_BASE_URL: Keycloak base URL (e.g., https://auth.viafronteira.com)
+            - VIA_SUITE_KEYCLOAK_REALM: Keycloak realm name (e.g., via-suite)
+            - VIA_SUITE_KEYCLOAK_CLIENT_ID: OAuth client ID
+            - VIA_SUITE_KEYCLOAK_CLIENT_SECRET: OAuth client secret
+        -->
+
+        <record id="oauth_provider_keycloak_viasuite" model="auth.oauth.provider">
+            <field name="name">ViaSuite Keycloak</field>
+            <field name="enabled" eval="True"/>
+            <field name="body">Sign in with ViaSuite</field>
+            <field name="client_id" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_CLIENT_ID', 'viasuite-odoo')"/>
+            <field name="auth_endpoint" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_BASE_URL', 'https://auth.viafronteira.com') + '/realms/' + __import__('os').getenv('VIA_SUITE_KEYCLOAK_REALM', 'via-suite') + '/protocol/openid-connect/auth'"/>
+            <field name="validation_endpoint" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_BASE_URL', 'https://auth.viafronteira.com') + '/realms/' + __import__('os').getenv('VIA_SUITE_KEYCLOAK_REALM', 'via-suite') + '/protocol/openid-connect/userinfo'"/>
+            <field name="data_endpoint" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_BASE_URL', 'https://auth.viafronteira.com') + '/realms/' + __import__('os').getenv('VIA_SUITE_KEYCLOAK_REALM', 'via-suite') + '/protocol/openid-connect/token'"/>
             <field name="scope">openid profile email</field>
+            <field name="css_class">btn-primary</field>
+            <field name="sequence">10</field>
+        </record>
 
-            <field name="auth_endpoint">http://CHANGE-ME/realms/CHANGE-ME/protocol/openid-connect/auth</field>
-            <field name="validation_endpoint">http://CHANGE-ME/realms/CHANGE-ME/protocol/openid-connect/userinfo</field>
-            <field name="data_endpoint">http://CHANGE-ME/realms/CHANGE-ME/protocol/openid-connect/token</field>
+        <!-- Store Keycloak configuration in system parameters for easy access -->
+        <record id="ir_config_parameter_keycloak_base_url" model="ir.config_parameter">
+            <field name="key">via_suite.keycloak.base_url</field>
+            <field name="value" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_BASE_URL', 'https://auth.viafronteira.com')"/>
+        </record>
 
-            <field name="css_class">fa fa-key</field>
+        <record id="ir_config_parameter_keycloak_realm" model="ir.config_parameter">
+            <field name="key">via_suite.keycloak.realm</field>
+            <field name="value" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_REALM', 'via-suite')"/>
+        </record>
 
-            <field name="body">
-                ViaFronteira SSO
-            </field>
+        <record id="ir_config_parameter_keycloak_client_id" model="ir.config_parameter">
+            <field name="key">via_suite.keycloak.client_id</field>
+            <field name="value" eval="__import__('os').getenv('VIA_SUITE_KEYCLOAK_CLIENT_ID', 'viasuite-odoo')"/>
         </record>
 
     </data>

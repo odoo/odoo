@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--
+            Login Page Templates for ViaSuite
+
+            Customizes the login page with ViaSuite branding and Keycloak OAuth.
+        -->
+
+        <!-- Override Login Page Title and Logo -->
+        <template id="login" inherit_id="web.login" name="ViaSuite Login Page">
+            <!-- Replace Logo -->
+            <xpath expr="//div[hasclass('o_database_list')]//img" position="replace">
+                <img src="/via_suite_base/static/src/img/logo.png" alt="ViaSuite" style="max-width: 250px; margin-bottom: 30px;"/>
+            </xpath>
+
+            <!-- Replace Title -->
+            <xpath expr="//h1[contains(text(), 'Sign in')]" position="replace">
+                <h1 style="color: #002147; font-weight: 300; margin-bottom: 10px;">
+                    Welcome to ViaSuite
+                </h1>
+                <p style="color: #666; font-size: 14px; margin-bottom: 30px;">
+                    Sign in with your Keycloak account
+                </p>
+            </xpath>
+        </template>
+
+        <!-- Customize OAuth Providers Section -->
+        <template id="oauth_providers" inherit_id="auth_oauth.providers" name="ViaSuite OAuth Providers">
+            <!-- Add custom styling to OAuth buttons -->
+            <xpath expr="//a[hasclass('btn')]" position="attributes">
+                <attribute name="style">
+                    background: linear-gradient(135deg, #002147 0%, #003d7a 100%);
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    font-size: 16px;
+                    font-weight: 500;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 6px rgba(0, 33, 71, 0.2);
+                </attribute>
+            </xpath>
+        </template>
+
+        <!-- Custom Login Page Styles -->
+        <template id="login_styles" inherit_id="web.login_layout" name="ViaSuite Login Styles">
+            <xpath expr="//head" position="inside">
+                <style type="text/css">
+                    /* ViaSuite Login Page Custom Styles */
+
+                    body.o_web_client {
+                    background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+                    }
+
+                    .o_login_auth {
+                    background: white;
+                    border-radius: 12px;
+                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+                    padding: 40px;
+                    max-width: 450px;
+                    margin: 0 auto;
+                    }
+
+                    .o_login_auth h1 {
+                    color: #002147;
+                    font-weight: 300;
+                    margin-bottom: 10px;
+                    text-align: center;
+                    }
+
+                    .o_login_auth .form-control {
+                    border: 2px solid #e0e0e0;
+                    border-radius: 8px;
+                    padding: 12px 16px;
+                    font-size: 14px;
+                    transition: border-color 0.3s ease;
+                    }
+
+                    .o_login_auth .form-control:focus {
+                    border-color: #FF730E;
+                    box-shadow: 0 0 0 0.2rem rgba(255, 115, 14, 0.25);
+                    outline: none;
+                    }
+
+                    .o_login_auth .btn-primary {
+                    background-color: #FF730E;
+                    border: none;
+                    border-radius: 8px;
+                    padding: 12px 24px;
+                    font-size: 16px;
+                    font-weight: 500;
+                    transition: background-color 0.3s ease;
+                    width: 100%;
+                    }
+
+                    .o_login_auth .btn-primary:hover {
+                    background-color: #e66600;
+                    }
+
+                    .o_login_auth .list-group-item {
+                    border: 2px solid #e0e0e0;
+                    border-radius: 8px;
+                    margin-bottom: 10px;
+                    padding: 12px 16px;
+                    transition: border-color 0.3s ease;
+                    }
+
+                    .o_login_auth .list-group-item:hover {
+                    border-color: #FF730E;
+                    background-color: rgba(255, 115, 14, 0.05);
+                    }
+
+                    /* OAuth Button Styling */
+                    .o_login_auth .o_oauth_provider {
+                    background: linear-gradient(135deg, #002147 0%, #003d7a 100%) !important;
+                    color: white !important;
+                    border: none !important;
+                    padding: 14px 24px !important;
+                    font-size: 16px !important;
+                    font-weight: 500 !important;
+                    border-radius: 8px !important;
+                    transition: all 0.3s ease !important;
+                    box-shadow: 0 4px 6px rgba(0, 33, 71, 0.2) !important;
+                    width: 100%;
+                    text-align: center;
+                    margin-bottom: 15px;
+                    display: block;
+                    }
+
+                    .o_login_auth .o_oauth_provider:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 12px rgba(0, 33, 71, 0.3) !important;
+                    }
+
+                    /* Footer Styling */
+                    .o_login_footer {
+                    text-align: center;
+                    margin-top: 30px;
+                    color: #666;
+                    font-size: 12px;
+                    }
+
+                    .o_login_footer a {
+                    color: #FF730E;
+                    text-decoration: none;
+                    }
+
+                    .o_login_footer a:hover {
+                    color: #e66600;
+                    text-decoration: underline;
+                    }
+
+                    /* Error Messages */
+                    .alert-danger {
+                    background-color: #fff5f5;
+                    border-color: #feb2b2;
+                    color: #c53030;
+                    border-radius: 8px;
+                    padding: 12px 16px;
+                    }
+
+                    /* Database Selector */
+                    .o_database_list {
+                    background: white;
+                    border-radius: 12px;
+                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+                    padding: 40px;
+                    max-width: 450px;
+                    margin: 0 auto;
+                    }
+                </style>
+            </xpath>
+        </template>
+
+        <!-- Add Footer with ViaFronteira Branding -->
+        <template id="login_footer" inherit_id="web.login" name="ViaSuite Login Footer">
+            <xpath expr="//div[hasclass('o_login_auth')]" position="after">
+                <div class="o_login_footer">
+                    <p style="margin: 20px 0 5px 0;">
+                        <strong>ViaSuite</strong> - Retail Management Solution
+                    </p>
+                    <p style="margin: 5px 0;">
+                        Powered by <a href="https://www.viafronteira.com" target="_blank">ViaFronteira, LLC</a>
+                    </p>
+                    <p style="margin: 15px 0 0 0; font-size: 11px; color: #999;">
+                        © 2025 ViaFronteira, LLC. All rights reserved.
+                    </p>
+                </div>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

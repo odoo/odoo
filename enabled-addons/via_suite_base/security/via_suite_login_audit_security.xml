@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Group: Audit Log Manager -->
+        <record id="group_audit_log_manager" model="res.groups">
+            <field name="name">ViaSuite: Audit Log Manager</field>
+            <field name="comment">Can view and manage login audit logs</field>
+        </record>
+        
+        <!-- Record Rules -->
+        
+        <!-- Rule: Users can see their own audit logs -->
+        <record id="via_suite_login_audit_user_rule" model="ir.rule">
+            <field name="name">ViaSuite Login Audit: User Own Records</field>
+            <field name="model_id" ref="model_via_suite_login_audit"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        
+        <!-- Rule: Audit Log Managers can see all records -->
+        <record id="via_suite_login_audit_manager_rule" model="ir.rule">
+            <field name="name">ViaSuite Login Audit: Manager All Records</field>
+            <field name="model_id" ref="model_via_suite_login_audit"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_audit_log_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        
+    </data>
+</odoo>

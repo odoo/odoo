@@ -1,0 +1,129 @@
+// ============================================
+// ViaSuite Theme - Custom SCSS Variables
+// ============================================
+//
+// This file defines the ViaSuite color scheme and theme variables
+// for the Odoo web interface.
+//
+// Brand Colors:
+// - Primary: #FF730E (Vibrant Orange)
+// - Secondary: #002147 (Navy Blue)
+
+// --------------------------------------------
+// Primary Colors
+// --------------------------------------------
+$o-viasuite-primary: #FF730E;
+$o-viasuite-secondary: #002147;
+$o-viasuite-primary-light: lighten($o-viasuite-primary, 10%);
+$o-viasuite-primary-dark: darken($o-viasuite-primary, 10%);
+$o-viasuite-secondary-light: lighten($o-viasuite-secondary, 10%);
+$o-viasuite-secondary-dark: darken($o-viasuite-secondary, 10%);
+
+// --------------------------------------------
+// Override Odoo Default Variables
+// --------------------------------------------
+
+// Primary color (used throughout the UI)
+$o-brand-primary: $o-viasuite-primary !default;
+$o-brand-secondary: $o-viasuite-secondary !default;
+
+// Links
+$link-color: $o-viasuite-primary;
+$link-hover-color: $o-viasuite-primary-dark;
+
+// Buttons
+$btn-primary-bg: $o-viasuite-primary;
+$btn-primary-border: $o-viasuite-primary;
+
+// Navigation bar
+$o-navbar-bg: $o-viasuite-secondary;
+$o-navbar-inverse-bg: $o-viasuite-secondary;
+$o-navbar-inverse-link-color: #ffffff;
+$o-navbar-inverse-link-hover-bg: $o-viasuite-secondary-light;
+
+// --------------------------------------------
+// Custom ViaSuite Styles
+// --------------------------------------------
+
+:root {
+  // CSS Variables for dynamic theming
+  --viasuite-primary: #{$o-viasuite-primary};
+  --viasuite-secondary: #{$o-viasuite-secondary};
+  --viasuite-primary-light: #{$o-viasuite-primary-light};
+  --viasuite-primary-dark: #{$o-viasuite-primary-dark};
+  --viasuite-secondary-light: #{$o-viasuite-secondary-light};
+  --viasuite-secondary-dark: #{$o-viasuite-secondary-dark};
+}
+
+// Navigation Bar Styling
+.o_main_navbar {
+  background: linear-gradient(135deg, $o-viasuite-secondary 0%, $o-viasuite-secondary-light 100%);
+  border-bottom: 3px solid $o-viasuite-primary;
+
+  .o_menu_brand {
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .o_menu_sections {
+    .dropdown-toggle {
+      color: #ffffff;
+
+      &:hover, &:focus {
+        background-color: $o-viasuite-secondary-light;
+      }
+    }
+  }
+}
+
+// Buttons
+.btn-primary {
+  background-color: $o-viasuite-primary;
+  border-color: $o-viasuite-primary;
+
+  &:hover, &:focus, &:active {
+    background-color: $o-viasuite-primary-dark;
+    border-color: $o-viasuite-primary-dark;
+  }
+}
+
+.btn-secondary {
+  background-color: $o-viasuite-secondary;
+  border-color: $o-viasuite-secondary;
+  color: #ffffff;
+
+  &:hover, &:focus, &:active {
+    background-color: $o-viasuite-secondary-light;
+    border-color: $o-viasuite-secondary-light;
+    color: #ffffff;
+  }
+}
+
+// Links
+a {
+  color: $o-viasuite-primary;
+
+  &:hover {
+    color: $o-viasuite-primary-dark;
+  }
+}
+
+// Form Controls
+.form-control:focus {
+  border-color: $o-viasuite-primary;
+  box-shadow: 0 0 0 0.2rem rgba(255, 115, 14, 0.25);
+}
+
+// Control panel
+.o_control_panel {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid $o-viasuite-primary;
+
+  .o_cp_buttons {
+    .btn-primary {
+      background-color: $o-viasuite-primary;
+      border-color: $o-viasuite-primary;
+    }
+  }
+}

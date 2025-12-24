@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViaSuite Base</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #002147;
+            border-bottom: 3px solid #FF730E;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #002147;
+            margin-top: 30px;
+        }
+        .feature {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #FF730E;
+        }
+        .feature h3 {
+            color: #FF730E;
+            margin-top: 0;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .logo {
+            text-align: center;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="logo">
+    <h1 style="font-size: 48px; color: #002147; margin: 0;">ViaSuite</h1>
+    <p style="color: #FF730E; font-size: 18px; margin: 10px 0;">Base Module</p>
+    <p style="color: #666;">by ViaFronteira, LLC</p>
+</div>
+
+<h2>Overview</h2>
+<p>
+    <strong>ViaSuite Base</strong> is the core module for the ViaSuite retail management solution.
+    This module provides essential customizations and infrastructure for multi-tenant SaaS deployment.
+</p>
+
+<h2>Features</h2>
+
+<div class="feature">
+    <h3>🔐 Keycloak SSO Integration</h3>
+    <p>
+        Enterprise-grade authentication with Keycloak OAuth2/OpenID Connect.
+        Supports multi-tenant access control with <code>via_suite_tenants</code> attribute.
+    </p>
+</div>
+
+<div class="feature">
+    <h3>📧 Amazon SES Email</h3>
+    <p>
+        Pre-configured Amazon SES integration for reliable email delivery.
+        All email templates customized with ViaSuite branding.
+    </p>
+</div>
+
+<div class="feature">
+    <h3>📝 Structured Logging</h3>
+    <p>
+        JSON-formatted structured logging for better observability.
+        Integrates seamlessly with log aggregation systems.
+    </p>
+</div>
+
+<div class="feature">
+    <h3>🐛 Sentry Error Tracking</h3>
+    <p>
+        Real-time error tracking and performance monitoring with Sentry integration.
+        Automatic exception capture with context.
+    </p>
+</div>
+
+<div class="feature">
+    <h3>🎨 Custom Branding</h3>
+    <p>
+        Complete rebranding from Odoo to ViaSuite:
+        <br>• Logo and favicon customization
+        <br>• Color scheme (#FF730E orange, #002147 navy)
+        <br>• Email templates
+        <br>• UI strings replacement
+    </p>
+</div>
+
+<div class="feature">
+    <h3>🌍 Multi-Language Support</h3>
+    <p>
+        Pre-installed languages for diverse retail environments:
+        <br>• Portuguese (Brazil)
+        <br>• Spanish (Paraguay)
+        <br>• English (US)
+        <br>• Arabic (Saudi Arabia)
+        <br>• Chinese (Simplified)
+    </p>
+</div>
+
+<div class="feature">
+    <h3>🔍 Login Audit Logging</h3>
+    <p>
+        Comprehensive audit trail of all authentication events including logins,
+        logouts, and failed attempts with IP address and user agent tracking.
+    </p>
+</div>
+
+<div class="feature">
+    <h3>🧹 Automated Cleanup</h3>
+    <p>
+        Scheduled jobs for system maintenance:
+        <br>• Expired sessions cleanup (daily)
+        <br>• Old audit logs cleanup (weekly)
+        <br>• Orphan attachments quarantine (weekly)
+    </p>
+</div>
+
+<h2>Requirements</h2>
+<ul>
+    <li>Odoo 19.0 Community Edition</li>
+    <li>Python 3.12+</li>
+    <li>PostgreSQL 13+</li>
+    <li>Keycloak instance</li>
+    <li>AWS account (SES + S3)</li>
+</ul>
+
+<h2>Configuration</h2>
+<p>All configuration is done via environment variables:</p>
+<ul>
+    <li><code>VIA_SUITE_KEYCLOAK_*</code> - Keycloak OAuth settings</li>
+    <li><code>VIA_SUITE_SMTP_*</code> - Amazon SES configuration</li>
+    <li><code>VIA_SUITE_S3_*</code> - S3 storage settings</li>
+    <li><code>VIA_SUITE_SENTRY_DSN</code> - Sentry error tracking</li>
+</ul>
+
+<div class="warning">
+    <strong>⚠️ Important:</strong> This module is automatically installed (<code>auto_install: True</code>).
+    Make sure all environment variables are properly configured before installation.
+</div>
+
+<h2>Support</h2>
+<p>
+    For documentation and support, visit:
+    <a href="https://www.viafronteira.com" target="_blank">www.viafronteira.com</a>
+</p>
+
+<hr style="margin: 40px 0; border: none; border-top: 1px solid #ddd;">
+
+<p style="text-align: center; color: #999; font-size: 12px;">
+    Version 19.0.1.0.0 | © 2025 ViaFronteira, LLC | All rights reserved
+</p>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--
+            Web Client Templates for ViaSuite Branding
+
+            Customizes the web interface with ViaSuite logos and branding.
+        -->
+
+        <!-- Override Page Title -->
+        <template id="webclient_bootstrap" inherit_id="web.webclient_bootstrap">
+            <xpath expr="//title" position="replace">
+                <title>ViaSuite</title>
+            </xpath>
+        </template>
+
+        <!-- Override Favicon and Icons -->
+        <template id="web_icon" inherit_id="web.layout">
+            <xpath expr="//link[@rel='shortcut icon']" position="replace">
+                <link rel="shortcut icon" href="/via_suite_base/static/src/img/favicon.ico" type="image/x-icon"/>
+                <link rel="icon" type="image/png" sizes="32x32" href="/via_suite_base/static/src/img/favicon-32x32.png"/>
+                <link rel="icon" type="image/png" sizes="16x16" href="/via_suite_base/static/src/img/favicon-16x16.png"/>
+                <link rel="apple-touch-icon" sizes="180x180" href="/via_suite_base/static/src/img/apple-touch-icon.png"/>
+            </xpath>
+        </template>
+
+        <!-- Override Company Logo in Navbar -->
+        <template id="navbar_logo" inherit_id="web.webclient_bootstrap">
+            <xpath expr="//nav[hasclass('o_main_navbar')]" position="inside">
+                <style>
+                    .o_main_navbar .o_menu_brand img {
+                    max-height: 40px;
+                    padding: 5px 0;
+                    }
+                </style>
+            </xpath>
+        </template>
+
+        <!-- Replace Logo Image -->
+        <template id="menu_brand_logo" inherit_id="web.webclient_bootstrap">
+            <xpath expr="//a[hasclass('o_menu_brand')]//img" position="replace">
+                <img src="/via_suite_base/static/src/img/logo_white.png" alt="ViaSuite" class="o_logo"/>
+            </xpath>
+        </template>
+
+        <!-- Add PWA Manifest and Meta Tags -->
+        <template id="pwa_manifest" inherit_id="web.layout">
+            <xpath expr="//head" position="inside">
+                <!-- PWA Manifest -->
+                <link rel="manifest" href="/via_suite_base/static/src/manifest.json"/>
+
+                <!-- Theme Color -->
+                <meta name="theme-color" content="#002147"/>
+
+                <!-- Apple Web App -->
+                <meta name="apple-mobile-web-app-capable" content="yes"/>
+                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+                <meta name="apple-mobile-web-app-title" content="ViaSuite"/>
+
+                <!-- Application Name -->
+                <meta name="application-name" content="ViaSuite"/>
+
+                <!-- Description -->
+                <meta name="description" content="ViaSuite - Retail Management Solution by ViaFronteira, LLC"/>
+            </xpath>
+        </template>
+
+        <!-- Override Company Name in Footer (if exists) -->
+        <template id="footer_company" inherit_id="web.webclient_bootstrap" optional="True">
+            <xpath expr="//footer//span[contains(text(), 'Odoo')]" position="replace">
+                <span>Powered by <strong>ViaSuite</strong> - ViaFronteira, LLC</span>
+            </xpath>
+        </template>
+
+        <!-- Custom CSS for Branding -->
+        <template id="viasuite_custom_css" inherit_id="web.assets_backend" name="ViaSuite Custom CSS">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/via_suite_base/static/src/scss/viasuite_theme.scss"/>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

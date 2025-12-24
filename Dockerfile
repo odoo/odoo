@@ -114,6 +114,14 @@ COPY ./odoo ./odoo
 COPY ./addons ./addons
 COPY ./enabled-addons ${ODOO_EXTRA_ADDONS}
 
+# Clone OCA repos necessários
+RUN git clone -b 19.0 --depth 1 https://github.com/OCA/storage.git /tmp/oca-storage \
+ && cp -r /tmp/oca-storage/fs_storage ${ODOO_EXTRA_ADDONS}/ \
+ && cp -r /tmp/oca-storage/fs_attachment ${ODOO_EXTRA_ADDONS}/ \
+ && cp -r /tmp/oca-storage/fs_attachment_s3 ${ODOO_EXTRA_ADDONS}/ \
+ && rm -rf /tmp/oca-storage \
+ && chown -R odoo:odoo ${ODOO_EXTRA_ADDONS}
+
 # entrypoint (tini + roda como odoo)
 COPY ./deploy/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh \

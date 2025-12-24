@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+
+        <record id="via_oauth_provider_keycloak" model="auth.oauth.provider">
+            <field name="name">Keycloak</field>
+            <field name="enabled">True</field>
+
+            <!-- Default placeholders - overwritten by post_init_hook if env vars provided -->
+            <field name="client_id">via-suite</field>
+            <field name="scope">openid profile email</field>
+
+            <field name="auth_endpoint">http://CHANGE-ME/realms/CHANGE-ME/protocol/openid-connect/auth</field>
+            <field name="validation_endpoint">http://CHANGE-ME/realms/CHANGE-ME/protocol/openid-connect/userinfo</field>
+            <field name="data_endpoint">http://CHANGE-ME/realms/CHANGE-ME/protocol/openid-connect/token</field>
+
+            <field name="css_class">fa fa-key</field>
+
+            <field name="body">
+                ViaFronteira SSO
+            </field>
+        </record>
+
+    </data>
+</odoo>

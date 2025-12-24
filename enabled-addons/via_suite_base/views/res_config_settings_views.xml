@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--
+            Configuration Settings View for ViaSuite
+
+            Adds ViaSuite-specific settings to the general settings page.
+        -->
+
+        <!-- Add ViaSuite Settings Section -->
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.viasuite</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+
+                    <!-- ViaSuite Base Settings -->
+                    <div class="app_settings_block" data-string="ViaSuite" string="ViaSuite" data-key="via_suite_base">
+                        <h2>ViaSuite Configuration</h2>
+
+                        <!-- Branding Information -->
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_via_suite_base"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_via_suite_base"/>
+                                    <div class="text-muted">
+                                        ViaSuite Base module provides core customizations:
+                                        <ul>
+                                            <li>Keycloak SSO integration</li>
+                                            <li>AWS S3 storage for attachments</li>
+                                            <li>Amazon SES email configuration</li>
+                                            <li>Structured logging with JSON output</li>
+                                            <li>Sentry error tracking</li>
+                                            <li>Multi-language support</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- System Information -->
+                        <div class="row mt32">
+                            <div class="col-12">
+                                <h3>System Information</h3>
+                            </div>
+                        </div>
+
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"></div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Product Name"/>
+                                    <div class="text-muted">
+                                        <strong>ViaSuite</strong> - Retail Management Solution
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"></div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Company"/>
+                                    <div class="text-muted">
+                                        <strong>ViaFronteira, LLC</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"></div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Version"/>
+                                    <div class="text-muted">
+                                        19.0.1.0.0
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"></div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Website"/>
+                                    <div class="text-muted">
+                                        <a href="https://www.viafronteira.com" target="_blank">
+                                            www.viafronteira.com
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Authentication Configuration -->
+                        <div class="row mt32">
+                            <div class="col-12">
+                                <h3>Authentication</h3>
+                            </div>
+                        </div>
+
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"></div>
+                                <div class="o_setting_right_pane">
+                                    <label string="OAuth Provider"/>
+                                    <div class="text-muted">
+                                        Keycloak SSO at <strong>auth.viafronteira.com</strong>
+                                        <br/>
+                                        Realm: <strong>via-suite</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"></div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Session Timeout"/>
+                                    <div class="text-muted">
+                                        24 hours (configured for PDV operations)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Storage Configuration -->
+                        <div class="row mt32">
+                            <div class="col-12">
+                                <h3>Storage &amp; Email</h3>
+                            </div>
+                        </div>
+
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"></div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Attachment Storage"/>
+                                    <div class="text-muted">
+                                        AWS S3 (configured via environment variables)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"></div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Email Server"/>
+                                    <div class="text-muted">
+                                        Amazon SES (no-reply@viafronteira.com)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Monitoring Configuration -->
+                        <div class="row mt32">
+                            <div class="col-12">
+                                <h3>Monitoring &amp; Logging</h3>
+                            </div>
+                        </div>
+
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"></div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Error Tracking"/>
+                                    <div class="text-muted">
+                                        Sentry (configured via VIA_SUITE_SENTRY_DSN)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"></div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Log Format"/>
+                                    <div class="text-muted">
+                                        Structured JSON logging (for observability)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Support Information -->
+                        <div class="row mt32">
+                            <div class="col-12">
+                                <div class="alert alert-info" role="alert">
+                                    <h4 class="alert-heading">
+                                        <i class="fa fa-info-circle"/> Configuration Help
+                                    </h4>
+                                    <p>
+                                        ViaSuite is configured via environment variables.
+                                        For detailed configuration instructions, please refer to the deployment guide.
+                                    </p>
+                                    <hr/>
+                                    <p class="mb-0">
+                                        Need help? Contact support at
+                                        <a href="mailto:support@viafronteira.com">support@viafronteira.com</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
