@@ -11,6 +11,8 @@ patch(DataServiceOptions.prototype, {
                     record
                         .backLink("<-pos.order.line.coupon_id")
                         .find((l) => !(l.order_id?.finalized && typeof l.order_id.id === "number")),
+                getRecordsBasedOnLines: (orderlines) =>
+                    orderlines.map((line) => line.coupon_id).filter((c) => c),
             },
         };
     },
