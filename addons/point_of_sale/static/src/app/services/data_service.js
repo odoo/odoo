@@ -174,31 +174,43 @@ export class PosData extends Reactive {
         // This methods will synchronize local data and state in indexedDB. This methods is mostly
         // used with models like pos.order, pos.order.line, pos.payment etc. These models are created
         // in the frontend and are not loaded from the backend.
+        const dataToKeep = {};
+        let orderlinesToKeep = [];
         try {
             const modelsParams = Object.entries(this.opts.databaseTable);
             for (const [model, params] of modelsParams) {
-                const put = [];
-                const remove = [];
-                const data = this.models[model].getAll();
+                if (!params.getRecordsBasedOnLines) {
+                    const data = this.models[model].getAll();
+                    const recordsToPut = data.filter((record) => !params.condition(record));
 
-                for (const record of data) {
-                    const isToRemove = params.condition(record);
+                    if (model === "pos.order.line") {
+                        orderlinesToKeep = recordsToPut;
+                    }
 
-                    if (isToRemove === undefined || isToRemove === true) {
-                        if (record[params.key]) {
-                            remove.push(record[params.key]);
-                        }
-                    } else {
-                        put.push(record.serializeForIndexedDB());
+                    if (recordsToPut.length) {
+                        await this.indexedDB.create(
+                            model,
+                            recordsToPut.map((r) => r.serializeForIndexedDB())
+                        );
+                        dataToKeep[model] = recordsToPut.map((r) => r[params.key]);
                     }
                 }
+            }
+            for (const [model, params] of modelsParams) {
+                if (params.getRecordsBasedOnLines) {
+                    const recordsToPut = params.getRecordsBasedOnLines(orderlinesToKeep);
 
-                if (remove.length) {
-                    await this.indexedDB.delete(model, remove);
-                }
+                    if (recordsToPut?.length) {
+                        const uniqueRecords = [
+                            ...new Map(recordsToPut.map((r) => [r[params.key], r])).values(),
+                        ];
 
-                if (put.length) {
-                    await this.indexedDB.create(model, put);
+                        await this.indexedDB.create(
+                            model,
+                            uniqueRecords.map((r) => r.serializeForIndexedDB())
+                        );
+                        dataToKeep[model] = uniqueRecords.map((r) => r[params.key]);
+                    }
                 }
             }
         } catch (error) {
@@ -210,6 +222,32 @@ export class PosData extends Reactive {
                 [error]
             );
         }
+
+        this.indexedDB.readAll(Object.keys(this.opts.databaseTable)).then((data) => {
+            if (!data) {
+                return;
+            }
+
+            for (const [model, records] of Object.entries(data)) {
+                const key = this.opts.databaseTable[model].key;
+                const keysToDelete = [];
+
+                for (const record of records) {
+                    const localRecord = this.models[model].get(record.id);
+                    if (!localRecord) {
+                        keysToDelete.push(record[key]);
+                        continue;
+                    }
+                    if (!dataToKeep[model] || !dataToKeep[model].includes(record[key])) {
+                        keysToDelete.push(record[key]);
+                    }
+                }
+
+                if (keysToDelete.length) {
+                    this.indexedDB.delete(model, keysToDelete);
+                }
+            }
+        });
     }
 
     async synchronizeServerDataInIndexedDB(serverData = {}) {
