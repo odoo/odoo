@@ -223,6 +223,7 @@ describe("Custom button style", () => {
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.test/", {
             confirm: false,
         });
+        await animationFrame();
         await click("button[name='link_type']");
         await animationFrame();
         await click(".o-we-link-type-dropdown .dropdown-item:contains('Custom')");
