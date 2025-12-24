@@ -70,6 +70,21 @@ class WebsiteSaleVariantController(Controller):
             )
         return combination_info
 
+    @route(
+        "/website_sale/get_attribute_images",
+        type="jsonrpc",
+        auth="public",
+        methods=["POST"],
+        website=True,
+        readonly=True,
+    )
+    def get_dynamic_attribute_images(self, product_template_id, combination, **_kwargs):
+        product_template = request.env["product.template"].browse(int(product_template_id))
+        return product_template._get_dynamic_attribute_images(
+            request.env["product.template.attribute.value"].browse(combination).exists().ids,
+            request.website.id,
+        )
+
     @route("/sale/create_product_variant", type="jsonrpc", auth="public", methods=["POST"])
     def create_product_variant(
         self, product_template_id, product_template_attribute_value_ids, **_kwargs

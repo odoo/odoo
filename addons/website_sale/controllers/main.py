@@ -907,13 +907,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
             combination_info = product._get_combination_info(
                 combination=combination.with_env(self.env)
             )
+            attribute_value_images = product._get_dynamic_attribute_images(
+                combination.ids, request.website.id
+            )
         else:
             combination_info = product._get_combination_info()
+            attribute_value_images = product._get_dynamic_attribute_images([], request.website.id)
 
         # Needed to trigger the recently viewed product rpc
         view_track = website.viewref("website_sale.product").track
 
         return {
+            "attribute_value_images": attribute_value_images,
             "categories": ProductCategory.search([("parent_id", "=", False)]),
             "category": category,
             "combination_info": combination_info,
