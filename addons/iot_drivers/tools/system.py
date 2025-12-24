@@ -258,9 +258,12 @@ def generate_password():
 
 
 def get_ip():
+    """Get the local IP address of the IoT Box by creating
+    a dummy connection to the gateway or Google DNS.
+    """
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        s.connect(('8.8.8.8', 1))  # Google DNS
+        s.connect((get_gateway() or '8.8.8.8', 1))  # Google DNS
         return s.getsockname()[0]
     except OSError as e:
         _logger.warning("Could not get local IP address: %s", e)
