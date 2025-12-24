@@ -469,6 +469,9 @@ export class AddImageAction extends BuilderAction {
     }
     apply({ editingElement, loadResult: { images } }) {
         if (images && images.length) {
+            images.forEach((image) => {
+                image.classList.add("o_editable_media");
+            });
             const mode = this.dependencies.imageGalleryOption.getMode(editingElement);
             this.dependencies.imageGalleryOption.setImages(editingElement, mode, images);
         }
