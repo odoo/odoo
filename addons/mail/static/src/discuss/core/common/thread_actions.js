@@ -242,8 +242,7 @@ registerThreadAction("hide", {
      * @param {import("models").DiscussChannel} param0.channel
      */
     condition: ({ channel, owner }) =>
-        (channel?.canHide ||
-            channel?.sub_channel_ids.some((subThread) => subThread.channel.canHide)) &&
+        (channel?.canHide || channel?.sub_channel_ids.some((subChannel) => subChannel.canHide)) &&
         !owner.isDiscussContent,
     icon: "fa fa-fw fa-times-circle",
     /**
