@@ -26,6 +26,7 @@
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//aside" position="inside">
+                    <field name="activity_state" invisible="1"/>
                     <div class="ms-auto mt-auto" t-att-class="{ 'o_has_no_activity': !record.activity_state.raw_value }">
                         <field name="activity_ids" widget="kanban_activity"/>
                     </div>
