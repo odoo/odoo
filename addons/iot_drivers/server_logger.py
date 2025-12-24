@@ -25,7 +25,7 @@ class ServerLogger(logging.Handler):
         """
         super().__init__()
         self.setFormatter(
-            ColoredFormatter('%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s: %(message)s %(perf_info)s')
+            ColoredFormatter('(%(asctime)s) %(name)s: %(message)s %(perf_info)s')
         )
         self.addFilter(self._logs_filter)
         self._server_iot_log_url = server_url + '/iot/log'
@@ -44,7 +44,7 @@ class ServerLogger(logging.Handler):
         """Generate a batch of log records to send to the server.
         The amount of log records is limited to 50 to avoid too heavy requests.
         """
-        yield f"identifier {IOT_IDENTIFIER}<log/>\n".encode()
+        yield f"identifier {IOT_IDENTIFIER}<log/>\n".encode()  # TODO: remove when v19 is deprecated
         for _ in range(50):  # max 50 logs per batch
             try:
                 log_record = self._queue.get_nowait()
@@ -65,6 +65,7 @@ class ServerLogger(logging.Handler):
         odoo_session.headers = {
             'X-Odoo-Database': self._db_name,
             'User-Agent': 'OdooIoTBox/1.0',
+            'Authorization': f'Bearer {helpers.get_token()}',
         }
         if self._queue.qsize() == 0:
             return
