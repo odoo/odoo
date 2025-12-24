@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -74,4 +74,4 @@ class CalendarAlarm(models.Model):
         }[self.alarm_type]
         self.name = "%s - %s %s" % (display_alarm_type, self.duration, display_interval)
         if self.notify_responsible:
-            self.name += " - " + _("Notify Responsible")
+            self.name += " - " + self.env._("Notify Responsible")

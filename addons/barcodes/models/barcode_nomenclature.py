@@ -1,6 +1,6 @@
 import re
 
-from odoo import models, fields, api, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.barcode import check_barcode_encoding, get_barcode_check_digit
 
@@ -207,7 +207,7 @@ class BarcodeNomenclature(models.Model):
     def _unlink_except_default(self):
         default_record = self.env.ref("barcodes.default_barcode_nomenclature", raise_if_not_found=False)
         if default_record and default_record in self:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "You cannot delete '%(name)s' because it's the default barcode nomenclature.",
                 name=default_record.display_name
             ))

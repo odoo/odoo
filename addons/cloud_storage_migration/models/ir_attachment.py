@@ -6,10 +6,10 @@ import requests
 
 from datetime import timedelta
 
-from odoo.tools import SQL, config
-from odoo.http import request
-from odoo import models, fields, _
+from odoo import fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.http import request
+from odoo.tools import SQL, config
 
 from odoo.addons.base.models.ir_module import assert_log_admin_access
 from odoo.addons.cloud_storage.models.res_config_settings import DEFAULT_CLOUD_STORAGE_MIN_FILE_SIZE
@@ -24,9 +24,9 @@ class CloudStorageAttachmentMigration(models.Model):
     def _migrate_local_to_cloud_storage(self, session):
         """Migrate attachment from local binary storage to cloud storage"""
         if self.type != 'binary':
-            raise ValidationError(_("Attachment (%s) is not a binary attachment and cannot be migrated to cloud storage.", self.id))
+            raise ValidationError(self.env._("Attachment (%s) is not a binary attachment and cannot be migrated to cloud storage.", self.id))
         if not self.store_fname:
-            raise ValidationError(_("Attachment (%s) does not have a stored filename and cannot be migrated to cloud storage.", self.id))
+            raise ValidationError(self.env._("Attachment (%s) does not have a stored filename and cannot be migrated to cloud storage.", self.id))
         filepath = self._full_path(self.store_fname)
         self.url = self._generate_cloud_storage_url()
         upload_info = self._generate_cloud_storage_upload_info()
@@ -36,7 +36,7 @@ class CloudStorageAttachmentMigration(models.Model):
             # google cloud storage or azure blob storage by url matching
             response = session.request(upload_info['method'], upload_info['url'], data=f, headers=headers, timeout=(10, 30))
             if response.status_code != upload_info['response_status']:
-                raise ValidationError(_('Failed to upload attachment %(id)s to cloud storage: %(code)s', id=self.id, code=response.status_code))
+                raise ValidationError(self.env._('Failed to upload attachment %(id)s to cloud storage: %(code)s', id=self.id, code=response.status_code))
         self.write({
             'type': 'cloud_storage',
             'mimetype': self.mimetype,  # force kept the mimetype
@@ -52,7 +52,7 @@ class CloudStorageAttachmentMigration(models.Model):
         """
         ICP = self.env['ir.config_parameter']
         if not ICP.get_str('cloud_storage_provider'):
-            raise UserError(_("Cloud storage provider is not configured"))
+            raise UserError(self.env._("Cloud storage provider is not configured"))
 
         # check ir.config_parameter values' formats are correct
         cron = self.env.ref('cloud_storage_migration.ir_cron_manual_migrate_local_to_cloud_storage')
@@ -64,7 +64,7 @@ class CloudStorageAttachmentMigration(models.Model):
         all_model_names = ICP.get_str('cloud_storage_migration_all_models').split(',')
         all_model_names = tuple(m_ for m in all_model_names if (m_ := m.strip()) and m_ in self.env)
         if not message_model_names and not all_model_names:
-            raise UserError(_("No model for cloud storage migration"))
+            raise UserError(self.env._("No model for cloud storage migration"))
 
         max_attachment_id = ICP.get_int('cloud_storage_migration_max_attachment_id', 0)
         if not max_attachment_id:

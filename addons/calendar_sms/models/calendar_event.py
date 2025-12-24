@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -20,17 +20,17 @@ class CalendarEvent(models.Model):
                     partners -= event.user_id.partner_id
                 event._message_sms_with_template(
                     template=alarm.sms_template_id,
-                    template_fallback=_("Event reminder: %(name)s, %(time)s.", name=event.name, time=event.display_time),
+                    template_fallback=self.env._("Event reminder: %(name)s, %(time)s.", name=event.name, time=event.display_time),
                     partner_ids=partners.ids,
                     put_in_queue=False
                 )
 
     def action_send_sms(self):
         if not self.partner_ids:
-            raise UserError(_("There are no attendees on these events"))
+            raise UserError(self.env._("There are no attendees on these events"))
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Send SMS"),
+            'name': self.env._("Send SMS"),
             'res_model': 'sms.composer',
             'view_mode': 'form',
             'target': 'new',

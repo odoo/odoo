@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 from google.auth.transport.requests import Request
 
-from odoo import models, fields, api, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError, UserError
 
 from .ir_attachment import get_cloud_storage_google_credential
@@ -67,13 +67,13 @@ class ResConfigSettings(models.TransientModel):
         upload_url = IrAttachment._generate_cloud_storage_google_signed_url(bucket_name, blob_name, method='PUT', expiration=IrAttachment._cloud_storage_upload_url_time_to_expiry)
         upload_response = requests.put(upload_url, data=b'', timeout=5)
         if upload_response.status_code != 200:
-            raise ValidationError(_('The account info is not allowed to upload blobs to the bucket.\n%s', str(upload_response.text)))
+            raise ValidationError(self.env._('The account info is not allowed to upload blobs to the bucket.\n%s', str(upload_response.text)))
 
         # check blob read permission
         download_url = IrAttachment._generate_cloud_storage_google_signed_url(bucket_name, blob_name, method='GET', expiration=IrAttachment._cloud_storage_download_url_time_to_expiry)
         download_response = requests.get(download_url, timeout=5)
         if download_response.status_code != 200:
-            raise ValidationError(_('The account info is not allowed to download blobs from the bucket.\n%s', str(upload_response.text)))
+            raise ValidationError(self.env._('The account info is not allowed to download blobs from the bucket.\n%s', str(upload_response.text)))
 
         # CORS management is not allowed in the Google Cloud console.
         # configure CORS on bucket to allow .pdf preview and direct upload
@@ -93,7 +93,7 @@ class ResConfigSettings(models.TransientModel):
         data = json.dumps({'cors': cors})
         patch_response = requests.patch(url, data=data, headers=headers, timeout=5)
         if patch_response.status_code != 200:
-            raise ValidationError(_("The account info is not allowed to set the bucket's CORS.\n%s", str(patch_response.text)))
+            raise ValidationError(self.env._("The account info is not allowed to set the bucket's CORS.\n%s", str(patch_response.text)))
 
     def _get_cloud_storage_configuration(self):
         ICP = self.env['ir.config_parameter'].sudo()
@@ -119,4 +119,4 @@ class ResConfigSettings(models.TransientModel):
             """
         )
         if cr.fetchone():
-            raise UserError(_('Some Google attachments are in use, please migrate cloud storages before disable the provider'))
+            raise UserError(self.env._('Some Google attachments are in use, please migrate cloud storages before disable the provider'))

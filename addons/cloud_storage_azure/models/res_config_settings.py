@@ -3,7 +3,7 @@
 import requests
 from datetime import datetime, timedelta, timezone
 
-from odoo import models, fields, _
+from odoo import fields, models
 from odoo.exceptions import ValidationError, UserError
 
 
@@ -72,14 +72,14 @@ class ResConfigSettings(models.TransientModel):
         upload_url = self.env['ir.attachment']._generate_cloud_storage_azure_sas_url(**blob_info, permission='c', expiry=upload_expiry)
         upload_response = requests.put(upload_url, data=b'', headers={'x-ms-blob-type': 'BlockBlob'}, timeout=5)
         if upload_response.status_code != 201:
-            raise ValidationError(_('The connection string is not allowed to upload blobs to the container.\n%s', str(upload_response.text)))
+            raise ValidationError(self.env._('The connection string is not allowed to upload blobs to the container.\n%s', str(upload_response.text)))
 
         # check blob read permission
         download_expiry = datetime.now(timezone.utc) + timedelta(seconds=self.env['ir.attachment']._cloud_storage_download_url_time_to_expiry)
         download_url = self.env['ir.attachment']._generate_cloud_storage_azure_sas_url(**blob_info, permission='r', expiry=download_expiry)
         download_response = requests.get(download_url, timeout=5)
         if download_response.status_code != 200:
-            raise ValidationError(_('The connection string is not allowed to download blobs from the container.\n%s', str(download_response.text)))
+            raise ValidationError(self.env._('The connection string is not allowed to download blobs from the container.\n%s', str(download_response.text)))
 
     def _check_cloud_storage_uninstallable(self):
         if self.env['ir.config_parameter'].get_str('cloud_storage_provider') != 'azure':
@@ -95,7 +95,7 @@ class ResConfigSettings(models.TransientModel):
             """,
         )
         if cr.fetchone():
-            raise UserError(_('Some Azure attachments are in use, please migrate their cloud storages before disable this module'))
+            raise UserError(self.env._('Some Azure attachments are in use, please migrate their cloud storages before disable this module'))
 
     def set_values(self):
         super().set_values()
