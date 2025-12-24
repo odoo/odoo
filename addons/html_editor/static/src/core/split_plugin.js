@@ -305,9 +305,7 @@ export class SplitPlugin extends Plugin {
         if (before) {
             beforeSplit = this.splitElement(limitAncestor, childNodeIndex(before) + 1)[1];
         }
-        const result = beforeSplit || afterSplit || limitAncestor;
-        this.fixSplitAroundUntilEmptyNodes(result.parentElement, cursors);
-        return result;
+        return beforeSplit || afterSplit || limitAncestor;
     }
 
     /**
