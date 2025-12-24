@@ -183,16 +183,11 @@ export class SplitPlugin extends Plugin {
      */
     splitElement(element, offset) {
         /** @type {HTMLElement} **/
-        const before = element.cloneNode();
-        /** @type {HTMLElement} **/
         const after = element.cloneNode();
-        element.before(before);
         element.after(after);
         const children = childNodes(element);
-        before.append(...children.slice(0, offset));
         after.append(...children.slice(offset));
-        element.remove();
-        return [before, after];
+        return [element, after];
     }
 
     /**
@@ -273,8 +268,7 @@ export class SplitPlugin extends Plugin {
         if (before) {
             beforeSplit = this.splitElement(limitAncestor, childNodeIndex(before) + 1)[1];
         }
-        const result = beforeSplit || afterSplit || limitAncestor;
-        return result;
+        return beforeSplit || afterSplit || limitAncestor;
     }
 
     splitSelection() {
