@@ -6,9 +6,10 @@ import random
 import re
 from urllib.parse import urlparse
 
-from odoo import api, Command, fields, models, release, _
+from odoo import Command, api, fields, models, release
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
+
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 from odoo.addons.mail.tools.discuss import Store
 
@@ -31,10 +32,10 @@ class Im_LivechatChannel(models.Model):
         return [(6, 0, [self.env.uid])]
 
     def _default_button_text(self):
-        return _('Need help? Chat with us.')
+        return self.env._('Need help? Chat with us.')
 
     def _default_default_message(self):
-        return _('How may I help you?')
+        return self.env._('How may I help you?')
 
     # attribute fields
     name = fields.Char('Channel Name', required=True)
@@ -254,7 +255,7 @@ class Im_LivechatChannel(models.Model):
     def action_join(self):
         self.ensure_one()
         if not self.env.user.has_group("im_livechat.im_livechat_group_user"):
-            raise AccessError(_("Only Live Chat operators can join Live Chat channels"))
+            raise AccessError(self.env._("Only Live Chat operators can join Live Chat channels"))
         # sudo: im_livechat.channel - operators can join channels
         self.sudo().user_ids = [Command.link(self.env.user.id)]
         Store(bus_channel=self.env.user).add(self, ["are_you_inside", "name"]).bus_send()
@@ -580,7 +581,7 @@ class Im_LivechatChannel(models.Model):
     def get_livechat_info(self, username=None):
         self.ensure_one()
         if username is None:
-            username = _('Visitor')
+            username = self.env._('Visitor')
         info = {}
         info['available'] = self._is_livechat_available()
         info['server_url'] = self.get_base_url()

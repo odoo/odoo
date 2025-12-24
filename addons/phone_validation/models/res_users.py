@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 
 
 class ResUsers(models.Model):
@@ -26,7 +26,7 @@ class ResUsers(models.Model):
             for blacklist in blacklists:
                 user = numbers_to_blacklist[blacklist.number]
                 blacklist._message_log(
-                    body=_('Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)',
+                    body=self.env._('Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)',
                            user_name=current_user.name, user_id=current_user.id,
                            portal_user_name=user.name),
                 )

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class MailActivityPlan(models.Model):
@@ -64,5 +64,5 @@ class MailActivityPlan(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for plan, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", plan.name)
+                vals['name'] = self.env._("%s (copy)", plan.name)
         return vals_list

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import SQL
 
@@ -90,9 +90,9 @@ class MailThreadBlacklist(models.AbstractModel):
 
     def _assert_primary_email(self):
         if not hasattr(self, "_primary_email") or not isinstance(self._primary_email, str):
-            raise UserError(_('Invalid primary email field on model %s', self._name))
+            raise UserError(self.env._('Invalid primary email field on model %s', self._name))
         if self._primary_email not in self._fields or self._fields[self._primary_email].type != 'char':
-            raise UserError(_('Invalid primary email field on model %s', self._name))
+            raise UserError(self.env._('Invalid primary email field on model %s', self._name))
 
     def _message_receive_bounce(self, email, partner):
         """ Override of mail.thread generic method. Purpose is to increment the
@@ -113,14 +113,14 @@ class MailThreadBlacklist(models.AbstractModel):
         can_access = self.env['mail.blacklist'].has_access('write')
         if can_access:
             return {
-                'name': _('Are you sure you want to unblacklist this Email Address?'),
+                'name': self.env._('Are you sure you want to unblacklist this Email Address?'),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'mail.blacklist.remove',
                 'target': 'new',
             }
         else:
-            raise AccessError(_("You do not have the access right to unblacklist emails. Please contact your administrator."))
+            raise AccessError(self.env._("You do not have the access right to unblacklist emails. Please contact your administrator."))
 
     @api.model
     def _detect_loop_sender_domain(self, email_from_normalized):

@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class ProductTemplate(models.Model):
@@ -6,7 +6,7 @@ class ProductTemplate(models.Model):
 
     def _prepare_service_tracking_tooltip(self):
         if self.service_tracking == 'event':
-            return _("Create an Attendee for the selected Event.")
+            return self.env._("Create an Attendee for the selected Event.")
         return super()._prepare_service_tracking_tooltip()
 
     @api.onchange('service_tracking')

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class SmsTemplateReset(models.TransientModel):
@@ -23,7 +23,7 @@ class SmsTemplateReset(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'message': _('SMS Templates have been reset'),
+                'message': self.env._('SMS Templates have been reset'),
                 'next': next_action,
             }
         }

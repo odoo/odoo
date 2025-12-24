@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 
 
 class MailComposerMixin(models.AbstractModel):
@@ -156,7 +156,7 @@ class MailComposerMixin(models.AbstractModel):
         value when it has not been modified in the composer. """
         if field not in self:
             raise ValueError(
-                _('Rendering of %(field_name)s is not possible as not defined on template.',
+                self.env._('Rendering of %(field_name)s is not possible as not defined on template.',
                   field_name=field
                  )
             )
@@ -171,7 +171,7 @@ class MailComposerMixin(models.AbstractModel):
         }.get(field, field)
         if template_field not in self.template_id:
             raise ValueError(
-                _('Rendering of %(field_name)s is not possible as no counterpart on template.',
+                self.env._('Rendering of %(field_name)s is not possible as no counterpart on template.',
                   field_name=field
                  )
             )

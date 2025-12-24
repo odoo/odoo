@@ -6,7 +6,7 @@ import re
 from collections import defaultdict
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Domain
 from odoo.tools import is_html_empty, remove_accents
@@ -153,7 +153,7 @@ class MailAlias(models.Model):
             if owner := _fetch_owner(alias):
                 company = owner[owner._mail_get_company_field()]
                 if company and company.alias_domain_id != alias.alias_domain_id and alias.alias_domain_id.company_ids:
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         "We could not create alias %(alias_name)s because domain "
                         "%(alias_domain_name)s belongs to company %(alias_company_names)s "
                         "while the owner document belongs to company %(company_name)s.",
@@ -165,7 +165,7 @@ class MailAlias(models.Model):
             if target := _fetch_target(alias):
                 company = target[target._mail_get_company_field()]
                 if company and company.alias_domain_id != alias.alias_domain_id and alias.alias_domain_id.company_ids:
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         "We could not create alias %(alias_name)s because domain "
                         "%(alias_domain_name)s belongs to company %(alias_company_names)s "
                         "while the target document belongs to company %(company_name)s.",
@@ -186,7 +186,7 @@ class MailAlias(models.Model):
         for alias in self.filtered('alias_name'):
             if not dot_atom_text.match(alias.alias_name):
                 raise ValidationError(
-                    _("You cannot use anything else than unaccented latin characters in the alias address %(alias_name)s.",
+                    self.env._("You cannot use anything else than unaccented latin characters in the alias address %(alias_name)s.",
                       alias_name=alias.alias_name)
                 )
 
@@ -197,7 +197,7 @@ class MailAlias(models.Model):
                 dict(ast.literal_eval(alias.alias_defaults))
             except Exception as e:
                 raise ValidationError(
-                    _('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"')
+                    self.env._('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"')
                 ) from e
 
     @api.constrains('alias_name', 'alias_domain_id')
@@ -209,7 +209,7 @@ class MailAlias(models.Model):
         ])
         if failing:
             raise ValidationError(
-                _('Aliases %(alias_names)s is already used as bounce or catchall address. Please choose another alias.',
+                self.env._('Aliases %(alias_names)s is already used as bounce or catchall address. Please choose another alias.',
                   alias_names=', '.join(failing.mapped('display_name')))
             )
 
@@ -236,7 +236,7 @@ class MailAlias(models.Model):
             elif record.alias_name:
                 record.display_name = record.alias_name
             else:
-                record.display_name = _("Inactive Alias")
+                record.display_name = self.env._("Inactive Alias")
 
     @api.depends('alias_contact', 'alias_defaults', 'alias_model_id')
     def _compute_alias_status(self):
@@ -310,7 +310,7 @@ class MailAlias(models.Model):
         for alias_name, alias_domain in zip(alias_names, alias_domains):
             if alias_name and alias_name in domain_to_names[alias_domain]:
                 raise UserError(
-                    _('Email aliases %(alias_name)s cannot be used on several records at the same time. Please update records one by one.',
+                    self.env._('Email aliases %(alias_name)s cannot be used on several records at the same time. Please update records one by one.',
                       alias_name=alias_name)
                 )
             if alias_name:
@@ -328,24 +328,24 @@ class MailAlias(models.Model):
             return
         if existing.alias_parent_model_id and existing.alias_parent_thread_id:
             parent_name = self.env[existing.alias_parent_model_id.model].sudo().browse(existing.alias_parent_thread_id).display_name
-            msg_begin = _(
+            msg_begin = self.env._(
                 'Alias %(matching_name)s (%(current_id)s) is already linked with %(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %(parent_model_name)s.',
                 alias_model_name=existing.alias_model_id.name,
-                current_id=self.ids if self else _('your alias'),
+                current_id=self.ids if self else self.env._('your alias'),
                 matching_id=existing.id,
                 matching_name=existing.display_name,
                 parent_name=parent_name,
                 parent_model_name=existing.alias_parent_model_id.name
             )
         else:
-            msg_begin = _(
+            msg_begin = self.env._(
                 'Alias %(matching_name)s (%(current_id)s) is already linked with %(alias_model_name)s (%(matching_id)s).',
                 alias_model_name=existing.alias_model_id.name,
-                current_id=self.ids if self else _('new'),
+                current_id=self.ids if self else self.env._('new'),
                 matching_id=existing.id,
                 matching_name=existing.display_name,
             )
-        msg_end = _('Choose another value or change it on the other document.')
+        msg_end = self.env._('Choose another value or change it on the other document.')
         raise UserError(f'{msg_begin} {msg_end}')  # pylint: disable=missing-gettext
 
     @api.model
@@ -355,7 +355,7 @@ class MailAlias(models.Model):
         either alias domain, either everything. This method sanitized its value. """
         value = [domain.strip().lower() for domain in allowed_domains.split(',') if domain.strip()]
         if not value:
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 "Value %(allowed_domains)s for `mail.catchall.domain.allowed` cannot be validated.\n"
                 "It should be a comma separated list of domains e.g. example.com,example.org.",
                 allowed_domains=allowed_domains
@@ -464,7 +464,7 @@ class MailAlias(models.Model):
         contact_description = self._get_alias_contact_description()
         default_email = self.env.company.partner_id.email_formatted if self.env.company.partner_id.email else self.env.company.name
         content = Markup(
-            _("""The message below could not be accepted by the address %(alias_display_name)s.
+            self.env._("""The message below could not be accepted by the address %(alias_display_name)s.
                  Only %(contact_description)s are allowed to contact it.<br /><br />
                  Please make sure you are using the correct address or contact us at %(default_email)s instead."""
               )
@@ -475,14 +475,14 @@ class MailAlias(models.Model):
         }
         return Markup('<p>%(header)s,<br /><br />%(content)s<br /><br />%(regards)s</p>') % {
             'content': content,
-            'header': _('Dear Sender'),
-            'regards': _('Kind Regards'),
+            'header': self.env._('Dear Sender'),
+            'regards': self.env._('Kind Regards'),
         }
 
     def _get_alias_contact_description(self):
         if self.alias_contact == 'partners':
-            return _('addresses linked to registered partners')
-        return _('some specific addresses')
+            return self.env._('addresses linked to registered partners')
+        return self.env._('some specific addresses')
 
     def _get_alias_invalid_body(self, message_dict):
         """Get the body of the bounced email returned when the alias is incorrectly
@@ -493,7 +493,7 @@ class MailAlias(models.Model):
         :return: HTML to use as email body
         """
         content = Markup(
-            _("""The message below could not be accepted by the address %(alias_display_name)s.
+            self.env._("""The message below could not be accepted by the address %(alias_display_name)s.
 Please try again later or contact %(company_name)s instead."""
               )
         ) % {
@@ -503,8 +503,8 @@ Please try again later or contact %(company_name)s instead."""
         return self.env['ir.qweb']._render('mail.mail_bounce_alias_security', {
             'body': Markup('<p>%(header)s,<br /><br />%(content)s<br /><br />%(regards)s</p>') % {
                 'content': content,
-                'header': _('Dear Sender'),
-                'regards': _('Kind Regards'),
+                'header': self.env._('Dear Sender'),
+                'regards': self.env._('Kind Regards'),
             },
             'message': message_dict
         }, minimal_qcontext=True)

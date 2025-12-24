@@ -6,10 +6,11 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
-from odoo import _, Command, fields
+from odoo import Command, fields
+from odoo.tests.common import tagged, users
+
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.survey.tests import common
-from odoo.tests.common import tagged, users
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -150,7 +151,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
         self.assertEqual(
             question.validate_question('Is Alfred an answer?'),
-            {question.id: _('This is not a date')}
+            {question.id: self.env._('This is not a date')}
         )
 
         self.assertEqual(
@@ -176,7 +177,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
         self.assertEqual(
             question.validate_question('Is Alfred an answer?'),
-            {question.id: _('This is not a number')}
+            {question.id: self.env._('This is not a number')}
         )
 
         self.assertEqual(
@@ -200,7 +201,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
         self.assertEqual(
             question.validate_question('not an email'),
-            {question.id: _('This answer must be an email address')}
+            {question.id: self.env._('This answer must be an email address')}
         )
 
         self.assertEqual(

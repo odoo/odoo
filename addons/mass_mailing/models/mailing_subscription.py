@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class MailingSubscription(models.Model):
@@ -54,7 +54,7 @@ class MailingSubscription(models.Model):
 
     def open_mailing_contact(self):
         action = {
-            'name': _('Mailing Contacts'),
+            'name': self.env._('Mailing Contacts'),
             'type': 'ir.actions.act_window',
             'view_mode': 'list,form',
             'domain': [('id', 'in', self.contact_id.ids)],
@@ -62,7 +62,7 @@ class MailingSubscription(models.Model):
         }
         if len(self) == 1:
             action.update({
-                'name': _('Mailing Contact'),
+                'name': self.env._('Mailing Contact'),
                 'view_mode': 'form',
                 'res_id': self.contact_id.id,
             })

@@ -3,7 +3,7 @@
 
 from markupsafe import Markup
 
-from odoo import _, fields, models, tools
+from odoo import fields, models, tools
 from odoo.tools.misc import file_open
 
 
@@ -58,7 +58,7 @@ class MailingMailingTest(models.TransientModel):
         else:
             full_body = mailing._prepend_preview(mailing.body_html, mailing.preview)
             subject = mailing.subject
-        subject = _('[TEST] %(mailing_subject)s', mailing_subject=subject)
+        subject = self.env._('[TEST] %(mailing_subject)s', mailing_subject=subject)
 
         # Convert links in absolute URLs before the application of the shortener
         full_body = self.env['mail.render.mixin']._replace_local_links(full_body)
@@ -90,15 +90,15 @@ class MailingMailingTest(models.TransientModel):
         notification_messages = []
         if invalid_candidates:
             notification_messages.append(
-                _('Mailing addresses incorrect: %s', ', '.join(invalid_candidates)))
+                self.env._('Mailing addresses incorrect: %s', ', '.join(invalid_candidates)))
 
         for mail_sudo in mails_sudo:
             if mail_sudo.state == 'sent':
                 notification_messages.append(
-                    _('Test mailing successfully sent to %s', mail_sudo.email_to))
+                    self.env._('Test mailing successfully sent to %s', mail_sudo.email_to))
             elif mail_sudo.state == 'exception':
                 notification_messages.append(
-                    _('Test mailing could not be sent to %s:', mail_sudo.email_to) +
+                    self.env._('Test mailing could not be sent to %s:', mail_sudo.email_to) +
                     (Markup("<br/>") + mail_sudo.failure_reason)
                 )
 

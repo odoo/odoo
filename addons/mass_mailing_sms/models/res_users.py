@@ -3,7 +3,7 @@
 
 import json
 
-from odoo import api, fields, models, modules, _
+from odoo import api, fields, models, modules
 
 
 class ResUsers(models.Model):
@@ -11,7 +11,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_activity_groups(self):
-        """ Split mass_mailing and mass_mailing_sms activities in systray by 
+        """ Split mass_mailing and mass_mailing_sms activities in systray by
             removing the single mailing.mailing activity represented and
             doing a new query to split them by mailing_type.
         """
@@ -49,10 +49,10 @@ class ResUsers(models.Model):
                     if not user_activities.get(act['mailing_type']):
                         if act['mailing_type'] == 'sms':
                             module_name = 'mass_mailing_sms'
-                            name = _('SMS Marketing')
+                            name = self.env._('SMS Marketing')
                         else:
                             module_name = 'mass_mailing'
-                            name = _('Email Marketing')
+                            name = self.env._('Email Marketing')
                         icon = modules.Manifest.for_addon(module_name).icon
                         res_ids = set()
                         user_activities[act['mailing_type']] = {

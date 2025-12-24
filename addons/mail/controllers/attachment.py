@@ -7,13 +7,14 @@ import zipfile
 
 from werkzeug.exceptions import NotFound, UnsupportedMediaType
 
-from odoo import _, http
-from odoo.addons.mail.controllers.thread import ThreadController
+from odoo import http
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request, content_disposition
-from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 from odoo.tools.misc import file_open
 from odoo.tools.pdf import DependencyError, PdfReadError, extract_page
+
+from odoo.addons.mail.controllers.thread import ThreadController
+from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +81,7 @@ class AttachmentController(ThreadController):
             )
             res = {"data": {"store_data": store.get_result(), "attachment_id": attachment.id}}
         except AccessError:
-            res = {"error": _("You are not allowed to upload an attachment here.")}
+            res = {"error": self.env._("You are not allowed to upload an attachment here.")}
         return request.make_json_response(res)
 
     @http.route("/mail/attachment/delete", methods=["POST"], type="jsonrpc", auth="public")

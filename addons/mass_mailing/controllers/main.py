@@ -6,10 +6,9 @@ import urllib.parse
 
 from datetime import timedelta
 from markupsafe import Markup, escape
-from lxml import etree
 from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 
-from odoo import _, fields, http, tools
+from odoo import fields, http, tools
 from odoo.http import request, Response
 from odoo.tools import consteq
 
@@ -179,12 +178,12 @@ class MassMailController(http.Controller):
         mailing.contact_list_ids._update_subscription_from_email(email, opt_out=True)
         # compute name of unsubscribed list: hide non public lists
         if all(not mlist.is_public for mlist in mailing.contact_list_ids):
-            lists_unsubscribed_name = _('You are no longer part of our mailing list(s).')
+            lists_unsubscribed_name = self.env._('You are no longer part of our mailing list(s).')
         elif len(mailing.contact_list_ids) == 1:
-            lists_unsubscribed_name = _('You are no longer part of the %(mailing_name)s mailing list.',
+            lists_unsubscribed_name = self.env._('You are no longer part of the %(mailing_name)s mailing list.',
                                         mailing_name=mailing.contact_list_ids.name)
         else:
-            lists_unsubscribed_name = _(
+            lists_unsubscribed_name = self.env._(
                 'You are no longer part of the %(mailing_names)s mailing list.',
                 mailing_names=', '.join(mlist.name for mlist in mailing.contact_list_ids if mlist.is_public)
             )
@@ -202,12 +201,12 @@ class MassMailController(http.Controller):
 
     def _mailing_unsubscribe_from_document(self, mailing, document_id, email, hash_token):
         if document_id:
-            message = Markup(_(
+            message = Markup(self.env._(
                 'Blocklist request from unsubscribe link of mailing %(mailing_link)s (document %(record_link)s)',
                 **self._format_bl_request(mailing, document_id)
             ))
         else:
-            message = Markup(_(
+            message = Markup(self.env._(
                 'Blocklist request from unsubscribe link of mailing %(mailing_link)s (direct link usage)',
                 **self._format_bl_request(mailing, document_id)
             ))
@@ -220,7 +219,7 @@ class MassMailController(http.Controller):
                     mailing, document_id, email, hash_token
                 ),
                 last_action='blocklist_add',
-                unsubscribed_name=_('You are no longer part of our services and will not be contacted again.'),
+                unsubscribed_name=self.env._('You are no longer part of our services and will not be contacted again.'),
             )
         )
 
@@ -344,7 +343,7 @@ class MassMailController(http.Controller):
             else:
                 author_name = email_found
             message = Markup("<p>%s<br />%s</p>") % (
-                _('Feedback from %(author_name)s', author_name=author_name),
+                self.env._('Feedback from %(author_name)s', author_name=author_name),
                 feedback
             )
 
@@ -502,13 +501,13 @@ class MassMailController(http.Controller):
 
         if mailing_sudo:
             message = Markup(
-                _(
+                self.env._(
                     'Blocklist request from portal of mailing %(mailing_link)s (document %(record_link)s)',
                     **self._format_bl_request(mailing_sudo, document_id)
                 )
             )
         else:
-            message = Markup('<p>%s</p>') % _('Blocklist request from portal')
+            message = Markup('<p>%s</p>') % self.env._('Blocklist request from portal')
 
         _blocklist_rec = request.env['mail.blacklist'].sudo()._add(email_found, message=message)
         return True
@@ -529,13 +528,13 @@ class MassMailController(http.Controller):
 
         if mailing_sudo and document_id:
             message = Markup(
-                _(
+                self.env._(
                     'Blocklist removal request from portal of mailing %(mailing_link)s (document %(record_link)s)',
                     **self._format_bl_request(mailing_sudo, document_id)
                 )
             )
         else:
-            message = Markup('<p>%s</p>') % _('Blocklist removal request from portal')
+            message = Markup('<p>%s</p>') % self.env._('Blocklist removal request from portal')
 
         _blocklist_rec = request.env['mail.blacklist'].sudo()._remove(email_found, message=message)
         return True

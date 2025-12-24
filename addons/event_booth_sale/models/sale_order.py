@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -29,7 +29,7 @@ class SaleOrder(models.Model):
             so_lines_missing_booth = so.order_line.filtered(lambda line: line.service_tracking == 'event_booth' and not line.event_booth_pending_ids)
             if so_lines_missing_booth:
                 so_lines_descriptions = "".join(f"\n- {so_line_description.name}" for so_line_description in so_lines_missing_booth)
-                raise ValidationError(_("Please make sure all your event-booth related lines are configured before confirming this order:%s", so_lines_descriptions))
+                raise ValidationError(self.env._("Please make sure all your event-booth related lines are configured before confirming this order:%s", so_lines_descriptions))
             so.order_line._update_event_booths()
         return res
 

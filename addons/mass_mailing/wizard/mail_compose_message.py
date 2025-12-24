@@ -3,7 +3,7 @@
 
 from markupsafe import Markup
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.tools.misc import file_open
 
 
@@ -64,7 +64,7 @@ class MailComposeMessage(models.TransientModel):
                     '{original_body}'
                     '</blockquote>'
                 ).format(
-                    mailing_sent_message=Markup(_(
+                    mailing_sent_message=Markup(self.env._(
                         'Received the mailing <b>{mailing_name}</b>',
                     )).format(
                         mailing_name=self.mass_mailing_name or self.mass_mailing_id.display_name

@@ -1,6 +1,6 @@
 import re
 
-from odoo import fields, models, _
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.sms_twilio.tools.sms_api import SmsApiTwilio
@@ -31,13 +31,13 @@ class ResCompany(models.Model):
         self.ensure_one()
         account_sid = self.sms_twilio_account_sid
         if not account_sid or len(account_sid) != 34 or not account_sid.startswith('AC'):
-            raise UserError(_("Invalid Twilio Account SID: must start with 'AC' and be 34 characters long."))
+            raise UserError(self.env._("Invalid Twilio Account SID: must start with 'AC' and be 34 characters long."))
         if not re.match(r'^[A-Za-z0-9]{32}$', account_sid[2:]):
-            raise UserError(_("Invalid Twilio Account SID: must only contain alphanumeric characters after 'AC'."))
+            raise UserError(self.env._("Invalid Twilio Account SID: must only contain alphanumeric characters after 'AC'."))
 
     def _action_open_sms_twilio_account_manage(self):
         return {
-            'name': _('Manage Twilio SMS'),
+            'name': self.env._('Manage Twilio SMS'),
             'res_model': 'sms.twilio.account.manage',
             'res_id': False,
             'context': self.env.context,

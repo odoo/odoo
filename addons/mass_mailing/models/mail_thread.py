@@ -4,7 +4,7 @@
 import datetime
 from markupsafe import Markup
 
-from odoo import api, models, fields, tools, _
+from odoo import api, models, fields, tools
 
 BLACKLIST_MAX_BOUNCED_LIMIT = 5
 
@@ -71,7 +71,7 @@ class MailThread(models.AbstractModel):
                 if max(stats) > min(stats) + datetime.timedelta(weeks=1):
                     self.env['mail.blacklist'].sudo()._add(
                         bounced_email,
-                        message=Markup('<p>%s</p>') % _('This email has been automatically added in blocklist because of too much bounced.')
+                        message=Markup('<p>%s</p>') % self.env._('This email has been automatically added in blocklist because of too much bounced.')
                     )
 
     @api.model

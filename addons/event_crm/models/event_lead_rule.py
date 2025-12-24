@@ -4,7 +4,7 @@
 from ast import literal_eval
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class EventLeadRule(models.Model):
@@ -183,7 +183,7 @@ class EventLeadRule(models.Model):
                 # check if registrations are part of a group, for example a sale order, to know if we update or create leads
                 for toupdate_leads, _group_key, group_registrations in rule_group_info[rule]:
                     if toupdate_leads:
-                        additionnal_description = group_registrations._get_lead_description(_("New registrations"), line_counter=True)
+                        additionnal_description = group_registrations._get_lead_description(self.env._("New registrations"), line_counter=True)
                         for lead in toupdate_leads:
                             lead.write({
                                 'description': "%s<br/>%s" % (lead.description, additionnal_description),

@@ -11,12 +11,13 @@ from lxml import html
 from functools import reduce
 from markupsafe import Markup, escape
 
-from odoo import _, api, fields, models, tools
-from odoo.addons.base.models.ir_qweb import QWebError
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, AccessError
 from odoo.tools import urls
 from odoo.tools.mail import is_html_empty, prepend_html_content, html_normalize
 from odoo.tools.rendering_tools import convert_inline_template_to_qweb, parse_inline_template, render_inline_template, template_env_globals
+
+from odoo.addons.base.models.ir_qweb import QWebError
 
 _logger = logging.getLogger(__name__)
 
@@ -304,7 +305,7 @@ class MailRenderMixin(models.AbstractModel):
         if not self.env.su and not self.env.user.has_group('mail.group_mail_template_editor') and self._has_unsafe_expression():
             group = self.env.ref('mail.group_mail_template_editor')
             raise AccessError(
-                _('Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders',
+                self.env._('Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders',
                   group_name=group.name)
             )
 
@@ -390,12 +391,12 @@ class MailRenderMixin(models.AbstractModel):
                 if isinstance(e, QWebError) and isinstance(e.__cause__, PermissionError):
                     group = self.env.ref('mail.group_mail_template_editor')
                     raise AccessError(
-                        _('Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders',
+                        self.env._('Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders',
                            group_name=group.name)
                     ) from e
                 _logger.info("Failed to render template: %s", template_src, exc_info=True)
                 raise UserError(
-                    _("Failed to render QWeb template: %(template_src)s\n\n%(template_traceback)s)",
+                    self.env._("Failed to render QWeb template: %(template_src)s\n\n%(template_traceback)s)",
                       template_src=template_src,
                       template_traceback=traceback.format_exc())
                     ) from e
@@ -488,7 +489,7 @@ class MailRenderMixin(models.AbstractModel):
             except Exception as e:
                 _logger.info("Failed to render template: %s", view_ref, exc_info=True)
                 raise UserError(
-                    _("Failed to render template: %(view_ref)s", view_ref=view_ref)
+                    self.env._("Failed to render template: %(view_ref)s", view_ref=view_ref)
                 ) from e
 
         return results
@@ -529,7 +530,7 @@ class MailRenderMixin(models.AbstractModel):
             and not self.env.user.has_group('mail.group_mail_template_editor')):
             group = self.env.ref('mail.group_mail_template_editor')
             raise AccessError(
-                _('Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders',
+                self.env._('Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders',
                   group_name=group.name)
             )
 
@@ -549,7 +550,7 @@ class MailRenderMixin(models.AbstractModel):
             except Exception as e:
                 _logger.info("Failed to render inline_template: \n%s", str(template_txt), exc_info=True)
                 raise UserError(
-                    _("Failed to render inline_template template: %(template_txt)s",
+                    self.env._("Failed to render inline_template template: %(template_txt)s",
                       template_txt=template_txt)
                 ) from e
 
@@ -641,18 +642,18 @@ class MailRenderMixin(models.AbstractModel):
 
         if not isinstance(res_ids, (list, tuple)):
             raise ValueError(
-                _('Template rendering should only be called with a list of IDs. Received “%(res_ids)s” instead.',
+                self.env._('Template rendering should only be called with a list of IDs. Received “%(res_ids)s” instead.',
                   res_ids=res_ids)
             )
         if engine not in ('inline_template', 'qweb', 'qweb_view'):
             raise ValueError(
-                _('Template rendering supports only inline_template, qweb, or qweb_view (view or raw); received %(engine)s instead.',
+                self.env._('Template rendering supports only inline_template, qweb, or qweb_view (view or raw); received %(engine)s instead.',
                   engine=engine)
             )
         valid_render_options = self._render_template_get_valid_options()
         if not set((options or {}).keys()) <= valid_render_options:
             raise ValueError(
-                _('Those values are not supported as options when rendering: %(param_names)s',
+                self.env._('Those values are not supported as options when rendering: %(param_names)s',
                   param_names=', '.join(set(options.keys()) - valid_render_options)
                  )
             )
@@ -764,7 +765,7 @@ class MailRenderMixin(models.AbstractModel):
         """
         if field not in self:
             raise ValueError(
-                _('Rendering of %(field_name)s is not possible as not defined on template.',
+                self.env._('Rendering of %(field_name)s is not possible as not defined on template.',
                   field_name=field
                  )
             )

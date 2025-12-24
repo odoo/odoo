@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from collections import defaultdict
 from datetime import datetime
 from lxml.builder import E
 from markupsafe import Markup
 
-from odoo import api, exceptions, models, tools, _
-from odoo.addons.mail.tools.alias_error import AliasError
+from odoo import api, exceptions, models, tools
 from odoo.tools import parse_contact_from_email
 from odoo.tools.mail import email_normalize, email_split_and_format
 from odoo.tools.sql import column_exists
 
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
-
-import logging
+from odoo.addons.mail.tools.alias_error import AliasError
 
 _logger = logging.getLogger(__name__)
 
@@ -793,14 +792,14 @@ class Base(models.AbstractModel):
         if alias.alias_contact == 'followers':
             if not self.ids:
                 return AliasError('config_follower_no_record',
-                                  _('incorrectly configured alias (unknown reference record)'),
+                                  self.env._('incorrectly configured alias (unknown reference record)'),
                                   is_config_error=True)
             if not hasattr(self, "message_partner_ids"):
-                return AliasError('config_follower_no_partners', _('incorrectly configured alias'), True)
+                return AliasError('config_follower_no_partners', self.env._('incorrectly configured alias'), True)
             if not author or author not in self.message_partner_ids:
-                return AliasError('error_follower_not_following', _('restricted to followers'))
+                return AliasError('error_follower_not_following', self.env._('restricted to followers'))
         elif alias.alias_contact == 'partners' and not author:
-            return AliasError('error_partners_no_partner', _('restricted to known authors'))
+            return AliasError('error_partners_no_partner', self.env._('restricted to known authors'))
         return False
 
     # ------------------------------------------------------------
@@ -888,11 +887,11 @@ class Base(models.AbstractModel):
             field_value = self.mapped(field_path)
         except KeyError:
             raise exceptions.UserError(
-                _("%(model_name)s.%(field_path)s does not seem to be a valid field path", model_name=self._name, field_path=field_path)
+                self.env._("%(model_name)s.%(field_path)s does not seem to be a valid field path", model_name=self._name, field_path=field_path)
             )
         except Exception as err:  # noqa: BLE001
             raise exceptions.UserError(
-                _("We were not able to fetch value of field '%(field)s'", field=field_path)
+                self.env._("We were not able to fetch value of field '%(field)s'", field=field_path)
             ) from err
         if isinstance(field_value, models.Model):
             return ' '.join((value.display_name or '') for value in field_value)

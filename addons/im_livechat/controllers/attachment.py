@@ -2,9 +2,9 @@
 
 from werkzeug.exceptions import NotFound
 
-from odoo import _
 from odoo.http import route, request
 from odoo.exceptions import AccessError
+
 from odoo.addons.mail.controllers.attachment import AttachmentController
 from odoo.addons.mail.tools.discuss import add_guest_to_context
 
@@ -22,5 +22,5 @@ class LivechatAttachmentController(AttachmentController):
             and thread.livechat_end_dt
             and not request.env.user._is_internal()
         ):
-            raise AccessError(_("You are not allowed to upload attachments on this channel."))
+            raise AccessError(self.env._("You are not allowed to upload attachments on this channel."))
         return super().mail_attachment_upload(ufile, thread_id, thread_model, is_pending, **kwargs)

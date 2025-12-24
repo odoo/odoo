@@ -2,9 +2,9 @@
 
 import itertools
 import random
-
 from markupsafe import Markup
-from odoo import models, _
+
+from odoo import models
 
 
 class MailBot(models.AbstractModel):
@@ -58,8 +58,7 @@ class MailBot(models.AbstractModel):
 
         if channel.channel_type == "chat" and odoobot in channel.channel_member_ids.partner_id:
             # main flow
-            source = _("Thanks")
-            description = _("This is a temporary canned response to see how canned responses work.")
+            source = self.env._("Thanks")
             if odoobot_state == 'onboarding_emoji' and self._body_contains_emoji(body):
                 self.env.user.odoobot_state = "onboarding_command"
                 self.env.user.odoobot_failed = False
@@ -89,7 +88,7 @@ class MailBot(models.AbstractModel):
             elif odoobot_state == "onboarding_attachement" and values.get("attachment_ids"):
                 self.env["mail.canned.response"].create({
                     "source": source,
-                    "substitution": _("Thanks for your feedback. Goodbye!"),
+                    "substitution": self.env._("Thanks for your feedback. Goodbye!"),
                 })
                 self.env.user.odoobot_failed = False
                 self.env.user.odoobot_state = "onboarding_canned"
@@ -124,14 +123,14 @@ class MailBot(models.AbstractModel):
                     "and wait for the propositions. Select one of them and press enter.",
                     **self._get_style_dict()
                 )
-            elif odoobot_state in (False, "idle", "not_initialized") and (_('start the tour') in body.lower()):
+            elif odoobot_state in (False, "idle", "not_initialized") and (self.env._('start the tour') in body.lower()):
                 self.env.user.odoobot_state = "onboarding_emoji"
-                return _("To start, try to send me an emoji :)")
+                return self.env._("To start, try to send me an emoji :)")
             # easter eggs
-            elif odoobot_state == "idle" and body in ['❤️', _('i love you'), _('love')]:
-                return _("Aaaaaw that's really cute but, you know, bots don't work that way. You're too human for me! Let's keep it professional ❤️")
-            elif _('fuck') in body or "fuck" in body:
-                return _("That's not nice! I'm a bot but I have feelings... 💔")
+            elif odoobot_state == "idle" and body in ['❤️', self.env._('i love you'), self.env._('love')]:
+                return self.env._("Aaaaaw that's really cute but, you know, bots don't work that way. You're too human for me! Let's keep it professional ❤️")
+            elif self.env._('fuck') in body or "fuck" in body:
+                return self.env._("That's not nice! I'm a bot but I have feelings... 💔")
             # help message
             elif self._is_help_requested(body) or odoobot_state == 'idle':
                 return self.env._(
@@ -330,4 +329,4 @@ class MailBot(models.AbstractModel):
         """Returns whether a message linking to the documentation and videos
         should be sent back to the user.
         """
-        return any(token in body for token in ['help', _('help'), '?']) or self.env.user.odoobot_failed
+        return any(token in body for token in ['help', self.env._('help'), '?']) or self.env.user.odoobot_failed

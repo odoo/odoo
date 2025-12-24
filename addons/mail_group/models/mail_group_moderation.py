@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import email_normalize
 
@@ -26,7 +26,7 @@ class MailGroupModeration(models.Model):
         for values in vals_list:
             email_normalized = email_normalize(values.get('email'))
             if not email_normalized:
-                raise UserError(_('Invalid email address “%s”', values.get('email')))
+                raise UserError(self.env._('Invalid email address “%s”', values.get('email')))
             values['email'] = email_normalized
         return super().create(vals_list)
 
@@ -34,6 +34,6 @@ class MailGroupModeration(models.Model):
         if 'email' in vals:
             email_normalized = email_normalize(vals['email'])
             if not email_normalized:
-                raise UserError(_('Invalid email address “%s”', vals.get('email')))
+                raise UserError(self.env._('Invalid email address “%s”', vals.get('email')))
             vals['email'] = email_normalized
         return super().write(vals)

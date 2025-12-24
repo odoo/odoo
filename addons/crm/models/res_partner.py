@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ResPartner(models.Model):
@@ -44,7 +44,7 @@ class ResPartner(models.Model):
             return data_list
         for partner in self.filtered('opportunity_count'):
             data_list[partner.id].append(
-                {'iconClass': 'fa-star', 'value': partner.opportunity_count, 'label': _('Opportunities')}
+                {'iconClass': 'fa-star', 'value': partner.opportunity_count, 'label': self.env._('Opportunities')}
             )
         return data_list
 

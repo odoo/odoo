@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -15,7 +15,7 @@ class MailingListMerge(models.TransientModel):
 
         if not res.get('src_list_ids') and 'src_list_ids' in fields:
             if self.env.context.get('active_model') != 'mailing.list':
-                raise UserError(_('You can only apply this action from Mailing Lists.'))
+                raise UserError(self.env._('You can only apply this action from Mailing Lists.'))
             src_list_ids = self.env.context.get('active_ids')
             res.update({
                 'src_list_ids': [(6, 0, src_list_ids)],

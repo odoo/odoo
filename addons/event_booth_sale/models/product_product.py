@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 
 
@@ -16,7 +16,7 @@ class ProductProduct(models.Model):
             booth_category = self.env['event.booth.category'].search([('product_id', 'in', product_not_event_booth.ids)], limit=1)
             if booth_category:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You cannot change the service_tracking of the product %(product_name)s because it is already assigned "
                         "to %(booth_category_name)s. The service_tracking must remain 'event_booth'.",
                         product_name=product_not_event_booth.name,

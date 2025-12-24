@@ -3,9 +3,10 @@
 
 import logging
 
-from odoo import _, api, fields, models
-from odoo.addons.product.models.product_template import PRICE_CONTEXT_KEYS
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+
+from odoo.addons.product.models.product_template import PRICE_CONTEXT_KEYS
 
 _logger = logging.getLogger(__name__)
 
@@ -41,7 +42,7 @@ class EventBoothCategory(models.Model):
         for record in self:
             if record.product_id and record.product_id.service_tracking != 'event_booth':
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'The product, %(product_name)s , is used for Event Booth, it must have service_tracking set to "Event Booth".',
                         product_name=record.product_id.name
                     )

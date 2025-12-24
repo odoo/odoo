@@ -8,12 +8,13 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from werkzeug.urls import url_encode
 
-from odoo import api, fields, models, modules, tools, _
-from odoo.addons.base.models.ir_mail_server import MailDeliveryException
+from odoo import api, fields, models, modules, tools
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.tools.float_utils import float_round
 from odoo.tools.urls import urljoin as url_join
+
+from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 
 _logger = logging.getLogger(__name__)
 
@@ -78,7 +79,7 @@ class DigestDigest(models.Model):
         access to, hence providing an easy-skip for users without sufficient rights
         """
         if not any(self.env.user.has_group(group_name) for group_name in group_names):
-            raise AccessError(_("Do not have access, skip this data for user's digest email"))
+            raise AccessError(self.env._("Do not have access, skip this data for user's digest email"))
 
     def _compute_kpi_res_users_connected_value(self):
         self._raise_if_not_member_of('base.group_system')
@@ -173,7 +174,7 @@ class DigestDigest(models.Model):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'message': _('Digest sent!'),
+                'message': self.env._('Digest sent!'),
                 'type': 'info',
                 'sticky': False,
             }
@@ -189,7 +190,7 @@ class DigestDigest(models.Model):
             engine='qweb_view',
             add_context={
                 'title': self.name,
-                'top_button_label': _('Connect'),
+                'top_button_label': self.env._('Connect'),
                 'top_button_url': self.get_base_url(),
                 'company': user.company_id,
                 'user': user,
@@ -251,7 +252,7 @@ class DigestDigest(models.Model):
         self.ensure_one()
         return {
             'context': dict(self.env.context, default_digest_id=self.id, dialog_size='medium'),
-            'name': _('Test Digest'),
+            'name': self.env._('Test Digest'),
             'res_model': 'digest.test',
             'target': 'new',
             'type': 'ir.actions.act_window',
@@ -393,20 +394,20 @@ class DigestDigest(models.Model):
         if self.env.context.get('digest_slowdown'):
             _dummy, new_perioridicy_str = self._get_next_periodicity()
             preferences.append(
-                _("We have noticed you did not connect these last few days. We have automatically switched your preference to %(new_perioridicy_str)s Digests.",
+                self.env._("We have noticed you did not connect these last few days. We have automatically switched your preference to %(new_perioridicy_str)s Digests.",
                   new_perioridicy_str=new_perioridicy_str)
             )
         elif self.periodicity == 'daily' and user.has_group('base.group_erp_manager'):
             preferences.append(Markup('<p>%s<br /><a href="%s" target="_blank" style="color:#017e84; font-weight: bold;">%s</a></p>') % (
-                _('Prefer a broader overview?'),
+                self.env._('Prefer a broader overview?'),
                 f'/digest/{self.id:d}/set_periodicity?periodicity=weekly',
-                _('Switch to weekly Digests')
+                self.env._('Switch to weekly Digests')
             ))
         if user.has_group('base.group_erp_manager'):
             preferences.append(Markup('<p>%s<br /><a href="%s" target="_blank" style="color:#017e84; font-weight: bold;">%s</a></p>') % (
-                _('Want to customize this email?'),
+                self.env._('Want to customize this email?'),
                 f'/odoo/{self._name}/{self.id:d}',
-                _('Choose the metrics you care about')
+                self.env._('Choose the metrics you care about')
             ))
 
         return preferences
@@ -429,13 +430,13 @@ class DigestDigest(models.Model):
         if tz_name:
             start_datetime = start_datetime.replace(tzinfo=ZoneInfo(tz_name))
         return [
-            (_('Last 24 hours'), (
+            (self.env._('Last 24 hours'), (
                 (start_datetime + relativedelta(days=-1), start_datetime),
                 (start_datetime + relativedelta(days=-2), start_datetime + relativedelta(days=-1)))
-            ), (_('Last 7 Days'), (
+            ), (self.env._('Last 7 Days'), (
                 (start_datetime + relativedelta(weeks=-1), start_datetime),
                 (start_datetime + relativedelta(weeks=-2), start_datetime + relativedelta(weeks=-1)))
-            ), (_('Last 30 Days'), (
+            ), (self.env._('Last 30 Days'), (
                 (start_datetime + relativedelta(months=-1), start_datetime),
                 (start_datetime + relativedelta(months=-2), start_datetime + relativedelta(months=-1)))
             )
@@ -555,10 +556,10 @@ class DigestDigest(models.Model):
 
     def _get_next_periodicity(self):
         if self.periodicity == 'daily':
-            return 'weekly', _('weekly')
+            return 'weekly', self.env._('weekly')
         if self.periodicity == 'weekly':
-            return 'monthly', _('monthly')
-        return 'quarterly', _('quarterly')
+            return 'monthly', self.env._('monthly')
+        return 'quarterly', self.env._('quarterly')
 
     def _format_currency_amount(self, amount, currency_id):
         pre = currency_id.position == 'before'

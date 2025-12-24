@@ -4,7 +4,7 @@
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, exceptions, fields, models
 from odoo.tools import format_list
 
 
@@ -70,9 +70,9 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange('crm_auto_assignment_interval_type', 'crm_auto_assignment_interval_number')
     def _onchange_crm_auto_assignment_run_datetime(self):
         if self.crm_auto_assignment_interval_number <= 0:
-            raise exceptions.UserError(_('Repeat frequency should be positive.'))
+            raise exceptions.UserError(self.env._('Repeat frequency should be positive.'))
         elif self.crm_auto_assignment_interval_number >= 100:
-            raise exceptions.UserError(_('Invalid repeat frequency. Consider changing frequency type instead of using large numbers.'))
+            raise exceptions.UserError(self.env._('Invalid repeat frequency. Consider changing frequency type instead of using large numbers.'))
         self.crm_auto_assignment_run_datetime = self._get_crm_auto_assignmment_run_datetime(
             self.crm_auto_assignment_run_datetime,
             self.crm_auto_assignment_interval_type,
@@ -127,10 +127,10 @@ class ResConfigSettings(models.TransientModel):
     def _compute_predictive_lead_scoring_field_labels(self):
         for setting in self:
             if setting.predictive_lead_scoring_fields:
-                field_names = [_('Stage')] + [field.name for field in setting.predictive_lead_scoring_fields]
+                field_names = [self.env._('Stage')] + [field.name for field in setting.predictive_lead_scoring_fields]
                 setting.predictive_lead_scoring_field_labels = format_list(self.env, field_names)
             else:
-                setting.predictive_lead_scoring_field_labels = _('Stage')
+                setting.predictive_lead_scoring_field_labels = self.env._('Stage')
 
     def set_values(self):
         group_use_lead_id = self.env['ir.model.data']._xmlid_to_res_id('crm.group_use_lead')

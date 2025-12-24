@@ -5,10 +5,9 @@ import base64
 import logging
 from ast import literal_eval
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Domain
-from odoo.tools import is_html_empty
 from odoo.tools.safe_eval import safe_eval, time
 
 _logger = logging.getLogger(__name__)
@@ -203,7 +202,7 @@ class MailTemplate(models.Model):
         ))).mapped('model')
         for model in model_names:
             if self.env[model]._abstract:
-                raise ValidationError(_('You may not define a template on an abstract model: %s', model))
+                raise ValidationError(self.env._('You may not define a template on an abstract model: %s', model))
 
     def _check_can_be_rendered(self, fnames=None, render_options=None):
         dynamic_fnames = self._get_dynamic_field_names()
@@ -223,7 +222,7 @@ class MailTemplate(models.Model):
                 except Exception as e:
                     _logger.exception("Error while checking if template can be rendered for field %s", fname)
                     raise ValidationError(
-                        _("Oops! We couldn't save your template due to an issue with this value: %(template_txt)s. Correct it and try again.",
+                        self.env._("Oops! We couldn't save your template due to an issue with this value: %(template_txt)s. Correct it and try again.",
                         template_txt=template[fname])
                     ) from e
 
@@ -302,7 +301,7 @@ class MailTemplate(models.Model):
                 'default_model': template.model,
                 'default_template_id' : template.id,
             }
-            button_name = _('Send Mail (%s)', template.name)
+            button_name = self.env._('Send Mail (%s)', template.name)
             action = ActWindow.create({
                 'name': button_name,
                 'type': 'ir.actions.act_window',
@@ -319,7 +318,7 @@ class MailTemplate(models.Model):
 
     def action_open_mail_preview(self):
         action = self.env.ref('mail.mail_template_preview_action')._get_action_dict()
-        action.update({'name': _('Template Preview: "%(template_name)s"', template_name=self.name)})
+        action.update({'name': self.env._('Template Preview: "%(template_name)s"', template_name=self.name)})
         return action
 
     # ------------------------------------------------------------
@@ -365,7 +364,7 @@ class MailTemplate(models.Model):
                     else:
                         render_res = self.env['ir.actions.report']._render(report, [res_id])
                         if not render_res:
-                            raise UserError(_('Unsupported report type %s found.', report.report_type))
+                            raise UserError(self.env._('Unsupported report type %s found.', report.report_type))
                         report_content, report_format = render_res
                     report_content = base64.b64encode(report_content)
                     # generate name
@@ -378,7 +377,7 @@ class MailTemplate(models.Model):
                             }
                         )
                     else:
-                        report_name = _('Report')
+                        report_name = self.env._('Report')
                     extension = "." + report_format
                     if not report_name.endswith(extension):
                         report_name += extension

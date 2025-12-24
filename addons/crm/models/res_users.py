@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class ResUsers(models.Model):
@@ -14,4 +14,4 @@ class ResUsers(models.Model):
         if formatted_display_name and team_id:
             leader_id = self.env['crm.team'].browse(team_id).user_id
             for user in self.filtered(lambda u: u == leader_id):
-                user.display_name += " --%s--" % _("(Team Leader)")
+                user.display_name += " --%s--" % self.env._("(Team Leader)")

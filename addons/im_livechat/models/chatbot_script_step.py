@@ -1,13 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models, fields
+from collections import defaultdict
+from markupsafe import Markup
+
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import html2plaintext, email_normalize
-from odoo.addons.mail.tools.discuss import Store
 
-from collections import defaultdict
-from markupsafe import Markup
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ChatbotScriptStep(models.Model):
@@ -200,9 +201,9 @@ class ChatbotScriptStep(models.Model):
 
         description = Markup('')
         if input_email:
-            description += Markup("%s<strong>%s</strong><br>") % (_("Email: "), input_email)
+            description += Markup("%s<strong>%s</strong><br>") % (self.env._("Email: "), input_email)
         if input_phone:
-            description += Markup("%s<strong>%s</strong><br>") % (_("Phone: "), input_phone)
+            description += Markup("%s<strong>%s</strong><br>") % (self.env._("Phone: "), input_phone)
         if description:
             description += Markup('<br>')
 
@@ -321,7 +322,7 @@ class ChatbotScriptStep(models.Model):
         user_text_answer = html2plaintext(message_body)
         if self.step_type == 'question_email' and not email_normalize(user_text_answer):
             # if this error is raised, display an error message but do not go to next step
-            raise ValidationError(_('"%s" is not a valid email.', user_text_answer))
+            raise ValidationError(self.env._('"%s" is not a valid email.', user_text_answer))
 
         if self.step_type in [
             "question_email",

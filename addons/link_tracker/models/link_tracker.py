@@ -6,11 +6,12 @@ import string
 
 from werkzeug import urls
 
-from odoo import tools, models, fields, api, _
-from odoo.addons.mail.tools import link_preview
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools.mail import validate_url
+
+from odoo.addons.mail.tools import link_preview
 
 LINK_TRACKER_UNIQUE_FIELDS = ('url', 'campaign_id', 'medium_id', 'source_id', 'label')
 
@@ -167,7 +168,7 @@ class LinkTracker(models.Model):
                 for tracker in duplicates
             )
             raise UserError(
-                _('Combinations of Link Tracker values (URL, campaign, medium, source, and label) must be unique.\n'
+                self.env._('Combinations of Link Tracker values (URL, campaign, medium, source, and label) must be unique.\n'
                   'The following combinations are already used: \n- %(error_lines)s', error_lines=error_lines))
 
     @api.model_create_multi
@@ -175,10 +176,10 @@ class LinkTracker(models.Model):
         vals_list = [vals.copy() for vals in vals_list]
         for vals in vals_list:
             if 'url' not in vals:
-                raise ValueError(_('Creating a Link Tracker without URL is not possible'))
+                raise ValueError(self.env._('Creating a Link Tracker without URL is not possible'))
 
             if vals['url'].startswith(('?', '#')):
-                raise UserError(_("“%s” is not a valid link, links cannot redirect to the current page.", vals['url']))
+                raise UserError(self.env._("“%s” is not a valid link, links cannot redirect to the current page.", vals['url']))
             vals['url'] = validate_url(vals['url'])
 
             if not vals.get('title'):
@@ -226,9 +227,9 @@ class LinkTracker(models.Model):
         errors = set()
         for vals in vals_list:
             if 'url' not in vals:
-                raise ValueError(_('Creating a Link Tracker without URL is not possible'))
+                raise ValueError(self.env._('Creating a Link Tracker without URL is not possible'))
             if vals['url'].startswith(('?', '#')):
-                errors.add(_("“%s” is not a valid link, links cannot redirect to the current page.", vals['url']))
+                errors.add(self.env._("“%s” is not a valid link, links cannot redirect to the current page.", vals['url']))
             vals['url'] = validate_url(vals['url'])
             # fill vals to use direct accessor in _format_key
             self._add_missing_default_values(vals)
@@ -278,7 +279,7 @@ class LinkTracker(models.Model):
 
     def action_visit_page(self):
         return {
-            'name': _("Visit Webpage"),
+            'name': self.env._("Visit Webpage"),
             'type': 'ir.actions.act_url',
             'url': self.url,
             'target': 'new',

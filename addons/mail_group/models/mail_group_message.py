@@ -5,7 +5,7 @@ import logging
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.tools.mail import email_normalize, append_content_to_html
@@ -79,12 +79,12 @@ class MailGroupMessage(models.Model):
     def _constrains_mail_message_id(self):
         for message in self:
             if message.mail_message_id.model != 'mail.group':
-                raise AccessError(_(
+                raise AccessError(self.env._(
                     'Group message can only be linked to mail group. Current model is %s.',
                     message.mail_message_id.model,
                 ))
             if message.mail_message_id.res_id != message.mail_group_id.id:
-                raise AccessError(_('The record of the message should be the group.'))
+                raise AccessError(self.env._('The record of the message should be the group.'))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -183,11 +183,11 @@ class MailGroupMessage(models.Model):
         otherwise create a new rule.
         """
         if status not in ('ban', 'allow'):
-            raise ValueError(_('Wrong status (%s)', status))
+            raise ValueError(self.env._('Wrong status (%s)', status))
 
         for message in self:
             if not email_normalize(message.email_from):
-                raise UserError(_('The email "%s" is not valid.', message.email_from))
+                raise UserError(self.env._('The email "%s" is not valid.', message.email_from))
 
         existing_moderation = self.env['mail.group.moderation'].search(
             Domain.OR([
@@ -224,8 +224,8 @@ class MailGroupMessage(models.Model):
         ])
         if non_moderable_messages:
             if len(self) == 1:
-                raise UserError(_('This message can not be moderated'))
-            raise UserError(_(
+                raise UserError(self.env._('This message can not be moderated'))
+            raise UserError(self.env._(
                 'Those messages can not be moderated: %s.',
                 ', '.join(non_moderable_messages.mapped('subject')),
             ))

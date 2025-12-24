@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
-from odoo import _, api, fields, models
-from odoo.exceptions import UserError
-
 import re
+
+from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class UtmMedium(models.Model):
@@ -44,7 +43,7 @@ class UtmMedium(models.Model):
         for medium in self.SELF_REQUIRED_UTM_MEDIUMS_REF:
             utm_medium = self.env.ref(medium, raise_if_not_found=False)
             if utm_medium and utm_medium in self:
-                raise UserError(_(
+                raise UserError(self.env._(
                     "Oops, you can't delete the Medium '%s'.\n"
                     "Doing so would be like tearing down a load-bearing wall \u2014 not the best idea.",
                     utm_medium.name

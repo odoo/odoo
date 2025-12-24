@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import email_normalize
@@ -92,11 +92,11 @@ class IrMail_Server(models.Model):
 
         if mail_server.owner_user_id:
             if email_normalize(smtp_from) != mail_server.from_filter:
-                raise UserError(_('The server "%s" cannot be forced as it belongs to a user.', mail_server.display_name))
+                raise UserError(self.env._('The server "%s" cannot be forced as it belongs to a user.', mail_server.display_name))
             if not mail_server.active:
-                raise UserError(_('The server "%s" cannot be forced as it belongs to a user and is archived.', mail_server.display_name))
+                raise UserError(self.env._('The server "%s" cannot be forced as it belongs to a user and is archived.', mail_server.display_name))
             if mail_server.owner_user_id.outgoing_mail_server_id != mail_server:
-                raise UserError(_('The server "%s" cannot be forced as the owner does not use it anymore.', mail_server.display_name))
+                raise UserError(self.env._('The server "%s" cannot be forced as the owner does not use it anymore.', mail_server.display_name))
 
     def _get_personal_mail_servers_limit(self):
         """Return the number of email we can send in 1 minutes for this outgoing server.

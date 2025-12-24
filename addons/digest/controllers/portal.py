@@ -3,7 +3,6 @@
 
 from werkzeug.exceptions import Forbidden, NotFound
 
-from odoo import _
 from odoo.http import Controller, request, Response, route
 from odoo.tools import consteq
 
@@ -64,7 +63,7 @@ class DigestController(Controller):
         if not request.env.user.has_group('base.group_erp_manager'):
             raise Forbidden()
         if periodicity not in ('daily', 'weekly', 'monthly', 'quarterly'):
-            raise ValueError(_('Invalid periodicity set on digest'))
+            raise ValueError(self.env._('Invalid periodicity set on digest'))
 
         digest = request.env['digest.digest'].browse(digest_id).exists()
         digest.action_set_periodicity(periodicity)

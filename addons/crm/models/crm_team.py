@@ -7,7 +7,7 @@ import random
 from ast import literal_eval
 from markupsafe import Markup
 
-from odoo import api, exceptions, fields, models, modules, _
+from odoo import api, exceptions, fields, models, modules
 from odoo.fields import Domain
 from odoo.tools import float_compare, float_round
 from odoo.tools.safe_eval import safe_eval
@@ -87,7 +87,7 @@ class CrmTeam(models.Model):
                 if domain:
                     self.env['crm.lead'].search(domain, limit=1)
             except Exception:
-                raise exceptions.ValidationError(_('Assignment domain for team %(team)s is incorrectly formatted', team=team.name))
+                raise exceptions.ValidationError(self.env._('Assignment domain for team %(team)s is incorrectly formatted', team=team.name))
 
     # ------------------------------------------------------------
     # ORM
@@ -204,7 +204,7 @@ class CrmTeam(models.Model):
 
         # log a note in case of manual assign (as this method will mainly be called
         # on singleton record set, do not bother doing a specific message per team)
-        log_action = _("Lead Assignment requested by %(user_name)s", user_name=self.env.user.name)
+        log_action = self.env._("Lead Assignment requested by %(user_name)s", user_name=self.env.user.name)
         log_message = Markup("<p>%s<br /><br />%s</p>") % (log_action, html_message)
         self._message_log_batch(bodies=dict((team.id, log_message) for team in self))
 
@@ -213,7 +213,7 @@ class CrmTeam(models.Model):
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'title': _("Leads Assigned"),
+                'title': self.env._("Leads Assigned"),
                 'message': notif_message,
                 'next': {
                     'type': 'ir.actions.act_window_close'
@@ -240,7 +240,7 @@ class CrmTeam(models.Model):
           :meth:`CrmTeam._assign_and_convert_leads`;
         """
         if not (self.env.user.has_group('sales_team.group_sale_manager') or self.env.is_system()):
-            raise exceptions.UserError(_('Lead/Opportunities automatic assignment is limited to managers or administrators'))
+            raise exceptions.UserError(self.env._('Lead/Opportunities automatic assignment is limited to managers or administrators'))
 
         _logger.info(
             '### START Lead Assignment (%d teams, %d sales persons, force daily quota: %s)',
@@ -273,7 +273,7 @@ class CrmTeam(models.Model):
         message_parts = []
         # 1- duplicates removal
         if duplicates:
-            message_parts.append(_("%(duplicates)s duplicates leads have been merged.",
+            message_parts.append(self.env._("%(duplicates)s duplicates leads have been merged.",
                                    duplicates=duplicates))
 
         # 2- nothing assigned at all
@@ -281,41 +281,41 @@ class CrmTeam(models.Model):
             if len(self) == 1:
                 if not self.assignment_max:
                     message_parts.append(
-                        _("No allocated leads to %(team_name)s team because it has no capacity. Add capacity to its salespersons.",
+                        self.env._("No allocated leads to %(team_name)s team because it has no capacity. Add capacity to its salespersons.",
                           team_name=self.name))
                 else:
                     message_parts.append(
-                        _("No allocated leads to %(team_name)s team and its salespersons because no unassigned lead matches its domain.",
+                        self.env._("No allocated leads to %(team_name)s team and its salespersons because no unassigned lead matches its domain.",
                           team_name=self.name))
             else:
                 message_parts.append(
-                    _("No allocated leads to any team or salesperson. Check your Sales Teams and Salespersons configuration as well as unassigned leads."))
+                    self.env._("No allocated leads to any team or salesperson. Check your Sales Teams and Salespersons configuration as well as unassigned leads."))
 
         # 3- team allocation
         if not assigned and members_assigned:
             if len(self) == 1:
                 message_parts.append(
-                    _("No new lead allocated to %(team_name)s team because no unassigned lead matches its domain.",
+                    self.env._("No new lead allocated to %(team_name)s team because no unassigned lead matches its domain.",
                       team_name=self.name))
             else:
-                message_parts.append(_("No new lead allocated to the teams because no lead match their domains."))
+                message_parts.append(self.env._("No new lead allocated to the teams because no lead match their domains."))
         elif assigned:
             if len(self) == 1:
                 message_parts.append(
-                    _("%(assigned)s leads allocated to %(team_name)s team.",
+                    self.env._("%(assigned)s leads allocated to %(team_name)s team.",
                       assigned=assigned, team_name=self.name))
             else:
                 message_parts.append(
-                    _("%(assigned)s leads allocated among %(team_count)s teams.",
+                    self.env._("%(assigned)s leads allocated among %(team_count)s teams.",
                       assigned=assigned, team_count=len(self)))
 
         # 4- salespersons assignment
         if not members_assigned and assigned:
             message_parts.append(
-                _("No lead assigned to salespersons because no unassigned lead matches their domains."))
+                self.env._("No lead assigned to salespersons because no unassigned lead matches their domains."))
         elif members_assigned:
             message_parts.append(
-                _("%(members_assigned)s leads assigned among %(member_count)s salespersons.",
+                self.env._("%(members_assigned)s leads assigned among %(member_count)s salespersons.",
                   members_assigned=members_assigned, member_count=members))
 
         return message_parts
@@ -717,7 +717,7 @@ class CrmTeam(models.Model):
     def _compute_dashboard_button_name(self):
         super()._compute_dashboard_button_name()
         team_with_pipelines = self.filtered(lambda el: el.use_opportunities)
-        team_with_pipelines.update({'dashboard_button_name': _("Pipeline")})
+        team_with_pipelines.update({'dashboard_button_name': self.env._("Pipeline")})
 
     def action_primary_channel_button(self):
         self.ensure_one()

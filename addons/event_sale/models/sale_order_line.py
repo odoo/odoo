@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -30,7 +30,7 @@ class SaleOrderLine(models.Model):
                 not so_line.event_ticket_id or
                 (so_line.is_multi_slots and not so_line.event_slot_id)
             ):
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "The sale order line with the product %(product_name)s needs an event,"
                     " a ticket and a slot in case the event has multiple time slots.",
                     product_name=so_line.product_id.name))

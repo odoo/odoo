@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models, fields
+from odoo import api, models, fields
 from odoo.exceptions import ValidationError
 
 
@@ -25,10 +25,10 @@ class EventEventConfigurator(models.TransientModel):
         for record in self:
             if record.event_id.id != record.event_ticket_id.event_id.id:
                 error_messages.append(
-                    _('Invalid ticket choice "%(ticket_name)s" for event "%(event_name)s".'))
+                    self.env._('Invalid ticket choice "%(ticket_name)s" for event "%(event_name)s".'))
             if record.event_slot_id and record.event_id.id != record.event_slot_id.event_id.id:
                 error_messages.append(
-                    _('Invalid slot choice "%(slot_name)s" for event "%(event_name)s".'))
+                    self.env._('Invalid slot choice "%(slot_name)s" for event "%(event_name)s".'))
         if error_messages:
             raise ValidationError('\n'.join(error_messages))
 

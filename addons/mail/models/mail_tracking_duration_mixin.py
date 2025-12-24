@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import SQL
@@ -50,7 +50,7 @@ class MailTrackingDurationMixin(models.AbstractModel):
             or self._fields[self._track_duration_field].type != 'many2one'
         ):
             self.duration_tracking = False
-            raise ValueError(_(
+            raise ValueError(self.env._(
                 'Field “%(field)s” on model “%(model)s” must be of type Many2one and have tracking=True for the computation of duration.',
                 field=self._track_duration_field, model=self._name
             ))

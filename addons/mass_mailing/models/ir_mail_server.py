@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.tools.misc import format_date
 
 
@@ -17,10 +17,10 @@ class IrMail_Server(models.Model):
 
     def _active_usages_compute(self):
         def format_usage(mailing_id):
-            base = _('Mass Mailing "%s"', mailing_id.display_name)
+            base = self.env._('Mass Mailing "%s"', mailing_id.display_name)
             if not mailing_id.schedule_date:
                 return base
-            details = _('(scheduled for %s)', format_date(self.env, mailing_id.schedule_date))
+            details = self.env._('(scheduled for %s)', format_date(self.env, mailing_id.schedule_date))
             return f'{base} {details}'
 
         usages_super = super()._active_usages_compute()
@@ -28,7 +28,7 @@ class IrMail_Server(models.Model):
         for record in self:
             usages = []
             if default_mail_server_id == record.id:
-                usages.append(_('Email Marketing uses it as its default mail server to send mass mailings'))
+                usages.append(self.env._('Email Marketing uses it as its default mail server to send mass mailings'))
             usages.extend(map(format_usage, record.active_mailing_ids))
             if usages:
                 usages_super.setdefault(record.id, []).extend(usages)

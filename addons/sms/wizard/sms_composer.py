@@ -4,9 +4,10 @@
 from ast import literal_eval
 from uuid import uuid4
 
-from odoo import api, fields, models, _
-from odoo.addons.sms.tools.sms_tools import sms_content_to_rendered_html
+from odoo import api, fields, models
 from odoo.exceptions import UserError
+
+from odoo.addons.sms.tools.sms_tools import sms_content_to_rendered_html
 
 
 class SmsComposer(models.TransientModel):
@@ -165,7 +166,7 @@ class SmsComposer(models.TransientModel):
                 sanitized_numbers = [record._phone_format(number=number) for number in numbers]
                 invalid_numbers = [number for sanitized, number in zip(sanitized_numbers, numbers) if not sanitized]
                 if invalid_numbers:
-                    raise UserError(_('Following numbers are not correctly encoded: %s', repr(invalid_numbers)))
+                    raise UserError(self.env._('Following numbers are not correctly encoded: %s', repr(invalid_numbers)))
                 composer.sanitized_numbers = ','.join(sanitized_numbers)
             else:
                 composer.sanitized_numbers = False
@@ -186,9 +187,9 @@ class SmsComposer(models.TransientModel):
     def action_send_sms(self):
         if self.composition_mode in ('numbers', 'comment'):
             if self.comment_single_recipient and not self.recipient_single_valid:
-                raise UserError(_('Invalid recipient number. Please update it.'))
+                raise UserError(self.env._('Invalid recipient number. Please update it.'))
             elif not self.comment_single_recipient and self.recipient_invalid_count:
-                raise UserError(_('%s invalid recipients', self.recipient_invalid_count))
+                raise UserError(self.env._('%s invalid recipients', self.recipient_invalid_count))
         self._action_send_sms()
         return False
 

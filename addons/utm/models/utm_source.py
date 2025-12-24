@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -20,7 +20,7 @@ class UtmSource(models.Model):
         utm_source_referral = self.env.ref('utm.utm_source_referral', raise_if_not_found=False)
         for record in self:
             if record == utm_source_referral:
-                raise ValidationError(_("You cannot delete the 'Referral' UTM source record."))
+                raise ValidationError(self.env._("You cannot delete the 'Referral' UTM source record."))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -40,7 +40,7 @@ class UtmSource(models.Model):
 
         create_date = record.create_date or fields.Datetime.today()
         model_description = self.env['ir.model']._get(record._name).name
-        return _(
+        return self.env._(
             '%(content)s (%(model_description)s created on %(create_date)s)',
             content=content,
             model_description=model_description,
@@ -91,7 +91,7 @@ class UtmSourceMixin(models.AbstractModel):
     def write(self, vals):
         if (vals.get(self._rec_name) or vals.get('name')) and len(self) > 1:
             raise ValueError(
-                _('You cannot update multiple records with the same name. The name should be unique!')
+                self.env._('You cannot update multiple records with the same name. The name should be unique!')
             )
 
         if vals.get(self._rec_name) and not vals.get('name'):

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -29,7 +29,7 @@ class MailBlacklist(models.Model):
         for value in vals_list:
             email = tools.email_normalize(value.get('email'))
             if not email:
-                raise UserError(_('Invalid email address “%s”', value['email']))
+                raise UserError(self.env._('Invalid email address “%s”', value['email']))
             if email in all_emails:
                 continue
             all_emails.append(email)
@@ -101,7 +101,7 @@ class MailBlacklist(models.Model):
 
     def mail_action_blacklist_remove(self):
         return {
-            'name': _('Are you sure you want to unblacklist this email address?'),
+            'name': self.env._('Are you sure you want to unblacklist this email address?'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mail.blacklist.remove',

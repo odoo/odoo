@@ -1,7 +1,6 @@
 import logging
 import requests
 
-from odoo import _
 from odoo.addons.sms.tools.sms_api import SmsApiBase
 from odoo.addons.sms_twilio.tools.sms_twilio import get_twilio_from_number, get_twilio_status_callback_url
 
@@ -54,7 +53,7 @@ class SmsApiTwilio(SmsApiBase):
                 uuid = number_info['uuid']
                 response = self._sms_twilio_send_request(session, number_info['number'], body, uuid)
                 fields_values = {
-                    'failure_reason':  _("Unknown failure at sending, please contact Odoo support"),
+                    'failure_reason':  self.env._("Unknown failure at sending, please contact Odoo support"),
                     'state': 'server_error',
                     'uuid': uuid,
                 }
@@ -105,16 +104,16 @@ class SmsApiTwilio(SmsApiBase):
         # TDE TODO: clean failure type management
         error_dict = super()._get_sms_api_error_messages()
         error_dict.update({
-            'sms_acc': _("Trial Account Limitation"),
-            'sms_number_missing': _("A 'To' phone number is required"),
-            'twilio_acc_unverified': _("Unverified recipient on Trial Account"),
-            'twilio_authentication': _("Twilio Authentication Error"),
-            'twilio_callback': _("Twilio StatusCallback URL is incorrect"),
+            'sms_acc': self.env._("Trial Account Limitation"),
+            'sms_number_missing': self.env._("A 'To' phone number is required"),
+            'twilio_acc_unverified': self.env._("Unverified recipient on Trial Account"),
+            'twilio_authentication': self.env._("Twilio Authentication Error"),
+            'twilio_callback': self.env._("Twilio StatusCallback URL is incorrect"),
             'twilio_from_missing': ("A 'From' number is required to send a message"),
-            'twilio_from_to': _("'To' and 'From' numbers cannot be the same"),
-            'wrong_number_format': _("The number you're trying to reach is not correctly formatted"),
-            'twilio_wrong_credentials': _("Recheck your credentials"),
+            'twilio_from_to': self.env._("'To' and 'From' numbers cannot be the same"),
+            'wrong_number_format': self.env._("The number you're trying to reach is not correctly formatted"),
+            'twilio_wrong_credentials': self.env._("Recheck your credentials"),
             # fallback
-            'unknown': _("Unknown error, please contact Odoo support"),
+            'unknown': self.env._("Unknown error, please contact Odoo support"),
         })
         return error_dict

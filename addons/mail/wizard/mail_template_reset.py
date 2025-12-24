@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class MailTemplateReset(models.TransientModel):
@@ -23,7 +23,7 @@ class MailTemplateReset(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'message': _('The email template(s) have been restored to their original settings.'),
+                'message': self.env._('The email template(s) have been restored to their original settings.'),
                 'next': next_action,
             }
         }

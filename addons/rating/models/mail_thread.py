@@ -3,7 +3,7 @@
 import datetime
 import markupsafe
 
-from odoo import _, fields, models, tools
+from odoo import fields, models, tools
 
 
 class MailThread(models.AbstractModel):
@@ -120,11 +120,11 @@ class MailThread(models.AbstractModel):
         :returns: rating.rating record
         """
         if rate < 0 or rate > 5:
-            raise ValueError(_('Wrong rating value. A rate should be between 0 and 5 (received %d).', rate))
+            raise ValueError(self.env._('Wrong rating value. A rate should be between 0 and 5 (received %d).', rate))
         if token:
             rating = self.env['rating.rating'].search([('access_token', '=', token)], limit=1)
         if not rating:
-            raise ValueError(_('Invalid token or rating.'))
+            raise ValueError(self.env._('Invalid token or rating.'))
 
         rating.write({'rating': rate, 'feedback': feedback, 'consumed': True})
         if isinstance(self, self.env.registry['mail.thread']):
