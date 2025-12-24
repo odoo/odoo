@@ -679,6 +679,35 @@ class ProductTemplate(models.Model):
 
         return combination_info
 
+    def _get_dynamic_attribute_images(self, combination_ids, website_id):
+        """Compute the 'closest variant' image for every value based on the current selection.
+
+        :param tuple combination_ids: A tuple of integers representing the IDs of the
+            currently selected `product.template.attribute.value` records. This must
+            be a tuple (not a recordset) for valid caching.
+        :param int website_id: The ID of the current website (request.website.id). Used
+            to generate correct image URLs for the specific domain context.
+
+        :return: A dictionary mapping attribute value IDs to their corresponding image
+            URLs. Format: { attribute_value_id: image_url }
+        :rtype: dict
+        """
+        combination = self.env['product.template.attribute.value'].browse(combination_ids)
+        website = self.env['website'].browse(website_id)
+        attr_images = defaultdict(lambda: website.image_url(self, 'image_128'))
+
+        for ptal in self.valid_product_template_attribute_line_ids:
+            if ptal.attribute_id.is_thumbnail_visible:
+                selected_ptav = combination.filtered(lambda v: v.attribute_line_id == ptal)
+                for ptav in ptal.product_template_value_ids:
+                    simulated = (combination - selected_ptav) + ptav
+                    closest = self._get_closest_possible_combination(simulated)
+                    variant = self._get_variant_for_combination(closest)
+                    if variant:
+                        attr_images[ptav.id] = website.image_url(variant, 'image_128')
+
+        return attr_images
+
     @api.model
     def _apply_taxes_to_price(
         self, price, currency, product_taxes, taxes, product_or_template,
