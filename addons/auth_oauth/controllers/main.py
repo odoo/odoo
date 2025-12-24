@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 import functools
 import json
 import logging
-import os
 
 import werkzeug.urls
-import werkzeug.utils
 from werkzeug.exceptions import BadRequest
 
-from odoo import api, http, SUPERUSER_ID, _
+from odoo import SUPERUSER_ID, api, http
 from odoo.exceptions import AccessDenied
 from odoo.http import request, Response
 from odoo.modules.registry import Registry
@@ -97,11 +94,11 @@ class OAuthLogin(Home):
         if response.is_qweb:
             error = request.params.get('oauth_error')
             if error == '1':
-                error = _("Sign up is not allowed on this database.")
+                error = self.env._("Sign up is not allowed on this database.")
             elif error == '2':
-                error = _("Access Denied")
+                error = self.env._("Access Denied")
             elif error == '3':
-                error = _("You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email.")
+                error = self.env._("You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email.")
             else:
                 error = None
 

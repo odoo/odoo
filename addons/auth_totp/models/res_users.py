@@ -8,14 +8,14 @@ import re
 
 from datetime import datetime, timedelta
 
-from odoo import _, api, fields, models
-from odoo.addons.base.models.res_users import check_identity
+from odoo import api, fields, models
 from odoo.exceptions import AccessDenied, UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import sql, SQL
 
 from odoo.addons.auth_totp.models.totp import TOTP, TOTP_SECRET_SIZE
+from odoo.addons.base.models.res_users import check_identity
 
 _logger = logging.getLogger(__name__)
 
@@ -79,11 +79,11 @@ class ResUsers(models.Model):
             match = TOTP(key).match(credentials['token'])
             if match is None:
                 _logger.info("2FA check: FAIL for %s %r", self, sudo.login)
-                raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
+                raise AccessDenied(self.env._("Verification failed, please double-check the 6-digit code"))
 
             if sudo.totp_last_counter and match <= sudo.totp_last_counter:
                 _logger.warning("2FA check: REUSE for %s %r", self, sudo.login)
-                raise AccessDenied(_("Verification failed, please use the latest 6-digit code"))
+                raise AccessDenied(self.env._("Verification failed, please use the latest 6-digit code"))
 
             sudo.totp_last_counter = match
             _logger.info("2FA check: SUCCESS for %s %r", self, sudo.login)
@@ -131,8 +131,8 @@ class ResUsers(models.Model):
         count = RateLimitLog.search_count(domain)
         if count >= limit:
             descriptions = {
-                'send_email': _('You reached the limit of authentication mails sent for your account, please try again later.'),
-                'code_check': _('You reached the limit of code verifications for your account, please try again later.'),
+                'send_email': self.env._('You reached the limit of authentication mails sent for your account, please try again later.'),
+                'code_check': self.env._('You reached the limit of code verifications for your account, please try again later.'),
             }
             description = descriptions[limit_type]
             raise AccessDenied(description)
@@ -173,7 +173,7 @@ class ResUsers(models.Model):
             'tag': 'display_notification',
             'params': {
                 'type': 'warning',
-                'message': _("Two-factor authentication disabled for the following user(s): %s", ', '.join(self.mapped('name'))),
+                'message': self.env._("Two-factor authentication disabled for the following user(s): %s", ', '.join(self.mapped('name'))),
                 'next': {'type': 'ir.actions.act_window_close'},
             }
         }
@@ -181,10 +181,10 @@ class ResUsers(models.Model):
     @check_identity
     def action_totp_enable_wizard(self):
         if self.env.user != self:
-            raise UserError(_("Two-factor authentication can only be enabled for yourself"))
+            raise UserError(self.env._("Two-factor authentication can only be enabled for yourself"))
 
         if self.totp_enabled:
-            raise UserError(_("Two-factor authentication already enabled"))
+            raise UserError(self.env._("Two-factor authentication already enabled"))
 
         secret_bytes_count = TOTP_SECRET_SIZE // 8
         secret = base64.b32encode(os.urandom(secret_bytes_count)).decode()
@@ -198,7 +198,7 @@ class ResUsers(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'res_model': 'auth_totp.wizard',
-            'name': _("Two-Factor Authentication Activation"),
+            'name': self.env._("Two-Factor Authentication Activation"),
             'res_id': w.id,
             'views': [(False, 'form')],
             'context': self.env.context | {'dialog_size': 'medium'},

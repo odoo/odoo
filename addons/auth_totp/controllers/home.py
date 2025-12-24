@@ -3,9 +3,10 @@ import re
 
 from datetime import datetime, timedelta
 
-from odoo import http, _
+from odoo import http
 from odoo.exceptions import AccessDenied
 from odoo.http import request
+
 from odoo.addons.web.controllers import home as web_home
 
 TRUSTED_DEVICE_COOKIE = 'td_id'
@@ -51,14 +52,14 @@ class Home(web_home.Home):
             except AccessDenied as e:
                 error = str(e)
             except ValueError:
-                error = _("Invalid authentication code format.")
+                error = self.env._("Invalid authentication code format.")
             else:
                 request.session.finalize(request.env)
                 request.update_env(user=request.session.uid)
                 request.update_context(**request.session.context)
                 response = request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
                 if kwargs.get('remember'):
-                    name = _("%(browser)s on %(platform)s",
+                    name = self.env._("%(browser)s on %(platform)s",
                         browser=request.httprequest.user_agent.browser.capitalize(),
                         platform=request.httprequest.user_agent.platform.capitalize(),
                     )

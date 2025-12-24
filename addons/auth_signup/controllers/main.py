@@ -2,17 +2,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import werkzeug
+from markupsafe import Markup
 from werkzeug.urls import url_encode
 
-from odoo import http, tools, _
+from odoo import http, tools
+from odoo.exceptions import UserError
+from odoo.http import request
+from odoo.tools.translate import LazyTranslate
+
 from odoo.addons.auth_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.home import ensure_db, Home, SIGN_UP_REQUEST_PARAMS, LOGIN_SUCCESSFUL_PARAMS
 from odoo.addons.web.models.res_users import SKIP_CAPTCHA_LOGIN
 from odoo.addons.base_setup.controllers.main import BaseSetup
-from odoo.exceptions import UserError
-from odoo.tools.translate import LazyTranslate
-from odoo.http import request
-from markupsafe import Markup
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
@@ -77,10 +78,10 @@ class AuthSignupHome(Home):
                 User = request.env['res.users']
                 if User.sudo().with_context(active_test=False).\
                         search_count(User._get_login_domain(qcontext.get('login')), limit=1):
-                    qcontext["error"] = _("Another user is already registered using this email address.")
+                    qcontext["error"] = self.env._("Another user is already registered using this email address.")
                 else:
                     _logger.warning("%s", e)
-                    qcontext['error'] = _("Could not create a new account.") + Markup('<br/>') + str(e)
+                    qcontext['error'] = self.env._("Could not create a new account.") + Markup('<br/>') + str(e)
 
         elif 'signup_email' in qcontext:
             user = request.env['res.users'].sudo().search([('email', '=', qcontext.get('signup_email')), ('state', '!=', 'new')], limit=1)
@@ -104,19 +105,19 @@ class AuthSignupHome(Home):
                 if qcontext.get('token'):
                     self.do_signup(qcontext, do_login=False)
                     request.update_context(skip_captcha_login=SKIP_CAPTCHA_LOGIN)
-                    qcontext['message'] = _("Your password has been reset successfully.")
+                    qcontext['message'] = self.env._("Your password has been reset successfully.")
                 else:
                     login = qcontext.get('login')
-                    assert login, _("No login provided.")
+                    assert login, self.env._("No login provided.")
                     _logger.info(
                         "Password reset attempt for <%s> by user <%s> from %s",
                         login, request.env.user.login, request.httprequest.remote_addr)
                     request.env['res.users'].sudo().reset_password(login)
-                    qcontext['message'] = _("Password reset instructions sent to your email address.")
+                    qcontext['message'] = self.env._("Password reset instructions sent to your email address.")
             except UserError as e:
                 qcontext['error'] = e.args[0]
             except SignupError:
-                qcontext['error'] = _("Could not reset your password")
+                qcontext['error'] = self.env._("Could not reset your password")
                 _logger.exception('error when resetting password')
             except Exception as e:
                 qcontext['error'] = str(e)
@@ -153,16 +154,16 @@ class AuthSignupHome(Home):
                 for k, v in token_infos.items():
                     qcontext.setdefault(k, v)
             except:
-                qcontext['error'] = _("Invalid signup token")
+                qcontext['error'] = self.env._("Invalid signup token")
                 qcontext['invalid_token'] = True
         return qcontext
 
     def _prepare_signup_values(self, qcontext):
         values = { key: qcontext.get(key) for key in ('login', 'name', 'password') }
         if not values:
-            raise UserError(_("The form was not properly filled in."))
+            raise UserError(self.env._("The form was not properly filled in."))
         if values.get('password') != qcontext.get('confirm_password'):
-            raise UserError(_("Passwords do not match; please retype them."))
+            raise UserError(self.env._("Passwords do not match; please retype them."))
         supported_lang_codes = [code for code, _ in request.env['res.lang'].get_installed()]
         lang = request.env.context.get('lang', '')
         if lang in supported_lang_codes:
