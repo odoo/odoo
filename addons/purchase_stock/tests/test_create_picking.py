@@ -888,3 +888,26 @@ class TestCreatePicking(ProductVariantsCommon):
         po.order_line.name += '\nRandom purchase notes'
         po.button_confirm()
         self.assertEqual(po.picking_ids.move_ids.description_picking, ('No variant: extra\n' if product_matrix_installed else '') + '[123] ABC\nReceive with care')
+
+    def test_average_cost_updated_after_po_with_discount(self):
+        """
+        Check the product price update from receiving discounted goods.
+        """
+        self.product_id_1.categ_id = self.env['product.category'].create({
+            'name': 'average',
+            'property_cost_method': 'average',
+        })
+        self.product_id_1.seller_ids = [Command.create({
+            'partner_id': self.partner_id.id,
+            'min_qty': 10,
+            'price': 500.0,
+            'discount': 10,
+        })]
+        po = self.env['purchase.order'].create(self.po_vals)  # create a PO for 5 units
+        po.button_confirm()
+        with Form(po) as po_form:
+            with po_form.order_line.edit(0) as po_line:
+                po_line.product_qty = 10.0
+        po.picking_ids.button_validate()
+        # Update the quantity to 10 to trigger the discount
+        self.assertEqual(self.product_id_1.standard_price, 450.0)
