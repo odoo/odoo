@@ -37,25 +37,15 @@ declare module "models" {
         updateBusSubscription: (() => unknown) & { cancel: () => void };
     }
     export interface Thread {
-        avatar_cache_key: string;
         channel: DiscussChannel;
         channel_name_member_ids: ChannelMember[];
-        computeCorrespondent: () => ChannelMember;
-        correspondent: ChannelMember;
-        correspondentCountry: Country;
-        correspondents: Readonly<ChannelMember[]>;
         executeCommand: (command: unknown, body: string) => Promise<void>;
         firstUnreadMessage: Message;
         group_ids: ResGroups[];
-        leaveChannel: () => Promise<void>;
-        leaveChannelProcess: () => Promise<void>;
-        leaveChannelRpc: () => Promise<void>;
         markedAsUnread: boolean;
         markingAsRead: boolean;
         markReadSequential: () => Promise<any>;
-        name: string;
         scrollUnread: boolean;
-        self_member_id: ChannelMember;
         showCorrespondentCountry: Readonly<boolean>;
         showUnreadBanner: Readonly<boolean>;
     }
