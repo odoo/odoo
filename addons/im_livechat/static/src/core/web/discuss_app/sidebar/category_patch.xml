@@ -35,7 +35,9 @@
         <span t-if="livechatThread.channel?.channel_type === 'livechat' and (['waiting', 'need_help'].includes(livechatThread.channel.livechat_status) or livechatThread.livechat_end_dt)" class="o-livechat-LivechatStatusLabel" t-att-title="livechatThread.channel.livechatStatusLabel" t-att-class="{
             'position-absolute top-0 start-0': env.inDiscussSidebar or env.inChatBubble or env.inNotificationItem,
             'o-livechat-LivechatStatusLabel-Sidebar end-0 bottom-0 rounded-2 border': env.inDiscussSidebar,
-            'mx-n1 d-flex z-1 bg-opacity-100': env.inChatBubble or env.inNotificationItem,
+            'd-flex z-1 bg-opacity-100': env.inChatBubble or env.inNotificationItem,
+            'mx-n1': env.inChatBubble,
+            'mx-n2 my-n1': env.inNotificationItem,
             'text-warning': livechatThread.channel.livechat_status === 'waiting',
             'o-help': livechatThread.channel.livechat_status === 'need_help',
             'bg-warning': livechatThread.channel.livechat_status === 'waiting' and env.inDiscussSidebar,
