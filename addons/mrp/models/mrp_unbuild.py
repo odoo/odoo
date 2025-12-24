@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
 from odoo.tools.misc import clean_context
@@ -54,8 +54,8 @@ class MrpUnbuild(models.Model):
         check_company=True, index='btree_not_null')
     mo_bom_id = fields.Many2one('mrp.bom', 'Bill of Material used on the Production Order', related='mo_id.bom_id')
     lot_producing_ids = fields.Many2many('stock.lot', string='Lot/Serial Numbers', related='mo_id.lot_producing_ids')
-    lot_id = fields.Many2one(
-        'stock.lot', 'Lot/Serial Number',
+    lot_ids = fields.Many2many(
+        'stock.lot', string='Lot/Serial Number',
         domain="[('product_id', '=', product_id),('id', 'in', lot_producing_ids)]", check_company=True)
     has_tracking = fields.Selection(related='product_id.tracking', readonly=True)
     location_id = fields.Many2one(
@@ -119,14 +119,13 @@ class MrpUnbuild(models.Model):
             if order.mo_id and order.mo_id.product_id:
                 order.product_id = order.mo_id.product_id
 
-    @api.depends('mo_id')
+    @api.depends('mo_id', 'lot_ids')
     def _compute_product_qty(self):
         for order in self:
-            if order.mo_id:
-                if order.has_tracking == 'serial':
-                    order.product_qty = 1
-                else:
-                    order.product_qty = order.mo_id.qty_produced
+            if order.has_tracking == 'serial':
+                order.product_qty = len(order.lot_ids) or 1
+            elif order.mo_id:
+                order.product_qty = order.mo_id.qty_produced
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -141,15 +140,17 @@ class MrpUnbuild(models.Model):
             raise UserError(_("You cannot delete an unbuild order if the state is 'Done'."))
 
     def _prepare_finished_move_line_vals(self, finished_move):
-        return {
+        vals = {
             'move_id': finished_move.id,
-            'lot_id': self.lot_id.id,
-            'quantity': finished_move.product_uom_qty - finished_move.quantity,
             'product_id': finished_move.product_id.id,
             'uom_id': finished_move.uom_id.id,
             'location_id': finished_move.location_id.id,
             'location_dest_id': finished_move.location_dest_id.id,
         }
+        if self.has_tracking == 'serial':
+            return [dict(vals, lot_id=lot.id, quantity=1) for lot in self.lot_ids]
+        else:
+            return [dict(vals, lot_id=self.lot_ids.id, quantity=finished_move.product_uom_qty)]
 
     def _prepare_move_line_vals(self, move, origin_move_line, taken_quantity):
         return {
@@ -162,12 +163,20 @@ class MrpUnbuild(models.Model):
             'location_dest_id': move.location_dest_id.id,
         }
 
+    def action_clear_lots(self):
+        self.ensure_one()
+        self.lot_ids = [Command.clear()]
+        if self.env.context.get('reopen_unbuild_wizard'):
+            action = self.mo_id.button_unbuild()
+            action.update({'res_id': self.id})
+            return action
+
     def action_unbuild(self):
         self.ensure_one()
         self._check_company()
         # remove the default_* keys that were only needed in the unbuild wizard
         self = self.with_env(self.env(context=clean_context(self.env)))  # noqa: PLW0642
-        if self.product_id.tracking in ['lot', 'serial'] and not self.lot_id.id:
+        if self.product_id.tracking in ['lot', 'serial'] and not self.lot_ids:
             raise UserError(_('You should provide a lot number for the final product.'))
 
         if self.mo_id and self.mo_id.state != 'done':
@@ -182,8 +191,8 @@ class MrpUnbuild(models.Model):
         # Collect component lots already restored by previous unbuilds on the same MO
         previously_unbuilt_lots = (self.mo_id.unbuild_ids - self).produce_line_ids.filtered(lambda ml: ml.product_id != self.product_id and ml.product_id.tracking == 'serial').lot_ids
 
-        finished_moves = consume_moves.filtered(lambda m: m.product_id == self.product_id)
-        consume_moves -= finished_moves
+        finished_move = consume_moves.filtered(lambda m: m.product_id == self.product_id)
+        consume_moves -= finished_move
         error_message = _(
             "Please specify a manufacturing order.\n"
             "It will allow us to retrieve the lots/serial numbers of the correct components and/or byproducts."
@@ -195,10 +204,9 @@ class MrpUnbuild(models.Model):
         if any(consume_move.product_id.tracking in ['lot', 'serial'] and not self.mo_id for consume_move in consume_moves):
             raise UserError(error_message)
 
-        for finished_move in finished_moves:
-            if finished_move.uom_id.compare(finished_move.product_uom_qty, finished_move.quantity) > 0:
-                finished_move_line_vals = self._prepare_finished_move_line_vals(finished_move)
-                self.env['stock.move.line'].create(finished_move_line_vals)
+        if finished_move.uom_id.compare(finished_move.product_uom_qty, finished_move.quantity) > 0:
+            finished_move_line_vals = self._prepare_finished_move_line_vals(finished_move)
+            self.env['stock.move.line'].create(finished_move_line_vals)
 
         # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
         qty_already_used = defaultdict(float)
@@ -212,10 +220,8 @@ class MrpUnbuild(models.Model):
                 continue
             needed_quantity = move.product_uom_qty
             moves_lines = original_move.mapped('move_line_ids')
-            if move in produce_moves and self.lot_id:
-                moves_lines = moves_lines.filtered(
-                    lambda ml: self.lot_id in ml.produce_line_ids.lot_id and ml.lot_id not in previously_unbuilt_lots
-                )
+            if move in produce_moves and self.lot_ids:
+                moves_lines = moves_lines.filtered(lambda ml: ml.produce_line_ids.lot_id & self.lot_ids and ml.lot_id not in previously_unbuilt_lots)
             for move_line in moves_lines:
                 # Iterate over all move_lines until we unbuilded the correct quantity.
                 taken_quantity = min(needed_quantity, move_line.quantity - qty_already_used[move_line])
@@ -229,8 +235,8 @@ class MrpUnbuild(models.Model):
                     qty_already_used[move_line] += taken_quantity
                     unbuild_move_line._apply_putaway_strategy()
 
-        (finished_moves | consume_moves | produce_moves).picked = True
-        finished_moves._action_done()
+        (finished_move | consume_moves | produce_moves).picked = True
+        finished_move._action_done()
         consume_moves._action_done()
         produce_moves._action_done()
         produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.quantity > 0)
@@ -318,8 +324,12 @@ class MrpUnbuild(models.Model):
     def action_validate(self):
         self.ensure_one()
         precision = self.env['decimal.precision'].precision_get('Product Unit')
-        available_qty = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, strict=True)
+        available_qty = 0
         unbuild_qty = self.uom_id._compute_quantity(self.product_qty, self.product_id.uom_id)
+        if self.has_tracking == 'serial':
+            available_qty = sum(self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, lot, strict=True) for lot in self.lot_ids)
+        else:
+            available_qty = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_ids, strict=True)
         if float_compare(available_qty, unbuild_qty, precision_digits=precision) >= 0:
             return self.action_unbuild()
         else:
