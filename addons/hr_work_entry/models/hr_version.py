@@ -348,11 +348,34 @@ class HrVersion(models.Model):
         for tz, versions in self.grouped("tz").items():
             tz = ZoneInfo(tz) if tz else UTC
             for version in versions:
+                if not version.contract_date_start:
+                    continue
                 version_start = fields.Datetime.to_datetime(version.date_start).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                 version_stop = datetime.combine(fields.Datetime.to_datetime(version.date_end or date_stop),
                                                  datetime.max.time()).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+<<<<<<< 2075e56d3c0c213347088bc2c0ade1ae8a1a0368
                 if version_stop < date_start:
                     continue
+||||||| f79749409934be94d3459c19cb089e0ddf0516a5
+                if version_stop < date_stop:
+                    if version.date_generated_from != version.date_generated_to:
+                        domain_to_nullify |= Domain([
+                            ('version_id', '=', version.id),
+                            ('date', '>', version_stop.astimezone(tz)),
+                            ('date', '<=', date_stop.astimezone(tz)),
+                            ('state', '!=', 'validated'),
+                        ])
+=======
+
+                if version_stop < date_stop:
+                    if version.date_generated_from != version.date_generated_to:
+                        domain_to_nullify |= Domain([
+                            ('version_id', '=', version.id),
+                            ('date', '>', version_stop.astimezone(tz)),
+                            ('date', '<=', date_stop.astimezone(tz)),
+                            ('state', '!=', 'validated'),
+                        ])
+>>>>>>> da0cbad7cbc93606b572160532005b413e75690a
                 if date_start > version_stop or date_stop < version_start:
                     continue
                 date_start_work_entries = max(date_start, version_start)
