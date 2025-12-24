@@ -10,8 +10,8 @@ LOG_WARNING = 'warn'
 LOG_ERROR = 'error'
 LOG_CRITICAL = 'critical'
 
-# TODO get_encodings, ustr and exception_to_unicode were originally from tools.misc.
-# There are here until we refactor tools so that this module doesn't depends on tools.
+# get_encodings, ustr and exception_to_unicode were originally from tools.misc.
+# They have been moved here and are now deprecated as of Odoo 18.
 
 def get_encodings(hint_encoding='utf-8'):
     warnings.warn(
