@@ -2,6 +2,7 @@ import { roundPrecision } from "@web/core/utils/numbers";
 import { Base } from "../related_models";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { _t } from "@web/core/l10n/translation";
+import { formatCurrency } from "@web/core/currency";
 
 export class ProductTemplateAccounting extends Base {
     static pythonModel = "product.template";
@@ -157,5 +158,14 @@ export class ProductTemplateAccounting extends Base {
         accountTaxHelpers.add_tax_details_in_base_line(baseLine, config.company_id);
         accountTaxHelpers.round_base_lines_tax_details([baseLine], config.company_id);
         return baseLine.tax_details;
+    }
+
+    get displayPriceUnit() {
+        const config = this.models["pos.config"].getFirst();
+        const price =
+            config.iface_tax_included === "total"
+                ? this.getTaxDetails().total_included
+                : this.getTaxDetails().total_excluded;
+        return formatCurrency(price, config.currency_id.id);
     }
 }
