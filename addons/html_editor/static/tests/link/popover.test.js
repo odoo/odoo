@@ -1111,7 +1111,7 @@ describe("Link formatting in the popover", () => {
         await animationFrame();
         expect("button[name='link_type'] span").toHaveClass("btn btn-primary btn-sm");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            `<p><a href="http://test.com/" class="o_link_in_selection btn btn-primary">link1</a></p>`
+            `<p><a href="http://test.com/" class="btn btn-primary">link1</a></p>`
         );
     });
 });
