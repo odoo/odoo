@@ -19,7 +19,6 @@
         * Sentry error tracking integration
         * Custom branding (ViaSuite/ViaFronteira, LLC)
         * Multi-language support (pt_BR, es_PY, en_US, ar_SA, zh_CN)
-        * Automated cleanup jobs for sessions, logs, and attachments
         * Login/logout audit logging
         * Custom session timeout (24h for PDV operations)
         * PWA support with custom favicon and manifest
@@ -46,7 +45,6 @@
         'data/mail_server.xml',
         'data/mail_template.xml',
         'data/auth_oauth_provider.xml',
-        'data/ir_cron.xml',
 
         # Views
         'views/webclient_templates.xml',
