@@ -15,38 +15,38 @@ class HrEmployee(models.Model):
         'res.users', store=True, readonly=False,
         string="Attendance Approver",
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
-        groups="hr_attendance.group_hr_attendance_own",
+        groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer",
         help="The user set in Attendance will access the attendance of the employee through the dedicated app and will be able to edit them.")
     attendance_ids = fields.One2many(
-        'hr.attendance', 'employee_id', groups="hr_attendance.group_hr_attendance_own,hr.group_hr_user")
+        'hr.attendance', 'employee_id', groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     last_attendance_id = fields.Many2one(
         'hr.attendance', compute='_compute_last_attendance_id', store=True,
-        groups="hr_attendance.group_hr_attendance_own,hr.group_hr_user")
+        groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     last_check_in = fields.Datetime(
         related='last_attendance_id.check_in', store=True,
-        groups="hr_attendance.group_hr_attendance_own,hr.group_hr_user", tracking=False)
+        groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user", tracking=False)
     last_check_out = fields.Datetime(
         related='last_attendance_id.check_out', store=True,
-        groups="hr_attendance.group_hr_attendance_own,hr.group_hr_user", tracking=False)
+        groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user", tracking=False)
     attendance_state = fields.Selection(
         string="Attendance Status", compute='_compute_attendance_state',
         selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")],
-        groups="hr_attendance.group_hr_attendance_own,hr.group_hr_user")
+        groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     hours_last_month = fields.Float(compute='_compute_hours_last_month')
     hours_last_month_overtime = fields.Float(compute='_compute_hours_last_month')
     hours_today = fields.Float(
         compute='_compute_hours_today',
-        groups="hr_attendance.group_hr_attendance_own,hr.group_hr_user")
+        groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     hours_previously_today = fields.Float(
         compute='_compute_hours_today',
-        groups="hr_attendance.group_hr_attendance_own,hr.group_hr_user")
+        groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     last_attendance_worked_hours = fields.Float(
         compute='_compute_hours_today',
-        groups="hr_attendance.group_hr_attendance_own,hr.group_hr_user")
+        groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     hours_last_month_display = fields.Char(
         compute='_compute_hours_last_month', groups="hr.group_hr_user")
     overtime_ids = fields.One2many(
-        'hr.attendance.overtime.line', 'employee_id', groups="hr_attendance.group_hr_attendance_own,hr.group_hr_user")
+        'hr.attendance.overtime.line', 'employee_id', groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     total_overtime = fields.Float(compute='_compute_total_overtime', compute_sudo=True)
     display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
 
