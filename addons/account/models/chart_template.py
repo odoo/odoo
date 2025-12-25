@@ -218,7 +218,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         if not reload_template and (not company.root_id._existing_accounting() or install_demo):
             children_companies = self.env['res.company'].search([('id', 'child_of', company.id)])
-            for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
+            for model in ('account.move',) + self._get_template_models()[::-1]:
                 if not company.parent_id:
                     company_field = 'company_id' if 'company_id' in self.env[model] else 'company_ids'
                     records = self.env[model].sudo().with_context(active_test=False).search([(company_field, 'child_of', company.id)])
@@ -913,6 +913,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'reconcile': True,
             },
         }
+
+    def _get_template_models(self):
+        return TEMPLATE_MODELS
 
     def _setup_utility_bank_accounts(self, template_code, company, template_data):
         """Define basic bank accounts for the company.
