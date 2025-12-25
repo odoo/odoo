@@ -43,7 +43,7 @@ Requires: python3-magic
 Requires: python3-markupsafe
 Requires: python3-mock
 Requires: python3-num2words
-Requires: python3-ofxparse.noarch
+Requires: python3-ofxparse
 Requires: python3-openpyxl
 Requires: python3-passlib
 Requires: python3-pillow
