@@ -576,7 +576,7 @@ export class TicketScreen extends Component {
                 !this.pos.isProductQtyZero(refund.qty) &&
                 refund.line.order_id.uuid === order.uuid &&
                 (partner ? refund.line.order_id.partner_id?.id === partner.id : true) &&
-                !refund.destination_order_id
+                !refund.destination_order
         );
     }
 

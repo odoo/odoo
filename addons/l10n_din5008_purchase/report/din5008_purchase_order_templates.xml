@@ -81,6 +81,10 @@
                     <td>Order Deadline:</td>
                     <td><t t-out="o.date_order" t-options="{'widget': 'date'}"/></td>
                 </tr>
+                <tr t-if="o.date_planned">
+                    <td>Expected Arrival:</td>
+                    <td><t t-out="o.date_planned" t-options="{'widget': 'date'}"/></td>
+                </tr>
                 <tr t-if="o.incoterm_id">
                     <td>Incoterm:</td>
                     <td><t t-out="o.incoterm_id.code"/></td>

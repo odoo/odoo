@@ -94,7 +94,7 @@ class ProductProduct(models.Model):
         config = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
         limit_count = config.get_limited_product_count()
         if limit_count:
-            products = config.with_context(display_default_code=False).get_limited_products_loading(fields)
+            products = config.with_context(display_default_code=False, bin_size=True).get_limited_products_loading(fields)
         else:
             domain = self._load_pos_data_domain(data)
             products = self._load_product_with_domain(domain, config.id)
@@ -117,7 +117,7 @@ class ProductProduct(models.Model):
 
     def _load_product_with_domain(self, domain, config_id, load_archived=False):
         fields = self._load_pos_data_fields(config_id)
-        context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
+        context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived, 'bin_size': True}
         return self.with_context(context).search_read(
             domain,
             fields,

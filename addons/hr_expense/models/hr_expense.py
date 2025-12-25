@@ -615,7 +615,7 @@ class HrExpense(models.Model):
     def write(self, vals):
         if (
                 'state' in vals
-                and vals['state'] != 'submitted'
+                and vals['state'] not in {'draft', 'submitted'}
                 and not (self.env.user.has_group('hr_expense.group_hr_expense_manager') or self.env.su)
                 and any(state == 'draft' for state in self.mapped('state'))
         ):
