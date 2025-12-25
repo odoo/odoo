@@ -109,7 +109,7 @@ class StockQuant(models.Model):
     inventory_date = fields.Date(
         'Scheduled', compute='_compute_inventory_date', store=True, readonly=False,
         help="Next date the On Hand Quantity should be counted.")
-    last_count_date = fields.Date(compute='_compute_last_count_date', help='Last time the Quantity was Updated')
+    last_count_date = fields.Date(compute='_compute_last_count_date', search='_search_last_count_date', help='Last time the Quantity was Updated')
     inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False)
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
@@ -175,6 +175,40 @@ class StockQuant(models.Model):
             _update_dict(date_by_quant, (location_dest_id, result_package_id, product_id, lot_id, owner_id), move_line_date)
         for quant in self:
             quant.last_count_date = date_by_quant.get((quant.location_id.id, quant.package_id.id, quant.product_id.id, quant.lot_id.id, quant.owner_id.id))
+
+    def _search_last_count_date(self, operator, value):
+        if operator not in ('=', '!=', '<', '<=', '>', '>='):
+            return NotImplemented
+        query = """
+                SELECT q.id
+                FROM stock_move_line sml
+                JOIN stock_move sm ON sml.move_id = sm.id
+                JOIN stock_quant q
+                    ON q.product_id = sml.product_id
+                    AND (q.lot_id = sml.lot_id OR (q.lot_id IS NULL AND sml.lot_id IS NULL))
+                    AND (q.package_id = sml.package_id OR q.package_id = sml.result_package_id OR (q.package_id IS NULL AND sml.package_id IS NULL AND sml.result_package_id IS NULL))
+                    AND (q.owner_id = sml.owner_id OR (q.owner_id IS NULL AND sml.owner_id IS NULL))
+                    AND (q.location_id = sml.location_dest_id OR q.location_id = sml.location_id)
+                """
+        if operator in ('=', '!=') and value is False:
+            if operator == '=':
+                query += """
+                         GROUP BY q.id
+                         HAVING BOOL_OR(sm.is_inventory) IS NOT TRUE
+                         """
+            else:
+                query += """ WHERE sm.state = 'done' AND sm.is_inventory = TRUE """
+            self.env.cr.execute(query)
+        else:
+            query += f"""
+                     WHERE sm.state = 'done' AND sm.is_inventory = TRUE
+                     GROUP BY q.id
+                     HAVING DATE(MAX(sml.date)) {operator} %s
+                     """
+            self.env.cr.execute(query, (value,))
+        result = self.env.cr.fetchall()
+        quant_ids = [quant[0] for quant in result]
+        return [('id', 'in', quant_ids)]
 
     def _search(self, domain, *args, **kwargs):
         domain = Domain(domain).map_conditions(
