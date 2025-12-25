@@ -35,3 +35,6 @@ from . import test_multi_contract
 from . import test_time_off_allocation_tour
 from . import test_flexible_resource_calendar
 from . import test_calendar_leaves_count
+from . import test_hr_leave_cash_out_actions
+from . import test_hr_leave_cash_out_access_rights
+from . import test_hr_leave_cash_out_constraints

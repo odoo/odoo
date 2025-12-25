@@ -97,6 +97,8 @@
                                     <label for="support_document" class="me-4" string="Require Supporting Document"/>
                                     <label for="elligible_for_accrual_rate" class="me-4"/>
                                     <label for="allow_request_on_top" class="me-4" invisible="time_type == 'leave'"/>
+                                    <label for="allow_cash_out_request" class="fw-bold me-4" invisible="not requires_allocation"/>
+                                    <label for="allow_employee_request" class="fw-bold me-4" invisible="not allow_cash_out_request"/>
                                 </div>
                                 <div class="d-flex flex-column gap-1">
                                     <field name="include_public_holidays_in_duration" class="mb-2" nolabel="1"/>
@@ -104,6 +106,8 @@
                                     <field name="support_document" nolabel="1"/>
                                     <field name="elligible_for_accrual_rate" nolabel="1" readonly="time_type != 'leave'"/>
                                     <field name="allow_request_on_top" nolabel="1" invisible="time_type == 'leave'"/>
+                                    <field name="allow_cash_out_request" nolabel="1" invisible="not requires_allocation"/>
+                                    <field name="allow_employee_request" nolabel="1" invisible="not allow_cash_out_request"/>
                                 </div>
                             </div>
                         </group>
