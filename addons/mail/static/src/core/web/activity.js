@@ -1,3 +1,6 @@
+import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
+import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
+
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
@@ -20,7 +23,7 @@ import { FileUploader } from "@web/views/fields/file_handler";
  * @extends {Component<Props, Env>}
  */
 export class Activity extends Component {
-    static components = { ActivityMailTemplate, FileUploader };
+    static components = { ActivityMailTemplate, FileUploader, HtmlViewer };
     static props = ["activity", "onActivityChanged", "reloadParentView"];
     static template = "mail.Activity";
 
@@ -42,6 +45,13 @@ export class Activity extends Component {
             return _t("“%s”", this.props.activity.summary);
         }
         return this.props.activity.display_name;
+    }
+
+    get htmlViewerConfig() {
+        return {
+            value: this.props.activity.note,
+            embeddedComponents: READONLY_MAIN_EMBEDDINGS,
+        };
     }
 
     updateDelayAtNight() {
