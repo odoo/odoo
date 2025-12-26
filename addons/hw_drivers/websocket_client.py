@@ -72,7 +72,7 @@ def on_message(ws, messages):
                     device_identifier = device['identifier']
                     if device_identifier in main.iot_devices:
                         start_operation_time = time.perf_counter()
-                        _logger.info("device '%s' action started", device_identifier)
+                        _logger.info("websocket: device '%s' action started", device_identifier)
                         main.iot_devices[device_identifier].action(payload)
                         _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
             else:
