@@ -100,7 +100,7 @@ test("cover image options only appear on the right card when two of them are nes
 
     await contains(":iframe .inner_card").click();
     // Cover image options are displayed for the inner card
-    expect("[data-action-id='setCoverImagePosition']").toHaveCount(3);
+    expect("[data-action-id='setCoverImagePosition']").toHaveCount(4);
     expect("[data-action-id='removeCoverImage']").toHaveCount(1);
 });
 
@@ -126,15 +126,28 @@ test("set cover image position", async () => {
     expect(":iframe .s_card").toHaveClass(["o_card_img_horizontal", "flex-lg-row-reverse"]);
     expect(":iframe .s_card .o_card_img").toHaveClass("rounded-end");
 
-    // Set image position back to top
-    await click("[data-action-id='setCoverImagePosition'][title='Top']");
-    await waitFor("[data-action-id='setCoverImagePosition'][title='Top'].active");
-    expect(":iframe .s_card").toHaveClass("o_card_img_top");
-    expect(":iframe .s_card .o_card_img").toHaveClass("card-img-top");
+    // Set image position to bottom
+    await click("[data-action-id='setCoverImagePosition'][title='Bottom']");
+    await waitFor("[data-action-id='setCoverImagePosition'][title='Bottom'].active");
+    expect(":iframe .s_card").toHaveClass(["o_card_img_bottom", "flex-column-reverse"]);
+    expect(":iframe .s_card").not.toHaveClass([
+        "o_card_img_horizontal",
+        "flex-lg-row",
+        "flex-lg-row-reverse",
+    ]);
+    expect(":iframe .s_card .o_card_img").toHaveClass("card-img-bottom");
 
     // Remove cover image
     await click("[data-action-id='removeCoverImage']");
     await waitFor("[data-action-id='addCoverImage']");
+    expect(":iframe .s_card").not.toHaveClass([
+        "o_card_img_top",
+        "o_card_img_bottom",
+        "o_card_img_horizontal",
+        "flex-lg-row",
+        "flex-lg-row-reverse",
+        "flex-column-reverse",
+    ]);
     // Position buttons are no longer available
     expect("[data-action-id='setCoverImagePosition']").toHaveCount(0);
 });
@@ -177,7 +190,14 @@ test("set cover image ratio", async () => {
     expect(":iframe .s_card").toHaveStyle({ "--card-img-aspect-ratio": "60%" });
 });
 
-test("ratios only supported for top image", async () => {
+test("ratios supported for vertical images", async () => {
+    const verticalRatioClasses = [
+        "ratio-1x1",
+        "ratio-4x3",
+        "ratio-16x9",
+        "ratio-21x9",
+        "o_card_img_ratio_custom",
+    ];
     await setupWebsiteBuilderWithSnippet("s_card");
     await contains(":iframe .s_card").click();
     await waitFor("[data-label='Ratio'] ");
@@ -185,13 +205,16 @@ test("ratios only supported for top image", async () => {
     // When cover image is on top, all ratios are available
     expect(":iframe .s_card").toHaveClass("o_card_img_top");
     expect(`.dropdown-menu [data-class-action='']`).toHaveCount(1); // Default image ratio
-    for (const ratioClass of [
-        "ratio-1x1",
-        "ratio-4x3",
-        "ratio-16x9",
-        "ratio-21x9",
-        "o_card_img_ratio_custom",
-    ]) {
+    for (const ratioClass of verticalRatioClasses) {
+        expect(`.dropdown-menu [data-class-action='ratio ${ratioClass}']`).toHaveCount(1);
+    }
+    // Set image position to bottom
+    await click("[data-action-id='setCoverImagePosition'][title='Bottom']");
+    await waitFor("[data-action-id='setCoverImagePosition'][title='Bottom'].active");
+    await openRatioDropdownMenu();
+    expect(":iframe .s_card").toHaveClass("o_card_img_bottom");
+    expect(`.dropdown-menu [data-class-action='']`).toHaveCount(1); // Default image ratio
+    for (const ratioClass of verticalRatioClasses) {
         expect(`.dropdown-menu [data-class-action='ratio ${ratioClass}']`).toHaveCount(1);
     }
     // Set image position to left
@@ -211,10 +234,14 @@ test("set cover image width", async () => {
     await setupWebsiteBuilderWithSnippet("s_card");
     await contains(":iframe .s_card").click();
 
+    await waitFor("[data-action-id='setCoverImagePosition']");
     // Width option not available when image is on top
     expect("[data-label='Width']").toHaveCount(0);
+    // Width option still not available when image is on bottom
+    await click("[data-action-id='setCoverImagePosition'][title='Bottom']");
+    await waitFor("[data-action-id='setCoverImagePosition'][title='Bottom'].active");
+    expect("[data-label='Width']").toHaveCount(0);
     // Set image position to left
-    await waitFor("[data-action-id='setCoverImagePosition']");
     await click("[data-action-id='setCoverImagePosition'][title='Left']");
     await waitFor("[data-label='Width']");
     // Width option is now available
