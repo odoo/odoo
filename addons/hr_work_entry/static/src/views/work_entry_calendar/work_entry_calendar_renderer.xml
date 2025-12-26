@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_work_entry.CalendarRenderer">
+        <div class="o_work_entry_calendar d-flex flex-column h-100 flex-grow-1">
+            <WorkEntryDashboard t-if="showDashboard" employeeId="employeeId" rangeStart="rangeStart" rangeEnd="rangeEnd" reloadKey="dashboardReloadKey"/>
+            <t t-call="web.CalendarRenderer"/>
+        </div>
+    </t>
+</templates>

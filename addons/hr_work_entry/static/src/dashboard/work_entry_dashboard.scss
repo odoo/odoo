@@ -1,0 +1,64 @@
+.o_work_entry_dashboard {
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    height: auto;
+
+    box-shadow: inset 0 -1px 0 $border-color;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: $o-webclient-background-color;
+}
+
+.o_work_entry_dashboard_cards {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    &>* {
+        flex: 1;
+    }
+}
+
+.o_work_entry_card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1;
+    text-align: center;
+    border-right: 1px solid $border-color;
+
+    &>* {
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    span {
+        line-height: 1;
+    }
+
+    .o_work_entry_name {
+        color: $body-color;
+        font-size: 15px;
+        margin-bottom: 3px;
+    }
+
+    .o_work_entry_duration {
+        font-size: 30px;
+        font-weight: bold;
+        width: auto;
+        padding: 0 5px;
+    }
+
+    .o_work_entry_details {
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+    &:last-child {
+        border-right: none;
+    }
+}

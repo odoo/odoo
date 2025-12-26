@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class HrWorkEntryType(models.Model):
@@ -43,6 +43,27 @@ class HrWorkEntryType(models.Model):
         help="This field decides the behavior of the shortcut in the gantt view of the work entries. Add will always "
              "prompt a duration and will be added to the existing work entries while replace will simply replace all "
              "work entries of that day")
+
+    counter_periodicity = fields.Selection(
+        [('none', 'None'), ('month', 'Every Month'), ('year', 'Every Year')],
+        string="Periodicity",
+        default='none',
+    )
+    counter_use_cap = fields.Boolean(
+        string="Use Maximum Cap",
+        default=False,
+    )
+    counter_maximum_cap = fields.Float(
+        string="Maximum Cap",
+        default=False,
+        help="Define the total of the counter",
+    )
+
+    @api.constrains('counter_periodicity', 'counter_use_cap', 'counter_maximum_cap')
+    def _check_counter_cap_when_periodic(self):
+        for work_entry_type in self:
+            if work_entry_type.counter_periodicity in {'month', 'year'} and work_entry_type.counter_use_cap and work_entry_type.counter_maximum_cap <= 0:
+                raise ValidationError(_("Please set a Maximum Cap greater than zero."))
 
     @api.constrains('country_id')
     def _check_work_entry_type_country(self):

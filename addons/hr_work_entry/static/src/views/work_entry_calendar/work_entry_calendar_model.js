@@ -32,6 +32,7 @@ export class WorkEntryCalendarModel extends CalendarModel {
             super.updateData(...arguments),
             this._fetchUserFavoritesWorkEntries(),
         ]);
+        data.dashboardReloadKey = (data.dashboardReloadKey || 0) + 1;
     }
 
     async _fetchUserFavoritesWorkEntries() {
