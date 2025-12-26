@@ -8,10 +8,11 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
 
 const alignmentItems = [
-    { mode: "left", description: _t("Left align") },
-    { mode: "center", description: _t("Center align") },
-    { mode: "right", description: _t("Right align") },
-    { mode: "justify", description: _t("Justify") },
+    // In RTL, left and right icons are reverted to represent start and end.
+    { icon: "left", mode: "start", description: _t("Left align") },
+    { icon: "center", mode: "center", description: _t("Center align") },
+    { icon: "right", mode: "end", description: _t("Right align") },
+    { icon: "justify", mode: "justify", description: _t("Justify") },
 ];
 
 export class AlignPlugin extends Plugin {
@@ -21,8 +22,8 @@ export class AlignPlugin extends Plugin {
     resources = {
         user_commands: [
             {
-                id: "alignLeft",
-                run: () => this.setAlignment("left"),
+                id: "alignStart",
+                run: () => this.setAlignment("start"),
                 isAvailable: this.canSetAlignment.bind(this),
             },
             {
@@ -31,8 +32,8 @@ export class AlignPlugin extends Plugin {
                 isAvailable: this.canSetAlignment.bind(this),
             },
             {
-                id: "alignRight",
-                run: () => this.setAlignment("right"),
+                id: "alignEnd",
+                run: () => this.setAlignment("end"),
                 isAvailable: this.canSetAlignment.bind(this),
             },
             {
@@ -75,21 +76,27 @@ export class AlignPlugin extends Plugin {
         );
     }
 
-    get alignmentMode() {
+    get alignmentIconMode() {
         const sel = this.dependencies.selection.getSelectionData().deepEditableSelection;
         const block = closestBlock(sel?.anchorNode);
-        const textAlign = this.getTextAlignment(block);
-        return ["center", "right", "justify"].includes(textAlign) ? textAlign : "left";
-    }
-
-    getTextAlignment(block) {
-        const { direction, textAlign } = getComputedStyle(block);
-        if (textAlign === "start") {
-            return direction === "rtl" ? "right" : "left";
-        } else if (textAlign === "end") {
-            return direction === "rtl" ? "left" : "right";
+        let { direction, textAlign } = getComputedStyle(block);
+        if (direction === "rtl") {
+            // Handle compatibility:
+            // in RTL "left" is equivalent to "end"
+            // and "right" is equivalent to "start"
+            if (textAlign === "left") {
+                textAlign = "end";
+            } else if (textAlign === "right") {
+                textAlign = "start";
+            }
         }
-        return textAlign;
+        if (textAlign === "end") {
+            // The icon name suffix for "end" is "right", both in LTR and RTL
+            return "right";
+        }
+        // Return only one of the four supported icon name suffixes, defaulting
+        // to "left" which is also used for "start" in both LTR and RTL
+        return ["center", "right", "justify"].includes(textAlign) ? textAlign : "left";
     }
 
     getBlocksToAlign() {
@@ -106,8 +113,8 @@ export class AlignPlugin extends Plugin {
 
         for (const block of this.getBlocksToAlign()) {
             if (!visitedBlocks.has(block)) {
-                const currentTextAlign = this.getTextAlignment(block);
-                if (currentTextAlign !== mode) {
+                const { textAlign } = getComputedStyle(block);
+                if (textAlign !== mode) {
                     block.style.textAlign = mode;
                     isAlignmentUpdated = true;
                 }
@@ -125,6 +132,6 @@ export class AlignPlugin extends Plugin {
     }
 
     updateAlignmentParams() {
-        this.alignment.displayName = this.alignmentMode;
+        this.alignment.displayName = this.alignmentIconMode;
     }
 }

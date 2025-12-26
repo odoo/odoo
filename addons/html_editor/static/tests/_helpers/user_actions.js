@@ -363,16 +363,16 @@ export function resetSize(editor) {
     editor.shared.table.resetTableSize(findInSelection(selection, "table"));
 }
 /** @param {Editor} editor */
-export function alignLeft(editor) {
-    execCommand(editor, "alignLeft");
+export function alignStart(editor) {
+    execCommand(editor, "alignStart");
 }
 /** @param {Editor} editor */
 export function alignCenter(editor) {
     execCommand(editor, "alignCenter");
 }
 /** @param {Editor} editor */
-export function alignRight(editor) {
-    execCommand(editor, "alignRight");
+export function alignEnd(editor) {
+    execCommand(editor, "alignEnd");
 }
 /** @param {Editor} editor */
 export function justify(editor) {
