@@ -361,11 +361,9 @@
         <rng:element name="filter">
             <rng:ref name="overload"/>
             <rng:ref name="access_rights"/>
-            <rng:attribute name="name"/>
             <rng:optional><rng:attribute name="icon"/></rng:optional>
             <rng:optional><rng:attribute name="invisible"/></rng:optional>
             <rng:optional><rng:attribute name="separator" /></rng:optional>
-            <rng:optional><rng:attribute name="string" /></rng:optional>
             <rng:optional><rng:attribute name="type" /></rng:optional>
             <rng:optional><rng:attribute name="align" /></rng:optional>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
@@ -379,17 +377,32 @@
             <rng:optional><rng:attribute name="start_year"/></rng:optional>
             <rng:optional><rng:attribute name="end_year"/></rng:optional>
             <rng:optional><rng:attribute name="default_period"/></rng:optional>
-            <rng:zeroOrMore>
-                <rng:choice>
-                    <rng:ref name="field" />
-                    <rng:ref name="xpath" />
-                    <rng:ref name="separator"/>
-                    <rng:ref name="button"/>
-                    <rng:ref name="filter"/>
-                    <rng:ref name="html"/>
-                    <rng:element name="newline"><rng:empty/></rng:element>
-                </rng:choice>
-            </rng:zeroOrMore>
+            <rng:choice>
+                <!-- Standard Filter with a mandatory 'name' attribute -->
+                <rng:group>
+                    <rng:attribute name="name"/>
+                    <rng:optional><rng:attribute name="string" /></rng:optional>
+                    <rng:zeroOrMore>
+                        <rng:choice>
+                            <rng:ref name="field" />
+                            <rng:ref name="xpath" />
+                            <rng:ref name="separator"/>
+                            <rng:ref name="button"/>
+                            <rng:ref name="filter"/>
+                            <rng:ref name="html"/>
+                            <rng:element name="newline"><rng:empty/></rng:element>
+                        </rng:choice>
+                    </rng:zeroOrMore>
+                </rng:group>
+                <!-- Parent and inner filters with mandatory 'string' attribute -->
+                <!-- Supported in Search View -->
+                <rng:group>
+                    <rng:attribute name="string"/>
+                    <rng:oneOrMore>
+                        <rng:ref name="filter"/>
+                    </rng:oneOrMore>
+                </rng:group>
+            </rng:choice>
 
         </rng:element>
     </rng:define>

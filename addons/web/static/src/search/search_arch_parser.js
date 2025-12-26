@@ -25,7 +25,7 @@ function getContextGroupBy(context) {
 }
 
 function reduceType(type) {
-    if (type === "dateFilter") {
+    if (type === "dateFilter" || type === "parentFilter") {
         return "filter";
     }
     if (type === "dateGroupBy") {
@@ -80,7 +80,7 @@ export class SearchArchParser {
                     break;
                 case "filter":
                     if (this.optionsParams) {
-                        this.visitDateOption(node);
+                        this.visitInnerFilter(node);
                     } else {
                         this.visitFilter(node, visitChildren);
                     }
@@ -248,6 +248,14 @@ export class SearchArchParser {
                 preSearchItem.optionsParams = optionsParams;
                 this.optionsParams = null;
             }
+            if (!node.hasAttribute("date") && !!node.childElementCount) {
+                preSearchItem.type = "parentFilter";
+                this.optionsParams = { customOptions: [] };
+                visitChildren();
+                preSearchItem.optionsParams = this.optionsParams;
+                this.optionsParams = null;
+            }
+
             preSearchItem.domain = node.getAttribute("domain") || "[]";
         }
         if (node.hasAttribute("invisible")) {
@@ -295,17 +303,17 @@ export class SearchArchParser {
         this.currentGroup.push(preSearchItem);
     }
 
-    visitDateOption(node) {
-        const preDateOption = { type: "dateOption" };
+    visitInnerFilter(node) {
+        const preInnerFilterOption = { type: "innerFilter" };
         for (const attribute of ["name", "string", "domain"]) {
             if (!node.getAttribute(attribute)) {
                 throw new Error(`Attribute "${attribute}" is missing.`);
             }
         }
-        preDateOption.id = `custom_${node.getAttribute("name")}`;
-        preDateOption.description = node.getAttribute("string");
-        preDateOption.domain = node.getAttribute("domain");
-        this.optionsParams.customOptions.push(preDateOption);
+        preInnerFilterOption.id = `custom_${node.getAttribute("name")}`;
+        preInnerFilterOption.description = node.getAttribute("string");
+        preInnerFilterOption.domain = node.getAttribute("domain");
+        this.optionsParams.customOptions.push(preInnerFilterOption);
     }
 
     visitGroup(node, visitChildren) {

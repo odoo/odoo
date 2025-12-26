@@ -283,13 +283,13 @@ test("parsing date filter with custom options", async () => {
                         id: "custom_birthday_today",
                         description: "Today",
                         domain: "[('date_field', '=', context_today().strftime('%Y-%m-%d'))]",
-                        type: "dateOption",
+                        type: "innerFilter",
                     },
                     {
                         id: "custom_birthday_future",
                         description: "Future",
                         domain: "[('date_field', '>=', context_today().strftime('%Y-%m-%d'))]",
-                        type: "dateOption",
+                        type: "innerFilter",
                     },
                 ],
                 endMonth: 0,
@@ -796,13 +796,13 @@ test("toggle a date filter", async () => {
         `,
     });
     const filterId = Object.keys(model.searchItems).map((key) => Number(key))[0];
-    model.toggleDateFilter(filterId);
+    model.toggleParentFilter(filterId);
     expect(model.domain).toEqual([
         "&",
         ["date_field", ">=", "2019-01-01"],
         ["date_field", "<=", "2019-01-31"],
     ]);
-    model.toggleDateFilter(filterId, "first_quarter");
+    model.toggleParentFilter(filterId, "first_quarter");
     expect(model.domain).toEqual([
         "|",
         "&",
@@ -812,7 +812,7 @@ test("toggle a date filter", async () => {
         ["date_field", ">=", "2019-01-01"],
         ["date_field", "<=", "2019-03-31"],
     ]);
-    model.toggleDateFilter(filterId, "year");
+    model.toggleParentFilter(filterId, "year");
     expect(model.domain).toEqual([]);
 });
 
@@ -828,13 +828,13 @@ test("toggle a custom option in a date filter", async () => {
         `,
     });
     const filterId = Object.keys(model.searchItems).map((key) => Number(key))[0];
-    model.toggleDateFilter(filterId);
+    model.toggleParentFilter(filterId);
     expect(model.domain).toEqual([
         "&",
         ["date_field", ">=", "2019-01-01"],
         ["date_field", "<=", "2019-01-31"],
     ]);
-    model.toggleDateFilter(filterId, "custom_today");
+    model.toggleParentFilter(filterId, "custom_today");
     expect(model.domain).toEqual([["date_field", "=", "2019-01-06"]]);
 });
 
@@ -849,7 +849,7 @@ test("toggle a date filter with a domain", async () => {
     });
     const filterId = Object.keys(model.searchItems).map((key) => Number(key))[0];
     expect(model.domain).toEqual([]);
-    model.toggleDateFilter(filterId);
+    model.toggleParentFilter(filterId);
     expect(model.domain).toEqual([
         "&",
         "&",
@@ -871,7 +871,7 @@ test("toggle a custom option in a date filter with a domain", async () => {
         `,
     });
     const filterId = Object.keys(model.searchItems).map((key) => Number(key))[0];
-    model.toggleDateFilter(filterId, "custom_today");
+    model.toggleParentFilter(filterId, "custom_today");
     expect(model.domain).toEqual([
         "&",
         ["date_field", "=", "2019-01-06"],
@@ -1097,4 +1097,40 @@ test("allow filtering based on extra keys in getSearchItems", async () => {
     const items = model.getSearchItems((i) => i.isActive);
     expect(items).toHaveLength(1);
     expect(items[0].name).toBe("filter_1");
+});
+
+test("Inner filter: are correctly parsed", async () => {
+    const model = await createSearchModel({
+        searchViewArch: `
+            <search>
+                <filter string="Foo">
+                    <filter string="Abcd" name="abcd" domain="[('foo', '=', 'abcd')]"/>
+                    <filter string="Qsdf" name="qsdf" domain="[('foo', '=', 'qsdf')]"/>
+                </filter>
+            </search>
+        `,
+    });
+    expect(sanitizeSearchItems(model)).toEqual([
+        {
+            description: "Foo",
+            domain: "[]",
+            optionsParams: {
+                customOptions: [
+                    {
+                        description: "Abcd",
+                        domain: "[('foo', '=', 'abcd')]",
+                        id: "custom_abcd",
+                        type: "innerFilter",
+                    },
+                    {
+                        description: "Qsdf",
+                        domain: "[('foo', '=', 'qsdf')]",
+                        id: "custom_qsdf",
+                        type: "innerFilter",
+                    },
+                ],
+            },
+            type: "parentFilter",
+        },
+    ]);
 });

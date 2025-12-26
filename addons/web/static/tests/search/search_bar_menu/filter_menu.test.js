@@ -539,6 +539,69 @@ for (const contextValue of ["True", "1"]) {
     });
 }
 
+test("Inner filter: toggle", async () => {
+    const searchBarMenu = await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Foo">
+                    <filter string="Abcd" name="abcd" domain="[('foo', '=', 'abcd')]"/>
+                    <filter string="Qsdf" name="qsdf" domain="[('foo', '=', 'qsdf')]"/>
+                </filter>
+            </search>
+        `,
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Foo");
+    expect(isItemSelected("Foo")).toBe(false);
+    expect(`.o_item_option`).toHaveCount(2);
+
+    await contains(`.o_item_option:eq(1)`).click();
+    expect(isItemSelected("Foo")).toBe(true);
+    expect(searchBarMenu.env.searchModel.domain).toEqual([["foo", "=", "qsdf"]]);
+
+    await contains(`.o_item_option:eq(0)`).click();
+    expect(isItemSelected("Foo")).toBe(true);
+    expect(searchBarMenu.env.searchModel.domain).toEqual([["foo", "=", "abcd"]]);
+});
+
+test("Inner filter: domain is correctly combined with other filters", async () => {
+    const searchBarMenu = await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Foo">
+                    <filter string="Abcd" name="abcd" domain="[('foo', '=', 'abcd')]"/>
+                    <filter string="Qsdf" name="qsdf" domain="[('foo', '=', 'qsdf')]"/>
+                </filter>
+                <filter string="Bar" name="bar" domain="[('bar', '=', 'meow')]"/>
+            </search>
+        `,
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Foo");
+    await contains(`.o_item_option:eq(0)`).click();
+    await contains(`.o_menu_item:eq(1)`).click();
+    expect(isItemSelected("Foo")).toBe(true);
+    expect(isItemSelected("Bar")).toBe(true);
+    expect(searchBarMenu.env.searchModel.domain).toEqual([
+        "|",
+        ["foo", "=", "abcd"],
+        ["bar", "=", "meow"],
+    ]);
+
+    await contains(`.o_menu_item:eq(1)`).click();
+    await toggleMenuItem("Foo");
+    expect(`.o_item_option`).toHaveCount(0);
+    expect(isItemSelected("Foo")).toBe(true);
+    expect(isItemSelected("Bar")).toBe(false);
+    expect(searchBarMenu.env.searchModel.domain).toEqual([["foo", "=", "abcd"]]);
+});
+
 test("filter domains are correcly combined by OR and AND", async () => {
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "foo",
