@@ -9,11 +9,12 @@ from odoo.addons.iot_drivers.server_logger import server_logger
 _logger = logging.getLogger(__name__)
 
 
-def handle_message(message_type: str, **kwargs: dict) -> dict:
+def handle_message(message_type: str, communication_type: str, **kwargs: dict) -> dict:
     """General handler for messages received from the Odoo server either
     via WebSocket or HTTP.
 
     :param message_type: The type of message received.
+    :param communication_type: The type of communication (e.g., '(ws)' for WebSocket, '(lp)' for long polling).
     :param kwargs: Additional parameters passed with the message.
     :return: A dictionary response based on the message type and processing.
     """
@@ -35,7 +36,7 @@ def handle_message(message_type: str, **kwargs: dict) -> dict:
                 _logger.warning("No IoT device with identifier '%s' found", device_identifier)
                 return {**base_response, 'status': 'disconnected'}
             start_operation_time = time.perf_counter()
-            _logger.info("device '%s' action started", device_identifier)
+            _logger.info("%s device '%s' action started", communication_type, device_identifier)
             res = main.iot_devices[device_identifier].action(kwargs)
             _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
             return {**base_response, **res}
