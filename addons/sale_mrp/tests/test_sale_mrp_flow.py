@@ -2059,7 +2059,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         kit = self._cls_create_product('Super Kit', self.uom_unit)
         (kit + self.component_a).categ_id.property_cost_method = 'fifo'
 
-        self.env['mrp.bom'].create({
+        bom = self.env['mrp.bom'].create({
             'product_tmpl_id': kit.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'phantom',
@@ -2070,7 +2070,8 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         })
 
         self.component_a.standard_price = 10
-        kit.button_bom_cost()
+        bom.action_update_product_cost_from_bom()
+        kit.standard_price = bom.unit_cost
 
         stock_location = self.company_data['default_warehouse'].lot_stock_id
         self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 1)

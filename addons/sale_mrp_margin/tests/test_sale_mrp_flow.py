@@ -22,27 +22,26 @@ class TestSaleMrpFlow(test_sale_mrp_flow.TestSaleMrpFlowCommon):
         """
         super_kit = self._cls_create_product('Super Kit', self.uom_unit)
         (super_kit + self.component_a + self.component_b).categ_id.property_cost_method = 'average'
-        self.env['mrp.bom'].create({
-            'product_tmpl_id': self.component_a.product_tmpl_id.id,
-            'product_qty': 1.0,
-            'type': 'phantom',
-            'bom_line_ids': [(0, 0, {
-                'product_id': self.component_b.id,
-                'product_qty': 3.0,
-            })]
-        })
-        self.env['mrp.bom'].create({
-            'product_tmpl_id': super_kit.product_tmpl_id.id,
-            'product_qty': 1.0,
-            'type': 'phantom',
-            'bom_line_ids': [(0, 0, {
-                'product_id': self.component_a.id,
-                'product_qty': 2.0,
-            })]
-        })
+        component_a_bom, super_kit_bom = self.env['mrp.bom'].create([
+            {
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'type': 'phantom',
+                'bom_line_ids': [Command.create({
+                    'product_id': component.id,
+                    'product_qty': quantity,
+                })],
+            }
+            for product, component, quantity in zip(
+                (self.component_a, super_kit),
+                (self.component_b, self.component_a),
+                (3.0, 2.0),
+            )
+        ])
         self.component_b.standard_price = 10
-        self.component_a.button_bom_cost()
-        super_kit.button_bom_cost()
+        (component_a_bom | super_kit_bom).action_update_product_cost_from_bom()
+        self.component_a.standard_price = component_a_bom.unit_cost
+        super_kit.standard_price = super_kit_bom.unit_cost
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.partner_a
         with so_form.order_line.new() as line:
@@ -67,7 +66,7 @@ class TestSaleMrpFlow(test_sale_mrp_flow.TestSaleMrpFlowCommon):
         kit.uom_ids = [Command.set([self.uom_unit.id, self.uom_ten.id])]
         self.product_category.property_cost_method = 'average'
         (kit + sub_kit + self.component_a + self.component_b).categ_id = self.product_category
-        self.env['mrp.bom'].create([
+        sub_kit_bom, kit_bom = self.env['mrp.bom'].create([
             {
                 'product_tmpl_id': sub_kit.product_tmpl_id.id,
                 'product_qty': 1.0,
@@ -102,8 +101,9 @@ class TestSaleMrpFlow(test_sale_mrp_flow.TestSaleMrpFlowCommon):
         ])
         self.component_a.standard_price = 30
         self.component_b.standard_price = 10
-        sub_kit.action_bom_cost()
-        kit.action_bom_cost()
+        (sub_kit_bom | kit_bom).action_update_product_cost_from_bom()
+        sub_kit.standard_price = sub_kit_bom.unit_cost
+        kit.standard_price = kit_bom.unit_cost
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [Command.create({

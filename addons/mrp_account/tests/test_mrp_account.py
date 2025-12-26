@@ -180,15 +180,15 @@ class TestMrpAccount(TestBomPriceCommon):
 class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
 
     def test_01_compute_price_operation_cost(self):
-        self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
-        self.dining_table.button_bom_cost()
+        self.assertEqual(self.bom_1.unit_cost, 0, "Initial cost of the Product should be 0")
+        self.bom_1.action_update_product_cost_from_bom()
         # Total cost of Dining Table = (550) + Total cost of operations (321.25) = 871.25
         # byproduct have 1%+12% of cost share so the final cost is 757.99
-        self.assertEqual(float_round(self.dining_table.standard_price, precision_digits=2), 757.99)
-        self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()
+        self.assertEqual(float_round(self.bom_1.unit_cost, precision_digits=2), 757.99)
+        (self.bom_1 | self.bom_2).action_update_product_cost_from_bom()
         # Total cost of Dining Table = (718.75) + Total cost of all operations (321.25 + 25.52) = 1065.52
         # byproduct have 1%+12% of cost share so the final cost is 927
-        self.assertEqual(float_compare(self.dining_table.standard_price, 927, precision_digits=2), 0)
+        self.assertEqual(float_compare(self.bom_1.unit_cost, 927, precision_digits=2), 0)
 
     def test_labor_cost_posting_is_not_rounded_incorrectly(self):
         """ Test to ensure that labor costs are posted accurately without rounding errors."""
@@ -207,15 +207,6 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         self.assertEqual(production.workorder_ids.mapped('time_ids').mapped('account_move_line_id').mapped('credit'), [
             0.06,
         ])
-
-    def test_02_compute_byproduct_price(self):
-        """Test BoM cost when byproducts with cost share"""
-
-        self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
-        self.assertEqual(self.scrap_wood.standard_price, 30, "Initial price of the By-Product should be 30")
-        # bom price is 871.25. Byproduct cost share is 12%+1% = 13% -> 113.26 for 8+12 units -> 5.66
-        self.scrap_wood.button_bom_cost()
-        self.assertAlmostEqual(self.scrap_wood.standard_price, 5.663125, "After computing price from BoM price should be 20.63")
 
     def test_wip_accounting_00(self):
         """ Test that posting a WIP accounting entry works as expected.
