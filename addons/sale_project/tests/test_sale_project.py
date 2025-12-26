@@ -1659,7 +1659,7 @@ class TestSaleProject(TestSaleProjectCommon):
             - Create a project and link it to the sale order.
             - Create a task and link it to the project.
             - Verify that the project is linked to the sale order.
-            - Verify that the tasks is linked to the sale order.
+            - Verify that the task without SO item is not linked to the sale order.
             - Verify that the project & task smart button is hidden.
             - Confirm the sale order.
             - Verify the visibility of the project & task smart button.
@@ -1689,8 +1689,8 @@ class TestSaleProject(TestSaleProjectCommon):
 
         self.assertEqual(
             (sale_order.project_count, sale_order.tasks_count),
-            (1, 1),
-            "The project and task should be linked to the sale order."
+            (1, 0),
+            "Project must be linked and tasks without SO lines should not be linked to the sales order."
         )
         self.assertFalse(
             sale_order.show_project_button,
