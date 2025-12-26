@@ -1795,6 +1795,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         credit_notes = self.env['account.move'].search([('move_type', '=', 'out_refund')], order='id desc', limit=1)
         self.assertEqual(credit_notes.ref, "Reversal of: "+invoices.name)
         self.assertEqual(credit_notes.reversed_entry_id.id, invoices.id)
+        self.assertEqual(credit_notes.payment_state, 'paid')
 
     def test_order_total_subtotal_account_line_values(self):
         self.tax1 = self.env['account.tax'].create({

@@ -1012,6 +1012,42 @@ class AccountMove(models.Model):
             move.amount_residual_signed = total_residual
             move.amount_total_in_currency_signed = abs(move.amount_total) if move.move_type == 'entry' else -(sign * move.amount_total)
 
+    def _select_payment(self):
+        return '''source_line.id AS source_line_id,
+                    source_line.move_id AS source_move_id,
+                    account.account_type AS source_line_account_type,
+                    ARRAY_AGG(counterpart_move.move_type) AS counterpart_move_types,
+                    COALESCE(BOOL_AND(COALESCE(pay.is_matched, FALSE))
+                        FILTER (WHERE counterpart_move.payment_id IS NOT NULL), TRUE) AS all_payments_matched,
+                    BOOL_OR(COALESCE(BOOL(pay.id), FALSE)) as has_payment,
+                    BOOL_OR(COALESCE(BOOL(counterpart_move.statement_line_id), FALSE)) as has_st_line
+                '''
+
+    def _from_payment(self, source_field, counterpart_field):
+        return f'''account_partial_reconcile part
+                    JOIN account_move_line source_line ON source_line.id = part.{source_field}_move_id
+                    JOIN account_account account ON account.id = source_line.account_id
+                    JOIN account_move_line counterpart_line ON counterpart_line.id = part.{counterpart_field}_move_id
+                    JOIN account_move counterpart_move ON counterpart_move.id = counterpart_line.move_id
+                    LEFT JOIN account_payment pay ON pay.id = counterpart_move.payment_id
+                '''
+
+    def _where_payment(self):
+        return "source_line.move_id IN %s AND counterpart_line.move_id != source_line.move_id"
+
+    def _group_by_payment(self):
+        return "source_line.id, source_line.move_id, account.account_type"
+
+    def _payment_state_query(self, source_field, counterpart_field):
+        """Return the full SQL query used to fetch payment state data."""
+        return (f"""
+            SELECT {self._select_payment()}
+            FROM {self._from_payment(source_field, counterpart_field)}
+            WHERE {self._where_payment()}
+            GROUP BY {self._group_by_payment()}
+            """
+        )
+
     @api.depends('amount_residual', 'move_type', 'state', 'company_id')
     def _compute_payment_state(self):
         groups = self.grouped(lambda move:
@@ -1029,25 +1065,7 @@ class AccountMove(models.Model):
 
             queries = []
             for source_field, counterpart_field in (('debit', 'credit'), ('credit', 'debit')):
-                queries.append(f'''
-                    SELECT
-                        source_line.id AS source_line_id,
-                        source_line.move_id AS source_move_id,
-                        account.account_type AS source_line_account_type,
-                        ARRAY_AGG(counterpart_move.move_type) AS counterpart_move_types,
-                        COALESCE(BOOL_AND(COALESCE(pay.is_matched, FALSE))
-                            FILTER (WHERE counterpart_move.payment_id IS NOT NULL), TRUE) AS all_payments_matched,
-                        BOOL_OR(COALESCE(BOOL(pay.id), FALSE)) as has_payment,
-                        BOOL_OR(COALESCE(BOOL(counterpart_move.statement_line_id), FALSE)) as has_st_line
-                    FROM account_partial_reconcile part
-                    JOIN account_move_line source_line ON source_line.id = part.{source_field}_move_id
-                    JOIN account_account account ON account.id = source_line.account_id
-                    JOIN account_move_line counterpart_line ON counterpart_line.id = part.{counterpart_field}_move_id
-                    JOIN account_move counterpart_move ON counterpart_move.id = counterpart_line.move_id
-                    LEFT JOIN account_payment pay ON pay.id = counterpart_move.payment_id
-                    WHERE source_line.move_id IN %s AND counterpart_line.move_id != source_line.move_id
-                    GROUP BY source_line.id, source_line.move_id, account.account_type
-                ''')
+                queries.append(self._payment_state_query(source_field, counterpart_field))
 
             self._cr.execute(' UNION ALL '.join(queries), [stored_ids, stored_ids])
 
@@ -1069,8 +1087,7 @@ class AccountMove(models.Model):
 
             new_pmt_state = 'not_paid'
             if currency.is_zero(invoice.amount_residual):
-                if any(x['has_payment'] or x['has_st_line'] for x in reconciliation_vals):
-
+                if self._reconciliation_vals_has_payment_or_st_line(reconciliation_vals):
                     # Check if the invoice/expense entry is fully paid or 'in_payment'.
                     if all(x['all_payments_matched'] for x in reconciliation_vals):
                         new_pmt_state = 'paid'
@@ -1098,6 +1115,9 @@ class AccountMove(models.Model):
                 new_pmt_state = 'partial'
 
             invoice.payment_state = new_pmt_state
+
+    def _reconciliation_vals_has_payment_or_st_line(self, reconciliation_vals):
+        return any(x['has_payment'] or x['has_st_line'] for x in reconciliation_vals)
 
     @api.depends('invoice_payment_term_id', 'invoice_date', 'currency_id', 'amount_total_in_currency_signed', 'invoice_date_due')
     def _compute_needed_terms(self):

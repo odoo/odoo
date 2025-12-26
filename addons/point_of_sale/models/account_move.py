@@ -72,6 +72,18 @@ class AccountMove(models.Model):
                             'pos_payment_name': pos_payment.payment_method_id.name,
                         })
 
+    def _reconciliation_vals_has_payment_or_st_line(self, reconciliation_vals):
+        return super()._reconciliation_vals_has_payment_or_st_line(reconciliation_vals) or any(x['has_pos_payment'] for x in reconciliation_vals)
+
+    def _from_payment(self, source_field, counterpart_field):
+        pos_from = """LEFT JOIN pos_payment pp ON pp.account_move_id = counterpart_move.id"""
+        return super()._from_payment(source_field, counterpart_field) + pos_from
+
+    def _select_payment(self):
+        pos_select = """,
+            BOOL_OR(COALESCE(BOOL(pp.id), FALSE)) as has_pos_payment"""
+        return super()._select_payment() + pos_select
+
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
