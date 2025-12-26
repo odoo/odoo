@@ -162,6 +162,10 @@ class PollablePriorityQueue(PriorityQueue):
         self._getsocket.recv(1)
         return super().get(*args, **kwargs)
 
+    def close(self):
+        self._putsocket.close()
+        self._getsocket.close()
+
 
 # ------------------------------------------------------
 # WEBSOCKET LIFECYCLE
@@ -409,7 +413,9 @@ class Websocket:
         if self.state is not ConnectionState.OPEN or self._waiting_for_dispatch:
             return
         self._waiting_for_dispatch = True
-        self._send_control_command(ControlCommand.DISPATCH)
+        # Ignore if the socket was closed in the meantime.
+        with suppress(OSError):
+            self._send_control_command(ControlCommand.DISPATCH)
 
     # ------------------------------------------------------
     # PRIVATE METHODS
@@ -635,6 +641,7 @@ class Websocket:
             self.__selector.unregister(self.__socket)
         self.__selector.close()
         self.__socket.close()
+        self.__cmd_queue.close()
         self.state = ConnectionState.CLOSED
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
