@@ -80,7 +80,7 @@ class IrAttachment(models.Model):
         return self._read_format(self._editor_media_fields())[0]
 
     @api.model
-    def _editor_media_fields(self, split_relational = False):
+    def _editor_media_fields(self, split_relational=False):
         m2o_fields = ['original_id']
         non_relational_fields = [
             'id',

@@ -1,6 +1,8 @@
+import { ATTACHMENT_FIELDS } from "./file_selector";
 import { ImageSelector } from "./image_selector";
 import { IconSelector } from "./icon_selector";
 import { _t } from "@web/core/l10n/translation";
+
 
 export const TABS = {
     IMAGES: {
@@ -17,6 +19,34 @@ export const TABS = {
     },
 };
 
+export async function renderAndSaveMedia({
+    orm,
+    activeTab,
+    availableTabs,
+    oldMediaNode,
+    selectedMedia,
+    extraClassesToAdd,
+    extraClassesToRemove,
+    multiImages,
+    saveFunction,
+    aiThreadId=null,
+}){
+    const elements = await renderMedia({
+        orm,
+        activeTab,
+        availableTabs,
+        oldMediaNode,
+        selectedMedia,
+        extraClassesToAdd,
+        extraClassesToRemove,
+        aiThreadId,
+    });
+    if (multiImages) {
+        await saveFunction(elements, selectedMedia, activeTab, oldMediaNode);
+    } else {
+        await saveFunction(elements[0], selectedMedia, activeTab, oldMediaNode);
+    }
+}
 
 /**
  * Render the selected media for insertion in the editor
@@ -29,7 +59,11 @@ export const TABS = {
  * @param {Array<String>} extraClassesToAdd
  * @returns {Array<HTMLElement>}
  */
-export async function renderMedia({ orm, activeTab, availableTabs, oldMediaNode, selectedMedia, extraClassesToAdd, extraClassesToRemove }) {
+export async function renderMedia({ 
+    orm, activeTab, availableTabs, oldMediaNode,
+    selectedMedia, extraClassesToAdd, extraClassesToRemove,
+    aiThreadId=null,
+}) {
     const elements = await availableTabs[activeTab].Component.createElements(
         selectedMedia,
         { orm: orm }
@@ -69,6 +103,9 @@ export async function renderMedia({ orm, activeTab, availableTabs, oldMediaNode,
                     element.dataset.hoverEffectIntensity =
                         oldMediaNode.dataset.hoverEffectIntensity;
                 }
+            }
+            if(aiThreadId){
+                element.dataset.aiThreadId = aiThreadId;
             }
         }
         for (const otherTab of Object.keys(availableTabs).filter(
@@ -124,21 +161,24 @@ export async function renderMedia({ orm, activeTab, availableTabs, oldMediaNode,
     return elements;
 }
 
-export async function saveMediaAndClose(){
-    if (saveSelectedMedia) {
-        const elements = await this.renderMedia({
-            orm: this.orm,
-            activeTab: this.activeTab,
-            availableTabs: this.tabs,
-            oldMediaNode: this.props.media,
-            selectedMedia: selectedMedia,
-            extraClassesToAdd: this.extraClassesToAdd(),
-        });
-        if (this.props.multiImages) {
-            await this.props.save(elements, selectedMedia, this.state.activeTab);
-        } else {
-            await this.props.save(elements[0], selectedMedia, this.state.activeTab);
-        }
+export async function customMediaDialogImageSave({ attachments, superSaveFunction, propsSaveFunction }){
+    const preloadedAttachments = attachments.filter((attachment) => attachment.res_model);
+    const nonPreloadedAttachments = attachments.filter(
+        (attachment) => !attachment.res_model
+    );
+    if (nonPreloadedAttachments.length > 0) {
+        await superSaveFunction();
+        await propsSaveFunction(nonPreloadedAttachments);
     }
-    this.props.close();
+    if (preloadedAttachments.length) {
+        await propsSaveFunction(preloadedAttachments);
+    }
+}
+
+export function convertAttachmentRecordToObject(attachment_record){
+    const imageAttachmentObject = {};
+    for (const attachment_field of ATTACHMENT_FIELDS){
+        imageAttachmentObject[attachment_field] = attachment_record[attachment_field];
+    }
+    return imageAttachmentObject;
 }

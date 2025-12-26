@@ -210,7 +210,7 @@ export class MediaPlugin extends Plugin {
 
     openMediaDialog(params = {}, editableEl = null) {
         const oldSave =
-            params.save || ((element) => this.onSaveMediaDialog(element, { node: params.node }));
+            params.save || this.getSaveFunction(params)
         params.save = async (...args) => {
             const selection = args[0];
             const elements = selection
@@ -219,7 +219,7 @@ export class MediaPlugin extends Plugin {
                     : [selection]
                 : [];
             for (const onMediaDialogSaved of this.getResource("on_media_dialog_saved_handlers")) {
-                await onMediaDialogSaved(elements, { node: params.node });
+                await onMediaDialogSaved(elements, { node: args[3] || params.node });
             }
             return oldSave(...args);
         };
@@ -240,6 +240,14 @@ export class MediaPlugin extends Plugin {
             ...params,
         });
         return mediaDialogClosedPromise;
+    }
+
+    getSaveFunction(params){
+        return (...args) => {
+            const element = args[0];
+            const node = args[3] || params.node
+            this.onSaveMediaDialog(element, { node });
+        }
     }
 
     /**

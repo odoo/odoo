@@ -6,7 +6,6 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";
-
 import { Component, xml, useState, useRef, onWillStart, useEffect } from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = [
@@ -19,7 +18,9 @@ export const IMAGE_MIMETYPES = [
     "image/webp",
 ];
 export const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".jpe", ".png", ".svg", ".gif", ".webp"];
+
 export const ATTACHMENT_FIELDS = [
+    "id",
     "name",
     "mimetype",
     "description",

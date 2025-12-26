@@ -5,7 +5,7 @@ import { Notebook } from "@web/core/notebook/notebook";
 
 import { Component, useState, useRef, useEffect } from "@odoo/owl";
 import { iconClasses } from "@html_editor/utils/dom_info";
-import { TABS, renderMedia } from "./media_dialog_utils"
+import { TABS, renderAndSaveMedia } from "./media_dialog_utils"
 
 const DEFAULT_SEQUENCE = 50;
 const sequence = (tab) => tab.sequence ?? DEFAULT_SEQUENCE;
@@ -201,7 +201,7 @@ export class MediaDialog extends Component {
                 !this.props.media);
         this.state.isSaving = true;
         if (saveSelectedMedia) {
-            const elements = await renderMedia({
+            await renderAndSaveMedia({
                 orm: this.orm,
                 activeTab: this.state.activeTab,
                 availableTabs: this.tabs,
@@ -209,12 +209,9 @@ export class MediaDialog extends Component {
                 selectedMedia: selectedMedia,
                 extraClassesToAdd: this.extraClassesToAdd(),
                 extraClassesToRemove: this.initialIconClasses,
+                multiImages: this.props.multiImages,
+                saveFunction: this.props.save,
             });
-            if (this.props.multiImages) {
-                await this.props.save(elements, selectedMedia, this.state.activeTab);
-            } else {
-                await this.props.save(elements[0], selectedMedia, this.state.activeTab);
-            }
         }
         this.props.close();
         this.state.isSaving = false;

@@ -1,6 +1,7 @@
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
 import { _t } from "@web/core/l10n/translation";
+import { customMediaDialogImageSave } from "@html_editor/main/media/media_dialog/media_dialog_utils";
 
 export class CustomMediaDialog extends MediaDialog {
     static defaultProps = {
@@ -15,19 +16,11 @@ export class CustomMediaDialog extends MediaDialog {
             return;
         }
         if (this.state.activeTab == "IMAGES") {
-            const attachments = this.selectedMedia[this.state.activeTab];
-            const preloadedAttachments = attachments.filter((attachment) => attachment.res_model);
-            this.selectedMedia[this.state.activeTab] = attachments.filter(
-                (attachment) => !preloadedAttachments.includes(attachment)
-            );
-            if (this.selectedMedia[this.state.activeTab].length > 0) {
-                await super.save();
-                const newAttachments = this.selectedMedia[this.state.activeTab];
-                this.props.imageSave(newAttachments);
-            }
-            if (preloadedAttachments.length) {
-                this.props.imageSave(preloadedAttachments);
-            }
+            await customMediaDialogImageSave({
+                attachments: this.selectedMedia[this.state.activeTab],
+                superSaveFunction: () => super.save(),
+                propsSaveFunction: (attachments) => this.props.imageSave(attachments),
+            });
         } else {
             this.props.videoSave(this.selectedMedia[this.state.activeTab]);
         }
