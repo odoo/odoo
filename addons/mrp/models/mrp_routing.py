@@ -102,15 +102,7 @@ class MrpRoutingWorkcenter(models.Model):
 
         for operation in self:
             workcenter = self.env.context.get('workcenter', operation.workcenter_id)
-            product = (
-                self.env.context.get('product', operation.bom_id.product_id)
-                or self.env.context.get(
-                    'action_button_product',
-                    operation.bom_id.product_tmpl_id.product_variant_ids.filtered(
-                        lambda p: p.product_template_attribute_value_ids <= operation.bom_product_template_attribute_value_ids,
-                    ),
-                )
-            )
+            product = self.env.context.get('product', operation.bom_id.product_id or operation.bom_id.product_tmpl_id.product_variant_ids)
             if len(product) > 1:
                 product = product[0]
             quantity = self.env.context.get('quantity', operation.bom_id.product_qty or 1)
