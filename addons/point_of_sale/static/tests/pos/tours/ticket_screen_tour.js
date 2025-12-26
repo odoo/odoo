@@ -264,6 +264,54 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_order_refund_flow", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad", "2", "3"),
+            ProductScreen.addOrderline("Letter Tray", "3", "2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
+            // First refund order
+            ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("001"),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.toRefundTextContains("To Refund: 1.00"),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickBack(),
+            ProductScreen.isShown(),
+            Order.hasLine("Desk Pad", "-1"),
+            // Second refund order
+            Chrome.createFloatingOrder(),
+            ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("001"),
+            TicketScreen.toRefundTextContains("Refunding"),
+            inLeftSide([...ProductScreen.clickLine("Letter Tray", "3.0")]),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.toRefundTextContains("To Refund: 1.00"),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickBack(),
+            ProductScreen.isShown(),
+            // Verify refund order has only one line
+            Order.hasLine("Letter Tray", "-1"),
+            // Delete both refunding orders
+            Chrome.clickOrders(),
+            TicketScreen.deleteOrder("002"),
+            Dialog.confirm(),
+            TicketScreen.deleteOrder("003"),
+            Dialog.confirm(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("001"),
+            TicketScreen.noLinesToRefund(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("refund_multiple_products_amounts_compliance", {
     steps: () =>
         [
