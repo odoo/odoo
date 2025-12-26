@@ -6,6 +6,7 @@
     font: 13px / 19.5px SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
     pre, textarea.o_prism_source {
+        direction: ltr #{"/*rtl:ignore*/"};
         margin: 0;
         padding: 8px 16px;
     }
@@ -40,7 +41,7 @@
     .o_code_toolbar {
         position: absolute;
         top: 0;
-        right: 0;
+        right: 0 #{"/*rtl:ignore*/"};
         padding: 3px 4px;
         z-index: 1;
         align-items: center;
