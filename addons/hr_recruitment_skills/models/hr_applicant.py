@@ -157,7 +157,7 @@ class HrApplicant(models.Model):
             skills = vals.pop("current_applicant_skill_ids", []) + vals.get("applicant_skill_ids", [])
             original_vals = vals.copy()
             original_vals["applicant_skill_ids"] = skills
-            vals["applicant_skill_ids"] = self.env["hr.applicant.skill"]._get_transformed_commands(skills, self)
+            vals["applicant_skill_ids"] = skills
             for applicant in self:
                 # Modify the skill values for the talent if it exists
                 if applicant.pool_applicant_id and (not applicant.is_pool_applicant):
