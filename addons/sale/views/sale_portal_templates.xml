@@ -570,7 +570,7 @@
                         <h5 class="mb-1">Sale Information</h5>
                         <hr class="mt-1 mb-2"/>
                     </span>
-                    <table class="table table-borderless table-sm">
+                    <table class="table table-borderless">
                         <tbody style="white-space:nowrap" id="sale_info_table">
                             <tr>
                                 <th t-if="sale_order.state in ['sale', 'cancel']" class="ps-0 pb-0">Order Date:</th>
@@ -697,12 +697,12 @@
                 <t t-set="display_taxes" t-value="not hide_taxes_details and any(line._has_taxes() for line in lines_to_report)"/>
 
                 <div name="sol_table" class="table-responsive">
-                    <table t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="table table-sm" id="sales_order_table">
+                    <table t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="table" id="sales_order_table">
                         <thead>
                             <tr>
                                 <th class="text-start" id="product_name_header">Description</th>
                                 <th class="text-end" id="product_qty_header">Quantity</th>
-                                <th t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}" id="product_unit_price_header">
+                                <th t-attf-class="text-end text-nowrap {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}" id="product_unit_price_header">
                                     Unit Price
                                 </th>
                                 <th t-if="display_discount" t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}" id="product_discount_header">
@@ -757,7 +757,7 @@
                                     <tr
                                         t-if="is_section or is_subsection"
                                         name="tr_section"
-                                        t-attf-class="{{'fw-bold o_line_section bg-200' if is_section else 'fw-medium o_line_subsection border-dark bg-100'}}"
+                                        t-attf-class="{{'o_line_section bg-200' if is_section else 'o_line_subsection bg-100'}} fw-bold"
                                     >
                                         <t t-set="show_section_total" t-value="is_section or not line.parent_id.collapse_prices"/>
                                         <t
@@ -796,7 +796,7 @@
                                             <span t-field="line.name"/>
                                         </td>
                                     </tr>
-                                    <tr t-elif="is_combo" name="tr_combo" class="fw-bold o_line_subsection bg-100 border-dark">
+                                    <tr t-elif="is_combo" name="tr_combo" class="fw-bold">
                                         <td
                                             name="td_combo_name"
                                             t-att-class="padding_class"
@@ -813,20 +813,10 @@
                                             </div>
                                         </td>
                                         <td
-                                            name="td_combo_priceunit"
-                                            t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}"
-                                        />
-                                        <td
-                                            t-if="display_discount"
-                                            name="td_combo_discount"
-                                            t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}"
-                                        />
-                                        <td
-                                            t-if="display_taxes"
-                                            name="td_combo_taxes"
-                                            t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"
-                                        />
-                                        <td name="td_combo_subtotal" class="text-end">
+                                            name="td_combo_subtotal"
+                                            class="text-end"
+                                            t-att-colspan="2 + (1 if display_discount else 0) + (1 if display_taxes else 0)"
+                                        >
                                             <span
                                                 t-if="not collapse_prices"
                                                 name="price_subtotal_combo"
@@ -899,7 +889,6 @@
                                         t-foreach="line._get_grouped_section_summary(display_taxes)"
                                         t-as="section_line"
                                         name="tr_section_group"
-                                        class="o_line_section"
                                     >
                                         <td name="td_section_group_name" t-att-class="padding_class">
                                             <span t-field="line.name">
@@ -973,7 +962,7 @@
     </template>
 
     <template id="sale_order_portal_content_totals_table">
-        <table class="table table-sm" name="sale_order_totals_table">
+        <table class="table" name="sale_order_totals_table">
             <t t-call="#{sale_order._get_name_tax_totals_view()}">
                 <t t-set="tax_totals" t-value="sale_order.tax_totals"/>
                 <t t-set="currency" t-value="sale_order.currency_id"/>

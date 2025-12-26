@@ -262,7 +262,7 @@
                                                         <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
                                                     </td>
                                                     <td colspan="1" class="text-end o_price_total">
-                                                        <span t-out="section_subtotal" class="o_price_subtotal_section text-nowrap" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                        <span t-out="section_subtotal" class="text-nowrap" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                                     </td>
                                                 </t>
                                                 <t t-elif="is_note">

@@ -1,5 +1,9 @@
 /* ---- My Orders page ---- */
 
+#sales_order_table {
+    font-size: MAX($font-size-sm, 14px);
+}
+
 .orders_vertical_align {
     display: flex;
     align-items: center;
@@ -26,8 +30,9 @@
     width: 100% !important;
 }
 
-.sale_tbody tr:has(+ .o_line_section) {
-    border-bottom: $border-width solid $dark;
+.sale_tbody tr:has(+ .o_line_section),
+thead:has(+ .sale_tbody > .o_line_section:first-child) {
+    border-bottom: $border-width solid $gray-600;
 }
 
 .o_portal .sale_tbody .js_quantity_container {
