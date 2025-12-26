@@ -25,6 +25,10 @@
             <field name="currency_id" ref="base.USD"/>
         </record>
 
+        <function model="mrp.bom" name="action_update_product_cost_from_bom">
+            <value eval="[ref('mrp_subcontracting.mrp_bom_subcontract')]"/>
+        </function>
+
         <record id="product.product_delivery_02" model="product.product">
             <field name="route_ids" eval="[(4,ref('stock.route_warehouse0_mto'))]"></field>
         </record>

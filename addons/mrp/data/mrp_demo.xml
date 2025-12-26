@@ -20,16 +20,19 @@
         <record id="mrp_workcenter_3" model="mrp.workcenter">
             <field name="name">Assembly 1</field>
             <field name="resource_calendar_id" ref="mrp.mrp_workcenter_calendar"/>
+            <field name="costs_hour">34.59</field>
         </record>
 
         <record id="mrp_workcenter_1" model="mrp.workcenter">
             <field name="name">Drill 1</field>
             <field name="resource_calendar_id" ref="mrp.mrp_workcenter_calendar"/>
+            <field name="costs_hour">20</field>
         </record>
 
         <record id="mrp_workcenter_2" model="mrp.workcenter">
             <field name="name">Assembly 2</field>
             <field name="resource_calendar_id" ref="mrp.mrp_workcenter_calendar"/>
+            <field name="costs_hour">70.30</field>
         </record>
 
         <!-- Resource: mrp.bom -->
@@ -662,6 +665,10 @@
             <field name="loss_id" ref="block_reason1"/>
             <field name="date_start" eval="(datetime.now() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
+
+        <function model="mrp.bom" name="action_update_product_cost_from_bom">
+            <value model="mrp.bom" eval="obj().search([]).ids"/>
+        </function>
 
         <function model="mrp.production" name="action_confirm" eval="[[
             ref('mrp.mrp_production_1'),

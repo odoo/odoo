@@ -217,6 +217,8 @@
                     <field name="type"/>
                     <field name="product_id" groups="product.group_product_variant" optional="hide"/>
                     <field name="product_id" groups="!product.group_product_variant" column_invisible="1"/>
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="unit_cost" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="product_qty" optional="hide"/>
                     <field name="uom_id" groups="uom.group_uom" optional="hide" widget="many2one_uom"/>
@@ -410,6 +412,18 @@
                     'views': [(env.ref('mrp.mrp_bom_line_view_pivot').id, 'pivot'), (env.ref('mrp.mrp_bom_line_view_list').id, 'list')],
                     'domain': [('bom_id', 'in', env.context.get('active_ids'))],
                 }
+            </field>
+        </record>
+
+        <record id="action_update_product_cost_from_bom" model="ir.actions.server">
+            <field name="name">Update Product Cost from BoM</field>
+            <field name="model_id" ref="mrp.model_mrp_bom"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_bom"/>
+            <field name="binding_view_types">list,kanban</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    records.action_update_product_cost_from_bom()
             </field>
         </record>
     </data>
