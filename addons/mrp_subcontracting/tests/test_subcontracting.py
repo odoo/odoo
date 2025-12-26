@@ -574,6 +574,33 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
         self.assertEqual(avail_qty_comp1, -2)
 
+    def test_flow_warning_bom_auto_record(self):
+        """ Record quantity on picking for a bom subcontracted with flexible + warning consumption"""
+        self.bom.product_qty = 12
+        self.bom.consumption = 'warning'
+        # Create a receipt picking from the subcontractor
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 5
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        self.assertEqual(picking_receipt.display_action_record_components, 'facultative')
+        action = picking_receipt.action_record_components()
+        mo = self.env['mrp.production'].browse(action['res_id'])
+        self.assertEqual(mo.move_raw_ids[0].product_qty, 0.42)  # rounded from 0.41666... due to UoM rounding
+
+        picking_receipt.move_ids[0].quantity = 6
+        self.assertEqual(mo.move_raw_ids[0].product_qty, 0.51)  # rounded up from 0.504, based on old QTY and not the BoM
+        self.assertTrue(mo.subcontracting_has_been_recorded)  # ensure consumption warning is skipped so MO is processed as expected
+
+        picking_receipt.button_validate()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.product_qty, 6)
+
     def test_flow_warning_bom_1(self):
         """ Record Component for a bom subcontracted with a flexible and flexible + warning consumption """
         self.bom.consumption = 'warning'
