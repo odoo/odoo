@@ -23,7 +23,7 @@ class ViaSuiteLogin(Home):
         if request.session.uid:
             return request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
         
-        # If there's an OAuth error, show default login (prevent infinite loop)
+        # If there's an OAuth error return, let super handle it (it translates error codes into messages)
         if kw.get('oauth_error'):
             return super(ViaSuiteLogin, self).web_login(redirect=redirect, **kw)
         
