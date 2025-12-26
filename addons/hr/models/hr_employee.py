@@ -1381,7 +1381,11 @@ We can redirect you to the public employee list."""
         """
         calendar_periods_by_employee = defaultdict(list)
         for employee in self.sudo():
-            for version in employee._get_versions_with_contract_overlap_with_period(start.date(), stop.date()):
+            if not self.env.context.get('calendar_period_include_contract_less_versions'):
+                versions = employee._get_versions_with_contract_overlap_with_period(start.date(), stop.date())
+            else:
+                versions = employee._get_versions_overlap_with_period(start.date(), stop.date())
+            for version in versions:
                 # if employee is under fully flexible contract, use timezone of the employee
                 calendar_tz = timezone(version.resource_calendar_id.tz) if version.resource_calendar_id else timezone(employee.resource_id.tz)
                 date_start = datetime.combine(
@@ -1540,6 +1544,13 @@ We can redirect you to the public employee list."""
         return self.env['hr.version'].search([
             ('employee_id', 'in', self.ids), ('contract_date_start', '!=', False), ('contract_date_start', '<=', date_to),
             '|', ('contract_date_end', '>=', date_from), ('contract_date_end', '=', False),
+        ])
+
+    def _get_versions_overlap_with_period(self, date_from, date_to):
+        """Returns the versions of the employee between date_from and date_to."""
+        return self.env['hr.version'].search([
+            ('employee_id', 'in', self.ids), ('date_start', '!=', False), ('date_start', '<=', date_to),
+            '|', ('date_end', '>=', date_from), ('date_end', '=', False),
         ])
 
     def get_avatar_card_data(self, fields):
