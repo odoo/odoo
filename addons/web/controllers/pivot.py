@@ -4,6 +4,7 @@ import json
 from collections import deque
 
 from werkzeug.datastructures import FileStorage
+from werkzeug.exceptions import UnprocessableEntity
 
 from odoo import http, _
 from odoo.http import content_disposition, request
@@ -16,6 +17,8 @@ class TableExporter(http.Controller):
     def export_xlsx(self, data, **kw):
         import xlsxwriter  # noqa: PLC0415
         jdata = json.load(data) if isinstance(data, FileStorage) else json.loads(data)
+        if not jdata:
+            raise UnprocessableEntity(_('No data to export'))
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         worksheet = workbook.add_worksheet(jdata['title'])
