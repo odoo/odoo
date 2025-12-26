@@ -25,20 +25,26 @@ class BaseModuleInstallRequest(models.TransientModel):
         self.user_ids = [(6, 0, users.ids)]
 
     def action_send_request(self):
-        mail_template = self.env.ref('base_install_request.mail_template_base_install_request')
-        menu_id = self.env.ref('base.menu_apps').id
-        for user in self.user_ids:
-            render_ctx = dict(self.env.context, partner=user.partner_id, menu_id=menu_id)
-            mail_template.with_context(render_ctx).send_mail(
-                self.id,
-                force_send=True,
-                email_layout_xmlid='mail.mail_notification_light')
+        mail_template = self.env.ref('base_install_request.mail_template_base_install_request', raise_if_not_found=False)
+        if mail_template:
+            menu_id = self.env.ref('base.menu_apps').id
+            for user in self.user_ids:
+                render_ctx = dict(self.env.context, partner=user.partner_id, menu_id=menu_id)
+                mail_template.with_context(render_ctx).send_mail(
+                    self.id,
+                    force_send=True,
+                    email_layout_xmlid='mail.mail_notification_light')
+            notification_type = 'success'
+            message = _('Your request has been successfully sent')
+        else:
+            notification_type = 'warning'
+            message = _('Your request failed, please try again later or contact administrator')
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'type': 'success',
-                'message': _('Your request has been successfully sent'),
+                'type': notification_type,
+                'message': message,
                 'next': {'type': 'ir.actions.act_window_close'},
             }
         }
