@@ -409,7 +409,7 @@
                                         </div>
                                         <div class="mt16 mb-1">
                                             <label string="Default" for="pos_default_receipt_printer_id" class="o_light_label me-2"/>
-                                            <field name="pos_default_receipt_printer_id"/>
+                                            <field name="pos_default_receipt_printer_id" domain="[('id', 'in', pos_receipt_printer_ids)]"/>
                                         </div>
                                         <div class="mt16 mb-1">
                                             <label string="Link Cashdrawer" for="pos_iface_cashdrawer" class="o_light_label me-2"/>
