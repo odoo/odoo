@@ -300,7 +300,7 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.test("ProgressBarField: field is editable in kanban", async function (assert) {
+    QUnit.test("ProgressBarField: field can be editable in kanban", async function (assert) {
         assert.expect(7);
 
         serverData.models.partner.fields.int_field.readonly = true;
@@ -310,12 +310,18 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "kanban",
             resModel: "partner",
-            arch: `
+            arch: /* xml */ `
                 <kanban>
                     <templates>
                         <t t-name="kanban-box">
                             <div>
-                                <field name="int_field" title="ProgressBarTitle" widget="progressbar" options="{'editable': true, 'max_value': 'float_field'}" />
+                                <field
+                                    name="int_field"
+                                    title="ProgressBarTitle"
+                                    widget="progressbar"
+                                    options="{'editable': true, 'max_value': 'float_field'}"
+                                    force_save="true"
+                                />
                             </div>
                         </t>
                     </templates>
@@ -360,7 +366,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("force readonly in kanban", async (assert) => {
+    QUnit.test("readonly by default in kanban", async (assert) => {
         assert.expect(2);
 
         serverData.models.partner.records[0].int_field = 99;
@@ -374,7 +380,7 @@ QUnit.module("Fields", (hooks) => {
                     <templates>
                         <t t-name="kanban-box">
                             <div>
-                                <field name="int_field" widget="progressbar" options="{'editable': true, 'max_value': 'float_field', 'readonly': True}" />
+                                <field name="int_field" widget="progressbar" options="{'editable': true, 'max_value': 'float_field'}" />
                             </div>
                         </t>
                     </templates>
