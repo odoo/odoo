@@ -854,6 +854,7 @@ export class SearchModel extends EventBus {
         switch (searchItem.type) {
             case "dateFilter":
             case "dateGroupBy":
+            case "parentFilter":
             case "field_property":
             case "field": {
                 return;
@@ -877,9 +878,9 @@ export class SearchModel extends EventBus {
      * This can impact the query in various form, e.g. add/remove other query elements
      * in case the filter is of type 'filter'.
      */
-    toggleDateFilter(searchItemId, generatorId) {
+    toggleParentFilter(searchItemId, generatorId) {
         const searchItem = this.searchItems[searchItemId];
-        if (searchItem.type !== "dateFilter") {
+        if (searchItem.type !== "dateFilter" && searchItem.type !== "parentFilter") {
             return;
         }
         const generatorIds = generatorId ? [generatorId] : searchItem.defaultGeneratorIds;
@@ -1168,8 +1169,8 @@ export class SearchModel extends EventBus {
                 .filter((f) => f.isDefault && f.type !== "favorite")
                 .sort((f1, f2) => (f1.defaultRank || 100) - (f2.defaultRank || 100))
                 .forEach((f) => {
-                    if (f.type === "dateFilter") {
-                        this.toggleDateFilter(f.id);
+                    if (f.type === "dateFilter" || f.type === "parentFilter") {
+                        this.toggleParentFilter(f.id);
                     } else if (f.type === "dateGroupBy") {
                         this.toggleDateGroupBy(f.id);
                     } else if (f.type === "field") {
@@ -1376,6 +1377,12 @@ export class SearchModel extends EventBus {
                     queryElements.map((queryElem) => queryElem.intervalId)
                 );
                 break;
+            case "parentFilter":
+                enrichSearchItem.options = _enrichOptions(
+                    searchItem.optionsParams.customOptions,
+                    queryElements.map((queryElem) => queryElem.generatorId)
+                );
+                break;
             case "field":
             case "field_property":
                 enrichSearchItem.autocompleteValues = queryElements.map(
@@ -1559,11 +1566,20 @@ export class SearchModel extends EventBus {
 
     /**
      * Compute the string representation or the description of the current domain associated
-     * with a date filter starting from its corresponding query elements.
+     * with a parent filter (such as a date filter) starting from its corresponding query elements.
      */
-    _getDateFilterDomain(dateFilter, generatorIds, key = "domain") {
-        const dateFilterRange = constructDateDomain(this.referenceMoment, dateFilter, generatorIds);
-        return dateFilterRange[key];
+    _getParentFilterDomain(searchItem, generatorIds, key = "domain") {
+        if (searchItem.type === "dateFilter") {
+            const dateFilterRange = constructDateDomain(
+                this.referenceMoment,
+                searchItem,
+                generatorIds
+            );
+            return dateFilterRange[key];
+        }
+        return searchItem.optionsParams.customOptions
+            .filter((item) => generatorIds.includes(item.id))
+            .map((o) => o[key])[0];
     }
 
     /**
@@ -1667,15 +1683,15 @@ export class SearchModel extends EventBus {
                         }
                         break;
                     }
-                    case "dateFilter": {
+                    case "dateFilter":
+                    case "parentFilter": {
                         type = "filter";
-                        const periodDescription = this._getDateFilterDomain(
+                        const innerFilterDescription = this._getParentFilterDomain(
                             searchItem,
                             activeItem.generatorIds,
                             "description"
                         );
-                        values.push(`${searchItem.description}: ${periodDescription}`);
-
+                        values.push(`${searchItem.description}: ${innerFilterDescription}`);
                         break;
                     }
                     default: {
@@ -2110,8 +2126,9 @@ export class SearchModel extends EventBus {
             case "field": {
                 return this._getFieldDomain(searchItem, activeItem.autocompleteValues);
             }
-            case "dateFilter": {
-                return this._getDateFilterDomain(searchItem, activeItem.generatorIds);
+            case "dateFilter":
+            case "parentFilter": {
+                return this._getParentFilterDomain(searchItem, activeItem.generatorIds);
             }
             case "filter":
             case "favorite": {

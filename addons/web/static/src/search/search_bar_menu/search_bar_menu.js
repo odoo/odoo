@@ -53,7 +53,7 @@ export class SearchBarMenu extends Component {
     // Filter Panel
     get filterItems() {
         return this.env.searchModel.getSearchItems((searchItem) =>
-            ["filter", "dateFilter"].includes(searchItem.type)
+            ["filter", "dateFilter", "parentFilter"].includes(searchItem.type)
         );
     }
 
@@ -68,7 +68,7 @@ export class SearchBarMenu extends Component {
      */
     onFilterSelected({ itemId, optionId }) {
         if (optionId) {
-            this.env.searchModel.toggleDateFilter(itemId, optionId);
+            this.env.searchModel.toggleParentFilter(itemId, optionId);
         } else {
             this.env.searchModel.toggleSearchItem(itemId);
         }
