@@ -9,7 +9,7 @@ import { renderToElement } from "@web/core/utils/render";
  * @property { CardImageOptionPlugin['adaptRatio'] } adaptRatio
  */
 
-const ratiosOnlySupportedForTopImage = [
+const ratiosOnlySupportedForTopBottomImage = [
     "ratio ratio-4x3",
     "ratio ratio-16x9",
     "ratio ratio-21x9",
@@ -17,9 +17,11 @@ const ratiosOnlySupportedForTopImage = [
 ];
 const imageRelatedClasses = [
     "o_card_img_top",
+    "o_card_img_bottom",
     "o_card_img_horizontal",
     "flex-lg-row",
     "flex-lg-row-reverse",
+    "flex-column-reverse",
 ];
 const imageRelatedStyles = [
     "--card-img-aspect-ratio",
@@ -50,8 +52,8 @@ class CardImageOptionPlugin extends Plugin {
      * positioned horizontally.
      */
     adaptRatio(editingElement, imagePositionClass) {
-        if (imagePositionClass === "card-img-top") {
-            // All ratios are supported for top image
+        if (["card-img-top", "card-img-bottom"].includes(imagePositionClass)) {
+            // All ratios are supported for top/bottom image
             return;
         }
         const imageWrapper = editingElement.querySelector(".o_card_img_wrapper");
@@ -59,7 +61,7 @@ class CardImageOptionPlugin extends Plugin {
             editingElement: imageWrapper,
             params: { mainParam },
         });
-        for (const ratioClasses of ratiosOnlySupportedForTopImage) {
+        for (const ratioClasses of ratiosOnlySupportedForTopBottomImage) {
             if (this.classAction.isApplied(asMainParam(ratioClasses))) {
                 this.classAction.clean(asMainParam(ratioClasses));
                 // Only square ratio is supported for horizontal image
