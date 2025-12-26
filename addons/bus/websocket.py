@@ -585,6 +585,8 @@ class Websocket:
         self.__selector.unregister(self.__socket)
         self.__selector.close()
         self.__socket.close()
+        self.__notif_sock_r.close()
+        self.__notif_sock_w.close()
         self.state = ConnectionState.CLOSED
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
