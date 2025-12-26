@@ -21,6 +21,7 @@ from . import (
     test_mail,
     test_main_controller,
     test_pricelist,
+    test_property_field_res_partner,
     test_product_attribute_value_config,
     test_product_configurator,
     test_product_filters,
