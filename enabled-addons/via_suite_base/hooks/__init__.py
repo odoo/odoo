@@ -5,10 +5,7 @@ ViaSuite Base Hooks
 
 Installation and configuration hooks:
 - post_init_hook: Main orchestrator for module initialization
-- sentry_init: Initialize Sentry error tracking
-- logger_config: Configure structured logging
-- branding: Branding customization utilities
+- oauth_config: Configure Keycloak OAuth provider
 """
 
 from . import post_init_hook
-# from . import sentry_init

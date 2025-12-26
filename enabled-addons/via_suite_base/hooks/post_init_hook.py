@@ -70,37 +70,19 @@ def post_init_hook(env):
     cr = env.cr
 
     try:
-        # Step 1: Initialize Sentry error tracking
-        # _logger.info("[1/7] Initializing Sentry error tracking...")
-        # from odoo.addons.via_suite_base.hooks.sentry_init import initialize_sentry
-        # sentry_ok = initialize_sentry()
-        # if sentry_ok:
-        #     _logger.info("✓ Sentry initialized successfully")
-        # else:
-        #     _logger.info("⊘ Sentry not configured (optional)")
-
         # Step 3: Install languages
         _logger.info("[3/8] Installing ViaSuite default languages...")
         _install_languages(env)
         _logger.info("✓ Languages installed (pt_BR, es_PY, en_US, ar_SA, zh_CN)")
 
-        # Step 9: Configure mail server
-        _logger.info("[8/9] Configuring mail server...")
-        from odoo.addons.via_suite_base.hooks.mail_config import configure_mail_server
-        mail_ok = configure_mail_server(env)
-        if mail_ok:
-            _logger.info("✓ Mail server configured from environment variables")
+        # Step 4: Configure OAuth
+        _logger.info("[4/8] Configuring Keycloak OAuth...")
+        from odoo.addons.via_suite_base.hooks.oauth_config import configure_oauth
+        oauth_ok = configure_oauth(env)
+        if oauth_ok:
+            _logger.info("✓ OAuth provider configured from environment variables")
         else:
-            _logger.warning("✗ Failed to configure mail server")
-
-        # # Step 10: Configure OAuth
-        # _logger.info("[10/10] Configuring OAuth...")
-        # from odoo.addons.via_suite_base.hooks.oauth_config import configure_oauth
-        # oauth_ok = configure_oauth(env)
-        # if oauth_ok:
-        #     _logger.info("✓ OAuth provider configured from environment variables")
-        # else:
-        #     _logger.warning("✗ Failed to configure OAuth provider")
+            _logger.warning("✗ Failed to configure OAuth provider")
 
         # Commit changes
         cr.commit()
@@ -114,15 +96,4 @@ def post_init_hook(env):
         _logger.error("✗ Error during ViaSuite Base installation!")
         _logger.error(f"Error: {str(e)}")
         _logger.error("="*80)
-
-        # # Try to capture error in Sentry if available
-        # try:
-        #     from odoo.addons.via_suite_base.hooks.sentry_init import SentryInitializer
-        #     SentryInitializer.capture_exception(
-        #         e,
-        #         context={'phase': 'post_init_hook'}
-        #     )
-        # except Exception:
-        #     pass
-
         raise

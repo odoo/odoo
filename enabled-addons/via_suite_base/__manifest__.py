@@ -29,19 +29,11 @@
     'depends': [
         'base',
         'web',
-        'mail',
         'auth_oauth'
     ],
     'data': [
-        # Data
-        # 'data/ir_config_parameter.xml',
-        'data/mail_server.xml',
-        # 'data/auth_oauth_provider.xml',
-
-        # Views
-        # 'views/webclient_templates.xml',
-        # 'views/login_templates.xml',
-        # 'views/res_config_settings_views.xml',
+        'data/ir_config_parameter.xml',
+        'data/auth_oauth_provider.xml',
     ],
     # 'assets': {
     #     'web.assets_backend': [
@@ -51,11 +43,11 @@
     #         'via_suite_base/static/src/scss/viasuite_theme.scss',
     #     ],
     # },
-    'external_dependencies': {
-        'python': [
-            'sentry_sdk',
-        ],
-    },
+    # 'external_dependencies': {
+    #     'python': [
+    #         'sentry_sdk',
+    #     ],
+    # },
     'post_init_hook': 'post_init_hook',
     'auto_install': False,
     'application': False,

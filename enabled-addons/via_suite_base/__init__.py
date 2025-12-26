@@ -5,6 +5,8 @@ ViaSuite Base Module
 """
 
 from . import hooks
+from . import controllers
+from . import models
 from .hooks.post_init_hook import post_init_hook
 
 __version__ = '19.0.1.0.0'
