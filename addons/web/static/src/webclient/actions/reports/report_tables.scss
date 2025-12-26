@@ -15,10 +15,6 @@ table.table {
         border-top: $border-width solid $o-gray-400;
     }
 
-    .o_line_subsection {
-        border-bottom: $border-width solid $o-gray-400;
-    }
-
     .o_line_section {
         td, td.o_price_total {
             background-color: $gray-200;
@@ -47,14 +43,10 @@ div#total {
         }
 
         th:first-child, td:first-child {
-            padding-left: 0;
+            padding-left: map-get($spacers, 1);
         }
 
         th:last-child, td:last-child {
-            padding-right: 0;
-        }
-
-        .o_price_subtotal_section {
             padding-right: map-get($spacers, 1);
         }
     }
@@ -69,11 +61,11 @@ div#total {
     table:not(.o_ignore_layout_styling) {
 
         td:first-child, th:first-child {
-            padding-left: 0;
+            padding-left: map-get($spacers, 1);
         }
 
         td:last-child, th:last-child {
-            padding-right: 0;
+            padding-right: map-get($spacers, 1);
         }
 
         &:not(.o_total_table) {
@@ -98,10 +90,6 @@ div#total {
 
         .o_line_section, .o_line_subsection {
             border-top: $border-width solid;
-
-            .o_price_subtotal_section {
-                padding-right: map-get($spacers, 1);
-            }
         }
     }
 }
@@ -109,7 +97,7 @@ div#total {
 .o_table_striped {
     table:not(.o_ignore_layout_styling) {
         tbody tr {
-            &.o_line_section, &.o_line_subsection {
+            &.o_line_section {
                 border: none;
             }
 
@@ -177,7 +165,7 @@ div#total {
                 border-bottom: $border-width solid $gray-700;
             }
 
-            tr:not(.o_line_section):not(.o_line_subsection) td.o_price_total,
+            tr:not(.o_line_section):not(.o_line_subsection):not(.o_line_combo) td.o_price_total,
             .o_taxes td {
                 background-color: rgba($gray-200, .5);
             }
@@ -245,11 +233,11 @@ div#total {
     table:not(.o_ignore_layout_styling) {
 
         td:first-child, th:first-child {
-            padding-left: 0;
+            padding-left: map-get($spacers, 1);
         }
 
         td:last-child, th:last-child {
-            padding-right: 0;
+            padding-right: map-get($spacers, 1);
         }
 
         &:not(.o_total_table) {
@@ -268,13 +256,9 @@ div#total {
 
         border-bottom: $border-width solid $o-gray-400;
 
-        .o_line_section, .o_line_subsection {
+        .o_line_section, .o_line_subsection, .o_line_combo {
             border-bottom: $border-width solid $o-gray-400;
             border-top: $border-width solid $o-gray-400;
-
-            .o_price_subtotal_section {
-                padding-right: map-get($spacers, 1);
-            }
         }
     }
 }

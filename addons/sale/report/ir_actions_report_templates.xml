@@ -172,7 +172,7 @@
                                 <td t-if="show_section_total" name="td_section_price" class="text-end o_price_total">
                                     <span
                                         t-out="line._get_section_totals(price_field)"
-                                        class="o_price_subtotal_section text-nowrap"
+                                        class="text-nowrap"
                                         t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
                                     >
                                         27.00
@@ -188,17 +188,22 @@
                                     <span t-field="line.name">A note, whose content usually applies to the section or product above.</span>
                                 </td>
                             </tr>
-                            <tr t-elif="is_combo" name="tr_combo" class="fw-bold o_line_subsection">
+                            <tr t-elif="is_combo" name="tr_combo" class="o_line_combo fw-bold">
                                 <td
                                     name="td_combo_name"
-                                    t-att-colspan="3 + (1 if display_discount else 0) + (1 if display_taxes else 0)"
-                                    class="border-end-0"
                                     t-att-style="padding_style"
                                 >
                                     <span t-field="line.name">Combo Product</span>
-                                    x <span t-field="line.product_uom_qty" t-options="{'widget': 'integer'}"/>
                                 </td>
-                                <td name="td_combo_price" class="text-end o_price_total">
+                                <td name="td_combo_quantity" class="text-end">
+                                    <span t-field="line.product_uom_qty"/>
+                                    <span t-field="line.product_uom_id"/>
+                                </td>
+                                <td
+                                    name="td_combo_price"
+                                    t-att-colspan="2 + (1 if display_discount else 0) + (1 if display_taxes else 0)"
+                                    class="text-end o_price_total"
+                                >
                                     <span
                                         t-if="not collapse_prices"
                                         name="price_subtotal_combo"
@@ -266,7 +271,6 @@
                                 t-foreach="line._get_grouped_section_summary(display_taxes)"
                                 t-as="section_line"
                                 name="tr_section_group"
-                                class="o_line_section"
                             >
                                 <td name="td_section_group_name" t-att-style="padding_style">
                                     <span t-field="line.name">
