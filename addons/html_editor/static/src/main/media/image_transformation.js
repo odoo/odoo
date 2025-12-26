@@ -187,9 +187,8 @@ export class ImageTransformation extends Component {
                 }
             }
             this.image.style.width = newWidth + "px";
-            this.image.style.height = newHeight + "px";
+            this.image.style.height = "auto";
             settings.width = newWidth;
-            settings.height = newHeight;
         }
 
         settings.angle = Math.round(settings.angle);
@@ -208,9 +207,16 @@ export class ImageTransformation extends Component {
         this.positionTransfoContainer();
     }
 
+    convertPixelWidthToPercentage() {
+        const currentPixelWidth = this.image.offsetWidth;
+        const widthPercent = (currentPixelWidth / this.image.parentElement.offsetWidth) * 100;
+        this.image.style.width = widthPercent.toFixed(2) + "%";
+    }
+
     mouseUp() {
         this.isCurrentlyTransforming = false;
         this.transfo.active = null;
+        this.convertPixelWidthToPercentage();
         this.props.onApply?.();
         this.props.onChange();
     }
