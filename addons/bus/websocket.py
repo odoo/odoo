@@ -377,7 +377,9 @@ class Websocket:
         }
         if self.__notif_sock_r not in readables:
             # Send a random bit to mark the socket as readable.
-            self.__notif_sock_w.send(b'x')
+            # Ignore if the socket was closed in the meantime.
+            with suppress(OSError):
+                self.__notif_sock_w.send(b'x')
 
     # ------------------------------------------------------
     # PRIVATE METHODS
@@ -586,6 +588,8 @@ class Websocket:
         self.__selector.unregister(self.__socket)
         self.__selector.close()
         self.__socket.close()
+        self.__notif_sock_r.close()
+        self.__notif_sock_w.close()
         self.state = ConnectionState.CLOSED
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
