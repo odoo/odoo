@@ -378,10 +378,9 @@ class HrLeaveType(models.Model):
         if not self.requested_display_name():
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
             return super()._compute_display_name()
-        # use sudo() to get the correct remaining leaves
-        for record in self.sudo():
+        for record in self:
             name = record.name
-            if record.requires_allocation:
+            if record.requires_allocation and self.env.context.get('default_date_from'):
                 remaining_time = float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0
                 maximum = float_round(record.max_leaves, precision_digits=2) or 0.0
 
