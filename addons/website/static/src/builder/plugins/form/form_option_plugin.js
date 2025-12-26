@@ -435,11 +435,21 @@ export class FormOptionPlugin extends Plugin {
                 // the form DOM.
                 newFormFields = formInfo.formFields.filter(
                     (newField) =>
-                        ![...el.querySelectorAll(".s_website_form_field")].some(
-                            (oldFieldEl) =>
-                                getFieldName(oldFieldEl) === newField.name ||
-                                getFieldFillWith(oldFieldEl) === newField.fillWith
-                        )
+                        ![...el.querySelectorAll(".s_website_form_field")].some((oldFieldEl) => {
+                            const sameFieldsName = getFieldName(oldFieldEl) === newField.name;
+                            const sameFieldsFillWith =
+                                getFieldFillWith(oldFieldEl) === newField.fillWith;
+                            const setFieldName = (fieldEl, name) => {
+                                const inputEls = fieldEl.querySelectorAll(".s_website_form_input");
+                                inputEls.forEach((el) => (el.name = name));
+                                return true;
+                            };
+                            if (sameFieldsName || sameFieldsFillWith) {
+                                return !sameFieldsName
+                                    ? setFieldName(oldFieldEl, newField.name)
+                                    : true;
+                            }
+                        })
                 );
             }
             activeForm = this.getModelsCache(el).find((model) => model.id === modelId);
