@@ -44,8 +44,10 @@ class DriverController(http.Controller):
         iot_device.data['owner'] = session_id
         data = json.loads(data)
 
-        _logger.debug("Calling action %s for device %s", data.get('action', ''), device_identifier)
+        start_operation_time = time.perf_counter()
+        _logger.info("Longpolling: calling action %s for device %s", data.get('action', ''), device_identifier)
         iot_device.action(data)
+        _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
         return True
 
     @route.iot_route('/hw_drivers/check_certificate', type='http', cors='*', csrf=False)
