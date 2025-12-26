@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Library:           OASIS Universal Business Language (UBL) 2.1 OS
+                     http://docs.oasis-open.org/ubl/os-UBL-2.1/
+  Release Date:      04 November 2013
+  Module:            UBL-UnqualifiedDataTypes-2.1.xsd
+  Generated on:      2013-04-20 18:40(UTC)
+  Copyright (c) OASIS Open 2013. All Rights Reserved.
+
+  This schema fragment implements UBL unqualified datatypes using core
+  component types with all supplementary components as described in
+  CCTS 2.01 http://www.unece.org/cefact/ebxml/CCTS_V2-01_Final.pdf tables
+  8-1, 8-2 and 8-3.
+
+  Per table 8-3, the graphic, picture, sound and video types are based on
+  "Binary Object. Type" as they are secondary representation terms.
+
+  Per table 8-3, the value, rate and percentage types are based on
+  "Numeric. Type" as they are secondary representation terms.
+
+  Per table 8-3, the name type is based on "Text. Type" as it is a 
+  secondary representation term.
+
+  Per XSD lexical constraints, the following unqualified data types 
+  corresponding to core component types and secondary representation terms 
+  are based on XSD types (accordingly, the supplementary component "format" 
+  is not made available for these types):
+
+        Date Time. Type  on  xsd:dateTime
+        Date. Type       on  xsd:date
+        Time. Type       on  xsd:time
+        Indicator. Type  on  xsd:boolean
+
+  Per UBL 2.0 the following supplementary components are restricted to be
+  required rather than optional:
+
+   Amount. Currency. Identifier  as  (AmountType)/@currencyID
+   Binary Object. Mime. Code     as  (BinaryObjectType)/@mimeCode
+   Graphic. Mime. Code           as  (GraphicType)/@mimeCode
+   Picture. Mime. Code           as  (PictureType)/@mimeCode
+   Sound. Mime. Code             as  (SoundType)/@mimeCode
+   Video. Mime. Code             as  (VideoType)/@mimeCode
+   Measure. Unit. Code           as  (MeasureType)/@unitCode
+
+  All other unqualified data types inherit the core component types complete
+  with their supplementary components.
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2" 
+xmlns:ccts-cct="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModule:2"
+            xmlns:ccts="urn:un:unece:uncefact:documentation:2" 
+            elementFormDefault="qualified" 
+            attributeFormDefault="unqualified"
+            version="2.1">
+<!-- ===== Imports ===== -->
+  <xsd:import schemaLocation="CCTS_CCT_SchemaModule-2.1.xsd"
+namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModule:2"/>
+<!-- ===== Type Definitions ===== -->
+  <xsd:complexType name="AmountType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT000001</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Amount. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>A number of monetary units specified using a given unit of currency.</ccts:Definition>
+        <ccts:RepresentationTermName>Amount</ccts:RepresentationTermName>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="ccts-cct:AmountType">
+        <xsd:attribute name="currencyID" type="xsd:normalizedString" use="required">
+           <xsd:annotation>
+              <xsd:documentation xml:lang="en">
+                 <ccts:UniqueID>UNDT000001-SC2</ccts:UniqueID>
+                 <ccts:CategoryCode>SC</ccts:CategoryCode>
+                 <ccts:DictionaryEntryName>Amount. Currency. Identifier</ccts:DictionaryEntryName>
+                 <ccts:Definition>The currency of the amount.</ccts:Definition>
+                 <ccts:ObjectClass>Amount Currency</ccts:ObjectClass>
+                 <ccts:PropertyTermName>Identification</ccts:PropertyTermName>
+                 <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+                 <ccts:PrimitiveType>string</ccts:PrimitiveType>
+                 <ccts:UsageRule>Reference UNECE Rec 9, using 3-letter alphabetic codes.</ccts:UsageRule>
+              </xsd:documentation>
+           </xsd:annotation>
+        </xsd:attribute>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="BinaryObjectType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT000002</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Binary Object. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>A set of finite-length sequences of binary octets.</ccts:Definition>
+        <ccts:RepresentationTermName>Binary Object</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>binary</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="ccts-cct:BinaryObjectType">
+        <xsd:attribute name="mimeCode" type="xsd:normalizedString" use="required">
+           <xsd:annotation>
+              <xsd:documentation xml:lang="en">
+                 <ccts:UniqueID>UNDT000002-SC3</ccts:UniqueID>
+                 <ccts:CategoryCode>SC</ccts:CategoryCode>
+                 <ccts:DictionaryEntryName>Binary Object. Mime. Code</ccts:DictionaryEntryName>
+                 <ccts:Definition>The mime type of the binary object.</ccts:Definition>
+                 <ccts:ObjectClass>Binary Object</ccts:ObjectClass>
+                 <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
+                 <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+                 <ccts:PrimitiveType>string</ccts:PrimitiveType>
+              </xsd:documentation>
+           </xsd:annotation>
+        </xsd:attribute>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="GraphicType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT000003</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Graphic. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>A diagram, graph, mathematical curve, or similar representation.</ccts:Definition>
+        <ccts:RepresentationTermName>Graphic</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>binary</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="ccts-cct:BinaryObjectType">
+        <xsd:attribute name="mimeCode" type="xsd:normalizedString" use="required">
+           <xsd:annotation>
+              <xsd:documentation xml:lang="en">
+                 <ccts:UniqueID>UNDT000003-SC3</ccts:UniqueID>
+                 <ccts:CategoryCode>SC</ccts:CategoryCode>
+                 <ccts:DictionaryEntryName>Graphic. Mime. Code</ccts:DictionaryEntryName>
+                 <ccts:Definition>The mime type of the graphic object.</ccts:Definition>
+                 <ccts:ObjectClass>Graphic</ccts:ObjectClass>
+                 <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
+                 <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+                 <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
+              </xsd:documentation>
+           </xsd:annotation>
+        </xsd:attribute>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="PictureType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT000004</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Picture. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>A diagram, graph, mathematical curve, or similar representation.</ccts:Definition>
+        <ccts:RepresentationTermName>Picture</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>binary</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="ccts-cct:BinaryObjectType">
+        <xsd:attribute name="mimeCode" type="xsd:normalizedString" use="required">
+           <xsd:annotation>
+              <xsd:documentation xml:lang="en">
+                 <ccts:UniqueID>UNDT000004-SC3</ccts:UniqueID>
+                 <ccts:CategoryCode>SC</ccts:CategoryCode>
+                 <ccts:DictionaryEntryName>Picture. Mime. Code</ccts:DictionaryEntryName>
+                 <ccts:Definition>The mime type of the picture object.</ccts:Definition>
+                 <ccts:ObjectClass>Picture</ccts:ObjectClass>
+                 <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
+                 <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+                 <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
+              </xsd:documentation>
+           </xsd:annotation>
+        </xsd:attribute>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="SoundType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT000005</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Sound. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>An audio representation.</ccts:Definition>
+        <ccts:RepresentationTermName>Sound</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>binary</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="ccts-cct:BinaryObjectType">
+        <xsd:attribute name="mimeCode" type="xsd:normalizedString" use="required">
+           <xsd:annotation>
+              <xsd:documentation xml:lang="en">
+                 <ccts:UniqueID>UNDT000005-SC3</ccts:UniqueID>
+                 <ccts:CategoryCode>SC</ccts:CategoryCode>
+                 <ccts:DictionaryEntryName>Sound. Mime. Code</ccts:DictionaryEntryName>
+                 <ccts:Definition>The mime type of the sound object.</ccts:Definition>
+                 <ccts:ObjectClass>Sound</ccts:ObjectClass>
+                 <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
+                 <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+                 <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
+              </xsd:documentation>
+           </xsd:annotation>
+        </xsd:attribute>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="VideoType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT000006</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Video. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>A video representation.</ccts:Definition>
+        <ccts:RepresentationTermName>Video</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>binary</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="ccts-cct:BinaryObjectType">
+        <xsd:attribute name="mimeCode" type="xsd:normalizedString" use="required">
+           <xsd:annotation>
+              <xsd:documentation xml:lang="en">
+                 <ccts:UniqueID>UNDT000006-SC3</ccts:UniqueID>
+                 <ccts:CategoryCode>SC</ccts:CategoryCode>
+                 <ccts:DictionaryEntryName>Video. Mime. Code</ccts:DictionaryEntryName>
+                 <ccts:Definition>The mime type of the video object.</ccts:Definition>
+                 <ccts:ObjectClass>Video</ccts:ObjectClass>
+                 <ccts:PropertyTermName>Mime</ccts:PropertyTermName>
+                 <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+                 <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
+              </xsd:documentation>
+           </xsd:annotation>
+        </xsd:attribute>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="CodeType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT000007</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Code. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>A character string (letters, figures, or symbols) that for brevity and/or language independence may be used to represent or replace a definitive value or text of an attribute, together with relevant supplementary information.</ccts:Definition>
+        <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>string</ccts:PrimitiveType>
+        <ccts:UsageRule>Other supplementary components in the CCT are captured as part of the token and name for the schema module containing the code list and thus, are not declared as attributes. </ccts:UsageRule>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="ccts-cct:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  
+  <xsd:complexType name="DateTimeType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT000008</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Date Time. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>A particular point in the progression of time, together with relevant supplementary information.</ccts:Definition>
+        <ccts:RepresentationTermName>Date Time</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>string</ccts:PrimitiveType>
+        <ccts:UsageRule>Can be used for a date and/or time.</ccts:UsageRule>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:dateTime"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="DateType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT000009</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Date. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>One calendar day according the Gregorian calendar.</ccts:Definition>
+        <ccts:RepresentationTermName>Date</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>string</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:date"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="TimeType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT0000010</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Time. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>An instance of time that occurs every day.</ccts:Definition>
+        <ccts:RepresentationTermName>Time</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>string</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:time"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="IdentifierType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT0000011</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Identifier. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>A character string to identify and uniquely distinguish one instance of an object in an identification scheme from all other objects in the same scheme, together with relevant supplementary information.</ccts:Definition>
+        <ccts:RepresentationTermName>Identifier</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>string</ccts:PrimitiveType>
+        <ccts:UsageRule>Other supplementary components in the CCT are captured as part of the token and name for the schema module containing the identifier list and thus, are not declared as attributes. </ccts:UsageRule>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="ccts-cct:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="IndicatorType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT0000012</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Indicator. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>A list of two mutually exclusive Boolean values that express the only possible states of a property.</ccts:Definition>
+        <ccts:RepresentationTermName>Indicator</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>string</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:boolean"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="MeasureType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT0000013</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Measure. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>A numeric value determined by measuring an object using a specified unit of measure.</ccts:Definition>
+        <ccts:RepresentationTermName>Measure</ccts:RepresentationTermName>
+        <ccts:PropertyTermName>Type</ccts:PropertyTermName>
+        <ccts:PrimitiveType>decimal</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="ccts-cct:MeasureType">
+        <xsd:attribute name="unitCode" type="xsd:normalizedString" use="required">
+           <xsd:annotation>
+              <xsd:documentation xml:lang="en">
+                 <ccts:UniqueID>UNDT000013-SC2</ccts:UniqueID>
+                 <ccts:CategoryCode>SC</ccts:CategoryCode>
+                 <ccts:DictionaryEntryName>Measure. Unit. Code</ccts:DictionaryEntryName>
+                 <ccts:Definition>The type of unit of measure.</ccts:Definition>
+                 <ccts:ObjectClass>Measure Unit</ccts:ObjectClass>
+                 <ccts:PropertyTermName>Code</ccts:PropertyTermName>
+                 <ccts:RepresentationTermName>Code</ccts:RepresentationTermName>
+                 <ccts:PrimitiveType>normalizedString</ccts:PrimitiveType>
+                 <ccts:UsageRule>Reference UNECE Rec. 20 and X12 355</ccts:UsageRule>
+              </xsd:documentation>
+           </xsd:annotation>
+        </xsd:attribute>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  
+  <xsd:complexType name="NumericType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT0000014</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Numeric. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>Numeric information that is assigned or is determined by calculation, counting, or sequencing. It does not require a unit of quantity or unit of measure.</ccts:Definition>
+        <ccts:RepresentationTermName>Numeric</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>string</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="ccts-cct:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="ValueType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT0000015</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:DictionaryEntryName>Value. Type</ccts:DictionaryEntryName>
+        <ccts:Definition>Numeric information that is assigned or is determined by calculation, counting, or sequencing. It does not require a unit of quantity or unit of measure.</ccts:Definition>
+        <ccts:RepresentationTermName>Value</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>string</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="ccts-cct:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="PercentType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT0000016</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:DictionaryEntryName>Percent. Type</ccts:DictionaryEntryName>
+        <ccts:Definition>Numeric information that is assigned or is determined by calculation, counting, or sequencing and is expressed as a percentage. It does not require a unit of quantity or unit of measure.</ccts:Definition>
+        <ccts:RepresentationTermName>Percent</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>string</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="ccts-cct:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="RateType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT0000017</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:DictionaryEntryName>Rate. Type</ccts:DictionaryEntryName>
+        <ccts:Definition>A numeric expression of a rate that is assigned or is determined by calculation, counting, or sequencing. It does not require a unit of quantity or unit of measure.</ccts:Definition>
+        <ccts:RepresentationTermName>Rate</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>string</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="ccts-cct:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="QuantityType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT0000018</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Quantity. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>A counted number of non-monetary units, possibly including a fractional part.</ccts:Definition>
+        <ccts:RepresentationTermName>Quantity</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>decimal</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="ccts-cct:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="TextType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT0000019</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Text. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>A character string (i.e. a finite set of characters), generally in the form of words of a language.</ccts:Definition>
+        <ccts:RepresentationTermName>Text</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>string</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="ccts-cct:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="NameType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        <ccts:UniqueID>UBLUDT0000020</ccts:UniqueID>
+        <ccts:CategoryCode>UDT</ccts:CategoryCode>
+        <ccts:DictionaryEntryName>Name. Type</ccts:DictionaryEntryName>
+        <ccts:VersionID>1.0</ccts:VersionID>
+        <ccts:Definition>A character string that constitutes the distinctive designation of a person, place, thing or concept.</ccts:Definition>
+        <ccts:RepresentationTermName>Name</ccts:RepresentationTermName>
+        <ccts:PrimitiveType>string</ccts:PrimitiveType>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="ccts-cct:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+</xsd:schema><!-- ===== Copyright Notice ===== --><!--
+  OASIS takes no position regarding the validity or scope of any 
+  intellectual property or other rights that might be claimed to pertain 
+  to the implementation or use of the technology described in this 
+  document or the extent to which any license under such rights 
+  might or might not be available; neither does it represent that it has 
+  made any effort to identify any such rights. Information on OASIS's 
+  procedures with respect to rights in OASIS specifications can be 
+  found at the OASIS website. Copies of claims of rights made 
+  available for publication and any assurances of licenses to be made 
+  available, or the result of an attempt made to obtain a general 
+  license or permission for the use of such proprietary rights by 
+  implementors or users of this specification, can be obtained from 
+  the OASIS Executive Director.
+
+  OASIS invites any interested party to bring to its attention any 
+  copyrights, patents or patent applications, or other proprietary 
+  rights which may cover technology that may be required to 
+  implement this specification. Please address the information to the 
+  OASIS Executive Director.
+  
+  This document and translations of it may be copied and furnished to 
+  others, and derivative works that comment on or otherwise explain 
+  it or assist in its implementation may be prepared, copied, 
+  published and distributed, in whole or in part, without restriction of 
+  any kind, provided that the above copyright notice and this 
+  paragraph are included on all such copies and derivative works. 
+  However, this document itself may not be modified in any way, 
+  such as by removing the copyright notice or references to OASIS, 
+  except as needed for the purpose of developing OASIS 
+  specifications, in which case the procedures for copyrights defined 
+  in the OASIS Intellectual Property Rights document must be 
+  followed, or as required to translate it into languages other than 
+  English. 
+
+  The limited permissions granted above are perpetual and will not be 
+  revoked by OASIS or its successors or assigns. 
+
+  This document and the information contained herein is provided on 
+  an "AS IS" basis and OASIS DISCLAIMS ALL WARRANTIES, 
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY 
+  WARRANTY THAT THE USE OF THE INFORMATION HEREIN 
+  WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED 
+  WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A 
+  PARTICULAR PURPOSE.
+-->

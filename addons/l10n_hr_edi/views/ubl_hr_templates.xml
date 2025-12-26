@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="ubl_21_CommonType_hr" inherit_id="account_edi_ubl_cii.ubl_20_CommonType">
+        <xpath expr="//*[local-name()='AccountingSupplierParty']" position="inside">                    
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:SellerContact>
+                    <cbc:ID t-out="accounting_supplier_vals.get('operator_oib')"/>
+                    <cbc:Name t-out="accounting_supplier_vals.get('operator_name')"/>
+                </cac:SellerContact>
+            </t>
+        </xpath>
+    </template>
+</odoo>

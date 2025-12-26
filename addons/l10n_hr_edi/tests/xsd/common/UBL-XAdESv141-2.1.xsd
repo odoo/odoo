@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Library:           OASIS Universal Business Language (UBL) 2.1 OS
+                     http://docs.oasis-open.org/ubl/os-UBL-2.1/
+  Release Date:      04 November 2013
+  Module:            UBL-XAdESv141-2.1.xsd
+  Generated on:      2011-02-21 17:20(UTC)
+
+  This is a copy of http://uri.etsi.org/01903/v1.4.1/XAdESv141.xsd modified
+  only to change the importing URI for the XAdES v1.3.2 schema.
+-->
+<xsd:schema targetNamespace="http://uri.etsi.org/01903/v1.4.1#" xmlns="http://uri.etsi.org/01903/v1.4.1#" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" elementFormDefault="qualified">
+	<xsd:import namespace="http://uri.etsi.org/01903/v1.3.2#" schemaLocation="UBL-XAdESv132-2.1.xsd"/>
+	<!-- Start CertificateValues -->
+	<xsd:element name="TimeStampValidationData" type="ValidationDataType"/>
+	<xsd:complexType name="ValidationDataType">
+		<xsd:sequence>
+			<xsd:element ref="xades:CertificateValues" minOccurs="0" />
+			<xsd:element ref="xades:RevocationValues" minOccurs="0" />
+		</xsd:sequence>
+		<xsd:attribute name="Id" type="xsd:ID" use="optional"/>
+		<xsd:attribute name="UR" type="xsd:anyURI" use="optional"/>
+	</xsd:complexType>
+	<xsd:element name="ArchiveTimeStampV2" type="xades:XAdESTimeStampType"/>
+</xsd:schema>
