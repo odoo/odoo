@@ -11,7 +11,6 @@
             - VIA_SUITE_KEYCLOAK_CLIENT_ID: OAuth client ID
             - VIA_SUITE_KEYCLOAK_CLIENT_SECRET: OAuth client secret
         -->
-
         <record id="oauth_provider_keycloak_viasuite" model="auth.oauth.provider">
             <field name="name">ViaSuite Keycloak</field>
             <field name="enabled" eval="True"/>
@@ -37,12 +36,12 @@
 
         <record id="ir_config_parameter_keycloak_realm" model="ir.config_parameter">
             <field name="key">via_suite.keycloak.realm</field>
-            <field name="value">via-suite</field>
+            <field name="value">master</field>
         </record>
 
         <record id="ir_config_parameter_keycloak_client_id" model="ir.config_parameter">
             <field name="key">via_suite.keycloak.client_id</field>
-            <field name="value">viasuite-odoo</field>
+            <field name="value">via-suite</field>
         </record>
     </data>
 </odoo>

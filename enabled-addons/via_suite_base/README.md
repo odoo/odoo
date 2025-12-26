@@ -1,13 +1,22 @@
-# via_suite_base
+ViaSuite Base Module
+====================
 
-Bootstraps ViaFronteira tenant databases with default settings:
+        Core module providing base customizations for ViaSuite:
+        
+        Features:
+        ---------
+        * Multi-language support (pt_BR, es_PY, en_US, ar_SA, zh_CN)
+        * Amazon SES email configuration
 
-- Keycloak SSO (auth_oauth provider + authorization_header=1)
-- Active currencies: USD/BRL/ARS/PYG
-- Company base currency: USD
-- Pricelists A/B/C/D/E/F (global % discounts)
-- Via roles/groups aligned with Sales/Stock/POS/Accounting
-- Default admin users (SSO-ready)
+        * Keycloak SSO integration (multi-tenant)
+        * Structured logging with JSON output
+        * Sentry error tracking integration
+        * Custom branding (ViaSuite/ViaFronteira, LLC)
+        
+        * PWA support with custom favicon and manifest
+        
+        This module is auto-installed and provides the foundation for all
+        ViaSuite tenants.
 
 ## Keycloak configuration via environment variables
 

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--
+            Configuration Settings View for ViaSuite
+
+            Adds ViaSuite-specific settings to the general settings page.
+            Refactored for Odoo 19 (app/block/setting structure).
+        -->
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.viasuite</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+
+                    <app string="ViaSuite" name="via_suite_base" data-string="ViaSuite" data-key="via_suite_base" logo="/via_suite_base/static/description/icon.png">
+                        
+                        <block title="ViaSuite Configuration" name="viasuite_config">
+                            <setting id="viasuite_core" string="ViaSuite Base Module" help="Core customizations: Keycloak SSO, AWS S3, SES, Sentry, Structured Logging">
+                                <div class="text-muted">
+                                    ViaSuite Base is installed and active.
+                                </div>
+                            </setting>
+                        </block>
+
+                        <block title="System Information" name="system_info">
+                            <setting id="product_name" string="Product Name">
+                                <span class="text-muted"><strong>ViaSuite</strong> - Retail Management Solution</span>
+                            </setting>
+                            <setting id="company_info" string="Company">
+                                <span class="text-muted"><strong>ViaFronteira, LLC</strong></span>
+                            </setting>
+                            <setting id="version_info" string="Version">
+                                <span class="text-muted">19.0.1.0.0</span>
+                            </setting>
+                            <setting id="website_info" string="Website">
+                                <a href="https://www.viafronteira.com" target="_blank">www.viafronteira.com</a>
+                            </setting>
+                        </block>
+
+                        <block title="Authentication" name="auth_config">
+                            <setting id="oauth_provider" string="OAuth Provider" help="Keycloak SSO configuration">
+                                <div class="text-muted">
+                                    Keycloak SSO at <strong>auth.viafronteira.com</strong><br/>
+                                    Realm: <strong>via-suite</strong>
+                                </div>
+                            </setting>
+                            <setting id="session_timeout" string="Session Timeout" help="Session duration configuration">
+                                <div class="text-muted">
+                                    24 hours (configured for PDV operations)
+                                </div>
+                            </setting>
+                        </block>
+
+                        <block title="Storage &amp; Email" name="storage_email_config">
+                            <setting id="attachment_storage" string="Attachment Storage">
+                                <div class="text-muted">AWS S3 (configured via environment variables)</div>
+                            </setting>
+                            <setting id="email_server" string="Email Server">
+                                <div class="text-muted">Amazon SES (no-reply@viafronteira.com)</div>
+                            </setting>
+                        </block>
+
+                        <block title="Monitoring &amp; Logging" name="monitoring_config">
+                            <setting id="error_tracking" string="Error Tracking">
+                                <div class="text-muted">Sentry (configured via VIA_SUITE_SENTRY_DSN)</div>
+                            </setting>
+                            <setting id="log_format" string="Log Format">
+                                <div class="text-muted">Structured JSON logging (for observability)</div>
+                            </setting>
+                        </block>
+
+                        <block title="Support" name="support_info">
+                             <setting id="support_contact" string="Configuration Help">
+                                <div class="text-muted">
+                                    ViaSuite is configured via environment variables.<br/>
+                                    Need help? Contact <a href="mailto:support@viafronteira.com">support@viafronteira.com</a>
+                                </div>
+                             </setting>
+                        </block>
+
+                    </app>
+
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

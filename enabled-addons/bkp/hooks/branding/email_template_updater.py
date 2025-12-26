@@ -53,7 +53,7 @@ class EmailTemplateUpdater:
                 return
 
             # Update template body to include ViaSuite branding
-            if template.body_html:
+            if template._name == 'mail.template' and template.body_html:
                 body = template.body_html
 
                 # Replace company references
@@ -66,6 +66,10 @@ class EmailTemplateUpdater:
                 template.write({'body_html': body})
 
                 _logger.info("Updated password reset email template")
+            elif template._name == 'ir.ui.view':
+                _logger.info("Skipped password reset template update: It is an ir.ui.view (QWeb), not a mail.template.")
+            else:
+                _logger.warning(f"Skipped password reset template update: Unknown model {template._name}")
 
         except Exception as e:
             _logger.error(f"Error updating auth signup template: {str(e)}")

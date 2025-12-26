@@ -23,9 +23,10 @@ class BrandingReplacer:
     """
 
     # Mapping of strings to replace
+    # IMPORTANT: Only replace user-visible text (capitalized), NOT technical identifiers
+    # like JavaScript variables or Python module names (lowercase 'odoo')
     REPLACEMENTS = {
         'Odoo': 'ViaSuite',
-        'odoo': 'viasuite',
         'Odoo S.A.': 'ViaFronteira, LLC',
         'www.odoo.com': 'www.viafronteira.com',
         'odoo.com': 'viafronteira.com',
