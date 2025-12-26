@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                 "[data-success-page='/contactus-thank-you']" +
                 ":has(.s_website_form_field:has(label:contains('Your Name')):has(input[type='text'][name='name'][required]))" +
                 ":has(.s_website_form_field:has(label:contains('Your Email')):has(input[type='email'][name='email_from'][required]))" +
-                ":has(.s_website_form_field:has(label:contains('Your Question')):has(textarea[name='description'][required]))" +
+                ":has(.s_website_form_field:has(label:contains('Renamed')):has(textarea[name='Renamed'][required]))" +
                 ":has(.s_website_form_field:has(label:contains('Subject')):has(input[type='text'][name='subject'][required]))" +
                 ":has(.s_website_form_field:has(label:contains('Test Date')):has(input[type='text'][name='date'][required]))" +
                 ":has(.s_website_form_field:has(label:contains('Your Message')):has(textarea[name='body_html'][required]))" +
@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                 "form:has(#s_website_form_result.text-danger)" +
                 ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
                 ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
-                ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Renamed')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Subject')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Test Date')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Your Message')).o_has_error)" +
@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                 "form:has(#s_website_form_result.text-danger)" +
                 ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
                 ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
-                ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Renamed')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Subject')):not(.o_has_error))" +
                 ":has(.s_website_form_field:has(label:contains('Test Date')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Your Message')).o_has_error)" +
@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                 "form:has(#s_website_form_result.text-danger)" +
                 ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
                 ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
-                ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
+                ":has(.s_website_form_field:has(label:contains('Renamed')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Subject')):not(.o_has_error))" +
                 ":has(.s_website_form_field:has(label:contains('Test Date')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Your Message')):not(.o_has_error))" +
@@ -142,8 +142,8 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
             run: "edit subject",
         },
         {
-            content: "Complete Your Question field",
-            trigger: "textarea[name='description']",
+            content: "Complete Renamed field",
+            trigger: "textarea[name='Renamed']",
             run: "edit magan",
         },
         {

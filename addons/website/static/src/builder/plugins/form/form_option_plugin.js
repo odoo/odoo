@@ -33,6 +33,9 @@ import {
     setVisibilityDependency,
     rerenderField,
     getFormCacheKey,
+    isFieldRequired,
+    getFieldFillWith,
+    getDescriptionPosition,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
@@ -45,6 +48,9 @@ import { localization } from "@web/core/l10n/localization";
 import { formatDate } from "@web/core/l10n/dates";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { getParsedDataFor } from "@website/js/utils";
+import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
+import { isVisible } from "@web/core/utils/ui";
+import { nodeSize } from "@html_editor/utils/position";
 
 /**
  * @typedef { Object } FormOptionShared
@@ -169,7 +175,7 @@ export class FormOptionPlugin extends Plugin {
             MultiCheckboxDisplayAction,
             SetLabelTextAction,
             SelectLabelPositionAction,
-            ToggleDescriptionAction,
+            SetDescriptionAction,
             SelectTextareaValueAction,
             ToggleRequiredAction,
             SetVisibilityAction,
@@ -180,6 +186,7 @@ export class FormOptionPlugin extends Plugin {
             SetDefaultErrorMessageAction,
             SetRequirementComparatorAction,
             SetMultipleFilesAction,
+            SetFormLabelsWidthAction,
         },
         content_not_editable_selectors: ".s_website_form form",
         content_editable_selectors: [
@@ -345,6 +352,42 @@ export class FormOptionPlugin extends Plugin {
         }
     }
     /**
+     * Checks if a form element conforms to its default configuration.
+     *
+     * @param {HTMLElement} formEl The form element.
+     * @param {Object[]} formInfo The default config.
+     */
+    isDefaultFormConfig(formEl, formInfo) {
+        const DOMFields = [
+            ...formEl.querySelectorAll(".s_website_form_field:not(.s_website_form_dnone)"),
+        ].toSorted((a, b) => getFieldName(a).localeCompare(getFieldName(b)));
+        if (DOMFields.length !== formInfo.formFields.length) {
+            return false;
+        }
+        const fieldFormatID = (field) => JSON.stringify(getFieldFormat(field)).replaceAll(" ", "");
+        const fieldLabelText = (field) =>
+            field.querySelector(".s_website_form_label_content")?.textContent;
+        // We use sorted fields here since changing fields order is not
+        // considered as significant.
+        for (const [i, field] of formInfo.formFields
+            .toSorted((a, b) => a.name.localeCompare(b.name))
+            .entries()) {
+            const fieldEl = renderField(field);
+            if (
+                isFieldCustom(fieldEl) != isFieldCustom(DOMFields[i]) ||
+                getFieldName(fieldEl) !== getFieldName(DOMFields[i]) ||
+                getFieldType(fieldEl) !== getFieldType(DOMFields[i]) ||
+                isFieldRequired(fieldEl) != isFieldRequired(DOMFields[i]) ||
+                fieldLabelText(fieldEl) !== fieldLabelText(DOMFields[i]) ||
+                getFieldFillWith(fieldEl) !== getFieldFillWith(DOMFields[i]) ||
+                fieldFormatID(fieldEl) !== fieldFormatID(DOMFields[i])
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
+    /**
      * Apply the model on the form changing its fields
      *
      * @param {HTMLElement} el
@@ -354,6 +397,7 @@ export class FormOptionPlugin extends Plugin {
      */
     applyFormModel(el, activeForm, modelId, formInfo) {
         let oldFormInfo;
+        let newFormFields = formInfo?.formFields;
         if (modelId) {
             const oldFormKey = activeForm.website_form_key;
             if (oldFormKey) {
@@ -361,8 +405,52 @@ export class FormOptionPlugin extends Plugin {
                     .category("website.form_editor_actions")
                     .get(oldFormKey, null);
             }
-            for (const fieldEl of el.querySelectorAll(".s_website_form_field")) {
-                fieldEl.remove();
+            // TO apply the new model on the current form:
+            // 1. We check if the form was edited.
+            if (this.isDefaultFormConfig(el, oldFormInfo) || !newFormFields) {
+                // 2. The form hasn't been edited yet > We allow to replace
+                // the whole form with the one from the new model.
+                for (const fieldEl of el.querySelectorAll(".s_website_form_field")) {
+                    fieldEl.remove();
+                }
+            } else {
+                // 3. Otherwise, we remove all the fields that are linked to
+                // the current model.
+                for (const fieldData of oldFormInfo.fields) {
+                    const fieldEl = el.querySelector(
+                        `.s_website_form_field:has([name="${fieldData.name}"])`
+                    );
+                    fieldEl?.remove();
+                }
+                // 4. "Model required fields" will be removed too (Otherwise,
+                // they will be handled as "required" for the new action).
+                for (const fieldEl of el.querySelectorAll(
+                    ".s_website_form_field.s_website_form_model_required"
+                )) {
+                    fieldEl.remove();
+                }
+                // 5. If a field from the new form refers the same information
+                // as a current one, it won't be added.
+                // 6. The rest of the fields will be automatically added to
+                // the form DOM.
+                newFormFields = formInfo.formFields.filter(
+                    (newField) =>
+                        ![...el.querySelectorAll(".s_website_form_field")].some((oldFieldEl) => {
+                            const sameFieldsName = getFieldName(oldFieldEl) === newField.name;
+                            const sameFieldsFillWith =
+                                getFieldFillWith(oldFieldEl) === newField.fillWith;
+                            const setFieldName = (fieldEl, name) => {
+                                const inputEls = fieldEl.querySelectorAll(".s_website_form_input");
+                                inputEls.forEach((el) => (el.name = name));
+                                return true;
+                            };
+                            if (sameFieldsName || sameFieldsFillWith) {
+                                return !sameFieldsName
+                                    ? setFieldName(oldFieldEl, newField.name)
+                                    : true;
+                            }
+                        })
+                );
             }
             activeForm = this.getModelsCache(el).find((model) => model.id === modelId);
         }
@@ -388,7 +476,7 @@ export class FormOptionPlugin extends Plugin {
         // Load template
         if (formInfo) {
             const formatInfo = getDefaultFormat(el);
-            formInfo.formFields.forEach((field) => {
+            newFormFields.forEach((field) => {
                 // Create a shallow copy of field to prevent unintended
                 // mutations to the original field stored in the registry
                 const _field = { ...field };
@@ -921,12 +1009,14 @@ export class SelectAction extends BuilderAction {
         const models = this.dependencies.websiteFormOption.getModelsCache(el);
         const targetModelName = getModelName(el);
         const activeForm = models.find((m) => m.model === targetModelName);
-        this.dependencies.websiteFormOption.applyFormModel(
-            el,
-            activeForm,
-            parseInt(modelId),
-            loadResult.formInfo
-        );
+        if (models.find((model) => model.id === parseInt(modelId)).model !== targetModelName) {
+            this.dependencies.websiteFormOption.applyFormModel(
+                el,
+                activeForm,
+                parseInt(modelId),
+                loadResult.formInfo
+            );
+        }
     }
     isApplied({ editingElement: el, value: modelId }) {
         const models = this.dependencies.websiteFormOption.getModelsCache(el);
@@ -1107,10 +1197,26 @@ export class CustomFieldAction extends BuilderAction {
     apply({ editingElement: fieldEl, value, loadResult: fields }) {
         this.dependencies.websiteFormOption.clearValidationDataset(fieldEl);
         delete fieldEl.dataset.requirementComparator;
+        const isCheckboxField = value === "boolean";
         const oldLabelText = fieldEl.querySelector(".s_website_form_label_content").textContent;
         const field = getCustomField(value, oldLabelText);
+        const isFieldRequired = field.required;
         setActiveProperties(fieldEl, field);
+        if (isCheckboxField) {
+            if (!isFieldRequired) {
+                field.required = true;
+            }
+            if (field.description) {
+                // Sets a default checkbox description & description layout.
+                field.description = !!field.description;
+                field.formatInfo.textPosition = "top";
+            }
+        }
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+        if (isCheckboxField && !isFieldRequired) {
+            // Set the mark on the "checkbox" field (required by default).
+            this.dependencies.websiteFormOption.setLabelsMark(fieldEl.closest("form"));
+        }
     }
     isApplied({ editingElement: fieldEl, value }) {
         const currentValue = isFieldCustom(fieldEl) ? getFieldType(fieldEl) : "";
@@ -1285,22 +1391,44 @@ export class SelectLabelPositionAction extends BuilderAction {
         return currentValue === value;
     }
 }
-export class ToggleDescriptionAction extends BuilderAction {
-    static id = "toggleDescription";
-    static dependencies = ["websiteFormOption"];
+export class SetDescriptionAction extends BuilderAction {
+    static id = "setDescription";
+    static dependencies = ["websiteFormOption", "selection"];
     load(context) {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
     apply({ editingElement: fieldEl, loadResult: fields, value }) {
         const description = fieldEl.querySelector(".s_website_form_field_description");
-        const hasDescription = !!description;
+        // This action is used for two scenarios:
+        // 1. The target field is a checkbox: The field description will be set
+        // with the position specified in the `value`.
+        // 2. Otherwise, the field description will be simply toggled.
+        const enableDescription = !value ? !description : value !== "none";
         const field = getActiveField(fieldEl, { fields });
-        field.description = !hasDescription; // Will be changed to default description in qweb
+        field.description = enableDescription; // Will be changed to default description in qweb
+        if (value && value !== "none") {
+            field.formatInfo.textPosition = value;
+        }
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+        if (enableDescription) {
+            const description = fieldEl.querySelector(".s_website_form_field_description")
+                .childNodes[0];
+            // Select the field description text in the editor.
+            this.dependencies.selection.setSelection({
+                anchorNode: description,
+                anchorOffset: 0,
+                focusNode: description,
+                focusOffset: nodeSize(description),
+            });
+        }
     }
-    isApplied({ editingElement: fieldEl }) {
+    isApplied({ editingElement: fieldEl, value }) {
         const description = fieldEl.querySelector(".s_website_form_field_description");
-        return !!description;
+        if (getFieldType(fieldEl) !== "boolean") {
+            return !!description;
+        } else {
+            return getDescriptionPosition(fieldEl) === value;
+        }
     }
 }
 export class SelectTextareaValueAction extends BuilderAction {
@@ -1459,6 +1587,43 @@ class SetMultipleFilesAction extends BuilderAction {
     static id = "setMultipleFiles";
     apply({ editingElement }) {
         editingElement.multiple = editingElement.dataset.maxFilesNumber > 1;
+    }
+}
+class SetFormLabelsWidthAction extends StyleAction {
+    static id = "setFormLabelsWidth";
+    static dependencies = ["builderActions"];
+    apply({ editingElement, value }) {
+        const setLabelWidthValue = (el) =>
+            this.dependencies.builderActions.getAction("styleAction").apply({
+                editingElement: el,
+                params: {
+                    mainParam: "width",
+                },
+                value: value,
+            });
+        for (const labelEl of editingElement.querySelectorAll(".s_website_form_label")) {
+            setLabelWidthValue(labelEl);
+        }
+    }
+    getValue({ editingElement }) {
+        const getLabelWidthValue = (el) =>
+            this.dependencies.builderActions.getAction("styleAction").getValue({
+                editingElement: el,
+                params: {
+                    mainParam: "width",
+                },
+            });
+        // Each field now has its own label width. The global option only
+        // considers visible labels. If any label has a width different from
+        // the others, the global option input will appear empty to reflect the
+        // inconsistent values.
+        const labelWidthValues = [...editingElement.querySelectorAll(".s_website_form_label")]
+            .filter(isVisible)
+            .map(getLabelWidthValue);
+        if (new Set(labelWidthValues).size === 1) {
+            return labelWidthValues[0];
+        }
+        return null;
     }
 }
 

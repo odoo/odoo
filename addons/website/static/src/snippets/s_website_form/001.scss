@@ -17,6 +17,43 @@
 }
 
 .s_website_form[data-vcss="001"] {
+    %o-inline-description-field {
+        display: grid;
+        grid-template-columns: fit-content(0px) fit-content(100%);
+    }
+    @mixin s_website_form_field_description_position($position) {
+        @if $position == wrap {
+            .s_website_form_label {
+                display: block;
+            }
+            .s_website_form_field_description {
+                display: inline;
+            }
+            .form-check {
+                margin: 0;
+                float: inline-start;
+            }
+        } @else {
+            &:not(:has(div.col-sm)) {
+                @extend %o-inline-description-field;
+                align-items: $position;
+                .s_website_form_label {
+                    grid-column: 1 / -1;
+                }
+            }
+            .s_website_form_label + div.col-sm {
+                @extend %o-inline-description-field;
+                align-items: $position;
+            }
+            .s_website_form_field_description {
+                margin: auto 0;
+            }
+            .form-check {
+                margin: 0
+            }
+        }
+    };
+
     .s_website_form_label {
         @include media-breakpoint-down(sm) {
             width: auto !important;
@@ -74,7 +111,6 @@
             }
         }
     }
-
     .o_add_files_button {
         background-color: $o-gray-200;
         width: fit-content;
@@ -82,6 +118,27 @@
         &:hover {
             background-color: darken($o-gray-200, 4.5%);
         }
+    }
+    // Set a marker (*) to the checkbox description when "required"
+    // and its label is hidden.
+    .s_website_form_field[data-type="boolean"] {
+        &.s_website_form_required, &.s_website_form_model_required {
+            .s_website_form_label.d-none ~ .s_website_form_field_description {
+                &::after {
+                    content: " *";
+                }
+            }
+        }
+    }
+    // Field description layout style (currently used for checkbox fields). 
+    .s_website_form_description_top {
+        @include s_website_form_field_description_position(start);
+    }
+    .s_website_form_description_center {
+        @include s_website_form_field_description_position(center);
+    }
+    .s_website_form_description_wrap {
+        @include s_website_form_field_description_position(wrap);
     }
     @include media-breakpoint-down(md) {
         .datetimepicker-input{

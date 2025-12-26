@@ -278,6 +278,11 @@ $form-check-input-border-radius: if($input-border-radius != null, min($input-bor
 //   (a disabled range should have its *active* part with a different color).
 $form-range-track-bg: $input-disabled-bg !default;
 
+$input-border-top-width: o-website-value('input-border-top-width') !default;
+$input-border-right-width: o-website-value('input-border-right-width') !default;
+$input-border-bottom-width: o-website-value('input-border-bottom-width') !default;
+$input-border-left-width: o-website-value('input-border-left-width') !default;
+
 // Dropdowns
 $dropdown-border-color: $border-color !default;
 
@@ -396,4 +401,21 @@ $--enable-no-overflow-of-text-columns: false !default;
   .carousel-item {
     transition-duration: 200ms !important;
   }
+}
+
+// A side-specific "form field border width" is only applied if it differs
+// from the global border width that applies to all sides.
+.form-control {
+    @if $input-border-top-width != $input-border-width {
+        border-top-width: $input-border-top-width !important;
+    }
+    @if $input-border-right-width != $input-border-width {
+        border-right-width: $input-border-right-width !important;
+    }
+    @if $input-border-bottom-width != $input-border-width {
+        border-bottom-width: $input-border-bottom-width !important;
+    }
+    @if $input-border-left-width != $input-border-width {
+        border-left-width: $input-border-left-width !important;
+    }
 }

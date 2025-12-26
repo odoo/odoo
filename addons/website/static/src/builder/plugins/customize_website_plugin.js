@@ -872,17 +872,50 @@ export class CustomizeWebsiteVariableAction extends BuilderAction {
             currentValue === value || `'${currentValue}'` === value
         );
     }
-    getValue({ params: { mainParam: variable } }) {
-        const currentValue = this.dependencies.customizeWebsite.getWebsiteVariableValue(variable);
+    getValue({ params: { mainParam: variable, subVariablesConfig = {} } }) {
+        const subVariables = subVariablesConfig[variable] || [];
+        // A global variable returns the common value of its sub-variables
+        // if they are all identical. Otherwise, it returns null. And each
+        // sub-variable always returns its own current value.
+        const currentValue = this._subVariablesValue([variable, ...subVariables]);
         return currentValue;
     }
-    async apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
+    async apply({
+        params: { mainParam: variable, nullValue = "null", subVariablesConfig = {} },
+        value,
+    }) {
+        // 1. A single variable with potential sub-variables: update all.
+        const variablesToUpdate = [variable, ...(subVariablesConfig[variable] || [])].map(
+            (name) => [name, value]
+        );
+        const allSubVariables = Object.values(subVariablesConfig)[0] || [];
+        const otherSubVariables = allSubVariables.filter((v) => v !== variable);
+        // 2. A sub-variable linked to a global one: update the sub-variable,
+        // then update the global variable based on the current values of all
+        // sub-variables.
+        if (allSubVariables.length === otherSubVariables.length + 1) {
+            variablesToUpdate.push([
+                Object.keys(subVariablesConfig)[0],
+                this._subVariablesValue(otherSubVariables) === value ? value : nullValue,
+            ]);
+        }
         await this.dependencies.customizeWebsite.customizeWebsiteVariables(
-            {
-                [variable]: value,
-            },
+            Object.fromEntries(variablesToUpdate),
             nullValue
         );
+    }
+    /**
+     * Returns the shared value of a list of CSS variables, or `null`
+     * if they differ.
+     *
+     * @param {string[]} variables
+     */
+    _subVariablesValue(variables) {
+        const values = variables.map(this.dependencies.customizeWebsite.getWebsiteVariableValue);
+        if (new Set(values).size === 1) {
+            return values[0];
+        }
+        return null;
     }
 }
 

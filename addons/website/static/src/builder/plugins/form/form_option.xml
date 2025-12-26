@@ -11,20 +11,18 @@
         </BuilderSelect>
     </BuilderRow>
     <FormActionFieldsOption activeForm="state.activeForm"/>
-    <BuilderRow label.translate="Marked Fields">
+    <BuilderRow label.translate="Marked Fields" tooltip.translate="Add an icon to the labels of required or optional fields">
         <BuilderSelect id="'field_mark_select'" action="'updateLabelsMark'">
             <BuilderSelectItem classAction="''">None</BuilderSelectItem>
             <BuilderSelectItem classAction="'o_mark_required'" id="'form_required_opt'">Required</BuilderSelectItem>
             <BuilderSelectItem classAction="'o_mark_optional'" id="'form_optional_opt'">Optional</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Mark Text">
+    <BuilderRow label.translate="Marker">
         <BuilderTextInput action="'setMark'" default="''" t-if="isActiveItem('form_required_opt') || isActiveItem('form_optional_opt')"/>
     </BuilderRow>
     <BuilderRow label.translate="Labels Width">
-        <BuilderNumberInput
-            styleAction="'width'"
-            unit="'px'" applyTo="'.s_website_form_label'"/>
+        <BuilderNumberInput action="'setFormLabelsWidth'" unit="'px'" default="null"/>
     </BuilderRow>
     <BuilderRow label.translate="On Success">
         <BuilderSelect preview="false" action="'onSuccess'">
@@ -49,7 +47,7 @@
 <t t-name="website.s_website_form_form_action_fields_option">
     <t t-if="state.formInfo.fields">
         <t t-foreach="state.formInfo.fields" t-as="field" t-key="field.name">
-            <BuilderRow t-if="field.type === 'many2one'" label="field.string" preview="false">
+            <BuilderRow t-if="field.type === 'many2one'" label="field.string" tooltip="field.help" preview="false">
                 <BuilderSelect actionParam="{ isSelect: true, fieldName: field.name }">
                     <BuilderSelectItem t-if="!field.required" action="'addActionField'" actionValue="'0'">
                         None
@@ -66,7 +64,7 @@
                 />
             </BuilderRow>
             <!-- TODO className="'o_we_large'" -->
-            <BuilderRow t-if="field.type === 'char'" label="field.string">
+            <BuilderRow t-if="field.type === 'char'" label="field.string" tooltip="field.help">
                 <BuilderTextInput actionParam="{ fieldName: field.name }" action="'addActionField'" default="''"/>
             </BuilderRow>
         </t>
@@ -100,7 +98,7 @@
                 <BuilderSelectItem actionValue="'url'">Url</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'integer'">Number</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'float'">Decimal Number</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'boolean'">Checkbox</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'boolean'" id="'custom_field_boolean_opt'">Checkbox</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'one2many'">Multiple Checkboxes</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'selection'">Radio Buttons</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'many2one'">Selection</BuilderSelectItem>
@@ -155,16 +153,33 @@
                 <i class="fa fa-eye-slash"/>
             </BuilderButton>
             <BuilderButton title.translate="Top" actionValue="'top'" iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"/>
-            <BuilderButton title.translate="Left" actionValue="'left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
-            <BuilderButton title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+            <BuilderButton id="'label_position_left_opt'" title.translate="Left" actionValue="'left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            <BuilderButton id="'label_position_right_opt'" title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
         </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow t-if="isActiveItem('label_position_right_opt') || isActiveItem('label_position_left_opt')" label.translate="Label Width" level="1">
+        <BuilderNumberInput styleAction="'width'" applyTo="'.s_website_form_label'" unit="'px'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Required">
+        <BuilderCheckbox t-if="!domState.elClassList.includes('s_website_form_model_required')"
+            id="'required_opt'" preview="false"
+            action="'toggleRequired'" actionParam="'s_website_form_required'"
+        />
     </BuilderRow>
     <BuilderRow label.translate="Link to country">
         <BuilderCheckbox action="'linkStateToCountry'" t-if="this.canLinkStateToCountry.value"
             id="'link_state_to_country_opt'" applyTo="'.s_website_form_input'"/>
     </BuilderRow>
-    <BuilderRow label.translate="Description">
-        <BuilderCheckbox action="'toggleDescription'" preview="false"/>
+    <BuilderRow label.translate="Description" tooltip.translate="Add a description on your field">
+        <!-- Use position options only when the target field is a "Checkbox" -->
+        <BuilderSelect t-if="isActiveItem('custom_field_boolean_opt')" action="'setDescription'">
+            <BuilderSelectItem actionValue="'none'">None</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'top'">Top (Inline)</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'center'">Center (Inline)</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'stacked'">Stacked</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'wrap'">Wrap</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderCheckbox t-else="" action="'setDescription'" preview="false"/>
     </BuilderRow>
     <BuilderRow label.translate="Placeholder">
         <BuilderTextInput attributeAction="'placeholder'"
@@ -187,12 +202,6 @@
         />
         <BuilderDateTimePicker type="'date'" attributeAction="'value'" action="'property'" actionParam="{ property: 'value', format: format.date }"
             applyTo="'.s_website_form_date input'"
-        />
-    </BuilderRow>
-    <BuilderRow label.translate="Required">
-        <BuilderCheckbox t-if="!domState.elClassList.includes('s_website_form_model_required')"
-            id="'required_opt'" preview="false"
-            action="'toggleRequired'" actionParam="'s_website_form_required'"
         />
     </BuilderRow>
     <BuilderRow label.translate="Max # of Files">
@@ -227,7 +236,8 @@
                 default="{ display_name: state.valueList.defaultItemName, selected: false }"
                 defaultNewValue="{ id: state.valueList.defaultItemName }"
                 forbidLastItemRemoval="true"
-                records="state.valueList.availableRecords" />
+                records="state.valueList.availableRecords"
+                autofocusNewItem="true"/>
         </div>
     </BuilderRow>
     <BuilderRow label.translate="Requirement"

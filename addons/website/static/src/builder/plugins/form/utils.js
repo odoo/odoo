@@ -3,7 +3,9 @@ import { escape } from "@web/core/utils/strings";
 import { renderToElement } from "@web/core/utils/render";
 import { generateHTMLId } from "@html_builder/utils/utils_css";
 import { isSmallInteger } from "@html_builder/utils/utils";
+import { markup } from "@odoo/owl";
 
+const DESCRIPTION_POSITION_PREFIX = "s_website_form_description_";
 export const VISIBILITY_DATASET = [
     "visibilityDependency",
     "visibilityCondition",
@@ -62,6 +64,7 @@ export function getDefaultFormat(el) {
         requiredMark: isRequiredMark(el),
         optionalMark: isOptionalMark(el),
         mark: getMark(el),
+        textPosition: getFieldType(el) === "boolean" ? "top" : "stacked",
     };
 }
 
@@ -122,7 +125,12 @@ export function renderField(field, resetId = false) {
         params.field.string = field.name;
     }
     if (field.description) {
-        params.default_description = _t("Describe your field here.");
+        params.default_description =
+            field.type === "boolean"
+                ? markup`<span>${_t(
+                      "I agree to the"
+                  )} <a class="o_translate_inline" href="#bottom" target="_blank">Terms & Conditions</a></span>`
+                : _t("Describe your field here.");
     } else if (["email_cc", "email_to"].includes(field.name)) {
         params.default_description = _t("Separate email addresses with a comma.");
     }
@@ -202,6 +210,8 @@ export function getFieldFormat(fieldEl) {
         requiredMark: requiredMark,
         optionalMark: optionalMark,
         mark: mark && mark.textContent,
+        textPosition:
+            getFieldType(fieldEl) == "boolean" ? getDescriptionPosition(fieldEl) : "stacked",
     };
     return format;
 }
@@ -239,6 +249,16 @@ export function getFieldType(fieldEl) {
 }
 
 /**
+ * Returns the "fillWith" value of the field input (if it exists).
+ *
+ * @param {HTMLElement} fieldEl
+ * @returns {string}
+ */
+export function getFieldFillWith(fieldEl) {
+    return `${fieldEl.querySelector("[data-fill-with]")?.dataset.fillWith}`;
+}
+
+/**
  * Set the active field properties on the field Object
  *
  * @param {HTMLElement} fieldEl
@@ -254,7 +274,8 @@ export function setActiveProperties(fieldEl, field) {
     const description = fieldEl.querySelector(".s_website_form_field_description");
     field.placeholder = input?.placeholder || "";
     if (input) {
-        // textarea value has no attribute,  date/datetime timestamp property is formated
+        // textarea value has no attribute, date/datetime timestamp property
+        // is formated
         field.value = input.getAttribute("value") || input.value;
     } else if (field.type === "boolean") {
         field.value = !!fieldEl.querySelector('input[type="checkbox"][checked]');
@@ -556,4 +577,22 @@ export function rerenderField(fieldEl, fields) {
     delete field.id;
     const newFieldEl = renderField(field);
     replaceFieldElement(fieldEl, newFieldEl);
+}
+
+/**
+ * Returns the field description layout (currently used for checkbox fields).
+ *
+ * @param {HTMLElement} fieldEl
+ */
+export function getDescriptionPosition(fieldEl) {
+    if (!fieldEl.querySelector(".s_website_form_field_description")) {
+        return "none";
+    } else {
+        const descriptionPositionClass = [...fieldEl.classList].find((cls) =>
+            cls.startsWith(DESCRIPTION_POSITION_PREFIX)
+        );
+        return descriptionPositionClass
+            ? descriptionPositionClass.replace(DESCRIPTION_POSITION_PREFIX, "")
+            : "stacked";
+    }
 }

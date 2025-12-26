@@ -112,8 +112,23 @@
                 </BuilderRow>
             </t>
         </BuilderRow>
+        <t t-set="subVariablesConfig" t-value="{'input-border-width': ['input-border-top-width', 'input-border-right-width', 'input-border-bottom-width', 'input-border-left-width']}"/>
         <BuilderRow label.translate="Border Width" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'input-border-width'" unit="'px'" saveUnit="'rem'"/>
+            <BuilderNumberInput actionParam="{mainParam: 'input-border-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'" default="null"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Top" level="1">
+                    <BuilderNumberInput actionParam="{mainParam: 'input-border-top-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Right" level="1">
+                    <BuilderNumberInput actionParam="{mainParam: 'input-border-right-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Bottom" level="1">
+                    <BuilderNumberInput actionParam="{mainParam: 'input-border-bottom-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Left" level="1">
+                    <BuilderNumberInput actionParam="{mainParam: 'input-border-left-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
         </BuilderRow>
         <BuilderRow label.translate="Border Radius" action="'customizeWebsiteVariable'">
             <BuilderNumberInput actionParam="'input-border-radius'" unit="'px'" saveUnit="'rem'"/>
