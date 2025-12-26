@@ -21,3 +21,11 @@ class TestUi(Testl10nFrPosCert):
         self.assertEqual(company.country_id.code, "FR", "Company should be set to France (FR)")
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour("l10nFrPosCertSelfInvoicingTour", login="pos_user")
+
+    def test_old_unit_price_correctly_computed(self):
+        """
+        Tests that the FR specific Old Unit Price sections in the OrderSummary and OrderReceipt are
+        correctly computed and displayed.
+        """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("test_old_unit_price_correctly_computed", login="pos_user")
