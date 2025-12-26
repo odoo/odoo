@@ -3265,8 +3265,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         Tests that the buttons such as +10 or +50 work even in languages such as
         french that have ',' as a decimal separator.
         """
-        self.env['res.lang']._activate_lang('fr_BE')
-        self.pos_user.write({'lang': 'fr_BE'})
+        lang = self.env['res.lang'].search([('code', '=', self.pos_user.lang)])
+        lang.write({'thousands_sep': '.', 'decimal_point': ','})
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_add_money_button_with_different_decimal_separator', login="pos_user")
 
     def test_convert_orderlines_to_combo(self):
