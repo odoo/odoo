@@ -2,26 +2,10 @@ import { _t } from "@web/core/l10n/translation";
 import { useService, useChildRef } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
-import { ImageSelector } from "./image_selector";
-import { IconSelector } from "./icon_selector";
 
 import { Component, useState, useRef, useEffect } from "@odoo/owl";
 import { iconClasses } from "@html_editor/utils/dom_info";
-
-export const TABS = {
-    IMAGES: {
-        id: "IMAGES",
-        title: _t("Images"),
-        Component: ImageSelector,
-        sequence: 10,
-    },
-    ICONS: {
-        id: "ICONS",
-        title: _t("Icons"),
-        Component: IconSelector,
-        sequence: 20,
-    },
-};
+import { TABS, renderAndSaveMedia } from "./media_dialog_utils"
 
 const DEFAULT_SEQUENCE = 50;
 const sequence = (tab) => tab.sequence ?? DEFAULT_SEQUENCE;
@@ -173,107 +157,6 @@ export class MediaDialog extends Component {
         this.props.extraTabs.forEach((tab) => this.addTab(tab));
     }
 
-    /**
-     * Render the selected media for insertion in the editor
-     *
-     * @param {Array<Object>} selectedMedia
-     * @returns {Array<HTMLElement>}
-     */
-    async renderMedia(selectedMedia) {
-        const elements = await this.tabs[this.state.activeTab].Component.createElements(
-            selectedMedia,
-            { orm: this.orm }
-        );
-        elements.forEach((element) => {
-            if (this.props.media) {
-                element.classList.add(...this.props.media.classList);
-                const style = this.props.media.getAttribute("style");
-                if (style) {
-                    element.setAttribute("style", style);
-                }
-                if (this.state.activeTab === TABS.IMAGES.id) {
-                    if (this.props.media.dataset.shape) {
-                        element.dataset.shape = this.props.media.dataset.shape;
-                    }
-                    if (this.props.media.dataset.shapeColors) {
-                        element.dataset.shapeColors = this.props.media.dataset.shapeColors;
-                    }
-                    if (this.props.media.dataset.shapeFlip) {
-                        element.dataset.shapeFlip = this.props.media.dataset.shapeFlip;
-                    }
-                    if (this.props.media.dataset.shapeRotate) {
-                        element.dataset.shapeRotate = this.props.media.dataset.shapeRotate;
-                    }
-                    if (this.props.media.dataset.hoverEffect) {
-                        element.dataset.hoverEffect = this.props.media.dataset.hoverEffect;
-                    }
-                    if (this.props.media.dataset.hoverEffectColor) {
-                        element.dataset.hoverEffectColor =
-                            this.props.media.dataset.hoverEffectColor;
-                    }
-                    if (this.props.media.dataset.hoverEffectStrokeWidth) {
-                        element.dataset.hoverEffectStrokeWidth =
-                            this.props.media.dataset.hoverEffectStrokeWidth;
-                    }
-                    if (this.props.media.dataset.hoverEffectIntensity) {
-                        element.dataset.hoverEffectIntensity =
-                            this.props.media.dataset.hoverEffectIntensity;
-                    }
-                }
-            }
-            for (const otherTab of Object.keys(this.tabs).filter(
-                (key) => key !== this.state.activeTab
-            )) {
-                for (const property of this.tabs[otherTab].Component.mediaSpecificStyles) {
-                    element.style.removeProperty(property);
-                }
-                element.classList.remove(...this.tabs[otherTab].Component.mediaSpecificClasses);
-                const extraClassesToRemove = [];
-                for (const name of this.tabs[otherTab].Component.mediaExtraClasses) {
-                    if (typeof name === "string") {
-                        extraClassesToRemove.push(name);
-                    } else {
-                        // Regex
-                        for (const className of element.classList) {
-                            if (className.match(name)) {
-                                extraClassesToRemove.push(className);
-                            }
-                        }
-                    }
-                }
-                // Remove classes that do not also exist in the target type.
-                element.classList.remove(
-                    ...extraClassesToRemove.filter((candidateName) => {
-                        for (const name of this.tabs[this.state.activeTab].Component
-                            .mediaExtraClasses) {
-                            if (typeof name === "string") {
-                                if (candidateName === name) {
-                                    return false;
-                                }
-                            } else {
-                                // Regex
-                                if (candidateName.match(name)) {
-                                    return false;
-                                }
-                            }
-                        }
-                        return true;
-                    })
-                );
-            }
-
-            element.classList.add(...this.extraClassesToAdd());
-
-            element.classList.remove(...this.initialIconClasses);
-            element.classList.remove("o_modified_image_to_save");
-            element.classList.remove("oe_edited_link");
-            element.classList.add(
-                ...this.tabs[this.state.activeTab].Component.mediaSpecificClasses
-            );
-        });
-        return elements;
-    }
-
     extraClassesToAdd() {
         return [];
     }
@@ -318,12 +201,17 @@ export class MediaDialog extends Component {
                 !this.props.media);
         this.state.isSaving = true;
         if (saveSelectedMedia) {
-            const elements = await this.renderMedia(selectedMedia);
-            if (this.props.multiImages) {
-                await this.props.save(elements, selectedMedia, this.state.activeTab);
-            } else {
-                await this.props.save(elements[0], selectedMedia, this.state.activeTab);
-            }
+            await renderAndSaveMedia({
+                orm: this.orm,
+                activeTab: this.state.activeTab,
+                availableTabs: this.tabs,
+                oldMediaNode: this.props.media,
+                selectedMedia: selectedMedia,
+                extraClassesToAdd: this.extraClassesToAdd(),
+                extraClassesToRemove: this.initialIconClasses,
+                multiImages: this.props.multiImages,
+                saveFunction: this.props.save,
+            });
         }
         this.props.close();
         this.state.isSaving = false;

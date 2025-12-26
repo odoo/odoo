@@ -22,7 +22,6 @@ export class BackgroundImageOptionPlugin extends Plugin {
     static shared = [
         "changeEditingEl",
         "setImageBackground",
-        "loadReplaceBackgroundImage",
         "applyReplaceBackgroundImage",
         "removeBackgroundImage",
     ];
@@ -81,21 +80,9 @@ export class BackgroundImageOptionPlugin extends Plugin {
             newEditingEl.classList.toggle("o_modified_image_to_save", isModifiedImage);
         }
     }
-    loadReplaceBackgroundImage({ editingElement }) {
-        return new Promise((resolve) => {
-            const onClose = this.dependencies.media.openMediaDialog({
-                onlyImages: true,
-                node: editingElement,
-                save: async (imageEl) => {
-                    resolve(imageEl);
-                },
-            });
-            onClose.then(resolve);
-        });
-    }
     applyReplaceBackgroundImage({
         editingElement,
-        loadResult: imageEl,
+        imageEl,
         params: { forceClean = false },
     }) {
         if (!forceClean && !imageEl) {
@@ -150,7 +137,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
     removeBackgroundImage({ editingElement, params }) {
         this.applyReplaceBackgroundImage({
             editingElement,
-            loadResult: "",
+            imageEl: "",
             params: { ...params, forceClean: true },
         });
         this.dispatchTo("on_bg_image_hide_handlers", editingElement);
@@ -214,13 +201,22 @@ export class SelectFilterColorAction extends StyleAction {
 
 export class ToggleBgImageAction extends BuilderAction {
     static id = "toggleBgImage";
-    static dependencies = ["backgroundImageOption"];
-    load(context) {
-        return this.dependencies.backgroundImageOption.loadReplaceBackgroundImage(context);
+    static dependencies = ["backgroundImageOption", "media"];
+    async apply(context) {
+        await this.dependencies.media.openMediaDialog(this.getMediaDialogProps(context));
     }
-    apply(context) {
-        return this.dependencies.backgroundImageOption.applyReplaceBackgroundImage(context);
+
+    getMediaDialogProps(context) {
+        return {
+            onlyImages: true,
+            node: context.editingElement,
+            save: async (imageEl) => {
+                context.imageEl = imageEl;
+                this.dependencies.backgroundImageOption.applyReplaceBackgroundImage(context)
+            },
+        }
     }
+
     isApplied({ editingElement }) {
         return !!getBgImageURLFromEl(editingElement);
     }
@@ -239,12 +235,21 @@ export class RemoveBgImageAction extends BuilderAction {
 
 export class ReplaceBgImageAction extends BuilderAction {
     static id = "replaceBgImage";
-    static dependencies = ["backgroundImageOption"];
-    load(context) {
-        return this.dependencies.backgroundImageOption.loadReplaceBackgroundImage(context);
+    static dependencies = ["backgroundImageOption", "media"];
+    async apply(context) {
+        await this.dependencies.media.openMediaDialog(this.getMediaDialogProps(context));
     }
-    apply(context) {
-        return this.dependencies.backgroundImageOption.applyReplaceBackgroundImage(context);
+
+
+    getMediaDialogProps(context) {
+        return {
+            onlyImages: true,
+            node: context.editingElement,
+            save: async (imageEl) => {
+                context.imageEl = imageEl;
+                this.dependencies.backgroundImageOption.applyReplaceBackgroundImage(context)
+            },
+        }
     }
 }
 export class DynamicColorAction extends BuilderAction {
