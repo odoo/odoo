@@ -37,9 +37,10 @@ class DriverController(http.Controller):
             # Skip the request if it was already executed (duplicated action calls)
             if iot_device._check_idempotency(**data, session_id=session_id):
                 return False
-
-            _logger.debug("Calling action %s for device %s", data.get('action', ''), device_identifier)
+            start_operation_time = time.perf_counter()
+            _logger.info("Longpolling: calling action %s for device %s", data.get('action', ''), device_identifier)
             iot_device.action(data)
+            _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
             return True
         return False
 
