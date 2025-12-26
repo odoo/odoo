@@ -1,5 +1,6 @@
 import io
 import json
+from http import HTTPStatus
 from lxml import etree
 from zipfile import ZipFile
 
@@ -48,3 +49,17 @@ class TestPivotExport(HttpCase):
         self.assertEqual(xml_data['B1'], '500')
         self.assertEqual(xml_data['A2'], '0')
         self.assertEqual(xml_data['B2'], '42')
+
+    def test_export_xlsx_with_empty_data(self):
+        """ Test the export_xlsx method of the pivot controller without jdata """
+        self.authenticate('admin', 'admin')
+
+        response = self.url_open(
+            '/web/pivot/export_xlsx',
+            data={
+                'data': json.dumps({}),
+                'csrf_token': http.Request.csrf_token(self),
+            },
+        )
+        self.assertEqual(response.status_code, HTTPStatus.UNPROCESSABLE_ENTITY)
+        self.assertIn('No data to export', response.text)
