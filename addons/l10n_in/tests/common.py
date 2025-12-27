@@ -109,6 +109,7 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             AccountChartTemplate.ref("sgst_sale_12")
             + AccountChartTemplate.ref("cess_5_plus_1591_sale")
         )
+        cls.exempt = AccountChartTemplate.ref('exempt_sale')
 
         # === Products === #
         cls.product_a.write({
