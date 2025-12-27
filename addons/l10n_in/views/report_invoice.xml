@@ -61,21 +61,13 @@
 
         <t name="invoice_title" position="replace">
             <t name="invoice_title">
-                <span t-if="o.invoice_line_ids.tax_ids">
-                    Tax Invoice
-                </span>
-                <span t-else="">
-                    Invoice
-                </span>
+                <span t-out="o._get_l10n_in_invoice_label()"/>
             </t>
         </t>
         <t name="proforma_invoice_title" position="replace">
-                <span t-if="o.invoice_line_ids.tax_ids">
-                   Proforma Tax Invoice
-                </span>
-                <span t-else="">
-                    Proforma Invoice
-                </span>
+            <t name="proforma_invoice_title">
+                Proforma <span t-out="o._get_l10n_in_invoice_label()"/>
+            </t>
         </t>
 
         <xpath expr="//div[@id='payment_term']" position="after">
