@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-27 01:48+0000\n"
-"PO-Revision-Date: 2025-11-25 09:49+0000\n"
+"PO-Revision-Date: 2025-12-26 14:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/stock/hi/>"
 "\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -334,6 +334,18 @@ msgid ""
 "* Transit Location: Counterpart location that should be used in inter-"
 "company or inter-warehouses operations"
 msgstr ""
+"* वेंडर लोकेशन: वेंडर से आने वाले प्रॉडक्ट के लिए सोर्स लोकेशन दिखाने वाली वर्चुअल लोकेशन\n"
+"* आपके वेयरहाउस में जगहों की पदानुक्रम (जैसे, मुख्य क्षेत्र और उसके अंदर के उप-क्षेत्र) बनाने के लिए इस्तेमा"
+"ल की जाने वाली वर्चुअल लोकेशन, जो अपनी चाइल्ड लोकेशन को जोड़ती है; इसमें सीधे प्रॉडक्ट नहीं हो सकते\n"
+"* इंटरनल लोकेशन: आपके अपने वेयरहाउस के अंदर की भौतिक (फ़िज़िकल) लोकेशन,\n"
+"* ग्राहक लोकेशन: यह एक वर्चुअल जगह है जो उन प्रॉडक्ट के पहुंचने की जगह को दर्शाती है जो ग्राहकों को भेजे "
+"जाते हैं\n"
+"* इन्वेंट्री लॉस: स्टॉक स्तर को सही करने के लिए इस्तेमाल किए जाने वाले इन्वेंट्री ऑपरेशनों के लिए काउंटरपार्ट लोके"
+"शन के रूप में काम करने वाली वर्चुअल लोकेशन (फ़िज़िकल इन्वेंट्री)\n"
+"* प्रॉडक्शन: प्रॉडक्शन ऑपरेशनों के लिए वर्चुअल काउंटरपार्ट लोकेशन: यह लोकेशन सामग्री का इस्तेमाल करती है "
+"और तैयार प्रॉडक्ट बनाती है\n"
+"* ट्रांज़िट लोकेशन: यह एक काउंटरपार्ट लोकेशन है जिसका इस्तेमाल अलग-अलग कंपनियों या अलग-अलग गोदामों के बीच "
+"सामान के ट्रांसफ़र के लिए किया जाता है"
 
 #. module: stock
 #. odoo-python
@@ -1547,6 +1559,10 @@ msgid ""
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
+"डिफ़ॉल्ट रूप से, सिस्टम सोर्स लोकेशन के स्टॉक से लेगा और उपलब्धता के लिए इंतज़ार करेगा. दूसरा विकल्प आपको सीधे "
+"सोर्स लोकेशन पर ख़रीद बनाने देता है, (और इस तरह उसके मौजूदा स्टॉक को नज़रअंदाज़ करता है) ताकि प्रॉडक्ट "
+"इकट्ठा किए जा सकें. अगर हम मूव को चेन करना चाहते हैं और चाहते हैं कि यह पिछले मूव के लिए इंतज़ार करे, तो "
+"दूसरा विकल्प चुनें।"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
@@ -1783,7 +1799,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Clear"
-msgstr ""
+msgstr "क्लियर"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
@@ -2334,6 +2350,13 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"प्रॉडक्ट की मौजूदा क्वांटिटी.\n"
+"अगर आप सिर्फ एक स्टॉक लोकेशन को देखते हैं, तो इसमें उस लोकेशन या उससे जुड़ी किसी भी छोटी जगह में रखा सामान "
+"शामिल करें.\n"
+"अगर आप सिर्फ एक वेयरहाउस को देखते हैं, तो इसमें उस वेयरहाउस के स्टॉक लोकेशन या उससे जुड़ी किसी भी छोटी "
+"जगह में रखा सामान शामिल करें.\n"
+"इस दुकान के वेयरहाउस के स्टॉक लोकेशन या उससे जुड़ी किसी भी छोटी जगह में रखा सामान शामिल करें.\n"
+"बाकी सभी स्थितियों में, इसमें 'आंतरिक' प्रकार वाले किसी भी स्टॉक लोकेशन में रखा सामान शामिल करें।"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__custom
@@ -3511,7 +3534,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__print_format
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__print_format
 msgid "Format"
-msgstr ""
+msgstr "फ़ॉर्मैट"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__free_qty
@@ -4485,7 +4508,7 @@ msgstr "जनवरी"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "John Doe"
-msgstr ""
+msgstr "जॉन डोई"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_lead_days
@@ -4560,7 +4583,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Laptop"
-msgstr ""
+msgstr "लैपटॉप"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -5027,7 +5050,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Lots/Serial Numbers"
-msgstr ""
+msgstr "लॉट्स/सीरियल नंबर"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
@@ -5330,6 +5353,10 @@ msgid ""
 "to appear as a third party in the context of any claim for damages filed "
 "against the client by an end consumer."
 msgstr ""
+"My Company (Chicago) यह वादा करती है कि वह तय समय के अंदर अच्छा काम करके देगी. लेकिन, इसका "
+"मतलब यह नहीं है कि वे मनचाहे नतीजे की गारंटी लेते हैं (वे केवल कोशिश करने की गारंटी लेते हैं, नतीजे की नहीं). "
+"अगर ग्राहक का कोई कस्टमर ग्राहक पर हर्जाने का दावा करता है, तो ग्राहक उस मामले में My Company "
+"(Chicago) को घसीट नहीं सकता या उसे बीच में नहीं ला सकता।"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -7558,6 +7585,10 @@ msgid ""
 "orders 2 pallets of 1000 units each and you only have 1600 in stock, then "
 "1600 will be reserved"
 msgstr ""
+"सिर्फ़ फुल पैकेजिंग रिज़र्व करें: आंशिक पैकेजिंग रिज़र्व नहीं होगी. अगर ग्राहक 1000 यूनिट के 2 पैलेट ऑर्डर करता "
+"है और स्टॉक में केवल 1600 हैं, तो केवल 1000 रिज़र्व होंगे\n"
+"आंशिक पैकेजिंग रिज़र्व करें: आंशिक पैकेजिंग रिज़र्व करने की अनुमति दें. अगर ग्राहक 1000 यूनिट के 2 पैलेट ऑर्डर "
+"करता है और स्टॉक में केवल 1600 हैं, तो 1600 रिज़र्व होंगे"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__packaging_reserve_method
@@ -8026,7 +8057,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__barcode_separator
 msgid "Separator"
-msgstr ""
+msgstr "सेपरेटर"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__9
@@ -8060,7 +8091,7 @@ msgstr "सिक्वेंस प्रीफ़िक्स"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
-msgstr ""
+msgstr "सीरियल नंबर"
 
 #. module: stock
 #. odoo-python
@@ -8127,6 +8158,15 @@ msgid ""
 "Least Packages: FIFO but with the least number of packages possible when "
 "there are several packages containing the same product."
 msgstr ""
+"इस प्रॉडक्ट कैटेगरी के लिए सोर्स लोकेशन की परवाह किए बिना इस्तेमाल की जाने वाली एक खास हटाने की रणनीति तय "
+"करें.\n"
+"\n"
+"FIFO: प्रॉडक्ट/लॉट जो पहले स्टॉक किए गए थे, उन्हें पहले बाहर निकाला जाएगा.\n"
+"LIFO: प्रॉडक्ट/लॉट जो आखिरी बार स्टॉक किए गए थे, उन्हें पहले बाहर निकाला जाएगा.\n"
+"सबसे नज़दीकी लोकेशन: टारगेट लोकेशन के सबसे नज़दीक वाले प्रॉडक्ट/लॉट को पहले बाहर निकाला जाएगा.\n"
+"FEFO: सबसे नज़दीकी हटाने की तारीख वाले प्रॉडक्ट/लॉट को पहले बाहर निकाला जाएगा "
+"(इस तरीक़े की उपलब्धता \"खत्म होने की तारीख\" सेटिंग पर निर्भर करती है).\n"
+"सबसे कम पैकेज: FIFO, लेकिन जब एक ही प्रॉडक्ट वाले कई पैकेज हों, तो कम से कम पैकेज इस्तेमाल हों।"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8790,6 +8830,12 @@ msgid ""
 "available, the system will try to find a  rule to bring the products in the "
 "source location."
 msgstr ""
+"स्टॉक से लें: प्रॉडक्ट, सोर्स लोकेशन के उपलब्ध स्टॉक से लिए जाएंगे.\n"
+"दूसरा नियम ट्रिगर करें: सिस्टम सोर्स लोकेशन में प्रॉडक्ट लाने के लिए एक स्टॉक नियम खोजने की कोशिश करेगा. उपलब्"
+"ध स्टॉक को नज़रअंदाज़ किया जाएगा.\n"
+"स्टॉक से लें, अगर अनुपलब्ध है, तो दूसरा नियम ट्रिगर करें: प्रॉडक्ट, सोर्स लोकेशन के उपलब्ध स्टॉक से लिए "
+"जाएंगे. अगर कोई स्टॉक उपलब्ध नहीं है, तो सिस्टम सोर्स लोकेशन में प्रॉडक्ट लाने के लिए एक नियम खोजने की कोशिश "
+"करेगा।"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_allocation
@@ -9654,7 +9700,7 @@ msgstr "स्थानांतरण"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Transfer to"
-msgstr ""
+msgstr "यहां ट्रांसफ़र करें"
 
 #. module: stock
 #. odoo-python
