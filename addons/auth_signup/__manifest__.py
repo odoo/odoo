@@ -18,6 +18,7 @@ Allow users to sign up and reset their password
     'data': [
         'data/ir_config_parameter_data.xml',
         'data/ir_cron_data.xml',
+        'data/email_body_views.xml',
         'data/mail_template_data.xml',
         'views/res_config_settings_views.xml',
         'views/res_users_views.xml',
@@ -26,6 +27,7 @@ Allow users to sign up and reset their password
         'views/webclient_templates.xml',
         ],
     'bootstrap': True,
+    'post_init_hook': '_post_init_hook',
     'assets': {
         'web.assets_frontend': [
             'auth_signup/static/**/*',

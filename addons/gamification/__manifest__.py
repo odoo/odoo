@@ -35,6 +35,7 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'security/gamification_security.xml',
         'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
+        'data/email_body_views.xml',
         'data/mail_template_data.xml',  # keep before to populate challenge reports
         'data/gamification_badge_data.xml',
         'data/gamification_challenge_data.xml',
@@ -49,6 +50,7 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
             'gamification/static/src/**/*',
         ],
     },
+    'post_init_hook': '_post_init_hook',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -36,6 +36,25 @@ def _project_post_init(env):
     # Create analytic plan fields on project model for existing plans
     env['account.analytic.plan'].search([])._sync_plan_column('project.project')
 
+    _migrate_email_templates_to_body_view(env)
+
+
+def _migrate_email_templates_to_body_view(env):
+    """Set body_view_id on existing templates without clearing body_html.
+
+    This preserves user customizations while enabling view inheritance for new
+    installs. Existing body_html takes priority over body_view_id.
+    """
+    template_view_mapping = [
+        ('project.mail_template_data_project_task', 'project.email_body_project_task'),
+        ('project.rating_project_request_email_template', 'project.email_body_rating_project_request'),
+    ]
+    for template_xmlid, view_xmlid in template_view_mapping:
+        template = env.ref(template_xmlid, raise_if_not_found=False)
+        view = env.ref(view_xmlid, raise_if_not_found=False)
+        if template and view and not template.body_view_id:
+            template.body_view_id = view
+
 def _project_uninstall_hook(env):
     """Since the m2m table for the project share wizard's `partner_ids` field is not dropped at uninstall, it is
     necessary to ensure it is emptied, else re-installing the module will fail due to foreign keys constraints."""

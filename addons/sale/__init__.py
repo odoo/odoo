@@ -13,6 +13,7 @@ from . import wizard
 def _post_init_hook(env):
     _synchronize_crons(env)
     _setup_downpayment_account(env)
+    _migrate_email_templates_to_body_view(env)
 
 
 def _synchronize_crons(env):
@@ -31,3 +32,22 @@ def _setup_downpayment_account(env):
             property_downpayment_account = env['account.chart.template'].with_company(company).ref(template_data['downpayment_account_id'], raise_if_not_found=False)
             if property_downpayment_account:
                 company.downpayment_account_id = property_downpayment_account
+
+
+def _migrate_email_templates_to_body_view(env):
+    """Set body_view_id on existing templates without clearing body_html.
+
+    This preserves user customizations while enabling view inheritance for new
+    installs. Existing body_html takes priority over body_view_id.
+    """
+    template_view_mapping = [
+        ('sale.email_template_edi_sale', 'sale.email_body_edi_sale'),
+        ('sale.email_template_proforma', 'sale.email_body_proforma'),
+        ('sale.mail_template_sale_confirmation', 'sale.email_body_sale_confirmation'),
+        ('sale.mail_template_sale_payment_executed', 'sale.email_body_sale_payment_executed'),
+    ]
+    for template_xmlid, view_xmlid in template_view_mapping:
+        template = env.ref(template_xmlid, raise_if_not_found=False)
+        view = env.ref(view_xmlid, raise_if_not_found=False)
+        if template and view and not template.body_view_id:
+            template.body_view_id = view

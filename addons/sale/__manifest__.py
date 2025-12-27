@@ -26,6 +26,7 @@ This module contains all the common features of Sales Management and eCommerce.
         'data/ir_cron.xml',
         'data/ir_sequence_data.xml',
         'data/mail_message_subtype_data.xml',
+        'data/email_body_views.xml',
         'data/mail_template_data.xml',
         'data/sale_tour.xml',
         'data/ir_config_parameter.xml', # Needs mail_template_data

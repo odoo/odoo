@@ -25,6 +25,7 @@ If you need to manage your meetings, you should install the CRM module.
         'security/ir.model.access.csv',
         'security/calendar_security.xml',
         'data/calendar_cron.xml',
+        'data/email_body_views.xml',
         'data/mail_template_data.xml',
         'data/calendar_data.xml',
         'data/mail_activity_type_data.xml',
@@ -58,6 +59,7 @@ If you need to manage your meetings, you should install the CRM module.
             'calendar/static/tests/tours/**/*',
         ],
     },
+    'post_init_hook': '_post_init_hook',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

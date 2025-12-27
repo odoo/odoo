@@ -50,6 +50,7 @@
         'report/project_report_views.xml',
         'data/ir_cron_data.xml',
         'data/mail_message_subtype_data.xml',
+        'data/email_body_views.xml',
         'data/mail_template_data.xml',
         'data/project_data.xml',
         'data/project_tour.xml',
