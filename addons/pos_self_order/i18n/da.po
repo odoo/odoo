@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-03 18:38+0000\n"
+"POT-Creation-Date: 2025-12-26 18:39+0000\n"
 "PO-Revision-Date: 2025-11-19 14:56+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -33,12 +33,6 @@ msgstr "\"QR koder\""
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "(require Odoo Enterprise)"
 msgstr "(kræver Odoo Enterprise)"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
-msgid "/ Tracker number:"
-msgstr "/ Tracker nummer:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -96,31 +90,31 @@ msgstr ""
 "                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
 "                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
 "                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
-"                    <t t-set=\"state\" t-value=\"client.state_id.name or ''\""
-"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or "
+"''\"/>\n"
 "                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
-"                    <t t-set=\"country\" t-value="
-"\"client.country_id.name or ''\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hej <t t-out=\"client_name\""
-">kundenavn</t>,</t>\n"
+"                        <t t-if=\"client_name\">Hej <t t-"
+"out=\"client_name\">kundenavn</t>,</t>\n"
 "                        <t t-else=\"\">Hej</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Din ordre <t t-out=\"object.tracking_number\">...</"
 "t> på <t t-out=\"object.amount_total\">xx.xx kr.</t> er blevet bekræftet. "
 "<span t-if=\"object.preset_time or client.street\">Den vil være klar</span> "
-"<span t-if=\"object.preset_time\">kl. <t t-out=\"format_time("
-"time=object.preset_time, tz=tz, time_format='short', lang_code=lg)"
-"\">12:00</t></span> <span t-if=\"client.street\">på <t t-out=\"street\""
-">gade</t>, <t t-out=\"state\">stat</t>, <t t-out=\"client.zip or ''\""
-">postnummer</t>, <t t-out=\"city\">by</t>, <t t-out=\"country\""
-">land</t></span></div>\n"
+"<span t-if=\"object.preset_time\">kl. <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00</t></span> <span t-if=\"client.street\">på <t t-"
+"out=\"street\">gade</t>, <t t-out=\"state\">stat</t>, <t t-out=\"client.zip "
+"or ''\">postnummer</t>, <t t-out=\"city\">by</t>, <t t-out=\"country\">land</"
+"t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Tak.</div>\n"
 "                    <br/>\n"
@@ -164,21 +158,21 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hej <t t-out=\"client_name\""
-">kundenavn</t>,</t>\n"
+"                        <t t-if=\"client_name\">Hej <t t-"
+"out=\"client_name\">kundenavn</t>,</t>\n"
 "                        <t t-else=\"\">Hej</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Din ordre <t t-out=\"object.tracking_number\">...</"
 "t> på <t t-out=\"object.amount_total\">xx.xx kr.</t> er blevet bekræftet. "
-"<span t-if=\"object.preset_time\">Den vil være klar kl. <t t-out="
-"\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"<span t-if=\"object.preset_time\">Den vil være klar kl. <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
 "lang_code=lg)\">12:00</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Tak.</div>\n"
@@ -807,6 +801,12 @@ msgid "Kiosk"
 msgstr "Kiosk"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Kiosk T"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
 msgid "Label"
 msgstr "Tekst"
@@ -1003,6 +1003,7 @@ msgstr "Åben Kiosk"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
 msgid "Order"
 msgstr "Ordre"
 
@@ -1346,6 +1347,12 @@ msgstr "Selvbestillingsfunktion"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
 msgid "Self Ordering Url"
 msgstr "Selvbestillings URL"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Self-Order T"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1730,6 +1737,9 @@ msgstr "ikke længere tilgængelig. Gå tilbage, og redigér din ordre."
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "odoo"
 msgstr "odoo"
+
+#~ msgid "/ Tracker number:"
+#~ msgstr "/ Tracker nummer:"
 
 #~ msgid ""
 #~ "%s is not available anymore, it has thus been removed from your order. "

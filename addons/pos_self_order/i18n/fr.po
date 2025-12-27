@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-03 18:38+0000\n"
+"POT-Creation-Date: 2025-12-26 18:39+0000\n"
 "PO-Revision-Date: 2025-08-20 23:52+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -34,12 +34,6 @@ msgstr "\"Codes QR\""
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "(require Odoo Enterprise)"
 msgstr "(nécessite Odoo Enterprise)"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
-msgid "/ Tracker number:"
-msgstr "/ Numéro du bipeur :"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -810,6 +804,12 @@ msgid "Kiosk"
 msgstr "Kiosque"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Kiosk T"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
 msgid "Label"
 msgstr "Libellé"
@@ -1011,6 +1011,7 @@ msgstr "Ouvrir le kiosque"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
 msgid "Order"
 msgstr "Commande"
 
@@ -1356,6 +1357,12 @@ msgstr "Mode service commande autonome"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
 msgid "Self Ordering Url"
 msgstr "URL commande autonome"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Self-Order T"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1742,6 +1749,9 @@ msgstr "plus disponible. Revenez en arrière et modifiez votre commande."
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "odoo"
 msgstr "odoo"
+
+#~ msgid "/ Tracker number:"
+#~ msgstr "/ Numéro du bipeur :"
 
 #~ msgid ""
 #~ "%s is not available anymore, it has thus been removed from your order. "

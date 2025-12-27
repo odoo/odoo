@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-03 18:38+0000\n"
+"POT-Creation-Date: 2025-12-26 18:39+0000\n"
 "PO-Revision-Date: 2025-11-19 14:56+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -35,12 +35,6 @@ msgstr "\"QR 코드\""
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "(require Odoo Enterprise)"
 msgstr "(Odoo 엔터프라이즈 필요)"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
-msgid "/ Tracker number:"
-msgstr "/  배송 조회 번호:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -614,8 +608,9 @@ msgstr "이메일 양식"
 #: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
 msgid ""
 "Enable QR menu in the Restaurant settings to get QR codes for free on tables."
-msgstr "레스토랑 설정에서 QR 메뉴 기능을 활성화하면 테이블에서 QR 코드 사용 기능을 "
-"무료로 사용할 수 있습니다."
+msgstr ""
+"레스토랑 설정에서 QR 메뉴 기능을 활성화하면 테이블에서 QR 코드 사용 기능을 무"
+"료로 사용할 수 있습니다."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -801,6 +796,12 @@ msgstr "다음과 같이"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_search_view
 msgid "Kiosk"
 msgstr "키오스크"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Kiosk T"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
@@ -999,6 +1000,7 @@ msgstr "키오스크 열기"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
 msgid "Order"
 msgstr "주문"
 
@@ -1341,6 +1343,12 @@ msgstr "셀프 주문 서비스 모드"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
 msgid "Self Ordering Url"
 msgstr "셀프 주문 Url"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Self-Order T"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1725,6 +1733,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "odoo"
 msgstr "odoo"
+
+#~ msgid "/ Tracker number:"
+#~ msgstr "/  배송 조회 번호:"
 
 #~ msgid ""
 #~ "%s is not available anymore, it has thus been removed from your order. "
