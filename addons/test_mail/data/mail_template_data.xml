@@ -63,4 +63,58 @@
         <p>Hello <t t-out="partner.name"/>, this comes from <t t-out="object.name"/>.</p>
     </template>
 
+    <!-- QWeb view for testing body_view_id feature -->
+    <record id="email_body_view_base" model="ir.ui.view">
+        <field name="name">test.email.body.base</field>
+        <field name="type">qweb</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <t t-name="test_mail.email_body_view_base">
+                <div class="email-wrapper">
+                    <div id="email-header">
+                        <h1>Base Email Header</h1>
+                    </div>
+                    <div id="email-body">
+                        <p>Hello <t t-out="object.name"/>!</p>
+                        <div id="email-content">
+                            <p>This is the base content.</p>
+                        </div>
+                    </div>
+                    <div id="email-footer">
+                        <p>Base Footer</p>
+                    </div>
+                </div>
+            </t>
+        </field>
+    </record>
+
+    <!-- Extension view to test view inheritance with body_view_id -->
+    <record id="email_body_view_extend" model="ir.ui.view">
+        <field name="name">test.email.body.extend</field>
+        <field name="type">qweb</field>
+        <field name="mode">extension</field>
+        <field name="inherit_id" ref="email_body_view_base"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='email-header']" position="inside">
+                <p class="extended-header">Extended Header Content</p>
+            </xpath>
+            <xpath expr="//div[@id='email-content']" position="inside">
+                <p class="extended-content">This content was added by the extension view.</p>
+            </xpath>
+            <xpath expr="//div[@id='email-footer']" position="inside">
+                <p class="extended-footer">Extended Footer</p>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Mail template using body_view_id -->
+    <record id="mail_template_with_body_view" model="mail.template">
+        <field name="name">Test: Template with Body View</field>
+        <field name="model_id" ref="test_mail.model_mail_test_container"/>
+        <field name="subject">Test Subject for {{ object.name }}</field>
+        <field name="body_view_id" ref="email_body_view_base"/>
+        <field name="email_to">{{ object.customer_id.email }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
 </odoo>

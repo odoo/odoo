@@ -413,3 +413,165 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         self.assertEqual(mails_sudo[1].body_html,
                          f'<body><p>EnglishBody for {test_records[1].name}</p> English Layout for Lang Chatter Model</body>')
         self.assertEqual(mails_sudo[1].subject, f'EnglishSubject for {test_records[1].name}')
+
+
+@tagged('mail_template', 'mail_template_body_view')
+class TestMailTemplateBodyView(MailCommon):
+    """Test body_view_id feature and view inheritance for email templates."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.test_container = cls.env['mail.test.container'].create({
+            'name': 'Test Container',
+            'customer_id': cls.partner_admin.id,
+        })
+        # Reference the views and template created in data files
+        cls.base_view = cls.env.ref('test_mail.email_body_view_base')
+        cls.extension_view = cls.env.ref('test_mail.email_body_view_extend')
+        cls.template_with_view = cls.env.ref('test_mail.mail_template_with_body_view')
+
+    def test_body_view_id_field_exists(self):
+        """Test that body_view_id field exists and is properly configured."""
+        self.assertTrue(hasattr(self.env['mail.template'], 'body_view_id'))
+        self.assertTrue(self.template_with_view.body_view_id)
+        self.assertEqual(self.template_with_view.body_view_id, self.base_view)
+
+    def test_body_view_renders_when_body_html_empty(self):
+        """Test that body_view_id is used when body_html is empty."""
+        # Ensure body_html is empty
+        self.template_with_view.body_html = False
+
+        rendered = self.template_with_view._render_field('body_html', self.test_container.ids)
+        body = rendered[self.test_container.id]
+
+        # Check base view content
+        self.assertIn('email-wrapper', body)
+        self.assertIn('email-header', body)
+        self.assertIn('Base Email Header', body)
+        self.assertIn('Test Container', body)
+        self.assertIn('Base Footer', body)
+
+    def test_body_html_takes_priority(self):
+        """Test that body_html is used when not empty, ignoring body_view_id."""
+        custom_body = '<p>Custom body content here</p>'
+        self.template_with_view.body_html = custom_body
+
+        rendered = self.template_with_view._render_field('body_html', self.test_container.ids)
+        body = rendered[self.test_container.id]
+
+        # Should contain custom body, not view content
+        self.assertIn('Custom body content here', body)
+        self.assertNotIn('Base Email Header', body)
+
+    def test_view_inheritance_applied(self):
+        """Test that extension view content is included when rendering."""
+        # Ensure body_html is empty to use view
+        self.template_with_view.body_html = False
+
+        rendered = self.template_with_view._render_field('body_html', self.test_container.ids)
+        body = rendered[self.test_container.id]
+
+        # Check that extension view content is included
+        self.assertIn('Extended Header Content', body)
+        self.assertIn('extended-content', body)
+        self.assertIn('Extended Footer', body)
+
+    def test_is_body_customized_computed(self):
+        """Test is_body_customized computed field."""
+        # Template with only body_view_id (no body_html)
+        self.template_with_view.body_html = False
+        self.assertFalse(self.template_with_view.is_body_customized)
+
+        # Template with body_html set
+        self.template_with_view.body_html = '<p>Custom</p>'
+        self.assertTrue(self.template_with_view.is_body_customized)
+
+        # Template with neither (just whitespace)
+        self.template_with_view.body_html = '   '
+        self.assertFalse(self.template_with_view.is_body_customized)
+
+    def test_action_copy_view_to_body(self):
+        """Test action_copy_view_to_body copies view arch to body_html."""
+        self.template_with_view.body_html = False
+        self.assertFalse(self.template_with_view.is_body_customized)
+
+        self.template_with_view.action_copy_view_to_body()
+
+        # Now body_html should contain view content
+        self.assertTrue(self.template_with_view.body_html)
+        self.assertTrue(self.template_with_view.is_body_customized)
+        self.assertIn('email-wrapper', self.template_with_view.body_html)
+
+    def test_action_reset_body_to_view(self):
+        """Test action_reset_body_to_view clears body_html."""
+        self.template_with_view.body_html = '<p>Custom content</p>'
+        self.assertTrue(self.template_with_view.is_body_customized)
+
+        self.template_with_view.action_reset_body_to_view()
+
+        # body_html should be cleared
+        self.assertFalse(self.template_with_view.is_body_customized)
+
+    def test_constraint_qweb_type(self):
+        """Test constraint that body_view_id must be qweb type."""
+        # Create a non-qweb view
+        non_qweb_view = self.env['ir.ui.view'].create({
+            'name': 'test.non.qweb',
+            'type': 'form',
+            'model': 'res.partner',
+            'arch': '<form><field name="name"/></form>',
+        })
+
+        with self.assertRaises(Exception):
+            self.env['mail.template'].create({
+                'name': 'Test Invalid View Type',
+                'model_id': self.env['ir.model']._get_id('mail.test.container'),
+                'body_view_id': non_qweb_view.id,
+            })
+
+    def test_constraint_primary_mode(self):
+        """Test constraint that body_view_id must be primary mode."""
+        # The extension view has mode='extension', should fail
+        with self.assertRaises(Exception):
+            self.env['mail.template'].create({
+                'name': 'Test Invalid View Mode',
+                'model_id': self.env['ir.model']._get_id('mail.test.container'),
+                'body_view_id': self.extension_view.id,
+            })
+
+    def test_empty_result_without_body_or_view(self):
+        """Test that empty string is returned when no body_html or body_view_id."""
+        template = self.env['mail.template'].create({
+            'name': 'Empty Template',
+            'model_id': self.env['ir.model']._get_id('mail.test.container'),
+        })
+
+        rendered = template._render_field('body_html', self.test_container.ids)
+        self.assertEqual(rendered[self.test_container.id], '')
+
+    def test_generate_template_uses_body_view(self):
+        """Test that _generate_template works with body_view_id."""
+        self.template_with_view.body_html = False
+
+        values = self.template_with_view._generate_template(
+            self.test_container.ids,
+            ['body_html', 'subject'],
+        )
+
+        body = values[self.test_container.id]['body_html']
+        self.assertIn('Base Email Header', body)
+        self.assertIn('Extended Header Content', body)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_send_mail_with_body_view(self):
+        """Test sending mail using body_view_id."""
+        self.template_with_view.body_html = False
+        self.template_with_view.email_to = 'test@example.com'
+
+        mail_id = self.template_with_view.send_mail(self.test_container.id)
+        mail = self.env['mail.mail'].sudo().browse(mail_id)
+
+        # Mail should contain view content
+        self.assertIn('Base Email Header', mail.body_html)
+        self.assertIn('Test Container', mail.body_html)

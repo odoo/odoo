@@ -47,6 +47,55 @@
                         <notebook>
                             <page string="Body" name="content">
                                 <field name="can_write" invisible="1"/>
+                                <field name="is_body_customized" invisible="1"/>
+
+                                <!-- View-based body section (visible to technical users) -->
+                                <group groups="base.group_no_one" invisible="not body_view_id">
+                                    <group>
+                                        <field name="body_view_id"
+                                               options="{'no_create': True}"
+                                               domain="[('type', '=', 'qweb'), ('mode', '=', 'primary')]"/>
+                                    </group>
+                                    <group>
+                                        <!-- Copy view content to body_html for editing -->
+                                        <button name="action_copy_view_to_body"
+                                                type="object"
+                                                string="Copy to Body &amp; Edit"
+                                                class="btn-secondary"
+                                                invisible="is_body_customized"
+                                                confirm="This will copy the view content to Body HTML for manual editing. Continue?"/>
+                                        <!-- Reset body_html to use view again -->
+                                        <button name="action_reset_body_to_view"
+                                                type="object"
+                                                string="Reset to View"
+                                                class="btn-secondary"
+                                                invisible="not is_body_customized"
+                                                confirm="This will clear your Body HTML customizations and use the view content. Continue?"/>
+                                    </group>
+                                </group>
+
+                                <!-- Info banner when using view (not customized) -->
+                                <div invisible="not body_view_id or is_body_customized"
+                                     class="alert alert-info mb-3"
+                                     role="status">
+                                    <i class="fa fa-info-circle me-2"/>
+                                    Body content is rendered from the linked view with full inheritance support.
+                                    <span groups="base.group_no_one">
+                                        Click "Copy to Body &amp; Edit" above to customize.
+                                    </span>
+                                </div>
+
+                                <!-- Info banner when customized (overriding view) -->
+                                <div invisible="not is_body_customized"
+                                     class="alert alert-warning mb-3"
+                                     role="status"
+                                     groups="base.group_no_one">
+                                    <i class="fa fa-exclamation-triangle me-2"/>
+                                    Body HTML has custom content that overrides the linked view.
+                                    Click "Reset to View" to restore view-based content.
+                                </div>
+
+                                <!-- Standard body_html field -->
                                 <field name="body_html" widget="html_mail" class="oe-bordered-editor"
                                     placeholder="Write your message here..."
                                     options="{'codeview': true, 'dynamic_placeholder': true, 'allowCommandVideo': false}"
