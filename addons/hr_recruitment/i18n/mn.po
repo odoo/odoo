@@ -31,7 +31,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-21 18:37+0000\n"
-"PO-Revision-Date: 2025-11-25 13:22+0000\n"
+"PO-Revision-Date: 2025-12-27 08:03+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-17/"
 "hr_recruitment/mn/>\n"
@@ -47,14 +47,14 @@ msgstr ""
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "1 Meeting"
-msgstr ""
+msgstr "1 Уулзалт"
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Click to view</b> the application."
-msgstr ""
+msgstr "<b>Энд дарж</b> ажилд орох хүсэлттэй танилцаарай."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -62,13 +62,15 @@ msgstr ""
 #, python-format
 msgid "<b>Did you apply by sending an email?</b> Check incoming applications."
 msgstr ""
+"<b>Та имэйлээр хүсэлтээ илгээсэн үү?</b> Ирсэн ажилд орох хүсэлтүүдийг "
+"шалгах."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
-msgstr ""
+msgstr "<b>Энэ картыг чирснээр</b>, түүнийг эхний ярилцлагад тэнцүүлнэ."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -78,6 +80,9 @@ msgid ""
 "<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All "
 "emails sent or received are saved in the history here</i>"
 msgstr ""
+"<div>Ажил горилогч руу <b>Имэйл илгээх</b> оролдлого "
+"хийнэ.</div><div><i>Зөвлөмж: Бүх илгээсэн болон хүлээн авсан имэйлүүд энд "
+"түүх болон хадгалагдана.</i>"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -94,6 +99,8 @@ msgid ""
 "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
 "title=\"Company\"/>"
 msgstr ""
+"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Компани\" title="
+"\"Компани\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -116,7 +123,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Баримт бичиг\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -136,7 +143,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span class=\"o_stat_text\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Ажилтан</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -152,6 +159,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span invisible=\"address_id\" class=\"oe_read_only\">Remote</span>"
 msgstr ""
+"<span invisible=\"address_id\" class=\"oe_read_only\">Алсын хандалтат</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -166,6 +174,15 @@ msgid ""
 "                                </span>\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"not is_warning_visible\">\n"
+"                                <span class="
+"\"fa fa-exclamation-triangle text-danger ps-3\">\n"
+"                                </span>\n"
+"                                <span class=\"text-danger\">\n"
+"                                    Бүх ажилд орох хүсэлтүүд дээрх ажилд "
+"авсан огноо, ажилд авсан төлөв байдал арилна.\n"
+"                                </span>\n"
+"                            </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -541,13 +558,13 @@ msgstr "Ажилбар"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_overdue
 msgid "Activities Overdue"
-msgstr ""
+msgstr "Хугацаа хэтэрсэн ажилбарууд"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_today
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Activities Today"
-msgstr ""
+msgstr "Өнөөдрийн ажилбар"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -624,12 +641,12 @@ msgstr "Алиас нэр"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Хуурмаг нэрны төлөв"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Хуурмаг нэрний төлөв нь сүүлд хүлээн авсан мэдэгдлээс тогтоогдоно."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_model_id
@@ -639,7 +656,7 @@ msgstr "Алиастай модел"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__all_application_count
 msgid "All Application Count"
-msgstr ""
+msgstr "Бүх ажилд орох хүсэлтийн тоо"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
@@ -649,7 +666,7 @@ msgstr "Бүх анкет"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__allowed_user_ids
 msgid "Allowed User"
-msgstr ""
+msgstr "Зөвшөөрсөн хэрэглэгч"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -675,7 +692,7 @@ msgstr "Боловсролын түвшин"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_emails
 msgid "Applicant Emails"
-msgstr ""
+msgstr "Ажил горилогчийн имэйл"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
@@ -686,7 +703,7 @@ msgstr "Ажилд орсон горилогчид"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_properties_definition
 msgid "Applicant Properties"
-msgstr ""
+msgstr "Ажил горилогчийн шинж чанарууд"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
@@ -706,7 +723,7 @@ msgstr "Горилогчийн нэр"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
 msgid "Applicant(s) not having email"
-msgstr ""
+msgstr "Ажил горилогчид имэйл хаяг алга"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
@@ -718,7 +735,7 @@ msgstr "Горилогчид"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_hired
 msgid "Applicants Hired"
-msgstr ""
+msgstr "Горилогчийг ажилд авсан"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -758,7 +775,7 @@ msgstr "Нийт анкетын тоо"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_status
 msgid "Application Status"
-msgstr ""
+msgstr "Ажилд орох хүсэлтийн төлөв"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -794,7 +811,7 @@ msgstr "Горилсон ажлын байр"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_date
 msgid "Applied on"
-msgstr ""
+msgstr "Хүсэлт хүлээн авсан огноо"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -848,12 +865,12 @@ msgstr "Хар жагсаалт"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "Хар жагсаалтын дугаар нь гар утасных эсэх"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "Хар жагсаалтын дугаар нь суурин утасных эсэх"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -872,7 +889,7 @@ msgstr "Түгжигдсэн"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "Үндсэн агуулга нь загвартайгаа ижил"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_bounce
@@ -893,6 +910,10 @@ msgid ""
 "statistics according to the source of the application: LinkedIn, Monster, "
 "Indeed, etc."
 msgstr ""
+"Албан тушаал дээр имэйл алиас тохируулснаар, энэ хаягт ирсэн имэйлүүд "
+"автоматаар ажилд орох хүсэлт болон бүртгэгдэнэ. Та эх сурвалжаар нь ялган "
+"шинжилгээ хийх зорилгоор хэд хэдэн мөр мөшгигч ашиглах боломжтой: LinkedIn, "
+"Monster, Indeed, Zangia гэх мэт."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -940,7 +961,7 @@ msgstr "Горилогчийн ангилал"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Choose an application email."
-msgstr ""
+msgstr "Ажилд орох хүсэлтийн имэйл хаяг сонгоно уу."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__color
@@ -971,6 +992,7 @@ msgstr "Тохиргоо"
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Confirmation email sent to all new job applications"
 msgstr ""
+"Шинээр үүссэн бүх ажилд орох хүсэлтүүд рүү баталгаажуулах имэйл илгээгдсэн"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1018,6 +1040,7 @@ msgstr "Батлагдсан хөдөлмөрийн гэрээ"
 #, python-format
 msgid "Copy this email address, to paste it in your email composer, to apply."
 msgstr ""
+"Энэ имэйл хаягыг хуулбарлан авч, имэйл илгээх цонхонд буулгаснаар хэрэгжинэ."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_bounce
@@ -1052,7 +1075,7 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Create your first Job Position."
-msgstr ""
+msgstr "Эхний албан тушаалаа бүртгэнэ үү."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
@@ -1086,7 +1109,7 @@ msgstr "Үүсгэсэн огноо"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "Буцаагдсан имэйл зурвас"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_close
@@ -1122,6 +1145,11 @@ msgid ""
 "refused,\n"
 "                    hired."
 msgstr ""
+"Сонгон шалгаруулалтын үйл явцыг удирдах үе шатуудыг тодорхойлно уу, жишээ нь:"
+"\n"
+"                                             утсаар холбогдох, эхний "
+"ярилцлага, хоёрдох ярилцлага, татгалзсан,\n"
+"                    ажилд авсан гэх мэт."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -1135,7 +1163,7 @@ msgstr "Боловсролын түвшин"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__name
 msgid "Degree Name"
-msgstr ""
+msgstr "Боловсролын зэргийн нэр"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
@@ -1190,7 +1218,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Directly Available"
-msgstr ""
+msgstr "Шууд боломжтой"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1201,7 +1229,7 @@ msgstr "Үл хэрэгсэх"
 #: model:res.groups,name:hr_recruitment.group_applicant_cv_display
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Display CV on application form"
-msgstr ""
+msgstr "Ажилд орох хүсэлтийн форм цонхонд CV харуулах"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__display_name
@@ -1254,6 +1282,9 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "                is different according to the job position."
 msgstr ""
+"Хэрэв албан тушаалаас хамаараад сонгон шалгаруулалтын үе шатууд нь ялгаатай "
+"байх бол\n"
+"                                   алба нэгжийг сонгож тодорхойлно уу."
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_6
@@ -1298,7 +1329,7 @@ msgstr "Имэйл CC"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "Имэй домэйн ж.ш 'example.com' цаашлаад 'odoo@example.com' гэх мэт"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1317,7 +1348,7 @@ msgstr ""
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email template must be selected to send a mail"
-msgstr ""
+msgstr "Имэйл илгээхийн тулд имэйл загвар сонгогдсон байх ёстой"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1331,7 +1362,7 @@ msgstr "Ажилтан"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__emp_is_active
 msgid "Employee Active"
-msgstr ""
+msgstr "Ажилтан идэвхтэй эсэх"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__employee_name
@@ -1341,7 +1372,7 @@ msgstr "Ажилтны нэр"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
 msgid "Employee created:"
-msgstr ""
+msgstr "Ажилтан үүссэн огноо:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__emp_id
@@ -1361,7 +1392,7 @@ msgstr "Ажил эрхлэлтийн төрлүүд"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__priority
 msgid "Evaluation"
-msgstr ""
+msgstr "Үнэлгээ"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__3
@@ -1391,7 +1422,7 @@ msgstr "Өргөтгөсөн шүүлт"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__extended_interviewer_ids
 msgid "Extended Interviewer"
-msgstr ""
+msgstr "Нэмэлт ярилцлагад оролцогч"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1401,7 +1432,7 @@ msgstr "Нэмэлт давуу талууд..."
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__favorite_user_ids
 msgid "Favorite User"
-msgstr ""
+msgstr "Тэмдэглэгдсэн хэрэглэгч"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_sanitized
@@ -1409,6 +1440,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+"Утасны дугаарыг хэлбэршүүлэн хадгалах зорилготой талбар. Утасны дугаараар "
+"хайлт шүүлт хийхэд тусална."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.ir_attachment_hr_recruitment_list_view
@@ -1449,12 +1482,12 @@ msgstr "Ирээдүйн үйл ажиллагаанууд"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Generate Email"
-msgstr ""
+msgstr "Имэйл үүсгэх"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_get_refuse_reason
 msgid "Get Refuse Reason"
-msgstr ""
+msgstr "Татгалзсан шалтгаанаа хүлээн авах"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__1
@@ -1489,7 +1522,7 @@ msgstr "Саарал Канбан Шошго"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__group_applicant_cv_display
 msgid "Group Applicant Cv Display"
-msgstr ""
+msgstr "Ажил горилогчийн бүлэг CV харуулах"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1500,7 +1533,7 @@ msgstr "Бүлэглэлт"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__has_domain
 msgid "Has Domain"
-msgstr ""
+msgstr "Домэйн-тэй эсэх"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__has_message
@@ -1510,24 +1543,24 @@ msgstr "Мессежтэй"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_closed
 msgid "Hire Date"
-msgstr ""
+msgstr "Ажилд авсан огноо"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__hired
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Hired"
-msgstr ""
+msgstr "Ажилд авсан"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__hired_stage
 msgid "Hired Stage"
-msgstr ""
+msgstr "Ажилд авах үе шат"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Hiring Date"
-msgstr ""
+msgstr "Ажилд авах огноо"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
@@ -1576,6 +1609,8 @@ msgstr "Үүнийг сонговол алдаа үүсэх үед зурвас�
 msgid ""
 "If checked, this stage is used to determine the hire date of an applicant"
 msgstr ""
+"Хэрэв сонгосон бол, энэ үе шат нь ажил горилогчийг ажилд авсан огноог "
+"тодорхойлно"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
@@ -1592,6 +1627,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"Үүнийг сонговол, бүртгэлгүй хэрэглэгчид рүү default мэдэгдлийн оронд энэхүү "
+"агуулга бүхий мэдэгдэл автоматаар илгээгдэнэ."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__emp_is_active
@@ -1626,6 +1663,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive "
 "mass mailing sms anymore, from any list"
 msgstr ""
+"Хэрэв хэлбэршүүлсэн утасны дугаар нь хар жагсаалтанд орсон байвал, энэ "
+"харилцах хаягт ямар нэг автомат имэйл, SMS хүлээн авахгүй"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1648,6 +1687,10 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Хар жагсаалтанд орсон дугаар нь гар утасны дугаар эсэхийг илтгэнэ. Улмаар "
+"гар утас болон суурин утасны дугаар аль аль нь "
+"бүртгэгдсэн                             тохиолдолд аль дугаар нь хар "
+"жагсаалтанд орсон эсэхийг ялгаж харахад тусална."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_blacklisted
@@ -1656,6 +1699,10 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Хар жагсаалтанд орсон дугаар нь суурин утасны дугаар эсэхийг илтгэнэ. Улмаар "
+"гар утас болон суурин утасны дугаар аль аль нь "
+"бүртгэгдсэн                              тохиолдолд аль дугаар нь хар "
+"жагсаалтанд орсон эсэхийг ялгаж харахад тусална."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -1670,23 +1717,23 @@ msgstr "Судалгааны хуудас"
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_interviewer
 msgid "Interviewer"
-msgstr ""
+msgstr "Ярилцлага хийгч"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__interviewer_ids
 msgid "Interviewers"
-msgstr ""
+msgstr "Ярилцлага хийгчид"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "Засварлагч эсэх"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__is_favorite
 msgid "Is Favorite"
-msgstr ""
+msgstr "Дуртайгаар тэмдэглэгдсэн эсэх"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_is_follower
@@ -1696,7 +1743,7 @@ msgstr "Дагагч эсэх"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__is_warning_visible
 msgid "Is Warning Visible"
-msgstr ""
+msgstr "Анхааруулга харуулах эсэх"
 
 #. module: hr_recruitment
 #: model:res.groups,comment:hr_recruitment.group_hr_recruitment_interviewer
@@ -1821,7 +1868,7 @@ msgstr ""
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "Last Meeting"
-msgstr ""
+msgstr "Сүүлийн уулзалт"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__last_stage_id
@@ -1878,6 +1925,8 @@ msgid ""
 "Let's create the position. An email will be setup for applications, and a "
 "public job description, if you use the Website app."
 msgstr ""
+"Ажлын байр бүртгэцгээе. Ажилд орох хүсэлтүүдэд зориулж имэйл бүртгэнэ, "
+"вебсайт дээр ашиглахад зориулж ажлын байрны дэлгэрэнгүй тайлбар бүртгэнэ."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1885,6 +1934,8 @@ msgstr ""
 #, python-format
 msgid "Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
 msgstr ""
+"Таны <b>ажилтан сонгон шалгаруулах</b> үйл ажиллагааг хэрхэн <b>сайжруулж</"
+"b> болохыг харья."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1898,14 +1949,14 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s create this new employee now."
-msgstr ""
+msgstr "Одоо шинэ ажилтанаа бүртгэе."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s go back to the dashboard."
-msgstr ""
+msgstr "Хянах самбар руу буцаж очьё."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__linkedin_profile
@@ -1915,7 +1966,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "Local-part дээр үндэслэн ирж буй имэйлийг таних"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__template_id
@@ -1946,12 +1997,12 @@ msgstr "Хэрэгсэл"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_date
 msgid "Meeting Display Date"
-msgstr ""
+msgstr "Уулзалтын огноо харагдац"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_text
 msgid "Meeting Display Text"
-msgstr ""
+msgstr "Уулзалтын текст харагдац"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_ids
@@ -2001,7 +2052,7 @@ msgstr "Миний эрхэмүүд"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_search_view
 msgid "My Job Positions"
-msgstr ""
+msgstr "Миний ажлын байрууд"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__name
@@ -2078,14 +2129,14 @@ msgstr "Дараагийн ажилбарын төрөл"
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "Next Meeting"
-msgstr ""
+msgstr "Дараагийн уулзалт"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "No Meeting"
-msgstr ""
+msgstr "Уулзалт алга"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2099,7 +2150,7 @@ msgstr "Гарчиг үгүй"
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "No application found. Let's create one !"
-msgstr ""
+msgstr "Ажилд орох хүсэлт олдсонгүй. Шинийг үүсгэцгээе !"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -2127,7 +2178,7 @@ msgstr "Хэвийн"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Хэлбэршүүлсэн имэйл хаяг"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction_counter
@@ -2145,6 +2196,7 @@ msgid ""
 "Number of applications that are new in the flow (typically at first step of "
 "the flow)"
 msgstr ""
+"Шинээр бүртгэгдсэн ажил орох хүсэлтийн тоо (урсгалын эхний үе шатандаа яваа)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
@@ -2180,12 +2232,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
 msgid "Officer: Manage all applicants"
-msgstr ""
+msgstr "Мэргэжилтэн: Бүх ажилд орох хүсэлтийг удирдана"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__old_application_count
 msgid "Old Application"
-msgstr ""
+msgstr "Хуучин ажилд орох хүсэлт"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__ongoing
@@ -2225,11 +2277,13 @@ msgstr ""
 #, python-format
 msgid "Or talk about this applicant privately with your colleagues."
 msgstr ""
+"Эсвэл уг ажилд орох хүсэлтийн талаар хамт ажиллагсадтайгаа хувьчлан "
+"ярилцаарай."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other applications"
-msgstr ""
+msgstr "Бусад ажилд орох хүсэлт"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_model_id
@@ -2267,19 +2321,19 @@ msgstr "Утас"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "Утасны дугаар хар жагсаалтанд орсон"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_mobile_search
 msgid "Phone/Mobile"
-msgstr ""
+msgstr "Утас/Гар утас"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "Please provide an applicant name."
-msgstr ""
+msgstr "Ажил горилогчийн нэрийг оруулна уу."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
@@ -2354,7 +2408,7 @@ msgstr "Бичлэгийн Мөчирийн ID"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__user_id
 msgid "Recruiter"
-msgstr ""
+msgstr "Сонго шалгаруулагч"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
@@ -2392,22 +2446,22 @@ msgstr "Сонгон шалгаруулалтын шатууд"
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Recruitment: Application Acknowledgement"
-msgstr ""
+msgstr "Сонгон шалгаруулалт: Ажилд орох хүсэлт хүлээн авсны баталгаажуулалт"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_interest
 msgid "Recruitment: Interest"
-msgstr ""
+msgstr "Сонгон шалгаруулалт: Эхний шатанд тэнцсэн тухай"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_not_interested
 msgid "Recruitment: Not interested anymore"
-msgstr ""
+msgstr "Сонгон шалгаруулалт: Сонгон шалгаруулалтаас хасагдсан тухай"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_refuse
 msgid "Recruitment: Refuse"
-msgstr ""
+msgstr "Сонгон шалгаруулалт: Түтгэлзэл"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
@@ -2444,18 +2498,18 @@ msgstr "Түдгэлзүүлэх"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #, python-format
 msgid "Refuse Reason"
-msgstr ""
+msgstr "Түтгэлзүүлсэн шалтгаан"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_refuse_reason
 msgid "Refuse Reason of Applicant"
-msgstr ""
+msgstr "Ажил горилогчийн татгалзсан шалтгаан"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_refuse_reason_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_applicant_refuse_reason
 msgid "Refuse Reasons"
-msgstr ""
+msgstr "Түтгэлзүүлсэн шалтгаан"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__refused
@@ -2483,7 +2537,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Remote"
-msgstr ""
+msgstr "Алсын зайн"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__render_model
@@ -2526,7 +2580,7 @@ msgstr "Сэргээх"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Resume's content"
-msgstr ""
+msgstr "Намтарын агуулга"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_5
@@ -2536,7 +2590,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Running Applicants"
-msgstr ""
+msgstr "Явагдаж буй ажил орох хүсэлтүүд"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
@@ -2571,19 +2625,19 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_sanitized
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Хэлбэршүүлсэн дугаар"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_phone_sanitized
 msgid "Sanitized Phone Number"
-msgstr ""
+msgstr "Хэлбэршүүлсэн утасны дугаар"
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Save it!"
-msgstr ""
+msgstr "Үүнийг хадгална уу!"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -2598,7 +2652,7 @@ msgstr "Горилогчдыг Хайх"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_view_search
 msgid "Search Source"
-msgstr ""
+msgstr "Эх сурвалж хайх"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -2611,6 +2665,8 @@ msgid ""
 "Select the location where the applicant will work. Addresses listed here are "
 "defined on the company's contact information."
 msgstr ""
+"Ажил горилогчийн ажиллах ажлын байрны байршлыг сонгоно уу. Энд байх хаягууд "
+"нь компаны хаягын дэвтэр дээр бүртгэлтэй."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -2620,7 +2676,7 @@ msgstr "Илгээх"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_extract
 msgid "Send CV to OCR to fill applications"
-msgstr ""
+msgstr "CV -ээ OCR руу илгээж ажил орох хүсэлтийн мэдээллийг бүрдүүлэх"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2634,7 +2690,7 @@ msgstr "Имэйл илгээх"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send Interview Survey"
-msgstr ""
+msgstr "Ярилцлагын асуулга илгээх"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2646,23 +2702,25 @@ msgstr "SMS илгээх"
 msgid ""
 "Send an Interview Survey to the applicant during the recruitment process"
 msgstr ""
+"Сонгон шалгаруулалтын явцад ажилд орох хүсэлттэй холбоотой асуулга илгээж "
+"бөглүүлж авах"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
 msgid "Send mails to applicants"
-msgstr ""
+msgstr "Ажил горилогчид руу шуудан илгээх"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send texts to your contacts"
-msgstr ""
+msgstr "Харилцах хаягууд руу текст илгээх"
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Send your email. Followers will get a copy of the communication."
-msgstr ""
+msgstr "Имэйлээ илгээнэ үү. Дагагчид уг харилцааны хуулбарыг хүлээн авна."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__sequence
@@ -2677,6 +2735,8 @@ msgid ""
 "Set this template to a recruitment stage to send it when applications reach "
 "that stage"
 msgstr ""
+"Энэхүү имэйл загварыг сонгон шалгаруулалтын үе шатанд тохируулснаар ажилд "
+"орох хүсэлт тухайн үе шатанд хүрэхэд имэйл илгээгдэнэ"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
@@ -2818,6 +2878,11 @@ msgid ""
 "they can refuse him. You don't need to have Recruitment rights to be set as "
 "an interviewer."
 msgstr ""
+"Ажлын байр дээр сонгогдсон ярилцлага хийгчид нь тус ажлын байранд хүлээн "
+"авсан ажил орон бүх хүсэлтүүдийг харж чадна. Мөн тэд дэлгэрэнгүй мэдээлэл, "
+"хавсралт файл, уулзалтын тэмдэглэлүүдийг харж чадахаас гадна тэдний сонгон "
+"шалгаруулалтыг түтгэлзүүлж хүртэл чадна. Тиймээс та ярилцлага хийгчидэд "
+"дахин Сонгон шалгаруулалтын тусгай эрхийн түвшин нэмж оноох шаардлагагүй юм."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__user_id
@@ -2826,6 +2891,9 @@ msgid ""
 "in this job position. The Recruiter is automatically added to all meetings "
 "with the Applicant."
 msgstr ""
+"Сонгон шалгаруулагч нь бүх ажилд орох хүсэлт дээрх үлдсэн сонгон "
+"шалгаруулагчаар сонгогдох болно. Мөн сонгон шалгаруулагч нь ажил горилогчтой "
+"хийх бүхий л уулзалтанд автоматаар нэмэгдэнэ."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2835,6 +2903,8 @@ msgid ""
 "The UTM campaign '%s' cannot be deleted as it is used in the recruitment "
 "process."
 msgstr ""
+"'%s' UTM кампанит ажлыг устгах боломжгүй. Учир нь уг кампанит ажил нь сонгон "
+"шалгаруулалтын үйл явцад ашиглагдаж байна."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
@@ -2855,7 +2925,7 @@ msgstr ""
 #: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
 #, python-format
 msgid "The following applicants are missing an email address: %s."
-msgstr ""
+msgstr "Дараах ажил горилогчид имэйл хаяггүй байна: %s."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
@@ -2888,6 +2958,8 @@ msgid ""
 "This field is used to search on email address as the primary email field can "
 "contain more than strictly an email address."
 msgstr ""
+"Энэ талбар нь имэйл хаягаар хайхад ашиглагдана. Учир нь үндсэн имэйл талбар "
+"нь заримдаа зөвхөн имэйл хаяг бус, нэмэлт текст агуулсан байдаг."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id
@@ -2923,12 +2995,12 @@ msgstr "Энэ үе нь Канбан харагдацад бичлэг байх
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Tip: Let candidates apply by email"
-msgstr ""
+msgstr "Зөвлөмж: Нэр дэвшигчид имэйлээр хариугаа өгөх боломжыг бүрдүүлээрэй"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "To Recruit"
-msgstr ""
+msgstr "Ажлын байрны хэрэгцээ"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2943,12 +3015,12 @@ msgstr "Багажны зөвлөмж"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Trackers"
-msgstr ""
+msgstr "Мөр мөшгигч"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Try sending an email"
-msgstr ""
+msgstr "Имэйл илгээж үзэх"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -2956,6 +3028,8 @@ msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
 msgstr ""
+"Хайлтанд ямар нэг шүүлт хэрэглээгүй эсэхээ нягтлаарай, улмаар бичлэг "
+"олдохгүй байвал шинээр үүсгээрэй."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -2970,7 +3044,7 @@ msgstr "UTM Аян"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_utm_source
 msgid "UTM Source"
-msgstr ""
+msgstr "UTM Эх үүсвэр"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm
@@ -3001,7 +3075,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Use emails and links trackers"
-msgstr ""
+msgstr "Имэйл болон холбоос мөшгигч ашиглах"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -3010,6 +3084,9 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies "
 "on the Survey app."
 msgstr ""
+"Ажилд авах явцдаа ажлын байр бүрт тохируулсан ярилцлагын маягт ашиглана. "
+"Ашиглах маягтыг тухайн ажлын байрны дэлгэрэнгүй мэдээллийн форм дээрээс "
+"сонгоно. Энэ боломж нь Судалгаа (Survey) апп дээр тулгуурлаж ажиллана."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_users
@@ -3029,7 +3106,7 @@ msgstr "Онц"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Want to analyse where applications come from ?"
-msgstr ""
+msgstr "Ажил орох хүсэлтүүд хаанаас ирж буйг шинжилгээ хийж хармаар байна уу ?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
@@ -3047,24 +3124,26 @@ msgstr "Вебсайтын харилцааны түүх"
 #, python-format
 msgid "What do you want to recruit today? Choose a job title..."
 msgstr ""
+"Өнөөдөр ямар ажилтан сонгон шалгаруулж авмаар байна? Ажлын байрны гарчигийг "
+"оруулна уу..."
 
 #. module: hr_recruitment
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_refuse
 msgid "When you refuse an application, you can choose this template"
-msgstr ""
+msgstr "Ажилд орох хүсэлтийг түтгэлзүүлэхдээ уг имэйл загварыг сонгоно уу"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
 msgid "Write your message here..."
-msgstr ""
+msgstr "Зурвасаа энд бичээрэй..."
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "You are not allowed to perform this action."
-msgstr ""
+msgstr "Та энэ үйлдлийг хийх зөвшөөрөлгүй байна."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -3073,6 +3152,9 @@ msgid ""
 "instead\n"
 "                            of the default labels."
 msgstr ""
+"Та канбан харагдац дээр үе шатууд ямар нэрээр харагдцахыг\n"
+"                                                               энд тохируулж "
+"болно."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3091,6 +3173,9 @@ msgid ""
 "recruitment sources in Recruitment:\n"
 "%(recruitment_sources)s"
 msgstr ""
+"Та эдгээр UTM эх үүсвэрийг устгах боломжгүй учир нь эдгээр нь сонгон "
+"шалгаруулалтын үе шатанд ашиглагдсан байна:\n"
+"%(recruitment_sources)s"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3098,6 +3183,7 @@ msgstr ""
 #, python-format
 msgid "You must define a Contact Name for this applicant."
 msgstr ""
+"Та энэ ажил горилогчийн холбоо барих этгээдийн нэрийг оруулах шаардлагатай."
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
@@ -3105,7 +3191,7 @@ msgstr ""
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: {{ object.job_id.name }}"
-msgstr ""
+msgstr "Таны ажлын сонгон шалгаруулалт: {{ object.job_id.name }}"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -3116,7 +3202,7 @@ msgstr "Ж: Жон Дое"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "e.g. LinkedIn"
-msgstr ""
+msgstr "ж.ш LinkenIn"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3132,12 +3218,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "e.g. domain.com"
-msgstr ""
+msgstr "ж.ш domain.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. sales-manager"
-msgstr ""
+msgstr "ж.ш борлуулалтын-менежер"
 
 #~ msgid "Address where employees are working"
 #~ msgstr "Ажилчдын ажиллаж буй хаяг"

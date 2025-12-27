@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-13 00:53+0000\n"
-"PO-Revision-Date: 2025-11-22 17:00+0000\n"
+"PO-Revision-Date: 2025-12-27 08:03+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/sale/hi/>\n"
 "Language: hi\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard___data_fetched
@@ -497,7 +497,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-print\"/> View Details"
-msgstr ""
+msgstr "<i class=\"fa fa-print\"/> जानकारी देखें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1132,6 +1132,17 @@ msgid ""
 "   • For consumable or storable products, open the product, go to the 'General Information' tab and change the 'Invoicing Policy' from 'Delivered Quantities' to 'Ordered Quantities'.\n"
 "   • For services (and other products), change the 'Invoicing Policy' to 'Prepaid/Fixed Price'.\n"
 msgstr ""
+"इनवॉइस नहीं बना सकते. इनवॉइस बनाने के लिए कोई आइटम उपलब्ध नहीं है.\n"
+"\n"
+"इस समस्या को हल करने के लिए, पक्का करें कि:\n"
+"   • प्रॉडक्ट को बिल बनाने की कोशिश करने से पहले डिलीवर किया गया है.\n"
+"   • प्रॉडक्ट की इनवॉइसिंग नीति सही सेट है.\n"
+"\n"
+"अगर आप ऑर्डर की गई मात्राओं के आधार पर इनवॉइस बनाना चाहते हैं, तो:\n"
+"   • उपभोग्य या स्टोर किए जा सकने वाले प्रॉडक्ट के लिए, प्रॉडक्ट खोलें, 'सामान्य जानकारी' टैब पर जाएं और "
+"'इनवॉइसिंग नीति' को 'डिलीवर की गई मात्रा' से 'ऑर्डर की गई मात्रा' में बदलें..\n"
+"   • सेवाओं (और अन्य प्रॉडक्ट) के लिए, 'इनवॉइसिंग नीति' को 'पहले से भुगतान किया गया/तय कीमत' में बदलें'."
+"\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1512,7 +1523,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
 msgid "Customer State"
-msgstr ""
+msgstr "ग्राहक की स्थिति"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id
@@ -1717,7 +1728,7 @@ msgstr "डिस्काउंट अमाउंट"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_discount_product_id
 msgid "Discount Product"
-msgstr ""
+msgstr "डिस्काउंट प्रॉडक्ट"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_type
@@ -2029,7 +2040,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__invoice_status__invoiced
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Fully Invoiced"
-msgstr ""
+msgstr "पूरी तरह से इनवॉइस किया गया"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2222,7 +2233,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Invalid signature data."
-msgstr ""
+msgstr "अमान्य हस्ताक्षर डेटा।"
 
 #. module: sale
 #. odoo-python
@@ -2675,7 +2686,7 @@ msgstr "नया"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr ""
+msgstr "नया कोटेशन"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
@@ -2739,7 +2750,7 @@ msgstr "ध्यान दें"
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__no
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__invoice_status__no
 msgid "Nothing to Invoice"
-msgstr ""
+msgstr "इनवॉइस करने के लिए कुछ नहीं है"
 
 #. module: sale
 #. odoo-javascript
@@ -3429,7 +3440,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
-msgstr ""
+msgstr "कोटेशन की संख्या"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -3794,7 +3805,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 msgid "Sales Order Item"
-msgstr ""
+msgstr "सेल्स ऑर्डर आइटम"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -4152,12 +4163,12 @@ msgstr "हस्ताक्षर"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Signature is missing."
-msgstr ""
+msgstr "हस्ताक्षर मौजूद नहीं है।"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_by
 msgid "Signed By"
-msgstr ""
+msgstr "इन्होंने साइन किया है"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_on
@@ -4472,6 +4483,11 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"जब पेमेंट प्रोवाइडर से लेन-देन की पुष्टि होती है, तो इनवॉइस अपने-आप बन जाता है और ग्राहक पोर्टल पर उपलब्"
+"ध होता है.\n"
+"इनवॉइस को 'भुगतान किया गया' के रूप में चिह्नित किया जाता है और पेमेंट प्रोवाइडर की सेटिंग में तय किए गए भुगतान "
+"जर्नल में भुगतान दर्ज किया जाता है.\n"
+"अगर आप ऑर्डर के समय ही फ़ाइनल इनवॉइस जारी करते हैं, न कि डिलीवरी के बाद, तो यह मोड बेहतर है।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4917,7 +4933,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__upselling
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__invoice_status__upselling
 msgid "Upselling Opportunity"
-msgstr ""
+msgstr "अपसेलिंग का मौका"
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
@@ -4927,7 +4943,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "Valid Until"
-msgstr ""
+msgstr "तक मान्य है"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4950,7 +4966,7 @@ msgstr "वेरिएंट ग्रिड एंट्री"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "View Details"
-msgstr ""
+msgstr "जानकारी देखें"
 
 #. module: sale
 #. odoo-python

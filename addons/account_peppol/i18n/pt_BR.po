@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-18 18:37+0000\n"
-"PO-Revision-Date: 2025-12-20 10:50+0000\n"
+"POT-Creation-Date: 2025-12-25 18:35+0000\n"
+"PO-Revision-Date: 2025-12-27 08:25+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-17/account_peppol/pt_BR/>\n"
@@ -205,11 +205,6 @@ msgstr "Cancelado"
 msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr ""
 "Não é possível cancelar um registro que já tenha sido enviado ao PEPPOL"
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
-msgid "Cannot receive this format"
-msgstr "Não é possível receber esse formato"
 
 #. module: account_peppol
 #. odoo-python
@@ -409,18 +404,8 @@ msgid "Not registered"
 msgstr "Não registrado"
 
 #. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid
-msgid "Not valid"
-msgstr "Inválido"
-
-#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_verified
 msgid "Not verified"
-msgstr "Não verificado"
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_verified
-msgid "Not verified yet"
 msgstr "Não verificado"
 
 #. module: account_peppol
@@ -481,6 +466,21 @@ msgstr "PEPPOL: atualizar o status da mensagem"
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_participant_status_ir_actions_server
 msgid "PEPPOL: update participant status"
 msgstr "PEPPOL: atualizar o status do participante"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
+msgid "Partner cannot receive format"
+msgstr "O parceiro não pode receber o formato"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid
+msgid "Partner is not on Peppol"
+msgstr "O parceiro não está no Peppol"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__valid
+msgid "Partner is on Peppol"
+msgstr "O parceiro está no Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__pending
@@ -544,12 +544,6 @@ msgid "Peppol e-address (EAS)"
 msgstr "Endereço eletrônico do Peppol (EAS)"
 
 #. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_verification_label
-#: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_verification_label
-msgid "Peppol endpoint validity"
-msgstr "Validade do endpoint do Peppol"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
@@ -562,6 +556,8 @@ msgid "Peppol ready invoices"
 msgstr "Faturas prontas para Peppol"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_verification_label
+#: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_verification_label
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
 msgid "Peppol status"
 msgstr "Status do Peppol"
@@ -874,6 +870,11 @@ msgstr ""
 "tarde."
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_verified
+msgid "Unchecked"
+msgstr "Sem verificação"
+
+#. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_endpoint
 msgid ""
@@ -903,11 +904,6 @@ msgid ""
 msgstr ""
 "Como parâmetros de configuração, este campo especifica quais modos EDI podem "
 "ser selecionados na IU."
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__valid
-msgid "Valid"
-msgstr "Válido"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1026,6 +1022,21 @@ msgstr "to send invoices, but this one"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "uses"
+
+#~ msgid "Cannot receive this format"
+#~ msgstr "Não é possível receber esse formato"
+
+#~ msgid "Not valid"
+#~ msgstr "Inválido"
+
+#~ msgid "Not verified yet"
+#~ msgstr "Não verificado"
+
+#~ msgid "Peppol endpoint validity"
+#~ msgstr "Validade do endpoint do Peppol"
+
+#~ msgid "Valid"
+#~ msgstr "Válido"
 
 #, python-format
 #~ msgid "The document has been sent to the Peppol Access Point for processing"
