@@ -78,19 +78,19 @@ jobs:
       - name: "Deploy via-suite-web (set image)"
         shell: bash
         run: |
-          kubectl set image deployment/via-suite-web \
+          kubectl set image deployment/via-suite-web -n via-suite \
             via-suite=${{ env.IMAGE_REPOSITORY }}:${{ env.GITHUB_SHA_SHORT }}
 
       - name: "Deploy via-suite-cron (set image)"
         shell: bash
         run: |
-          kubectl set image deployment/via-suite-cron \
+          kubectl set image deployment/via-suite-cron -n via-suite \
             via-suite=${{ env.IMAGE_REPOSITORY }}:${{ env.GITHUB_SHA_SHORT }}
 
       - name: "Wait for rollout via-suite-web"
         shell: bash
-        run: kubectl rollout status deployment/via-suite-web
+        run: kubectl rollout status deployment/via-suite-web -n via-suite
 
       - name: "Wait for rollout via-suite-cron"
         shell: bash
-        run: kubectl rollout status deployment/via-suite-cron
+        run: kubectl rollout status deployment/via-suite-cron -n via-suite
