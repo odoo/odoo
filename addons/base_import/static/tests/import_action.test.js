@@ -1246,6 +1246,67 @@ describe("Import view", () => {
         });
     });
 
+    test("execute import in batches until completion", async () => {
+        patchWithCleanup(ImportAction.prototype, {
+            get isBatched() {
+                // make sure the UI displays the batched import options
+                return true;
+            },
+        });
+
+        mockService("notification", {
+            add: (message) => {
+                expect.step(message);
+                return () => {};
+            },
+        });
+
+        mockService("action", {
+            doAction(action) {
+                if (
+                    action &&
+                    action.res_model === "partner" &&
+                    action.name === "Imported records"
+                ) {
+                    expect.step("open_imported_records");
+                    return Promise.resolve(true);
+                }
+                return super.doAction(...arguments);
+            },
+        });
+
+        redirect("/odoo/action-2");
+        await mountWebClient();
+        onRpc("base_import.import", "execute_import", ({ args }) => executeImport(args, true));
+        await getService("action").doAction(1);
+
+        // Set and trigger the change of a file for the input
+        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+
+        // Set batch limit to 1. Total rows is 3. This will trigger 3 batches.
+        await contains("input#o_import_batch_limit").edit(1);
+
+        if (getMockEnv().isSmall) {
+            await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
+            await contains(".o-dropdown--menu button:contains('Import')").click();
+        } else {
+            await contains(".o_control_panel_main_buttons button:contains('Import')").click();
+        }
+
+        // Wait for the 3 batches to complete. Each batch waits for 1 animation frame in the mock.
+        for (let i = 0; i < 3; i++) {
+            await animationFrame();
+        }
+
+        expect.verifySteps(["3 records successfully imported", "open_imported_records"]);
+        expect(".o_import_data_content .alert-warning").toHaveCount(0, {
+            message: "Resume message should not be shown after successful full import",
+        });
+    });
+
     test("relational fields correctly mapped on preview", async () => {
         await mountWebClient();
         onRpc("base_import.import", "parse_preview", ({ args }) =>
