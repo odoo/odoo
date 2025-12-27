@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-21 14:14+0000\n"
+"PO-Revision-Date: 2025-12-24 14:09+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/project/"
 "ar/>\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
@@ -602,6 +602,19 @@ msgid ""
 "                                            </span>\n"
 "                                        </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                            <i class="
+"\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                            <span name="
+"\"rating_status_helper\">\n"
+"                                                <span invisible="
+"\"rating_status == 'periodic'\">سيتم إرسال طلب التقييم بمجرد وصول المهمة إلى "
+"هذه المرحلة.</span>\n"
+"                                                <span invisible="
+"\"rating_status == 'stage'\">سيتم إرسال طلبات التقييم طالما بقيت المهمة في "
+"هذه المرحلة.</span>\n"
+"                                            </span>\n"
+"                                        </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
@@ -2555,6 +2568,9 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task "
 "remains in this stage."
 msgstr ""
+"إذا تم تعيين هذا الخيار، فسيتم إرسال طلب التقييم تلقائيًا عبر البريد "
+"الإلكتروني إلى العميل عندما تصل المهمة إلى هذه المرحلة.\n"
+"أو سيتم إرساله على فترات منتظمة طالما بقيت المهمة في هذه المرحلة."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
