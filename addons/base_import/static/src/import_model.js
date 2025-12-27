@@ -430,6 +430,7 @@ export class BaseImportModel {
             importRes.nextrow = nextrow;
         } else {
             // Falsy `nextrow` signals there's nothing left to import
+            importRes.nextrow = 0;
             this.stopImport();
         }
         return false;
