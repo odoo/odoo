@@ -11,7 +11,7 @@
                         <field name="id" invisible="1"/>
                         <group>
                             <group>
-                                <field mode="list" nolabel="1" name="current_applicant_skill_ids" widget="skills_one2many"
+                                <field mode="list" nolabel="1" col="2" name="current_applicant_skill_ids" widget="skills_one2many"
                                         context="{'default_applicant_id': id, 'no_timeline': True}" >
                                     <list
                                         class="o_applicant_skills"
@@ -28,6 +28,11 @@
                             </group>
                             <group>
                                 <field name="matching_score" invisible="is_pool_applicant" nolabel="1" widget="skill_match_gauge_field" options="{'max_value': 100}" />
+                            </group>
+                            <group/>
+                            <group>
+                                <field name="matching_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="missing_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
                         </group>
                     </div>
@@ -77,11 +82,57 @@
         <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job"/>
         <field name="mode">extension</field>
         <field name="arch" type="xml">
+            <header position="inside">
+                <button
+                    name="action_new_job_matching_search"
+                    type="object"
+                    class="btn-secondary"
+                    string="Search Matching Applicants"
+                    invisible="not context.get('default_job_id')"
+                    display="always"
+                    groups="hr_recruitment.group_hr_recruitment_user"
+                />
+            </header>
             <field name="kanban_state" position="after">
                 <field name="matching_score" string="Matching" widget="progressbar" options="{'overflow_class': 'bg-success'}" invisible="not matching_score"/>
+                <field name="matching_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="missing_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
             </field>
         </field>
     </record>
+
+    <record id="hr_kanban_view_applicant" model="ir.ui.view">
+        <field name="name">hr.applicant.view.kanban.inherit.hr.recruitment.skills</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant"/>
+        <field name="mode">extension</field>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button
+                    name="action_new_job_matching_search"
+                    type="object"
+                    class="btn-secondary"
+                    string="Search Matching Applicants"
+                    invisible="not context.get('default_job_id')"
+                    display="always"
+                    groups="hr_recruitment.group_hr_recruitment_user"
+                />
+            </header>
+
+            <xpath expr="//field[@name='job_id']" position="after">
+                <div t-if="record.matching_skill_ids.raw_value.length" class="d-flex gap-3">
+                    <span class="flex-shrink-0">Matching Skills</span>
+                    <field name="matching_skill_ids" widget="many2many_tags" options="{'color_field': 'matching_color'}"/>
+                </div>
+                <div t-if="record.missing_skill_ids.raw_value.length" class="d-flex gap-3">
+                    <span class="flex-shrink-0">Missing Skills</span>
+                    <field name="missing_skill_ids" widget="many2many_tags" options="{'color_field': 'missing_color'}"/>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
 
     <record id="crm_case_tree_view_inherit_hr_recruitment_skills" model="ir.ui.view">
         <field name="name">hr.applicant.view.tree.inherit.skills</field>
@@ -111,8 +162,8 @@
             </field>
             <field name="partner_name" position="after">
                 <xpath expr="//field[@name='matching_score']" position="move"/>
-                <field name="matching_skill_ids" widget="many2many_tags"/>
-                <field name="missing_skill_ids" widget="many2many_tags"/>
+                <xpath expr="//field[@name='matching_skill_ids']" position="move"/>
+                <xpath expr="//field[@name='missing_skill_ids']" position="move"/>
             </field>
         </field>
     </record>

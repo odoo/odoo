@@ -2,7 +2,8 @@
 
 from ast import literal_eval
 
-from odoo import fields, models, Command, api
+from odoo import Command, api, fields, models
+from odoo.fields import Domain
 
 
 class HrApplicant(models.Model):
@@ -53,27 +54,33 @@ class HrApplicant(models.Model):
                 applicant.missing_skill_ids = False
                 applicant.matching_score = False
                 continue
-            job_skills = job.job_skill_ids
-            job_degree = job.expected_degree.sudo().score * 100
-            job_total = sum(job_skills.mapped("level_progress")) + job_degree
-            job_skill_map = {js.skill_id: js.level_progress for js in job_skills}
 
-            matching_applicant_skills = applicant.current_applicant_skill_ids.filtered(
-                lambda a: a.skill_id in job_skill_map,
+            matching_skill_ids, missing_skill_ids, matching_score = applicant._applicant_job_match(
+                job.job_skill_ids,
+                job.expected_degree.sudo().score * 100,
             )
-            applicant_degree = applicant.type_id.score * 100 if job_degree > 1 else 0
-            applicant_total = (
-                sum(min(skill.level_progress, job_skill_map[skill.skill_id] * 2) for skill in matching_applicant_skills)
-                + applicant_degree
-            )
-
-            matching_skill_ids = matching_applicant_skills.mapped("skill_id")
-            missing_skill_ids = job_skills.mapped("skill_id") - matching_applicant_skills.mapped("skill_id")
-            matching_score = round(applicant_total / job_total * 100) if job_total else 0
 
             applicant.matching_skill_ids = matching_skill_ids
             applicant.missing_skill_ids = missing_skill_ids
             applicant.matching_score = matching_score
+
+    def _applicant_job_match(self, job_skill_ids, job_expected_degree_score):
+        job_total = sum(job_skill_ids.mapped("level_progress")) + job_expected_degree_score
+        job_skill_map = {js.skill_id: js.level_progress for js in job_skill_ids}
+
+        matching_applicant_skills = self.current_applicant_skill_ids.filtered(
+            lambda a: a.skill_id in job_skill_map,
+        )
+        applicant_degree = self.type_id.score * 100 if job_expected_degree_score > 1 else 0
+        applicant_total = (
+            sum(min(skill.level_progress, job_skill_map[skill.skill_id] * 2) for skill in matching_applicant_skills)
+            + applicant_degree
+        )
+
+        matching_skill_ids = matching_applicant_skills.mapped("skill_id")
+        missing_skill_ids = job_skill_ids.mapped("skill_id") - matching_applicant_skills.mapped("skill_id")
+        matching_score = round(applicant_total / job_total * 100) if job_total else 0
+        return matching_skill_ids, missing_skill_ids, matching_score
 
     def _get_employee_create_vals(self):
         vals = super()._get_employee_create_vals()
@@ -164,3 +171,82 @@ class HrApplicant(models.Model):
                     mapped_skills = applicant._map_applicant_skill_ids_to_talent_skill_ids(original_vals)
                     applicant.pool_applicant_id.write({"applicant_skill_ids": mapped_skills})
         return super().write(vals)
+
+    def action_new_job_matching_search(self):
+        # What is the current job?
+        current_job_id = self.env.context["default_job_id"]  # This should be from the current search domain?
+
+        current_job = self.env["hr.job"].browse(current_job_id)
+        current_job_skills = current_job.job_skill_ids
+        current_job_expected_degree_score = current_job.expected_degree.score * 100
+        # if job has neither skills or expected degree, throw an error or popup or something?
+        if not (current_job_skills or current_job_expected_degree_score):
+            return {
+                "type": "ir.actions.client",
+                "tag": "display_notification",
+                "params": {
+                    "type": "error",
+                    "message": self.env._(
+                        """
+                        The current job doesn't have any skills to match applicants to.
+                        Try adding skills to the job position.
+                        """,
+                    ),
+                },
+            }
+        # Search for the matching applicants
+        # TODO: Make sure I don't include duplicates (Need for root applicant??)
+        matching_existing_applicants = self.env["hr.applicant"].search(
+            Domain.AND(
+                [
+                    Domain("job_id", "!=", current_job_id),
+                    Domain("skill_ids", "in", current_job.job_skill_ids.skill_id.ids),
+                ],
+            ),
+        )
+        # If there are no matching applicants then throw an error or something?
+        if not matching_existing_applicants:
+            return {
+                "type": "ir.actions.client",
+                "tag": "display_notification",
+                "params": {
+                    "type": "danger",
+                    "title": self.env._("No Matching Applicants Found"),
+                    "message": self.env._(
+                        """
+                        There are no applicants in your database that match the expected skills of this job position.
+                        Try adjusting the expected skills on the job position and make sure all your applicants have their skills up to date.
+                        """,
+                    ),
+                },
+            }
+
+        matching_applicant_vals = []
+        for applicant in matching_existing_applicants:
+            matching, missing, score = applicant._applicant_job_match(
+                current_job_skills,
+                current_job_expected_degree_score,
+            )
+            matching_applicant_vals.append(
+                {
+                    "applicant_id": applicant.id,
+                    "matching_job_id": current_job_id,
+                    "matching_skills": matching,
+                    "missing_skills": missing,
+                    "matching_score": score,
+                },
+            )
+
+        matching_applicants = self.env["matching.applicant"].create(matching_applicant_vals)
+
+        return {
+            "name": self.env._("Applicants matching %(job_name)s", job_name=current_job.name),
+            "type": "ir.actions.act_window",
+            "res_model": "matching.applicant",
+            "target": "new",
+            "views": [[False, "list"]],
+            "domain": [("id", "in", matching_applicants.ids)],
+            "context": {
+                "dialog_size": "large",
+            },
+        }

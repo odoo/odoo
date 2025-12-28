@@ -12,6 +12,7 @@
         'views/hr_applicant_skill_views.xml',
         'views/hr_job_views.xml',
         'security/ir.model.access.csv',
+        'wizard/matching_applicant.xml',
     ],
     'assets': {
         'web.assets_backend': [
