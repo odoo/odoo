@@ -490,7 +490,8 @@ export class BuilderOptionsPlugin extends Plugin {
                 this.updateContainers(targetEl, { forceUpdate: true });
                 // Scroll to the target if not visible.
                 if (!isElementInViewport(targetEl)) {
-                    targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+                    // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
+                    targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
                 }
             } else {
                 this.deactivateContainers();
