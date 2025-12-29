@@ -139,9 +139,11 @@ test("should be able to create a new group chat from an existing chat", async ()
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-DiscussContent-header button[title='Invite People']");
+    await contains(".o-discuss-ChannelInvitation");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2'))");
     await click("button[title='Create Group Chat']:enabled");
+    await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(
         ".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin, TestPartner, and TestPartner2')"
     );
