@@ -230,7 +230,7 @@
                 <field name="aggregation_formula">tax_ro_baza_rd9.balance + tax_ro_baza_rd10.balance + tax_ro_baza_rd11.balance + tax_ro_baza_rd12.balance + tax_ro_baza_rd13.balance + tax_ro_baza_rd14.balance + tax_ro_baza_rd15.balance + tax_ro_baza_rd16.balance + tax_ro_baza_rd17.balance + tax_ro_baza_rd18.balance</field>
                 <field name="children_ids">
                     <record id="account_tax_report_ro_baza_rd9" model="account.report.line">
-                        <field name="name">9 - TAX BASE - Supplies of goods and services taxable at 19% rate</field>
+                        <field name="name">9 - TAX BASE - Supplies of goods and services taxable at 21% rate</field>
                         <field name="code">tax_ro_baza_rd9</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_ro_baza_rd9_tag" model="account.report.expression">
@@ -239,27 +239,9 @@
                                 <field name="formula">09 - TAX BASE</field>
                             </record>
                         </field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_ro_baza_rd91" model="account.report.line">
-                                <field name="name">9.1 - TAX BASE - Supplies of goods and services taxable at 19% rate</field>
-                                <field name="code">tax_ro_baza_rd91</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_baza_rd91_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">09_1 - TAX BASE</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_baza_rd92" model="account.report.line">
-                                <field name="name">9.2 - TAX BASE - Non-deductible purchases of goods and services 50% taxable at 19% rate</field>
-                                <field name="code">tax_ro_baza_rd92</field>
-                                <field name="aggregation_formula">0.5 * tax_ro_baza_rd242.balance</field>
-                            </record>
-                        </field>
                     </record>
                     <record id="account_tax_report_ro_baza_rd10" model="account.report.line">
-                        <field name="name">10 - TAX BASE - Supplies of goods and services taxable at 9% rate</field>
+                        <field name="name">10 - TAX BASE - Supplies of goods and services taxable at 11% rate</field>
                         <field name="code">tax_ro_baza_rd10</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_ro_baza_rd10_tag" model="account.report.expression">
@@ -268,27 +250,9 @@
                                 <field name="formula">10 - TAX BASE</field>
                             </record>
                         </field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_ro_baza_rd101" model="account.report.line">
-                                <field name="name">10.1 - TAX BASE - Supplies of goods and services taxable at 9% rate</field>
-                                <field name="code">tax_ro_baza_rd101</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_baza_rd101_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">10_1 - TAX BASE</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_baza_rd102" model="account.report.line">
-                                <field name="name">10_2 - TAX BASE - Non-deductible purchases of goods and services 50% taxable at 9% rate</field>
-                                <field name="code">tax_ro_baza_rd102</field>
-                                <field name="aggregation_formula">0.5 * tax_ro_baza_rd252.balance</field>
-                            </record>
-                        </field>
                     </record>
                     <record id="account_tax_report_ro_baza_rd11" model="account.report.line">
-                        <field name="name">11 - TAX BASE - Supplies of taxable goods at 5% rate</field>
+                        <field name="name">11 - TAX BASE - Supplies of goods and services taxable at 9% rate, according to article 3 of law No. 141/2025</field>
                         <field name="code">tax_ro_baza_rd11</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_ro_baza_rd11_tag" model="account.report.expression">
@@ -297,38 +261,14 @@
                                 <field name="formula">11 - TAX BASE</field>
                             </record>
                         </field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_ro_baza_rd111" model="account.report.line">
-                                <field name="name">11.1 - TAX BASE - Supplies of goods and services taxable at 5% rate</field>
-                                <field name="code">tax_ro_baza_rd111</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_baza_rd111_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">11_1 - TAX BASE</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_baza_rd112" model="account.report.line">
-                                <field name="name">11.2 - TAX BASE - Non-deductible purchases of goods and services 50% taxable at 5% rate</field>
-                                <field name="code">tax_ro_baza_rd112</field>
-                                <field name="aggregation_formula">0.5 * tax_ro_baza_rd262.balance</field>
-                            </record>
-                        </field>
                     </record>
                     <record id="account_tax_report_ro_baza_rd12" model="account.report.line">
                         <field name="name">12 - TAX BASE - Purchases of goods and services subject to simplification measures for which the beneficiary is liable to pay VAT (reverse charge) , of which:</field>
                         <field name="code">tax_ro_baza_rd12</field>
-                        <field name="expression_ids">
-                            <record id="account_tax_report_ro_baza_rd12_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">12 - TAX BASE</field>
-                            </record>
-                        </field>
+                        <field name="aggregation_formula">tax_ro_baza_rd121.balance + tax_ro_baza_rd122.balance</field>
                         <field name="children_ids">
                             <record id="account_tax_report_ro_baza_rd121" model="account.report.line">
-                                <field name="name">12.1 - TAX BASE - Purchases of goods and services, taxable at 19% rate</field>
+                                <field name="name">12.1 - TAX BASE - Purchases of goods and services, taxable at 21% rate</field>
                                 <field name="code">tax_ro_baza_rd121</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_ro_baza_rd121_tag" model="account.report.expression">
@@ -339,24 +279,13 @@
                                 </field>
                             </record>
                             <record id="account_tax_report_ro_baza_rd122" model="account.report.line">
-                                <field name="name">12.2 - TAX BASE - Purchases of goods and services, taxable at 9% rate</field>
+                                <field name="name">12.2 - TAX BASE - Purchases of goods, taxable at 11% rate</field>
                                 <field name="code">tax_ro_baza_rd122</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_ro_baza_rd122_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">12_2 - TAX BASE</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_baza_rd123" model="account.report.line">
-                                <field name="name">12.3 - TAX BASE - Purchases of goods and services, taxable at 5% rate</field>
-                                <field name="code">tax_ro_baza_rd123</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_baza_rd123_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">12_3 - TAX BASE</field>
                                     </record>
                                 </field>
                             </record>
@@ -436,7 +365,7 @@
                 <field name="aggregation_formula">tax_ro_tva_rd9.balance + tax_ro_tva_rd10.balance + tax_ro_tva_rd11.balance + tax_ro_tva_rd12.balance + tax_ro_tva_rd16.balance + tax_ro_tva_rd17.balance + tax_ro_tva_rd18.balance</field>
                 <field name="children_ids">
                     <record id="account_tax_report_ro_tva_rd9" model="account.report.line">
-                        <field name="name">9 - VAT - Supplies of goods and services taxable at 19% rate</field>
+                        <field name="name">9 - VAT - Supplies of goods and services taxable at 21% rate</field>
                         <field name="code">tax_ro_tva_rd9</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_ro_tva_rd9_tag" model="account.report.expression">
@@ -445,33 +374,9 @@
                                 <field name="formula">09 - VAT</field>
                             </record>
                         </field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_ro_tva_rd91" model="account.report.line">
-                                <field name="name">9.1 - VAT - Supplies of goods and services taxable at 19% rate</field>
-                                <field name="code">tax_ro_tva_rd91</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd91_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">09_1 - VAT</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_tva_rd92" model="account.report.line">
-                                <field name="name">9.2 - VAT - Non-deductible purchases of goods and services 50% taxable at 19% rate</field>
-                                <field name="code">tax_ro_tva_rd92</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd92_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">09_2 - VAT</field>
-                                    </record>
-                                </field>
-                            </record>
-                        </field>
                     </record>
                     <record id="account_tax_report_ro_tva_rd10" model="account.report.line">
-                        <field name="name">10 - VAT - Supplies of goods and services taxable at 9% rate</field>
+                        <field name="name">10 - VAT - Supplies of goods and services taxable at 11% rate</field>
                         <field name="code">tax_ro_tva_rd10</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_ro_tva_rd10_tag" model="account.report.expression">
@@ -480,33 +385,9 @@
                                 <field name="formula">10 - VAT</field>
                             </record>
                         </field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_ro_tva_rd101" model="account.report.line">
-                                <field name="name">10.1 - VAT - Supplies of goods and services taxable at 9% rate</field>
-                                <field name="code">tax_ro_tva_rd101</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd101_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">10_1 - VAT</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_tva_rd102" model="account.report.line">
-                                <field name="name">10.2 - VAT - Non-deductible purchases of goods and services 50% taxable at 9% rate</field>
-                                <field name="code">tax_ro_tva_rd102</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd102_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">10_2 - VAT</field>
-                                    </record>
-                                </field>
-                            </record>
-                        </field>
                     </record>
                     <record id="account_tax_report_ro_tva_rd11" model="account.report.line">
-                        <field name="name">11 - VAT - Supplies of taxable goods at 5% rate</field>
+                        <field name="name">11 - VAT - Supplies of taxable goods at 9% rate, according to article 3 of law No. 141/2025</field>
                         <field name="code">tax_ro_tva_rd11</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_ro_tva_rd11_tag" model="account.report.expression">
@@ -515,44 +396,14 @@
                                 <field name="formula">11 - VAT</field>
                             </record>
                         </field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_ro_tva_rd111" model="account.report.line">
-                                <field name="name">11.1 - VAT - Supplies of goods and services taxable at 5% rate</field>
-                                <field name="code">tax_ro_tva_rd111</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd111_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">11_1 - VAT</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_tva_rd112" model="account.report.line">
-                                <field name="name">11.2 - VAT - Non-deductible purchases of goods and services 50% taxable at 5% rate</field>
-                                <field name="code">tax_ro_tva_rd112</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd112_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">11_2 - VAT</field>
-                                    </record>
-                                </field>
-                            </record>
-                        </field>
                     </record>
                     <record id="account_tax_report_ro_tva_rd12" model="account.report.line">
                         <field name="name">12 - VAT - Purchases of goods and services subject to simplification measures for which the beneficiary is liable to pay VAT (reverse charge) , of which:</field>
                         <field name="code">tax_ro_tva_rd12</field>
-                        <field name="expression_ids">
-                            <record id="account_tax_report_ro_tva_rd12_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">12 - VAT</field>
-                            </record>
-                        </field>
+                        <field name="aggregation_formula">tax_ro_tva_rd121.balance + tax_ro_tva_rd122.balance</field>
                         <field name="children_ids">
                             <record id="account_tax_report_ro_tva_rd121" model="account.report.line">
-                                <field name="name">12.1 - VAT - Purchases of goods and services, taxable at 19% rate</field>
+                                <field name="name">12.1 - VAT - Purchases of goods and services, taxable at 21% rate</field>
                                 <field name="code">tax_ro_tva_rd121</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_ro_tva_rd121_tag" model="account.report.expression">
@@ -563,24 +414,13 @@
                                 </field>
                             </record>
                             <record id="account_tax_report_ro_tva_rd122" model="account.report.line">
-                                <field name="name">12.2 - VAT - Purchases of goods and services, taxable at 9% rate</field>
+                                <field name="name">12.2 - VAT - Purchases of goods, taxable at 11% rate</field>
                                 <field name="code">tax_ro_tva_rd122</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_ro_tva_rd122_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">12_2 - VAT</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_tva_rd123" model="account.report.line">
-                                <field name="name">12.3 - VAT - Purchases of goods and services, taxable at 5% rate</field>
-                                <field name="code">tax_ro_tva_rd123</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd123_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">12_3 - VAT</field>
                                     </record>
                                 </field>
                             </record>
@@ -788,87 +628,51 @@
             <record id="account_tax_report_ro_baza_achiz" model="account.report.line">
                 <field name="name">TAX BASE ON DOMESTIC PURCHASES OF GOODS/SERVICES AND IMPORTS, EXEMPT OR NON-TAXABLE INTRA-COMMUNITY PURCHASES</field>
                 <field name="code">tax_ro_baza_achiz</field>
-                <field name="aggregation_formula">tax_ro_baza_rd24.balance + tax_ro_baza_rd25.balance + tax_ro_baza_rd26.balance + tax_ro_baza_rd27.balance + tax_ro_baza_rd30.balance</field>
+                <field name="aggregation_formula">tax_ro_baza_rd24.balance + tax_ro_baza_rd25.balance + tax_ro_baza_rd27.balance + tax_ro_baza_rd30.balance</field>
                 <field name="children_ids">
                     <record id="account_tax_report_ro_baza_rd24" model="account.report.line">
-                        <field name="name">24 - TAX BASE - Purchases of goods and services taxable at 19%, other than those under heading 27</field>
+                        <field name="name">24 - TAX BASE - Purchases of goods and services taxable at 21%, other than those under heading 27</field>
                         <field name="code">tax_ro_baza_rd24</field>
-                        <field name="aggregation_formula">tax_ro_baza_rd241.balance + 0.5 * tax_ro_baza_rd242.balance</field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_ro_baza_rd241" model="account.report.line">
-                                <field name="name">24.1 - TAX BASE - Purchases of goods and services taxable at 19%, other than those under heading 27</field>
-                                <field name="code">tax_ro_baza_rd241</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_baza_rd241_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">24_1 - TAX BASE</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_baza_rd242" model="account.report.line">
-                                <field name="name">24.2 - TAX BASE - Purchases of goods and services taxable at 19%, non-deductible 50%.</field>
-                                <field name="code">tax_ro_baza_rd242</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_baza_rd242_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">24_2 - TAX BASE</field>
-                                    </record>
-                                </field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_ro_baza_rd24_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">24 - TAX BASE</field>
                             </record>
                         </field>
                     </record>
                     <record id="account_tax_report_ro_baza_rd25" model="account.report.line">
-                        <field name="name">25 - TAX BASE - Purchases of goods and services taxable at 9% rate</field>
+                        <field name="name">25 - TAX BASE - Purchases of goods and services taxable at 11% rate</field>
                         <field name="code">tax_ro_baza_rd25</field>
-                        <field name="aggregation_formula">tax_ro_baza_rd251.balance + 0.5 * tax_ro_baza_rd252.balance</field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_ro_baza_rd251" model="account.report.line">
-                                <field name="name">25.1 - TAX BASE - Purchases of goods and services taxable at 9% rate</field>
-                                <field name="code">tax_ro_baza_rd251</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_baza_rd251_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">25_1 - TAX BASE</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_baza_rd252" model="account.report.line">
-                                <field name="name">25.2 - TAX BASE - Purchases of goods and services taxable at 9%, non-deductible at 50%</field>
-                                <field name="code">tax_ro_baza_rd252</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_baza_rd252_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">25_2 - TAX BASE</field>
-                                    </record>
-                                </field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_ro_baza_rd25_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">25 - TAX BASE</field>
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_ro_baza_rd26" model="account.report.line">
-                        <field name="name">26 - TAX BASE - Purchases of taxable goods at 5% rate</field>
-                        <field name="code">tax_ro_baza_rd26</field>
-                        <field name="aggregation_formula">tax_ro_baza_rd261.balance + 0.5 * tax_ro_baza_rd262.balance</field>
+                    <record id="account_tax_report_ro_baza_rd27" model="account.report.line">
+                        <field name="name">26 - TAX BASE - Purchases of goods and services subject to simplification measures for which the beneficiary is liable to pay VAT (reverse charge), of which</field>
+                        <field name="code">tax_ro_baza_rd27</field>
+                        <field name="aggregation_formula">tax_ro_baza_rd271.balance + tax_ro_baza_rd272.balance</field>
                         <field name="children_ids">
-                            <record id="account_tax_report_ro_baza_rd261" model="account.report.line">
-                                <field name="name">26.1 - TAX BASE - Purchases of taxable goods at 5% rate</field>
-                                <field name="code">tax_ro_baza_rd261</field>
+                            <record id="account_tax_report_ro_baza_rd271" model="account.report.line">
+                                <field name="name">26.1 - TAX BASE - Purchases of goods, taxable at 21%</field>
+                                <field name="code">tax_ro_baza_rd271</field>
                                 <field name="expression_ids">
-                                    <record id="account_tax_report_ro_baza_rd261_tag" model="account.report.expression">
+                                    <record id="account_tax_report_ro_baza_rd271_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">26_1 - TAX BASE</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="account_tax_report_ro_baza_rd262" model="account.report.line">
-                                <field name="name">26.2 - TAX BASE - Purchases of goods taxable at 5%, non-deductible 50%</field>
-                                <field name="code">tax_ro_baza_rd262</field>
+                            <record id="account_tax_report_ro_baza_rd272" model="account.report.line">
+                                <field name="name">26.2 - TAX BASE - Purchases of goods, taxable at 11%</field>
+                                <field name="code">tax_ro_baza_rd272</field>
                                 <field name="expression_ids">
-                                    <record id="account_tax_report_ro_baza_rd262_tag" model="account.report.expression">
+                                    <record id="account_tax_report_ro_baza_rd272_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">26_2 - TAX BASE</field>
@@ -877,71 +681,25 @@
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_ro_baza_rd27" model="account.report.line">
-                        <field name="name">27 - TAX BASE - Purchases of goods and services subject to simplification measures for which the beneficiary is liable to pay VAT (reverse charge), of which (row 25=row 12)</field>
-                        <field name="code">tax_ro_baza_rd27</field>
-                        <field name="expression_ids">
-                            <record id="account_tax_report_ro_baza_rd27_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">27 - TAX BASE</field>
-                            </record>
-                        </field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_ro_baza_rd271" model="account.report.line">
-                                <field name="name">27.1 - TAX BASE - Purchases of goods and services, taxable at 19% (row 25.1=row 12.1)</field>
-                                <field name="code">tax_ro_baza_rd271</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_baza_rd271_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">27_1 - TAX BASE</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_baza_rd272" model="account.report.line">
-                                <field name="name">27.2 - TAX BASE - Purchases of goods, taxable at 9% (row 25.2=row 12.2)</field>
-                                <field name="code">tax_ro_baza_rd272</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_baza_rd272_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">27_2 - TAX BASE</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_baza_rd273" model="account.report.line">
-                                <field name="name">27.3 - TAX BASE - Purchases of goods, taxable at 5% (row 25.3=row 12.3)</field>
-                                <field name="code">tax_ro_baza_rd273</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_baza_rd273_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">27_3 - TAX BASE</field>
-                                    </record>
-                                </field>
-                            </record>
-                        </field>
-                    </record>
                     <record id="account_tax_report_ro_baza_rd30" model="account.report.line">
-                        <field name="name">30 - TAX BASE - Purchases of tax-exempt or non-taxable goods and services, of which:</field>
+                        <field name="name">29 - TAX BASE - Purchases of tax-exempt or non-taxable goods and services, of which:</field>
                         <field name="code">tax_ro_baza_rd30</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_ro_baza_rd30_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">30 - TAX BASE</field>
+                                <field name="formula">29 - TAX BASE</field>
                             </record>
                         </field>
                         <field name="children_ids">
                             <record id="account_tax_report_ro_baza_rd301" model="account.report.line">
-                                <field name="name">30.1 - TAX BASE - Tax-exempt intra-Community purchases of services (not completed under the simplified method)</field>
+                                <field name="name">29.1 - TAX BASE - Tax-exempt intra-Community purchases of services (not completed under the simplified method)</field>
                                 <field name="code">tax_ro_baza_rd301</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_ro_baza_rd301_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">30_1 - TAX BASE</field>
+                                        <field name="formula">29_1 - TAX BASE</field>
                                     </record>
                                 </field>
                             </record>
@@ -952,39 +710,21 @@
             <record id="account_tax_report_ro_tva_achiz" model="account.report.line">
                 <field name="name">VAT ON DOMESTIC PURCHASES OF GOODS/SERVICES AND IMPORTS, EXEMPT OR NON-TAXABLE INTRA-COMMUNITY PURCHASES</field>
                 <field name="code">tax_ro_tva_achiz</field>
-                <field name="aggregation_formula">tax_ro_tva_rd24.balance + tax_ro_tva_rd25.balance + tax_ro_tva_rd26.balance + tax_ro_tva_rd27.balance + tax_ro_tva_rd28.balance + tax_ro_tva_rd29.balance</field>
+                <field name="aggregation_formula">tax_ro_tva_rd24.balance + tax_ro_tva_rd25.balance + tax_ro_tva_rd27.balance + tax_ro_tva_rd28.balance + tax_ro_tva_rd29.balance</field>
                 <field name="children_ids">
                     <record id="account_tax_report_ro_tva_rd24" model="account.report.line">
-                        <field name="name">24 - VAT - Purchases of goods and services taxable at 19%, other than those under heading 27</field>
+                        <field name="name">24 - VAT - Purchases of goods and services taxable at 21%, other than those under heading 27</field>
                         <field name="code">tax_ro_tva_rd24</field>
-                        <field name="aggregation_formula">tax_ro_tva_rd241.balance + tax_ro_tva_rd242.balance</field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_ro_tva_rd241" model="account.report.line">
-                                <field name="name">24.1 - VAT - Purchases of goods and services taxable at 19%, other than those under heading 27</field>
-                                <field name="code">tax_ro_tva_rd241</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd241_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">24_1 - VAT</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_tva_rd242" model="account.report.line">
-                                <field name="name">24.2 - VAT - Purchases of goods and services taxable at 19%, non-deductible 50%.</field>
-                                <field name="code">tax_ro_tva_rd242</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd242_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">24_2 - VAT</field>
-                                    </record>
-                                </field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_ro_tva_rd24_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">24 - VAT</field>
                             </record>
                         </field>
                     </record>
                     <record id="account_tax_report_ro_tva_rd25" model="account.report.line">
-                        <field name="name">25 - VAT - Purchases of goods and services taxable at 9% rate</field>
+                        <field name="name">25 - VAT - Purchases of goods and services taxable at 11%</field>
                         <field name="code">tax_ro_tva_rd25</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_ro_tva_rd25_tag" model="account.report.expression">
@@ -993,52 +733,28 @@
                                 <field name="formula">25 - VAT</field>
                             </record>
                         </field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_ro_tva_rd251" model="account.report.line">
-                                <field name="name">25.1 - VAT - Purchases of goods and services taxable at 9% rate</field>
-                                <field name="code">tax_ro_tva_rd251</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd251_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">25_1 - VAT</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_tva_rd252" model="account.report.line">
-                                <field name="name">25.2 - VAT - Purchases of goods and services taxable at 9%, non-deductible at 50%</field>
-                                <field name="code">tax_ro_tva_rd252</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd252_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">25_2 - VAT</field>
-                                    </record>
-                                </field>
-                            </record>
-                        </field>
                     </record>
-                    <record id="account_tax_report_ro_tva_rd26" model="account.report.line">
-                        <field name="name">26 - VAT - Purchases of taxable goods at 5% rate</field>
-                        <field name="code">tax_ro_tva_rd26</field>
-                        <field name="aggregation_formula">tax_ro_tva_rd261.balance + tax_ro_tva_rd262.balance</field>
+                    <record id="account_tax_report_ro_tva_rd27" model="account.report.line">
+                        <field name="name">26 - VAT - Purchases of goods and services subject to simplification measures for which the beneficiary is liable to pay VAT (reverse charge), of which</field>
+                        <field name="code">tax_ro_tva_rd27</field>
+                        <field name="aggregation_formula">tax_ro_tva_rd271.balance + tax_ro_tva_rd272.balance</field>
                         <field name="children_ids">
-                            <record id="account_tax_report_ro_tva_rd261" model="account.report.line">
-                                <field name="name">26.1 - VAT - Purchases of taxable goods at 5% rate</field>
-                                <field name="code">tax_ro_tva_rd261</field>
+                            <record id="account_tax_report_ro_tva_rd271" model="account.report.line">
+                                <field name="name">26.1 - VAT - Purchases of goods, taxable at 21%</field>
+                                <field name="code">tax_ro_tva_rd271</field>
                                 <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd261_tag" model="account.report.expression">
+                                    <record id="account_tax_report_ro_tva_rd271_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">26_1 - VAT</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="account_tax_report_ro_tva_rd262" model="account.report.line">
-                                <field name="name">26.2 - VAT - Purchases of goods taxable at 5%, non-deductible 50%</field>
-                                <field name="code">tax_ro_tva_rd262</field>
+                            <record id="account_tax_report_ro_tva_rd272" model="account.report.line">
+                                <field name="name">26.2 - VAT - Purchases of goods, taxable at 11%</field>
+                                <field name="code">tax_ro_tva_rd272</field>
                                 <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd262_tag" model="account.report.expression">
+                                    <record id="account_tax_report_ro_tva_rd272_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">26_2 - VAT</field>
@@ -1047,159 +763,113 @@
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_ro_tva_rd27" model="account.report.line">
-                        <field name="name">27 - VAT - Purchases of goods and services subject to simplification measures for which the beneficiary is liable to pay VAT (reverse charge), of which (row 25=row 12)</field>
-                        <field name="code">tax_ro_tva_rd27</field>
+                    <record id="account_tax_report_ro_tva_rd28" model="account.report.line">
+                        <field name="name">27 - VAT - Flat-rate compensation for purchases of agricultural products and services from suppliers applying the special scheme for farmers</field>
+                        <field name="code">tax_ro_tva_rd28</field>
                         <field name="expression_ids">
-                            <record id="account_tax_report_ro_tva_rd27_tag" model="account.report.expression">
+                            <record id="account_tax_report_ro_tva_rd28_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">27 - VAT</field>
                             </record>
                         </field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_ro_tva_rd271" model="account.report.line">
-                                <field name="name">27.1 - VAT - Purchases of goods and services, taxable at 19% (row 25.1=row 12.1)</field>
-                                <field name="code">tax_ro_tva_rd271</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd271_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">27_1 - VAT</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_tva_rd272" model="account.report.line">
-                                <field name="name">27.2 - VAT - Purchases of goods, taxable at 9% (row 25.2=row 12.2)</field>
-                                <field name="code">tax_ro_tva_rd272</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd272_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">27_2 - VAT</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_ro_tva_rd273" model="account.report.line">
-                                <field name="name">27.3 - VAT - Purchases of goods, taxable at 5% (row 25.3=row 12.3)</field>
-                                <field name="code">tax_ro_tva_rd273</field>
-                                <field name="expression_ids">
-                                    <record id="account_tax_report_ro_tva_rd273_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">27_3 - VAT</field>
-                                    </record>
-                                </field>
-                            </record>
-                        </field>
                     </record>
-                    <record id="account_tax_report_ro_tva_rd28" model="account.report.line">
-                        <field name="name">28 - VAT - Flat-rate compensation for purchases of agricultural products and services from suppliers applying the special scheme for farmers</field>
-                        <field name="code">tax_ro_tva_rd28</field>
+                    <record id="account_tax_report_ro_tva_rd29" model="account.report.line">
+                        <field name="name">28 - VAT - Flat-rate compensation adjustments</field>
+                        <field name="code">tax_ro_tva_rd29</field>
                         <field name="expression_ids">
-                            <record id="account_tax_report_ro_tva_rd28_tag" model="account.report.expression">
+                            <record id="account_tax_report_ro_tva_rd29_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">28 - VAT</field>
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_ro_tva_rd29" model="account.report.line">
-                        <field name="name">29 - VAT - Flat-rate compensation adjustments</field>
-                        <field name="code">tax_ro_tva_rd29</field>
-                        <field name="expression_ids">
-                            <record id="account_tax_report_ro_tva_rd29_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">29 - VAT</field>
-                            </record>
-                        </field>
-                    </record>
                 </field>
             </record>
             <record id="account_tax_report_ro_baza_total_rd31" model="account.report.line">
-                <field name="name">31 - TAX BASE - TOTAL DEDUCTIBLE TAX (amount from row 20 to row 29, except row 20.1,22.1, 27.1, 27.2, 27.3)</field>
+                <field name="name">30 - TAX BASE - TOTAL DEDUCTIBLE TAX (amount from row 20 to row 28, except row 20.1, 22.1, 26.1, 26.2)</field>
                 <field name="code">tax_ro_baza_total_rd31</field>
                 <field name="aggregation_formula">tax_ro_baza_intracom_eu_a.balance + tax_ro_baza_achiz.balance</field>
             </record>
             <record id="account_tax_report_ro_tva_total_rd31" model="account.report.line">
-                <field name="name">31 - VAT - TOTAL DEDUCTIBLE TAX (amount from row 20 to row 29, except row 20.1,22.1, 27.1, 27.2, 27.3)</field>
+                <field name="name">30 - VAT - TOTAL DEDUCTIBLE TAX (amount from row 20 to row 28, except row 20.1, 22.1, 26.1, 26.2)</field>
                 <field name="code">tax_ro_tva_total_rd31</field>
                 <field name="aggregation_formula">tax_ro_tva_intracom_eu_a.balance + tax_ro_tva_achiz.balance</field>
             </record>
             <record id="account_tax_report_ro_tva_rd32" model="account.report.line">
-                <field name="name">32 - VAT - SUB-TOTAL TAX DEDUCTED PURSUANT TO ARTICLE 297 AND ARTICLE 298 OR ARTICLE 300 AND ARTICLE 298 (row 30&lt;=row 29)</field>
+                <field name="name">31 - VAT - SUB-TOTAL TAX DEDUCTED PURSUANT TO ARTICLE 297 AND ARTICLE 298 OR ARTICLE 300 AND ARTICLE 298</field>
                 <field name="code">tax_ro_tva_rd32</field>
                 <field name="aggregation_formula">tax_ro_tva_intracom_eu_a.balance + tax_ro_tva_achiz.balance</field>
             </record>
             <record id="account_tax_report_ro_tva_rd33" model="account.report.line">
-                <field name="name">33 - VAT - VAT actually refunded to foreign purchasers, including commission to authorised establishments</field>
+                <field name="name">32 - VAT - VAT actually refunded to foreign purchasers, including commission to authorised establishments</field>
                 <field name="code">tax_ro_tva_rd33</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_ro_tva_rd33_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">32 - VAT</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_ro_baza_rd34" model="account.report.line">
+                <field name="name">33 - TAX BASE - Deducted tax adjustments</field>
+                <field name="code">tax_ro_baza_rd34</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_ro_baza_rd34_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">33 - TAX BASE</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_ro_tva_rd34" model="account.report.line">
+                <field name="name">33 - VAT - Deducted tax adjustments</field>
+                <field name="code">tax_ro_tva_rd34</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_ro_tva_rd34_tag" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">33 - VAT</field>
                     </record>
                 </field>
             </record>
-            <record id="account_tax_report_ro_baza_rd34" model="account.report.line">
-                <field name="name">34 - TAX BASE - Deducted tax adjustments</field>
-                <field name="code">tax_ro_baza_rd34</field>
+            <record id="account_tax_report_ro_tva_rd35" model="account.report.line">
+                <field name="name">34 - VAT - Pro-rata adjustments / adjustments for capital goods</field>
+                <field name="code">tax_ro_tva_rd35</field>
                 <field name="expression_ids">
-                    <record id="account_tax_report_ro_baza_rd34_tag" model="account.report.expression">
-                        <field name="label">balance</field>
-                        <field name="engine">tax_tags</field>
-                        <field name="formula">34 - TAX BASE</field>
-                    </record>
-                </field>
-            </record>
-            <record id="account_tax_report_ro_tva_rd34" model="account.report.line">
-                <field name="name">34 - VAT - Deducted tax adjustments</field>
-                <field name="code">tax_ro_tva_rd34</field>
-                <field name="expression_ids">
-                    <record id="account_tax_report_ro_tva_rd34_tag" model="account.report.expression">
+                    <record id="account_tax_report_ro_tva_rd35_tag" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">34 - VAT</field>
                     </record>
                 </field>
             </record>
-            <record id="account_tax_report_ro_tva_rd35" model="account.report.line">
-                <field name="name">35 - VAT - Pro-rata adjustments / adjustments for capital goods</field>
-                <field name="code">tax_ro_tva_rd35</field>
-                <field name="expression_ids">
-                    <record id="account_tax_report_ro_tva_rd35_tag" model="account.report.expression">
-                        <field name="label">balance</field>
-                        <field name="engine">tax_tags</field>
-                        <field name="formula">35 - VAT</field>
-                    </record>
-                </field>
-            </record>
             <record id="account_tax_report_ro_tva_rd36" model="account.report.line">
-                <field name="name">36 - VAT - TOTAL TAX DEDUCTED (row 32+row 33+row 34+row 35)</field>
+                <field name="name">35 - VAT - TOTAL TAX DEDUCTED (row 31 + row 32 + row 33 + row 34)</field>
                 <field name="code">tax_ro_tva_rd36</field>
                 <field name="aggregation_formula">tax_ro_tva_intracom_eu_a.balance + tax_ro_tva_achiz.balance + tax_ro_tva_rd33.balance + tax_ro_tva_rd34.balance + tax_ro_tva_rd35.balance</field>
             </record>
             <record id="account_tax_report_ro_tva_rd40" model="account.report.line">
-                <field name="name">40 - VAT - VAT differences to be paid established by the tax inspection authorities by means of a communicated decision and not paid by the date of submission of the VAT return</field>
+                <field name="name">39 - VAT - VAT differences to be paid established by the tax inspection authorities by means of a communicated decision and not paid by the date of submission of the VAT return</field>
                 <field name="code">tax_ro_tva_rd40</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_ro_tva_rd40_tag" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
-                        <field name="formula">40 - VAT</field>
+                        <field name="formula">39 - VAT</field>
                     </record>
                 </field>
             </record>
             <record id="account_tax_report_ro_tva_rd43" model="account.report.line">
-                <field name="name">43 - VAT - Negative VAT differences established by the tax inspection authorities by decision communicated by the date of submission of the VAT return</field>
+                <field name="name">42 - VAT - Negative VAT differences established by the tax inspection authorities by decision communicated by the date of submission of the VAT return</field>
                 <field name="code">tax_ro_tva_rd43</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_ro_tva_rd43_tag" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">tax_tags</field>
-                        <field name="formula">43 - VAT</field>
+                        <field name="formula">42 - VAT</field>
                     </record>
                 </field>
             </record>
