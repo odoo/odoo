@@ -42,7 +42,12 @@ const discussChannelPatch = {
         return super.isHideUntilNewMessageSupported;
     },
     get livechatShouldAskLeaveConfirmation() {
-        if (this.isTransient || this.livechat_end_dt || !this.self_member_id) {
+        if (
+            this.isTransient ||
+            this.livechat_end_dt ||
+            !this.self_member_id ||
+            this.channel_type !== "livechat"
+        ) {
             return false;
         }
         return (

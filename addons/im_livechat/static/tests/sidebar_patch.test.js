@@ -500,3 +500,21 @@ test("show looking for help duration in the sidebar", async () => {
         ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(2d)"
     );
 });
+
+test("sidebar: leave non-livechat channel removes it from sidebar", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebarChannel-itemName:text('General')");
+    await click(".o-mail-DiscussSidebarChannel:text('General') .oi-ellipsis-h");
+    await click(".o-dropdown-item:contains('Leave Channel')");
+    await contains(
+        ".modal-body:text('You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?')"
+    );
+    await click("button:text('Leave Conversation')");
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')", { count: 0 });
+});
