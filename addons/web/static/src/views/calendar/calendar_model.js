@@ -870,7 +870,8 @@ export class CalendarModel extends Model {
                 const records = await this.orm.searchRead(
                     field.relation,
                     [["id", "in", relatedIds]],
-                    fieldsToFetch
+                    fieldsToFetch,
+                    { context: { active_test: false } }
                 );
                 if (isX2Many) {
                     const nameById = Object.fromEntries(records.map((r) => [r.id, r.display_name]));
