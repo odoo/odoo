@@ -2,8 +2,8 @@
 from calendar import monthrange
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError, UserError
+from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 
 def _get_selection_days(self):
@@ -171,9 +171,9 @@ class HrLeaveAccrualLevel(models.Model):
         error_message = ''
         for level in self:
             if level.frequency == 'weekly' and not level.week_day:
-                error_message = _("Weekday must be selected to use the frequency weekly")
+                error_message = self.env._("Weekday must be selected to use the frequency weekly")
             elif level.frequency == 'bimonthly' and int(level.first_day) >= int(level.second_day):
-                error_message = _("The first day must be lower than the second day.")
+                error_message = self.env._("The first day must be lower than the second day.")
         if error_message:
             raise ValidationError(error_message)
 
@@ -310,7 +310,7 @@ class HrLeaveAccrualLevel(models.Model):
                 return date
             return last_call + relativedelta(month=int(self.yearly_month), day=int(self.yearly_day), years=1)
 
-        raise ValidationError(_("Your frequency selection is not correct: please choose a frequency between theses options:"
+        raise ValidationError(self.env._("Your frequency selection is not correct: please choose a frequency between theses options:"
             "Hourly, Daily, Weekly, Twice a month, Monthly, Twice a year and Yearly."))
 
     def _get_previous_date(self, last_call):
@@ -356,7 +356,7 @@ class HrLeaveAccrualLevel(models.Model):
                 return year_date
             return last_call + relativedelta(month=int(self.yearly_month), day=int(self.yearly_day), years=-1)
 
-        raise ValidationError(_("Your frequency selection is not correct: please choose a frequency between theses options:"
+        raise ValidationError(self.env._("Your frequency selection is not correct: please choose a frequency between theses options:"
             "Hourly, Daily, Weekly, Twice a month, Monthly, Twice a year and Yearly."))
 
     def _get_level_transition_date(self, allocation_start):

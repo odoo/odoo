@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -26,7 +26,7 @@ class AccountAnalyticAccount(models.Model):
             limit=1,
         )
         if has_tasks:
-            raise UserError(_("Before we can bid farewell to these accounts, you need to tidy up the projects linked to them by removing their existing tasks!"))
+            raise UserError(self.env._("Before we can bid farewell to these accounts, you need to tidy up the projects linked to them by removing their existing tasks!"))
 
     def action_view_projects(self):
         kanban_view_id = self.env.ref('project.view_project_kanban').id
@@ -36,7 +36,7 @@ class AccountAnalyticAccount(models.Model):
             "views": [[kanban_view_id, "kanban"], [False, "form"]],
             "domain": [['account_id', '=', self.id]],
             "context": {"create": False},
-            "name": _("Projects"),
+            "name": self.env._("Projects"),
         }
         if len(self.project_ids) == 1:
             result['views'] = [(False, "form")]

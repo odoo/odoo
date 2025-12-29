@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _, exceptions
+from odoo import exceptions, fields, models
 
 
 class GamificationBadgeUserWizard(models.TransientModel):
@@ -21,7 +21,7 @@ class GamificationBadgeUserWizard(models.TransientModel):
         uid = self.env.uid
         for wiz in self:
             if uid == wiz.user_id.id:
-                raise exceptions.UserError(_('You can not grant a badge to yourself.'))
+                raise exceptions.UserError(self.env._('You can not grant a badge to yourself.'))
 
             #create the badge
             BadgeUser.create({

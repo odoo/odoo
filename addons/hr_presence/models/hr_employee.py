@@ -2,8 +2,7 @@
 
 import logging
 
-from ast import literal_eval
-from odoo import fields, models, _, api
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Datetime
 
@@ -79,7 +78,7 @@ class HrEmployee(models.Model):
 
     def _action_set_manual_presence(self, state):
         if not self.env.user.has_group('hr.group_hr_manager'):
-            raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
+            raise UserError(self.env._("You don't have the right to do this. Please contact an Administrator."))
         self.write({
             'manually_set_present': state,
             'manually_set_presence': True,
@@ -101,7 +100,7 @@ class HrEmployee(models.Model):
                 'default_employee_ids': self.ids,
                 'default_date_from': fields.Date.today(),
                 'default_date_to': fields.Date.today(),
-                'default_name': _('Unplanned Absence'),
+                'default_name': self.env._('Unplanned Absence'),
             }
 
         return {
@@ -119,14 +118,14 @@ class HrEmployee(models.Model):
 
     def action_send_sms(self):
         if not self.env.user.has_group('hr.group_hr_manager'):
-            raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
+            raise UserError(self.env._("You don't have the right to do this. Please contact an Administrator."))
 
         context = dict(self.env.context)
         context.update(default_res_model='hr.employee', default_res_ids=self.ids, default_composition_mode='mass', default_number_field_name='mobile_phone', default_mass_keep_log=True)
 
         template = self.env.ref('hr_presence.sms_template_presence', False)
         if not template:
-            context['default_body'] = _("""We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.
+            context['default_body'] = self.env._("""We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.
 Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.
 Thank you for your prompt attention to this matter.""")
         else:

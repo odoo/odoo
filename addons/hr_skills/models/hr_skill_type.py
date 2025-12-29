@@ -2,7 +2,7 @@
 
 from random import randint
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -31,7 +31,7 @@ class HrSkillType(models.Model):
                 incorrect_skill_type |= skill_type
         if incorrect_skill_type:
             raise ValidationError(
-                _("The following skills type must contain at least one skill and one level: %s",
+                self.env._("The following skills type must contain at least one skill and one level: %s",
                   "\n".join(skill_type.name for skill_type in incorrect_skill_type)))
 
     def _compute_display_name(self):

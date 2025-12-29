@@ -3,7 +3,7 @@
 
 import json
 
-from odoo import _, api, fields, models, modules, SUPERUSER_ID
+from odoo import SUPERUSER_ID, api, fields, models, modules
 
 
 class ResUsers(models.Model):
@@ -55,10 +55,10 @@ class ResUsers(models.Model):
             if is_task not in user_activities:
                 if not is_task:
                     module_name = 'project_todo'
-                    name = _('To-Do')
+                    name = self.env._('To-Do')
                 else:
                     module_name = 'project'
-                    name = _('Task')
+                    name = self.env._('Task')
                 icon = modules.Manifest.for_addon(module_name).icon
                 user_activities[is_task] = {
                     'id': self.env['ir.model']._get('project.task').id,

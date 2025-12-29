@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, Command, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 
 from dateutil.relativedelta import relativedelta
@@ -29,13 +29,13 @@ class ProjectTaskRecurrence(models.Model):
     @api.constrains('repeat_interval')
     def _check_repeat_interval(self):
         if self.filtered(lambda t: t.repeat_interval <= 0):
-            raise ValidationError(_('The interval should be greater than 0'))
+            raise ValidationError(self.env._('The interval should be greater than 0'))
 
     @api.constrains('repeat_type', 'repeat_until')
     def _check_repeat_until_date(self):
         today = fields.Date.today()
         if self.filtered(lambda t: t.repeat_type == 'until' and t.repeat_until < today):
-            raise ValidationError(_('The end date should be in the future'))
+            raise ValidationError(self.env._('The end date should be in the future'))
 
     @api.model
     def _get_recurring_fields_to_copy(self):

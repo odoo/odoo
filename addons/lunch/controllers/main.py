@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, http, fields
+from odoo import fields, http
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import request
@@ -143,7 +143,7 @@ class LunchController(http.Controller):
 
     def _check_user_impersonification(self, user_id=None):
         if (user_id and request.env.uid != user_id and not request.env.user.has_group('lunch.group_lunch_manager')):
-            raise AccessError(_('You are trying to impersonate another user, but this can only be done by a lunch manager'))
+            raise AccessError(self.env._('You are trying to impersonate another user, but this can only be done by a lunch manager'))
 
     def _get_current_lines(self, user):
         return request.env['lunch.order'].search(

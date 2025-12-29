@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -44,7 +44,7 @@ class GamificationBadgeUser(models.Model):
                 res_id=badge_user.id,
                 body=body_html,
                 partner_ids=[badge_user.user_partner_id.id],
-                subject=_("🎉 You've earned the %(badge)s badge!", badge=badge_user.badge_name),
+                subject=self.env._("🎉 You've earned the %(badge)s badge!", badge=badge_user.badge_name),
                 subtype_xmlid='mail.mt_comment',
                 email_layout_xmlid='mail.mail_notification_layout',
                 subtitles=[_lt('Your Badge'), badge_user.badge_id.name or ''],

@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import json
-
 from collections import OrderedDict
 from operator import itemgetter
 from markupsafe import Markup
 
-from odoo import http, _
+from odoo import http
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -62,8 +61,8 @@ class ProjectCustomerPortal(CustomerPortal):
 
     def _prepare_searchbar_sortings(self):
         return {
-            'date': {'label': _('Newest'), 'order': 'create_date desc'},
-            'name': {'label': _('Name'), 'order': 'name'},
+            'date': {'label': self.env._('Newest'), 'order': 'create_date desc'},
+            'name': {'label': self.env._('Name'), 'order': 'name'},
         }
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
@@ -299,53 +298,53 @@ class ProjectCustomerPortal(CustomerPortal):
 
     def _task_get_searchbar_sortings(self, milestones_allowed, project=False):
         values = {
-            'id desc': {'label': _('Newest'), 'order': 'id desc', 'sequence': 10},
-            'name': {'label': _('Title'), 'order': 'name', 'sequence': 20},
-            'stage_id, project_id': {'label': _('Stage'), 'order': 'stage_id, project_id', 'sequence': 50},
-            'state': {'label': _('Status'), 'order': 'state', 'sequence': 60},
-            'priority desc': {'label': _('Priority'), 'order': 'priority desc', 'sequence': 80},
-            'date_deadline asc': {'label': _('Deadline'), 'order': 'date_deadline asc', 'sequence': 90},
-            'date_last_stage_update desc': {'label': _('Last Stage Update'), 'order': 'date_last_stage_update desc', 'sequence': 110},
+            'id desc': {'label': self.env._('Newest'), 'order': 'id desc', 'sequence': 10},
+            'name': {'label': self.env._('Title'), 'order': 'name', 'sequence': 20},
+            'stage_id, project_id': {'label': self.env._('Stage'), 'order': 'stage_id, project_id', 'sequence': 50},
+            'state': {'label': self.env._('Status'), 'order': 'state', 'sequence': 60},
+            'priority desc': {'label': self.env._('Priority'), 'order': 'priority desc', 'sequence': 80},
+            'date_deadline asc': {'label': self.env._('Deadline'), 'order': 'date_deadline asc', 'sequence': 90},
+            'date_last_stage_update desc': {'label': self.env._('Last Stage Update'), 'order': 'date_last_stage_update desc', 'sequence': 110},
         }
         if not project:
-            values['project_id, stage_id'] = {'label': _('Project'), 'order': 'project_id, stage_id', 'sequence': 30}
+            values['project_id, stage_id'] = {'label': self.env._('Project'), 'order': 'project_id, stage_id', 'sequence': 30}
         if milestones_allowed:
-            values['milestone_id'] = {'label': _('Milestone'), 'order': 'milestone_id', 'sequence': 70}
+            values['milestone_id'] = {'label': self.env._('Milestone'), 'order': 'milestone_id', 'sequence': 70}
         return values
 
     def _task_get_searchbar_groupby(self, milestones_allowed, project=False):
         values = {
-            'none': {'label': _('None'), 'sequence': 10},
-            'stage_id': {'label': _('Stage'), 'sequence': 20},
-            'state': {'label': _('Status'), 'sequence': 40},
-            'priority': {'label': _('Priority'), 'sequence': 60},
-            'partner_id': {'label': _('Customer'), 'sequence': 70},
+            'none': {'label': self.env._('None'), 'sequence': 10},
+            'stage_id': {'label': self.env._('Stage'), 'sequence': 20},
+            'state': {'label': self.env._('Status'), 'sequence': 40},
+            'priority': {'label': self.env._('Priority'), 'sequence': 60},
+            'partner_id': {'label': self.env._('Customer'), 'sequence': 70},
             'parent_id': {'label': self.env._('Parent Task'), 'sequence': 90},
         }
         if not project:
-            values['project_id'] = {'label': _('Project'), 'sequence': 30}
+            values['project_id'] = {'label': self.env._('Project'), 'sequence': 30}
         if milestones_allowed:
-            values['milestone_id'] = {'label': _('Milestone'), 'sequence': 50}
+            values['milestone_id'] = {'label': self.env._('Milestone'), 'sequence': 50}
         return values
 
     def _task_get_searchbar_inputs(self, milestones_allowed, project=False):
         values = {
-            'name': {'input': 'name', 'label': _(
+            'name': {'input': 'name', 'label': self.env._(
                 'Search%(left)s Tasks%(right)s',
                 left=Markup('<span class="nolabel">'),
                 right=Markup('</span>'),
             ), 'sequence': 10},
-            'users': {'input': 'user_ids', 'label': _('Search in Assignees'), 'sequence': 20},
-            'stage_id': {'input': 'stage_id', 'label': _('Search in Stages'), 'sequence': 30},
-            'status': {'input': 'status', 'label': _('Search in Status'), 'sequence': 40},
-            'priority': {'input': 'priority', 'label': _('Search in Priority'), 'sequence': 60},
-            'partner_id': {'input': 'partner_id', 'label': _('Search in Customer'), 'sequence': 80},
+            'users': {'input': 'user_ids', 'label': self.env._('Search in Assignees'), 'sequence': 20},
+            'stage_id': {'input': 'stage_id', 'label': self.env._('Search in Stages'), 'sequence': 30},
+            'status': {'input': 'status', 'label': self.env._('Search in Status'), 'sequence': 40},
+            'priority': {'input': 'priority', 'label': self.env._('Search in Priority'), 'sequence': 60},
+            'partner_id': {'input': 'partner_id', 'label': self.env._('Search in Customer'), 'sequence': 80},
             'parent_id': {'input': 'parent_id', 'label': self.env._('Search in Parent Task'), 'sequence': 110},
         }
         if not project:
-            values['project_id'] = {'input': 'project_id', 'label': _('Search in Project'), 'sequence': 50}
+            values['project_id'] = {'input': 'project_id', 'label': self.env._('Search in Project'), 'sequence': 50}
         if milestones_allowed:
-            values['milestone_id'] = {'input': 'milestone_id', 'label': _('Search in Milestone'), 'sequence': 70}
+            values['milestone_id'] = {'input': 'milestone_id', 'label': self.env._('Search in Milestone'), 'sequence': 70}
 
         return values
 
@@ -483,7 +482,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
     def _get_my_tasks_searchbar_filters(self, project_domain=None, task_domain=None):
         searchbar_filters = {
-            'all': {'label': _('All'), 'domain': [('project_id', '!=', False), ('is_template', '=', False)]},
+            'all': {'label': self.env._('All'), 'domain': [('project_id', '!=', False), ('is_template', '=', False)]},
         }
 
         # extends filterby criteria with project the customer has access to
@@ -532,7 +531,7 @@ class ProjectCustomerPortal(CustomerPortal):
     def _show_task_report(self, task_sudo, report_type, download):
         # This method is to be overriden to report timesheets if the module is installed.
         # The route should not be called if at least hr_timesheet is not installed
-        raise MissingError(_('There is nothing to report.'))
+        raise MissingError(self.env._('There is nothing to report.'))
 
     @http.route(['/my/tasks/<int:task_id>'], type='http', auth="public", website=True)
     def portal_my_task(self, task_id, report_type=None, access_token=None, project_sharing=False, **kw):
@@ -561,7 +560,7 @@ class ProjectCustomerPortal(CustomerPortal):
             if not task_sudo.with_user(request.env.uid).project_id._check_project_sharing_access():
                 return request.not_found()
         except (AccessError, MissingError):
-            raise UserError(_("The document does not exist or you do not have the rights to access it."))
+            raise UserError(self.env._("The document does not exist or you do not have the rights to access it."))
 
         IrAttachment = request.env['ir.attachment']
 
@@ -582,7 +581,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
         if values.get('mimetype', False) not in valid_image_mime_types:
             return request.make_response(
-                data=json.dumps({'error': _('Only jpeg, png, bmp and tiff images are allowed as attachments.')}),
+                data=json.dumps({'error': self.env._('Only jpeg, png, bmp and tiff images are allowed as attachments.')}),
                 headers=[('Content-Type', 'application/json')],
                 status=400
             )

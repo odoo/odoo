@@ -1,5 +1,5 @@
 
-from odoo import Command, http, _
+from odoo import Command, http
 from odoo.http import request
 
 
@@ -32,7 +32,7 @@ class ProjectClient(http.Controller):
             return {'error': 'project_not_found'}
 
         if not email_subject:
-            email_subject = _('Task for %s', partner.name)
+            email_subject = self.env._('Task for %s', partner.name)
 
         record = request.env['project.task'].with_company(partner.company_id).create({
             'name': email_subject,

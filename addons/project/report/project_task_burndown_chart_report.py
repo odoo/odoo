@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.models import TableSQL
 from odoo.tools import SQL
+
 from odoo.addons.resource.models.utils import filter_map_domain
 
 
@@ -219,7 +220,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
                 is_closed_or_stage_in_groupby = True
 
         if not date_in_groupby or not is_closed_or_stage_in_groupby:
-            raise UserError(_('The view must be grouped by date and by Stage - Burndown chart or Is Closed - Burnup chart'))
+            raise UserError(self.env._('The view must be grouped by date and by Stage - Burndown chart or Is Closed - Burnup chart'))
 
     @api.model
     def _determine_domains(self, domain):

@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import api, fields, models
 from odoo.tools.misc import format_duration
-from odoo import _, api, fields, models
 
 
 class HrLeaveType(models.Model):
@@ -27,7 +27,7 @@ class HrLeaveType(models.Model):
         for leave_type in overtime_leaves:
             leave_type.display_name = "%(name)s (%(count)s)" % {
                 'name': leave_type.name,
-                'count': _('%s hours available',
+                'count': self.env._('%s hours available',
                     format_duration(unspent_overtime)),
             }
         super(HrLeaveType, self - overtime_leaves)._compute_display_name()

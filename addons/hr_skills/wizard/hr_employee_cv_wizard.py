@@ -3,7 +3,7 @@
 
 from werkzeug.urls import url_encode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class HrEmployeeCvWizard(models.TransientModel):
@@ -31,7 +31,7 @@ class HrEmployeeCvWizard(models.TransientModel):
     def action_validate(self):
         self.ensure_one()
         return {
-            'name': _('Print Resume'),
+            'name': self.env._('Print Resume'),
             'type': 'ir.actions.act_url',
             'url': '/print/cv?' + url_encode({
                 'employee_ids': ','.join(str(x) for x in self.employee_ids.ids),

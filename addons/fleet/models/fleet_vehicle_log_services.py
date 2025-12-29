@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -50,7 +50,7 @@ class FleetVehicleLogServices(models.Model):
     def _set_odometer(self):
         for record in self:
             if not record.odometer:
-                raise UserError(_('Emptying the odometer value of a vehicle is not allowed.'))
+                raise UserError(self.env._('Emptying the odometer value of a vehicle is not allowed.'))
             odometer = self.env['fleet.vehicle.odometer'].create({
                 'value': record.odometer,
                 'date': record.date or fields.Date.context_today(record),

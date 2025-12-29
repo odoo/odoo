@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -44,7 +44,7 @@ class HrExpensePostWizard(models.TransientModel):
     def action_post_entry(self):
         expenses = self.env['hr.expense'].browse(self.env.context['active_ids'])
         if not self.env['account.move'].has_access('create'):
-            raise UserError(_("You don't have the rights to create accounting entries."))
+            raise UserError(self.env._("You don't have the rights to create accounting entries."))
         expense_receipt_vals_list = [
             {
                 **new_receipt_vals,
@@ -77,7 +77,7 @@ class HrExpensePostWizard(models.TransientModel):
         else:
             list_view = self.env.ref('hr_expense.view_move_list_expense', raise_if_not_found=False)
             action.update({
-                'name': _("New expense entries"),
+                'name': self.env._("New expense entries"),
                 'view_mode': 'list,form',
                 'views': [(list_view and list_view.id, 'list'), (False, 'form')],
                 'domain': [('id', 'in', moves_ids)],

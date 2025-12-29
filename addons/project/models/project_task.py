@@ -3,19 +3,19 @@
 import re
 from collections import defaultdict
 from datetime import timedelta, datetime, time, UTC
+from lxml import html
 from random import shuffle
 
-from lxml import html
-
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import SUPERUSER_ID, api, fields, models, tools
 from odoo.fields import Command, Date, Domain
-from odoo.addons.rating.models import rating_data
-from odoo.addons.html_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_list, SQL, LazyTranslate, html_sanitize
-from odoo.addons.resource.models.utils import filter_map_domain
-from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
+
+from odoo.addons.html_editor.tools import handle_history_divergence
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
+from odoo.addons.rating.models import rating_data
+from odoo.addons.resource.models.utils import filter_map_domain
 
 _lt = LazyTranslate(__name__)
 
@@ -345,14 +345,14 @@ class ProjectTask(models.Model):
         """ Ensures that the company of the task is valid for the partner. """
         for task in self:
             if task.partner_id and task.partner_id.company_id and task.company_id and task.company_id != task.partner_id.company_id:
-                raise ValidationError(_('The task and the associated partner must be linked to the same company.'))
+                raise ValidationError(self.env._('The task and the associated partner must be linked to the same company.'))
 
     @api.constrains('child_ids', 'project_id')
     def _ensure_super_task_is_not_private(self):
         """ Ensures that the company of the task is valid for the partner. """
         for task in self:
             if not task.project_id and task.subtask_count:
-                raise ValidationError(_('This task has sub-tasks, so it can\'t be private.'))
+                raise ValidationError(self.env._('This task has sub-tasks, so it can\'t be private.'))
 
     @property
     def TASK_PORTAL_READABLE_FIELDS(self):
@@ -458,13 +458,13 @@ class ProjectTask(models.Model):
     @api.model
     def _get_default_personal_stage_create_vals(self, user_id):
         return [
-            {'sequence': 1, 'name': _('Inbox'), 'user_id': user_id, 'fold': False},
-            {'sequence': 2, 'name': _('Today'), 'user_id': user_id, 'fold': False},
-            {'sequence': 3, 'name': _('This Week'), 'user_id': user_id, 'fold': False},
-            {'sequence': 4, 'name': _('This Month'), 'user_id': user_id, 'fold': False},
-            {'sequence': 5, 'name': _('Later'), 'user_id': user_id, 'fold': False},
-            {'sequence': 6, 'name': _('Done'), 'user_id': user_id, 'fold': True},
-            {'sequence': 7, 'name': _('Cancelled'), 'user_id': user_id, 'fold': True},
+            {'sequence': 1, 'name': self.env._('Inbox'), 'user_id': user_id, 'fold': False},
+            {'sequence': 2, 'name': self.env._('Today'), 'user_id': user_id, 'fold': False},
+            {'sequence': 3, 'name': self.env._('This Week'), 'user_id': user_id, 'fold': False},
+            {'sequence': 4, 'name': self.env._('This Month'), 'user_id': user_id, 'fold': False},
+            {'sequence': 5, 'name': self.env._('Later'), 'user_id': user_id, 'fold': False},
+            {'sequence': 6, 'name': self.env._('Done'), 'user_id': user_id, 'fold': True},
+            {'sequence': 7, 'name': self.env._('Cancelled'), 'user_id': user_id, 'fold': True},
         ]
 
     def _populate_missing_personal_stages(self):
@@ -499,7 +499,7 @@ class ProjectTask(models.Model):
     @api.constrains('depend_on_ids')
     def _check_no_cyclic_dependencies(self):
         if self._has_cycle('depend_on_ids'):
-            raise ValidationError(_("Two tasks cannot depend on each other."))
+            raise ValidationError(self.env._("Two tasks cannot depend on each other."))
 
     @api.model
     def _get_recurrence_fields(self):
@@ -576,7 +576,7 @@ class ProjectTask(models.Model):
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if self._has_cycle():
-            raise ValidationError(_('Error! You cannot create a recursive hierarchy of tasks.'))
+            raise ValidationError(self.env._('Error! You cannot create a recursive hierarchy of tasks.'))
 
     def _get_attachments_search_domain(self):
         self.ensure_one()
@@ -855,7 +855,7 @@ class ProjectTask(models.Model):
             if 'active' not in default and not task['active'] and not self.env.context.get('copy_project'):
                 vals['active'] = True
             if not default.get('name'):
-                vals['name'] = task.name if self.env.context.get('copy_project') or copy_from_template else _("%s (copy)", task.name)
+                vals['name'] = task.name if self.env.context.get('copy_project') or copy_from_template else self.env._("%s (copy)", task.name)
             if task.recurrence_id and not default.get('recurrence_id'):
                 vals['recurrence_id'] = task.recurrence_id.copy().id
             if task.allow_milestones:
@@ -954,14 +954,14 @@ class ProjectTask(models.Model):
         )).copy(default=default)
 
         self._resolve_copied_dependencies(copied_tasks)
-        log_message = _("Task Created")
+        log_message = self.env._("Task Created")
         copied_tasks._message_log_batch(bodies={task.id: log_message for task in copied_tasks})
 
         return copied_tasks
 
     @api.model
     def get_empty_list_help(self, help_message):
-        tname = _("task")
+        tname = self.env._("task")
         project_id = self.env.context.get('default_project_id', False)
         if project_id:
             name = self.env['project.project'].browse(project_id).label_tasks
@@ -1255,13 +1255,13 @@ class ProjectTask(models.Model):
                 subtasks_to_update.sudo().write({'milestone_id': vals['milestone_id']})
 
         if vals.get('parent_id') in self.ids:
-            raise UserError(_("Sorry. You can't set a task as its parent task."))
+            raise UserError(self.env._("Sorry. You can't set a task as its parent task."))
 
         # stage change: update date_last_stage_update
         now = fields.Datetime.now()
         if 'stage_id' in vals:
             if not 'project_id' in vals and self.filtered(lambda t: not t.project_id):
-                raise UserError(_('You can only set a personal stage on a private task.'))
+                raise UserError(self.env._('You can only set a personal stage on a private task.'))
 
             additional_vals.update(self.update_date_end(vals['stage_id']))
             additional_vals['date_last_stage_update'] = now
@@ -1356,13 +1356,13 @@ class ProjectTask(models.Model):
             for task in self:
                 project_link = project_link_per_task_id.get(task.id)
                 if project_link:
-                    body = _(
+                    body = self.env._(
                         'Task Transferred from Project %(source_project)s to %(destination_project)s',
                         source_project=project_link,
                         destination_project=task.project_id._get_html_link(title=task.project_id.display_name),
                     )
                 else:
-                    body = _('Task Converted from To-Do')
+                    body = self.env._('Task Converted from To-Do')
                 task.message_notify(
                     body=body,
                     partner_ids=partner_ids,
@@ -1501,11 +1501,11 @@ class ProjectTask(models.Model):
         stage_name = self.stage_id.name
         subtitles = ""
         if project_name and stage_name:
-            subtitles = _('Project: %(project_name)s, Stage: %(stage_name)s', project_name=project_name, stage_name=stage_name)
+            subtitles = self.env._('Project: %(project_name)s, Stage: %(stage_name)s', project_name=project_name, stage_name=stage_name)
         elif project_name:
-            subtitles = _('Project: %(project_name)s', project_name=project_name)
+            subtitles = self.env._('Project: %(project_name)s', project_name=project_name)
         elif stage_name:
-            subtitles = _('Stage: %(stage_name)s', stage_name=stage_name)
+            subtitles = self.env._('Stage: %(stage_name)s', stage_name=stage_name)
         if subtitles:
             render_context['subtitles'].append(subtitles)
         return render_context
@@ -1524,7 +1524,7 @@ class ProjectTask(models.Model):
             values['partner_name'] = partner.name
             assignation_msg = self.env['ir.qweb']._render('project.task_invitation_follower', values, minimal_qcontext=True)
             self.message_notify(
-                subject=_('You have been invited to follow %s', self.display_name),
+                subject=self.env._('You have been invited to follow %s', self.display_name),
                 body=assignation_msg,
                 partner_ids=partner.ids,
                 email_layout_xmlid='mail.mail_notification_layout',
@@ -1554,7 +1554,7 @@ class ProjectTask(models.Model):
                 assignation_msg = self.env['ir.qweb']._render('project.project_message_user_assigned', values, minimal_qcontext=True)
                 assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
                 task.message_notify(
-                    subject=_('You have been assigned to %s', task.display_name),
+                    subject=self.env._('You have been assigned to %s', task.display_name),
                     body=assignation_msg,
                     partner_ids=user.partner_id.ids,
                     email_layout_xmlid='mail.mail_notification_layout',
@@ -1597,9 +1597,9 @@ class ProjectTask(models.Model):
     def _creation_message(self):
         self.ensure_one()
         if self.project_id:
-            return _('This new task has been created in the "%(project_name)s" project.',
+            return self.env._('This new task has been created in the "%(project_name)s" project.',
                      project_name=self.project_id.display_name)
-        return _('This new task is not part of any project.')
+        return self.env._('This new task is not part of any project.')
 
     def _track_subtype(self, init_values):
         self.ensure_one()
@@ -1713,7 +1713,7 @@ class ProjectTask(models.Model):
             msg_dict['author_id'] = author.id
 
         defaults = {
-            'name': msg_dict.get('subject') or _("No Subject"),
+            'name': msg_dict.get('subject') or self.env._("No Subject"),
             'allocated_hours': 0.0,
             'partner_id': msg_dict.get('author_id'),
             'email_cc': ", ".join(self._mail_cc_sanitized_raw_dict(msg_dict.get('cc')).values()) if custom_values.get('project_id') else ""
@@ -1834,7 +1834,7 @@ class ProjectTask(models.Model):
 
     def action_open_parent_task(self):
         return {
-            'name': _('Parent Task'),
+            'name': self.env._('Parent Task'),
             'view_mode': 'form',
             'res_model': 'project.task',
             'res_id': self.parent_id.id,
@@ -1916,13 +1916,13 @@ class ProjectTask(models.Model):
             'type': 'ir.actions.act_window',
             'context': {**self.env.context, 'default_depend_on_ids': [Command.link(self.id)], 'show_project_update': False, 'search_default_open_tasks': True},
             'domain': [('depend_on_ids', '=', self.id)],
-            'name': _('Dependent Tasks'),
+            'name': self.env._('Dependent Tasks'),
             'view_mode': 'list,form,kanban,calendar,pivot,graph,activity',
         }
 
     def action_recurring_tasks(self):
         return {
-            'name': _('Tasks in Recurrence'),
+            'name': self.env._('Tasks in Recurrence'),
             'type': 'ir.actions.act_window',
             'res_model': 'project.task',
             'view_mode': 'list,form,kanban,calendar,pivot,graph,activity',
@@ -1970,7 +1970,7 @@ class ProjectTask(models.Model):
         self.ensure_one()
         if self.project_id:
             return {
-                'name': _('Convert to Task/Sub-Task'),
+                'name': self.env._('Convert to Task/Sub-Task'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'project.task',
                 'res_id': self.id,
@@ -1982,7 +1982,7 @@ class ProjectTask(models.Model):
             'tag': 'display_notification',
             'params': {
                 'type': 'danger',
-                'message': _('Private tasks cannot be converted into sub-tasks. Please set a project on the task to gain access to this feature.'),
+                'message': self.env._('Private tasks cannot be converted into sub-tasks. Please set a project on the task to gain access to this feature.'),
             }
         }
 
@@ -1994,7 +1994,7 @@ class ProjectTask(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'type': 'danger',
-                    'message': _('Private tasks cannot be converted into templates'),
+                    'message': self.env._('Private tasks cannot be converted into templates'),
                 },
             }
         if self.is_template:
@@ -2007,7 +2007,7 @@ class ProjectTask(models.Model):
             }
         self.is_template = True
         self.role_ids = False
-        self.message_post(body=_("Task converted to template"))
+        self.message_post(body=self.env._("Task converted to template"))
         return {
             'type': 'ir.actions.client',
             'tag': 'project_show_template_notification',
@@ -2023,13 +2023,13 @@ class ProjectTask(models.Model):
     def action_undo_convert_to_template(self):
         self.ensure_one()
         self.is_template = False
-        self.message_post(body=_("Template converted back to regular task"))
+        self.message_post(body=self.env._("Template converted back to regular task"))
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'message': _('Template converted back to regular task'),
+                'message': self.env._('Template converted back to regular task'),
                 'next': {
                     'type': 'ir.actions.client',
                     'tag': 'soft_reload',
@@ -2215,6 +2215,6 @@ class ProjectTask(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Tasks'),
+            'label': self.env._('Import Template for Tasks'),
             'template': '/project/static/xls/tasks_import_template.xlsx',
         }]

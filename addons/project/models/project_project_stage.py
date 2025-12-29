@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -33,7 +33,7 @@ class ProjectProjectStage(models.Model):
         context = dict(self.env.context)
         context['stage_view'] = stage_view
         return {
-            'name': _('Delete Project Stage'),
+            'name': self.env._('Delete Project Stage'),
             'view_mode': 'form',
             'res_model': 'project.project.stage.delete.wizard',
             'views': [(self.env.ref('project.view_project_project_stage_delete_wizard').id, 'form')],
@@ -50,7 +50,7 @@ class ProjectProjectStage(models.Model):
             if project:
                 company = self.env['res.company'].browse(vals['company_id'])
                 raise UserError(
-                    _("You are not able to switch the company of this stage to %(company_name)s since it currently "
+                    self.env._("You are not able to switch the company of this stage to %(company_name)s since it currently "
                     "includes projects associated with %(project_company_name)s. Please ensure that this stage exclusively "
                     "consists of projects linked to %(company_name)s.",
                         company_name=company.name,
@@ -73,7 +73,7 @@ class ProjectProjectStage(models.Model):
             })
 
             return {
-                'name': _('Unarchive Projects'),
+                'name': self.env._('Unarchive Projects'),
                 'view_mode': 'form',
                 'res_model': 'project.project.stage.delete.wizard',
                 'views': [(self.env.ref('project.view_project_project_stage_unarchive_wizard').id, 'form')],

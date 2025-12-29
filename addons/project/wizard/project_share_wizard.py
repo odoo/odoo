@@ -2,7 +2,7 @@
 
 import operator
 
-from odoo import Command, api, fields, models, _
+from odoo import Command, api, fields, models
 
 
 class ProjectShareWizard(models.TransientModel):
@@ -143,7 +143,7 @@ class ProjectShareWizard(models.TransientModel):
         if not new_portal_user:
             return self.action_send_mail()
         return {
-            'name': _('Confirmation'),
+            'name': self.env._('Confirmation'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'views': [(self.env.ref('project.project_share_wizard_confirm_form').id, 'form')],
@@ -160,7 +160,7 @@ class ProjectShareWizard(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'message': _("Project shared with your collaborators."),
+                'message': self.env._("Project shared with your collaborators."),
                 'next': {'type': 'ir.actions.act_window_close'},
             }}
         partner_ids_in_readonly_mode = []

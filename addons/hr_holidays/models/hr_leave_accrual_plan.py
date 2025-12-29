@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from calendar import monthrange
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.hr_holidays.models.hr_leave_accrual_plan_level import _get_selection_days
@@ -115,7 +115,7 @@ class HrLeaveAccrualPlan(models.Model):
     def action_open_accrual_plan_employees(self):
         self.ensure_one()
         return {
-            'name': _("Accrual Plan's Employees"),
+            'name': self.env._("Accrual Plan's Employees"),
             'type': 'ir.actions.act_window',
             'view_mode': 'kanban,list,form',
             'res_model': 'hr.employee',
@@ -164,7 +164,7 @@ class HrLeaveAccrualPlan(models.Model):
             ('state', 'not in', ('cancel', 'refuse')),
         ]
         if self.env['hr.leave.allocation'].search_count(domain):
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 "Some of the accrual plans you're trying to delete are linked to an existing allocation. Delete or cancel them first."
             ))
 

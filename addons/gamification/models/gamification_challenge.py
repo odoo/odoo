@@ -4,11 +4,10 @@ import ast
 import itertools
 import logging
 from datetime import date, timedelta
-
 from dateutil.relativedelta import relativedelta, MO
 from markupsafe import Markup
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.http import SESSION_LIFETIME
 
 _logger = logging.getLogger(__name__)
@@ -219,7 +218,7 @@ class GamificationChallenge(models.Model):
         elif vals.get('state') == 'draft':
             # resetting progress
             if self.env['gamification.goal'].search_count([('challenge_id', 'in', self.ids), ('state', '=', 'inprogress')], limit=1):
-                raise exceptions.UserError(_("You can not reset a challenge with unfinished goals."))
+                raise exceptions.UserError(self.env._("You can not reset a challenge with unfinished goals."))
 
         return write_res
 
@@ -519,7 +518,7 @@ class GamificationChallenge(models.Model):
 
             if self.visibility_mode == 'personal':
                 if not user:
-                    raise exceptions.UserError(_("Retrieving progress for personal challenge without user information"))
+                    raise exceptions.UserError(self.env._("Retrieving progress for personal challenge without user information"))
 
                 domain.append(('user_id', '=', user.id))
 
@@ -638,7 +637,7 @@ class GamificationChallenge(models.Model):
     def accept_challenge(self):
         user = self.env.user
         sudoed = self.sudo()
-        sudoed.message_post(body=_("%s has joined the challenge", user.name))
+        sudoed.message_post(body=self.env._("%s has joined the challenge", user.name))
         sudoed.write({'invited_user_ids': [(3, user.id)], 'user_ids': [(4, user.id)]})
         return sudoed._generate_goals_from_challenge()
 
@@ -646,7 +645,7 @@ class GamificationChallenge(models.Model):
         """The user discard the suggested challenge"""
         user = self.env.user
         sudoed = self.sudo()
-        sudoed.message_post(body=_("%s has refused the challenge", user.name))
+        sudoed.message_post(body=self.env._("%s has refused the challenge", user.name))
         return sudoed.write({'invited_user_ids': (3, user.id)})
 
     def _check_challenge_reward(self, force=False):
@@ -693,16 +692,16 @@ class GamificationChallenge(models.Model):
 
             if challenge_ended:
                 # open chatter message
-                message_body = _("The challenge %s is finished.", challenge.name)
+                message_body = self.env._("The challenge %s is finished.", challenge.name)
 
                 if rewarded_users:
-                    message_body += Markup("<br/>") + _(
+                    message_body += Markup("<br/>") + self.env._(
                         "Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s.",
                         badge_name=challenge.reward_id.name,
                         users=", ".join(rewarded_users.mapped('display_name'))
                     )
                 else:
-                    message_body += Markup("<br/>") + _("Nobody has succeeded to reach every goal, no badge is rewarded for this challenge.")
+                    message_body += Markup("<br/>") + self.env._("Nobody has succeeded to reach every goal, no badge is rewarded for this challenge.")
 
                 # reward bests
                 reward_message = Markup("<br/> %(rank)d. %(user_name)s - %(reward_name)s")
@@ -710,14 +709,14 @@ class GamificationChallenge(models.Model):
                     (first_user, second_user, third_user) = challenge._get_topN_users(MAX_VISIBILITY_RANKING)
                     if first_user:
                         challenge._reward_user(first_user, challenge.reward_first_id)
-                        message_body += Markup("<br/>") + _("Special rewards were sent to the top competing users. The ranking for this challenge is:")
+                        message_body += Markup("<br/>") + self.env._("Special rewards were sent to the top competing users. The ranking for this challenge is:")
                         message_body += reward_message % {
                             'rank': 1,
                             'user_name': first_user.name,
                             'reward_name': challenge.reward_first_id.name,
                         }
                     else:
-                        message_body += _("Nobody reached the required conditions to receive special badges.")
+                        message_body += self.env._("Nobody reached the required conditions to receive special badges.")
 
                     if second_user and challenge.reward_second_id:
                         challenge._reward_user(second_user, challenge.reward_second_id)

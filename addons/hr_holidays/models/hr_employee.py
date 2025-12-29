@@ -2,15 +2,15 @@
 
 from collections import defaultdict
 from datetime import date, datetime, time, timedelta, timezone, UTC
+from dateutil.relativedelta import relativedelta
 from zoneinfo import ZoneInfo
 
-from dateutil.relativedelta import relativedelta
-
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.tools.float_utils import float_round
+
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 
 class HrEmployee(models.Model):
@@ -245,7 +245,7 @@ class HrEmployee(models.Model):
                     ('resource_calendar_id', '!=', int(values['resource_calendar_id'])),
                     ('date_from', '>', fields.Datetime.now())]).write({'resource_calendar_id': values['resource_calendar_id']})
             except ValidationError:
-                raise ValidationError(_("Changing this working schedule results in the affected employee(s) not having enough "
+                raise ValidationError(self.env._("Changing this working schedule results in the affected employee(s) not having enough "
                                         "leaves allocated to accomodate for their leaves already taken in the future. Please "
                                         "review this employee's leaves and adjust their allocation accordingly."))
 
@@ -275,7 +275,7 @@ class HrEmployee(models.Model):
 
     def action_time_off_dashboard(self):
         return {
-            'name': _('Time Off Dashboard'),
+            'name': self.env._('Time Off Dashboard'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave',
             'views': [[self.env.ref('hr_holidays.hr_leave_employee_view_dashboard').id, 'calendar']],

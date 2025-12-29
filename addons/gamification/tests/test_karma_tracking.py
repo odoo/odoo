@@ -7,9 +7,10 @@ from freezegun import freeze_time
 from itertools import chain, repeat
 from unittest.mock import patch
 
-from odoo import exceptions, fields, _
-from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo import exceptions, fields
 from odoo.tests import tagged, common
+
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -239,15 +240,15 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         self.assertEqual(len(user.karma_tracking_ids), 2)
         self.assertEqual(user.karma_tracking_ids[1].old_value, 32)
         self.assertEqual(user.karma_tracking_ids[1].new_value, 70)
-        self.assertIn(_('Add Manually'), user.karma_tracking_ids[1].reason)
+        self.assertIn(self.env._('Add Manually'), user.karma_tracking_ids[1].reason)
         self.assertIn(self.test_user.display_name, user.karma_tracking_ids[1].reason)
         self.assertIn(str(self.test_user.id), user.karma_tracking_ids[1].reason)
         self.assertEqual(user.karma_tracking_ids[0].old_value, 0)
         self.assertEqual(user.karma_tracking_ids[0].new_value, 32)
 
-        user._add_karma(69, user, _('Test Reason'))
+        user._add_karma(69, user, self.env._('Test Reason'))
         self.assertEqual(len(user.karma_tracking_ids), 3)
-        self.assertIn(_('Test Reason'), user.karma_tracking_ids[2].reason)
+        self.assertIn(self.env._('Test Reason'), user.karma_tracking_ids[2].reason)
         self.assertEqual(user.karma, 139)
 
         # add manually karma to a user (e.g. from the technical view)

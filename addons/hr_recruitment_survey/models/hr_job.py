@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class HrJob(models.Model):
@@ -18,12 +18,12 @@ class HrJob(models.Model):
     def action_new_survey(self):
         self.ensure_one()
         survey = self.env['survey.survey'].create({
-            'title': _("Interview Form: %s", self.name),
+            'title': self.env._("Interview Form: %s", self.name),
         })
         self.write({'survey_id': survey.id})
 
         action = {
-                'name': _('Survey'),
+                'name': self.env._('Survey'),
                 'view_mode': 'form,list',
                 'res_model': 'survey.survey',
                 'type': 'ir.actions.act_window',

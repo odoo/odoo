@@ -3,8 +3,7 @@
 import ast
 from collections import defaultdict
 
-from dateutil.relativedelta import relativedelta
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.tools import SQL
 from odoo.tools.convert import convert_file
 
@@ -371,7 +370,7 @@ class HrJob(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'ir.attachment',
-            'name': _('Documents'),
+            'name': self.env._('Documents'),
             'context': {
                 'default_res_model': self._name,
                 'default_res_id': self.ids[0],
@@ -424,7 +423,7 @@ class HrJob(models.Model):
             res_model = "hr.employee.public"
 
         return {
-            'name': _("Related Employees"),
+            'name': self.env._("Related Employees"),
             'type': 'ir.actions.act_window',
             'res_model': res_model,
             'view_mode': 'list,kanban,form',

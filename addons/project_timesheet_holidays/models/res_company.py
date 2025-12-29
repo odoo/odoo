@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class ResCompany(models.Model):
@@ -18,7 +18,7 @@ class ResCompany(models.Model):
             company = company.with_company(company)
             if not company.leave_timesheet_task_id:
                 task = company.env['project.task'].sudo().create({
-                    'name': _('Time Off'),
+                    'name': self.env._('Time Off'),
                     'project_id': company.internal_project_id.id,
                     'active': True,
                     'company_id': company.id,

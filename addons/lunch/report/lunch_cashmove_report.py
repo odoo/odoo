@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools, _
+from odoo import fields, models, tools
 
 
 class LunchCashmoveReport(models.Model):
@@ -19,7 +19,7 @@ class LunchCashmoveReport(models.Model):
 
     def _compute_display_name(self):
         for cashmove in self:
-            cashmove.display_name = '{} {}'.format(_('Lunch Cashmove'), '#%d' % cashmove.id)
+            cashmove.display_name = '{} {}'.format(self.env._('Lunch Cashmove'), '#%d' % cashmove.id)
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)

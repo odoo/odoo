@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
+from odoo import api, fields, models
 
 
 class HrExpenseSplitWizard(models.TransientModel):
@@ -66,4 +66,4 @@ class HrExpenseSplitWizard(models.TransientModel):
         (self.expense_id | copied_expenses).split_expense_origin_id = self.expense_id.split_expense_origin_id or self.expense_id
         all_related_expenses = copied_expenses | self.expense_id | split_expense_ids
 
-        return all_related_expenses._get_records_action(name=_("Split Expenses"))
+        return all_related_expenses._get_records_action(name=self.env._("Split Expenses"))

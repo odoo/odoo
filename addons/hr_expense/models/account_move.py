@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from markupsafe import Markup
-
-from odoo import Command, models, fields, api, _
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import frozendict
 
@@ -32,14 +30,14 @@ class AccountMove(models.Model):
         for move in self:
             expense_payment_modes = move.expense_ids.mapped('payment_mode')
             if 'company_account' in expense_payment_modes and len(move.expense_ids) > 1 :
-                raise ValidationError(_("Each expense paid by the company must have a distinct and dedicated journal entry."))
+                raise ValidationError(self.env._("Each expense paid by the company must have a distinct and dedicated journal entry."))
 
     def action_open_expense(self):
         self.ensure_one()
         linked_expenses = self.expense_ids
         if len(linked_expenses) > 1:
             return {
-            'name': _("Expenses"),
+            'name': self.env._("Expenses"),
             'type': 'ir.actions.act_window',
             'view_mode': 'list,form',
             'views': [(False, 'list'), (False, 'form')],
@@ -62,11 +60,11 @@ class AccountMove(models.Model):
     def _creation_message(self):
         if self.expense_ids:
             if len(self.expense_ids) == 1:
-                return _("Journal entry created from this expense: %(link)s", link=self.expense_ids._get_html_link())
+                return self.env._("Journal entry created from this expense: %(link)s", link=self.expense_ids._get_html_link())
             links = self.expense_ids[0]._get_html_link()
             for additional_expense in self.expense_ids[1:]:  # ', ' Destroys Markup, and each part here is safe
                 links += ', ' + additional_expense._get_html_link()
-            return _("Journal entry created from these expenses: %(links)s", links=links)
+            return self.env._("Journal entry created from these expenses: %(links)s", links=links)
         return super()._creation_message()
 
     @api.depends('expense_ids')

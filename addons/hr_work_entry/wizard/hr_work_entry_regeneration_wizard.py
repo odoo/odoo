@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
-from itertools import groupby
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
+from itertools import groupby
+
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class HrWorkEntryRegenerationWizard(models.TransientModel):
@@ -99,10 +100,10 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
         if not slots:
             if not self.env.context.get('work_entry_skip_validation'):
                 if not self.search_criteria_completed:
-                    raise ValidationError(_("In order to regenerate the work entries, you need to provide the wizard with an employee_id, a date_from and a date_to."))
+                    raise ValidationError(self.env._("In order to regenerate the work entries, you need to provide the wizard with an employee_id, a date_from and a date_to."))
 
                 if self.date_from < self.earliest_available_date or self.date_to > self.latest_available_date:
-                    raise ValidationError(_("The from date must be >= '%(earliest_available_date)s' and the to date must be <= '%(latest_available_date)s', which correspond to the generated work entries time interval.", earliest_available_date=self._date_to_string(self.earliest_available_date), latest_available_date=self._date_to_string(self.latest_available_date)))
+                    raise ValidationError(self.env._("The from date must be >= '%(earliest_available_date)s' and the to date must be <= '%(latest_available_date)s', which correspond to the generated work entries time interval.", earliest_available_date=self._date_to_string(self.earliest_available_date), latest_available_date=self._date_to_string(self.latest_available_date)))
 
                 if not self.valid:
                     raise ValidationError(self.env._("No work entry can be regenerated in this range of dates and these employees."))

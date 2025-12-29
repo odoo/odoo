@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -47,9 +47,9 @@ class HrWorkEntryType(models.Model):
     @api.constrains('country_id')
     def _check_work_entry_type_country(self):
         if self.env.ref('hr_work_entry.work_entry_type_attendance') in self:
-            raise UserError(_("You can't change the country of this specific work entry type."))
+            raise UserError(self.env._("You can't change the country of this specific work entry type."))
         elif not self.env.context.get('install_mode') and self.env['hr.work.entry'].sudo().search_count([('work_entry_type_id', 'in', self.ids)], limit=1):
-            raise UserError(_("You can't change the Country of this work entry type cause it's currently used by the system. You need to delete related working entries first."))
+            raise UserError(self.env._("You can't change the Country of this work entry type cause it's currently used by the system. You need to delete related working entries first."))
 
     @api.constrains('code', 'country_id')
     def _check_code_unicity(self):
@@ -64,4 +64,4 @@ class HrWorkEntryType(models.Model):
                 ('country_id', 'in', self.country_id.ids + [False]),
             ])
             if invalid_work_entry_types:
-                raise UserError(_("The same code cannot be associated to multiple work entry types (%s)", ', '.join(list(set(invalid_work_entry_types.mapped('code'))))))
+                raise UserError(self.env._("The same code cannot be associated to multiple work entry types (%s)", ', '.join(list(set(invalid_work_entry_types.mapped('code'))))))

@@ -3,11 +3,10 @@
 import itertools
 from collections import defaultdict
 from datetime import datetime, date, time, timedelta, UTC
+from dateutil.relativedelta import relativedelta
 from zoneinfo import ZoneInfo
 
-from dateutil.relativedelta import relativedelta
-
-from odoo import api, fields, models, _, SUPERUSER_ID
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.tools import ormcache, float_is_zero
@@ -521,7 +520,7 @@ class HrVersion(models.Model):
             version = self.env['hr.version'].browse(version_id)
             tz = version.resource_calendar_id.tz or version.employee_id.resource_calendar_id.tz or version.company_id.resource_calendar_id.tz
             if not tz:
-                raise UserError(_('Missing timezone for work entries generation.'))
+                raise UserError(self.env._('Missing timezone for work entries generation.'))
             tz = ZoneInfo(tz)
             tz_by_version[version_id] = tz
             return tz
@@ -533,7 +532,7 @@ class HrVersion(models.Model):
                 new_vals.pop('date_start', False)
                 new_vals.pop('date_stop', False)
                 if 'duration' not in new_vals or 'date' not in new_vals:
-                    raise UserError(_('Missing date or duration on work entry'))
+                    raise UserError(self.env._('Missing date or duration on work entry'))
                 new_vals_list.append(new_vals)
                 continue
 

@@ -2,7 +2,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, models, api, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -30,7 +30,7 @@ class HrLeave(models.Model):
         # The following computation doesn't work for resource calendars in
         # which the employee works zero hours.
         if not (self.resource_calendar_id.attendance_ids):
-            raise UserError(_("An employee can't take paid time off in a period without any work hours."))
+            raise UserError(self.env._("An employee can't take paid time off in a period without any work hours."))
 
         if self.leave_type_request_unit != 'hour':
             # Use company's working schedule hours for the leave to avoid duration calculation issues.

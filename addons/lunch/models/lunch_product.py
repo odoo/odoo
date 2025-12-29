@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -93,13 +93,13 @@ class LunchProduct(models.Model):
     def _check_active_categories(self):
         invalid_products = self.filtered(lambda product: product.active and not product.category_id.active)
         if invalid_products:
-            raise UserError(_("The following product categories are archived. You should either unarchive the categories or change the category of the product.\n%s", '\n'.join(invalid_products.category_id.mapped('name'))))
+            raise UserError(self.env._("The following product categories are archived. You should either unarchive the categories or change the category of the product.\n%s", '\n'.join(invalid_products.category_id.mapped('name'))))
 
     @api.constrains('active', 'supplier_id')
     def _check_active_suppliers(self):
         invalid_products = self.filtered(lambda product: product.active and not product.supplier_id.active)
         if invalid_products:
-            raise UserError(_("The following suppliers are archived. You should either unarchive the suppliers or change the supplier of the product.\n%s", '\n'.join(invalid_products.supplier_id.mapped('name'))))
+            raise UserError(self.env._("The following suppliers are archived. You should either unarchive the suppliers or change the supplier of the product.\n%s", '\n'.join(invalid_products.supplier_id.mapped('name'))))
 
     def _inverse_is_favorite(self):
         """ Handled in the write() """

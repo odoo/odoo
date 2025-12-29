@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 
 
 class HrLeaveEmployeeTypeReport(models.Model):
@@ -128,13 +128,13 @@ class HrLeaveEmployeeTypeReport(models.Model):
                       ('state', '!=', 'cancel')]
 
         return {
-            'name': _('Balance'),
+            'name': self.env._('Balance'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave.employee.type.report',
             'view_mode': 'pivot',
             'search_view_id': [self.env.ref('hr_holidays.view_search_hr_holidays_employee_type_report').id],
             'domain': domain,
-            'help': _("""
+            'help': self.env._("""
                 <p class="o_view_nocontent_empty_folder">
                     No Balance yet!
                 </p>

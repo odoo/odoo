@@ -3,11 +3,12 @@
 from lxml import etree
 from psycopg2.errors import CheckViolation
 
-from odoo import Command, _
-from odoo.addons.project.tests.test_project_base import TestProjectCommon
+from odoo import Command
 from odoo.tests import Form, tagged
 from odoo.tools import mute_logger
 from odoo.exceptions import ValidationError
+
+from odoo.addons.project.tests.test_project_base import TestProjectCommon
 
 
 @tagged('-at_install', 'post_install')
