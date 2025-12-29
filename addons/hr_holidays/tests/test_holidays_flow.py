@@ -29,16 +29,22 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         HolidayStatusManagerGroup.create({
             'name': 'WithMeetingType',
             'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
         self.holidays_status_hr = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedHR',
             'requires_allocation': False,
             'leave_validation_type': 'hr',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
         self.holidays_status_manager = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedManager',
             'requires_allocation': False,
             'leave_validation_type': 'manager',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         HolidaysEmployeeGroup = Requests.with_user(self.user_employee_id)
@@ -94,6 +100,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'allocation_validation_type': 'hr',
                 'leave_validation_type': 'both',
                 'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
             })
 
             self.env['hr.leave.allocation'].create([
@@ -130,6 +138,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             HolidayStatusManagerGroup.create({
                 'name': 'WithMeetingType',
                 'requires_allocation': False,
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
             })
 
             self.holidays_status_limited = HolidayStatusManagerGroup.create({
@@ -138,7 +148,9 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'employee_requests': False,
                 'allocation_validation_type': 'hr',
                 'leave_validation_type': 'both',
-                'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)]
+                'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
             })
             HolidaysEmployeeGroup = Requests.with_user(self.user_employee_id)
 
@@ -241,6 +253,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'allocation_validation_type': 'hr',
             'leave_validation_type': 'both',
             'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         self.env['hr.leave.allocation'].create({

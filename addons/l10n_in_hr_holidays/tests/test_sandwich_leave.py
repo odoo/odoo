@@ -49,18 +49,21 @@ class TestSandwichLeave(TransactionCase):
         self.leave_type_day, self.leave_type_half_day, self.leave_type_hours = self.env['hr.leave.type'].create([{
             'name': 'Test Leave Type',
             'request_unit': 'day',
+            'unit_of_measure': 'day',
             'requires_allocation': False,
             'l10n_in_is_sandwich_leave': True,
             'company_id': self.indian_company.id,
         }, {
             'name': 'Test Leave Type 2',
             'request_unit': 'half_day',
+            'unit_of_measure': 'day',
             'requires_allocation': False,
             'l10n_in_is_sandwich_leave': True,
             'company_id': self.indian_company.id,
         }, {
             'name': 'Test Leave Type 3',
             'request_unit': 'hour',
+            'unit_of_measure': 'hour',
             'requires_allocation': False,
             'l10n_in_is_sandwich_leave': True,
             'company_id': self.indian_company.id,
@@ -361,6 +364,7 @@ class TestSandwichLeave(TransactionCase):
         other_leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
             'request_unit': 'day',
+            'unit_of_measure': 'day',
             'requires_allocation': False,
         })
         before_holiday_leave = self.env['hr.leave'].create({

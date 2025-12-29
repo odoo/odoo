@@ -31,6 +31,8 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
                 'allocation_validation_type': 'hr',
                 'leave_validation_type': 'both',
                 'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
             })
 
             self.env['hr.leave.allocation'].create([

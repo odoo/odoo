@@ -11,6 +11,8 @@ class TestTimeOffCardTour(HttpCase):
             'time_type': 'leave',
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
         admin_employee = get_admin_employee(self.env)
         self.env['hr.leave.allocation'].create({

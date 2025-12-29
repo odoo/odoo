@@ -26,6 +26,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'name': 'Paid Time Off',
             'time_type': 'leave',
             'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
     def test_departure_without_leave_and_allocation_employee(self):

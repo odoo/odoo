@@ -137,12 +137,14 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
             'name': 'Paid leave type',
             'requires_allocation': False,
             'request_unit': 'hour',
+            'unit_of_measure': 'hour',
             'work_entry_type_id': entry_type_paid.id,
         },
         {
             'name': 'Unpaid leave type',
             'requires_allocation': False,
             'request_unit': 'hour',
+            'unit_of_measure': 'hour',
             'work_entry_type_id': entry_type_unpaid.id,
         }])
 
@@ -183,6 +185,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
             'name': 'Paid leave type',
             'requires_allocation': False,
             'request_unit': 'hour',
+            'unit_of_measure': 'hour',
             'work_entry_type_id': entry_type_paid.id,
         })
 

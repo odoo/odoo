@@ -436,6 +436,8 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         hr_leave_type_with_ts = self.env['hr.leave.type'].create({
             'name': 'Leave Type with timesheet generation',
             'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         # create and validate a leave for full time employee

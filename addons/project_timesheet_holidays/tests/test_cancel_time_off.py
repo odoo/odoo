@@ -38,6 +38,8 @@ class TestCancelTimeOff(TransactionCase):
             'requires_allocation': False,
             'leave_validation_type': 'both',
             'company_id': cls.company.id,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
     @freeze_time('2020-01-01')

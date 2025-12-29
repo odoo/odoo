@@ -32,6 +32,7 @@ class TestFrenchLeaves(TransactionCase):
             'name': 'Time Off',
             'requires_allocation': False,
             'request_unit': 'half_day',
+            'unit_of_measure': 'day',
         })
         cls.company.write({
             'l10n_fr_reference_leave_type': cls.time_off_type.id,
@@ -361,6 +362,7 @@ class TestFrenchLeaves(TransactionCase):
         self.assertNotEqual(leave.number_of_hours, 8.0, 'Company and employee hours per day should not match in this case')
 
         self.time_off_type.request_unit = "day"
+        self.time_off_type.unit_of_measure = "day"
         leave = self.env['hr.leave'].create({
             'name': 'Test',
             'holiday_status_id': self.time_off_type.id,

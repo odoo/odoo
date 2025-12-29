@@ -66,6 +66,7 @@ class TestWorkEntryHolidaysPerformancesBigData(TestWorkEntryHolidaysBase):
         cls.paid_time_off = cls.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'request_unit': 'day',
+            'unit_of_measure': 'day',
             'leave_validation_type': 'both',
             'company_id': cls.company.id,
             'requires_allocation': False,

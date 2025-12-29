@@ -71,6 +71,8 @@ class TestAvatarCardTour(MailCommon, HttpCase):
                     "company_id": cls.company_2.id,
                     "time_type": "leave",
                     "requires_allocation": False,
+                    'request_unit': 'day',
+                    'unit_of_measure': 'day',
                 }
             )
         )

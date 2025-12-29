@@ -24,6 +24,8 @@ class TestWorkingHours(TestHrCalendarCommon):
             'name': 'Unpaid Time Off',
             'requires_allocation': False,
             'leave_validation_type': 'no_validation',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
     def test_multi_companies_2_employees_2_selected_companies_holidays(self):

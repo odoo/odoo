@@ -148,6 +148,8 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'name': 'Paid Time Off',
             'time_type': 'leave',
             'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
         self.employee_emp.resource_calendar_id = self.calendar_1.id
 
@@ -189,6 +191,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'request_unit': 'hour',
+            'unit_of_measure': 'hour',
             'leave_validation_type': 'both',
         })
         self.env['hr.leave.allocation'].create({
@@ -256,6 +259,8 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'time_type': 'leave',
             'requires_allocation': False,
             'leave_validation_type': 'both',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         employee_leave = self.env['hr.leave'].create({

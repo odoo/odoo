@@ -38,7 +38,9 @@ class TestPartner(TransactionCase):
             'requires_allocation': False,
             'name': 'Legal Leaves',
             'time_type': 'leave',
-            'responsible_ids': cls.users.ids
+            'responsible_ids': cls.users.ids,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
         cls.leaves = cls.env['hr.leave'].create([{
             'request_date_from': "2024-06-03",

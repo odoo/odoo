@@ -37,6 +37,8 @@ class TestFrenchWorkEntries(TransactionCase):
         cls.time_off_type = cls.env['hr.leave.type'].create({
             'name': 'Time Off',
             'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
         cls.company.write({
             'l10n_fr_reference_leave_type': cls.time_off_type.id,

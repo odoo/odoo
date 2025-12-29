@@ -40,6 +40,8 @@ class TestHolidaysOvertime(TransactionCase):
             'company_id': cls.company.id,
             'requires_allocation': False,
             'overtime_deductible': True,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
         cls.leave_type_employee_allocation = cls.env['hr.leave.type'].create({
             'name': 'Overtime Compensation Employee Allocation',
@@ -48,6 +50,8 @@ class TestHolidaysOvertime(TransactionCase):
             'employee_requests': True,
             'allocation_validation_type': 'hr',
             'overtime_deductible': True,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         cls.ruleset = cls.env['hr.attendance.overtime.ruleset'].create({
@@ -170,6 +174,8 @@ class TestHolidaysOvertime(TransactionCase):
                 'employee_requests': True,
                 'allocation_validation_type': 'hr',
                 'overtime_deductible': False,
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
             })
 
             # User can request another allocation even without overtime
