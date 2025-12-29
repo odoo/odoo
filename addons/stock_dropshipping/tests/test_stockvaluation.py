@@ -279,16 +279,10 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         all_amls = self._dropship_product1()
 
         # return what we've done
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=self.sale_order1.picking_ids.ids, active_id=self.sale_order1.picking_ids.ids[0],
-            active_model='stock.picking'))
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 1.0
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_ids[0].move_line_ids[0].quantity = 1.0
-        return_pick.move_ids[0].picked = True
-        return_pick._action_done()
+        return_pick = self.sale_order1.picking_ids._create_return()
+        return_pick.move_ids.product_uom_qty = 1.0
+        return_pick.action_assign()
+        return_pick.button_validate()
         self.assertEqual(return_pick.move_ids._is_dropshipped_returned(), True)
 
         all_amls_return = self.vendor_bill1.line_ids + self.customer_invoice1.line_ids
@@ -317,31 +311,19 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         self.assertTrue(-8 in self.purchase_order1.picking_ids.move_ids.stock_valuation_layer_ids.mapped('value'))
 
         # return what we've done
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=self.sale_order1.picking_ids.ids, active_id=self.sale_order1.picking_ids.ids[0],
-            active_model='stock.picking'))
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 1.0
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_ids[0].move_line_ids[0].quantity = 1.0
-        return_pick.move_ids[0].picked = True
-        return_pick._action_done()
+        return_pick = self.sale_order1.picking_ids._create_return()
+        return_pick.move_ids.product_uom_qty = 1.0
+        return_pick.action_assign()
+        return_pick.button_validate()
 
         self.assertTrue(8 in return_pick.move_ids.stock_valuation_layer_ids.mapped('value'))
         self.assertTrue(-8 in return_pick.move_ids.stock_valuation_layer_ids.mapped('value'))
 
         # return again to have a new dropship picking from a dropship return
-        stock_return_picking_form_2 = Form(self.env['stock.return.picking']
-            .with_context(active_ids=return_pick.ids, active_id=return_pick.ids[0],
-            active_model='stock.picking'))
-        stock_return_picking_2 = stock_return_picking_form_2.save()
-        stock_return_picking_2.product_return_moves.quantity = 1.0
-        stock_return_picking_action_2 = stock_return_picking_2.action_create_returns()
-        return_pick_2 = self.env['stock.picking'].browse(stock_return_picking_action_2['res_id'])
-        return_pick_2.move_ids[0].move_line_ids[0].quantity = 1.0
-        return_pick_2.move_ids[0].picked = True
-        return_pick_2._action_done()
+        return_pick_2 = return_pick._create_return()
+        return_pick_2.move_ids.product_uom_qty = 1.0
+        return_pick_2.action_assign()
+        return_pick_2.button_validate()
 
         self.assertTrue(8 in return_pick_2.move_ids.stock_valuation_layer_ids.mapped('value'))
         self.assertTrue(-8 in return_pick_2.move_ids.stock_valuation_layer_ids.mapped('value'))
@@ -405,24 +387,16 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         self.assertEqual(dropship3.state, "done")
 
         # Return dropship
-        ret_model = self.env['stock.return.picking'].with_context(active_id=dropship3.id, active_model='stock.picking')
-        pck_return_wiz = Form(ret_model).save()
-        pck_return_wiz.product_return_moves.quantity = 1.0
-        pck_return_action = pck_return_wiz.action_create_returns()
-        dropship3_return = self.env['stock.picking'].browse(pck_return_action['res_id'])
-        dropship3_return.move_ids.quantity = 1
-        dropship3_return.move_ids.picked = True
-        dropship3_return._action_done()
+        dropship3_return = dropship3._create_return()
+        dropship3_return.move_ids.product_uom_qty = 1.0
+        dropship3_return.action_assign()
+        dropship3_return.button_validate()
 
         # Return the dropship return
-        ret_model = ret_model.with_context(active_id=dropship3_return.id)
-        pck_return_wiz = Form(ret_model).save()
-        pck_return_wiz.product_return_moves.quantity = 1.0
-        pck_return_action = pck_return_wiz.action_create_returns()
-        dropship3_return_return = self.env['stock.picking'].browse(pck_return_action['res_id'])
-        dropship3_return_return.move_ids.quantity = 1
-        dropship3_return_return.move_ids.picked = True
-        dropship3_return_return._action_done()
+        dropship3_return_return = dropship3_return._create_return()
+        dropship3_return_return.move_ids.product_uom_qty = 1.0
+        dropship3_return_return.action_assign()
+        dropship3_return_return.button_validate()
 
         # create the customer invoice
         customer_invoice3 = self.sale_order1._create_invoices()

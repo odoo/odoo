@@ -512,14 +512,9 @@ class TestRepair(TestRepairCommon):
 
         self.assertEqual(picking.state, 'done')
         # Create a return
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking.ids, active_id=picking.ids[0],
-            active_model='stock.picking'))
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 1.0
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_picking.move_ids.picked = True
+        return_picking = picking._create_return()
+        return_picking.move_ids.product_uom_qty = 1.0
+        return_picking.action_assign()
         return_picking.button_validate()
         self.assertEqual(return_picking.state, 'done')
 

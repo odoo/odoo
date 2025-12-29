@@ -284,11 +284,9 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         in_moves._action_done()
 
         # Return the second picking (i.e. one component @20)
-        ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
-        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_wizard.product_return_moves.quantity = 1
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.write({'quantity': 1, 'picked': True})
+        return_picking = pickings[1]._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.action_assign()
         return_picking.button_validate()
 
         # Add a credit note for the returned kit
@@ -385,11 +383,9 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         in_moves._action_done()
 
         # Return the second picking (i.e. one component @20)
-        ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
-        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_wizard.product_return_moves.quantity = 1
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.write({'quantity': 1, 'picked': True})
+        return_picking = pickings[1]._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.move_ids.action_assign()
         return_picking.button_validate()
 
         # Create a new invoice for the returned kit

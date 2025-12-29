@@ -395,15 +395,10 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         return rinv
 
     def _return(self, picking, qty=None):
-        wizard_form = Form(self.env['stock.return.picking'].with_context(active_ids=picking.ids, active_id=picking.id, active_model='stock.picking'))
-        wizard = wizard_form.save()
         qty = qty or picking.move_ids.quantity
-        for line in wizard.product_return_moves:
-            line.quantity = qty
-        action = wizard.action_create_returns()
-        return_picking = self.env["stock.picking"].browse(action["res_id"])
-        return_picking.move_ids.move_line_ids.quantity = qty
-        return_picking.move_ids.picked = True
+        return_picking = picking._create_return()
+        return_picking.move_ids.product_uom_qty = qty
+        return_picking.action_assign()
         return_picking.button_validate()
         return return_picking
 
@@ -538,14 +533,9 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.assertEqual(self.product1.value_svl, 300)
 
         # return the second po
-        stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
-            active_ids=receipt_po2.ids, active_id=receipt_po2.ids[0], active_model='stock.picking'))
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 10
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_ids[0].move_line_ids[0].quantity = 10
-        return_pick.move_ids[0].picked = True
+        return_pick = receipt_po2._create_return()
+        return_pick.move_ids.product_uom_qty = 10
+        return_pick.action_assign()
         return_pick.button_validate()
 
         # valuation of product1 should be 200 as the first items will be sent out

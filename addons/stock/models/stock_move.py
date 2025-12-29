@@ -1817,10 +1817,13 @@ Please change the quantity done or the rounding precision in your settings.""",
         return location.should_bypass_reservation() or not self.product_id.is_storable
 
     def _should_assign_at_confirm(self):
+        # Return moves should be auto-assigned when confirmed
+        if self.origin_returned_move_id:
+            return True
         return self._should_bypass_reservation() or self.picking_type_id.reservation_method == 'at_confirm' or (self.reservation_date and self.reservation_date <= fields.Date.today())
 
     def _filtered_for_assign(self):
-        return self.filtered(lambda move: move.state in ('confirmed', 'partially_available') and move._should_assign_at_confirm())
+        return self.filtered(lambda move: (move.state in ('confirmed', 'partially_available') or move.origin_returned_move_id) and move._should_assign_at_confirm())
 
     def _get_picked_quantity(self):
         self.ensure_one()

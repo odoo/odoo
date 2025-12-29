@@ -187,13 +187,9 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         receipt.move_ids.picked = True
         receipt.button_validate()
 
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=receipt.id, active_model='stock.picking'))
-        return_wizard = return_form.save()
-        return_wizard.product_return_moves.quantity = 3
-        return_wizard.product_return_moves.to_refund = True
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.quantity = 3
-        return_picking.move_ids.picked = True
+        return_picking = receipt._create_return()
+        return_picking.move_ids.product_uom_qty = 3
+        return_picking.action_assign()
         return_picking.button_validate()
 
         self.assertEqual(self.finished2.qty_available, 7.0)
@@ -229,13 +225,10 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         receipt.move_ids.picked = True
         receipt.button_validate()
 
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=receipt.id, active_model='stock.picking'))
-        return_wizard = return_form.save()
-        return_wizard.product_return_moves.quantity = 3
-        return_wizard.product_return_moves.to_refund = False
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.quantity = 3
-        return_picking.move_ids.picked = True
+        return_picking = receipt._create_return()
+        return_picking.move_ids.to_refund = False
+        return_picking.move_ids.product_uom_qty = 3
+        return_picking.action_assign()
         return_picking.button_validate()
 
         self.assertEqual(self.finished2.qty_available, 7.0)
@@ -457,11 +450,9 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         receipt.move_ids.quantity = 10
         receipt.button_validate()
 
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=receipt.id, active_model='stock.picking'))
-        wizard = return_form.save()
-        wizard.product_return_moves.quantity = 1.0
-        return_picking = wizard._create_return()
-        return_picking.move_ids.quantity = 1.0
+        return_picking = receipt._create_return()
+        return_picking.move_ids.product_uom_qty = 1.0
+        return_picking.action_assign()
         return_picking.button_validate()
 
         pol = po.order_line
@@ -872,11 +863,10 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.assertEqual(picking.state, 'done')
         # create a return to the vendor location
         supplier_location = self.env.ref('stock.stock_location_suppliers')
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=picking.id, active_model='stock.picking'))
-        wizard = return_form.save()
-        wizard.product_return_moves.quantity = 2.0
-        return_picking = wizard._create_return()
+        return_picking = picking._create_return()
+        return_picking.move_ids.product_uom_qty = 2.0
         return_picking.location_dest_id = supplier_location
+        return_picking.action_assign()
         return_picking.button_validate()
         self.assertEqual(return_picking.state, 'done')
 

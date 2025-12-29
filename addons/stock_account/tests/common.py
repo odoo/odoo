@@ -1,6 +1,5 @@
 from odoo import Command, fields
 from odoo.tools.misc import clean_context
-from odoo.tests import Form
 from odoo.addons.base.tests.common import BaseCommon
 
 
@@ -226,13 +225,8 @@ class TestStockValuationCommon(BaseCommon):
         return dropshipped
 
     def _make_return(self, move, quantity_to_return):
-        stock_return_picking = Form(self.env['stock.return.picking']
-            .with_context(active_ids=[move.picking_id.id], active_id=move.picking_id.id, active_model='stock.picking'))
-        stock_return_picking = stock_return_picking.save()
-        stock_return_picking.product_return_moves.quantity = quantity_to_return
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_ids[0].move_line_ids[0].quantity = quantity_to_return
+        return_pick = move.picking_id._create_return()
+        return_pick.move_ids[0].quantity = quantity_to_return
         return_pick.move_ids[0].picked = True
         return_pick._action_done()
         return return_pick.move_ids

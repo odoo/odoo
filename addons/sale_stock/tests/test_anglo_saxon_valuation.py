@@ -395,15 +395,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
 
         product.standard_price = 40
 
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=pick.ids, active_id=pick.sorted().ids[0], active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        return_wiz.product_return_moves.quantity = 1
-        return_wiz.product_return_moves.to_refund = False
-        res = return_wiz.action_create_returns()
-
-        return_pick = self.env['stock.picking'].browse(res['res_id'])
-        return_pick.move_ids.write({'quantity': 1, 'picked': True})
+        return_pick = pick._create_return()
+        return_pick.move_ids.product_uom_qty = 1
+        return_pick.action_assign()
         return_pick.button_validate()
 
         # We don't set the price_unit so that the `standard_price` will be used (see _get_price_unit()):
@@ -870,17 +864,10 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         so_1 = self._so_deliver(self.product_fifo_auto, 2, 12)
 
         # Return 1 from SO1
-        stock_return_picking_form = Form(
-            self.env['stock.return.picking'].with_context(
-                active_ids=so_1.picking_ids.ids, active_id=so_1.picking_ids.ids[0], active_model='stock.picking')
-        )
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 1.0
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick = so_1.picking_ids._create_return()
+        return_pick.move_ids.product_uom_qty = 1.0
         return_pick.action_assign()
-        return_pick.move_ids.write({'quantity': 1, 'picked': True})
-        return_pick._action_done()
+        return_pick.button_validate()
 
         # Create, confirm and deliver a sale order for 1@12 (SO2)
         so_2 = self._so_deliver(self.product_fifo_auto, 1, 12)
@@ -889,14 +876,8 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         self._make_in_move(self.product_fifo_auto, 1, 20)
 
         # Re-deliver returned 1 from SO1
-        stock_redeliver_picking_form = Form(
-            self.env['stock.return.picking'].with_context(
-                active_ids=return_pick.ids, active_id=return_pick.ids[0], active_model='stock.picking')
-        )
-        stock_redeliver_picking = stock_redeliver_picking_form.save()
-        stock_redeliver_picking.product_return_moves.quantity = 1.0
-        stock_redeliver_picking_action = stock_redeliver_picking.action_create_returns()
-        redeliver_pick = self.env['stock.picking'].browse(stock_redeliver_picking_action['res_id'])
+        redeliver_pick = return_pick._create_return()
+        redeliver_pick.move_ids.product_uom_qty = 1.0
         redeliver_pick.action_assign()
         redeliver_pick.move_ids.write({'quantity': 1, 'picked': True})
         redeliver_pick._action_done()
@@ -1073,11 +1054,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         self._make_in_move(self.product_fifo_auto, 1, 100)
 
         # Return the second picking (i.e. 1@20)
-        ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
-        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_wizard.product_return_moves.quantity = 1
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.write({'quantity': 1, 'picked': True})
+        return_picking = pickings[1]._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.action_assign()
         return_picking.button_validate()
 
         # Add a credit note for the returned product
@@ -1136,11 +1115,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
         self._make_in_move(self.product_fifo_auto, 1, 100)
 
         # Return the second picking (i.e. 1@20)
-        ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
-        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        return_wizard.product_return_moves.quantity = 1
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.write({'quantity': 1, 'picked': True})
+        return_picking = pickings[1]._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.action_assign()
         return_picking.button_validate()
 
         # Create a new invoice for the returned product

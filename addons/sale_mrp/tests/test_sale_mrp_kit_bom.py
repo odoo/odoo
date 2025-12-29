@@ -656,36 +656,21 @@ class TestSaleMrpKitBom(BaseCommon):
         self.assertEqual(so.order_line.qty_delivered, 25 / 5 * 6)
 
         # Return 10 components
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking_ship.ids, active_id=picking_ship.id,
-            active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        for return_move in return_wiz.product_return_moves:
-            return_move.write({
-                'quantity': 10,
-                'to_refund': True
-            })
-        res = return_wiz.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick = picking_ship._create_return()
+        return_pick.move_ids.product_uom_qty = 10
+        return_pick.action_assign()
 
         # Process all components and validate the return
         return_pick.button_validate()
         self.assertEqual(so.order_line.qty_delivered, 15 / 5 * 6)
 
         # Resend 5 components
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=return_pick.ids, active_id=return_pick.id,
-            active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        for return_move in return_wiz.product_return_moves:
-            return_move.write({
-                'quantity': 5,
-                'to_refund': True
-            })
-        res = return_wiz.action_create_returns()
+        return_pick_2 = return_pick._create_return()
+        return_pick_2.move_ids.product_uom_qty = 5
+        return_pick_2.action_assign()
 
         # Validate the return
-        self.env['stock.picking'].browse(res['res_id']).button_validate()
+        return_pick_2.button_validate()
         self.assertEqual(so.order_line.qty_delivered, 20 / 5 * 6)
 
     def test_sale_kit_qty_change(self):

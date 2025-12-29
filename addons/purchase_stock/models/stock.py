@@ -37,6 +37,18 @@ class StockPicking(models.Model):
     def _search_delay_pass(self, operator, value):
         return [('purchase_id.date_order', operator, value)]
 
+    def _create_return(self):
+        picking = super()._create_return()
+        if len(picking.move_ids.partner_id) == 1 and picking.partner_id != picking.move_ids.partner_id:
+            picking.partner_id = picking.move_ids.partner_id
+        return picking
+
+    def _prepare_return_move_default_values(self, move_id):
+        vals = super()._prepare_return_move_default_values(move_id)
+        if self.location_id.usage == "supplier":
+            vals['purchase_line_id'], vals['partner_id'] = move_id._get_purchase_line_and_partner_from_chain()
+        return vals
+
     def _action_done(self):
         self.purchase_id.sudo().action_acknowledge()
         return super()._action_done()
@@ -135,22 +147,6 @@ class StockWarehouse(models.Model):
         if warehouse.buy_pull_id and name:
             warehouse.buy_pull_id.write({'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)})
         return res
-
-
-class StockReturnPicking(models.TransientModel):
-    _inherit = "stock.return.picking"
-
-    def _prepare_move_default_values(self, return_line, new_picking):
-        vals = super()._prepare_move_default_values(return_line, new_picking)
-        if self.location_id.usage == "supplier":
-            vals['purchase_line_id'], vals['partner_id'] = return_line.move_id._get_purchase_line_and_partner_from_chain()
-        return vals
-
-    def _create_return(self):
-        picking = super()._create_return()
-        if len(picking.move_ids.partner_id) == 1 and picking.partner_id != picking.move_ids.partner_id:
-            picking.partner_id = picking.move_ids.partner_id
-        return picking
 
 
 class StockWarehouseOrderpoint(models.Model):

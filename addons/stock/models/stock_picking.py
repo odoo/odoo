@@ -692,6 +692,7 @@ class StockPicking(models.Model):
         "Picking Instructions",
         help="Internal instructions for the partner or its parent company as set by the user.",
         compute='_compute_picking_warning_text')
+    show_return = fields.Boolean('Show return button', default=True)
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -1219,6 +1220,56 @@ class StockPicking(models.Model):
         self.filtered(lambda x: not x.move_ids).state = 'cancel'
         return True
 
+    def action_return(self):
+        new_picking = self._create_return()
+        return {
+            'name': _('Returned Picking'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking',
+            'res_id': new_picking.id,
+            'view_mode': 'form',
+            'context': self.env.context,
+        }
+
+    def action_return_all(self):
+        """ Set all the quantities in the return picking as the original picking's done quantities
+        """
+        self.ensure_one()
+        if self.return_id:
+            for return_move in self.move_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
+                orig_move = return_move.origin_returned_move_id
+                quantity = orig_move.quantity
+                for dest_move in orig_move.move_dest_ids - return_move:
+                    if not dest_move.origin_returned_move_id or dest_move.origin_returned_move_id != orig_move:
+                        continue
+                    quantity -= dest_move.quantity
+                quantity = return_move.uom_id.round(quantity)
+                return_move.product_uom_qty = quantity
+
+    def action_clear_return(self):
+        self.ensure_one()
+        if self.return_id:
+            self.move_ids.product_uom_qty = 0
+
+    def action_exchange(self):
+        self.ensure_one()
+        if self.return_id:
+            new_picking = self._create_return()
+            new_picking.move_ids.write({
+            'origin_returned_move_id': False,
+            'move_orig_ids': False,
+            })
+            new_picking.action_confirm()
+            new_picking.action_assign()
+            return {
+                'name': _('Returned Picking'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'stock.picking',
+                'res_id': new_picking.id,
+                'view_mode': 'form',
+                'context': self.env.context,
+            }
+
     def action_detailed_operations(self):
         view_id = self.env.ref('stock.view_stock_move_line_detailed_operation_tree').id
         return {
@@ -1257,6 +1308,81 @@ class StockPicking(models.Model):
             "views": [[False, "list"], [False, "form"]],
             "domain": [('id', 'in', next_transfers.ids)],
         }
+
+    def _prepare_return_move_default_values(self, move_id):
+        origin_move = move_id.origin_returned_move_id or move_id
+        move_orig_to_link = origin_move.move_dest_ids.returned_move_ids
+        if not move_id.origin_returned_move_id:
+            # link to original move
+            move_orig_to_link |= origin_move
+            # link to siblings of original move, if any
+            move_orig_to_link |= origin_move\
+                .move_dest_ids.filtered(lambda m: m.state not in ('cancel'))\
+                .move_orig_ids.filtered(lambda m: m.state not in ('cancel'))
+        move_dest_to_link = origin_move.move_orig_ids.returned_move_ids
+        # link to children of originally returned moves, if any. Note that the use of
+        # 'origin_move.move_orig_ids.returned_move_ids.move_orig_ids.move_dest_ids'
+        # instead of 'origin_move.move_orig_ids.move_dest_ids' prevents linking a
+        # return directly to the destination moves of its parents. However, the return of
+        # the return will be linked to the destination moves.
+        move_dest_to_link |= origin_move.move_orig_ids.returned_move_ids\
+            .move_orig_ids.filtered(lambda m: m.state not in ('cancel'))\
+            .move_dest_ids.filtered(lambda m: m.state not in ('cancel'))
+
+        vals = {
+            'product_id': move_id.product_id.id,
+            'product_uom_qty': move_id.quantity if not self.show_return else 0,  # if exchange take quantity
+            'uom_id': move_id.uom_id.id or move_id.product_id.uom_id.id,
+            'picking_id': self.id,
+            'state': 'draft',
+            'date': fields.Datetime.now(),
+            'location_id': self.location_id.id or move_id.location_dest_id.id,
+            'location_dest_id': self.location_dest_id.id or move_id.location_id.id,
+            'location_final_id': False,
+            'picking_type_id': self.picking_type_id.id,
+            'warehouse_id': self.picking_type_id.warehouse_id.id,
+            'origin_returned_move_id': move_id.id,
+            'procure_method': 'make_to_stock',
+            'reference_ids': origin_move.picking_id.reference_ids.ids,
+            'move_orig_ids': [Command.link(m.id) for m in move_orig_to_link],
+            'move_dest_ids': [Command.link(m.id) for m in move_dest_to_link],
+        }
+        if self.picking_type_id.code == 'outgoing':
+            vals['partner_id'] = self.partner_id.id
+        return vals
+
+    def _prepare_return_picking_default_values(self):
+        location = self.location_dest_id
+        return_type = self.picking_type_id.return_picking_type_id or self.picking_type_id
+        location_dest = return_type.default_location_dest_id if return_type and return_type.code == 'incoming' else self.location_id
+
+        vals = {
+            'move_ids': [],
+            'picking_type_id': return_type.id,
+            'state': 'draft',
+            'return_id': self.id,
+            'origin': _("Return of %(picking_name)s", picking_name=self.name),
+            'location_id': location.id,
+            'location_dest_id': location_dest.id,
+        }
+        return vals
+
+    def _create_return(self):
+        self.ensure_one()
+        self.move_ids.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._do_unreserve()
+        new_picking = self.copy(self._prepare_return_picking_default_values())
+        new_picking.user_id = False
+        new_picking.message_post_with_source(
+                'mail.message_origin_link',
+                render_values={'self': new_picking, 'origin': self},
+                subtype_xmlid='mail.mt_note',
+        )
+        for move in self.move_ids.filtered(lambda m: m.state != 'cancel'):
+            move.copy(new_picking._prepare_return_move_default_values(move))
+
+        # toggles between showing Return and Exchange buttons
+        new_picking.show_return = not new_picking.show_return
+        return new_picking
 
     def _action_done(self):
         """Call `_action_done` on the `stock.move` of the `stock.picking` in `self`.

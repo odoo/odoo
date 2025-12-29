@@ -930,32 +930,20 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(order_line.qty_delivered, 7.0)
 
         # Return all components processed by backorder_3
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=backorder_3.ids, active_id=backorder_3.ids[0],
-            active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        for return_move in return_wiz.product_return_moves:
-            return_move.write({
-                'quantity': expected_quantities[return_move.product_id],
-                'to_refund': True
-            })
-        res = return_wiz.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick = backorder_3._create_return()
+        for move in return_pick.move_ids:
+            move.product_uom_qty = expected_quantities[move.product_id]
 
         # Process all components and validate the picking
+        return_pick.action_assign()
         return_pick.button_validate()
 
         # Now quantity delivered should be 3 again
         self.assertEqual(order_line.qty_delivered, 3)
 
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=return_pick.ids, active_id=return_pick.ids[0],
-            active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        for move in return_wiz.product_return_moves:
-            move.quantity = expected_quantities[move.product_id]
-        res = return_wiz.action_create_returns()
-        return_of_return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_of_return_pick = return_pick._create_return()
+        for move in return_of_return_pick.move_ids:
+            move.product_uom_qty = expected_quantities[move.product_id]
 
         # Process all components except one of each
         for move in return_of_return_pick.move_ids:
@@ -964,6 +952,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
                 'picked': True,
                 'to_refund': True
             })
+        return_of_return_pick.action_assign()
 
         Form.from_action(self.env, return_of_return_pick.button_validate()).save().process()
 
@@ -1669,17 +1658,9 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(qty_del_validated, 1.0, 'The order went from warehouse to client, so it has been delivered')
 
         # 1 was delivered, now create a return
-        stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
-            active_ids=pick.ids, active_id=pick.ids[0], active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        for return_move in return_wiz.product_return_moves:
-            return_move.write({
-                'quantity': 1,
-                'to_refund': True
-            })
-        res = return_wiz.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(res['res_id'])
-        return_pick.move_line_ids.quantity = 1
+        return_pick = pick._create_return()
+        return_pick.move_ids.product_uom_qty = 1
+        return_pick.action_assign()
         return_pick.button_validate()  # validate return
 
         # Delivered quantities to the client should be 0
@@ -2089,11 +2070,9 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         picking = so.picking_ids
         picking.button_validate()
 
-        ctx = {'active_ids':picking.ids, 'active_id': picking.ids[0], 'active_model': 'stock.picking'}
-        return_picking_wizard_form = Form(self.env['stock.return.picking'].with_context(ctx))
-        return_picking_wizard = return_picking_wizard_form.save()
-        return_picking_wizard.product_return_moves.quantity = 1
-        return_picking_wizard.action_create_returns()
+        return_picking = picking._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.action_assign()
 
         price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
         self.assertEqual(price, 10)
@@ -2149,13 +2128,10 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         delivery.button_validate()
 
         # Return 2 [uom_ten] x kit_3
-        return_wizard_form = Form(self.env['stock.return.picking'].with_context(active_ids=delivery.ids, active_id=delivery.id, active_model='stock.picking'))
-        return_wizard = return_wizard_form.save()
-        return_wizard.product_return_moves[0].quantity = 20
-        return_wizard.product_return_moves[1].quantity = 40
-        action = return_wizard.action_create_returns()
-        return_picking = self.env['stock.picking'].browse(action['res_id'])
-        return_picking.move_ids.picked = True
+        return_picking = delivery._create_return()
+        return_picking.move_ids[0].product_uom_qty = 20
+        return_picking.move_ids[1].product_uom_qty = 40
+        return_picking.action_assign()
         return_picking.button_validate()
 
         # Adapt the SOL qty according to the delivered one
@@ -2247,13 +2223,9 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(delivery.state, 'done')
         self.assertEqual(so.order_line.qty_delivered, 2)
 
-        ctx = {'active_id': delivery.id, 'active_model': 'stock.picking'}
-        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
-        for line in return_wizard.product_return_moves:
-            line.quantity = line.move_id.quantity
-        return_picking = return_wizard._create_return()
-        for m in return_picking.move_ids:
-            m.write({'quantity': m.product_uom_qty, 'picked': True})
+        return_picking = delivery._create_return()
+        return_picking.action_return_all()
+        return_picking.action_assign()
         return_picking.button_validate()
 
         self.assertEqual(return_picking.state, 'done')
@@ -2534,15 +2506,10 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         delivery.button_validate()
         self.assertEqual(delivery.state, 'done')
 
-        return_wizard = self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking').create({})
-        for line in return_wizard.product_return_moves:
-            line.quantity = line.move_quantity
-        res = return_wizard.action_create_returns()
-
-        return_picking = self.env['stock.picking'].browse(res["res_id"])
+        return_picking = delivery._create_return()
+        return_picking.action_return_all()
         return_picking.location_dest_id = return_location
-        for move in return_picking.move_ids:
-            move.quantity = move.product_qty
+        return_picking.action_assign()
         return_picking.button_validate()
         self.assertEqual(return_picking.state, 'done')
         self.assertEqual(order.order_line.qty_delivered, 0)
@@ -2576,12 +2543,11 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         delivery = sale_order.picking_ids
         delivery.action_assign()
         delivery.button_validate()
-        return_picking_form = Form(self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking'))
-        return_wizard = return_picking_form.save()
-        return_wizard.product_return_moves.filtered(lambda prm: prm.product_id == comp_to_return).quantity = 1
-        res = return_wizard.action_create_exchanges()
-        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking = delivery._create_return()
+        return_picking.move_ids.filtered(lambda m: m.product_id == comp_to_return).product_uom_qty = 1
+        return_picking.action_assign()
         return_picking.button_validate()
+        return_picking.action_exchange()
         exchange_picking = sale_order.picking_ids.filtered(lambda so: so.state != 'done')
         exchange_picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 1)
@@ -2653,19 +2619,17 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.env['stock.quant']._update_available_quantity(self.component_a, self.company_data['default_warehouse'].lot_stock_id, quantity=10)
         second_picking.action_assign()
         second_picking.button_validate()
-        return_picking_form = Form(self.env['stock.return.picking'].with_context(active_id=second_picking.id, active_model='stock.picking'))
-        return_wizard = return_picking_form.save()
-        return_wizard.product_return_moves.filtered(lambda prm: prm.product_id == self.component_a).quantity = 1
-        res = return_wizard.action_create_exchanges()
-        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking = second_picking._create_return()
+        return_picking.move_ids.filtered(lambda m: m.product_id == self.component_a).product_uom_qty = 1
+        return_picking.action_assign()
         return_picking.button_validate()
+        return_picking.action_exchange()
         exchange_picking = so.picking_ids.filtered(lambda so: so.state == 'assigned')
         exchange_picking.button_validate()
         so.order_line._compute_qty_delivered()
-        # In the case where the kit has multiple identical components, only the first BOM line
-        # is linked to all moves (this is a known limitation).
-        self.assertEqual(exchange_picking.move_ids.bom_line_id, self.bom_kit_1.bom_line_ids[0], "All moves in the exchange picking should be linked to the first BOM line.")
-        self.assertEqual(exchange_picking.move_ids.quantity, 2)
+        self.assertEqual(len(exchange_picking.move_ids), 2, "The exchange picking should have 2 moves for the components")
+        self.assertEqual(exchange_picking.move_ids.product_id, self.component_a, "All moves in the exchange picking should be for the same component")
+        self.assertEqual(exchange_picking.move_ids.bom_line_id, self.bom_kit_1.bom_line_ids, "Each move in the exchange picking should be linked to a BOM line of the kit")
 
     def test_delivery_after_splitting_production(self):
         """

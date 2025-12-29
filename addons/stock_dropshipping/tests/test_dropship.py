@@ -245,15 +245,9 @@ class TestDropship(common.TransactionCase):
         picking_dropship.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 3.0)
         self.assertEqual(purchase_order.order_line.qty_received, 3.0)
-        stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
-            active_ids=picking_dropship.ids,
-            active_id=picking_dropship.id,
-            active_model='stock.picking'
-        ))
-        return_wiz = stock_return_picking_form.save()
-        return_wiz.product_return_moves.quantity = 3
-        res = return_wiz.action_create_returns()
-        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking = picking_dropship._create_return()
+        return_picking.move_ids.product_uom_qty = 3
+        return_picking.action_assign()
         return_picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
         self.assertEqual(purchase_order.order_line.qty_received, 0)
@@ -527,15 +521,9 @@ class TestDropshipPostInstall(common.TransactionCase):
         dropship_picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 2)
         self.assertEqual(purchase_order.order_line.qty_received, 2)
-        stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
-            active_ids=dropship_picking.ids,
-            active_id=dropship_picking.id,
-            active_model='stock.picking',
-        ))
-        return_wiz = stock_return_picking_form.save()
-        return_wiz.product_return_moves.quantity = 2
-        res = return_wiz.action_create_returns()
-        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking = dropship_picking._create_return()
+        return_picking.move_ids.product_uom_qty = 2
+        return_picking.action_assign()
         return_picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
         self.assertEqual(purchase_order.order_line.qty_received, 0)
