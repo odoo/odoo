@@ -7161,15 +7161,28 @@ class AccountMove(models.Model):
         if self.state != 'posted':
             return []
 
-        if self.is_purchase_document(include_receipts=True):
-            attachment = self.message_main_attachment_id
-            return [{
+        docs = []
+
+        if not self.is_purchase_document(include_receipts=True):
+            docs += self._get_invoice_legal_documents_all() or []
+
+        for attachment in self.attachment_ids + self._get_mail_thread_data_attachments() + self.message_main_attachment_id:
+            docs.append({
                 'filename': attachment.name,
                 'filetype': attachment.mimetype,
                 'content': attachment.raw,
-            }] if attachment else []
+            })
 
-        return self._get_invoice_legal_documents_all()
+        seen_docs = set()
+        unique_docs = []
+        for doc in docs:
+            key = tuple(doc.values())
+            if key in seen_docs:
+                continue
+            seen_docs.add(key)
+            unique_docs.append(doc)
+
+        return unique_docs
 
     def _get_move_lines_to_report(self):
         def show_line(line):

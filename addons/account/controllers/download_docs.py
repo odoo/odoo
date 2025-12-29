@@ -27,6 +27,21 @@ def _build_zip_from_data(docs_data):
     return buffer.getvalue()
 
 
+def rename_duplicates(docs):
+    seen = {}
+    for doc in docs:
+        name = doc["filename"]
+        if name not in seen:
+            seen[name] = 0
+        else:
+            seen[name] += 1
+            base, *ext = name.rsplit('.', 1)
+            new_name = f"{base} ({seen[name]})" + (f".{ext[0]}" if ext else "")
+            doc["filename"] = new_name
+            seen[new_name] = 0
+    return docs
+
+
 class AccountDocumentDownloadController(http.Controller):
 
     @http.route('/account/download_invoice_attachments/<models("ir.attachment"):attachments>', type='http', auth='user')
@@ -70,21 +85,6 @@ class AccountDocumentDownloadController(http.Controller):
 
     @http.route('/account/download_move_attachments/<models("account.move"):moves>', type='http', auth='user')
     def download_move_attachments(self, moves):
-
-        def rename_duplicates(docs):
-            seen = {}
-            for doc in docs:
-                name = doc["filename"]
-                if name not in seen:
-                    seen[name] = 0
-                else:
-                    seen[name] += 1
-                    base, *ext = name.rsplit('.', 1)
-                    new_name = f"{base} ({seen[name]})" + (f".{ext[0]}" if ext else "")
-                    doc["filename"] = new_name
-                    seen[new_name] = 0
-            return docs
-
         if docs_data := list(chain.from_iterable(move._get_move_zip_export_docs() for move in moves)):
             docs_data = rename_duplicates(docs_data)
             zip_content = _build_zip_from_data(docs_data)

@@ -3,6 +3,7 @@ from zipfile import ZipFile
 
 from odoo.fields import Command
 from odoo.tests.common import tagged
+from odoo.addons.account.controllers.download_docs import rename_duplicates
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 
 
@@ -90,7 +91,18 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
     def test_download_moves_attachments(self):
         self.authenticate(self.env.user.login, self.env.user.login)
         url = f'/account/download_move_attachments/{",".join(map(str, self.invoices.ids))}'
-        attachment_names = sorted([doc['filename'] for invoice in self.invoices for doc in invoice._get_invoice_legal_documents_all()])
+        attachment_names = sorted([
+            doc['filename'] for doc in rename_duplicates([
+                doc
+                for invoice in self.invoices
+                for doc in
+                    invoice._get_invoice_legal_documents_all() + [{
+                        'filename': att.name,
+                        'filetype': att.mimetype,
+                        'content': att.raw,
+                    } for att in invoice.attachment_ids]
+            ])
+        ])
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
         with ZipFile(BytesIO(res.content)) as zip_file:
