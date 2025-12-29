@@ -1211,3 +1211,22 @@ registry.category("web_tour.tours").add("test_orderline_merge_with_higher_price_
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_different_currencies_correct_convertion", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            inLeftSide([
+                ...ProductScreen.clickControlButton("Info"),
+                Dialog.is({ title: "Desk Organizer | 2.55" }),
+                Dialog.cancel(),
+                ...Order.hasLine({
+                    productName: "Desk Organizer",
+                    quantity: "1",
+                    price: "2.55",
+                }),
+            ]),
+        ].flat(),
+});
