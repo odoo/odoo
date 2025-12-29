@@ -21,3 +21,4 @@ from . import res_company
 from . import res_partner
 from . import resource
 from . import ir_ui_menu
+from . import ir_binary
