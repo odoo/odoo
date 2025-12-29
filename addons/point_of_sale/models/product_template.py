@@ -221,9 +221,17 @@ class ProductTemplate(models.Model):
         if products.filtered(lambda p: p.pos_optional_product_ids):
             products |= products.mapped("pos_optional_product_ids")
 
+<<<<<<< 9fc7136897710f0e5efcf4c95106987200f09e0b
         # Ensure products from loaded orders are loaded
         if data.get('pos.order.line'):
             products += self.env['product.product'].browse([l['product_id'] for l in data['pos.order.line']]).product_tmpl_id
+||||||| 6d246b50b572311c3c6fb28213edaef13501162a
+        fields = self._load_pos_data_fields(config.id)
+        return self.with_context(config_id=config.id)._post_read_pos_data(products.read(fields, load=False))
+=======
+        fields = self._load_pos_data_fields(config.id)
+        return products.read(fields, load=False)
+>>>>>>> 210ad781dd30569d2d765dcb7dd1f2f5c6464c74
 
         return self._load_pos_data_read(products, config)
 
