@@ -115,6 +115,110 @@ export class ProductScreen extends Component {
             () => [this.currentOrder, this.currentOrder.totalQuantity]
         );
     }
+<<<<<<< 0ff15abd58f0792a2a483c92d0fec43f26c956a2
+||||||| 376c36336b4a2bd01c9cb9b2594abee0713bcf51
+    getAncestorsAndCurrent() {
+        const selectedCategory = this.pos.selectedCategory;
+        return selectedCategory
+            ? [undefined, ...selectedCategory.allParents, selectedCategory]
+            : [selectedCategory];
+    }
+    getChildCategories(selectedCategory) {
+        return selectedCategory
+            ? [...selectedCategory.child_ids]
+            : this.pos.models["pos.category"].filter((category) => !category.parent_id);
+    }
+
+    getCategoriesList(list, allParents, depth) {
+        return list.map((category) => {
+            if (category.id === allParents[depth]?.id && category.child_ids?.length) {
+                return [
+                    category,
+                    this.getCategoriesList(category.child_ids, allParents, depth + 1),
+                ];
+            }
+            return category;
+        });
+    }
+
+    getCategoriesAndSub() {
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        let rootCategories = this.pos.models["pos.category"].getAll();
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            rootCategories = iface_available_categ_ids;
+        }
+        rootCategories = rootCategories.filter((category) => !category.parent_id);
+        const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
+        const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
+        return this.getCategoriesList(rootCategories, allParents, 0)
+            .flat(Infinity)
+            .map(this.getChildCategoriesInfo, this);
+    }
+
+    getChildCategoriesInfo(category) {
+        return {
+            ...pick(category, "id", "name", "color"),
+            imgSrc:
+                this.pos.config.show_category_images && category.has_image
+                    ? `/web/image?model=pos.category&field=image_128&id=${category.id}`
+                    : undefined,
+            isSelected: this.getAncestorsAndCurrent().includes(category),
+            isChildren: this.getChildCategories(this.pos.selectedCategory).includes(category),
+        };
+    }
+=======
+    getAncestorsAndCurrent() {
+        const selectedCategory = this.pos.selectedCategory;
+        return selectedCategory
+            ? [undefined, ...selectedCategory.allParents, selectedCategory]
+            : [selectedCategory];
+    }
+    getChildCategories(selectedCategory) {
+        return selectedCategory
+            ? [...selectedCategory.child_ids]
+            : this.pos.models["pos.category"].filter((category) => !category.parent_id);
+    }
+
+    getCategoriesList(list, allParents, depth) {
+        return list.map((category) => {
+            if (category.id === allParents[depth]?.id && category.child_ids?.length) {
+                return [
+                    category,
+                    this.getCategoriesList(category.child_ids, allParents, depth + 1),
+                ];
+            }
+            return category;
+        });
+    }
+
+    getCategoriesAndSub() {
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        let rootCategories = this.pos.models["pos.category"].getAll();
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            rootCategories = iface_available_categ_ids;
+        }
+        rootCategories = rootCategories.filter((category) => !category.parent_id);
+        const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
+        const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
+        return this.getCategoriesList(rootCategories, allParents, 0)
+            .flat(Infinity)
+            .map(this.getChildCategoriesInfo, this);
+    }
+
+    getChildCategoriesInfo(category) {
+        return {
+            ...pick(category, "id", "name", "color"),
+            imgSrc:
+                this.pos.config.show_category_images && category.has_image
+                    ? `/web/image?model=pos.category&field=image_128&id=${category.id}`
+                    : undefined,
+            isSelected: this.getAncestorsAndCurrent().includes(category),
+            isChildren: this.pos.selectedCategory
+                ? this.pos.selectedCategory.child_ids.includes(category)
+                : !category.parent_id,
+        };
+    }
+>>>>>>> 7c2822f48c40098353835138b8e461e56f6e5c0c
 
     getNumpadButtons() {
         const colorClassMap = {
