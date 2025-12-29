@@ -17,12 +17,6 @@ export class Many2OneAvatarEmployeeField extends EmployeeFieldRelationMixin(
         );
     }
 
-    get many2OneProps() {
-        return {
-            ...super.many2OneProps,
-            relation: this.relation,
-        };
-    }
 }
 
 export const many2OneAvatarEmployeeField = {
@@ -49,12 +43,6 @@ export class KanbanMany2OneAvatarEmployeeField extends EmployeeFieldRelationMixi
             (!this.env.isSmall && ["hr.employee", "hr.employee.public"].includes(this.relation)) ||
             super.displayAvatarCard
         );
-    }
-    get many2OneProps() {
-        return {
-            ...super.many2OneProps,
-            relation: this.relation,
-        };
     }
 }
 
