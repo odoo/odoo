@@ -10,6 +10,7 @@ export class PhoneField extends Component {
     static props = {
         ...standardFieldProps,
         placeholder: { type: String, optional: true },
+        wrap: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -30,10 +31,20 @@ export const phoneField = {
             type: "field",
             availableTypes: ["char"],
         },
+        {
+            label: _t("Wrap"),
+            name: "wrap",
+            type: "boolean",
+            default: false,
+            help: _t(
+                "If true, the icons next to the phone number will wrapped when the line is too long."
+            ),
+        },
     ],
     supportedTypes: ["char"],
-    extractProps: ({ placeholder }) => ({
+    extractProps: ({ options, placeholder }) => ({
         placeholder,
+        wrap: options.wrap,
     }),
 };
 
