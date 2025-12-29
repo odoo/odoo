@@ -16,6 +16,19 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             'requires_allocation': False,
             'request_unit': 'half_day',
         })
+        cls.leave_type_hour = cls.env['hr.leave.type'].create({
+            'name': 'Automatic Test (Hours)',
+            'time_type': 'leave',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+        })
+        cls.leave_type_hour_incl_public_holidays = cls.env['hr.leave.type'].create({
+            'name': 'Hours with working day on public holiday',
+            'time_type': 'leave',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+            'include_public_holidays_in_duration': True,
+        })
 
     def test_no_attendances(self):
         calendar = self.env['resource.calendar'].create({
@@ -459,3 +472,94 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         self.assertEqual(leave.number_of_hours, 0)
         self.assertEqual(leave.date_from, datetime(2019, 9, 2, 6, 0, 0))
         self.assertEqual(leave.date_to, datetime(2019, 9, 2, 10, 0, 0))
+
+    def test_attendance_based_on_duration_hours(self):
+        # Test that duration-based calendars allow leave at any hour of the day,
+        # without being bound to any specific time period.
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Duration Based',
+            'duration_based': True,
+            'attendance_ids': [
+                Command.clear(),
+                Command.create({
+                    "name": "Wednesday",
+                    "duration_hours": 8,
+                    "day_period": "full_day",
+                    "dayofweek": "2"}),
+            ],
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = calendar
+        leave = self.env['hr.leave'].create({
+            'employee_id': employee.id,
+            'holiday_status_id': self.leave_type_hour.id,
+            'request_date_from': date(2026, 2, 4),
+            'request_date_to': date(2026, 2, 4),
+            'request_hour_from': 4.0,
+            'request_hour_to': 7.0,
+        })
+        self.assertEqual(leave.number_of_hours, 3)
+        self.assertEqual(leave.number_of_days, 0.375)
+
+    def test_duration_based_hours_with_public_holiday(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Duration Based Public Holiday Test',
+            'duration_based': True,
+            'tz': 'Europe/Brussels',
+            'attendance_ids': [
+                Command.clear(),
+                Command.create({
+                    'name': 'Wednesday',
+                    'duration_hours': 8,
+                    'day_period': 'full_day',
+                    'dayofweek': '2',
+                }),
+            ],
+        })
+
+        self.employee_emp.resource_calendar_id = calendar
+        self.employee_hruser.resource_calendar_id = calendar
+
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Test Public Holiday',
+            'date_from': datetime(2026, 2, 4, 3, 0, 0),
+            'date_to': datetime(2026, 2, 4, 15, 0, 0),
+            'calendar_id': calendar.id,
+            'time_type': 'leave',
+        })
+
+        # Leave fully within PH (8AM-3PM Brussels) → 0 hours
+        leave1 = self.env['hr.leave'].create({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type_hour.id,
+            'request_date_from': date(2026, 2, 4),
+            'request_date_to': date(2026, 2, 4),
+            'request_hour_from': 8.0,
+            'request_hour_to': 15.0,
+        })
+        self.assertEqual(leave1.number_of_hours, 0)
+        self.assertEqual(leave1.number_of_days, 0)
+
+        # Same hours, include_public_holidays_in_duration=True → 7 hours
+        leave2 = self.env['hr.leave'].create({
+            'employee_id': self.employee_hruser.id,
+            'holiday_status_id': self.leave_type_hour_incl_public_holidays.id,
+            'request_date_from': date(2026, 2, 4),
+            'request_date_to': date(2026, 2, 4),
+            'request_hour_from': 8.0,
+            'request_hour_to': 15.0,
+        })
+        self.assertEqual(leave2.number_of_hours, 7)
+        self.assertAlmostEqual(leave2.number_of_days, 0.875)
+
+        # Leave after PH (5PM-8PM Brussels) → 3 hours
+        leave3 = self.env['hr.leave'].create({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type_hour.id,
+            'request_date_from': date(2026, 2, 4),
+            'request_date_to': date(2026, 2, 4),
+            'request_hour_from': 17.0,
+            'request_hour_to': 20.0,
+        })
+        self.assertEqual(leave3.number_of_hours, 3)
+        self.assertAlmostEqual(leave3.number_of_days, 0.375)
