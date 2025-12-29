@@ -11,7 +11,7 @@ import { ACTION_TAGS } from "@mail/core/common/action";
 
 export class CallActionList extends Component {
     static components = { ActionList };
-    static props = ["channel", "className?", "compact?"];
+    static props = ["channel", "className?", "compact?", "pipExtraActions?"];
     static template = "discuss.CallActionList";
 
     setup() {
@@ -34,16 +34,18 @@ export class CallActionList extends Component {
                     (a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT)
                 );
                 const sequenceGroup = filtered[0].sequenceGroup;
-                const maxQuickActions = sequenceGroup === 200 ? 2 : 4;
+                const hasPipActions = sequenceGroup === 200 && this.props.pipExtraActions;
+                const pipActions = hasPipActions ? toRaw(this.props.pipExtraActions) : [];
+                const maxQuickActions = pipActions.length > 0 ? 1 : 4;
                 const quickActions = filtered.slice(0, maxQuickActions);
-                const moreActions = filtered.slice(maxQuickActions);
+                const moreActions = [...pipActions, ...filtered.slice(maxQuickActions)];
                 const newGroup = moreActions?.length
                     ? [
                           ...quickActions,
                           this.callActions.more(
                               {
                                   actions: moreActions,
-                                  dropdownMenuClass: "m-0 mb-1",
+                                  dropdownMenuClass: "m-0 mb-1 overflow-x-hidden",
                                   dropdownPosition: "top-end",
                                   name: this.MORE,
                               },

@@ -172,6 +172,7 @@ registerThreadAction("invite-people", {
         } bg-100 border border-secondary`,
     condition: ({ channel, owner }) =>
         channel &&
+        !owner.env.pipWindow &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !(owner.isDiscussContent && channel?.hasMemberList),
     icon: "oi oi-fw oi-user-plus",
@@ -186,6 +187,17 @@ registerThreadAction("invite-people", {
             });
         }
     },
+});
+registerThreadAction("copy-invite-link", {
+    condition: ({ channel, owner }) => owner.env.pipWindow && channel?.invitationLink,
+    icon: "oi oi-fw oi-user-plus",
+    name: _t("Copy Invite Link"),
+    onSelected: ({ channel, owner }) =>
+        channel.copyInvitationLink({
+            clipboard: owner.env.pipWindow.navigator.clipboard,
+        }),
+    sequence: 20,
+    sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 20),
 });
 registerThreadAction("member-list", {
     actionPanelClose: ({ action, owner, store, nextActiveAction }) => {

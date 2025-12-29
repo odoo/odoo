@@ -61,7 +61,8 @@ export const muteAction = {
 };
 registerCallAction("mute", muteAction);
 export const quickActionSettings = {
-    condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
+    condition: ({ owner, channel }) =>
+        !owner.env.inCallMenu && channel?.isSelfInCall && !owner.env.pipWindow,
     dropdown: true,
     dropdownComponent: QuickVoiceSettings,
     dropdownMenuClass: "p-2",
@@ -118,7 +119,8 @@ export const cameraOnAction = {
 };
 registerCallAction("camera-on", cameraOnAction);
 export const quickVideoSettings = {
-    condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
+    condition: ({ owner, channel }) =>
+        !owner.env.inCallMenu && channel?.isSelfInCall && !owner.env.pipWindow,
     dropdown: true,
     dropdownComponent: QuickVideoSettings,
     dropdownMenuClass: "p-2",
@@ -175,7 +177,7 @@ registerCallAction("fullscreen", {
                 channel.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
             ),
         }),
-    condition: ({ channel }) => channel?.isSelfInCall,
+    condition: ({ channel, owner }) => channel?.isSelfInCall && !owner.env.pipWindow,
     name: ({ store }) => (store.rtc.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
     isActive: ({ store }) => store.rtc.isFullscreen,
     icon: ({ action }) => (action.isActive ? "fa fa-compress" : "fa fa-expand"),
@@ -196,7 +198,8 @@ registerCallAction("picture-in-picture", {
         !owner.env.inCallMenu &&
         channel?.isSelfInCall &&
         store.env.services["discuss.pip_service"] &&
-        !store.env?.isSmall,
+        !store.env?.isSmall &&
+        !owner.env.pipWindow,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.isPipMode ? _t("Exit Picture in Picture") : _t("Picture in Picture"),
