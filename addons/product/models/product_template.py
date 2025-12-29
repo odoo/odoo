@@ -394,17 +394,21 @@ class ProductTemplate(models.Model):
 
     @api.depends('product_variant_ids.volume')
     def _compute_volume(self):
-        self._compute_template_field_from_variant_field('volume')
+        for t in self:
+            t.volume = t.product_variant_ids.volume if len(t.product_variant_ids) == 1 else t.volume
 
     def _set_volume(self):
-        self._set_product_variant_field('volume')
+        for t in self:
+            t.product_variant_ids.volume = t.volume
 
     @api.depends('product_variant_ids.weight')
     def _compute_weight(self):
-        self._compute_template_field_from_variant_field('weight')
+        for t in self:
+            t.weight = t.product_variant_ids.weight if len(t.product_variant_ids) == 1 else t.weight
 
     def _set_weight(self):
-        self._set_product_variant_field('weight')
+        for t in self:
+            t.product_variant_ids.weight = t.weight
 
     def _compute_is_product_variant(self):
         self.is_product_variant = False

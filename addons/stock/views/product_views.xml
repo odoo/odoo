@@ -93,21 +93,22 @@
                 <xpath expr="//field[@name='virtual_available']" position='attributes'>
                     <attribute name="groups">stock.group_stock_user</attribute>
                 </xpath>
+                <field name="virtual_available" position="after">
+                    <button
+                        name="action_product_forecast_report"
+                        type="object"
+                        icon="fa-area-chart"
+                        title="View Forecast"
+                        invisible="not is_storable"
+                        groups="stock.group_stock_user"
+                    />
+                </field>
             </field>
         </record>
 
         <!-- Disable variant qty editing not using quants -->
         <record id="product.product_view_list_qty" model="ir.ui.view">
             <field name="active" eval="False"/>
-        </record>
-
-        <record id="stock_variant_easy_edit_view" model="ir.ui.view">
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_variant_easy_edit_view"></field>
-            <field name="arch" type="xml">
-                <xpath expr="//label[@for='qty_available']" position="replace"/>
-                <xpath expr="//div[@name='no_stock_variant_qty_edit']" position="replace"/>
-            </field>
         </record>
 
         <record id="view_stock_product_template_tree" model="ir.ui.view">
@@ -208,6 +209,7 @@
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="before">
                     <field name="has_available_route_ids" invisible="1"/>
+                    <field name="responsible_id" domain="[('share', '=', False)]" widget="many2one_avatar_user" groups="stock.group_stock_user"/>
                     <group string="Operations" name="operations" invisible="not (has_available_route_ids or route_from_categ_ids)">
                         <label for="route_ids" invisible="not has_available_route_ids"/>
                         <div invisible="not has_available_route_ids">
@@ -545,9 +547,6 @@
                         </t>
                     </button>
 
-                    <xpath expr="//label[@for='weight']" position="before">
-                        <field name="responsible_id" domain="[('share', '=', False)]" widget="many2one_avatar_user" groups="stock.group_stock_user"/>
-                    </xpath>
                 </data>
             </field>
         </record>
@@ -659,8 +658,6 @@
 
         <menuitem id="menu_product_variant_config_stock" name="Products" action="product_template_action_product"
             parent="stock.menu_stock_inventory_control" sequence="1"/>
-        <menuitem id="product_product_menu" name="Product Variants" action="stock_product_normal_action"
-            parent="menu_stock_inventory_control" sequence="2" groups="product.group_product_variant"/>
         <menuitem id="menu_product_stock" name="Stock" action="stock.action_product_stock_view"
         parent="stock.menu_warehouse_report" sequence="5"/>
 

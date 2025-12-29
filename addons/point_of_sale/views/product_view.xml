@@ -120,12 +120,6 @@
         action="product_template_action_pos_product"
         parent="point_of_sale.pos_config_menu_catalog"
         sequence="5"/>
-    <menuitem id="pos_config_menu_action_product_product"
-        name="Product Variants"
-        parent="point_of_sale.pos_config_menu_catalog"
-        action="product_product_action"
-        groups="product.group_product_variant"
-        sequence="10"/>
     <menuitem id="point_of_sale.menu_product_combo"
         name="Combo Choices"
         parent="point_of_sale.pos_config_menu_catalog"
@@ -172,17 +166,6 @@
             </list>
             <field name="is_favorite" position="before">
                 <field name="pos_sequence" widget="handle" nolabel="1"/>
-            </field>
-        </field>
-    </record>
-
-    <record id="product_product_tree_view" model="ir.ui.view">
-        <field name="name">product.product.product.list.inherit</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_product_tree_view"/>
-        <field name="arch" type="xml">
-            <field name="categ_id" position="before">
-                <field name="pos_categ_ids" widget="many2many_tags" groups="point_of_sale.group_pos_user" optional="hide" string="POS Product Category"/>
             </field>
         </field>
     </record>
