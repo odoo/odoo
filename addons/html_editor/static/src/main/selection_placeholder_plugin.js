@@ -23,7 +23,7 @@ export class SelectionPlaceholderPlugin extends Plugin {
     static dependencies = ["baseContainer", "history", "selection"];
     resources = {
         external_history_step_handlers: this.updatePlaceholders.bind(this),
-        normalize_handlers: this.updatePlaceholders.bind(this),
+        normalize_handlers: withSequence(100, this.updatePlaceholders.bind(this)),
         step_added_handlers: this.updatePlaceholders.bind(this),
         selectionchange_handlers: (selectionData) => this.onSelectionChange(selectionData),
         clean_for_save_handlers: withSequence(0, ({ root }) => {
