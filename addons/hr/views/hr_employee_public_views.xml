@@ -75,8 +75,9 @@
                                 <field name="department_id" context="{'open_employees_kanban': 1}"/>
                                 <field name="job_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="parent_id" widget="many2one_avatar_user"/>
-                                <field name="coach_id" widget="many2one_avatar_user"/>
+                                <field name="has_cross_company_relation" invisible="1"/>
+                                <field name="parent_id" widget="many2one_avatar_employee"/>
+                                <field name="coach_id" widget="many2one_avatar_employee"/>
                             </group>
                         </group>
                         <notebook>
