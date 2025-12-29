@@ -126,7 +126,7 @@
                 <field name="check_in"/>
                 <field name="check_out"/>
                 <field name="worked_hours" string="Work Hours" widget="float_time"/>
-                <field name="validated_overtime_hours" string="Extra Hours" widget="float_time" column_invisible="not context.get('display_extra_hours')"/>
+                <field name="validated_overtime_hours" string="Approved Overtime" widget="float_time" column_invisible="not context.get('display_extra_hours')"/>
                 <field name="overtime_status" string="Status" widget="badge"
                        decoration-warning="overtime_status == 'to_approve'"
                        decoration-success="overtime_status == 'approved'"
