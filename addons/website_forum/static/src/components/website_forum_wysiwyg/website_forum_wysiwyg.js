@@ -91,6 +91,7 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
 
     onSubmitButtonClick(ev) {
         if (this.readyToSubmit) {
+            this.readyToSubmit = false;
             return;
         }
         ev.preventDefault();
