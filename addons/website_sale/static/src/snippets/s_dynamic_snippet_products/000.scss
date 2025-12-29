@@ -1,4 +1,93 @@
 .s_dynamic_snippet_products {
+<<<<<<< b87105c0e870aa3dd73e3bd954f015cd21197f82
+||||||| f80040687d2641ac57136078f23936535619bdbb
+    // Adjusts carousel arrows' aligments
+    @mixin o-aligns-controlers {
+
+        .carousel-control-next,
+        .carousel-control-prev {
+            aspect-ratio: var(--o-wsale-card-thumb-aspect-ratio, 1/1);
+            width: var(--o-wsale-dynamic-snippet-col-size) !important;
+            transform: scaleX(.2);
+            bottom: auto;
+            isolation: isolate;
+            padding-top: 1rem;
+
+            .oi {
+                transform: scaleX(5);
+            }
+        }
+
+        .carousel-control-next {
+            transform-origin: center right;
+        }
+
+        .carousel-control-prev {
+            transform-origin: center left;
+        }
+    }
+
+    // Adapts arrow container width
+    @mixin o-adapts-col-size {
+        .carousel {
+            --o-wsale-dynamic-snippet-col-size: var(--o-carousel-item-width-percentage);
+
+            &:where(:has(.col-6)) {
+                --o-wsale-dynamic-snippet-col-size: 50%;
+            }
+
+            &:where(:has(.col-3)) {
+                --o-wsale-dynamic-snippet-col-size: 25%;
+            }
+        }
+    }
+=======
+    // RTL chevron rotation
+    .o_rtl & {
+        --o-chevron-rtl-rotate: 180deg;
+    }
+
+    // Adjusts carousel arrows' aligments
+    @mixin o-aligns-controlers {
+
+        .carousel-control-next,
+        .carousel-control-prev {
+            aspect-ratio: var(--o-wsale-card-thumb-aspect-ratio, 1/1);
+            width: var(--o-wsale-dynamic-snippet-col-size) !important;
+            transform: scaleX(.2);
+            bottom: auto;
+            isolation: isolate;
+            padding-top: 1rem;
+
+            .oi {
+                transform: scaleX(5) rotate(var(--o-chevron-rtl-rotate, 0deg));
+            }
+        }
+
+        .carousel-control-next {
+            transform-origin: center right;
+        }
+
+        .carousel-control-prev {
+            transform-origin: center left;
+        }
+    }
+
+    // Adapts arrow container width
+    @mixin o-adapts-col-size {
+        .carousel {
+            --o-wsale-dynamic-snippet-col-size: var(--o-carousel-item-width-percentage);
+
+            &:where(:has(.col-6)) {
+                --o-wsale-dynamic-snippet-col-size: 50%;
+            }
+
+            &:where(:has(.col-3)) {
+                --o-wsale-dynamic-snippet-col-size: 25%;
+            }
+        }
+    }
+>>>>>>> 236415ed2ba4e69e67076665f81f4c18f55ccf40
     .s_dynamic_snippet_row.row {
         --gutter-x: var(--o-wsale-products-grid-gap, 16px);
     }
