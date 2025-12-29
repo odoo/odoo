@@ -1357,6 +1357,11 @@ class ProductTemplate(models.Model):
         if not product_template_attribute_values_per_line:
             return
 
+        product_template_attribute_values_per_line = [ptav for ptav in product_template_attribute_values_per_line if len(ptav)]
+        if not product_template_attribute_values_per_line:
+            yield self.env['product.template.attribute.value']
+            return
+
         all_exclusions = {self.env['product.template.attribute.value'].browse(k):
                           self.env['product.template.attribute.value'].browse(v) for k, v in
                           self._get_own_attribute_exclusions().items()}
