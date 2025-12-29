@@ -145,7 +145,9 @@ export class ProductScreen extends Component {
                     ? `/web/image?model=pos.category&field=image_128&id=${category.id}`
                     : undefined,
             isSelected: this.getAncestorsAndCurrent().includes(category),
-            isChildren: this.getChildCategories(this.pos.selectedCategory).includes(category),
+            isChildren: this.pos.selectedCategory
+                ? this.pos.selectedCategory.child_ids.includes(category)
+                : !category.parent_id,
         };
     }
 
