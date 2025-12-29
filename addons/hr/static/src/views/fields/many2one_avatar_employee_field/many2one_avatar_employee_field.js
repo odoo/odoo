@@ -17,6 +17,28 @@ export class Many2OneAvatarEmployeeField extends EmployeeFieldRelationMixin(
         );
     }
 
+    onClickAvatar(ev) {
+        if (
+            (this.props.name === "parent_id" || this.props.name === "coach_id") &&
+            this.props.record.data.has_cross_company_relation
+        ) {
+            ev.stopPropagation();
+            return;
+        }
+        super.onClickAvatar(ev);
+    }
+
+    onClick(ev) {
+        if (
+            (this.props.name === "parent_id" || this.props.name === "coach_id") &&
+            this.props.record.data.has_cross_company_relation
+        ) {
+            ev.stopPropagation();
+            return;
+        }
+        super.onClick(ev);
+    }
+
 }
 
 export const many2OneAvatarEmployeeField = {
