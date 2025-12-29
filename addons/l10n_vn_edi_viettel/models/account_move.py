@@ -695,9 +695,9 @@ class AccountMove(models.Model):
             # For credit notes amount, we send negative values (reduces the amount of the original invoice)
             sign = 1 if self.move_type == 'out_invoice' else -1
             item_information = {
-                'itemCode': line.product_id.code,
-                'itemName': line.product_id.name,
-                'unitName': line.product_uom_id.name,
+                'itemCode': line.product_id.code or '',
+                'itemName': line.name,
+                'unitName': line.product_uom_id.name or 'Units',
                 'unitPrice': line.price_unit * sign,
                 'quantity': line.quantity,
                 # This amount should be without discount applied.
