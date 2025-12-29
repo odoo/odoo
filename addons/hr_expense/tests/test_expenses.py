@@ -1025,3 +1025,20 @@ class TestExpenses(TestExpenseCommon):
 
         # Check that there is no fourth autobalancing line on the account move
         self.assertEqual(expense.account_move_id.line_ids.mapped('balance'), [86.96, 13.04, -100.0])
+
+    def test_remove_company_id_from_hr_expense(self):
+        expense = self.create_expenses({
+                'name': 'Company PC 1000 + 15%',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'total_amount_currency': 1000.00,
+                'date': '2021-10-12',
+                'payment_mode': 'company_account',
+                'company_id': self.company_data['company'].id,
+                'tax_ids': [Command.set(self.tax_purchase_a.ids)],
+            })
+        form = Form(expense)
+        form.company_id = self.env['res.company']
+        self.assertEqual(form.is_editable, False)
+        form.company_id = self.env.company
+        self.assertEqual(form.is_editable, True)
