@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-12-20 09:34+0000\n"
+"PO-Revision-Date: 2025-12-24 10:24+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/event/"
 "ja/>\n"
@@ -4397,7 +4397,7 @@ msgstr "進行中"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_question__is_default
 msgid "Include by default in new events."
-msgstr ""
+msgstr "新規イベントにデフォルトで含めます。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
@@ -4500,7 +4500,7 @@ msgstr "現在進行中"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_reusable
 msgid "Is Reusable"
-msgstr ""
+msgstr "再利用可能"
 
 #. module: event
 #. odoo-python
@@ -4644,7 +4644,7 @@ msgstr "登録制限"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__limit_max_per_order
 msgid "Limit per Order"
-msgstr ""
+msgstr "オーダごとの上限"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -4777,6 +4777,8 @@ msgid ""
 "Maximum of this product per order.\n"
 "Set to 0 to ignore this rule"
 msgstr ""
+"オーダあたりのこのプロダクトの最大数量。\n"
+"このルールを無視するには0に設定してください"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
@@ -4854,7 +4856,7 @@ msgstr "新規"
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot_calendar/event_slot_calendar_controller.js:0
 msgid "New Slot"
-msgstr ""
+msgstr "新規スロット"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
@@ -4901,7 +4903,7 @@ msgstr "出席者はまだいません！"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_question_action
 msgid "No questions yet! Please create one."
-msgstr ""
+msgstr "まだ質問はありません！質問を作成してください。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
@@ -4911,12 +4913,12 @@ msgstr "体系"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not Reusable"
-msgstr ""
+msgstr "再利用不可"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not mandatory"
-msgstr ""
+msgstr "必須ではない"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__note
@@ -5015,7 +5017,7 @@ msgstr "オーダごとに1回"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Once per order"
-msgstr ""
+msgstr "オーダごとに1回"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -5364,7 +5366,7 @@ msgstr "レスポンシブHTMLフルページチケット"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Reusable"
-msgstr ""
+msgstr "再利用可"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
@@ -5426,7 +5428,7 @@ msgstr "スケジューラEメール"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Search Event Question"
-msgstr ""
+msgstr "イベント質問を検索"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -5563,7 +5565,7 @@ msgstr "複数スロットイベントでは、スロットの選択は必須で
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Slot(s)"
-msgstr ""
+msgstr "スロット"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
@@ -6363,7 +6365,7 @@ msgstr "すでに回答がある質問のタイプを変更することはでき
 #. odoo-python
 #: code:addons/event/models/event_question.py:0
 msgid "You cannot delete a default question."
-msgstr ""
+msgstr "デフォルトの質問は削除できません。"
 
 #. module: event
 #. odoo-python
@@ -6371,7 +6373,8 @@ msgstr ""
 msgid ""
 "You cannot delete a question that has already been answered by attendees. "
 "You can archive it instead."
-msgstr ""
+msgstr "参加者が回答済みの質問は削除できません。代わりにアーカイブすることができます"
+"。"
 
 #. module: event
 #. odoo-python
@@ -6446,7 +6449,7 @@ msgstr "例: VIPチケット"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "event_id"
-msgstr ""
+msgstr "event_id"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form

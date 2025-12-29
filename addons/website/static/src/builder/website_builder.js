@@ -189,7 +189,6 @@ export class WebsiteBuilder extends Component {
             "ImagePlugin",
             "AlignPlugin",
             "ListPlugin",
-            "FontPlugin",
             "FontFamilyPlugin",
         ];
         const pluginsToRemove = this.props.translation

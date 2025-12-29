@@ -7,11 +7,20 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, expect } from "@odoo/hoot";
 import { disableAnimations } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
 defineMailModels();
+
+async function assertPinnedPanelUnpinCount(expectedCount) {
+    await contains(".dropdown-item", { text: "Unpin", count: expectedCount });
+    await click(".o-mail-DiscussContent-header button[title='Pinned Messages']");
+    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", {
+        text: "Test pinned message",
+    });
+    expect(".o-discuss-PinnedMessagesPanel button[title='Unpin']").toHaveCount(expectedCount);
+}
 
 test("Pin message", async () => {
     const pyEnv = await startServer();
@@ -142,4 +151,38 @@ test("can add reactions from pinned panel", async () => {
     await click(".o-discuss-PinnedMessagesPanel .o-mail-Message [title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button", { text: "👍" });
     await contains(".o-mail-MessageReaction", { count: 0 });
+});
+
+test("Guest user cannot see unpin button", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    pyEnv["mail.message"].create({
+        body: "Test pinned message",
+        model: "discuss.channel",
+        res_id: channelId,
+        pinned_at: "2023-03-30 11:27:11",
+    });
+    await start({ authenticateAs: false });
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { text: "Test pinned message" });
+    expect(".o-mail-Message [title='Expand']").toHaveCount(0);
+    await assertPinnedPanelUnpinCount(0);
+});
+
+test("Internal user can see unpin button", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        body: "Test pinned message",
+        model: "discuss.channel",
+        res_id: channelId,
+        pinned_at: "2023-03-30 11:27:11",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message [title='Expand']");
+    await assertPinnedPanelUnpinCount(1);
 });

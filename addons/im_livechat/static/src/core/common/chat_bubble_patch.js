@@ -4,9 +4,9 @@ import { patch } from "@web/core/utils/patch";
 
 patch(ChatBubble.prototype, {
     get showImStatus() {
-        return (
-            super.showImStatus &&
-            !(this.thread?.correspondent?.livechat_member_type === "bot" && this.env.embedLivechat)
-        );
+        if (this.thread?.self_member_id?.livechat_member_type === "visitor") {
+            return false;
+        }
+        return super.showImStatus;
     },
 });

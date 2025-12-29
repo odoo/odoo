@@ -29,11 +29,6 @@
                     <span class="text-black fs-4 fw-bolder" t-esc="currentOrder?.getCustomerCount() || 0"/>
                 </button>
             </div>
-            <div class="fs-2 text-center">
-            2: <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.amountPerGuest(2))" /> <span class="me-4">/ Guest</span>
-            3: <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.amountPerGuest(3))" /> <span class="me-4">/ Guest</span>
-            4: <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.amountPerGuest(4))" /> <span class="me-4">/ Guest</span>
-            </div>
         </xpath>
     </t>
 

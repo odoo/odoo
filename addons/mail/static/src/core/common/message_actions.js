@@ -99,6 +99,9 @@ registerMessageAction("reply-to", {
             }
         }
         owner.env.inChatter?.toggleComposer("note", { force: true });
+        if (!composer.isFocused) {
+            composer.autofocus++;
+        }
     },
     sequence: ({ message, store, thread }) =>
         thread?.eq(store.inbox) || message.isSelfAuthored ? 55 : 20,

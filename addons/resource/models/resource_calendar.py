@@ -327,6 +327,10 @@ class ResourceCalendar(models.Model):
             resources_list = [resources]
         else:
             resources_list = list(resources) + [self.env['resource.resource']]
+
+        if self.flexible_hours and lunch:
+            return {resource.id: Intervals([], keep_distinct=True) for resource in resources_list}
+
         domain = Domain.AND([
             Domain(domain or Domain.TRUE),
             Domain('calendar_id', '=', self.id),

@@ -180,6 +180,87 @@ test("clickbot clickeverywhere test", async () => {
     ]);
 });
 
+test("only one app", async () => {
+    onRpc("has_group", () => true);
+    mockDate("2017-10-08T15:35:11.000");
+    const clickEverywhereDef = new Deferred();
+    patchWithCleanup(browser.localStorage, {
+        removeItem(key) {
+            const savedState = super.getItem(key);
+            expect.step("savedState: " + savedState);
+            return super.removeItem(key);
+        },
+    });
+    patchWithCleanup(browser, {
+        console: {
+            log: (msg) => {
+                expect.step(msg);
+                if (msg === SUCCESS_SIGNAL) {
+                    clickEverywhereDef.resolve();
+                }
+            },
+            error: (msg) => {
+                expect.step(msg);
+                clickEverywhereDef.resolve();
+            },
+        },
+    });
+    defineMenus([
+        { id: 1, name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
+        {
+            id: 2,
+            children: [
+                {
+                    id: 3,
+                    name: "menu 1",
+                    appID: 2,
+                    actionID: 1002,
+                    xmlid: "app2_menu1",
+                },
+                {
+                    id: 4,
+                    name: "menu 2",
+                    appID: 2,
+                    actionID: 1022,
+                    xmlid: "app2_menu2",
+                },
+            ],
+            name: "App2",
+            appID: 2,
+            actionID: 1002,
+            xmlid: "app2",
+        },
+    ]);
+    const webClient = await mountWithCleanup(WebClient);
+    patchWithCleanup(odoo, {
+        __WOWL_DEBUG__: { root: webClient },
+    });
+    window.clickEverywhere("app1");
+    await clickEverywhereDef;
+    expect.verifySteps([
+        "Clicking on: apps menu toggle button",
+        "Testing app menu: app1",
+        "Testing menu App1 app1",
+        'Clicking on: menu item "App1"',
+        "Testing 2 filters",
+        'Clicking on: filter "Not Bar"',
+        'Clicking on: filter "Date"',
+        'Clicking on: filter option "October"',
+        "Testing view switch: kanban",
+        "Clicking on: kanban view switcher",
+        "Testing 2 filters",
+        'Clicking on: filter "Not Bar"',
+        'Clicking on: filter "Date"',
+        'Clicking on: filter option "October"',
+        "Successfully tested 1 apps",
+        "Successfully tested 0 menus",
+        "Successfully tested 0 modals",
+        "Successfully tested 4 filters",
+        SUCCESS_SIGNAL,
+        'savedState: {"light":false,"studioCount":0,"testedApps":["app1"],"testedMenus":["app1"],"testedFilters":4,"testedModals":0,"appIndex":0,"menuIndex":0,"subMenuIndex":0,"xmlId":"app1","app":"app1"}',
+    ]);
+});
+
 test("clickbot clickeverywhere test (with dropdown menu)", async () => {
     onRpc("has_group", () => true);
     mockDate("2017-10-08T15:35:11.000");

@@ -668,10 +668,6 @@ export class PosStore extends WithLazyGetterTrap {
             this.addPendingOrder(paidUnsyncedOrderIds);
         }
 
-        this.data.models["pos.order"]
-            .filter((order) => order._isResidual)
-            .forEach((order) => (order.state = "cancel"));
-
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
         await this.syncAllOrders();
 
@@ -927,7 +923,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (configure) {
             this.numberBuffer.reset();
         }
-        const selectedOrderline = order.getSelectedOrderline();
+        let selectedOrderline = order.getSelectedOrderline();
         if (options.draftPackLotLines && configure) {
             selectedOrderline.setPackLotLines({
                 ...options.draftPackLotLines,
@@ -938,6 +934,7 @@ export class PosStore extends WithLazyGetterTrap {
         // Merge orderline if needed
         this.tryMergeOrderline(order, line, merge, selectedOrderline);
 
+        selectedOrderline = order.getSelectedOrderline();
         if (values.product_id.tracking === "lot") {
             const productTemplate = values.product_id.product_tmpl_id;
             const related_lines = [];
@@ -947,7 +944,7 @@ export class PosStore extends WithLazyGetterTrap {
                 values.price_extra,
                 false,
                 values.product_id,
-                line,
+                selectedOrderline,
                 related_lines
             );
             related_lines.forEach((line) => line.setUnitPrice(price));
@@ -2714,18 +2711,41 @@ export class PosStore extends WithLazyGetterTrap {
     get productToDisplayByCateg() {
         const sortedProducts = this.productsToDisplay;
         if (!this.config.iface_group_by_categ) {
-            return sortedProducts.length ? [[0, sortedProducts]] : [];
+            return sortedProducts.length ? [["0", sortedProducts]] : [];
         } else {
             const groupedByCategory = {};
             for (const product of sortedProducts) {
-                for (const categ of product.pos_categ_ids) {
-                    if (!groupedByCategory[categ.id]) {
-                        groupedByCategory[categ.id] = [];
+                if (product.pos_categ_ids.length === 0) {
+                    if (!groupedByCategory[0]) {
+                        groupedByCategory[0] = [];
                     }
-                    groupedByCategory[categ.id].push(product);
+                    groupedByCategory[0].push(product);
+                    continue;
+                }
+                const category_ids = this.selectedCategory
+                    ? [this.selectedCategory.id]
+                    : product.pos_categ_ids.map((c) => c.id);
+                for (const categ_id of category_ids) {
+                    if (!groupedByCategory[categ_id]) {
+                        groupedByCategory[categ_id] = [];
+                    }
+                    groupedByCategory[categ_id].push(product);
                 }
             }
             const res = Object.entries(groupedByCategory).sort(([a], [b]) => {
+                // None category goes last
+                const aNoneCategory = a === "0";
+                const bNoneCategory = b === "0";
+                if (aNoneCategory && bNoneCategory) {
+                    return 0;
+                }
+                if (aNoneCategory) {
+                    return 1;
+                }
+                if (bNoneCategory) {
+                    return -1;
+                }
+
                 const catA = this.models["pos.category"].get(a);
                 const catB = this.models["pos.category"].get(b);
 
@@ -2836,6 +2856,10 @@ export class PosStore extends WithLazyGetterTrap {
 
     get showSaveOrderButton() {
         return this.config.raw.trusted_config_ids.length > 0;
+    }
+
+    canEditPayment(order) {
+        return order.nb_print === 0;
     }
 }
 

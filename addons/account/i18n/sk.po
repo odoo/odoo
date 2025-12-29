@@ -23,7 +23,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-19 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:55+0000\n"
+"PO-Revision-Date: 2025-12-27 19:00+0000\n"
 "Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/account/"
 "sk/>\n"
@@ -155,6 +155,10 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
+"%(move)s sa dostal do neplatného stavu, pokiaľ ide o súvisiaci riadok výkazu."
+"\n"
+"Aby bol účtovný záznam konzistentný, musí mať vždy presne jeden riadok s "
+"prechodným účtom."
 
 #. module: account
 #. odoo-python
@@ -1253,7 +1257,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Účtovný záznam</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1821,6 +1825,141 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<t t-set=\"invoices\" t-value=\"ctx.get('einvoices', [])\"/>\n"
+"<t t-set=\"invoice_preview_ids\" t-value="
+"\"','.join([str(i) for i in invoices.ids]) if invoices else ''\"/>\n"
+"<t t-set=\"invoice_count\" t-value=\"len(invoices)\"/>\n"
+"<t t-set=\"MAX_INVOICES_TO_DISPLAY\" t-value=\"5\"/>\n"
+"\n"
+"<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
+"serif; color: #454748;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
+"\">\n"
+"        <tr>\n"
+"            <td align=\"center\">\n"
+"                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"background-color: white; border-collapse:separate;\">\n"
+"                    <!-- HEADER -->\n"
+"                    <tr>\n"
+"                        <td align=\"center\">\n"
+"                            <table width=\"100%\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"background-color: #875A7B; color: #FFFFFF; font-"
+"size: 14px; padding: 14px 0; border-radius: 3px;\">\n"
+"                                <tr>\n"
+"                                    <td align=\"left\" style=\"padding-left: "
+"16px;\">\n"
+"                                        Práve ste obdržali <t t-if="
+"\"invoice_count &gt; 1\">nové elektronické faktúry!</t><t t-else=\"\">novú "
+"elektronickú faktúru!</t>\n"
+"                                    </td>\n"
+"                                    <td align=\"right\" style=\"padding-"
+"right: 16px;\">\n"
+"                                        <img alt=\"Odoo\" src="
+"\"/web/static/img/logo_inverse_white_206px.png\" style="
+"\"height: 2em; object-fit: contain;\" class=\"align-baseline w-auto\"/>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <!-- BODY -->\n"
+"                    <tr>\n"
+"                        <td align=\"center\">\n"
+"                            <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style="
+"\"padding: 16px 32px; background-color: white; border-collapse:separate;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"font-size: 14px;\">\n"
+"                                        <h3 style=\"font-size: 20px; margin-"
+"bottom: 20px;\">\n"
+"                                            <t t-if="
+"\"object.company_id.name\">\n"
+"                                                Dobrý deň <t t-out="
+"\"object.company_id.name\"/>,\n"
+"                                            </t>\n"
+"                                            <t t-else=\"\">\n"
+"                                                Hi,\n"
+"                                            </t>\n"
+"                                        </h3>\n"
+"                                        <p style=\"margin-top: 12px;\">\n"
+"                                            Práve ste obdržali <t t-if="
+"\"invoice_count &gt; 1\">nové elektronické faktúry</t><t t-else=\"\">novú "
+"elektronickú faktúru</t>!\n"
+"                                        </p>\n"
+"                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
+"t-value=\"5\"/>\n"
+"                                        <t t-foreach="
+"\"invoices[:MAX_INVOICES_TO_DISPLAY]\" t-as=\"inv\">\n"
+"                                            <t t-if=\"not inv_first\">\n"
+"                                                <div style=\"background-"
+"color:#EEEEEE; height:1px; width: 60%; margin: 16px auto; border:none;\"/>\n"
+"                                            </t>\n"
+"                                            <p style=\"line-height: 1.7em; "
+"padding-top: 16px;\">\n"
+"                                                <t t-if="
+"\"inv.name or inv.ref\">\n"
+"                                                    <span style=\"font-"
+"weight:bold;\">Invoice Ref:</span> <t t-out=\"inv.name or inv.ref\"/><br/>\n"
+"                                                </t>\n"
+"                                                <t t-if="
+"\"inv.partner_id.name\">\n"
+"                                                    <span style=\"font-"
+"weight:bold;\">Vendor:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
+"                                                </t>\n"
+"                                                <t t-if=\"inv.amount_total\">"
+"\n"
+"                                                    <span style=\"font-"
+"weight:bold;\">Amount:</span> <t t-out=\"inv.amount_total\" t-options=\""
+"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"object.company_id.currency_id}\"/><br/>\n"
+"                                                </t>\n"
+"                                                <t t-if="
+"\"inv.invoice_date_due\">\n"
+"                                                    <span style=\"font-"
+"weight:bold;\">Due date:</span> <t t-out=\"inv.invoice_date_due\"/>\n"
+"                                                </t>\n"
+"                                            </p>\n"
+"                                        </t>\n"
+"\n"
+"                                        <div style=\"text-align: center; "
+"padding-top: 24px;\">\n"
+"                                            <a t-if=\"invoice_count != 1\" t"
+"-attf-href=\"/odoo/accounting/action-"
+"account.action_account_moves_email_preview?active_ids={{ invoice_preview_ids "
+"}}\" target=\"_blank\" t-attf-style=\"padding: 12px 24px; font-size: 14px; "
+"font-weight: bold; color: #FFFFFF; text-decoration: none !important; "
+"background-color: #008384; border-radius:3px; display: inline-block;\">\n"
+"                                               Konzultovať faktúry\n"
+"                                            </a>\n"
+"                                            <a t-else=\"\" t-attf-href=\"/"
+"odoo/accounting/{{ object.id }}/account.move/{{ invoices.id }}\" target=\""
+"_blank\" t-attf-style=\"padding: 12px 24px; font-size: 14px; font-weight: "
+"bold; color: #FFFFFF; text-decoration: none !important; background-color: "
+"#008384; border-radius:3px; display: inline-block;\">\n"
+"                                               Konzultovať faktúru\n"
+"                                            </a>\n"
+"                                            <p style=\"font-size: 11px; "
+"margin-top: 8px; color: #777;\">Je čas prepočítať niektoré čísla</p>\n"
+"                                        </div>\n"
+"                                        <br/>\n"
+"                                        <p style=\"text-align: center; "
+"margin-top: 16px;\">\n"
+"                                            Ak si želáte odhlásiť odber e-"
+"mailov s prichádzajúcimi faktúrami, kliknite na <a t-attf-href="
+"\"/my/journal/{{ object.id }}/unsubscribe\">odhlásiť</a>.\n"
+"                                        </p>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_invoice_subscriber
@@ -2127,7 +2266,7 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Záznam účtovnej knihy sa skladá z niekoľkých položiek, z ktorej\n"
+"Účtovný záznam sa skladá z niekoľkých položiek, z ktorej\n"
 "každá je buď debetná alebo kreditná transakcia."
 
 #. module: account
@@ -2156,6 +2295,8 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 msgid "A new Hard Lock Date must be posterior (or equal) to the previous one."
 msgstr ""
+"Nové dátum trvalého uzamknutia musí byť neskoršie (alebo rovnaké) ako "
+"predchádzajúce."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2169,6 +2310,7 @@ msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
 "journal entry."
 msgstr ""
+"Platba s prechodným účtom nemôže byť potvrdená bez zaúčtovania do denníka."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
@@ -2646,7 +2788,7 @@ msgid ""
 "used to keep track of the tax base amount."
 msgstr ""
 "Účet, ktorý bude použitý na riadkoch vytvorených v hotovostnom účtovnom "
-"zápise a použitý na sledovanie základu dane."
+"zázname a použitý na sledovanie základu dane."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -3289,6 +3431,8 @@ msgid ""
 "All unhashable moves before the selected date that are not protected by the "
 "Hard Lock Date"
 msgstr ""
+"Všetky nehashovateľné doklady pred vybraným dátumom, ktoré nie sú chránené "
+"dátumom trvalého uzamknutia"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
@@ -3665,6 +3809,9 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
+"Všetky záznamy do tohto dátumu vrátane budú odložené na neskôr, v súlade s "
+"poradovým číslom v denníku. Tento dátum uzamknutia je nezvratný a neumožňuje "
+"žiadne výnimky."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -3672,6 +3819,8 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
 msgstr ""
+"Všetky záznamy do tohto dátumu vrátane budú odložené na neskôr, v súlade s "
+"poradím v denníku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -3680,6 +3829,9 @@ msgid ""
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
 msgstr ""
+"Všetky záznamy s daňami do tohto dátumu vrátane budú odložené na neskôr, v "
+"súlade s poradovým číslom v denníku. Dátum uzávierky dane sa automaticky "
+"nastaví pri zaúčtovaní záverečného daňového záznamu."
 
 #. module: account
 #. odoo-python
@@ -3706,6 +3858,8 @@ msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Všetky nákupné záznamy pred týmto dátumom vrátane budú odložené na neskorší "
+"dátum v súlade s poradím v denníku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
@@ -3713,6 +3867,8 @@ msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Všetky predajné záznamy pred týmto dátumom vrátane budú odložené na neskorší "
+"dátum v súlade s poradím v denníku."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -5062,7 +5218,7 @@ msgstr "Zmeňte štítok náprotivku, ktorý bude držať rozdiel v platbe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__lock_date
 msgid "Changed Lock Date"
-msgstr ""
+msgstr "Zmenené dátum uzamknutia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__chart_template
@@ -5612,6 +5768,7 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
 msgstr ""
+"Poškodené údaje v účtovnom zázname s identifikačným číslom %(id)s (%(name)s)."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -5806,7 +5963,7 @@ msgstr "Vytvoriť faktúru zákazníka"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Create a journal entry"
-msgstr "Vytvoriť záznam denníka"
+msgstr "Vytvoriť účtovný záznam"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_supplier_accounts
@@ -8095,7 +8252,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__no_followup
 #: model:ir.model.fields,help:account.field_account_move__no_followup
 msgid "Exclude this journal entry from follow-up reports."
-msgstr ""
+msgstr "Vylúčte tento účtovný záznam z prehľadov upomienok."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__no_followup
@@ -8918,7 +9075,7 @@ msgstr "Získajte výsledok hash integrity ako PDF."
 #: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__fiscalyear_lock_date
 msgid "Global Lock Date"
-msgstr ""
+msgstr "Globálne dátum uzamknutia"
 
 #. module: account
 #. odoo-python
@@ -9026,7 +9183,7 @@ msgstr "HTTP smerovanie"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__hard_lock_date
 msgid "Hard Lock Date"
-msgstr ""
+msgstr "Dátum trvalého uzamknutia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -9183,6 +9340,9 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
+"Dátum, ku ktorému sú zabezpečené všetky zaúčtované položky denníka vrátane "
+"tohto dáta a staršie. Zohľadňujú sa iba položky denníka po dátume trvalého "
+"uzamknutia."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -9433,7 +9593,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "Ak je prázdne, použije sa denník záznamu, ktorý sa má stornovať."
+msgstr ""
+"Ak je prázdne, použije sa denník účtovného záznamu, ktorý sa má stornovať."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
@@ -9538,8 +9699,8 @@ msgid ""
 "If you want to use \"Off-Balance Sheet\" accounts, all the accounts of the "
 "journal entry must be of this type"
 msgstr ""
-"Ak chcete používať „podsúvahové“ účty, pak účty na všetkých riadkov dokladu "
-"musia byť tohto typu"
+"Ak chcete používať „podsúvahové“ účty, pak účty na všetkých riadkov "
+"účtovného záznamu musia byť tohto typu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_amount
@@ -10439,6 +10600,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
 msgstr ""
+"Nepravidelnosti spôsobené návrhmi, zrušenými alebo vymazanými faktúrami s "
+"poradovým číslom od posledného dátumu uzamknutia."
 
 #. module: account
 #. odoo-python
@@ -10447,6 +10610,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted invoices with a sequence "
 "number since last lock date."
 msgstr ""
+"Nezrovnalosti spôsobené návrhmi, zrušenými alebo vymazanými faktúrami s "
+"poradovým číslom od posledného dátumu uzamknutia."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
@@ -10702,14 +10867,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Entry"
-msgstr "Záznam denníka"
+msgstr "Účtovný záznam"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment_field.js:0
 msgid "Journal Entry Info"
-msgstr ""
+msgstr "Informácie k účtovnému záznamu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -10809,7 +10974,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "Journal should be the same type as the reversed entry."
-msgstr ""
+msgstr "Denník by mal byť rovnakého typu ako má stornovaný záznam."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
@@ -11300,17 +11465,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "Lock Date Exception %s"
-msgstr ""
+msgstr "Výnimka dátumu uzamknutia %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__lock_date_field
 msgid "Lock Date Field"
-msgstr ""
+msgstr "Pole Dátum uzamknutia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
-msgstr ""
+msgstr "Správa o dátume uzamknutia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
@@ -12739,7 +12904,7 @@ msgstr "Otvorenie denníku"
 #: code:addons/account/models/company.py:0
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_move_id
 msgid "Opening Journal Entry"
-msgstr "Počiatočná položka účtovnej knihy"
+msgstr "Otvárací účtovný záznam"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_move_posted
@@ -12816,7 +12981,7 @@ msgstr "Pôvodné prijaté faktúry"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__company_lock_date
 msgid "Original Lock Date"
-msgstr ""
+msgstr "Pôvodný dátum uzamknutia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
@@ -14090,12 +14255,12 @@ msgstr "Nákup"
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__purchase_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__purchase_lock_date
 msgid "Purchase Lock Date"
-msgstr ""
+msgstr "Dátum uzamknutia nákupu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__purchase_lock_date
 msgid "Purchase Lock date"
-msgstr ""
+msgstr "Dátum uzamknutia nákupu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
@@ -14800,7 +14965,7 @@ msgstr "Záznam storna"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse Journal Entry"
-msgstr "Denník záznamu storna"
+msgstr "Stornovaný účtovný záznam"
 
 #. module: account
 #. odoo-python
@@ -15035,7 +15200,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__sale_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__sale_lock_date
 msgid "Sales Lock Date"
-msgstr ""
+msgstr "Dátum uzamknutia predaja"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
@@ -16529,7 +16694,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_lock_date_message
 #: model:ir.model.fields,field_description:account.field_account_move__tax_lock_date_message
 msgid "Tax Lock Date Message"
-msgstr "Správa o zámere dane"
+msgstr "Správa dátumu uzávierky daní"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_map
@@ -16585,7 +16750,7 @@ msgstr "Riadok rozdelenia daní"
 #: model:ir.model.fields,field_description:account.field_res_company__tax_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__tax_lock_date
 msgid "Tax Return Lock Date"
-msgstr ""
+msgstr "Termín uzávierky daňového priznania"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_scope
@@ -16751,16 +16916,19 @@ msgid ""
 "Technical field giving the date the company lock date at the time the "
 "exception was created."
 msgstr ""
+"Technicke pole, ktoré udáva dátum uzamknutia spoločnosti v čase vytvorenia "
+"výnimky."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__lock_date
 msgid "Technical field giving the date the lock date was changed to."
 msgstr ""
+"Technické pole, ktoré uvádza dátum, na ktorý bolo dátum uzamknutia zmenené."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__lock_date_field
 msgid "Technical field identifying the changed lock date"
-msgstr ""
+msgstr "Technické pole identifikujúce zmenené dátum uzamknutia"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
@@ -16954,7 +17122,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "The Hard Lock Date cannot be removed."
-msgstr ""
+msgstr "Trvalé uzamknutie nemôže byť zrušené."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
@@ -16983,6 +17151,8 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
 msgstr ""
+"Sekvencia účtovných záznamov nie je v súlade s aktuálnym formátom. Zmeniť ju "
+"môže iba účtovník."
 
 #. module: account
 #. odoo-python
@@ -17029,8 +17199,8 @@ msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
-"Účet vybraný vo vašom denníku núti zadať sekundárnu menu. Mali by ste z účtu "
-"odstrániť sekundárnu menu."
+"Účet vybraný vo vašom účtovnom zázname núti zadať sekundárnu menu. Mali by "
+"ste z účtu odstrániť sekundárnu menu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -17228,12 +17398,14 @@ msgid ""
 "The date is being set prior to: %(lock_date_info)s. The Journal Entry will "
 "be accounted on %(invoice_date)s upon posting."
 msgstr ""
+"Dátum je nastavený pred: %(lock_date_info)s. Účtovný záznam bude zaúčtovaný "
+"k %(invoice_date)s."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "The date selected is protected by: %(lock_date_info)s."
-msgstr ""
+msgstr "Vybraný dátum je chránený: %(lock_date_info)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__fiscalyear_lock_date
@@ -17241,6 +17413,8 @@ msgid ""
 "The date the Global Lock Date is set to by this exception. If the lock date "
 "is not changed it is set to the maximal date."
 msgstr ""
+"Dátum, na ktorý je globálny dátum uzamknutia nastavený touto výnimkou. Ak sa "
+"dátum uzamknutia nezmení, je nastavený na maximálny dátum."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__purchase_lock_date
@@ -17248,6 +17422,8 @@ msgid ""
 "The date the Purchase Lock Date is set to by this exception. If the lock "
 "date is not changed it is set to the maximal date."
 msgstr ""
+"Dátum, na ktorý je nastavený dátum uzamknutia nákupu podľa tejto výnimky. Ak "
+"sa dátum uzamknutia nezmení, je nastavený na maximálny dátum."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__sale_lock_date
@@ -17255,6 +17431,8 @@ msgid ""
 "The date the Sale Lock Date is set to by this exception. If the lock date is "
 "not changed it is set to the maximal date."
 msgstr ""
+"Dátum, na ktorý je podľa tejto výnimky nastavený dátum uzamknutia predaja. "
+"Ak sa dátum uzamknutia nezmení, je nastavený na maximálny dátum."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__tax_lock_date
@@ -17262,6 +17440,8 @@ msgid ""
 "The date the Tax Lock Date is set to by this exception. If the lock date is "
 "not changed it is set to the maximal date."
 msgstr ""
+"Dátum, na ktorý je podľa tejto výnimky nastavený dátum uzamknutia dane. Ak "
+"sa dátum uzamknutia nezmení, je nastavený na maximálny dátum."
 
 #. module: account
 #. odoo-python
@@ -17423,10 +17603,10 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
-"Záznam v denníku %s dosiahol neplatný stav, pokiaľ ide o súvisiaci riadok "
-"výpisu.\n"
-"Kvôli konzistentnosti musí mať záznam v denníku vždy presne jednu položku "
-"denníka, ktorá sa týka bankového alebo hotovostného účtu."
+"Účtovný záznam %s sa dostal do neplatného stavu, pokiaľ ide o súvisiacu "
+"položku výkazu.\n"
+"Aby bol účtovný záznam konzistentný, musí vždy obsahovať presne jednu "
+"položku týkajúcu sa bankového/hotovostného účtu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -17434,7 +17614,7 @@ msgid ""
 "The journal entry containing the initial balance of all this company's "
 "accounts."
 msgstr ""
-"Záznam v denníku obsahujúci počiatočný zostatok všetkých účtov tejto "
+"Účtovný záznam obsahujúci počiatočný zostatok všetkých účtov tejto "
 "spoločnosti."
 
 #. module: account
@@ -17485,6 +17665,9 @@ msgid ""
 "Please change the journal entry date or the following lock dates to proceed: "
 "%(lock_date_info)s."
 msgstr ""
+"Operácia bola zamietnutá, pretože by mala vplyv na už vydané daňové "
+"priznanie. Ak chcete pokračovať, zmeňte dátum účtovného záznamu alebo "
+"nasledujúce dátumy uzamknutia: %(lock_date_info)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
@@ -17838,6 +18021,8 @@ msgid ""
 "There are entries that cannot be hashed. They can be protected by the Hard "
 "Lock Date."
 msgstr ""
+"Existujú záznamy, ktoré nie je možné hashovať. Tieto záznamy je možné "
+"chrániť pomocou funkcie Trvalého uzamknutia."
 
 #. module: account
 #. odoo-python
@@ -17900,6 +18085,8 @@ msgstr ""
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
 msgstr ""
+"Zatiaľ nie je označený žiadny účtovný záznam týkajúci sa nezmeniteľnosti "
+"účtovných údajov."
 
 #. module: account
 #. odoo-python
@@ -18153,7 +18340,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This journal entry has been secured."
-msgstr ""
+msgstr "Tento účtovný záznam bol zabezpečený."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__is_self_billing
@@ -18232,7 +18419,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
-msgstr ""
+msgstr "Toto nastavenie sa uzamkne po vytvorení účtovného záznamu."
 
 #. module: account
 #. odoo-python
@@ -18331,6 +18518,9 @@ msgid ""
 "they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
+"Aby ste zachovali reštriktívnu auditnú stopu, nemôžete vymazať účtovné "
+"záznamy po ich zaúčtovaní.\n"
+"Namiesto toho môžete účtovný záznam zrušiť."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -18359,7 +18549,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "To reverse a journal entry, it has to be posted first."
-msgstr ""
+msgstr "Aby bolo možné stornovať účtovný záznam, musí byť najskôr zaúčtovaný."
 
 #. module: account
 #. odoo-javascript
@@ -19085,7 +19275,7 @@ msgstr "Užívateľ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_fiscalyear_lock_date
 msgid "User Fiscalyear Lock Date"
-msgstr ""
+msgstr "Užívateľský dátum uzamknutia fiškálneho roka"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__user_groupby
@@ -19095,7 +19285,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_hard_lock_date
 msgid "User Hard Lock Date"
-msgstr ""
+msgstr "Užívateľ Trvalého uzamknutia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__user_has_group_validate_bank_account
@@ -19106,17 +19296,17 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_purchase_lock_date
 msgid "User Purchase Lock Date"
-msgstr ""
+msgstr "Užívateľský dátum uzamknutia nákupu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_sale_lock_date
 msgid "User Sale Lock Date"
-msgstr ""
+msgstr "Užívateľský dátum uzamknutia predaja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_tax_lock_date
 msgid "User Tax Lock Date"
-msgstr ""
+msgstr "Užívateľský dátum uzamknutia daní"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_utilities
@@ -19742,6 +19932,8 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
+"Zaúčtovanú položku denníka nemožno odstrániť. Nehrajte sa so svojimi "
+"účtovnými záznamami; pred odstránením ju najskôr vráťte do stavu návrhu."
 
 #. module: account
 #. odoo-python
@@ -19818,7 +20010,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s."
-msgstr ""
+msgstr "Nemôžete pridávať/upravovať záznamy pred a vrátane: %(lock_date_info)s."
 
 #. module: account
 #. odoo-python
@@ -19888,7 +20080,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
-msgstr ""
+msgstr "Nemôžete odstrániť riadky účtovného záznamu, ktorý je uzamknutý."
 
 #. module: account
 #. odoo-python
@@ -19945,12 +20137,15 @@ msgid ""
 "change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
+"Túto úpravu nemožno vykonať v spárovanom účtovnom zázname. Môžete zmeniť len "
+"niektoré polia alebo musíte najskôr zrušiť párovanie.\n"
+"Účtovný zápis (id): %(entry)s (%(id)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "You cannot duplicate a Lock Date Exception."
-msgstr ""
+msgstr "Výnimku z dátumu uzamknutia nie je možné duplikovať."
 
 #. module: account
 #. odoo-python
@@ -20034,7 +20229,7 @@ msgid ""
 "reset the journal entry to draft to do so."
 msgstr ""
 "Nemôžete upravovať dane súvisiace s zaúčtovanou položkou denníka, preto by "
-"ste mali resetovať položku denníka na návrh."
+"ste mali resetovať účtovný záznam na návrh."
 
 #. module: account
 #. odoo-python
@@ -20048,7 +20243,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
-msgstr ""
+msgstr "Nemôžete pridať záznam do archivovaného denníka (%(journal)s)"
 
 #. module: account
 #. odoo-python
@@ -20100,14 +20295,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a locked journal entry."
-msgstr ""
+msgstr "Zamknutý účtovný záznam nemožno obnoviť do stavu návrh."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a tax cash basis journal entry."
 msgstr ""
-"Nemôžete obnoviť návrh účtovného záznamu, ktorý sa týka hotovostnej dane."
+"Účtovný záznam, ktorý sa týka hotovostnej dane, nemôžete obnoviť do stavu "
+"Návrh."
 
 #. module: account
 #. odoo-python
@@ -20121,6 +20317,8 @@ msgstr "Účtovný záznam kurzového rozdielu nie je možné obnoviť do stavu 
 msgid ""
 "You cannot revoke Lock Date Exceptions. Ask someone with the 'Adviser' role."
 msgstr ""
+"Výnimky z dátumu uzamknutia nemožno zrušiť. Požiadajte niekoho s rolou "
+"„poradca“."
 
 #. module: account
 #. odoo-python

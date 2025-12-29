@@ -4,7 +4,7 @@ from odoo.exceptions import UserError
 
 EXEMPTION_REASON_CODES = [
     ('VATEX-SA-29', 'VATEX-SA-29 Financial services mentioned in Article 29 of the VAT Regulations.'),
-    ('VATEX-SA-29-7', 'VATEX-SA-29-7 Life insurance services mentioned in Article 29 of the VAT.'),
+    ('VATEX-SA-29-7', 'VATEX-SA-29-7 Life insurance services mentioned in Article 29 of the VAT Regulations.'),
     ('VATEX-SA-30', 'VATEX-SA-30 Real estate transactions mentioned in Article 30 of the VAT Regulations.'),
     ('VATEX-SA-32', 'VATEX-SA-32 Export of goods.'),
     ('VATEX-SA-33', 'VATEX-SA-33 Export of Services.'),

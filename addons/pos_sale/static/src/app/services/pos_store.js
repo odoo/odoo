@@ -4,7 +4,7 @@ import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_p
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
+import { enhancedButtons, DECIMAL } from "@point_of_sale/app/components/numpad/numpad";
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
@@ -45,7 +45,11 @@ patch(PosStore.prototype, {
 
         //Add a down payment for transactions that were already done online
         if (sale_order.amount_paid > 0) {
-            this.addDownPaymentProductOrderlineToOrder(sale_order, -sale_order.amount_paid, false);
+            await this.addDownPaymentProductOrderlineToOrder(
+                sale_order,
+                -sale_order.amount_paid,
+                false
+            );
         }
         const selectedOption = await makeAwaitable(this.dialog, SelectionPopup, {
             title: _t("What do you want to do?"),
@@ -195,6 +199,7 @@ patch(PosStore.prototype, {
                 converted_line.lot_names.length > 0 &&
                 useLoadedLots
             ) {
+                const priceUnit = newLine.price_unit;
                 newLine.delete();
                 let total_lot_quantity = 0;
                 for (const lot of converted_line.lot_names) {
@@ -214,6 +219,7 @@ patch(PosStore.prototype, {
                             ...newLineValues,
                         });
                         splitted_line.setQuantity(lot_remaining_quantity, true);
+                        splitted_line.setUnitPrice(priceUnit);
                         splitted_line.setDiscount(line.discount);
                         splitted_line.setPackLotLines({
                             modifiedPackLotLines: [],
@@ -247,10 +253,23 @@ patch(PosStore.prototype, {
     },
 
     async downPaymentSO(saleOrder, isPercentage) {
+        const colorClassMap = {
+            [DECIMAL.value]: "o_colorlist_item_numpad_color_6",
+            Backspace: "o_colorlist_item_numpad_color_1",
+            "+10": "o_colorlist_item_numpad_color_10",
+            "+20": "o_colorlist_item_numpad_color_10",
+            "+50": "o_colorlist_item_numpad_color_10",
+            "-": "o_colorlist_item_numpad_color_3",
+        };
+
         const payload = await makeAwaitable(this.dialog, NumberPopup, {
             title: _t("Down Payment"),
             subtitle: _t("Due balance: %s", this.env.utils.formatCurrency(saleOrder.amount_unpaid)),
-            buttons: enhancedButtons(),
+            buttons: enhancedButtons().map((button) => ({
+                ...button,
+                class: `${colorClassMap[button.value] || ""}`,
+            })),
+            confirmButtonLabel: _t("Apply"),
             formatDisplayedValue: (x) => (isPercentage ? `% ${x}` : x),
             feedback: (buffer) =>
                 isPercentage && buffer
@@ -264,7 +283,7 @@ patch(PosStore.prototype, {
         }
 
         const amount = parseFloat(payload);
-        this.addDownPaymentProductOrderlineToOrder(saleOrder, amount, isPercentage);
+        await this.addDownPaymentProductOrderlineToOrder(saleOrder, amount, isPercentage);
     },
     async loadDownPaymentProduct() {
         if (!this.config.down_payment_product_id && this.config.raw.down_payment_product_id) {
@@ -277,11 +296,15 @@ patch(PosStore.prototype, {
                     "It seems that you didn't configure a down payment product in your point of sale. You can go to your point of sale configuration to choose one."
                 ),
             });
+            return false;
+        }
+        return true;
+    },
+    async addDownPaymentProductOrderlineToOrder(saleOrder, amount, isPercentage) {
+        const result = await this.loadDownPaymentProduct();
+        if (!result) {
             return;
         }
-    },
-    addDownPaymentProductOrderlineToOrder(saleOrder, amount, isPercentage) {
-        this.loadDownPaymentProduct();
         const saleOrderLines = saleOrder.order_line.filter((soLine) => !soLine.display_type);
         const baseLines = [];
         for (const saleOrderLine of saleOrderLines) {

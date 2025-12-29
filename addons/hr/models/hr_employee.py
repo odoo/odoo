@@ -549,11 +549,9 @@ class HrEmployee(models.Model):
         Return the version that should be used for the given date.
         If no valid version is found, we return the very first version of the employee.
         """
-        version = self.env['hr.version'].search([
-            ('employee_id', '=', self.id),
-            ('date_version', '<=', date)],
-            order='date_version desc', limit=1)
-        return version or self.version_ids[0]
+        self.ensure_one()
+        versions = self.version_ids.filtered_domain([('date_version', '<=', date)])
+        return max(versions, key=lambda v: v.date_version) if versions else self.version_ids[0]
 
     def create_version(self, values):
         self.ensure_one()
@@ -1564,30 +1562,44 @@ We can redirect you to the public employee list."""
                 res[employee.id] = employee_versions_sudo[0].resource_calendar_id.sudo(False)
         return res
 
-    def _get_calendar_periods(self, start, stop):
+    def _get_version_periods(self, start, stop, field=None, check_contract=False):
+        if field and field not in self:
+            raise UserError(self.env._(
+                "This field %(field_name)s doesn't exist on this model (hr.version).",
+                field_name=field
+            ))
+        version_periods_by_employee = defaultdict(list)
+        if check_contract:
+            versions = self._get_versions_with_contract_overlap_with_period(start.date(), stop.date())
+        else:
+            versions = self.version_ids.filtered_domain([
+                ('date_start', '<=', stop),
+                '|',
+                    ('date_end', '=', False),
+                    ('date_end', '>=', start)
+            ])
+        for version in versions:
+            # if employee is under fully flexible contract, use timezone of the employee
+            calendar_tz = timezone(version.resource_calendar_id.tz) if version.resource_calendar_id else timezone(version.employee_id.resource_id.tz)
+            date_start = datetime.combine(version.date_start, time.min).replace(tzinfo=calendar_tz).astimezone(utc)
+            end_date = version.date_end
+            if end_date:
+                date_end = datetime.combine(
+                    end_date + relativedelta(days=1),
+                    time.min,
+                ).replace(tzinfo=calendar_tz).astimezone(utc)
+            else:
+                date_end = stop
+            version_periods_by_employee[version.employee_id].append(
+                (max(date_start, start), min(date_end, stop), version[field] if field else version))
+        return version_periods_by_employee
+
+    def _get_calendar_periods(self, start, stop, check_contract=True):
         """
         :param datetime start: the start of the period
         :param datetime stop: the stop of the period
         """
-        calendar_periods_by_employee = defaultdict(list)
-        versions = self.sudo()._get_versions_with_contract_overlap_with_period(start.date(), stop.date())
-        for version in versions:
-            # if employee is under fully flexible contract, use timezone of the employee
-            calendar_tz = timezone(version.resource_calendar_id.tz) if version.resource_calendar_id else timezone(version.employee_id.resource_id.tz)
-            date_start = datetime.combine(
-                version.contract_date_start,
-                time(0, 0, 0)
-            ).replace(tzinfo=calendar_tz).astimezone(utc)
-            if version.date_end:
-                date_end = datetime.combine(
-                    version.date_end + relativedelta(days=1),
-                    time(0, 0, 0)
-                ).replace(tzinfo=calendar_tz).astimezone(utc)
-            else:
-                date_end = stop
-            calendar_periods_by_employee[version.employee_id].append(
-                (max(date_start, start), min(date_end, stop), version.resource_calendar_id))
-        return calendar_periods_by_employee
+        return self.sudo()._get_version_periods(start, stop, 'resource_calendar_id', check_contract)
 
     @api.model
     def _get_all_versions_with_contract_overlap_with_period(self, date_from, date_to):

@@ -193,7 +193,11 @@ export class PaymentPineLabs extends PaymentInterface {
      */
     async _waitForPaymentToConfirm() {
         const paymentLine = this.pos.getOrder().getSelectedPaymentline();
-        if (!paymentLine || paymentLine.payment_status == "retry") {
+        if (
+            !paymentLine ||
+            paymentLine.payment_status == "retry" ||
+            !paymentLine.pine_labs_plutus_transaction_ref
+        ) {
             return false;
         }
         const data = {

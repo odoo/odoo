@@ -20,13 +20,15 @@ test("should apply a color to a slice of text in a span in a font", async () => 
     });
 });
 
-test("should apply a color to the qweb tag", async () => {
+test("should apply a color to the qweb tag (1)", async () => {
     await testEditor({
         contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
     });
+});
 
+test("should apply a color to the qweb tag (2)", async () => {
     await testEditor({
         contentBefore: `<div><p t-field="record.display_name" contenteditable="false">[Test]</p></div>`,
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
@@ -212,12 +214,15 @@ test("should not apply font tag to t nodes (protects if else nodes separation)",
     });
 });
 
-test("should remove font tag after removing font color", async () => {
+test("should remove font tag after removing font color (1)", async () => {
     await testEditor({
         contentBefore: '<p><font style="color: rgb(255, 0, 0);">[abcabc]</font></p>',
         stepFunction: setColor("", "color"),
         contentAfter: "<p>[abcabc]</p>",
     });
+});
+
+test("should remove font tag after removing font color (2)", async () => {
     await testEditor({
         contentBefore: '<p><font class="text-400">[abcabc]</font></p>',
         stepFunction: setColor("", "color"),
@@ -225,12 +230,15 @@ test("should remove font tag after removing font color", async () => {
     });
 });
 
-test("should remove font tag after removing background color applied as style", async () => {
+test("should remove font tag after removing background color applied as style (1)", async () => {
     await testEditor({
         contentBefore: '<p><font style="background-color: rgb(255, 0, 0);">[abcabc]</font></p>',
         stepFunction: setColor("", "backgroundColor"),
         contentAfter: "<p>[abcabc]</p>",
     });
+});
+
+test("should remove font tag after removing background color applied as style (2)", async () => {
     await testEditor({
         contentBefore: '<p><font class="bg-200">[abcabc]</font></p>',
         stepFunction: setColor("", "backgroundColor"),
@@ -238,7 +246,7 @@ test("should remove font tag after removing background color applied as style", 
     });
 });
 
-test("should remove font tag if font-color and background-color both are removed one by one", async () => {
+test("should remove font tag if font-color and background-color both are removed one by one (1)", async () => {
     await testEditor({
         contentBefore: '<p><font style="color: rgb(255, 0, 0);" class="bg-200">[abcabc]</font></p>',
         stepFunction: (editor) => {
@@ -247,6 +255,9 @@ test("should remove font tag if font-color and background-color both are removed
         },
         contentAfter: "<p>[abcabc]</p>",
     });
+});
+
+test("should remove font tag if font-color and background-color both are removed one by one (2)", async () => {
     await testEditor({
         contentBefore:
             '<p><font style="background-color: rgb(255, 0, 0);" class="text-900">[abcabc]</font></p>',
@@ -550,7 +561,6 @@ test("should remove background gradient and apply new background color if gradie
         contentAfter: '<p><font style="background-color: rgb(255, 0, 0);">[abcd]</font></p>',
     });
 });
-
 test("should merge adjacent font with the same text color when mutations common root is <font>", async () => {
     // This test should not execute clean for save as the bug will no longer exists
     const { el, editor } = await setupEditor(
@@ -862,13 +872,16 @@ describe("colorElement", () => {
         });
     });
 });
-test("should not split unsplittable element when applying color", async () => {
+
+test("should not split unsplittable element when applying color (1)", async () => {
     await testEditor({
         contentBefore: '<div style="color: rgb(255, 0, 0);"><p>[test]</p></div>',
         stepFunction: setColor("rgb(0, 0, 255)", "color"),
         contentAfter:
             '<div style="color: rgb(255, 0, 0);"><p><font style="color: rgb(0, 0, 255);">[test]</font></p></div>',
     });
+});
+test("should not split unsplittable element when applying color (2)", async () => {
     await testEditor({
         contentBefore: '<div style="color: rgb(255, 0, 0);"><p>t[es]t</p></div>',
         stepFunction: setColor("rgb(0, 0, 255)", "color"),
