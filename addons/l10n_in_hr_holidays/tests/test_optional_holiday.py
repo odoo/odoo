@@ -20,12 +20,13 @@ class TestOptionalHoliday(TestHrHolidaysCommon):
             'requires_allocation': False,
             'time_type': 'leave',
             'request_unit': 'hour',
-            'l10n_in_is_limited_to_optional_days': True
+            'unit_of_measure': 'hour',
+            'l10n_in_is_limited_to_optional_days': True,
         })
 
         cls.optional_holiday = cls.env['l10n.in.hr.leave.optional.holiday'].create({
             'name': 'optional holiday',
-            'date': '2025-01-02'
+            'date': '2025-01-02',
         })
 
     def test_optional_holiday_valid_leave_request(self):

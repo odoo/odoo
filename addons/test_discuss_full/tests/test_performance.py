@@ -193,6 +193,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             'requires_allocation': False,
             'name': 'Legal Leaves',
             'time_type': 'leave',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
         self.leaves = self.env['hr.leave'].create([{
             'request_date_from': fields.Datetime.today() + relativedelta(days=-2),

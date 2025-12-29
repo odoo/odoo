@@ -23,6 +23,8 @@ class TestNegative(TestHrHolidaysCommon):
             'company_id': cls.company.id,
             'allows_negative': True,
             'max_allowed_negative': 5,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         cls.allocation_2022 = cls.env['hr.leave.allocation'].create({

@@ -57,10 +57,12 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'name': 'Custom Leave',
             'requires_allocation': False,
             'request_unit': 'hour',
+            'unit_of_measure': 'hour',
         }, {
             'name': 'Half day',
             'requires_allocation': False,
             'request_unit': 'half_day',
+            'unit_of_measure': 'day',
         }])
 
         self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).create([{

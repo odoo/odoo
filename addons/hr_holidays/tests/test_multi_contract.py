@@ -205,6 +205,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
             'requires_allocation': True,
             'leave_validation_type': 'hr',
             'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
         allocation = self.env['hr.leave.allocation'].create({
             'name': 'Allocation',
@@ -299,6 +300,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
             'requires_allocation': False,
             'leave_validation_type': 'hr',
             'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         leave1 = self.env['hr.leave'].create({
@@ -384,6 +386,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
             'time_type': 'leave',
             'requires_allocation': False,
             'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:

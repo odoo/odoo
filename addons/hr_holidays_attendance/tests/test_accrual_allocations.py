@@ -20,6 +20,8 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             'time_type': 'leave',
             'requires_allocation': True,
             'allocation_validation_type': 'hr',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
     def test_frequency_hourly_attendance(self):

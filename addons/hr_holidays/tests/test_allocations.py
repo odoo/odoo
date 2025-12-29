@@ -21,6 +21,8 @@ class TestAllocations(TestHrHolidaysCommon):
             'time_type': 'leave',
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
         cls.department = cls.env['hr.department'].create({
             'name': 'Test Department',
@@ -39,6 +41,8 @@ class TestAllocations(TestHrHolidaysCommon):
             'name': 'Paid Time Off',
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         cls.calendar_35h = cls.env['resource.calendar'].create({
@@ -208,6 +212,7 @@ class TestAllocations(TestHrHolidaysCommon):
 
     def test_allocation_type_hours_with_resource_calendar(self):
         self.leave_type.request_unit = 'hour'
+        self.leave_type.unit_of_measure = 'hour'
         self.employee.resource_calendar_id = self.calendar_35h
 
         hour_type_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
@@ -377,6 +382,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
             'request_unit': 'hour',
+            'unit_of_measure': 'hour',
         })
 
         with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
@@ -398,6 +404,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
             'request_unit': 'hour',
+            'unit_of_measure': 'hour',
         })
 
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
@@ -549,6 +556,7 @@ class TestAllocations(TestHrHolidaysCommon):
         not raise an error
         """
         self.leave_type.request_unit = "hour"
+        self.leave_type.unit_of_measure = "hour"
         with self.assertRaises(AssertionError):  # AssertionError raised by Form as employee is required
             with Form(self.env['hr.leave.allocation']) as allocation_form:
                 allocation_form.allocation_type = "regular"
@@ -569,6 +577,8 @@ class TestAllocations(TestHrHolidaysCommon):
         holidays_type_1 = leave_type.create({
             'name': 'archived_holidays',
             'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         self.env['hr.leave.allocation'].create({

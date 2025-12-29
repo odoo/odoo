@@ -25,11 +25,14 @@ class TestCompanyLeave(TransactionCase):
             'responsible_ids': [Command.link(cls.env.ref('base.user_admin').id)],
             'company_id': cls.company.id,
             'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         cls.paid_time_off = cls.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'request_unit': 'day',
+            'unit_of_measure': 'day',
             'leave_validation_type': 'both',
             'company_id': cls.company.id,
             'requires_allocation': False,
@@ -87,6 +90,7 @@ class TestCompanyLeave(TransactionCase):
         # Add a company leave on the second day
         # Check that leave is split into 2
         self.paid_time_off.request_unit = 'half_day'
+        self.paid_time_off.unit_of_measure = 'day'
 
         leave = self.env['hr.leave'].create({
             'name': 'Hol11',
@@ -131,6 +135,7 @@ class TestCompanyLeave(TransactionCase):
         # Add a company leave on the same day
         # Check that leave refused
         self.paid_time_off.request_unit = 'half_day'
+        self.paid_time_off.unit_of_measure = 'day'
 
         leave = self.env['hr.leave'].create({
             'name': 'Hol11',
@@ -168,6 +173,7 @@ class TestCompanyLeave(TransactionCase):
         # Add a company leave on the same day
         # Check that leave is refused
         self.paid_time_off.request_unit = 'day'
+        self.paid_time_off.unit_of_measure = 'day'
 
         leave = self.env['hr.leave'].create({
             'name': 'Hol11',

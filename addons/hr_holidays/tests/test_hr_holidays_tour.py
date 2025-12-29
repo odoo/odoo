@@ -34,6 +34,8 @@ class TestHrHolidaysTour(HttpCase):
             'name': 'NotLimitedHR',
             'requires_allocation': False,
             'leave_validation_type': 'hr',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
         # add allocation
         self.env['hr.leave.allocation'].create({

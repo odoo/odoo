@@ -19,6 +19,8 @@ class TestHrLeaveType(TestHrHolidaysCommon):
             'name': 'Paid Time Off',
             'time_type': 'leave',
             'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         with self.assertRaises(ValidationError):
@@ -28,6 +30,8 @@ class TestHrLeaveType(TestHrHolidaysCommon):
             'name': 'Worked Time',
             'time_type': 'other',
             'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         with self.assertRaises(ValidationError):
@@ -56,7 +60,7 @@ class TestHrLeaveType(TestHrHolidaysCommon):
                 'holiday_status_id': leave_type.id,
                 'request_date_from': '2025-09-03',
                 'request_date_to': '2025-09-03',
-            })
+        })
 
         worked_leave_type.allow_request_on_top = True
         leave_1 = self.env['hr.leave'].create({
@@ -82,6 +86,8 @@ class TestHrLeaveType(TestHrHolidaysCommon):
             self.env['hr.leave.type'].with_user(self.user_hruser_id).create({
                 'name': 'UserCheats',
                 'requires_allocation': False,
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
             })
 
     def test_users_tz_shift_back(self):
@@ -96,7 +102,11 @@ class TestHrLeaveType(TestHrHolidaysCommon):
           Valid allocation period              day
         """
         employee = self.env['hr.employee'].create({'name': 'Test Employee'})
-        leave_type = self.env['hr.leave.type'].create({'name': 'Test Leave'})
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+            })
 
         self.env['hr.leave.allocation'].sudo().create({
             'state': 'confirm',

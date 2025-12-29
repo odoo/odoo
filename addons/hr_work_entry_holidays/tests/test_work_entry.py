@@ -44,6 +44,8 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'requires_allocation': False,
             'allow_request_on_top': True,
             'work_entry_type_id': cls.work_entry_type_remote.id,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         cls.half_day_leave_type = cls.env['hr.leave.type'].create({
@@ -76,6 +78,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
     def test_time_week_leave_work_entry(self):
         # /!\ this is a week day => it exists an calendar attendance at this time
         self.leave_type.request_unit = 'hour'
+        self.leave_type.unit_of_measure = 'hour'
         leave = self.env['hr.leave'].create({
             'name': '1leave',
             'employee_id': self.richard_emp.id,
@@ -113,6 +116,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Sick',
             'request_unit': 'hour',
+            'unit_of_measure': 'hour',
             'leave_validation_type': 'both',
             'requires_allocation': False,
         })
@@ -182,6 +186,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         remote.action_approve()
 
         self.leave_type.request_unit = 'hour'
+        self.leave_type.unit_of_measure = 'hour'
         leave = self.env['hr.leave'].create({
             'name': '1leave',
             'employee_id': self.richard_emp.id,

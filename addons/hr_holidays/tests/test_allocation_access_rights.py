@@ -23,6 +23,8 @@ class TestAllocationRights(TestHrHolidaysCommon):
             'allocation_validation_type': 'hr',
             'requires_allocation': True,
             'employee_requests': True,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         cls.lt_validation_manager = cls.env['hr.leave.type'].create({
@@ -30,6 +32,8 @@ class TestAllocationRights(TestHrHolidaysCommon):
             'allocation_validation_type': 'manager',
             'requires_allocation': True,
             'employee_requests': True,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         cls.lt_allocation_no_validation = cls.env['hr.leave.type'].create({
@@ -37,6 +41,8 @@ class TestAllocationRights(TestHrHolidaysCommon):
             'allocation_validation_type': 'no_validation',
             'requires_allocation': True,
             'employee_requests': True,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
     def request_allocation(self, user, values={}):

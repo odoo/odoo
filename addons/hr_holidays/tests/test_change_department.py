@@ -17,6 +17,8 @@ class TestChangeDepartment(TestHrHolidaysCommon):
         self.holidays_status_1 = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedHR',
             'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         def create_holiday(name, start, end):

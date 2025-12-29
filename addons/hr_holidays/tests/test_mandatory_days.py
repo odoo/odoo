@@ -54,6 +54,8 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'leave_validation_type': 'hr',
             'requires_allocation': False,
             'company_id': cls.company.id,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
 
         cls.mandatory_day = cls.env['hr.leave.mandatory.day'].create({

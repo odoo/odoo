@@ -35,6 +35,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
             'name': 'Test Leave Type',
             'requires_allocation': False,
             'request_unit': 'day',
+            'unit_of_measure': 'day',
             'company_id': cls.company.id,
         })
 
@@ -141,6 +142,8 @@ class TestHolidayContract(TransactionCase):
             'name': 'Legal Leaves',
             'time_type': 'leave',
             'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
             'responsible_ids': [Command.link(cls.env.ref('base.user_admin').id)],
         })
         cls.env.ref('base.user_admin').notification_type = 'inbox'

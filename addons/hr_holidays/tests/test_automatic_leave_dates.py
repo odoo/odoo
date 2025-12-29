@@ -16,6 +16,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             'time_type': 'leave',
             'requires_allocation': False,
             'request_unit': 'half_day',
+            'unit_of_measure': 'day',
         })
 
     def test_no_attendances(self):

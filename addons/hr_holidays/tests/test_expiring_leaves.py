@@ -22,6 +22,8 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'time_type': 'leave',
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
         })
         cls.accrual_plan_with_accrual_validity = cls.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).sudo().create({
             'name': 'Test Accrual Plan With Accrual Validity',
