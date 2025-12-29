@@ -54,13 +54,12 @@ def get_certificate_end_date():
     # Ensure cryptography compatibility with python < 3.13
     if IS_RPI and float(get_version()[1:8]) < 2025.10:
         cert_end_date = cert.not_valid_after
-        now = datetime.datetime.now()
     else:
-        cert_end_date = cert.not_valid_after_utc
-        now = datetime.datetime.now(datetime.timezone.utc)
+        cert_end_date = cert.not_valid_after_utc.replace(tzinfo=None)
+
     if (
         common_name == 'OdooTempIoTBoxCertificate'
-        or now > cert_end_date - datetime.timedelta(days=10)
+        or datetime.datetime.now() > cert_end_date - datetime.timedelta(days=10)
     ):
         _logger.debug("SSL certificate '%s' must be updated.", common_name)
         return None
