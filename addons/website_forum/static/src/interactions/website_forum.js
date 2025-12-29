@@ -185,7 +185,7 @@ export class WebsiteForum extends Interaction {
         const textareaEl = currentTargetEl.querySelector("textarea[name=content]");
 
         if (titleEl?.required) {
-            titleEl.classList.toggle("is-invalid", !!titleEl.value);
+            titleEl.classList.toggle("is-invalid", !titleEl.value);
             validForm = !!titleEl.value;
         }
 
@@ -195,7 +195,7 @@ export class WebsiteForum extends Interaction {
             const textareaContainerEl = currentTargetEl.querySelector(".o_wysiwyg_textarea_wrapper");
             const hasContent = !!textareaContainerEl.innerText.trim() || !!textareaContainerEl.querySelector("img");
             ["border", "border-danger", "rounded-top"].forEach((cls) => {
-                textareaContainerEl.classList.toggle(cls, hasContent);
+                textareaContainerEl.classList.toggle(cls, !hasContent);
             });
             validForm = hasContent;
         }
