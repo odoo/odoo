@@ -160,7 +160,16 @@ class ProjectProject(models.Model):
                         if str(self.account_id.id) in ids.split(',')
                     ) / 100.
                     purchase_line_amount_to_invoice = price_subtotal * analytic_contribution
-                    invoice_lines = purchase_line.invoice_lines.filtered(lambda l: l.parent_state != 'cancel' and l.analytic_distribution and str(self.account_id.id) in l.analytic_distribution)
+                    invoice_lines = purchase_line.invoice_lines.filtered(
+                        lambda l:
+                        l.parent_state != 'cancel'
+                        and l.analytic_distribution
+                        and any(
+                            key == str(self.account_id.id)
+                            or key.startswith(str(self.account_id.id) + ",")
+                            for key in l.analytic_distribution
+                        )
+                    )
                     if invoice_lines:
                         invoiced_qty = sum(invoice_lines.filtered(lambda l: not l.is_refund).mapped('quantity'))
                         if invoiced_qty < purchase_line.product_qty:
