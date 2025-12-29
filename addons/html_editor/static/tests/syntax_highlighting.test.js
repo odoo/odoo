@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { getContent } from "./_helpers/selection";
+import { getContent, setSelection } from "./_helpers/selection";
 import { animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { ensureDistinctHistoryStep, insertText, splitBlock } from "./_helpers/user_actions";
 import {
@@ -183,6 +183,31 @@ test("inserting a code block in an empty paragraph with a style placeholder acti
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
         contentAfter: `<p><br></p><pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
+    });
+});
+
+test("inserting text and undo after an empty code block activates the syntax highlighting plugin with an empty textarea", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: "<p><br>[]</p>",
+        stepFunction: async (editor) => {
+            await insertPre(editor);
+            await compareHighlightedContent(
+                getContent(editor.editable),
+                '<p data-selection-placeholder=""><br></p>' +
+                    highlightedPre({ value: "", textareaRange: 0 }) +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+                editor
+            );
+            const p = document.querySelector("p");
+            setSelection({ anchorNode: p, anchorOffset: 0 });
+            await insertText(editor, "a");
+            await pressAndWait(["ctrl", "z"]);
+        },
+        contentAfterEdit:
+            `<p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>` +
+            highlightedPre({ value: "" }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        contentAfter: `[]<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>`,
     });
 });
 
