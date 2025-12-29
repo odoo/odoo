@@ -64,6 +64,14 @@ class HrVersion(models.Model):
         # see https://github.com/odoo/enterprise/pull/15091
         return super()._get_sub_leave_domain() | Domain('holiday_id.employee_id', 'in', self.employee_id.ids)
 
+    def _get_duration_based_leave_hours(self, date, calendar_leaves, hours):
+        holiday = calendar_leaves.holiday_id[:1]
+        if holiday:
+            half_day_hours = holiday._get_duration_based_half_day_hours(date, self.resource_calendar_id)
+            if half_day_hours is not None:
+                return half_day_hours
+        return super()._get_duration_based_leave_hours(date, calendar_leaves, hours)
+
     @api.model
     def _generate_work_entries_postprocess_adapt_to_calendar(self, vals):
         res = super()._generate_work_entries_postprocess_adapt_to_calendar(vals)

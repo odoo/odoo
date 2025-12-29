@@ -6,6 +6,7 @@ from datetime import datetime, date, time, timedelta
 import pytz
 
 from dateutil.relativedelta import relativedelta
+from dateutil.rrule import DAILY, rrule
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
@@ -231,6 +232,7 @@ class HrVersion(models.Model):
             worked_leaves = mapped_worked_leaves[resource.id]
 
             real_attendances = attendances - leaves - worked_leaves
+            is_duration_based = calendar.duration_based and version.has_static_work_entries()
             if not calendar:
                 real_leaves = leaves
                 real_worked_leaves = worked_leaves - real_leaves
@@ -250,6 +252,9 @@ class HrVersion(models.Model):
                     (static_attendances & multi_day_worked_leaves) | one_day_worked_leaves
                 ) - real_leaves
 
+            elif is_duration_based:
+                real_leaves, real_worked_leaves, real_attendances = version._get_duration_based_intervals(
+                    start_dt, end_dt, attendances, leaves, worked_leaves)
             elif version.has_static_work_entries() or not leaves:
                 # Empty leaves means empty real_leaves
                 real_worked_leaves = attendances - real_attendances - leaves
@@ -261,7 +266,8 @@ class HrVersion(models.Model):
                 real_leaves = static_attendances & leaves
                 real_worked_leaves = (static_attendances & worked_leaves) - real_leaves
 
-            real_attendances = self._get_real_attendances(attendances, leaves, worked_leaves)
+            if not is_duration_based:
+                real_attendances = self._get_real_attendances(attendances, leaves, worked_leaves)
 
             if not version.has_static_work_entries():
                 # An attendance based version might have an invalid planning, by definition it may not happen with
@@ -341,6 +347,80 @@ class HrVersion(models.Model):
     # will override in attendance bridge to add overtime vals
     def _get_real_attendances(self, attendances, leaves, worked_leaves):
         return attendances - leaves - worked_leaves
+
+    def _get_duration_based_leave_hours(self, date, calendar_leaves, hours):
+        """ Hours to count on `date` for `calendar_leaves`, which cover `hours` hours that day.
+        Overridden in hr_work_entry_holidays for half day leaves. """
+        return hours
+
+    def _get_duration_based_intervals(self, start_dt, end_dt, attendances, leaves, worked_leaves):
+        """ A duration based calendar only fixes the number of hours of each day. A leave counts
+        for the hours it covers, wherever in the day it is taken, up to the hours left that day,
+        and the schedule of the day is shortened by as much.
+
+        :return: tuple (real_leaves, real_worked_leaves, real_attendances)
+        """
+        self.ensure_one()
+        tz = pytz.timezone(self.resource_calendar_id.tz)
+
+        def get_hours(start, stop):
+            return (stop - start).total_seconds() / 3600
+
+        # Schedule of each day; other attendances (e.g. overtime) are handled as usual
+        schedule_by_day = defaultdict(list)
+        other_attendances = []
+        for interval in attendances:
+            if interval[2]._name == 'resource.calendar.attendance':
+                schedule_by_day[interval[0].astimezone(tz).date()].append(interval)
+            else:
+                other_attendances.append(interval)
+        day_hours = {
+            day: sum(get_hours(start, stop) for start, stop, _attendance in schedule)
+            for day, schedule in schedule_by_day.items()
+        }
+        hours_left = dict(day_hours)
+
+        # Cut the leaves at midnight, to get one piece of leave per day
+        first_day = datetime.combine(start_dt.astimezone(tz).date(), time.min)
+        last_day = end_dt.astimezone(tz).replace(tzinfo=None)
+        days = Intervals([
+            (tz.localize(day), tz.localize(day + timedelta(days=1)), self.env['resource.calendar.leaves'])
+            for day in rrule(DAILY, dtstart=first_day, until=last_day)
+        ], keep_distinct=True)
+
+        def fit_in_day_hours(intervals):
+            # Keep the first hours of each piece of leave that fit in the hours left that day,
+            # so the leave work entries keep the dates of the leaves they come from.
+            kept = []
+            for start, stop, calendar_leaves in intervals:
+                day = start.astimezone(tz).date()
+                leave_hours = min(
+                    self._get_duration_based_leave_hours(day, calendar_leaves, get_hours(start, stop)),
+                    hours_left.get(day, 0.0),
+                )
+                if leave_hours > 0:
+                    kept.append((start, start + timedelta(hours=leave_hours), calendar_leaves))
+                    hours_left[day] -= leave_hours
+            return Intervals(kept, keep_distinct=True)
+
+        # Leaves first: they take the hours of the day before worked leaves
+        real_leaves = fit_in_day_hours(leaves & days)
+        real_worked_leaves = fit_in_day_hours((worked_leaves - leaves) & days)
+
+        # Shorten the schedule of each day by the hours taken by leaves
+        real_attendances = []
+        for day, schedule in schedule_by_day.items():
+            hours_to_remove = day_hours[day] - hours_left[day]
+            for start, stop, attendance in schedule:
+                removed_hours = min(hours_to_remove, get_hours(start, stop))
+                hours_to_remove -= removed_hours
+                start += timedelta(hours=removed_hours)
+                if start < stop:
+                    real_attendances.append((start, stop, attendance))
+        real_attendances = Intervals(real_attendances, keep_distinct=True) | self._get_real_attendances(
+            Intervals(other_attendances, keep_distinct=True), leaves, worked_leaves)
+
+        return real_leaves, real_worked_leaves, real_attendances
 
     def _get_work_entries_values(self, date_start, date_stop):
         """
