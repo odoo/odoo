@@ -53,7 +53,7 @@
     &:where(:not(.row)) {
         flex-flow: column;
 
-        main {
+        .o_record_main {
             flex-grow: 1;
         }
 
@@ -62,7 +62,7 @@
         }
     }
 
-    > main {
+    > .o_record_main {
         display: flex;
         flex-flow: column;
         min-width: 0;
@@ -73,7 +73,7 @@
         }
     }
 
-    > footer, > main > footer {
+    > footer, > .o_record_main > footer {
         display: flex;
         align-items: center;
         column-gap: var(--Card-Footer-gap, #{map-get($spacers, 2)});

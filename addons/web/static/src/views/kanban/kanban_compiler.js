@@ -31,7 +31,8 @@ export class KanbanCompiler extends ViewCompiler {
     setup() {
         this.compilers.push(
             { selector: "t[t-call]", fn: this.compileTCall },
-            { selector: "img", fn: this.compileImage }
+            { selector: "img", fn: this.compileImage },
+            { selector: "main", fn: this.compileMain }
         );
     }
 
@@ -92,6 +93,19 @@ export class KanbanCompiler extends ViewCompiler {
         const element = el.cloneNode(true);
         element.setAttribute("loading", "lazy");
         return element;
+    }
+
+    /**
+     * @returns {Element}
+     */
+    compileMain(el, params) {
+        const compiled = createElement("div");
+
+        compiled.setAttribute("class", `o_record_main`);
+        for (const child of el.childNodes) {
+            append(compiled, this.compileNode(child, params));
+        }
+        return compiled;
     }
 
     /**
