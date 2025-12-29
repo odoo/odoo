@@ -936,7 +936,7 @@ class PoFileWriter:
             row.setdefault('modules', set()).add(module)
             if not row.get('translation') and trad != src:
                 row['translation'] = trad
-            row.setdefault('tnrs', []).append((type, name, res_id))
+            row.setdefault('tnrs', set()).add((type, name, res_id if type != 'code' else 0))
             row.setdefault('comments', set()).update(comments)
             modules.add(module)
 
