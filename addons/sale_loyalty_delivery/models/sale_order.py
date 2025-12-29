@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 from odoo.fields import Command
 
 
@@ -35,7 +35,7 @@ class SaleOrder(models.Model):
         taxes = self.fiscal_position_id.map_tax(taxes)
         max_discount = reward.discount_max_amount or float('inf')
         return [{
-            'name': _('Free Shipping - %s', reward.description),
+            'name': self.env._('Free Shipping - %s', reward.description),
             'reward_id': reward.id,
             'coupon_id': coupon.id,
             'points_cost': reward.required_points if not reward.clear_wallet else self._get_real_points_for_coupon(coupon),

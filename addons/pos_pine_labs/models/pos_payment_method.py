@@ -1,4 +1,4 @@
-from odoo import api, fields, models,  _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 from .pine_labs_pos_request import call_pine_labs
@@ -41,7 +41,7 @@ class PosPaymentMethod(models.Model):
                 'status': response['ResponseMessage'],
                 'plutusTransactionReferenceID': response['PlutusTransactionReferenceID'],
             }
-        default_error = _('The expected error code for the Pine Labs POS status request was not included in the response.')
+        default_error = self.env._('The expected error code for the Pine Labs POS status request was not included in the response.')
         error = response.get('ResponseMessage') or response.get('errorMessage') or default_error
         return {"error": error}
 
@@ -64,7 +64,7 @@ class PosPaymentMethod(models.Model):
                 'plutusTransactionReferenceID': response['PlutusTransactionReferenceID'],
                 'data': formatted_transaction_data,
             }
-        default_error = _('The expected error code for the Pine Labs POS status request was not included in the response.')
+        default_error = self.env._('The expected error code for the Pine Labs POS status request was not included in the response.')
         error = response.get('ResponseMessage') or response.get('errorMessage') or default_error
         return {'error': error}
 
@@ -86,13 +86,13 @@ class PosPaymentMethod(models.Model):
         if response.get('ResponseCode') == 0 and response.get('ResponseMessage') == "APPROVED":
             return {
                 'responseCode': response['ResponseCode'],
-                'notification': _('Pine Labs POS transaction cancelled. Retry again for collecting payment.')
+                'notification': self.env._('Pine Labs POS transaction cancelled. Retry again for collecting payment.')
             }
-        default_error = _('The expected error code for the Pine Labs POS status request was not included in the response.')
+        default_error = self.env._('The expected error code for the Pine Labs POS status request was not included in the response.')
         error = response.get('ResponseMessage') or response.get('errorMessage') or default_error
         return { 'error': error }
 
     @api.constrains('use_payment_terminal')
     def _check_pine_labs_terminal(self):
         if any(record.use_payment_terminal == 'pine_labs' and record.company_id.currency_id.name != 'INR' for record in self):
-            raise UserError(_('This Payment Terminal is only valid for INR Currency'))
+            raise UserError(self.env._('This Payment Terminal is only valid for INR Currency'))

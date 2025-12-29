@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class AccountAnalyticAccount(models.Model):
@@ -25,7 +25,7 @@ class AccountAnalyticAccount(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "purchase.order",
             "domain": [['id', 'in', purchase_orders.ids]],
-            "name": _("Purchase Orders"),
+            "name": self.env._("Purchase Orders"),
             'view_mode': 'list,form',
         }
         if len(purchase_orders) == 1:

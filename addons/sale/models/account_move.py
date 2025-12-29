@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools import groupby, OrderedSet
 
 
@@ -131,7 +131,7 @@ class AccountMove(models.Model):
                 for sale_line in line.sale_line_ids:
                     todo.add((sale_line.order_id, invoice.name))
         for (order, name) in todo:
-            order.message_post(body=_("Invoice %s paid", name))
+            order.message_post(body=self.env._("Invoice %s paid", name))
         return res
 
     def _action_invoice_ready_to_be_sent(self):

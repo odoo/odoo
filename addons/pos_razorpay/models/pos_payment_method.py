@@ -1,5 +1,5 @@
+from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo import fields, models, api, _
 
 from .razorpay_pos_request import RazorpayPosRequest
 
@@ -46,7 +46,7 @@ class PosPaymentMethod(models.Model):
                 'acquirerCode': response.get('acquirerCode'),
                 'postingDate': response.get('postingDate'),
             }
-        default_error_msg = _('The Razorpay POS refund request has encountered an unexpected error code.')
+        default_error_msg = self.env._('The Razorpay POS refund request has encountered an unexpected error code.')
         error = response.get('errorMessage') or default_error_msg
         return {'error': str(error)}
 
@@ -63,7 +63,7 @@ class PosPaymentMethod(models.Model):
                 'success': True,
                 'p2pRequestId': str(response.get('p2pRequestId'))
             }
-        default_error_msg = _('Razorpay POS payment request expected errorCode not found in the response')
+        default_error_msg = self.env._('Razorpay POS payment request expected errorCode not found in the response')
         error = response.get('errorMessage') or default_error_msg
         return {'error': str(error)}
 
@@ -98,11 +98,11 @@ class PosPaymentMethod(models.Model):
                     'settlementStatus': response.get('settlementStatus'),
                 }
             elif payment_status == 'FAILED' or payment_messageCode == 'P2P_DEVICE_CANCELED':
-                return {'error': str(response.get('message', _('Razorpay POS transaction failed'))),
+                return {'error': str(response.get('message', self.env._('Razorpay POS transaction failed'))),
                         'payment_messageCode': payment_messageCode}
             elif payment_messageCode in ['P2P_DEVICE_RECEIVED', 'P2P_DEVICE_SENT', 'P2P_STATUS_QUEUED']:
                 return {'status': payment_messageCode.split('_')[-1]}
-        default_error_msg = _('Razorpay POS payment status request expected errorCode not found in the response')
+        default_error_msg = self.env._('Razorpay POS payment status request expected errorCode not found in the response')
         error = response.get('errorMessage') or default_error_msg
         return {'error': str(error)}
 
@@ -112,12 +112,12 @@ class PosPaymentMethod(models.Model):
         body.update({'origP2pRequestId': data.get('p2pRequestId')})
         response = razorpay._call_razorpay(endpoint='cancel', payload=body)
         if response.get('success') and not response.get('errorCode'):
-            return {'error': _('Razorpay POS transaction canceled successfully')}
-        default_error_msg = _('Razorpay POS payment cancel request expected errorCode not found in the response')
+            return {'error': self.env._('Razorpay POS transaction canceled successfully')}
+        default_error_msg = self.env._('Razorpay POS payment cancel request expected errorCode not found in the response')
         errorMessage = response.get('errorMessage') or default_error_msg
         return {'errorMessage': str(errorMessage)}
 
     @api.constrains('use_payment_terminal')
     def _check_razorpay_terminal(self):
         if any(record.use_payment_terminal == 'razorpay' and record.company_id.currency_id.name != 'INR' for record in self):
-            raise UserError(_('This Payment Terminal is only valid for INR Currency'))
+            raise UserError(self.env._('This Payment Terminal is only valid for INR Currency'))

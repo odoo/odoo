@@ -3,9 +3,10 @@
 import ast
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.fields import Command, Domain
 from odoo.exceptions import UserError
+
 from odoo.addons.project.models.project_task import CLOSED_STATES
 
 
@@ -243,12 +244,12 @@ class SaleOrder(models.Model):
         ), self.env['sale.order.line'])
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Milestones'),
+            'name': self.env._('Milestones'),
             'domain': [('sale_line_id', 'in', self.order_line.ids)],
             'res_model': 'project.milestone',
             'views': [(self.env.ref('sale_project.project_milestone_view_tree').id, 'list')],
             'view_mode': 'list',
-            'help': _("""
+            'help': self.env._("""
                 <p class="o_view_nocontent_smiling_face">
                     No milestones found. Let's create one!
                 </p><p>

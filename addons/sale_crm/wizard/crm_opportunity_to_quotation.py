@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -15,7 +15,7 @@ class CrmQuotationPartner(models.TransientModel):
 
         active_model = self.env.context.get('active_model')
         if active_model != 'crm.lead':
-            raise UserError(_('You can only apply this action from a lead.'))
+            raise UserError(self.env._('You can only apply this action from a lead.'))
 
         lead = False
         if result.get('lead_id'):

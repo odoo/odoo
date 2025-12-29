@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -33,6 +33,6 @@ class MrpBom(models.Model):
         ])
         if lines:
             product_names = ', '.join(lines.product_id.mapped('display_name'))
-            raise UserError(_('As long as there are some sale order lines that must be delivered/invoiced and are '
+            raise UserError(self.env._('As long as there are some sale order lines that must be delivered/invoiced and are '
                               'related to these bills of materials, you can not remove them.\n'
                               'The error concerns these products: %s', product_names))

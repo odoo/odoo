@@ -1,7 +1,6 @@
 import logging
 
 from odoo import api, fields, models
-from odoo.addons.point_of_sale.models.pos_config import format_epson_certified_domain
 
 _logger = logging.getLogger(__name__)
 

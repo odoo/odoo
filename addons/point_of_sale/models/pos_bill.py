@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -17,7 +17,7 @@ class PosBill(models.Model):
         try:
             value = float(name)
         except ValueError:
-            raise UserError(_("The name of the Coins/Bills must be a number."))
+            raise UserError(self.env._("The name of the Coins/Bills must be a number."))
         result = super().create({"name": name, "value": value})
         return result.id, result.display_name
 

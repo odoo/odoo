@@ -3,17 +3,16 @@ import logging
 from ast import literal_eval
 from collections import defaultdict
 from datetime import datetime
-from zoneinfo import ZoneInfo
-
 from dateutil.relativedelta import relativedelta
 from markupsafe import escape, Markup
 from werkzeug.urls import url_encode
+from zoneinfo import ZoneInfo
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
+from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import format_amount, format_date, formatLang, groupby, OrderedSet, SQL
 from odoo.tools.float_utils import float_is_zero, float_repr
-from odoo.exceptions import AccessDenied, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -198,7 +197,7 @@ class PurchaseOrder(models.Model):
                 bad_products = order.order_line.product_id.filtered(
                     lambda p: p.company_id and p.company_id in invalid_companies
                 )
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
                     product_company=', '.join(invalid_companies.sudo().mapped('display_name')),
                     quote_company=order.company_id.display_name,
@@ -377,7 +376,7 @@ class PurchaseOrder(models.Model):
     def action_open_business_doc(self):
         self.ensure_one()
         return {
-            'name': _("Order"),
+            'name': self.env._("Order"),
             'type': 'ir.actions.act_window',
             'res_model': 'purchase.order',
             'res_id': self.id,
@@ -426,7 +425,7 @@ class PurchaseOrder(models.Model):
     def _unlink_if_cancelled(self):
         for order in self:
             if not order.state == 'cancel':
-                raise UserError(_('In order to delete a purchase order, you must cancel it first.'))
+                raise UserError(self.env._('In order to delete a purchase order, you must cancel it first.'))
 
     def copy(self, default=None):
         ctx = dict(self.env.context)
@@ -515,10 +514,10 @@ class PurchaseOrder(models.Model):
         else:
             access_opt = customer_portal_group[2].setdefault('button_access', {})
             if self.env.context.get('is_reminder'):
-                access_opt['title'] = _('View')
+                access_opt['title'] = self.env._('View')
             else:
                 access_opt.update(
-                    title=_("View Quotation") if self.state in ('draft', 'sent') else _("View Order"),
+                    title=self.env._("View Quotation") if self.state in ('draft', 'sent') else self.env._("View Order"),
                     url=self.get_base_url() + self.get_confirm_url(),
                 )
 
@@ -535,7 +534,7 @@ class PurchaseOrder(models.Model):
         subtitles = [render_context['record'].name]
         # don't show price on RFQ mail
         if self.state in ['draft', 'sent']:
-            subtitles.append(_('Order\N{NO-BREAK SPACE}due\N{NO-BREAK SPACE}%(date)s',
+            subtitles.append(self.env._('Order\N{NO-BREAK SPACE}due\N{NO-BREAK SPACE}%(date)s',
                 date=format_date(self.env, self.date_order, lang_code=render_context.get('lang'))
             ))
         else:
@@ -600,12 +599,12 @@ class PurchaseOrder(models.Model):
 
         self = self.with_context(lang=lang)
         if self.state in ['draft', 'sent']:
-            ctx['model_description'] = _('Request for Quotation')
+            ctx['model_description'] = self.env._('Request for Quotation')
         else:
-            ctx['model_description'] = _('Purchase Order')
+            ctx['model_description'] = self.env._('Purchase Order')
 
         return {
-            'name': _('Compose Email'),
+            'name': self.env._('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
@@ -622,7 +621,7 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
         action['domain'] = [('product_id', 'in', self.order_line.product_id.ids)]
-        action['display_name'] = _("Purchase Comparison for %s", self.display_name)
+        action['display_name'] = self.env._("Purchase Comparison for %s", self.display_name)
         return action
 
     def action_receive(self):
@@ -632,7 +631,7 @@ class PurchaseOrder(models.Model):
         )
         if invalid_targets:
             raise UserError(
-                _("The following purchase orders %(invalid_orders) can't be received. Cancelled all receptions."),
+                self.env._("The following purchase orders %(invalid_orders) can't be received. Cancelled all receptions."),
                 invalid_orders=invalid_targets)
         for order in self:
             for line in order.order_line:
@@ -675,7 +674,7 @@ class PurchaseOrder(models.Model):
 
         purchase_orders_with_invoices = self.filtered(lambda po: any(i.state not in ('cancel', 'draft') for i in po.invoice_ids))
         if purchase_orders_with_invoices:
-            raise UserError(_("Unable to cancel purchase order(s): %s. You must first cancel their related vendor bills.", purchase_orders_with_invoices.mapped('display_name')))
+            raise UserError(self.env._("Unable to cancel purchase order(s): %s. You must first cancel their related vendor bills.", purchase_orders_with_invoices.mapped('display_name')))
         self.write({'state': 'cancel'})
 
     def button_lock(self):
@@ -693,7 +692,7 @@ class PurchaseOrder(models.Model):
             and not line.product_id
             for line in self.order_line
         ):
-            return _("Some order lines are missing a product, you need to correct them before going further.")
+            return self.env._("Some order lines are missing a product, you need to correct them before going further.")
 
         return False
 
@@ -741,7 +740,7 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Bill Matching"),
+            'name': self.env._("Bill Matching"),
             'res_model': 'purchase.bill.line.match',
             'domain': [
                 ('partner_id', 'in', (self.partner_id | self.partner_id.commercial_partner_id).ids),
@@ -760,7 +759,7 @@ class PurchaseOrder(models.Model):
             'display_type': 'line_section',
             'is_downpayment': True,
             'sequence': (self.order_line[-1:].sequence or 9) + 1,
-            'name': _("Down Payments"),
+            'name': self.env._("Down Payments"),
         }
         del context
         return res
@@ -851,7 +850,7 @@ class PurchaseOrder(models.Model):
             return self.action_view_invoice(invoices)
 
         if len(invoices) != 1:
-            raise ValidationError(_("You can only upload a bill for a single vendor at a time."))
+            raise ValidationError(self.env._("You can only upload a bill for a single vendor at a time."))
         invoices.with_context(skip_is_manually_modified=True)._extend_with_attachments(
             invoices._to_files_data(attachments),
             new=True,
@@ -869,7 +868,7 @@ class PurchaseOrder(models.Model):
 
         # Group RFQs by vendor
         if len(rfq_to_merge) < 2:
-            raise UserError(_("Please select at least two purchase orders with state RFQ and RFQ sent to merge."))
+            raise UserError(self.env._("Please select at least two purchase orders with state RFQ and RFQ sent to merge."))
 
         rfqs_grouped = defaultdict(lambda: self.env['purchase.order'])
         for rfq in rfq_to_merge:
@@ -878,7 +877,7 @@ class PurchaseOrder(models.Model):
 
         bunches_of_rfq_to_be_merge = list(rfqs_grouped.values())
         if all(len(rfq_bunch) == 1 for rfq_bunch in list(bunches_of_rfq_to_be_merge)):
-            raise UserError(_("In selected purchase order to merge these details must be same\nVendor, currency, destination, dropship address and agreement"))
+            raise UserError(self.env._("In selected purchase order to merge these details must be same\nVendor, currency, destination, dropship address and agreement"))
         bunches_of_rfq_to_be_merge = [rfqs for rfqs in bunches_of_rfq_to_be_merge if len(rfqs) > 1]
 
         merged_rfq_ids = []
@@ -917,10 +916,10 @@ class PurchaseOrder(models.Model):
 
                 rfq_names = rfqs.mapped('name')
                 merged_names = ", ".join(rfq_names)
-                oldest_rfq_message = _("RFQ merged with %(oldest_rfq_name)s and %(cancelled_rfq)s", oldest_rfq_name=oldest_rfq.name, cancelled_rfq=merged_names)
+                oldest_rfq_message = self.env._("RFQ merged with %(oldest_rfq_name)s and %(cancelled_rfq)s", oldest_rfq_name=oldest_rfq.name, cancelled_rfq=merged_names)
 
                 for rfq in rfqs:
-                    cancelled_rfq_message = _("RFQ merged with %s", oldest_rfq._get_html_link())
+                    cancelled_rfq_message = self.env._("RFQ merged with %s", oldest_rfq._get_html_link())
                     rfq.message_post(body=cancelled_rfq_message)
                 oldest_rfq.message_post(body=oldest_rfq_message)
 
@@ -939,7 +938,7 @@ class PurchaseOrder(models.Model):
             action['res_id'] = merged_rfq_ids[0]
             action['view_mode'] = 'form'
         else:
-            action['name'] = _("Merged RFQs")
+            action['name'] = self.env._("Merged RFQs")
             action['domain'] = [('id', 'in', merged_rfq_ids)]
         return action
 
@@ -1122,7 +1121,7 @@ class PurchaseOrder(models.Model):
                 email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
                 email_values={'email_to': self.env.user.email, 'recipient_ids': []},
             )
-            return {'toast_message': escape(_("A sample email has been sent to %s.", self.env.user.email))}
+            return {'toast_message': escape(self.env._("A sample email has been sent to %s.", self.env.user.email))}
 
     def _send_reminder_open_composer(self,template_id):
         self.ensure_one()
@@ -1146,9 +1145,9 @@ class PurchaseOrder(models.Model):
             if template and template.lang:
                 lang = template._render_lang([ctx['default_res_id']])[ctx['default_res_id']]
         self = self.with_context(lang=lang)
-        ctx['model_description'] = _('Purchase Order')
+        ctx['model_description'] = self.env._('Purchase Order')
         return {
-            'name': _('Compose Email'),
+            'name': self.env._('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
@@ -1308,7 +1307,7 @@ class PurchaseOrder(models.Model):
     def _update_date_planned_for_lines(self, updated_dates):
         # create or update the activity
         activity = self.env['mail.activity'].search([
-            ('summary', '=', _('Date Updated')),
+            ('summary', '=', self.env._('Date Updated')),
             ('res_model_id', '=', 'purchase.order'),
             ('res_id', '=', self.id),
             ('user_id', '=', self.user_id.id)], limit=1)
@@ -1377,9 +1376,9 @@ class PurchaseOrder(models.Model):
         return 'order_id'
 
     def _create_update_date_activity(self, updated_dates):
-        note = Markup('<p>%s</p>\n') % _('%s modified receipt dates for the following products:', self.partner_id.name)
+        note = Markup('<p>%s</p>\n') % self.env._('%s modified receipt dates for the following products:', self.partner_id.name)
         for line, date in updated_dates:
-            note += Markup('<p> - %s</p>\n') % _(
+            note += Markup('<p> - %s</p>\n') % self.env._(
                 '%(product)s from %(original_receipt_date)s to %(new_receipt_date)s',
                 product=line.product_id.display_name,
                 original_receipt_date=line.date_planned.date(),
@@ -1387,7 +1386,7 @@ class PurchaseOrder(models.Model):
             )
         activity = self.activity_schedule(
             'mail.mail_activity_data_warning',
-            summary=_("Date Updated"),
+            summary=self.env._("Date Updated"),
             user_id=self.user_id.id
         )
         # add the note after we post the activity because the note can be soon
@@ -1398,7 +1397,7 @@ class PurchaseOrder(models.Model):
 
     def _update_update_date_activity(self, updated_dates, activity):
         for line, date in updated_dates:
-            activity.note += Markup('<p> - %s</p>\n') %  _(
+            activity.note += Markup('<p> - %s</p>\n') % self.env._(
                 '%(product)s from %(original_receipt_date)s to %(new_receipt_date)s',
                 product=line.product_id.display_name,
                 original_receipt_date=line.date_planned.date(),
@@ -1418,7 +1417,7 @@ class PurchaseOrder(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Requests for Quotation'),
+            'label': self.env._('Import Template for Requests for Quotation'),
             'template': '/purchase/static/xls/requests_for_quotation_import_template.xlsx',
         }]
 
@@ -1439,7 +1438,7 @@ class PurchaseOrder(models.Model):
         """
         attachments = self.env['ir.attachment'].browse(attachment_ids)
         if not attachments:
-            raise UserError(_("No attachment was provided"))
+            raise UserError(self.env._("No attachment was provided"))
 
         orders = self.with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(attachments)
-        return orders._get_records_action(name=_("Generated Orders"))
+        return orders._get_records_action(name=self.env._("Generated Orders"))

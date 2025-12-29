@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # Copyright (C) 2004-2008 PC Solutions (<http://pcsol.be>). All Rights Reserved
-from odoo import fields, models, api, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -14,7 +14,7 @@ class AccountJournal(models.Model):
     def _check_type(self):
         methods = self.env['pos.payment.method'].sudo().search([("journal_id", "in", self.ids)])
         if methods:
-            raise ValidationError(_("This journal is associated with a payment method. You cannot modify its type"))
+            raise ValidationError(self.env._("This journal is associated with a payment method. You cannot modify its type"))
 
     def _check_no_active_payments(self):
         hanging_journal_entries = self.env['pos.payment'].sudo().search(
@@ -23,7 +23,7 @@ class AccountJournal(models.Model):
             ('session_id.state', '=', 'opened')
         ], limit=1)
         if(hanging_journal_entries):
-            raise ValidationError(_("This journal is associated with payment method %(payment_method)s that is being used by order %(pos_order)s in the active pos session %(pos_session)s",
+            raise ValidationError(self.env._("This journal is associated with payment method %(payment_method)s that is being used by order %(pos_order)s in the active pos session %(pos_session)s",
                 payment_method=hanging_journal_entries.payment_method_id.name,
                 pos_order=hanging_journal_entries.pos_order_id.name,
                 pos_session=hanging_journal_entries.session_id.name))
@@ -51,7 +51,7 @@ class AccountJournal(models.Model):
         ], limit=1)
         if not journal:
             journal = self.create({
-                'name': _('Point of Sale'),
+                'name': self.env._('Point of Sale'),
                 'code': 'POSS',
                 'type': 'general',
                 'company_id': self.env.company.id,

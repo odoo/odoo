@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -120,7 +120,7 @@ class PosPaymentMethod(models.Model):
     def _onchange_journal_id(self):
         for pm in self:
             if pm.journal_id and pm.journal_id.type not in ['cash', 'bank']:
-                raise UserError(_("Only journals of type 'Cash' or 'Bank' could be used with payment methods."))
+                raise UserError(self.env._("Only journals of type 'Cash' or 'Bank' could be used with payment methods."))
             if pm.journal_id and pm.journal_id.type == 'bank':
                 chart_template = self.with_context(allowed_company_ids=self.env.company.root_id.ids).env['account.chart.template']
                 pm.outstanding_account_id = chart_template.ref('account_journal_payment_debit_account_id', raise_if_not_found=False) or self.company_id.transfer_account_id
@@ -145,7 +145,7 @@ class PosPaymentMethod(models.Model):
 
     def write(self, vals):
         if self._is_write_forbidden(set(vals.keys())):
-            raise UserError(_('Please close and validate the following open PoS Sessions before modifying this payment method.\n'
+            raise UserError(self.env._('Please close and validate the following open PoS Sessions before modifying this payment method.\n'
                             'Open sessions: %s', (' '.join(self.open_session_ids.mapped('name')),)))
 
         if 'payment_method_type' in vals:
@@ -191,7 +191,7 @@ class PosPaymentMethod(models.Model):
 
         for pm, vals in zip(self, vals_list):
             if 'name' not in default:
-                vals['name'] = _("%s (copy)", pm.name)
+                vals['name'] = self.env._("%s (copy)", pm.name)
             if pm.journal_id and pm.journal_id.type == 'cash':
                 if ('journal_id' in default and default['journal_id'] == pm.journal_id.id) or ('journal_id' not in default):
                     vals['journal_id'] = False
@@ -202,9 +202,9 @@ class PosPaymentMethod(models.Model):
         for rec in self:
             if rec.payment_method_type == "qr_code":
                 if (rec.journal_id.type != 'bank' or not rec.journal_id.bank_account_id):
-                    raise ValidationError(_("At least one bank account must be defined on the journal to allow registering QR code payments with Bank apps."))
+                    raise ValidationError(self.env._("At least one bank account must be defined on the journal to allow registering QR code payments with Bank apps."))
                 if not rec.qr_code_method:
-                    raise ValidationError(_("You must select a QR-code method to generate QR-codes for this payment method."))
+                    raise ValidationError(self.env._("You must select a QR-code method to generate QR-codes for this payment method."))
                 error_msg = self.journal_id.bank_account_id._get_error_messages_for_qr(self.qr_code_method, False, rec.company_id.currency_id)
                 if error_msg:
                     raise ValidationError(error_msg)
@@ -234,7 +234,7 @@ class PosPaymentMethod(models.Model):
         """
         self.ensure_one()
         if self.payment_method_type != "qr_code" or not self.qr_code_method:
-            raise UserError(_("This payment method is not configured to generate QR codes."))
+            raise UserError(self.env._("This payment method is not configured to generate QR codes."))
         payment_bank = self.journal_id.bank_account_id
         debtor_partner = self.env['res.partner'].browse(debtor_partner)
         currency = self.env['res.currency'].browse(currency)

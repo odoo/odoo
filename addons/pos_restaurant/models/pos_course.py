@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class PosCourse(models.Model):
@@ -24,7 +24,7 @@ class PosCourse(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for course, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", course.name)
+                vals['name'] = self.env._("%s (copy)", course.name)
         return vals_list
 
     @api.model

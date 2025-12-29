@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
-
 from odoo.addons.project.controllers.portal import ProjectCustomerPortal
 
 
@@ -14,7 +12,7 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
             del values['partner_id']
         if not project or project.sudo().allow_billable:
             values |= {
-                'sale_line_id': {'label': _('Sales Order Item'), 'sequence': 80},
+                'sale_line_id': {'label': self.env._('Sales Order Item'), 'sequence': 80},
             }
         return values
 
@@ -24,8 +22,8 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
             del values['partner_id']
         if not project or project.sudo().allow_billable:
             values |= {
-                'sale_order':  {'input': 'sale_order', 'label': _('Search in Sales Order Item'), 'sequence': 90},
-                'invoice': {'input': 'invoice', 'label': _('Search in Invoice'), 'sequence': 100},
+                'sale_order':  {'input': 'sale_order', 'label': self.env._('Search in Sales Order Item'), 'sequence': 90},
+                'invoice': {'input': 'invoice', 'label': self.env._('Search in Invoice'), 'sequence': 100},
             }
         return values
 

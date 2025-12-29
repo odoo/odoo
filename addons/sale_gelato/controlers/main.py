@@ -6,7 +6,7 @@ import pprint
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import SUPERUSER_ID, _
+from odoo import SUPERUSER_ID
 from odoo.http import Controller, request, route
 
 
@@ -40,7 +40,7 @@ class GelatoController(Controller):
             fulfillment_status = event_data.get('fulfillmentStatus')
             if fulfillment_status == 'failed':
                 # Log a message on the order.
-                log_message = _(
+                log_message = self.env._(
                     "Gelato could not proceed with the fulfillment of order %(order_reference)s:"
                     " %(gelato_message)s",
                     order_reference=order_sudo.display_name,
@@ -62,7 +62,7 @@ class GelatoController(Controller):
                 order_sudo.order_line.currency_id
 
                 # Log a message on the order.
-                log_message = _(
+                log_message = self.env._(
                     "Gelato has canceled order %(reference)s.", reference=order_sudo.display_name
                 )
                 order_sudo.message_post(
@@ -85,7 +85,7 @@ class GelatoController(Controller):
                 )
             elif fulfillment_status == 'returned':
                 # Log a message on the order.
-                log_message = _(
+                log_message = self.env._(
                     "Gelato has returned order %(reference)s.", reference=order_sudo.display_name
                 )
                 order_sudo.message_post(

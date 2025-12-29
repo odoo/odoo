@@ -5,11 +5,11 @@ from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
-from odoo.tools import float_compare
 
-from odoo import api, fields, models, SUPERUSER_ID, _, Command
-from odoo.addons.stock.models.stock_rule import ProcurementException
+from odoo import Command, SUPERUSER_ID, api, fields, models
 from odoo.tools import groupby
+
+from odoo.addons.stock.models.stock_rule import ProcurementException
 
 
 class StockRule(models.Model):
@@ -23,7 +23,7 @@ class StockRule(models.Model):
         message_dict = super(StockRule, self)._get_message_dict()
         __, destination, __, __ = self._get_message_values()
         message_dict.update({
-            'buy': _('When products are needed in <b>%s</b>, <br/> '
+            'buy': self.env._('When products are needed in <b>%s</b>, <br/> '
                      'a request for quotation is created to fulfill the need.<br/>'
                      'Note: This rule will be used in combination with the rules<br/>'
                      'of the reception route(s)', destination)
@@ -68,7 +68,7 @@ class StockRule(models.Model):
             )
 
             if not supplier and self.env.context.get('from_orderpoint'):
-                msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.', procurement.product_id.display_name)
+                msg = self.env._('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.', procurement.product_id.display_name)
                 errors.append((procurement, msg))
             elif not supplier:
                 # If the supplier is not set, we cannot create a PO.
@@ -202,7 +202,7 @@ class StockRule(models.Model):
 
     def _post_vendor_notification(self, records_to_notify, users_to_notify, product):
         notification_msg = Markup(" ").join(Markup("%s") % user._get_html_link(f'@{user.name}') for user in users_to_notify)
-        notification_msg += Markup("<br/>%s <strong>%s</strong>, %s") % (_("No supplier has been found to replenish"), product.display_name, _("this product should be manually replenished."))
+        notification_msg += Markup("<br/>%s <strong>%s</strong>, %s") % (self.env._("No supplier has been found to replenish"), product.display_name, self.env._("this product should be manually replenished."))
         records_to_notify.message_post(body=notification_msg, partner_ids=users_to_notify.ids)
 
     def _notify_responsible(self, procurement):
@@ -221,7 +221,7 @@ class StockRule(models.Model):
             delays['total_delay'] += 365
             delays['no_vendor_found_delay'] += 365
             if not bypass_delay_description:
-                delay_description.append((_('No Vendor Found'), _('+ %s day(s)', 365)))
+                delay_description.append((self.env._('No Vendor Found'), self.env._('+ %s day(s)', 365)))
             return delays, delay_description
         buy_rule.ensure_one()
         if not self.env.context.get('ignore_vendor_lead_time'):
@@ -229,13 +229,13 @@ class StockRule(models.Model):
             delays['total_delay'] += supplier_delay
             delays['purchase_delay'] += supplier_delay
             if not bypass_delay_description:
-                delay_description.append((_('Receipt Date'), supplier_delay))
-                delay_description.append((_('Vendor Lead Time'), _('+ %d day(s)', supplier_delay)))
+                delay_description.append((self.env._('Receipt Date'), supplier_delay))
+                delay_description.append((self.env._('Vendor Lead Time'), self.env._('+ %d day(s)', supplier_delay)))
         days_to_order = buy_rule.company_id.days_to_purchase
         delays['total_delay'] += days_to_order
         if not bypass_delay_description:
-            delay_description.append((_('Order Deadline'), days_to_order))
-            delay_description.append((_('Days to Purchase'), _('+ %d day(s)', days_to_order)))
+            delay_description.append((self.env._('Order Deadline'), days_to_order))
+            delay_description.append((self.env._('Days to Purchase'), self.env._('+ %d day(s)', days_to_order)))
         return delays, delay_description
 
     @api.model

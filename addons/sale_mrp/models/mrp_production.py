@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class MrpProduction(models.Model):
@@ -32,7 +32,7 @@ class MrpProduction(models.Model):
             })
         else:
             action.update({
-                'name': _("Sources Sale Orders of %s", self.name),
+                'name': self.env._("Sources Sale Orders of %s", self.name),
                 'domain': [('id', 'in', sale_order_ids)],
                 'view_mode': 'list,form',
             })

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import fields, models
 
 
 class ResPartner(models.Model):
@@ -49,6 +49,6 @@ class ResPartner(models.Model):
         if not self.env.user.has_group('purchase.group_purchase_user'):
             return data_list
         for partner in self.filtered(lambda partner: partner.purchase_order_count):
-            stat_info = {'iconClass': 'fa-credit-card', 'value': partner.purchase_order_count, 'label': _('Purchases')}
+            stat_info = {'iconClass': 'fa-credit-card', 'value': partner.purchase_order_count, 'label': self.env._('Purchases')}
             data_list[partner.id].append(stat_info)
         return data_list

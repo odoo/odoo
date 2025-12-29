@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _, Command
+from odoo import Command, api, fields, models
 from odoo.tools import format_date
 
 
@@ -59,7 +59,7 @@ class SaleOrder(models.Model):
         linked_orders = self.pos_order_line_ids.mapped('order_id')
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Linked POS Orders'),
+            'name': self.env._('Linked POS Orders'),
             'res_model': 'pos.order',
             'view_mode': 'list,form',
             'domain': [('id', 'in', linked_orders.ids)],
@@ -102,7 +102,7 @@ class SaleOrder(models.Model):
             and base_line['record']._name == 'pos.order.line'
         ):
             pos_order_line = base_line['record']
-            so_line_values['name'] = _(
+            so_line_values['name'] = self.env._(
                 "Down payment (ref: %(order_reference)s on \n %(date)s)",
                 order_reference=pos_order_line.name,
                 date=format_date(pos_order_line.env, pos_order_line.order_id.date_order),
@@ -229,6 +229,6 @@ class SaleOrderLine(models.Model):
             if sol.sudo().pos_order_line_ids:
                 downpayment_sols = sol.pos_order_line_ids.mapped('refunded_orderline_id.sale_order_line_id')
                 for downpayment_sol in downpayment_sols:
-                    downpayment_sol.name = _("%(line_description)s (Cancelled)", line_description=downpayment_sol.name)
+                    downpayment_sol.name = self.env._("%(line_description)s (Cancelled)", line_description=downpayment_sol.name)
             else:
                 super()._compute_name()

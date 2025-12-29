@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools import formatLang
@@ -112,9 +112,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _check_amount_is_positive(self):
         for wizard in self:
             if wizard.advance_payment_method == 'percentage' and wizard.amount <= 0.00:
-                raise UserError(_('The value of the down payment amount must be positive.'))
+                raise UserError(self.env._('The value of the down payment amount must be positive.'))
             elif wizard.advance_payment_method == 'fixed' and wizard.fixed_amount <= 0.00:
-                raise UserError(_('The value of the down payment amount must be positive.'))
+                raise UserError(self.env._('The value of the down payment amount must be positive.'))
 
     #=== ACTION METHODS ===#
 
@@ -125,7 +125,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     def view_draft_invoices(self):
         return {
-            'name': _('Draft Invoices'),
+            'name': self.env._('Draft Invoices'),
             'type': 'ir.actions.act_window',
             'view_mode': 'list',
             'views': [(False, 'list'), (False, 'form')],
@@ -185,9 +185,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 subtype_xmlid='mail.mt_note',
             )
 
-            title = _("Down payment invoice")
+            title = self.env._("Down payment invoice")
             order.with_user(poster).message_post(
-                body=_("%s has been created", invoice._get_html_link(title=title)),
+                body=self.env._("%s has been created", invoice._get_html_link(title=title)),
             )
 
             return invoice

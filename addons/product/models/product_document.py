@@ -1,7 +1,7 @@
 
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -27,7 +27,7 @@ class ProductDocument(models.Model):
         for attachment in self:
             if attachment.type == 'url' and attachment.url and\
                 not attachment.url.startswith(('https://', 'http://', 'ftp://')):
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "Please enter a valid URL.\nExample: https://www.odoo.com\n\nInvalid URL: %s",
                     attachment.url
                 ))

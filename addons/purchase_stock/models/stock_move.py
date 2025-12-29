@@ -3,10 +3,8 @@
 from collections import deque
 from datetime import datetime
 
-from odoo import api, Command, fields, models, _
+from odoo import api, Command, fields, models
 from odoo.fields import Date
-from odoo.tools.float_utils import float_round, float_is_zero, float_compare
-from odoo.exceptions import UserError
 
 
 class StockMove(models.Model):

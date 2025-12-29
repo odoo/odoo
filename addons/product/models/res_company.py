@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 
 
 class ResCompany(models.Model):
@@ -43,7 +43,7 @@ class ResCompany(models.Model):
         self.ensure_one()
         values = {}
         values.update({
-            'name': _("Default"),
+            'name': self.env._("Default"),
             'currency_id': self.currency_id.id,
             'company_id': self.id,
             'sequence': 10,

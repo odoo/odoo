@@ -2,13 +2,14 @@
 
 import logging
 import json
+from datetime import timedelta, datetime
 
-from odoo import http, _
+from odoo import http
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import format_amount, file_open
+
 from odoo.addons.account.controllers.portal import PortalAccount
-from datetime import timedelta, datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -133,9 +134,9 @@ class PosController(PortalAccount):
                     form_values[field] = kwargs.get(field)
 
             if errors:
-                errors['generic'] = _("Please fill all the required fields.")
+                errors['generic'] = self.env._("Please fill all the required fields.")
             elif len(form_values['pos_reference']) < 12:
-                errors['pos_reference'] = _("The Ticket Number should be at least 12 characters long.")
+                errors['pos_reference'] = self.env._("The Ticket Number should be at least 12 characters long.")
             else:
                 date_order = datetime(*[int(i) for i in form_values['date_order'].split('-')])
                 order = request.env['pos.order'].sudo().search([
@@ -147,7 +148,7 @@ class PosController(PortalAccount):
                 if order:
                     return request.redirect('/pos/ticket/validate?access_token=%s' % (order.access_token))
                 else:
-                    errors['generic'] = _("No sale order found.")
+                    errors['generic'] = self.env._("No sale order found.")
 
         elif request.httprequest.method == 'GET':
             if kwargs.get('order_uuid'):
@@ -255,7 +256,7 @@ class PosController(PortalAccount):
             'invoice_required_fields': additional_invoice_fields,
             'partner_required_fields': additional_partner_fields,
             'access_token': access_token,
-            'invoice_sending_methods': {'email': _("by Email")},
+            'invoice_sending_methods': {'email': self.env._("by Email")},
             **form_values,
         })
 
@@ -266,7 +267,7 @@ class PosController(PortalAccount):
         for field in additional_required_fields:
             if field.name not in addtional_form_values or not addtional_form_values[field.name]:
                 missing_fields.add(field.name)
-                error_messages.append(_("The field %s must be filled.", field.field_description.lower()))
+                error_messages.append(self.env._("The field %s must be filled.", field.field_description.lower()))
         return missing_fields, error_messages
 
     def _get_invoice(self, partner, invoice_values, pos_order, additional_invoice_fields, kwargs):

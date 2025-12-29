@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 
 
 class LoyaltyProgram(models.Model):
@@ -22,7 +22,7 @@ class LoyaltyProgram(models.Model):
         # Override 'promotion' template to say free shipping
         res = super().get_program_templates()
         if 'promotion' in res:
-            res['promotion']['description'] = _("Automatic promotion: free shipping on orders higher than $50")
+            res['promotion']['description'] = self.env._("Automatic promotion: free shipping on orders higher than $50")
         return res
 
     @api.model

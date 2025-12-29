@@ -3,10 +3,9 @@
 
 import uuid
 from base64 import b64decode
-
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.mimetypes import guess_mimetype
 
@@ -48,11 +47,11 @@ class RestaurantFloor(models.Model):
         confs = self.mapped('pos_config_ids').filtered(lambda c: c.module_pos_restaurant)
         opened_session = self.env['pos.session'].search([('config_id', 'in', confs.ids), ('state', '!=', 'closed')])
         if opened_session and confs:
-            error_msg = _("You cannot remove a floor that is used in a PoS session, close the session(s) first: \n")
+            error_msg = self.env._("You cannot remove a floor that is used in a PoS session, close the session(s) first: \n")
             for floor in self:
                 for session in opened_session:
                     if floor in session.config_id.floor_ids:
-                        error_msg += _("Floor: %(floor)s - PoS Config: %(config)s \n", floor=floor.name, config=session.config_id.name)
+                        error_msg += self.env._("Floor: %(floor)s - PoS Config: %(config)s \n", floor=floor.name, config=session.config_id.name)
             raise UserError(error_msg)
 
     def write(self, vals):
@@ -74,13 +73,13 @@ class RestaurantFloor(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for floor, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", floor.name)
+                vals['name'] = self.env._("%s (copy)", floor.name)
         return vals_list
 
     def deactivate_floor(self, session_id):
         draft_orders = self.env['pos.order'].search([('session_id', '=', session_id), ('state', '=', 'draft'), ('table_id.floor_id', '=', self.id)])
         if draft_orders:
-            raise UserError(_("You cannot delete a floor when orders are still in draft for this floor."))
+            raise UserError(self.env._("You cannot delete a floor when orders are still in draft for this floor."))
         for table in self.table_ids:
             table.active = False
         self.active = False
@@ -92,7 +91,7 @@ class RestaurantFloor(models.Model):
         img = b64decode(data)
         mimetype = guess_mimetype(img)
         if mimetype not in FLOOR_PLAN_SUPPORTED_IMAGE_MIMETYPES:
-            raise UserError(_("Uploaded image's format is not supported. Try with: %s", ', '.join(FLOOR_PLAN_SUPPORTED_IMAGE_MIMETYPES.values())))
+            raise UserError(self.env._("Uploaded image's format is not supported. Try with: %s", ', '.join(FLOOR_PLAN_SUPPORTED_IMAGE_MIMETYPES.values())))
         IrAttachment = self.env['ir.attachment']
         checksum = IrAttachment._compute_checksum(img)
         if not name:
@@ -154,7 +153,7 @@ class RestaurantTable(models.Model):
         draft_orders_count = self.env['pos.order'].search_count([('table_id', 'in', self.ids), ('state', '=', 'draft')])
 
         if draft_orders_count > 0:
-            raise UserError(_("You cannot delete a table when orders are still in draft for this table."))
+            raise UserError(self.env._("You cannot delete a table when orders are still in draft for this table."))
 
         return True
 
@@ -163,6 +162,6 @@ class RestaurantTable(models.Model):
         confs = self.mapped('floor_id.pos_config_ids').filtered(lambda c: c.module_pos_restaurant)
         opened_session = self.env['pos.session'].search([('config_id', 'in', confs.ids), ('state', '!=', 'closed')])
         if opened_session:
-            error_msg = _("You cannot remove a table that is used in a PoS session, close the session(s) first.")
+            error_msg = self.env._("You cannot remove a table that is used in a PoS session, close the session(s) first.")
             if confs:
                 raise UserError(error_msg)

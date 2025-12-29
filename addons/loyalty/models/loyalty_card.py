@@ -2,7 +2,7 @@
 
 from uuid import uuid4
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import format_amount
 
@@ -62,7 +62,7 @@ class LoyaltyCard(models.Model):
     def _contrains_code(self):
         # Prevent a coupon from having the same code a program
         if self.env['loyalty.rule'].search_count([('mode', '=', 'with_code'), ('code', 'in', self.mapped('code'))]):
-            raise ValidationError(_("A trigger with the same code as one of your coupon already exists."))
+            raise ValidationError(self.env._("A trigger with the same code as one of your coupon already exists."))
 
     @api.constrains('active', 'partner_id', 'program_id')
     def _check_single_loyalty_card_per_partner(self):
@@ -130,7 +130,7 @@ class LoyaltyCard(models.Model):
             force_email=True,
         )
         return {
-            'name': _("Compose Email"),
+            'name': self.env._("Compose Email"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
@@ -216,7 +216,7 @@ class LoyaltyCard(models.Model):
 
     def action_loyalty_update_balance(self):
         return {
-            'name': _("Update Balance"),
+            'name': self.env._("Update Balance"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'loyalty.card.update.balance',

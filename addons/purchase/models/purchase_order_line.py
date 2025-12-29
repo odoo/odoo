@@ -1,9 +1,8 @@
 from collections import defaultdict
 from datetime import datetime, time, UTC
-
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
 from odoo.tools.float_utils import float_compare, float_round
@@ -300,14 +299,14 @@ class PurchaseOrderLine(models.Model):
                 qty_received = line.product_uom_id._compute_quantity(line.qty_received, line.product_id.uom_id)
                 line.product_id.with_context(skip_qty_available_update=True).qty_available += qty_received
             if line.product_id and line.order_id.state == 'purchase':
-                msg = _("Extra line with %s ", line.product_id.display_name)
+                msg = self.env._("Extra line with %s ", line.product_id.display_name)
                 line.order_id.message_post(body=msg)
         return lines
 
     def write(self, vals):
         values = vals
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
-            raise UserError(_("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type."))
+            raise UserError(self.env._("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type."))
 
         if 'product_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit')
@@ -336,7 +335,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if line.order_id.state == 'purchase' and line.display_type not in ['line_section', 'line_subsection', 'line_note']:
                 state_description = {state_desc[0]: state_desc[1] for state_desc in self._fields['state']._description_selection(self.env)}
-                raise UserError(_('Cannot delete a purchase order line which is in state “%s”.', state_description.get(line.state)))
+                raise UserError(self.env._('Cannot delete a purchase order line which is in state “%s”.', state_description.get(line.state)))
 
     @api.model
     def _get_date_planned(self, seller, po=False):

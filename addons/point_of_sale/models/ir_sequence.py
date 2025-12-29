@@ -1,4 +1,4 @@
-from odoo import api, models, _
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -15,7 +15,7 @@ class IrSequence(models.Model):
             ('order_backend_seq_id', 'in', self.ids)
         ])
         if len(configs):
-            raise UserError(_(
+            raise UserError(self.env._(
                 "You cannot delete a sequence used in an active POS config: %s",
                 configs.order_seq_id.mapped('name')
             ))

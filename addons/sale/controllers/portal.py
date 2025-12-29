@@ -2,12 +2,11 @@
 
 import binascii
 
-from odoo import SUPERUSER_ID, _, fields, http
+from odoo import SUPERUSER_ID, fields, http
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 
@@ -42,7 +41,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
     def _get_sale_searchbar_sortings(self):
         return {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
+            'date': {'label': self.env._('Order Date'), 'order': 'date_order desc'},
         }
 
     def _prepare_sale_portal_rendering_values(
@@ -135,7 +134,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         payment_amount = self._cast_as_float(payment_amount)
         prepayment_amount = order_sudo._get_prepayment_required_amount()
         if payment_amount and payment_amount < prepayment_amount and order_sudo.state != 'sale':
-            raise MissingError(_("The amount is lower than the prepayment amount."))
+            raise MissingError(self.env._("The amount is lower than the prepayment amount."))
 
         if report_type in ('html', 'pdf', 'text'):
             return self._show_report(
@@ -157,7 +156,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 # dedicated to the salesman and shouldn't be translated in the customer/website lgg
                 context = {'lang': order_sudo.user_id.partner_id.lang or order_sudo.company_id.partner_id.lang}
                 author = order_sudo.partner_id if request.env.user._is_public() else request.env.user.partner_id
-                msg = _('Quotation viewed by customer %s', author.name)
+                msg = self.env._('Quotation viewed by customer %s', author.name)
                 del context
                 order_sudo.with_user(SUPERUSER_ID).message_post(
                     body=msg,
@@ -306,12 +305,12 @@ class CustomerPortal(payment_portal.PaymentPortal):
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
         except (AccessError, MissingError):
-            return {'error': _('Invalid order.')}
+            return {'error': self.env._('Invalid order.')}
 
         if not order_sudo._has_to_be_signed():
-            return {'error': _('The order is not in a state requiring customer signature.')}
+            return {'error': self.env._('The order is not in a state requiring customer signature.')}
         if not signature:
-            return {'error': _('Signature is missing.')}
+            return {'error': self.env._('Signature is missing.')}
 
         try:
             order_sudo.write({
@@ -322,7 +321,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             # flush now to make signature data available to PDF render request
             request.env.cr.flush()
         except (TypeError, binascii.Error) as e:
-            return {'error': _('Invalid signature data.')}
+            return {'error': self.env._('Invalid signature data.')}
 
         if not order_sudo._has_to_be_paid():
             order_sudo._validate_order()
@@ -336,7 +335,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 if request.env.user._is_public()
                 else request.env.user.partner_id.id
             ),
-            body=_('Order signed by %s', name),
+            body=self.env._('Order signed by %s', name),
             message_type='comment',
             subtype_xmlid='mail.mt_comment',
         )
@@ -446,7 +445,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except MissingError as error:
             raise error
         except AccessError:
-            raise ValidationError(_("The access token is invalid."))
+            raise ValidationError(self.env._("The access token is invalid."))
 
         logged_in = not request.env.user._is_public()
         partner_sudo = request.env.user.partner_id if logged_in else order_sudo.partner_invoice_id

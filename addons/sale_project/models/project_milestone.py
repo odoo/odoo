@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class ProjectMilestone(models.Model):
@@ -57,7 +57,7 @@ class ProjectMilestone(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Sales Order'),
+            'name': self.env._('Sales Order'),
             'res_model': 'sale.order',
             'res_id': self.sale_line_id.order_id.id,
             'view_mode': 'form',

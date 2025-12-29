@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -29,7 +29,7 @@ class PosConfig(models.Model):
                     if product.available_in_pos:
                         continue
                     invalid_reward_products_msg += "\n\t"
-                    invalid_reward_products_msg += _(
+                    invalid_reward_products_msg += self.env._(
                         "Program: %(name)s, Reward Product: `%(reward_product)s`",
                         name=reward.program_id.name,
                         reward_product=product.name,
@@ -39,32 +39,32 @@ class PosConfig(models.Model):
             if product.available_in_pos:
                 continue
             invalid_reward_products_msg += "\n\t"
-            invalid_reward_products_msg += _(
+            invalid_reward_products_msg += self.env._(
                 "Program: %(name)s, Rule Product: `%(rule_product)s`",
                 name=reward.program_id.name,
                 rule_product=product.name,
             )
 
         if invalid_reward_products_msg:
-            prefix_error_msg = _("To continue, make the following reward products available in Point of Sale.")
+            prefix_error_msg = self.env._("To continue, make the following reward products available in Point of Sale.")
             raise UserError(f"{prefix_error_msg}\n{invalid_reward_products_msg}")  # pylint: disable=missing-gettext
         if gift_card_programs:
             for gc_program in gift_card_programs:
                 # Do not allow a gift card program with more than one rule or reward, and check that they make sense
                 if len(gc_program.reward_ids) > 1:
-                    raise UserError(_('Invalid gift card program. More than one reward.'))
+                    raise UserError(self.env._('Invalid gift card program. More than one reward.'))
                 elif len(gc_program.rule_ids) > 1:
-                    raise UserError(_('Invalid gift card program. More than one rule.'))
+                    raise UserError(self.env._('Invalid gift card program. More than one rule.'))
                 rule = gc_program.rule_ids
                 if rule.reward_point_amount != 1 or rule.reward_point_mode != 'money':
-                    raise UserError(_('Invalid gift card program rule. Use 1 point per currency spent.'))
+                    raise UserError(self.env._('Invalid gift card program rule. Use 1 point per currency spent.'))
                 reward = gc_program.reward_ids
                 if reward.reward_type != 'discount' or reward.discount_mode != 'per_point' or reward.discount != 1:
-                    raise UserError(_('Invalid gift card program reward. Use 1 currency per point discount.'))
+                    raise UserError(self.env._('Invalid gift card program reward. Use 1 currency per point discount.'))
                 if not gc_program.mail_template_id:
-                    raise UserError(_('There is no email template on the gift card program and your pos is set to print them.'))
+                    raise UserError(self.env._('There is no email template on the gift card program and your pos is set to print them.'))
                 if not gc_program.pos_report_print_id:
-                    raise UserError(_('There is no print report on the gift card program and your pos is set to print them.'))
+                    raise UserError(self.env._('There is no print report on the gift card program and your pos is set to print them.'))
 
         return super()._check_before_creating_new_session()
 
@@ -81,7 +81,7 @@ class PosConfig(models.Model):
             return {
                 'successful': False,
                 'payload': {
-                    'error_message': _('This coupon is invalid (%s).', code),
+                    'error_message': self.env._('This coupon is invalid (%s).', code),
                 },
             }
         check_date = fields.Date.from_string(creation_date[:11])
@@ -92,18 +92,18 @@ class PosConfig(models.Model):
             or (program.date_to and program.date_to < today_date)
             or (program.limit_usage and program.sudo().total_order_count >= program.max_usage)
         ):
-            error_message = _("This coupon is expired (%s).", code)
+            error_message = self.env._("This coupon is expired (%s).", code)
         elif program.date_from and program.date_from > today_date:
-            error_message = _("This coupon is not yet valid (%s).", code)
+            error_message = self.env._("This coupon is not yet valid (%s).", code)
         elif (
             not program.reward_ids or
             not any(r.required_points <= coupon.points for r in program.reward_ids)
         ):
-            error_message = _("No reward can be claimed with this coupon.")
+            error_message = self.env._("No reward can be claimed with this coupon.")
         elif program.pricelist_ids and pricelist_id not in program.pricelist_ids.ids:
-            error_message = _("This coupon is not available with the current pricelist.")
+            error_message = self.env._("This coupon is not available with the current pricelist.")
         elif coupon and program.program_type == 'promo_code':
-            error_message = _("This programs requires a code to be applied.")
+            error_message = self.env._("This programs requires a code to be applied.")
 
         if error_message:
             return {

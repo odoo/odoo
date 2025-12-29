@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import logging
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request
@@ -55,7 +54,7 @@ class SaleOrder(models.Model):
         string="Order Reference",
         required=True, copy=False, readonly=False,
         index='trigram',
-        default=lambda self: _('New'))
+        default=lambda self: self.env._('New'))
 
     company_id = fields.Many2one(
         comodel_name='res.company',
@@ -422,7 +421,7 @@ class SaleOrder(models.Model):
             if order.terms_type == 'html' and order.env.company.invoice_terms_html:
                 baseurl = html_keep_url(order._get_note_url() + '/terms')
                 context = {'lang': order.partner_id.lang or self.env.user.lang}
-                order.note = _('Terms & Conditions: %s', baseurl)
+                order.note = self.env._('Terms & Conditions: %s', baseurl)
                 del context
             elif not is_html_empty(order.env.company.invoice_terms):
                 if order.partner_id.lang:
@@ -882,9 +881,9 @@ class SaleOrder(models.Model):
     def _compute_type_name(self):
         for record in self:
             if record.state in ('draft', 'sent', 'cancel'):
-                record.type_name = _("Quotation")
+                record.type_name = self.env._("Quotation")
             else:
-                record.type_name = _("Sales Order")
+                record.type_name = self.env._("Sales Order")
 
     # portal.mixin override
     def _compute_access_url(self):
@@ -923,7 +922,7 @@ class SaleOrder(models.Model):
                 bad_products = order.order_line.product_id.filtered(
                     lambda p: p.company_id and p.company_id in invalid_companies
                 )
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
                     product_company=', '.join(invalid_companies.sudo().mapped('display_name')),
                     quote_company=order.company_id.display_name,
@@ -934,7 +933,7 @@ class SaleOrder(models.Model):
     def _check_prepayment_percent(self):
         for order in self:
             if order.require_payment and not (0 < order.prepayment_percent <= 1.0):
-                raise ValidationError(_("Prepayment percentage must be a valid percentage."))
+                raise ValidationError(self.env._("Prepayment percentage must be a valid percentage."))
 
     #=== ONCHANGE METHODS ===#
 
@@ -955,8 +954,8 @@ class SaleOrder(models.Model):
         if self.commitment_date and self.expected_date and self.commitment_date < self.expected_date:
             return {
                 'warning': {
-                    'title': _('Requested date is too soon.'),
-                    'message': _("The delivery date is sooner than the expected date."
+                    'title': self.env._('Requested date is too soon.'),
+                    'message': self.env._("The delivery date is sooner than the expected date."
                                  " You may be unable to honor the delivery date.")
                 }
             }
@@ -969,8 +968,8 @@ class SaleOrder(models.Model):
         if self.order_line and self.state == 'draft':
             return {
                 'warning': {
-                    'title': _("Warning for the change of your quotation's company"),
-                    'message': _("Changing the company of an existing quotation might need some "
+                    'title': self.env._("Warning for the change of your quotation's company"),
+                    'message': self.env._("Changing the company of an existing quotation might need some "
                                  "manual adjustments in the details of the lines. You might "
                                  "consider updating the prices."),
                 }
@@ -982,7 +981,7 @@ class SaleOrder(models.Model):
             # This can't be caught by a python constraint as it is only triggered at save
             # and a compute methodd needs this data to be set correctly before saving
             if not order.company_id:
-                raise ValidationError(_("The company is required, please select one before making any other changes to the sale order."))
+                raise ValidationError(self.env._("The company is required, please select one before making any other changes to the sale order."))
 
     @api.onchange('fiscal_position_id')
     def _onchange_fpos_id_show_update_fpos(self):
@@ -1018,7 +1017,7 @@ class SaleOrder(models.Model):
                     selected_combo_items
                     and len(selected_combo_items) != len(line.product_template_id.sudo().combo_ids)
                 ):
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         "The number of selected combo items must match the number of available"
                         " combo choices."
                     ))
@@ -1069,12 +1068,12 @@ class SaleOrder(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', _("New")) == _("New"):
+            if vals.get('name', self.env._("New")) == self.env._("New"):
                 seq_date = fields.Datetime.context_timestamp(
                     self, fields.Datetime.to_datetime(vals['date_order'])
                 ) if 'date_order' in vals else None
                 vals['name'] = self.env['ir.sequence'].with_company(vals.get('company_id')).next_by_code(
-                    'sale.order', sequence_date=seq_date) or _("New")
+                    'sale.order', sequence_date=seq_date) or self.env._("New")
 
         return super().create(vals_list)
 
@@ -1099,13 +1098,13 @@ class SaleOrder(models.Model):
     def _unlink_except_draft_or_cancel(self):
         for order in self:
             if order.state not in ('draft', 'cancel'):
-                raise UserError(_(
+                raise UserError(self.env._(
                     "You can not delete a sent quotation or a confirmed sales order."
                     " You must first cancel it."))
 
     def write(self, vals):
         if 'pricelist_id' in vals and any(so.state == 'sale' for so in self):
-            raise UserError(_("You cannot change the pricelist of a confirmed order !"))
+            raise UserError(self.env._("You cannot change the pricelist of a confirmed order !"))
         return super().write(vals)
 
     #=== ACTION METHODS ===#
@@ -1114,7 +1113,7 @@ class SaleOrder(models.Model):
     def action_open_discount_wizard(self):
         self.ensure_one()
         return {
-            'name': _("Discount"),
+            'name': self.env._("Discount"),
             'type': 'ir.actions.act_window',
             'res_model': 'sale.order.discount',
             'view_mode': 'form',
@@ -1162,7 +1161,7 @@ class SaleOrder(models.Model):
                     order._portal_ensure_token()
 
         action = {
-            'name': _('Send'),
+            'name': self.env._('Send'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
@@ -1224,7 +1223,7 @@ class SaleOrder(models.Model):
         :raise: UserError if any given SO is not in draft state.
         """
         if any(order.state != 'draft' for order in self):
-            raise UserError(_("Only draft orders can be marked as sent directly."))
+            raise UserError(self.env._("Only draft orders can be marked as sent directly."))
 
         self.write({'state': 'sent'})
 
@@ -1271,14 +1270,14 @@ class SaleOrder(models.Model):
         """ Return whether order can be confirmed or not if not then returm error message. """
         self.ensure_one()
         if self.state not in {'draft', 'sent'}:
-            return _("Some orders are not in a state requiring confirmation.")
+            return self.env._("Some orders are not in a state requiring confirmation.")
         if any(
             not line.display_type
             and not line.is_downpayment
             and not line.product_id
             for line in self.order_line
         ):
-            return _("Some order lines are missing a product, you need to correct them before going further.")
+            return self.env._("Some order lines are missing a product, you need to correct them before going further.")
 
         return False
 
@@ -1395,7 +1394,7 @@ class SaleOrder(models.Model):
         orders_to_close = self.filtered(lambda o: not o.invoicing_closed)
         self.invoicing_closed = True
         orders_to_close._message_log_batch(
-            bodies={order.id: _("Invoicing closed") for order in orders_to_close}
+            bodies={order.id: self.env._("Invoicing closed") for order in orders_to_close}
         )
 
     def action_reopen_order(self):
@@ -1403,7 +1402,7 @@ class SaleOrder(models.Model):
         orders_to_reopen = self.filtered('invoicing_closed')
         orders_to_reopen.invoicing_closed = False
         orders_to_reopen._message_log_batch(
-            bodies={order.id: _("Invoicing reopened") for order in orders_to_reopen}
+            bodies={order.id: self.env._("Invoicing reopened") for order in orders_to_reopen}
         )
 
     def action_lock(self):
@@ -1415,7 +1414,7 @@ class SaleOrder(models.Model):
     def action_cancel(self):
         """ Cancel sales order and related draft invoices. """
         if any(order.locked for order in self):
-            raise UserError(_("You cannot cancel a locked order. Please unlock it first."))
+            raise UserError(self.env._("You cannot cancel a locked order. Please unlock it first."))
         return self._action_cancel()
 
     def _action_cancel(self):
@@ -1438,7 +1437,7 @@ class SaleOrder(models.Model):
         self._recompute_taxes()
 
         if self.partner_id:
-            self.message_post(body=_("Product taxes have been recomputed according to fiscal position %s.",
+            self.message_post(body=self.env._("Product taxes have been recomputed according to fiscal position %s.",
                 self.fiscal_position_id._get_html_link() if self.fiscal_position_id else "")
             )
 
@@ -1456,10 +1455,10 @@ class SaleOrder(models.Model):
         self._recompute_prices()
 
         if self.pricelist_id:
-            message = _("Product prices have been recomputed according to pricelist %s.",
+            message = self.env._("Product prices have been recomputed according to pricelist %s.",
                 self.pricelist_id._get_html_link())
         else:
-            message = _("Product prices have been recomputed.")
+            message = self.env._("Product prices have been recomputed.")
         self.message_post(body=message)
 
     def _recompute_prices(self):
@@ -1493,7 +1492,7 @@ class SaleOrder(models.Model):
     def action_open_business_doc(self):
         self.ensure_one()
         return {
-            'name': _("Order"),
+            'name': self.env._("Order"),
             'type': 'ir.actions.act_window',
             'res_model': 'sale.order',
             'res_id': self.id,
@@ -1587,7 +1586,7 @@ class SaleOrder(models.Model):
         ]
 
     def _nothing_to_invoice_error_message(self):
-        return _(
+        return self.env._(
             "Cannot create an invoice. No items are available to invoice.\n\n"
             "To resolve this issue, please ensure that:\n"
             "   \u2022 The products have been delivered before attempting to invoice them.\n"
@@ -1849,13 +1848,13 @@ class SaleOrder(models.Model):
             is_tx_pending = self.get_portal_last_transaction().state == 'pending'
             if self._has_to_be_signed():
                 if self._has_to_be_paid():
-                    access_opt['title'] = _("View Quotation") if is_tx_pending else _("Sign & Pay Quotation")
+                    access_opt['title'] = self.env._("View Quotation") if is_tx_pending else self.env._("Sign & Pay Quotation")
                 else:
-                    access_opt['title'] = _("Review & Sign Quotation")
+                    access_opt['title'] = self.env._("Review & Sign Quotation")
             elif self._has_to_be_paid() and not is_tx_pending:
-                access_opt['title'] = _("Review & Pay Quotation")
+                access_opt['title'] = self.env._("Review & Pay Quotation")
             elif self.state in ('draft', 'sent'):
-                access_opt['title'] = _("View Quotation")
+                access_opt['title'] = self.env._("View Quotation")
 
         return groups
 
@@ -1983,11 +1982,11 @@ class SaleOrder(models.Model):
         """
         attachments = self.env['ir.attachment'].browse(attachment_ids)
         if not attachments:
-            raise UserError(_("No attachment was provided"))
+            raise UserError(self.env._("No attachment was provided"))
 
         orders = self.with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(attachments)
 
-        return orders._get_records_action(name=_("Generated Orders"))
+        return orders._get_records_action(name=self.env._("Generated Orders"))
 
     # PORTAL #
 
@@ -2057,7 +2056,7 @@ class SaleOrder(models.Model):
     @api.model
     def get_empty_list_help(self, help_message):
         self = self.with_context(
-            empty_list_help_document_name=_("sale order"),
+            empty_list_help_document_name=self.env._("sale order"),
         )
         return super().get_empty_list_help(help_message)
 
@@ -2087,7 +2086,7 @@ class SaleOrder(models.Model):
             order.activity_schedule(
                 'mail.mail_activity_data_todo',
                 user_id=order.user_id.id or order.partner_id.user_id.id,
-                note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
+                note=self.env._("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
 
     def _prepare_analytic_account_data(self, prefix=None):
         """ Prepare SO analytic account creation values.
@@ -2119,7 +2118,7 @@ class SaleOrder(models.Model):
         context = {'lang': self.partner_id.lang}
         down_payments_section_line = {
             'display_type': 'line_section',
-            'name': _("Down Payments"),
+            'name': self.env._("Down Payments"),
             'product_id': False,
             'product_uom_id': False,
             'quantity': 0,
@@ -2254,7 +2253,7 @@ class SaleOrder(models.Model):
         )
         if invalid_targets:
             raise UserError(
-                _("The following sale orders %(invalid_orders) can't be delivered. Cancelled all deliveries."),
+                self.env._("The following sale orders %(invalid_orders) can't be delivered. Cancelled all deliveries."),
                 invalid_orders=invalid_targets)
         for order in self:
             for line in order.order_line:
@@ -2404,7 +2403,7 @@ class SaleOrder(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Quotations'),
+            'label': self.env._('Import Template for Quotations'),
             'template': '/sale/static/xls/quotations_import_template.xlsx',
         }]
 

@@ -2,7 +2,7 @@
 
 import json
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
@@ -105,7 +105,7 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             if line.available_product_document_ids:
                 lines_params.append({
-                    'name': _("Product") + " > " + line.name.splitlines()[0],
+                    'name': self.env._("Product") + " > " + line.name.splitlines()[0],
                     'id': line.id,
                     'files': [{
                         'name': doc.name.rstrip('.pdf'),
@@ -123,7 +123,7 @@ class SaleOrder(models.Model):
                     } for doc in line.available_product_document_ids]
                 })
         dialog_params = {
-            'headers': {'name': _("Header"), 'files': [{
+            'headers': {'name': self.env._("Header"), 'files': [{
                 'id': header.id,
                 'name': header.name,
                 'is_selected': header in selected_headers,
@@ -135,7 +135,7 @@ class SaleOrder(models.Model):
                 } for custom_form_field in header.form_field_ids.filtered(lambda ff: not ff.path)],
             } for header in headers_available]},
             'lines': lines_params,
-            'footers': {'name': _("Footer"), 'files': [{
+            'footers': {'name': self.env._("Footer"), 'files': [{
                 'id': footer.id,
                 'name': footer.name,
                 'is_selected': footer in selected_footers,

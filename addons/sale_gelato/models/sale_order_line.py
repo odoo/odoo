@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 
 
@@ -29,4 +29,4 @@ class SaleOrderLine(models.Model):
         :raise ValidationError: If a Gelato product is missing print images.
         """
         if any(line.product_id.product_tmpl_id.gelato_missing_images for line in self):
-            raise ValidationError(_("You cannot order unconfigured Gelato products."))
+            raise ValidationError(self.env._("You cannot order unconfigured Gelato products."))

@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -28,7 +28,7 @@ def _prepare_data(env, docids, data):
             'pricelist': layout_wizard.pricelist_id,
         }
     else:
-        raise UserError(_('Product model not defined, Please contact your administrator.'))
+        raise UserError(env._('Product model not defined, Please contact your administrator.'))
 
     if not layout_wizard:
         return {}

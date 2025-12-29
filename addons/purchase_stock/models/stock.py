@@ -3,7 +3,7 @@
 from collections import defaultdict
 from dateutil import relativedelta
 
-from odoo import api, Command, fields, models, _
+from odoo import Command, api, fields, models
 from odoo.fields import Domain
 
 
@@ -68,7 +68,7 @@ class StockWarehouse(models.Model):
                 buy_route.warehouse_ids = [Command.unlink(warehouse.id)]
 
     def _create_or_update_route(self):
-        purchase_route = self._find_or_create_global_route('purchase_stock.route_warehouse0_buy', _('Buy'))
+        purchase_route = self._find_or_create_global_route('purchase_stock.route_warehouse0_buy', self.env._('Buy'))
         for warehouse in self:
             if warehouse.buy_to_resupply:
                 purchase_route.warehouse_ids = [Command.link(warehouse.id)]
@@ -84,7 +84,7 @@ class StockWarehouse(models.Model):
                     'action': 'buy',
                     'picking_type_id': self.in_type_id.id,
                     'company_id': self.company_id.id,
-                    'route_id': self._find_or_create_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id,
+                    'route_id': self._find_or_create_global_route('purchase_stock.route_warehouse0_buy', self.env._('Buy')).id,
                     'propagate_cancel': self.reception_steps != 'one_step',
                 },
                 'update_values': {
@@ -284,7 +284,7 @@ class StockWarehouseOrderpoint(models.Model):
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
-                    'title': _('The following replenishment order has been generated'),
+                    'title': self.env._('The following replenishment order has been generated'),
                     'message': '%s',
                     'links': [{
                         'label': order.display_name,

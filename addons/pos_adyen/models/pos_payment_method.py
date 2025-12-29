@@ -6,8 +6,8 @@ import pprint
 import requests
 from urllib.parse import parse_qs
 
-from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError, UserError, AccessDenied
+from odoo import api, fields, models
+from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.tools import hmac
 
 _logger = logging.getLogger(__name__)
@@ -57,10 +57,10 @@ class PosPaymentMethod(models.Model):
                                                   limit=1)
             if existing_payment_method:
                 if existing_payment_method.company_id == payment_method.company_id:
-                    raise ValidationError(_('Terminal %(terminal)s is already used on payment method %(payment_method)s.',
+                    raise ValidationError(self.env._('Terminal %(terminal)s is already used on payment method %(payment_method)s.',
                                       terminal=payment_method.adyen_terminal_identifier, payment_method=existing_payment_method.display_name))
                 else:
-                    raise ValidationError(_('Terminal %(terminal)s is already used in company %(company)s on payment method %(payment_method)s.',
+                    raise ValidationError(self.env._('Terminal %(terminal)s is already used in company %(company)s on payment method %(payment_method)s.',
                                              terminal=payment_method.adyen_terminal_identifier,
                                              company=existing_payment_method.company_id.name,
                                              payment_method=existing_payment_method.display_name))
@@ -91,7 +91,7 @@ class PosPaymentMethod(models.Model):
         if not self.env.su and not self.env.user.has_group('point_of_sale.group_pos_user'):
             raise AccessDenied()
         if not data:
-            raise UserError(_('Invalid Adyen request'))
+            raise UserError(self.env._('Invalid Adyen request'))
 
         if 'SaleToPOIRequest' in data and data['SaleToPOIRequest']['MessageHeader']['MessageCategory'] == 'Payment' and 'PaymentRequest' in data['SaleToPOIRequest']:  # Clear only if it is a payment request
             self.sudo().adyen_latest_response = ''  # avoid handling old responses multiple times
@@ -175,7 +175,7 @@ class PosPaymentMethod(models.Model):
         is_payment_request_without_acquirer_data = operation == 'terminal_request' and self._is_valid_adyen_request_data(data, self._get_expected_payment_request(False))
 
         if not is_payment_request_without_acquirer_data and not is_payment_request_with_acquirer_data and not is_adjust_data and not is_cancel_data and not is_capture_data and not is_payment_status_data and not is_reversal_data:
-            raise UserError(_('Invalid Adyen request'))
+            raise UserError(self.env._('Invalid Adyen request'))
 
         if is_payment_request_with_acquirer_data or is_payment_request_without_acquirer_data or is_reversal_data:
             request_name = 'ReversalRequest' if is_reversal_data else 'PaymentRequest'

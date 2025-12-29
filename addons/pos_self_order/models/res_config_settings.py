@@ -1,11 +1,11 @@
 import zipfile
 from io import BytesIO
+from werkzeug.urls import url_unquote
 
-from odoo import models, fields, api, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools.misc import split_every
-from werkzeug.urls import url_unquote
 
 
 class ResConfigSettings(models.TransientModel):
@@ -30,7 +30,7 @@ class ResConfigSettings(models.TransientModel):
             user = self.pos_self_ordering_default_user_id
             if not (user.has_group("point_of_sale.group_pos_user")
                     or user.has_group("point_of_sale.group_pos_manager")):
-                raise ValidationError(_("The user must be a POS user"))
+                raise ValidationError(self.env._("The user must be a POS user"))
 
     @api.onchange("pos_self_ordering_service_mode")
     def _onchange_pos_self_order_service_mode(self):
@@ -61,12 +61,12 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange("pos_payment_method_ids")
     def _onchange_pos_payment_method_ids(self):
         if self.pos_self_ordering_mode == 'kiosk' and any(pm.is_cash_count for pm in self.pos_payment_method_ids):
-            raise ValidationError(_("You cannot add cash payment methods in kiosk mode."))
+            raise ValidationError(self.env._("You cannot add cash payment methods in kiosk mode."))
 
     @api.onchange("pos_self_ordering_pay_after", "pos_self_ordering_mode")
     def _onchange_pos_self_order_pay_after(self):
         if self.pos_self_ordering_pay_after == "meal" and self.pos_self_ordering_mode == 'kiosk':
-            raise ValidationError(_("Only pay after each is available with kiosk mode."))
+            raise ValidationError(self.env._("Only pay after each is available with kiosk mode."))
 
         if self.pos_self_ordering_service_mode == 'counter' and self.pos_self_ordering_mode == 'mobile':
             self.pos_self_ordering_pay_after = "each"
@@ -106,7 +106,7 @@ class ResConfigSettings(models.TransientModel):
 
     def generate_qr_codes_zip(self):
         if not self.pos_self_ordering_mode in ['mobile', 'consultation']:
-            raise ValidationError(_("QR codes can only be generated in mobile or consultation mode."))
+            raise ValidationError(self.env._("QR codes can only be generated in mobile or consultation mode."))
 
         qr_images = []
         excel_rows = []
@@ -115,7 +115,7 @@ class ResConfigSettings(models.TransientModel):
             table_ids = self.pos_config_id.floor_ids.table_ids
 
             if not table_ids:
-                raise ValidationError(_("In Self-Order mode, you must have at least one table to generate QR codes"))
+                raise ValidationError(self.env._("In Self-Order mode, you must have at least one table to generate QR codes"))
 
             for row_num, table in enumerate(table_ids, start=1):
                 table_number = table.table_number
@@ -177,7 +177,7 @@ class ResConfigSettings(models.TransientModel):
             table_ids = self.pos_config_id.floor_ids.table_ids
 
             if not table_ids:
-                raise ValidationError(_("In Self-Order mode, you must have at least one table to generate QR codes"))
+                raise ValidationError(self.env._("In Self-Order mode, you must have at least one table to generate QR codes"))
 
             url = url_unquote(self.pos_config_id._get_self_order_url(table_ids[0].id))
             name = table_ids[0].table_number

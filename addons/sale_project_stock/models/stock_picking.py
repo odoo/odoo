@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -22,21 +22,21 @@ class StockPicking(models.Model):
                 continue
             # raise if the sale order is not currently open
             if sale_order.state in ('draft', 'sent'):
-                raise UserError(_(
+                raise UserError(self.env._(
                     "The Sales Order %(order)s linked to the Project %(project)s must be"
                     " validated before validating the stock picking.",
                     order=sale_order.name,
                     project=project.name,
                 ))
             elif sale_order.state == 'cancel':
-                raise UserError(_(
+                raise UserError(self.env._(
                     "The Sales Order %(order)s linked to the Project %(project)s is cancelled."
                     " You cannot validate a stock picking on a cancelled Sales Order.",
                     order=sale_order.name,
                     project=project.name,
                 ))
             elif sale_order.locked:
-                raise UserError(_(
+                raise UserError(self.env._(
                     "The Sales Order %(order)s linked to the Project %(project)s is currently locked."
                     " You cannot validate a stock picking on a locked Sales Order."
                     " Please create a new SO linked to this Project.",

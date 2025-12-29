@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -50,7 +50,7 @@ class LoyaltyProgram(models.Model):
                 if not program.mail_template_id:
                     mail_template_label = program._fields.get('mail_template_id').get_description(self.env)['string']
                     pos_report_print_label = program._fields.get('pos_report_print_id').get_description(self.env)['string']
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         "You must set '%(mail_template)s' before setting '%(report)s'.",
                         mail_template=mail_template_label,
                         report=pos_report_print_label,

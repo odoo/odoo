@@ -1,6 +1,6 @@
 import random
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -129,7 +129,7 @@ class CrmTeam(models.Model):
                 lambda m: team.company_id not in m.user_id.company_ids
             )
             if invalid_members:
-                raise UserError(_("The following team members are not allowed in company '%(company)s' of the Sales Team '%(team)s': %(users)s",
+                raise UserError(self.env._("The following team members are not allowed in company '%(company)s' of the Sales Team '%(team)s': %(users)s",
                     company=team.company_id.display_name,
                     team=team.name,
                     users=", ".join(invalid_members.mapped('user_id.name'))
@@ -176,7 +176,7 @@ class CrmTeam(models.Model):
                 ('user_id', 'in', team.member_ids.ids)
             ])
             if other_memberships:
-                team.member_warning = _("%(user_names)s already in other teams (%(team_names)s).",
+                team.member_warning = self.env._("%(user_names)s already in other teams (%(team_names)s).",
                                    user_names=", ".join(other_memberships.mapped('user_id.name')),
                                    team_names=", ".join(other_memberships.mapped('crm_team_id.name'))
                                   )
@@ -209,7 +209,7 @@ class CrmTeam(models.Model):
         """ Sets the adequate dashboard button name depending on the Sales Team's options
         """
         for team in self:
-            team.dashboard_button_name = _("Big Pretty Button :)") # placeholder
+            team.dashboard_button_name = self.env._("Big Pretty Button :)")  # placeholder
 
     # ------------------------------------------------------------
     # CRUD
@@ -239,7 +239,7 @@ class CrmTeam(models.Model):
         ]
         for team in self:
             if team in default_teams:
-                raise UserError(_('Cannot delete default team "%s"', team.name))
+                raise UserError(self.env._('Cannot delete default team "%s"', team.name))
 
     # ------------------------------------------------------------
     # ACTIONS

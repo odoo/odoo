@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
 from markupsafe import Markup
+
+from odoo import api, fields, models
 
 
 class PosOrder(models.Model):
@@ -18,4 +19,4 @@ class PosOrder(models.Model):
                 order.cashier = order.user_id.name
 
     def _prepare_pos_log(self, body):
-        return super()._prepare_pos_log(body) + Markup("<br/>") + _("Cashier %s", self.cashier)
+        return super()._prepare_pos_log(body) + Markup("<br/>") + self.env._("Cashier %s", self.cashier)

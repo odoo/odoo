@@ -1,7 +1,8 @@
-from odoo import api, fields, models, _
-from odoo.tools import formatLang, float_is_zero
-from odoo.exceptions import ValidationError
 from uuid import uuid4
+
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.tools import formatLang, float_is_zero
 
 
 class PosPayment(models.Model):
@@ -61,13 +62,13 @@ class PosPayment(models.Model):
     def _check_amount(self):
         for payment in self:
             if payment.pos_order_id.state == 'done' or payment.pos_order_id.account_move:
-                raise ValidationError(_('You cannot edit a payment for a posted order.'))
+                raise ValidationError(self.env._('You cannot edit a payment for a posted order.'))
 
     @api.constrains('payment_method_id')
     def _check_payment_method_id(self):
         for payment in self:
             if payment.payment_method_id not in payment.session_id.config_id.payment_method_ids:
-                raise ValidationError(_('The payment method selected is not allowed in the config of the POS session.'))
+                raise ValidationError(self.env._('The payment method selected is not allowed in the config of the POS session.'))
 
     def _create_payment_moves(self, is_reverse=False):
         result = self.env['account.move']
@@ -90,7 +91,7 @@ class PosPayment(models.Model):
             payment_move = self.env['account.move'].with_context(default_journal_id=journal.id).create({
                 'journal_id': journal.id,
                 'date': fields.Date.context_today(order, order.date_order),
-                'ref': _('Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s', order=order.name, account_move=order.account_move.name, payment_method=payment_method.name),
+                'ref': self.env._('Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s', order=order.name, account_move=order.account_move.name, payment_method=payment_method.name),
                 'pos_payment_ids': pos_payment_ids,
             })
             result |= payment_move

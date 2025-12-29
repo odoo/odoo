@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields
+from odoo import fields
 from odoo.http import request, route
 
 from odoo.addons.portal.controllers.portal import CustomerPortal
@@ -30,10 +30,10 @@ class CustomerPortalLoyalty(CustomerPortal):
 
     def _get_loyalty_searchbar_sortings(self):
         return {
-            'date': {'label': _("Date"), 'order': 'create_date desc'},
-            'used': {'label': _("Used"), 'order': 'used desc'},
-            'description': {'label': _("Description"), 'order': 'description desc'},
-            'issued': {'label': _("Issued"), 'order': 'issued desc'},
+            'date': {'label': self.env._("Date"), 'order': 'create_date desc'},
+            'used': {'label': self.env._("Used"), 'order': 'used desc'},
+            'description': {'label': self.env._("Description"), 'order': 'description desc'},
+            'issued': {'label': self.env._("Issued"), 'order': 'issued desc'},
         }
 
     @route(

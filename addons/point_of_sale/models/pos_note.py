@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
+from odoo import api, fields, models
 
 
 class PosNote(models.Model):
@@ -23,7 +23,7 @@ class PosNote(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for note, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", note.name)
+                vals['name'] = self.env._("%s (copy)", note.name)
         return vals_list
 
     @api.model

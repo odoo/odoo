@@ -2,7 +2,8 @@
 
 from base64 import b32encode
 from hashlib import sha256
-from odoo import api, fields, models, _
+
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -59,7 +60,7 @@ class PosPrinter(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for printer, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", printer.name)
+                vals['name'] = self.env._("%s (copy)", printer.name)
         return vals_list
 
     @api.model
@@ -74,7 +75,7 @@ class PosPrinter(models.Model):
     def _constrains_epson_printer_ip(self):
         for record in self:
             if record.printer_type == 'epson_epos' and not record.epson_printer_ip:
-                raise ValidationError(_("Epson Printer IP Address cannot be empty."))
+                raise ValidationError(self.env._("Epson Printer IP Address cannot be empty."))
 
     @api.onchange("epson_printer_ip")
     def _onchange_epson_printer_ip(self):

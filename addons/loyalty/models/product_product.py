@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -17,7 +17,7 @@ class ProductProduct(models.Model):
                 ('discount_product_ids', 'in', self.ids),
             ], limit=1)
             if rewards:
-                raise ValidationError(_("This product may not be archived. It is being used for an active promotion program."))
+                raise ValidationError(self.env._("This product may not be archived. It is being used for an active promotion program."))
         return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
@@ -27,7 +27,7 @@ class ProductProduct(models.Model):
             self.env.ref('loyalty.ewallet_product_50', False),
         ]
         for product in self.filtered(lambda p: p in product_data):
-            raise UserError(_(
+            raise UserError(self.env._(
                 "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'."
                 " Please archive it instead.",
                 name=product.with_context(display_default_code=False).display_name

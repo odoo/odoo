@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models, Command
+from odoo import Command, api, fields, models
 
 
 class PurchaseRequisitionCreateAlternative(models.TransientModel):
@@ -33,11 +33,11 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
             if not partner.purchase_warn_msg:
                 partner = partner.parent_id
             if partner and partner.purchase_warn_msg:
-                self.purchase_warn_msg = _("Warning for %(partner)s:\n%(warning_message)s\n", partner=partner.name, warning_message=partner.purchase_warn_msg)
+                self.purchase_warn_msg = self.env._("Warning for %(partner)s:\n%(warning_message)s\n", partner=partner.name, warning_message=partner.purchase_warn_msg)
             if self.copy_products and self.origin_po_id.order_line:
                 for line in self.origin_po_id.order_line:
                     if line.product_id.purchase_line_warn_msg:
-                        self.purchase_warn_msg += _("Warning for %(product)s:\n%(warning_message)s\n", product=line.product_id.name, warning_message=line.product_id.purchase_line_warn_msg)
+                        self.purchase_warn_msg += self.env._("Warning for %(product)s:\n%(warning_message)s\n", product=line.product_id.name, warning_message=line.product_id.purchase_line_warn_msg)
 
     def action_create_alternative(self):
         vals = self._get_alternative_values()
@@ -52,7 +52,7 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
             action['res_id'] = alt_purchase_orders.id
             action['view_mode'] = 'form'
         else:
-            action['name'] = _('Alternative Purchase Orders')
+            action['name'] = self.env._('Alternative Purchase Orders')
             action['domain'] = [('id', 'in', alt_purchase_orders.ids)]
         return action
 

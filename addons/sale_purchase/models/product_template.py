@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -17,7 +17,7 @@ class ProductTemplate(models.Model):
         for template in self:
             if template.service_to_purchase:
                 if template.type != 'service':
-                    raise ValidationError(_("Product that is not a service can not create RFQ."))
+                    raise ValidationError(self.env._("Product that is not a service can not create RFQ."))
                 template._check_vendor_for_service_to_purchase(template.seller_ids)
 
     @api.model_create_multi
@@ -29,7 +29,7 @@ class ProductTemplate(models.Model):
 
     def _check_vendor_for_service_to_purchase(self, sellers):
         if not sellers:
-            raise ValidationError(_("Please define the vendor from whom you would like to purchase this service automatically."))
+            raise ValidationError(self.env._("Please define the vendor from whom you would like to purchase this service automatically."))
 
     @api.onchange('type', 'expense_policy')
     def _onchange_service_to_purchase(self):

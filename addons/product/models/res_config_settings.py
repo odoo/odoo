@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -30,7 +30,7 @@ class ResConfigSettings(models.TransientModel):
             if active_pricelist:
                 return {
                     'warning': {
-                    'message': _("You are deactivating the pricelist feature. "
+                    'message': self.env._("You are deactivating the pricelist feature. "
                                  "Every active pricelist will be archived.")
                 }}
 

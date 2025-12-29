@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import hashlib
-
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import padding
 
-from odoo import _, fields, models, api
+from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessDenied
 
 
@@ -40,7 +39,7 @@ class PosPaymentMethod(models.Model):
     @api.constrains('use_payment_terminal')
     def _check_qfpay_terminal(self):
         if any(record.use_payment_terminal == 'qfpay' and record.company_id.currency_id.name != 'HKD' for record in self):
-            raise UserError(_('QFPay is only valid for HKD Currency'))
+            raise UserError(self.env._('QFPay is only valid for HKD Currency'))
 
     def _is_write_forbidden(self, fields):
         return super()._is_write_forbidden(fields - {'qfpay_latest_response'})
@@ -51,7 +50,7 @@ class PosPaymentMethod(models.Model):
             raise AccessDenied()
 
         if self.use_payment_terminal != 'qfpay':
-            raise UserError(_('This method can only be used with QFPay payment terminal.'))
+            raise UserError(self.env._('This method can only be used with QFPay payment terminal.'))
 
         key = self.sudo().qfpay_pos_key
         # AES IV is a constant as stated in the documentation

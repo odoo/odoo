@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import werkzeug
 
-from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError, UserError, AccessError
+from odoo import api, fields, models
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 
 class PosPaymentMethod(models.Model):
@@ -32,7 +32,7 @@ class PosPaymentMethod(models.Model):
                                                    ('stripe_serial_number', '=', payment_method.stripe_serial_number)],
                                                   limit=1)
             if existing_payment_method:
-                raise ValidationError(_('Terminal %(terminal)s is already used on payment method %(payment_method)s.',
+                raise ValidationError(self.env._('Terminal %(terminal)s is already used on payment method %(payment_method)s.',
                      terminal=payment_method.stripe_serial_number, payment_method=existing_payment_method.display_name))
 
     def _get_stripe_payment_provider(self):
@@ -42,7 +42,7 @@ class PosPaymentMethod(models.Model):
         ], limit=1)
 
         if not stripe_payment_provider:
-            raise UserError(_("Stripe payment provider for company %s is missing", self.env.company.name))
+            raise UserError(self.env._("Stripe payment provider for company %s is missing", self.env.company.name))
 
         return stripe_payment_provider
 
@@ -58,7 +58,7 @@ class PosPaymentMethod(models.Model):
 
     def _stripe_check_access(self):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Do not have access to fetch token from Stripe"))
+            raise AccessError(self.env._("Do not have access to fetch token from Stripe"))
 
     def stripe_payment_intent(self, amount):
         self._stripe_check_access()
@@ -124,7 +124,7 @@ class PosPaymentMethod(models.Model):
         res_id = self._get_stripe_payment_provider().id
         # Redirect
         return {
-            'name': _('Stripe'),
+            'name': self.env._('Stripe'),
             'res_model': 'payment.provider',
             'type': 'ir.actions.act_window',
             'view_mode': 'form',

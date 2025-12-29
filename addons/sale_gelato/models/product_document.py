@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -18,7 +18,7 @@ class ProductDocument(models.Model):
         :rtype: dict
         """
         if not self.datas:
-            raise UserError(_("Print images must be set on products before they can be ordered."))
+            raise UserError(self.env._("Print images must be set on products before they can be ordered."))
 
         query_string = f'access_token={self.ir_attachment_id.generate_access_token()[0]}'
         url = f'{self.get_base_url()}{self.ir_attachment_id.image_src}?{query_string}'

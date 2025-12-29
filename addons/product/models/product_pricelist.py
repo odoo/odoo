@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -66,7 +66,7 @@ class ProductPricelist(models.Model):
     @api.depends('currency_id')
     def _compute_display_name(self):
         for pricelist in self:
-            pricelist_name = pricelist.name and pricelist.name or _('New')
+            pricelist_name = pricelist.name and pricelist.name or self.env._('New')
             pricelist.display_name = f'{pricelist_name} ({pricelist.currency_id.name})'
 
     def write(self, vals):
@@ -84,7 +84,7 @@ class ProductPricelist(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for pricelist, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", pricelist.name)
+                vals['name'] = self.env._("%s (copy)", pricelist.name)
         return vals_list
 
     def _get_products_price(self, products, *args, **kwargs):
@@ -360,7 +360,7 @@ class ProductPricelist(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Pricelists'),
+            'label': self.env._('Import Template for Pricelists'),
             'template': '/product/static/xls/product_pricelist.xls'
         }]
 
@@ -372,7 +372,7 @@ class ProductPricelist(models.Model):
             ('pricelist_id', 'not in', self.ids),
         ])
         if linked_items:
-            raise UserError(_(
+            raise UserError(self.env._(
                 'You cannot delete pricelist(s):\n(%(pricelists)s)\nThey are used within pricelist(s):\n%(other_pricelists)s',
                 pricelists='\n'.join(linked_items.base_pricelist_id.mapped('display_name')),
                 other_pricelists='\n'.join(linked_items.pricelist_id.mapped('display_name')),
@@ -382,7 +382,7 @@ class ProductPricelist(models.Model):
     def action_open_pricelist_report(self):
         self.ensure_one()
         return {
-            'name': _("Pricelist Report Preview"),
+            'name': self.env._("Pricelist Report Preview"),
             'type': 'ir.actions.client',
             'tag': 'generate_pricelist_report',
         }

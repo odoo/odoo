@@ -2,7 +2,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
@@ -29,8 +29,8 @@ class SaleOrderLine(models.Model):
                 if self.product_uom_qty < self.qty_delivered:
                     return {}
                 warning_mess = {
-                    'title': _('Ordered quantity decreased!'),
-                    'message': _('You are decreasing the ordered quantity! Do not forget to manually update the purchase order if needed.'),
+                    'title': self.env._('Ordered quantity decreased!'),
+                    'message': self.env._('You are decreasing the ordered quantity! Do not forget to manually update the purchase order if needed.'),
                 }
                 return {'warning': warning_mess}
         return {}
@@ -223,7 +223,7 @@ class SaleOrderLine(models.Model):
         # determine vendor of the order (take the first matching company and product)
         suppliers = self.product_id._select_seller(partner_id=self._retrieve_purchase_partner(), quantity=self.product_uom_qty, uom_id=self.product_uom_id)
         if warning and not suppliers:
-            raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.", self.product_id.display_name))
+            raise UserError(self.env._("There is no vendor associated to the product %s. Please define a vendor for this product.", self.product_id.display_name))
         return suppliers[0]
 
     def _get_additional_domain_for_purchase_order_line(self):

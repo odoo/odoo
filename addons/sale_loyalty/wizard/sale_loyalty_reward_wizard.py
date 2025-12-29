@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -41,7 +41,7 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
     def action_apply(self):
         self.ensure_one()
         if not self.selected_reward_id:
-            raise ValidationError(_('No reward selected.'))
+            raise ValidationError(self.env._('No reward selected.'))
         claimable_rewards = self.order_id._get_claimable_rewards()
         selected_coupon = False
         for coupon, rewards in claimable_rewards.items():
@@ -49,7 +49,7 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
                 selected_coupon = coupon
                 break
         if not selected_coupon:
-            raise ValidationError(_('Coupon not found while trying to add the following reward: %s', self.selected_reward_id.description))
+            raise ValidationError(self.env._('Coupon not found while trying to add the following reward: %s', self.selected_reward_id.description))
         self.order_id._apply_program_reward(self.selected_reward_id, coupon, product=self.selected_product_id)
         self.order_id._update_programs_and_rewards()
         return True

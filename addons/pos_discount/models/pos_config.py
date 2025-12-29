@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -29,7 +29,7 @@ class PosConfig(models.Model):
     def open_ui(self):
         for config in self:
             if not self.current_session_id and config.module_pos_discount and not config.discount_product_id:
-                raise UserError(_('A discount product is needed to use the Global Discount feature. Go to Point of Sale > Configuration > Settings to set it.'))
+                raise UserError(self.env._('A discount product is needed to use the Global Discount feature. Go to Point of Sale > Configuration > Settings to set it.'))
         return super().open_ui()
 
     def _get_special_products(self):

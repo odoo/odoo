@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, AccessError
+from odoo import api, fields, models
+from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL
 from odoo.tools.misc import unquote
@@ -144,7 +144,7 @@ class ProjectTask(models.Model):
         for task in self.sudo():
             if task.sale_line_id:
                 if not task.sale_line_id.is_service or task.sale_line_id.is_expense:
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         'You cannot link the order item %(order_id)s - %(product_id)s to this task because it is a re-invoiced expense.',
                         order_id=task.sale_line_id.order_id.name,
                         product_id=task.sale_line_id.product_id.display_name,
@@ -192,7 +192,7 @@ class ProjectTask(models.Model):
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
-            "name": _("Sales Order"),
+            "name": self.env._("Sales Order"),
             "views": [[False, "list"], [False, "kanban"], [False, "form"]],
             "context": {"create": False, "show_sale": True},
             "domain": [["id", "in", so_ids]],

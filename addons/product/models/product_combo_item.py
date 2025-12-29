@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -30,4 +30,4 @@ class ProductComboItem(models.Model):
     @api.constrains('product_id')
     def _check_product_id_no_combo(self):
         if any(combo_item.product_id.type == 'combo' for combo_item in self):
-            raise ValidationError(_("A combo choice can't contain products of type \"combo\"."))
+            raise ValidationError(self.env._("A combo choice can't contain products of type \"combo\"."))

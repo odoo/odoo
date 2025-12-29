@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tools import float_repr
@@ -36,12 +34,12 @@ class SaleOrderDiscount(models.TransientModel):
                 wizard.discount_type in ('sol_discount', 'so_discount')
                 and wizard.discount_percentage > 1.0
             ):
-                raise ValidationError(_("Invalid discount amount"))
+                raise ValidationError(self.env._("Invalid discount amount"))
 
     def _prepare_discount_product_values(self):
         self.ensure_one()
         values = {
-            'name': _('Discount'),
+            'name': self.env._('Discount'),
             'type': 'service',
             'invoice_policy': 'order',
             'list_price': 0.0,
@@ -113,7 +111,7 @@ class SaleOrderDiscount(models.TransientModel):
                     self._prepare_discount_product_values()
                 )
             else:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "There does not seem to be any discount product configured for this company yet."
                     " You can either use a per-line discount, or ask an administrator to grant the"
                     " discount the first time."

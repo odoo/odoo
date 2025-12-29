@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import threading
-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -11,7 +9,7 @@ class ProductTemplate(models.Model):
 
     def _selection_service_policy(self):
         service_policies = super()._selection_service_policy()
-        service_policies.insert(1, ('delivered_timesheet', _('Based on Timesheets')))
+        service_policies.insert(1, ('delivered_timesheet', self.env._('Based on Timesheets')))
         return service_policies
 
     service_type = fields.Selection(selection_add=[
@@ -46,7 +44,7 @@ class ProductTemplate(models.Model):
 
     def _prepare_invoicing_tooltip(self):
         if self.service_policy == 'delivered_timesheet':
-            return _("Invoice based on timesheets (delivered quantity).")
+            return self.env._("Invoice based on timesheets (delivered quantity).")
         return super()._prepare_invoicing_tooltip()
 
     @api.onchange('type', 'service_type', 'service_policy')
@@ -91,12 +89,12 @@ class ProductTemplate(models.Model):
     def _unlink_except_master_data(self):
         time_product = self.env.ref('sale_timesheet.time_product')
         if time_product.product_tmpl_id in self:
-            raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived, deleted nor linked to a company.', time_product.name))
+            raise ValidationError(self.env._('The %s product is required by the Timesheets app and cannot be archived, deleted nor linked to a company.', time_product.name))
 
     def write(self, vals):
         # timesheet product can't be deleted, archived or linked to a company
         if ('active' in vals and not vals['active']) or ('company_id' in vals and vals['company_id']):
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product.product_tmpl_id in self:
-                raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived, deleted nor linked to a company.', time_product.name))
+                raise ValidationError(self.env._('The %s product is required by the Timesheets app and cannot be archived, deleted nor linked to a company.', time_product.name))
         return super().write(vals)

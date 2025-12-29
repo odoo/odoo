@@ -1,4 +1,4 @@
-from odoo import api, models, fields, _
+from odoo import api, models, fields
 from odoo.exceptions import UserError
 
 
@@ -19,4 +19,4 @@ class PosPreset(models.Model):
             'pos_restaurant.pos_delivery_preset',
         ])
         if any(preset.id in master_presets for preset in self):
-            raise UserError(_('You cannot delete the master preset(s).'))
+            raise UserError(self.env._('You cannot delete the master preset(s).'))

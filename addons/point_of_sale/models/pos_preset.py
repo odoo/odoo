@@ -1,7 +1,8 @@
-from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError, UserError
-from datetime import datetime, timedelta
 from collections import defaultdict
+from datetime import timedelta
+
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError, UserError
 
 
 class PosPreset(models.Model):
@@ -33,7 +34,7 @@ class PosPreset(models.Model):
         for preset in self:
             for attendance in preset.attendance_ids:
                 if attendance.hour_from % 24 >= attendance.hour_to % 24:
-                    raise ValidationError(_('The start time must be before the end time.'))
+                    raise ValidationError(self.env._('The start time must be before the end time.'))
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -95,13 +96,13 @@ class PosPreset(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for preset, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", preset.name)
+                vals['name'] = self.env._("%s (copy)", preset.name)
         return vals_list
 
     def action_open_linked_orders(self):
         self.ensure_one()
         return {
-            'name': _('Linked Orders'),
+            'name': self.env._('Linked Orders'),
             'view_mode': 'list',
             'res_model': 'pos.order',
             'type': 'ir.actions.act_window',
@@ -111,7 +112,7 @@ class PosPreset(models.Model):
     def action_open_linked_config(self):
         self.ensure_one()
         return {
-            'name': _('Linked POS Configurations'),
+            'name': self.env._('Linked POS Configurations'),
             'view_mode': 'list',
             'res_model': 'pos.config',
             'type': 'ir.actions.act_window',
@@ -122,4 +123,4 @@ class PosPreset(models.Model):
     def _unlink_except_used_preset(self):
         for preset in self:
             if preset.count_linked_config:
-                raise UserError(_('You cannot delete a preset that is linked to a POS configuration.'))
+                raise UserError(self.env._('You cannot delete a preset that is linked to a POS configuration.'))

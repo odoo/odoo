@@ -2,10 +2,9 @@
 
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import float_round
 
 
 class ProductProduct(models.Model):
@@ -66,8 +65,8 @@ class ProductProduct(models.Model):
     def _onchange_type(self):
         if self._origin and self.sales_count > 0:
             return {'warning': {
-                'title': _("Warning"),
-                'message': _("You cannot change the product's type because it is already used in sales orders.")
+                'title': self.env._("Warning"),
+                'message': self.env._("You cannot change the product's type because it is already used in sales orders.")
             }}
 
     @api.depends_context('order_id')
@@ -126,7 +125,7 @@ class ProductProduct(models.Model):
             ['id:recordset'],
         ):
             if so_lines.product_uom_id != product.product_tmpl_id.uom_id:
-                raise UserError(_(
+                raise UserError(self.env._(
                     'As other units of measure (ex : %(problem_uom)s) '
                     'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
                     'If you want to change it, please archive the product and create a new one.',

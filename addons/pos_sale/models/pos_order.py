@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.tools import float_compare, float_is_zero, format_date
 
 
@@ -133,7 +133,7 @@ class PosOrder(models.Model):
         linked_orders = self.lines.mapped('sale_order_origin_id')
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Linked Sale Orders'),
+            'name': self.env._('Linked Sale Orders'),
             'res_model': 'sale.order',
             'view_mode': 'list,form',
             'domain': [('id', 'in', linked_orders.ids)],

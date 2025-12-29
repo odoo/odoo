@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_is_zero
-
-from itertools import groupby
 from collections import defaultdict
+from itertools import groupby
+
+from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 
 class StockPicking(models.Model):
@@ -142,7 +141,7 @@ class StockPickingType(models.Model):
                 continue
             pos_config = self.env['pos.config'].sudo().search([('picking_type_id', '=', picking_type.id)], limit=1)
             if pos_config:
-                raise ValidationError(_("You cannot archive '%(picking_type)s' as it is used by POS configuration '%(config)s'.", picking_type=picking_type.name, config=pos_config.name))
+                raise ValidationError(self.env._("You cannot archive '%(picking_type)s' as it is used by POS configuration '%(config)s'.", picking_type=picking_type.name, config=pos_config.name))
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -231,13 +230,13 @@ class StockMove(models.Model):
 
         if uoms_with_issues:
             error_message_lines = [
-                _("Conversion Error: The following unit of measure conversions result in a zero quantity due to rounding:")
+                self.env._("Conversion Error: The following unit of measure conversions result in a zero quantity due to rounding:")
             ]
             for uom_from, uom_to in uoms_with_issues:
-                error_message_lines.append(_(' - From "%(uom_from)s" to "%(uom_to)s"', uom_from=uom_from, uom_to=uom_to))
+                error_message_lines.append(self.env._(' - From "%(uom_from)s" to "%(uom_to)s"', uom_from=uom_from, uom_to=uom_to))
 
             error_message_lines.append(
-                _("\nThis issue occurs because the quantity becomes zero after rounding during the conversion. "
+                self.env._("\nThis issue occurs because the quantity becomes zero after rounding during the conversion. "
                 "To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit "
                 "does not round down to zero in the target unit.")
             )

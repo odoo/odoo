@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.sale_gelato import utils
@@ -50,7 +50,7 @@ class ProviderGelato(models.Model):
         elif source._name == 'stock.picking':
             is_gelato_order = any(source.move_ids.product_id.mapped('gelato_product_uid'))
         else:
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         if is_gelato_order:
             return available_delivery_methods.filtered(lambda m: m.delivery_type == 'gelato')
         else:
@@ -105,7 +105,7 @@ class ProviderGelato(models.Model):
                 return {
                     'success': False,
                     'price': 0,
-                    'error_message': _("The delivery method is not available for this order."),
+                    'error_message': self.env._("The delivery method is not available for this order."),
                 }
             else:
                 total_delivery_price += min(matching_shipment_method_prices)

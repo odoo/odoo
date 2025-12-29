@@ -4,7 +4,7 @@ import logging
 import pprint
 from functools import partial, wraps
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.sale_gelato import const, utils
@@ -47,7 +47,7 @@ class SaleOrder(models.Model):
             )  # Filter out non-saleable (sections, etc.) and non-deliverable products.
             if gelato_lines and non_gelato_lines:
                 raise ValidationError(
-                    _("You cannot mix Gelato products with non-Gelato products in the same order."))
+                    self.env._("You cannot mix Gelato products with non-Gelato products in the same order."))
 
     # === ACTION METHODS === #
 
@@ -93,7 +93,7 @@ class SaleOrder(models.Model):
         ]
         if missing_fields:
             translated_field_names = [f._description_string(self.env) for f in missing_fields]
-            return _(
+            return self.env._(
                 "The following required address fields are missing: %s",
                 ", ".join(translated_field_names),
             )
@@ -124,7 +124,7 @@ class SaleOrder(models.Model):
             self.env.cr.postcommit.add(partial(self._confirm_order_on_gelato, data['id']))
             self.env.cr.postrollback.add(partial(self._delete_order_on_gelato, data['id']))
         except UserError as e:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "The order with reference %(order_reference)s was not sent to Gelato.\n"
                 "Reason: %(error_message)s",
                 order_reference=self.display_name,
@@ -133,7 +133,7 @@ class SaleOrder(models.Model):
 
         _logger.info("Notification received from Gelato with data:\n%s", pprint.pformat(data))
         self.message_post(
-            body=_("The order has been successfully passed on Gelato."),
+            body=self.env._("The order has been successfully passed on Gelato."),
             author_id=self.env.ref('base.partner_root').id,
         )
 

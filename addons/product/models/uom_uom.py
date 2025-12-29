@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, _
+from odoo import models, fields
 from odoo.fields import Domain
 
 
@@ -22,7 +22,7 @@ class UomUom(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Packaging Barcodes'),
+            'name': self.env._('Packaging Barcodes'),
             'res_model': 'product.uom',
             'view_mode': 'list',
             'view_id': self.env.ref('product.product_uom_list_view').id,

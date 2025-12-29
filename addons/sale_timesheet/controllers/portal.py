@@ -2,7 +2,7 @@
 
 from werkzeug.exceptions import NotFound
 
-from odoo import http, _
+from odoo import http
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
@@ -60,14 +60,14 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
     def _get_searchbar_inputs(self):
         return super()._get_searchbar_inputs() | {
-            'so': {'input': 'so', 'label': _('Search in Sales Order Item'), 'sequence': 50},
-            'invoice': {'input': 'invoice', 'label': _('Search in Invoice'), 'sequence': 80},
+            'so': {'input': 'so', 'label': self.env._('Search in Sales Order Item'), 'sequence': 50},
+            'invoice': {'input': 'invoice', 'label': self.env._('Search in Invoice'), 'sequence': 80},
         }
 
     def _get_searchbar_groupby(self):
         return super()._get_searchbar_groupby() | {
-            'so_line': {'label': _('Sales Order Item'), 'sequence': 80},
-            'timesheet_invoice_id': {'label': _('Invoice'), 'sequence': 90},
+            'so_line': {'label': self.env._('Sales Order Item'), 'sequence': 80},
+            'timesheet_invoice_id': {'label': self.env._('Invoice'), 'sequence': 90},
         }
 
     def _get_search_domain(self, search_in, search):
@@ -81,8 +81,8 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
     def _get_searchbar_sortings(self):
         return super()._get_searchbar_sortings() | {
-            'so_line': {'label': _('Sales Order Item')},
-            'timesheet_invoice_id': {'label': _('Invoice')},
+            'so_line': {'label': self.env._('Sales Order Item')},
+            'timesheet_invoice_id': {'label': self.env._('Invoice')},
         }
 
     def _task_get_page_view_values(self, task, access_token, **kwargs):
@@ -91,7 +91,7 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
         try:
             if task.sale_order_id and self._document_check_access('sale.order', task.sale_order_id.id):
                 values['so_accessible'] = True
-                title = _('Quotation') if task.sale_order_id.state in ['draft', 'sent'] else _('Sales Order')
+                title = self.env._('Quotation') if task.sale_order_id.state in ['draft', 'sent'] else self.env._('Sales Order')
                 values['task_link_section'].append({
                     'access_url': task.sale_order_id.get_portal_url(),
                     'title': title,
@@ -107,10 +107,10 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
             if moves:
                 if len(moves) == 1:
                     task_invoice_url = moves.get_portal_url()
-                    title = _('Invoice')
+                    title = self.env._('Invoice')
                 else:
                     task_invoice_url = f'/my/tasks/{task.id}/orders/invoices'
-                    title = _('Invoices')
+                    title = self.env._('Invoices')
                 values['task_link_section'].append({
                     'access_url': task_invoice_url,
                     'title': title,

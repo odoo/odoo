@@ -6,7 +6,7 @@ from collections import defaultdict
 from functools import partial
 from zoneinfo import ZoneInfo
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import float_round, lazy, str2bool
@@ -75,7 +75,7 @@ class SaleOrder(models.Model):
             if order.id not in loyalty_history_data_per_order:
                 continue
             coupons = order.coupon_point_ids.coupon_id
-            coupon_point_name = (len(coupons) == 1 and coupons.point_name) or _("Points")
+            coupon_point_name = (len(coupons) == 1 and coupons.point_name) or self.env._("Points")
             order.loyalty_data = {
                 'point_name': coupon_point_name,
                 'issued': loyalty_history_data_per_order[order.id]['total_issued'],
@@ -110,7 +110,7 @@ class SaleOrder(models.Model):
         base_values = {
             'order_id': self.id,
             'order_model': self._name,
-            'description': _("Order %s", self.display_name),
+            'description': self.env._("Order %s", self.display_name),
         }
         for coupon, point_dict in points_per_coupon.items():
             cost = point_dict.get('cost', 0.0)
@@ -150,7 +150,7 @@ class SaleOrder(models.Model):
         for order in self:
             all_coupons = order.applied_coupon_ids | order.coupon_point_ids.coupon_id | order.order_line.coupon_id
             if any(order._get_real_points_for_coupon(coupon) < 0 for coupon in all_coupons):
-                raise ValidationError(_("One or more rewards on the sale order is invalid. Please check them."))
+                raise ValidationError(self.env._("One or more rewards on the sale order is invalid. Please check them."))
             order._update_programs_and_rewards()
             order._add_loyalty_history_lines()
         has_claimable_rewards = len(self) == 1 and bool(self._get_claimable_rewards())
@@ -173,8 +173,8 @@ class SaleOrder(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'type': 'info',
-                    'title': _("Rewards Available"),
-                    'message': _("There are available rewards not added to this order."),
+                    'title': self.env._("Rewards Available"),
+                    'message': self.env._("There are available rewards not added to this order."),
                     'next': {'type': 'ir.actions.act_window_close'},
                 },
             }
@@ -222,7 +222,7 @@ class SaleOrder(models.Model):
     def action_view_gift_cards(self):
         self.ensure_one()
         return {
-            'name': _("Gift Cards"),
+            'name': self.env._("Gift Cards"),
             'type': 'ir.actions.act_window',
             'view_mode': 'list,form',
             'res_model': 'loyalty.card',
@@ -260,7 +260,7 @@ class SaleOrder(models.Model):
         reward_products = reward.reward_product_ids
         product = product or reward_products[:1]
         if not product or product not in reward_products:
-            raise UserError(_("Invalid product to claim."))
+            raise UserError(self.env._("Invalid product to claim."))
         taxes = self.fiscal_position_id.map_tax(product.taxes_id._filter_taxes_by_company(self.company_id))
         points = self._get_real_points_for_coupon(coupon)
         claimable_count = float_round(points / reward.required_points, precision_rounding=1, rounding_method='DOWN') if not reward.clear_wallet else 1
@@ -559,12 +559,12 @@ class SaleOrder(models.Model):
             if not reward_program.is_payment_program and any(line.reward_id.program_id.is_payment_program for line in self.order_line):
                 return [{
                     **base_reward_line_values,
-                    'name': _("TEMPORARY DISCOUNT LINE"),
+                    'name': self.env._("TEMPORARY DISCOUNT LINE"),
                     'price_unit': 0,
                     'product_uom_qty': 0,
                     'points_cost': 0,
                 }]
-            raise UserError(_("There is nothing to discount"))
+            raise UserError(self.env._("There is nothing to discount"))
 
         max_discount = reward_currency._convert(reward.discount_max_amount, self.currency_id, self.company_id, fields.Date.today()) or float('inf')
         # discount should never surpass the order's current total amount
@@ -631,13 +631,13 @@ class SaleOrder(models.Model):
             mapped_taxes = self.fiscal_position_id.map_tax(tax)
             tax_desc = ''
             if len(discountable_per_tax) > 1 and any(t.name for t in mapped_taxes):
-                tax_desc = _(
+                tax_desc = self.env._(
                     " - On products with the following taxes: %(taxes)s",
                     taxes=", ".join(mapped_taxes.mapped('name')),
                 )
             reward_dict[tax] = {
                 **base_reward_line_values,
-                'name': _(
+                'name': self.env._(
                     "Discount %(desc)s%(tax_str)s",
                     desc=reward.description,
                     tax_str=tax_desc,
@@ -945,15 +945,15 @@ class SaleOrder(models.Model):
                 and global_discount_reward != reward
                 and self._best_global_discount_already_applied(global_discount_reward, reward)
             ):
-                return {'error': _("A better global discount is already applied.")}
+                return {'error': self.env._("A better global discount is already applied.")}
             elif global_discount_reward and global_discount_reward != reward:
                 # Invalidate the old global discount as it may impact the new discount to apply
                 global_discount_reward_lines._reset_loyalty(True)
                 old_reward_lines |= global_discount_reward_lines
         if not reward.program_id.is_nominative and reward.program_id.applies_on == 'future' and coupon in self.coupon_point_ids.coupon_id:
-            return {'error': _("The coupon can only be claimed on future orders.")}
+            return {'error': self.env._("The coupon can only be claimed on future orders.")}
         elif self._get_real_points_for_coupon(coupon) < reward.required_points:
-            return {'error': _("The coupon does not have enough points for the selected reward.")}
+            return {'error': self.env._("The coupon does not have enough points for the selected reward.")}
         reward_vals = self._get_reward_line_values(reward, coupon, **kwargs)
         self._write_vals_from_reward_vals(reward_vals, old_reward_lines)
         return {}
@@ -1332,17 +1332,17 @@ class SaleOrder(models.Model):
             #  with 0 points so that `_get_claimable_rewards` returns the rewards associated with those programs
             if not program.is_nominative:
                 if not code_matched:
-                    program_result['error'] = _("This program requires a code to be applied.")
+                    program_result['error'] = self.env._("This program requires a code to be applied.")
                 elif not minimum_amount_matched:
-                    program_result['error'] = _(
+                    program_result['error'] = self.env._(
                         "A minimum of %(amount)s %(currency)s should be purchased to get the reward",
                         amount=min(program.rule_ids.mapped('minimum_amount')),
                         currency=program.currency_id.name,
                     )
                 elif not product_qty_matched:
-                    program_result['error'] = _("You don't have the required product quantities on your sales order.")
+                    program_result['error'] = self.env._("You don't have the required product quantities on your sales order.")
             elif self.partner_id.is_public and not self._allow_nominative_programs():
-                program_result['error'] = _("This program is not available for public users.")
+                program_result['error'] = self.env._("This program is not available for public users.")
             if 'error' not in program_result:
                 points_result = [points] + rule_points
                 program_result['points'] = points_result
@@ -1363,7 +1363,7 @@ class SaleOrder(models.Model):
                     [('partner_id', '=', self.partner_id.id), ('program_id', '=', program.id)], limit=1)
                 # Do not apply 'nominative' programs if no point is given and no coupon exists
                 if not points and not coupon:
-                    return {'error': _("No card found for this loyalty program and no points will be given with this order.")}
+                    return {'error': self.env._("No card found for this loyalty program and no points will be given with this order.")}
                 elif coupon:
                     self._add_points_for_coupon({coupon: points})
                 coupons = coupon
@@ -1396,9 +1396,9 @@ class SaleOrder(models.Model):
         self.ensure_one()
         # Basic checks
         if not program.filtered_domain(self._get_program_domain()):
-            return {'error': _("The program is not available for this order.")}
+            return {'error': self.env._("The program is not available for this order.")}
         elif program in self._get_applied_programs():
-            return {'error': _("This program is already applied to this order."), 'already_applied': True}
+            return {'error': self.env._("This program is already applied to this order."), 'already_applied': True}
         elif program.reward_ids:
             global_rewards = program.reward_ids.filtered('is_global_discount')
             applied_global_reward = self._get_applied_global_discount()
@@ -1413,7 +1413,7 @@ class SaleOrder(models.Model):
                 and applied_global_reward
                 and self._best_global_discount_already_applied(applied_global_reward, best_global_rewards)
             ):
-                return {'error': _(
+                return {'error': self.env._(
                     "This discount (%(discount)s) is not compatible with \"%(other_discount)s\". "
                     "Please remove it in order to apply this one.",
                     discount=best_global_rewards.description,
@@ -1446,7 +1446,7 @@ class SaleOrder(models.Model):
         check_date = self._get_confirmed_tx_create_date()
 
         if rule in self.code_enabled_rule_ids:
-            return {'error': _("This promo code is already applied.")}
+            return {'error': self.env._("This promo code is already applied.")}
 
         # No trigger was found from the code, try to find a coupon
         if not program:
@@ -1455,17 +1455,17 @@ class SaleOrder(models.Model):
                 not coupon.program_id.active or\
                 not coupon.program_id.reward_ids or\
                 not coupon.program_id.filtered_domain(self._get_program_domain()):
-                return {'error': _("This code is invalid (%s).", code), 'not_found': True}
+                return {'error': self.env._("This code is invalid (%s).", code), 'not_found': True}
             if coupon.expiration_date and coupon.expiration_date < check_date:
-                return {'error': _("This coupon is expired.")}
+                return {'error': self.env._("This coupon is expired.")}
             elif coupon.points < min(coupon.program_id.reward_ids.mapped('required_points')):
-                return {'error': _("This coupon has already been used.")}
+                return {'error': self.env._("This coupon has already been used.")}
             program = coupon.program_id
 
         if not program or not program.active:
-            return {'error': _("This code is invalid (%s).", code), 'not_found': True}
+            return {'error': self.env._("This code is invalid (%s).", code), 'not_found': True}
         elif program.program_type in ('loyalty', 'ewallet'):
-            return {'error': _("This program cannot be applied with code.")}
+            return {'error': self.env._("This program cannot be applied with code.")}
 
         # Lock the loyalty program row to block several processes that try to
         # read it at the same time. We also use NOWAIT to make sure we trigger a
@@ -1476,7 +1476,7 @@ class SaleOrder(models.Model):
         """, (program.id,))
 
         if (program.limit_usage and program.total_order_count >= program.max_usage):
-            return {'error': _("This code is expired (%s).", code)}
+            return {'error': self.env._("This code is expired (%s).", code)}
 
         # Rule will count the next time the points are updated
         if rule:
