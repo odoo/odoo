@@ -178,11 +178,9 @@ class TestChannelRTC(MailCommon, HttpCase):
             [
                 # update new session
                 (self.cr.dbname, "discuss.channel", channel.id),
-                # message_post "started a live conference" (not asserted below)
-                (self.cr.dbname, "discuss.channel", channel.id),
                 # update new message separator
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
-                # update of last interest (not asserted below)
+                # message_post "started a live conference" (not asserted below)
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # update call history (not asserted below)
                 (self.cr.dbname, "discuss.channel", channel.id),
@@ -291,11 +289,9 @@ class TestChannelRTC(MailCommon, HttpCase):
             [
                 # update new session
                 (self.cr.dbname, "discuss.channel", channel.id),
-                # message_post "started a live conference" (not asserted below)
-                (self.cr.dbname, "discuss.channel", channel.id),
                 # update new message separator
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
-                # update of last interest (not asserted below)
+                # message_post "started a live conference" (not asserted below)
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # update call history (not asserted below)
                 (self.cr.dbname, "discuss.channel", channel.id),
@@ -955,8 +951,6 @@ class TestChannelRTC(MailCommon, HttpCase):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # discuss.channel/joined
                 (self.cr.dbname, "res.partner", test_user.partner_id.id),
-                # mail.record/insert - discuss.channel (last_interest_dt)
-                (self.cr.dbname, "discuss.channel", channel.id),
                 # mail.record/insert - discuss.channel.member (message_unread_counter, new_message_separator, …)
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
                 # discuss.channel/new_message
