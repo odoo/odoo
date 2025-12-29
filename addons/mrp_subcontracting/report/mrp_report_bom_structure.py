@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, _, fields
+from odoo import api, fields, models
 
 
 class ReportMrpReport_Bom_Structure(models.AbstractModel):
@@ -38,7 +38,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         if data.get('subcontracting'):
             subcontract_info = data['subcontracting']
             lines.append({
-                'name': _("Subcontracting: %s", subcontract_info['name']),
+                'name': self.env._("Subcontracting: %s", subcontract_info['name']),
                 'type': 'subcontract',
                 'uom': False,
                 'quantity': subcontract_info['quantity'],

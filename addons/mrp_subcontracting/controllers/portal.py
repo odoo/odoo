@@ -4,9 +4,10 @@
 import werkzeug
 from collections import OrderedDict
 
-from odoo import http, _
+from odoo import http
 from odoo.http import request
 from odoo.exceptions import AccessError, MissingError
+
 from odoo.addons.portal.controllers import portal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 
@@ -30,15 +31,15 @@ class CustomerPortal(portal.CustomerPortal):
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
         searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
-            'done': {'label': _('Done'), 'domain': [('state', '=', 'done')]},
-            'ready': {'label': _('Ready'), 'domain': [('state', '=', 'assigned')]},
+            'all': {'label': self.env._('All'), 'domain': []},
+            'done': {'label': self.env._('Done'), 'domain': [('state', '=', 'done')]},
+            'ready': {'label': self.env._('Ready'), 'domain': [('state', '=', 'assigned')]},
         }
         domain += searchbar_filters[filterby]['domain']
 
         searchbar_sortings = {
-            'date': {'label': _('Newest'), 'order': 'create_date desc, id desc'},
-            'name': {'label': _('Name'), 'order': 'name asc, id asc'},
+            'date': {'label': self.env._('Newest'), 'order': 'create_date desc, id desc'},
+            'name': {'label': self.env._('Name'), 'order': 'name asc, id asc'},
         }
         order = searchbar_sortings[sortby]['order']
         # count for pager

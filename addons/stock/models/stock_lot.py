@@ -2,10 +2,10 @@
 
 import operator as py_operator
 from collections.abc import Iterable
-from re import findall as regex_findall, split as regex_split
 from collections import defaultdict
+from re import findall as regex_findall, split as regex_split
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 
@@ -116,10 +116,10 @@ class StockLot(models.Model):
                 cross_lots[(product, name)] = count
             # For company-specific lots, we check that there is no duplicate with 'no-company' lots, but NOT between specific-company ones.
             if (company and (cross_lots.get((product, name), 0) + count) > 1) or count > 1:
-                error_message_lines.add(_(" - Product: %(product)s, Lot/Serial Number: %(lot)s", product=product.display_name, lot=name))
+                error_message_lines.add(self.env._(" - Product: %(product)s, Lot/Serial Number: %(lot)s", product=product.display_name, lot=name))
         if error_message_lines:
             raise ValidationError(
-                _(
+                self.env._(
                     "The combination of lot/serial number and product must be unique within a company including when no company is defined.\nThe following combinations contain duplicates:\n%(error_lines)s",
                     error_lines="\n".join(error_message_lines),
                 ),
@@ -130,7 +130,7 @@ class StockLot(models.Model):
         if active_picking_id:
             picking_id = self.env['stock.picking'].browse(active_picking_id)
             if picking_id and not picking_id.picking_type_id.use_create_lots:
-                raise UserError(_('You are not allowed to create a lot or serial number with this operation type. To change this, go on the operation type and tick the box "Create New Lots/Serial Numbers".'))
+                raise UserError(self.env._('You are not allowed to create a lot or serial number with this operation type. To change this, go on the operation type and tick the box "Create New Lots/Serial Numbers".'))
 
     @api.depends('product_id.company_id')
     def _compute_company_id(self):
@@ -174,9 +174,9 @@ class StockLot(models.Model):
         quants = self.quant_ids.filtered(lambda q: q.quantity > 0)
         if len(quants.location_id) == 1:
             unpack = len(quants.package_id.quant_ids) > 1
-            quants.move_quants(location_dest_id=self.location_id, message=_("Lot/Serial Number Relocated"), unpack=unpack)
+            quants.move_quants(location_dest_id=self.location_id, message=self.env._("Lot/Serial Number Relocated"), unpack=unpack)
         elif len(quants.location_id) > 1:
-            raise UserError(_('You can only move a lot/serial to a new location if it exists in a single location.'))
+            raise UserError(self.env._('You can only move a lot/serial to a new location if it exists in a single location.'))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -188,11 +188,11 @@ class StockLot(models.Model):
         if 'company_id' in vals:
             for lot in self:
                 if lot.location_id.company_id and vals['company_id'] and lot.location_id.company_id.id != vals['company_id']:
-                    raise UserError(_("You cannot change the company of a lot/serial number currently in a location belonging to another company."))
+                    raise UserError(self.env._("You cannot change the company of a lot/serial number currently in a location belonging to another company."))
         if 'product_id' in vals and any(vals['product_id'] != lot.product_id.id for lot in self):
             move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('product_id', '!=', vals['product_id'])])
             if move_lines:
-                raise UserError(_(
+                raise UserError(self.env._(
                     'You are not allowed to change the product linked to a serial or lot number '
                     'if some stock moves have already been created with that number. '
                     'This would lead to inconsistencies in your stock.'
@@ -204,7 +204,7 @@ class StockLot(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for lot, vals in zip(self, vals_list):
-                vals['name'] = _("(copy of) %s", lot.name)
+                vals['name'] = self.env._("(copy of) %s", lot.name)
         return vals_list
 
     @api.depends('quant_ids', 'quant_ids.quantity')
@@ -290,7 +290,7 @@ class StockLot(models.Model):
             })
         else:
             action.update({
-                'name': _("Delivery orders of %s", self.display_name),
+                'name': self.env._("Delivery orders of %s", self.display_name),
                 'domain': [('id', 'in', self.delivery_ids.ids)],
                 'view_mode': 'list,form'
             })

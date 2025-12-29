@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero
 
@@ -106,9 +106,9 @@ class ChangeProductionQty(models.TransientModel):
     def action_split_mo(self):
         for wizard in self:
             if wizard.product_qty <= 0:
-                raise UserError(_("Please specify a quantity bigger than 0."))
+                raise UserError(self.env._("Please specify a quantity bigger than 0."))
             if wizard.product_qty >= wizard.mo_id.product_qty:
-                raise UserError(_("Set a quantity that is smaller than the intial demand to split the manufacturing order."))
+                raise UserError(self.env._("Set a quantity that is smaller than the intial demand to split the manufacturing order."))
             new_product_qty = wizard.mo_id.product_qty - wizard.product_qty
             new_mo = wizard.mo_id._split_productions(amounts={wizard.mo_id: [wizard.product_qty, new_product_qty]}, skip_workorder_quantity=True)
             wizard.change_prod_qty()

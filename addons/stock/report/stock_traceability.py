@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, _
-from odoo.tools import format_datetime
 from markupsafe import Markup
+
+from odoo import api, models
+from odoo.tools import format_datetime
 
 
 rec = 0

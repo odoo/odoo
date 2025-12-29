@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, Command, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -92,7 +92,7 @@ class StockReturnPicking(models.TransientModel):
         res = super().default_get(fields)
         if self.env.context.get('active_id') and self.env.context.get('active_model') == 'stock.picking':
             if len(self.env.context.get('active_ids', [])) > 1:
-                raise UserError(_("You may only return one picking at a time."))
+                raise UserError(self.env._("You may only return one picking at a time."))
             picking = self.env['stock.picking'].browse(self.env.context.get('active_id'))
             if picking.exists():
                 res.update({'picking_id': picking.id})
@@ -123,7 +123,7 @@ class StockReturnPicking(models.TransientModel):
                 product_return_moves_data.update(wizard._prepare_stock_return_picking_line_vals_from_move(move))
                 product_return_moves.append(Command.create(product_return_moves_data))
             if not product_return_moves:
-                raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)."))
+                raise UserError(self.env._("No products to return (only lines in Done state and not fully returned yet can be returned)."))
             wizard.product_return_moves = product_return_moves
 
     @api.model
@@ -150,7 +150,7 @@ class StockReturnPicking(models.TransientModel):
             'picking_type_id': return_type.id or picking.picking_type_id.id,
             'state': 'draft',
             'return_id': picking.id,
-            'origin': _("Return of %(picking_name)s", picking_name=picking.name),
+            'origin': self.env._("Return of %(picking_name)s", picking_name=picking.name),
             'location_id': location.id,
             'location_dest_id': location_dest.id,
         }
@@ -178,7 +178,7 @@ class StockReturnPicking(models.TransientModel):
             if return_line._process_line(new_picking):
                 returned_lines = True
         if not returned_lines:
-            raise UserError(_("Please specify at least one non-zero quantity."))
+            raise UserError(self.env._("Please specify at least one non-zero quantity."))
 
         new_picking.action_confirm()
         new_picking.action_assign()
@@ -209,7 +209,7 @@ class StockReturnPicking(models.TransientModel):
         self.ensure_one()
         new_picking = self._create_return()
         return {
-            'name': _('Returned Picking'),
+            'name': self.env._('Returned Picking'),
             'view_mode': 'form',
             'res_model': 'stock.picking',
             'res_id': new_picking.id,

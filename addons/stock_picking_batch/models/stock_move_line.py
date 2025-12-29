@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import _, Command, fields, models
+from odoo import Command, fields, models
 from odoo.fields import Domain
 from odoo.tools.misc import OrderedSet
 
@@ -19,7 +19,7 @@ class StockMoveLine(models.Model):
             return self._add_to_wave(wave)
         view = self.env.ref('stock_picking_batch.stock_add_to_wave_form')
         return {
-            'name': _('Add to Wave'),
+            'name': self.env._('Add to Wave'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'stock.add.to.wave',
@@ -41,9 +41,9 @@ class StockMoveLine(models.Model):
                 'user_id': self.env.context.get('active_owner_id'),
                 'description': description,
             })
-            notification_title = _('The following wave transfer has been created')
+            notification_title = self.env._('The following wave transfer has been created')
         else:
-            notification_title = _('The following wave transfer has been updated')
+            notification_title = self.env._('The following wave transfer has been updated')
         line_by_picking = defaultdict(lambda: self.env['stock.move.line'])
         for line in self:
             line_by_picking[line.picking_id] |= line

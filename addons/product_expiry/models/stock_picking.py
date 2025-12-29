@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 
-from odoo import models, _
+from odoo import models
 
 
 class StockPicking(models.Model):
@@ -32,7 +32,7 @@ class StockPicking(models.Model):
             'default_lot_ids': [(6, 0, expired_lot_ids)],
         })
         return {
-            'name': _('Confirmation'),
+            'name': self.env._('Confirmation'),
             'type': 'ir.actions.act_window',
             'res_model': 'expiry.picking.confirmation',
             'view_mode': 'form',

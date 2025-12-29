@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -16,7 +16,7 @@ class StockWarehouse(models.Model):
         values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
         values.update({
             'repair_type_id': {
-                'name': _('%(name)s Sequence repair', name=self.name),
+                'name': self.env._('%(name)s Sequence repair', name=self.name),
                 'prefix': self.code + '/RO/',
                 'padding': 5,
                 'company_id': self.company_id.id
@@ -30,7 +30,7 @@ class StockWarehouse(models.Model):
         scrap_location_id = self.env['stock.location'].search_read([('usage', '=', 'inventory'), ('company_id', 'in', [self.company_id.id, False])], fields=['id'], limit=1)[0].get('id')
         data.update({
             'repair_type_id': {
-                'name': _('Repairs'),
+                'name': self.env._('Repairs'),
                 'code': 'repair_operation',
                 'default_location_src_id': self.lot_stock_id.id,
                 'default_location_dest_id': prod_location.id,
@@ -58,7 +58,7 @@ class StockWarehouse(models.Model):
     def _get_production_location(self):
         location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.company_id.id)], limit=1)
         if not location:
-            raise UserError(_("Can't find any production location."))
+            raise UserError(self.env._("Can't find any production location."))
         return location
 
     def _generate_global_route_rules_values(self):
@@ -72,7 +72,7 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id,
+                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', self.env._('Replenish on Order (MTO)')).id,
                     'location_dest_id': self.repair_type_id.default_location_dest_id.id,
                     'location_src_id': self.repair_type_id.default_location_src_id.id,
                     'picking_type_id': self.repair_type_id.id

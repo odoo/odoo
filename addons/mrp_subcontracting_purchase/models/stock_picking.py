@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, _
+from odoo import api, fields, models
 
 
 class StockPicking(models.Model):
@@ -29,7 +29,7 @@ class StockPicking(models.Model):
             })
         else:
             action.update({
-                'name': _("Source PO of %s", self.name),
+                'name': self.env._("Source PO of %s", self.name),
                 'domain': [('id', 'in', purchase_order_ids)],
                 'view_mode': 'list,form',
             })

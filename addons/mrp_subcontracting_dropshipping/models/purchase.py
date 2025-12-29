@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 
 
 class PurchaseOrder(models.Model):
@@ -28,7 +27,7 @@ class PurchaseOrder(models.Model):
     def onchange_picking_type_id(self):
         if self.default_location_dest_id_is_subcontracting_loc:
             return {
-                'warning': {'title': _('Warning'), 'message': _('Please note this purchase order is for subcontracting purposes.')}
+                'warning': {'title': self.env._('Warning'), 'message': self.env._('Please note this purchase order is for subcontracting purposes.')}
             }
 
     def _get_destination_location(self):

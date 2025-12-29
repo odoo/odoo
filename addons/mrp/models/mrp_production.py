@@ -1,22 +1,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 import datetime
+import json
 import math
 import re
-
 from ast import literal_eval
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
-from odoo.addons.web.controllers.utils import clean_action
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import format_datetime
 from odoo.tools.misc import OrderedSet, format_date, groupby as tools_groupby, topological_sort
 
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
+from odoo.addons.web.controllers.utils import clean_action
 
 SIZE_BACK_ORDER_NUMERING = 3
 
@@ -77,7 +76,7 @@ class MrpProduction(models.Model):
     def _get_default_is_locked(self):
         return not self.env.user.has_group('mrp.group_unlocked_by_default')
 
-    name = fields.Char('Reference', default=lambda self: _('New'), copy=False, readonly=True)
+    name = fields.Char('Reference', default=lambda self: self.env._('New'), copy=False, readonly=True)
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, string='Priority', default='0',
         help="Components will be reserved first for the MO with the highest priorities.")
@@ -389,7 +388,7 @@ class MrpProduction(models.Model):
     def _compute_components_availability(self):
         productions = self.filtered(lambda mo: mo.state not in ('cancel', 'done', 'draft'))
         productions.components_availability_state = 'available'
-        productions.components_availability = _('Available')
+        productions.components_availability = self.env._('Available')
 
         other_productions = self - productions
         other_productions.components_availability = False
@@ -408,12 +407,12 @@ class MrpProduction(models.Model):
                 for move in production.move_raw_ids
             ):
 
-                production.components_availability = _('Not Available')
+                production.components_availability = self.env._('Not Available')
                 production.components_availability_state = 'unavailable'
             else:
                 forecast_date = max(production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
                 if forecast_date:
-                    production.components_availability = _('Exp %s', format_date(self.env, forecast_date))
+                    production.components_availability = self.env._('Exp %s', format_date(self.env, forecast_date))
                     if production.date_start:
                         production.components_availability_state = 'late' if forecast_date > production.date_start else 'expected'
 
@@ -935,22 +934,22 @@ class MrpProduction(models.Model):
                 if message:
                     messages.append(message)
             if messages:
-                return {'warning': {'title': _('Warning'), 'message': ','.join(messages)}}
+                return {'warning': {'title': self.env._('Warning'), 'message': ','.join(messages)}}
         return True
 
     @api.constrains('move_finished_ids')
     def _check_byproducts(self):
         for order in self:
             if any(move.cost_share < 0 for move in order.move_byproduct_ids):
-                raise ValidationError(_("By-products cost shares must be positive."))
+                raise ValidationError(self.env._("By-products cost shares must be positive."))
             if sum(order.move_byproduct_ids.filtered(lambda m: m.state != 'cancel').mapped('cost_share')) > 100:
-                raise ValidationError(_("The total cost share for a manufacturing order's by-products cannot exceed 100."))
+                raise ValidationError(self.env._("The total cost share for a manufacturing order's by-products cannot exceed 100."))
 
     @api.constrains('lot_producing_ids')
     def _check_lot_producing_ids(self):
         for record in self:
             if record.product_tracking == 'lot' and len(record.lot_producing_ids) > 1:
-                raise UserError(_("You cannot set more than 1 lot"))
+                raise UserError(self.env._("You cannot set more than 1 lot"))
 
     def write(self, vals):
         if 'product_id' in vals and self.state != 'draft':
@@ -1003,7 +1002,7 @@ class MrpProduction(models.Model):
         for production in self:
             if 'date_start' in vals and not self.env.context.get('force_date', False):
                 if production.state in ['done', 'cancel']:
-                    raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
+                    raise UserError(self.env._('You cannot move a manufacturing order once it is cancelled or done.'))
                 if production.is_planned:
                     production._unplan_workorders()
             if vals.get('date_start'):
@@ -1037,7 +1036,7 @@ class MrpProduction(models.Model):
                 vals['move_finished_ids'] = list(filter(lambda move: move[2]['product_id'] == vals['product_id'], vals['move_finished_ids']))
                 vals['move_finished_ids'] = vals.get('move_finished_ids', []) + vals['move_byproduct_ids']
                 del vals['move_byproduct_ids']
-            if not vals.get('name', False) or vals['name'] == _('New'):
+            if not vals.get('name', False) or vals['name'] == self.env._('New'):
                 picking_type_id = vals.get('picking_type_id')
                 if not picking_type_id:
                     picking_type_id = self._get_default_picking_type_id(vals.get('company_id', self.env.company.id))
@@ -1089,7 +1088,7 @@ class MrpProduction(models.Model):
     @api.ondelete(at_uninstall=True)
     def _unlink_if_not_done(self):
         if any(mo.state == 'done' for mo in self):
-            raise UserError(_("You cannot delete a manufacturing order that is already done."))
+            raise UserError(self.env._("You cannot delete a manufacturing order that is already done."))
 
     def copy_data(self, default=None):
         default = dict(default or {})
@@ -1119,7 +1118,7 @@ class MrpProduction(models.Model):
         action['context'] = {
             'default_bom_line_ids': bom_lines_vals,
             'default_byproduct_ids': byproduct_vals,
-            'default_code': _("New BoM from %(mo_name)s", mo_name=self.display_name),
+            'default_code': self.env._("New BoM from %(mo_name)s", mo_name=self.display_name),
             'default_company_id': self.company_id.id,
             'default_operation_ids': operations_vals,
             'default_product_id': self.product_id.id,
@@ -1257,7 +1256,7 @@ class MrpProduction(models.Model):
         moves = []
         for production in self:
             if production.product_id in production.bom_id.byproduct_ids.mapped('product_id'):
-                raise UserError(_("You cannot have %s  as the finished product and in the Byproducts", self.product_id.name))
+                raise UserError(self.env._("You cannot have %s  as the finished product and in the Byproducts", self.product_id.name))
             finished_move_values = production._get_move_finished_values(production.product_id.id, production.product_qty, production.product_uom_id.id)
             finished_move_values['location_final_id'] = self.location_final_id.id
             moves.append(finished_move_values)
@@ -1407,11 +1406,11 @@ class MrpProduction(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
         if any(production.state == 'done' for production in self):
-            raise UserError(_('Cannot delete a manufacturing order in done state.'))
+            raise UserError(self.env._('Cannot delete a manufacturing order in done state.'))
         not_cancel = self.filtered(lambda m: m.state != 'cancel')
         if not_cancel:
             productions_name = ', '.join([prod.display_name for prod in not_cancel])
-            raise UserError(_('%s cannot be deleted. Try to cancel them before.', productions_name))
+            raise UserError(self.env._('%s cannot be deleted. Try to cancel them before.', productions_name))
 
     def _get_ready_to_produce_state(self):
         """ returns 'assigned' if enough components are reserved in order to complete
@@ -1486,7 +1485,7 @@ class MrpProduction(models.Model):
             })
         else:
             action.update({
-                'name': _("%s Child MO's", self.name),
+                'name': self.env._("%s Child MO's", self.name),
                 'domain': [('id', 'in', mrp_production_ids)],
                 'view_mode': 'list,form',
             })
@@ -1506,7 +1505,7 @@ class MrpProduction(models.Model):
             })
         else:
             action.update({
-                'name': _("MO Generated by %s", self.name),
+                'name': self.env._("MO Generated by %s", self.name),
                 'domain': [('id', 'in', mrp_production_ids)],
                 'view_mode': 'list,form',
             })
@@ -1517,7 +1516,7 @@ class MrpProduction(models.Model):
         return {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
-            'name': _("Backorder MO's"),
+            'name': self.env._("Backorder MO's"),
             'domain': [('id', 'in', backorder_ids)],
             'view_mode': 'list,form',
         }
@@ -1536,7 +1535,7 @@ class MrpProduction(models.Model):
         if exist_lot:
             name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
         if not name:
-            raise UserError(_("Please set the first Serial Number or a default sequence"))
+            raise UserError(self.env._("Please set the first Serial Number or a default sequence"))
         return {
             'product_id': self.product_id.id,
             'name': name,
@@ -1546,7 +1545,7 @@ class MrpProduction(models.Model):
         self.ensure_one()
         if self.product_tracking == 'lot':
             if self.lot_producing_ids:
-                raise UserError(_("You cannot set more than 1 lot per product"))
+                raise UserError(self.env._("You cannot set more than 1 lot per product"))
             self.lot_producing_ids = [Command.create(self._prepare_stock_lot_values())]
             if self.picking_type_id.auto_print_generated_mrp_lot:
                 return self._autoprint_generated_lots(self.lot_producing_ids)
@@ -1705,10 +1704,10 @@ class MrpProduction(models.Model):
 
     def _unplan_workorders(self):
         if any(wo.state == 'done' for wo in self.workorder_ids):
-            raise UserError(_("Some work orders are already done, so you cannot unplan this manufacturing order.\n\n"
+            raise UserError(self.env._("Some work orders are already done, so you cannot unplan this manufacturing order.\n\n"
                 "It’d be a shame to waste all that progress, right?"))
         elif any(wo.state == 'progress' for wo in self.workorder_ids):
-            raise UserError(_("Some work orders have already started, so you cannot unplan this manufacturing order.\n\n"
+            raise UserError(self.env._("Some work orders have already started, so you cannot unplan this manufacturing order.\n\n"
                 "It’d be a shame to waste all that progress, right?"))
 
         self.workorder_ids.leave_id.unlink()
@@ -1803,7 +1802,7 @@ class MrpProduction(models.Model):
         """ Cancels production order, unfinished stock moves and set procurement
         orders in exception """
         if any(mo.state == 'done' for mo in self):
-            raise UserError(_("You cannot cancel a manufacturing order that is already done."))
+            raise UserError(self.env._("You cannot cancel a manufacturing order that is already done."))
         self._action_cancel()
         return True
 
@@ -1967,7 +1966,7 @@ class MrpProduction(models.Model):
                 amounts[production].append(production.product_qty - total_amount)
                 has_backorder_to_ignore[production] = True
             elif not self.env.context.get('allow_more') and (diff < 0 or production.state in ['done', 'cancel']):
-                raise UserError(_("Unable to split with more than the quantity to produce."))
+                raise UserError(self.env._("Unable to split with more than the quantity to produce."))
 
         backorder_vals_list = []
         initial_qty_by_production = {}
@@ -2287,7 +2286,7 @@ class MrpProduction(models.Model):
             })
         else:
             another_action.update({
-                'name': _("Backorder MO"),
+                'name': self.env._("Backorder MO"),
                 'domain': [('id', 'in', backorders.ids)],
                 'views': [[False, 'list'], [False, 'form']],
                 'view_mode': 'list,form',
@@ -2365,7 +2364,7 @@ class MrpProduction(models.Model):
     def button_scrap(self):
         self.ensure_one()
         return {
-            'name': _('Scrap Products'),
+            'name': self.env._('Scrap Products'),
             'view_mode': 'form',
             'res_model': 'stock.scrap',
             'views': [[self.env.ref('stock.stock_scrap_form_view2').id, 'form']],
@@ -2403,7 +2402,7 @@ class MrpProduction(models.Model):
     @api.model
     def get_empty_list_help(self, help_message):
         self = self.with_context(
-            empty_list_help_document_name=_("manufacturing order"),
+            empty_list_help_document_name=self.env._("manufacturing order"),
         )
         return super(MrpProduction, self).get_empty_list_help(help_message)
 
@@ -2456,7 +2455,7 @@ class MrpProduction(models.Model):
     def button_unbuild(self):
         self.ensure_one()
         return {
-            'name': _('Unbuild: %s', self.product_id.display_name),
+            'name': self.env._('Unbuild: %s', self.product_id.display_name),
             'view_mode': 'form',
             'res_model': 'mrp.unbuild',
             'view_id': self.env.ref('mrp.mrp_unbuild_form_view_simplified').id,
@@ -2541,7 +2540,7 @@ class MrpProduction(models.Model):
         # set the new deadline of origin moves (stock to pre prod)
         production.move_raw_ids.move_orig_ids.with_context(date_deadline_propagate_ids=set(production.move_raw_ids.ids)).write({'date_deadline': production.date_start})
         for p in self:
-            p._message_log(body=_('This production has been merge in %s', production.display_name))
+            p._message_log(body=self.env._('This production has been merge in %s', production.display_name))
 
         return {
             'type': 'ir.actions.act_window',
@@ -2731,7 +2730,7 @@ class MrpProduction(models.Model):
         if self.product_tracking == 'serial' and self.lot_producing_ids:
             lots_to_check = self.lot_producing_ids.filtered(lambda l: l.id not in self.move_raw_ids.lot_ids.ids)
             if lots_to_check and self._are_finished_serials_already_produced(lots_to_check):
-                raise UserError(_('Serial number(s) for product %(product_name)s already produced', product_name=self.product_id.name))
+                raise UserError(self.env._('Serial number(s) for product %(product_name)s already produced', product_name=self.product_id.name))
 
         for move in self.move_finished_ids:
             if move.has_tracking != 'serial' or move.product_id == self.product_id:
@@ -2740,7 +2739,7 @@ class MrpProduction(models.Model):
                 if move_line.product_uom_id.is_zero(move_line.quantity):
                     continue
                 if self._are_finished_serials_already_produced(move_line.lot_id, excluded_sml=move_line):
-                    raise UserError(_('The serial number %(number)s used for byproduct %(product_name)s has already been produced',
+                    raise UserError(self.env._('The serial number %(number)s used for byproduct %(product_name)s has already been produced',
                                       number=move_line.lot_id.name, product_name=move_line.product_id.name))
 
         consumed_sn_ids = []
@@ -2752,7 +2751,7 @@ class MrpProduction(models.Model):
                 if not move_line.picked or move_line.product_uom_id.is_zero(move_line.quantity) or not move_line.lot_id:
                     continue
                 sml_sn = move_line.lot_id
-                message = _('The serial number %(number)s used for component %(component)s has already been consumed',
+                message = self.env._('The serial number %(number)s used for component %(component)s has already been consumed',
                     number=sml_sn.name,
                     component=move_line.product_id.name)
                 consumed_sn_ids.append(sml_sn.id)
@@ -2842,27 +2841,27 @@ class MrpProduction(models.Model):
     def _pre_action_split_merge_hook(self, merge=False, split=False):
         if not merge and not split:
             return True
-        ope_str = merge and _('merged') or _('split')
+        ope_str = merge and self.env._('merged') or self.env._('split')
         if any(production.state not in ('draft', 'confirmed') for production in self):
-            raise UserError(_("Only manufacturing orders in either a draft or confirmed state can be %s.", ope_str))
+            raise UserError(self.env._("Only manufacturing orders in either a draft or confirmed state can be %s.", ope_str))
         if any(not production.bom_id for production in self):
-            raise UserError(_("Only manufacturing orders with a Bill of Materials can be %s.", ope_str))
+            raise UserError(self.env._("Only manufacturing orders with a Bill of Materials can be %s.", ope_str))
         if split:
             return True
 
         if len(self) < 2:
-            raise UserError(_("You need at least two production orders to merge them."))
+            raise UserError(self.env._("You need at least two production orders to merge them."))
         products = set([(production.product_id, production.bom_id) for production in self])
         if len(products) > 1:
-            raise UserError(_('You can only merge manufacturing orders of identical products with same BoM.'))
+            raise UserError(self.env._('You can only merge manufacturing orders of identical products with same BoM.'))
         additional_raw_ids = self.mapped("move_raw_ids").filtered(lambda move: not move.bom_line_id)
         additional_byproduct_ids = self.mapped('move_byproduct_ids').filtered(lambda move: not move.byproduct_id)
         if additional_raw_ids or additional_byproduct_ids:
-            raise UserError(_("You can only merge manufacturing orders with no additional components or by-products."))
+            raise UserError(self.env._("You can only merge manufacturing orders with no additional components or by-products."))
         if len(set(self.mapped('state'))) > 1:
-            raise UserError(_("You can only merge manufacturing with the same state."))
+            raise UserError(self.env._("You can only merge manufacturing with the same state."))
         if len(set(self.mapped('picking_type_id'))) > 1:
-            raise UserError(_('You can only merge manufacturing with the same operation type'))
+            raise UserError(self.env._('You can only merge manufacturing with the same operation type'))
         # TODO explode and check no quantity has been edited
         return True
 
@@ -2892,7 +2891,7 @@ class MrpProduction(models.Model):
                 if move.has_tracking in ('serial', 'lot') and (not move.picked or any(not line.lot_id for line in move.move_line_ids if line.quantity and line.picked)):
                     missing_lot_id_products += "\n  - %s" % move.product_id.display_name
         if missing_lot_id_products:
-            error_msg = _(
+            error_msg = self.env._(
                 "You need to supply Lot/Serial Number for products and 'consume' them: %(missing_products)s",
                 missing_products=missing_lot_id_products,
             )
@@ -2977,7 +2976,7 @@ class MrpProduction(models.Model):
     def action_open_label_layout(self):
         view = self.env.ref('stock.product_label_layout_form_picking')
         return {
-            'name': _('Choose Labels Layout'),
+            'name': self.env._('Choose Labels Layout'),
             'type': 'ir.actions.act_window',
             'res_model': 'product.label.layout',
             'views': [(view.id, 'form')],
@@ -2993,7 +2992,7 @@ class MrpProduction(models.Model):
         if self.env.user.has_group('stock.group_production_lot') and move_line_ids.lot_id:
             view = self.env.ref('stock.picking_label_type_form')
             return {
-                'name': _('Choose Type of Labels To Print'),
+                'name': self.env._('Choose Type of Labels To Print'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'picking.label.type',
                 'views': [(view.id, 'form')],
@@ -3010,7 +3009,7 @@ class MrpProduction(models.Model):
     def action_view_serial_numbers(self):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_production_lot_form")
         action['domain'] = [('id', 'in', self.lot_producing_ids.ids)]
-        action['name'] = _("Serial Numbers")
+        action['name'] = self.env._("Serial Numbers")
         action['context'] = {
             'create': False,
             'delete': False,
@@ -3105,7 +3104,7 @@ class MrpProduction(models.Model):
             origin_production = production.move_dest_ids.raw_material_production_id
             if orderpoint and orderpoint.create_uid.id == api.SUPERUSER_ID and orderpoint.trigger == 'manual':
                 production.message_post(
-                    body=_('This production order has been created from Replenishment Report.'),
+                    body=self.env._('This production order has been created from Replenishment Report.'),
                     message_type='comment',
                     subtype_id=note_subtype_id
                 )

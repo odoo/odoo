@@ -2,12 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from datetime import timedelta
-
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-from odoo.fields import Command
-from odoo.tools.float_utils import float_compare
 from dateutil.relativedelta import relativedelta
+
+from odoo import api, fields, models
+from odoo.fields import Command
 
 
 class StockPicking(models.Model):
@@ -73,7 +71,7 @@ class StockPicking(models.Model):
         }
         if len(productions) > 1:
             action.update({
-                'name': _('Subcontracting MOs'),
+                'name': self.env._('Subcontracting MOs'),
                 'views': [
                     (self.env.ref('mrp_subcontracting.mrp_production_subcontracting_tree_view').id, 'list'),
                     (form_view_id.id, 'form'),

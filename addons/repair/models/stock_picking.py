@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
-from odoo import _, api, fields, models
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo import api, fields, models
 from odoo.tools.misc import clean_context
 
 
@@ -195,7 +192,7 @@ class StockPicking(models.Model):
             'default_partner_id': self.partner_id and self.partner_id.id or False,
         })
         return {
-            'name': _('Create Repair'),
+            'name': self.env._('Create Repair'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'repair.order',
@@ -216,7 +213,7 @@ class StockPicking(models.Model):
                 })
             else:
                 action.update({
-                    'name': _('Repair Orders'),
+                    'name': self.env._('Repair Orders'),
                     'view_mode': 'list,form',
                     'domain': [('id', 'in', self.repair_ids.ids)],
                 })

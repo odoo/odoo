@@ -2,7 +2,7 @@
 
 from datetime import datetime, time
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -38,7 +38,7 @@ class StockWarehouseOrderpoint(models.Model):
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
-                    'title': _('The following replenishment order has been generated'),
+                    'title': self.env._('The following replenishment order has been generated'),
                     'message': '%s',
                     'links': [{
                         'label': production.name,

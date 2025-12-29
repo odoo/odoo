@@ -3,10 +3,11 @@
 import copy
 import json
 from collections import defaultdict
-from odoo import _, api, fields, models
-from odoo.tools import float_compare, float_repr, float_round, float_is_zero, format_date, get_lang
 from datetime import datetime, timedelta
 from math import log10
+
+from odoo import api, fields, models
+from odoo.tools import float_compare, float_repr, float_round, float_is_zero, format_date, get_lang
 
 
 class ReportMrpReport_Mo_Overview(models.AbstractModel):
@@ -255,14 +256,14 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 rounding_method='DOWN',
             )
             if record.product_uom_id.compare(comp_producible_qty, 0) <= 0:
-                return _("Not Ready")
+                return self.env._("Not Ready")
             producible_qty = min(comp_producible_qty, producible_qty)
         if record.product_uom_id.compare(producible_qty, 0) <= 0:
-            return _("Not Ready")
+            return self.env._("Not Ready")
         elif record.product_uom_id.compare(producible_qty, record.product_qty) == -1:
             producible_qty = float_repr(producible_qty, self.env['decimal.precision'].precision_get('Product Unit'))
-            return _("%(producible_qty)s Ready", producible_qty=producible_qty)
-        return _("Ready")
+            return self.env._("%(producible_qty)s Ready", producible_qty=producible_qty)
+        return self.env._("Ready")
 
     def _get_uom_precision(self, uom_rounding):
         return max(0, int(-(log10(uom_rounding))))
@@ -286,7 +287,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         if production.state == "done":
             return self._get_finished_operation_data(production, level, current_index)
         currency = (production.company_id or self.env.company).currency_id
-        operation_uom = _("Minutes")
+        operation_uom = self.env._("Minutes")
         operations = []
         total_expected_time = 0.0
         total_current_time = 0.0
@@ -376,7 +377,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
 
     def _get_finished_operation_data(self, production, level=0, current_index=False):
         currency = (production.company_id or self.env.company).currency_id
-        done_operation_uom = _("Hours")
+        done_operation_uom = self.env._("Hours")
         operations = []
         total_duration = total_duration_expected = total_cost = total_mo_cost = 0
         total_bom_cost = False
@@ -577,7 +578,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             return component
         if any(rep.get('summary', {}).get('model') == 'to_order' for rep in replenishments):
             # Means that there's an extra "To Order" line summing up what's left to order.
-            component['formatted_state'] = _("To Order")
+            component['formatted_state'] = self.env._("To Order")
             component['state'] = 'to_order'
 
         return component
@@ -706,7 +707,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             to_order_line = {'summary': {
                 'level': level + 1,
                 'index': f"{current_index}TO",
-                'name': _("To Order"),
+                'name': self.env._("To Order"),
                 'model': "to_order",
                 'product_model': product._name,
                 'product_id': product.id,
@@ -763,7 +764,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         return {'summary': {
             'level': level + 1,
             'index': f"{current_index}IT",
-            'name': _("In Transit"),
+            'name': self.env._("In Transit"),
             'model': "in_transit",
             'product_model': product._name,
             'product_id': product.id,
@@ -818,13 +819,13 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
 
     def _format_receipt_date(self, state, date=False):
         if state == 'available':
-            return {'display': _("Available"), 'type': 'available', 'decorator': 'success', 'date': False}
+            return {'display': self.env._("Available"), 'type': 'available', 'decorator': 'success', 'date': False}
         elif state == 'estimated':
-            return {'display': _("Estimated %s", format_date(self.env, date)), 'type': 'estimated', 'decorator': False, 'date': date}
+            return {'display': self.env._("Estimated %s", format_date(self.env, date)), 'type': 'estimated', 'decorator': False, 'date': date}
         elif state == 'expected':
-            return {'display': _("Expected %s", format_date(self.env, date)), 'type': 'expected', 'decorator': 'warning', 'date': date}
+            return {'display': self.env._("Expected %s", format_date(self.env, date)), 'type': 'expected', 'decorator': 'warning', 'date': date}
         else:
-            return {'display': _("Not Available"), 'type': 'unavailable', 'decorator': 'danger', 'date': False}
+            return {'display': self.env._("Not Available"), 'type': 'unavailable', 'decorator': 'danger', 'date': False}
 
     def _get_replenishments_from_forecast(self, production, replenish_data):
         products = production.move_raw_ids.product_id

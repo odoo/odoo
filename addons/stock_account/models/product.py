@@ -1,12 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import float_is_zero, float_repr, float_round, float_compare
-from odoo.exceptions import ValidationError
-from collections import defaultdict
-from datetime import datetime
 
 
 class ProductTemplate(models.Model):
@@ -198,7 +194,7 @@ class ProductProduct(models.Model):
                 'value': product.standard_price,
                 'company_id': product.company_id.id or self.env.company.id,
                 'date': fields.Datetime.now(),
-                'description': _('Price update from %(old_price)s to %(new_price)s by %(user)s',
+                'description': self.env._('Price update from %(old_price)s to %(new_price)s by %(user)s',
                     old_price=old_price.get(product), new_price=product.standard_price, user=self.env.user.name)
             })
         return
@@ -209,7 +205,7 @@ class ProductProduct(models.Model):
         if not date or date == fields.Date.today():
             return self.standard_price
         if self.cost_method != 'standard':
-            raise ValidationError(_("You can only get the standard price at a given date for products with 'Standard Price' as cost method."))
+            raise ValidationError(self.env._("You can only get the standard price at a given date for products with 'Standard Price' as cost method."))
         product_value_domain = Domain([
             ('product_id', '=', self.id),
             ('move_id', '=', False),

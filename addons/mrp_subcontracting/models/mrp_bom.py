@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -24,4 +24,4 @@ class MrpBom(models.Model):
     @api.constrains('operation_ids', 'byproduct_ids', 'type')
     def _check_subcontracting_no_operation(self):
         if self.filtered_domain([('type', '=', 'subcontract'), '|', ('operation_ids', '!=', False), ('byproduct_ids', '!=', False)]):
-            raise ValidationError(_('You can not set a Bill of Material with operations or by-product line as subcontracting.'))
+            raise ValidationError(self.env._('You can not set a Bill of Material with operations or by-product line as subcontracting.'))

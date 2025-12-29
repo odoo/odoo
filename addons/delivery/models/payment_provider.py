@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 from odoo.addons.delivery import const
 from odoo.addons.payment import utils as payment_utils
@@ -45,7 +45,7 @@ class PaymentProvider(models.Model):
                 report,
                 unfiltered_providers - compatible_providers,
                 available=False,
-                reason=_("cash on delivery not allowed by selected delivery method"),
+                reason=self.env._("cash on delivery not allowed by selected delivery method"),
             )
 
         return compatible_providers

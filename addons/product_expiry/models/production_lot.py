@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
-from odoo import api, fields, models, SUPERUSER_ID, _
+
+from odoo import SUPERUSER_ID, api, fields, models
 
 
 class StockLot(models.Model):
@@ -99,8 +100,8 @@ class StockLot(models.Model):
             lot.activity_schedule(
                 'mail.mail_activity_data_todo',
                 user_id=lot.product_id.with_company(lot.company_id).responsible_id.id or lot.product_id.responsible_id.id or SUPERUSER_ID,
-                note=_("The alert date has been reached for this lot/serial number"),
-                summary=_("Alert Date Reached"),
+                note=self.env._("The alert date has been reached for this lot/serial number"),
+                summary=self.env._("Alert Date Reached"),
             )
         alert_lots.write({
             'product_expiry_reminded': True

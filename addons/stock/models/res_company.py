@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models, modules
+from odoo import api, fields, models, modules
 
 
 class ResCompany(models.Model):
@@ -61,7 +61,7 @@ class ResCompany(models.Model):
         '''
         for company in self:
             location = self.env['stock.location'].create({
-                'name': _('Inter-warehouse transit'),
+                'name': self.env._('Inter-warehouse transit'),
                 'usage': 'transit',
                 'company_id': company.id,
                 'active': False

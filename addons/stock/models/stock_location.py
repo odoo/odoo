@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import calendar
-
 from collections import defaultdict, OrderedDict
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 
@@ -151,7 +150,7 @@ class StockLocation(models.Model):
                     else:
                         location.next_inventory_date = fields.Date.today() + timedelta(days=location.cyclic_inventory_frequency)
                 except OverflowError:
-                    raise UserError(_("The selected Inventory Frequency (Days) creates a date too far into the future."))
+                    raise UserError(self.env._("The selected Inventory Frequency (Days) creates a date too far into the future."))
             else:
                 location.next_inventory_date = False
 
@@ -189,19 +188,19 @@ class StockLocation(models.Model):
                 # cannot have parent/child location set as replenish as well
                 replenish_wh_location = self.search([('id', '!=', loc.id), ('replenish_location', '=', True), '|', ('location_id', 'child_of', loc.id), ('location_id', 'parent_of', loc.id)], limit=1)
                 if replenish_wh_location:
-                    raise ValidationError(_('Another parent/sub replenish location %s exists, if you wish to change it, uncheck it first', replenish_wh_location.name))
+                    raise ValidationError(self.env._('Another parent/sub replenish location %s exists, if you wish to change it, uncheck it first', replenish_wh_location.name))
 
     @api.constrains('usage')
     def _check_scrap_location(self):
         for record in self:
             if record.usage == 'inventory' and self.env['stock.picking.type'].search_count([('code', '=', 'mrp_operation'), ('default_location_dest_id', '=', record.id)], limit=1):
-                raise ValidationError(_("You cannot set a location as a scrap location when it is assigned as a destination location for a manufacturing type operation."))
+                raise ValidationError(self.env._("You cannot set a location as a scrap location when it is assigned as a destination location for a manufacturing type operation."))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_data(self):
         inter_company_location = self.env.ref('stock.stock_location_inter_company')
         if inter_company_location in self:
-            raise ValidationError(_('The %s location is required by the Inventory app and cannot be deleted, but you can archive it.', inter_company_location.name))
+            raise ValidationError(self.env._('The %s location is required by the Inventory app and cannot be deleted, but you can archive it.', inter_company_location.name))
 
     def _search_is_empty(self, operator, value):
         if operator != 'in':
@@ -221,10 +220,10 @@ class StockLocation(models.Model):
         if 'company_id' in values:
             for location in self:
                 if location.company_id.id != values['company_id']:
-                    raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
+                    raise UserError(self.env._("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         if 'usage' in values and values['usage'] == 'view':
             if self.mapped('quant_ids'):
-                raise UserError(_("This location's usage cannot be changed to view as it contains products."))
+                raise UserError(self.env._("This location's usage cannot be changed to view as it contains products."))
         if 'usage' in values:
             modified_locations = self.filtered(lambda l: l.usage != values['usage'])
             reserved_quantities = self.env['stock.quant'].search_count([
@@ -233,7 +232,7 @@ class StockLocation(models.Model):
                 ],
                 limit=1)
             if reserved_quantities:
-                raise UserError(_(
+                raise UserError(self.env._(
                     "Internal locations having stock can't be converted"
                 ))
         if 'active' in values:
@@ -241,7 +240,7 @@ class StockLocation(models.Model):
                 for location in self:
                     warehouses = self.env['stock.warehouse'].search([('active', '=', True), '|', ('lot_stock_id', '=', location.id), ('view_location_id', '=', location.id)], limit=1)
                     if warehouses:
-                        raise UserError(_(
+                        raise UserError(self.env._(
                             "You cannot archive location %(location)s because it is used by warehouse %(warehouse)s",
                             location=location.display_name, warehouse=warehouses.display_name))
 
@@ -250,7 +249,7 @@ class StockLocation(models.Model):
                 internal_children_locations = children_location.filtered(lambda l: l.usage == 'internal')
                 children_quants = self.env['stock.quant'].search(['&', '|', ('quantity', '!=', 0), ('reserved_quantity', '!=', 0), ('location_id', 'in', internal_children_locations.ids)])
                 if children_quants and not values['active']:
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         "You can't disable locations %s because they still contain products.",
                         ', '.join(children_quants.mapped('location_id.display_name'))))
                 else:
@@ -290,7 +289,7 @@ class StockLocation(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for location, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", location.name)
+                vals['name'] = self.env._("%s (copy)", location.name)
         return vals_list
 
     def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None, additional_qty=None):
@@ -547,7 +546,7 @@ class StockRoute(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for route, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", route.name)
+                vals['name'] = self.env._("%s (copy)", route.name)
         return vals_list
 
     @api.depends('company_id')
@@ -583,7 +582,7 @@ class StockRoute(models.Model):
 
             for rule in route.rule_ids:
                 if route.company_id.id != rule.company_id.id:
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         "Rule %(rule)s belongs to %(rule_company)s while the route belongs to %(route_company)s.",
                         rule=rule.display_name,
                         rule_company=rule.company_id.display_name,

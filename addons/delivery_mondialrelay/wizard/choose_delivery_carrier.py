@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
-from odoo.tools.json import scriptsafe as json_safe
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools.json import scriptsafe as json_safe
 
 
 class ChooseDeliveryCarrier(models.TransientModel):
@@ -43,7 +43,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     def button_confirm(self):
         if self.carrier_id.is_mondialrelay:
             if not self.mondialrelay_last_selected:
-                raise ValidationError(_('Please, choose a Parcel Point'))
+                raise ValidationError(self.env._('Please, choose a Parcel Point'))
             data = json_safe.loads(self.mondialrelay_last_selected)
             partner_shipping = self.order_id.partner_id._mondialrelay_search_or_create({
                 'id': data['id'],

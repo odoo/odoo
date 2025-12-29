@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import Counter, defaultdict
 from ast import literal_eval
+from collections import Counter, defaultdict
 
-from odoo import _, api, fields, models
-from odoo.addons.web.controllers.utils import clean_action
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import OrderedSet, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+
+from odoo.addons.web.controllers.utils import clean_action
 
 
 class StockMoveLine(models.Model):
@@ -173,7 +174,7 @@ class StockMoveLine(models.Model):
     def _check_lot_product(self):
         for line in self:
             if line.lot_id and line.product_id != line.lot_id.sudo().product_id:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     'This lot %(lot_name)s is incompatible with this product %(product_name)s',
                     lot_name=line.lot_id.name,
                     product_name=line.product_id.display_name
@@ -182,7 +183,7 @@ class StockMoveLine(models.Model):
     @api.constrains('quantity')
     def _check_positive_quantity(self):
         if any(ml.quantity < 0 for ml in self):
-            raise ValidationError(_('You can not enter negative quantities.'))
+            raise ValidationError(self.env._('You can not enter negative quantities.'))
 
     @api.onchange('product_id', 'product_uom_id')
     def _onchange_product_id(self):
@@ -208,14 +209,14 @@ class StockMoveLine(models.Model):
                 if self.lot_name:
                     counter = Counter([line.lot_name for line in move_lines_to_check])
                     if counter.get(self.lot_name) and counter[self.lot_name] > 1:
-                        message = _('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
+                        message = self.env._('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
                     elif not self.lot_id:
                         lots = self.env['stock.lot'].search([('product_id', '=', self.product_id.id),
                                                              ('name', '=', self.lot_name),
                                                              '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])
                         quants = lots.quant_ids.filtered(lambda q: q.quantity != 0 and q.location_id.usage in ['customer', 'internal', 'transit'])
                         if quants:
-                            message = _(
+                            message = self.env._(
                                 'Serial number (%(serial_number)s) already exists in location(s): %(location_list)s. Please correct the serial number encoded.',
                                 serial_number=self.lot_name,
                                 location_list=quants.location_id.mapped('display_name')
@@ -223,7 +224,7 @@ class StockMoveLine(models.Model):
                 elif self.lot_id:
                     counter = Counter([line.lot_id.id for line in move_lines_to_check])
                     if counter.get(self.lot_id.id) and counter[self.lot_id.id] > 1:
-                        message = _('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
+                        message = self.env._('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
                     else:
                         # check if in correct source location
                         message, recommended_location = self.env['stock.quant'].sudo()._check_serial_number(
@@ -231,7 +232,7 @@ class StockMoveLine(models.Model):
                         if recommended_location:
                             self.location_id = recommended_location
             if message:
-                res['warning'] = {'title': _('Warning'), 'message': message}
+                res['warning'] = {'title': self.env._('Warning'), 'message': message}
         return res
 
     @api.onchange('quantity', 'product_uom_id')
@@ -242,7 +243,7 @@ class StockMoveLine(models.Model):
         res = {}
         if self.quantity and self.product_id.tracking == 'serial':
             if self.product_id.uom_id.compare(self.quantity_product_uom, 1.0) != 0 and not self.product_id.uom_id.is_zero(self.quantity_product_uom):
-                raise UserError(_('You can only process 1.0 %s of products with unique serial number.', self.product_id.uom_id.name))
+                raise UserError(self.env._('You can only process 1.0 %s of products with unique serial number.', self.product_id.uom_id.name))
         return res
 
     @api.onchange('result_package_id', 'product_id', 'product_uom_id', 'quantity')
@@ -421,10 +422,10 @@ class StockMoveLine(models.Model):
 
     def write(self, vals):
         if 'product_id' in vals and any(vals.get('state', ml.state) != 'draft' and vals['product_id'] != ml.product_id.id for ml in self):
-            raise UserError(_("Changing the product is only allowed in 'Draft' state."))
+            raise UserError(self.env._("Changing the product is only allowed in 'Draft' state."))
 
         if ('lot_id' in vals or 'quant_id' in vals) and len(self.product_id) > 1:
-            raise UserError(_("Changing the Lot/Serial number for move lines with different products is not allowed."))
+            raise UserError(self.env._("Changing the Lot/Serial number for move lines with different products is not allowed."))
 
         moves_to_recompute_state = self.env['stock.move']
         packages_to_check = self.env['stock.package']
@@ -465,7 +466,7 @@ class StockMoveLine(models.Model):
                         vals.get('quantity', ml.quantity), ml.product_id.uom_id, rounding_method='HALF-UP')
                     # Make sure `reserved_uom_qty` is not negative.
                     if ml.product_id.uom_id.compare(new_reserved_qty, 0) < 0:
-                        raise UserError(_('Reserving a negative quantity is not allowed.'))
+                        raise UserError(self.env._('Reserving a negative quantity is not allowed.'))
                 else:
                     new_reserved_qty = ml.quantity_product_uom
 
@@ -556,7 +557,7 @@ class StockMoveLine(models.Model):
     def _unlink_except_done_or_cancel(self):
         for ml in self:
             if ml.state in ('done', 'cancel'):
-                raise UserError(_(
+                raise UserError(self.env._(
                     "Deleting product moves after the transfer is done?\n\n"
                     "That would be like going back in time to revert all operations triggered after this move. Who knows what the end result would be, So let's not do it.\n\n"
                     "Try changing the “done” quantity to 0 instead."
@@ -611,7 +612,7 @@ class StockMoveLine(models.Model):
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
             quantity = float_round(ml.quantity, precision_digits=precision_digits, rounding_method='HALF-UP')
             if float_compare(uom_qty, quantity, precision_digits=precision_digits) != 0:
-                raise UserError(_('The quantity done for the product "%(product)s" doesn\'t respect the rounding precision '
+                raise UserError(self.env._('The quantity done for the product "%(product)s" doesn\'t respect the rounding precision '
                                   'defined on the unit of measure "%(unit)s". Please change the quantity done or the '
                                   'rounding precision of your unit of measure.',
                                   product=ml.product_id.display_name, unit=ml.product_uom_id.name))
@@ -635,7 +636,7 @@ class StockMoveLine(models.Model):
                     ml_ids_tracked_without_lot.add(ml.id)
 
             elif qty_done_float_compared < 0:
-                raise UserError(_('No negative quantities allowed'))
+                raise UserError(self.env._('No negative quantities allowed'))
             elif not ml.is_inventory:
                 ml_ids_to_delete.add(ml.id)
 
@@ -660,7 +661,7 @@ class StockMoveLine(models.Model):
             mls_tracked_without_lot = self.env['stock.move.line'].browse(ml_ids_tracked_without_lot)
             products_list = "\n".join(f"- {product_name}" for product_name in mls_tracked_without_lot.mapped("product_id.display_name"))
             raise UserError(
-                _(
+                self.env._(
                     "You need to supply a Lot/Serial Number for product:\n%(products)s",
                     products=products_list,
                 ),
@@ -1058,7 +1059,7 @@ class StockMoveLine(models.Model):
                 'location_dest_id': self[0].location_dest_id.id,
             })
             return {
-                'name': _('Choose destination location'),
+                'name': self.env._('Choose destination location'),
                 'view_mode': 'form',
                 'res_model': 'stock.package.destination',
                 'view_id': view_id,
@@ -1153,7 +1154,7 @@ class StockMoveLine(models.Model):
             :return: packages_to_pack: All packages that can be packed
         """
         if len(self.picking_type_id) > 1:
-            raise UserError(_('You cannot pack products into the same package when they are from different transfers with different operation types'))
+            raise UserError(self.env._('You cannot pack products into the same package when they are from different transfers with different operation types'))
 
         quantity_move_lines = self.filtered(lambda ml: ml.state not in ('done', 'cancel') and ml.product_uom_id.compare(ml.quantity, 0.0) > 0)
         if picked_first:
@@ -1170,7 +1171,7 @@ class StockMoveLine(models.Model):
     def _get_revert_inventory_move_values(self):
         self.ensure_one()
         return {
-            'inventory_name': _('%s [reverted]', self.reference),
+            'inventory_name': self.env._('%s [reverted]', self.reference),
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': self.quantity,
@@ -1209,13 +1210,13 @@ class StockMoveLine(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'type': 'danger',
-                    'message': _("There are no inventory adjustments to revert."),
+                    'message': self.env._("There are no inventory adjustments to revert."),
                 }
             }
         moves = self.env['stock.move'].create(move_vals)
         moves._action_done()
         return {
-            'name': _('Reverted Moves'),
+            'name': self.env._('Reverted Moves'),
             'type': 'ir.actions.act_window',
             'res_model': 'stock.move.line',
             'view_mode': 'list',

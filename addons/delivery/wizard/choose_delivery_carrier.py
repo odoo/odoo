@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -48,7 +48,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
             vals = self._get_delivery_rate()
             if vals.get('error_message'):
                 warning = {
-                    'title': _("%(carrier)s Error", carrier=self.carrier_id.name),
+                    'title': self.env._("%(carrier)s Error", carrier=self.carrier_id.name),
                     'message': vals['error_message'],
                     'type': 'notification',
                 }
@@ -79,7 +79,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         if vals.get('error_message'):
             raise UserError(vals.get('error_message'))
         return {
-            'name': _('Add a delivery method'),
+            'name': self.env._('Add a delivery method'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'choose.delivery.carrier',

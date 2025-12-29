@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-
 from collections import defaultdict
+
+from odoo import api, fields, models
 
 
 class AccountMove(models.Model):
@@ -38,7 +38,7 @@ class AccountMove(models.Model):
             })
         else:
             action.update({
-                'name': _("WIP MOs of %s", self.name),
+                'name': self.env._("WIP MOs of %s", self.name),
                 'domain': [('id', 'in', self.wip_production_ids.ids)],
                 'view_mode': 'list,form',
             })

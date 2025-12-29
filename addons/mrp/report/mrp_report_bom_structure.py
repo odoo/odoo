@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import json
 from collections import defaultdict, OrderedDict
 from datetime import date, datetime, time, timedelta
-import json
 
-from odoo import api, fields, models, _
-from odoo.tools import float_compare, float_round, format_date, float_is_zero, float_repr
+from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import float_round, format_date, float_repr
 
 
 class ReportMrpReport_Bom_Structure(models.AbstractModel):
@@ -281,8 +281,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             if component['is_storable']:
                 if missing_qty := max(component['quantity'] - component['quantity_forecasted'], 0):
                     missing_qty = float_repr(missing_qty, self.env['decimal.precision'].precision_get('Product Unit'))
-                    route_name = component['route_name'] or _('Order')
-                    component['status'] = _("%(qty)s To %(route)s", qty=missing_qty, route=route_name)
+                    route_name = component['route_name'] or self.env._('Order')
+                    component['status'] = self.env._("%(qty)s To %(route)s", qty=missing_qty, route=route_name)
         bom_report_line['components'] = components
         bom_report_line['producible_qty'] = self._compute_current_production_capacity(bom_report_line)
 
@@ -294,13 +294,13 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
         if level == 0:
             if bom_report_line['producible_qty'] > 0:
-                bom_report_line['status'] = _("%(qty)s Ready To Produce", qty=bom_report_line['producible_qty'])
+                bom_report_line['status'] = self.env._("%(qty)s Ready To Produce", qty=bom_report_line['producible_qty'])
             else:
-                bom_report_line['status'] = _("No Ready To Produce")
+                bom_report_line['status'] = self.env._("No Ready To Produce")
         elif missing_qty := max(bom_report_line['quantity'] - bom_report_line['quantity_available'], 0):
             missing_qty = float_repr(missing_qty, self.env['decimal.precision'].precision_get('Product Unit'))
-            route_name = bom_report_line['route_name'] or _('Order')
-            bom_report_line['status'] = _("%(qty)s To %(route)s", qty=missing_qty, route=route_name)
+            route_name = bom_report_line['route_name'] or self.env._('Order')
+            bom_report_line['status'] = self.env._("%(qty)s To %(route)s", qty=missing_qty, route=route_name)
 
         if not is_minimized:
 
@@ -471,7 +471,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             if planning := operations_planning.get(operation, None):
                 availability_state = 'estimated'
                 availability_delay = (planning['date_finished'].date() - date_today).days
-                availability_display = _('Estimated %s', format_date(self.env, planning['date_finished'])) + (" [" + planning['workcenter'].name + "]" if planning['workcenter'] != operation.workcenter_id else "")
+                availability_display = self.env._('Estimated %s', format_date(self.env, planning['date_finished'])) + (" [" + planning['workcenter'].name + "]" if planning['workcenter'] != operation.workcenter_id else "")
             else:
                 availability_state = 'available'
                 availability_delay = 0
@@ -484,7 +484,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 'link_id': operation.id,
                 'link_model': 'mrp.routing.workcenter',
                 'name': operation.name + ' - ' + operation.workcenter_id.name,
-                'uom_name': _("Minutes"),
+                'uom_name': self.env._("Minutes"),
                 'quantity': duration_expected,
                 'bom_cost': bom_cost,
                 'currency_id': company.currency_id.id,
@@ -554,10 +554,10 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
         if data['operations']:
             lines.append({
-                'name': _('Operations'),
+                'name': self.env._('Operations'),
                 'type': 'operation',
                 'quantity': data['operations_time'],
-                'uom': _('minutes'),
+                'uom': self.env._('minutes'),
                 'bom_cost': data['operations_cost'],
                 'level': level,
                 'visible': parent_unfolded,
@@ -568,7 +568,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                     'name': operation['name'],
                     'type': 'operation',
                     'quantity': operation['quantity'],
-                    'uom': _('minutes'),
+                    'uom': self.env._('minutes'),
                     'bom_cost': operation['bom_cost'],
                     'level': level + 1,
                     'availability_state': operation['availability_state'],
@@ -578,7 +578,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 })
         if data['byproducts']:
             lines.append({
-                'name': _('Byproducts'),
+                'name': self.env._('Byproducts'),
                 'type': 'byproduct',
                 'uom': False,
                 'quantity': data['byproducts_total'],
@@ -735,13 +735,13 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
     def _format_date_display(self, state, delay):
         date_today = self.env.context.get('from_date', fields.Date.today())
         if state == 'available':
-            return _('Available')
+            return self.env._('Available')
         if state == 'unavailable':
-            return _('Not Available')
+            return self.env._('Not Available')
         if state == 'expected':
-            return _('Expected %s', format_date(self.env, date_today + timedelta(days=delay)))
+            return self.env._('Expected %s', format_date(self.env, date_today + timedelta(days=delay)))
         if state == 'estimated':
-            return _('Estimated %s', format_date(self.env, date_today + timedelta(days=delay)))
+            return self.env._('Estimated %s', format_date(self.env, date_today + timedelta(days=delay)))
         return ''
 
     @api.model
@@ -830,7 +830,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         best_date_start = best_workcenter = best_duration_expected = None
         for workcenter in workcenters:
             if not workcenter.resource_calendar_id:
-                raise UserError(_('There is no defined calendar on workcenter %s.', workcenter.name))
+                raise UserError(self.env._('There is no defined calendar on workcenter %s.', workcenter.name))
             # Compute theoretical duration
             duration_expected = operation.with_context(product=product, quantity=quantity, workcenter=workcenter).time_total
             # Try to plan on workcenter
@@ -846,7 +846,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 best_duration_expected = duration_expected
         # If none of the workcenter are available, raise
         if best_date_finished == datetime.max:
-            raise UserError(_('Impossible to plan. Please check the workcenter availabilities.'))
+            raise UserError(self.env._('Impossible to plan. Please check the workcenter availabilities.'))
         planning_per_operation[operation] = {
             'date_start': best_date_start,
             'date_finished': best_date_finished,

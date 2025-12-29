@@ -2,9 +2,8 @@
 
 from collections import defaultdict
 
-from odoo import fields, models, api, _
+from odoo import api, fields, models
 from odoo.exceptions import AccessError
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.tools.misc import OrderedSet
 
 
@@ -110,7 +109,7 @@ class StockMove(models.Model):
         }
         if len(productions) > 1:
             action.update({
-                'name': _('Subcontracting MOs'),
+                'name': self.env._('Subcontracting MOs'),
                 'views': [
                     (self.env.ref('mrp_subcontracting.mrp_production_subcontracting_tree_view').id, 'list'),
                     (form_view_id.id, 'form'),
@@ -208,7 +207,7 @@ class StockMove(models.Model):
     def _check_access_if_subcontractor(self, vals):
         if self.env.user._is_portal() and not self.env.su:
             if vals.get('state') == 'done':
-                raise AccessError(_("Portal users cannot create a stock move with a state 'Done' or change the current state to 'Done'."))
+                raise AccessError(self.env._("Portal users cannot create a stock move with a state 'Done' or change the current state to 'Done'."))
 
     def _is_subcontract_return(self):
         self.ensure_one()

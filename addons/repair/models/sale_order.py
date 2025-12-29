@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
@@ -39,7 +39,7 @@ class SaleOrder(models.Model):
             }
         elif self.repair_count > 1:
             return {
-                "name": _("Repair Orders"),
+                "name": self.env._("Repair Orders"),
                 "type": "ir.actions.act_window",
                 "res_model": "repair.order",
                 "view_mode": "list,form",

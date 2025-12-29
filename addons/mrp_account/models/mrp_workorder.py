@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class MrpWorkorder(models.Model):
@@ -27,7 +27,7 @@ class MrpWorkorder(models.Model):
     def _prepare_analytic_line_values(self, account_field_values, amount, unit_amount):
         self.ensure_one()
         return {
-            'name': _("[WC] %s", self.display_name),
+            'name': self.env._("[WC] %s", self.display_name),
             'amount': amount,
             **account_field_values,
             'unit_amount': unit_amount,

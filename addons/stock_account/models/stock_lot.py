@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class StockLot(models.Model):
@@ -88,6 +88,6 @@ class StockLot(models.Model):
                 'value': lot.standard_price,
                 'company_id': product.company_id.id or self.env.company.id,
                 'date': fields.Datetime.now(),
-                'description': _('%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s',
+                'description': self.env._('%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s',
                     lot=lot.name, old_price=old_price, new_price=lot.standard_price, user=self.env.user.name)
             })

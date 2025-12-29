@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import markupsafe
 from collections import defaultdict
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
-
-import markupsafe
 
 
 class ReportStockLabel_Product_Product_View(models.AbstractModel):
@@ -19,7 +18,7 @@ class ReportStockLabel_Product_Product_View(models.AbstractModel):
         elif data.get('active_model') == 'product.product':
             Product = self.env['product.product']
         else:
-            raise UserError(_('Product model not defined, Please contact your administrator.'))
+            raise UserError(self.env._('Product model not defined, Please contact your administrator.'))
 
         quantity_by_product = defaultdict(list)
         for p, q in data.get('quantity_by_product').items():

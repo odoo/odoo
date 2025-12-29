@@ -2,9 +2,9 @@
 
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare
 from odoo.tools.misc import clean_context
 
 
@@ -131,14 +131,14 @@ class MrpUnbuild(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if not vals.get('name') or vals['name'] == _('New'):
-                vals['name'] = self.env['ir.sequence'].next_by_code('mrp.unbuild') or _('New')
+            if not vals.get('name') or vals['name'] == self.env._('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('mrp.unbuild') or self.env._('New')
         return super().create(vals_list)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
         if 'done' in self.mapped('state'):
-            raise UserError(_("You cannot delete an unbuild order if the state is 'Done'."))
+            raise UserError(self.env._("You cannot delete an unbuild order if the state is 'Done'."))
 
     def _prepare_finished_move_line_vals(self, finished_move):
         return {
@@ -168,10 +168,10 @@ class MrpUnbuild(models.Model):
         # remove the default_* keys that were only needed in the unbuild wizard
         self = self.with_env(self.env(context=clean_context(self.env)))  # noqa: PLW0642
         if self.product_id.tracking != 'none' and not self.lot_id.id:
-            raise UserError(_('You should provide a lot number for the final product.'))
+            raise UserError(self.env._('You should provide a lot number for the final product.'))
 
         if self.mo_id and self.mo_id.state != 'done':
-            raise UserError(_('You cannot unbuild a undone manufacturing order.'))
+            raise UserError(self.env._('You cannot unbuild a undone manufacturing order.'))
 
         consume_moves = self._generate_consume_moves()
         consume_moves._action_confirm()
@@ -181,7 +181,7 @@ class MrpUnbuild(models.Model):
 
         finished_moves = consume_moves.filtered(lambda m: m.product_id == self.product_id)
         consume_moves -= finished_moves
-        error_message = _(
+        error_message = self.env._(
             "Please specify a manufacturing order.\n"
             "It will allow us to retrieve the lots/serial numbers of the correct components and/or byproducts."
         )
@@ -231,7 +231,7 @@ class MrpUnbuild(models.Model):
         produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.quantity > 0)
         consume_moves.mapped('move_line_ids').write({'produce_line_ids': [(6, 0, produced_move_line_ids.ids)]})
         if self.mo_id:
-            unbuild_msg = _("%(qty)s %(measure)s unbuilt in %(order)s",
+            unbuild_msg = self.env._("%(qty)s %(measure)s unbuilt in %(order)s",
                 qty=self.product_qty,
                 measure=self.product_uom_id.name,
                 order=self._get_html_link(),
@@ -319,7 +319,7 @@ class MrpUnbuild(models.Model):
             return self.action_unbuild()
         else:
             return {
-                'name': _('%(product)s: Insufficient Quantity To Unbuild', product=self.product_id.display_name),
+                'name': self.env._('%(product)s: Insufficient Quantity To Unbuild', product=self.product_id.display_name),
                 'view_mode': 'form',
                 'res_model': 'stock.warn.insufficient.qty.unbuild',
                 'view_id': self.env.ref('mrp.stock_warn_insufficient_qty_unbuild_form_view').id,

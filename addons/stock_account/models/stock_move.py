@@ -2,10 +2,10 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _, Command
+from odoo import Command, api, fields, models
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import OrderedSet
-from odoo.exceptions import UserError
 
 VALUATION_DICT = {
     'value': 0,
@@ -52,7 +52,7 @@ class StockMove(models.Model):
 
     def search_remaining_qty(self, operator, value):
         if operator != '=' or not isinstance(value, bool) or value is not True:
-            raise UserError(_("Only is set (= True) is supported in search for remaining_qty."))
+            raise UserError(self.env._("Only is set (= True) is supported in search for remaining_qty."))
         products = 'default_product_id' in self.env.context and self.env['product.product'].browse(self.env.context['default_product_id']) or self.env['product.product']
         if not products:
             products = self.env['product.product'].search([('is_storable', '=', True), ('qty_available', '>', 0)])
@@ -147,11 +147,11 @@ class StockMove(models.Model):
 
     def action_adjust_valuation(self):
         if len(self) != 1:
-            raise UserError(_("You can only adjust valuation for one move at a time."))
+            raise UserError(self.env._("You can only adjust valuation for one move at a time."))
         action = self.env['ir.actions.act_window']._for_xml_id("stock_account.product_value_action")
         product = self.product_id if len(self.product_id) == 1 else False
         if product:
-            action['name'] = _('Adjust Valuation: %(product)s', product=product.display_name)
+            action['name'] = self.env._('Adjust Valuation: %(product)s', product=product.display_name)
         action['target'] = 'new'
         action['context'] = {
             'default_move_id': self.id,
@@ -391,7 +391,7 @@ class StockMove(models.Model):
         if manual_value:
             valuation_data['value'] = manual_value.value
             valuation_data['quantity'] = quantity
-            description = _("Adjusted on %(date)s by %(user)s",
+            description = self.env._("Adjusted on %(date)s by %(user)s",
                 date=manual_value.date,
                 user=manual_value.user_id.name,
             )
@@ -415,7 +415,7 @@ class StockMove(models.Model):
             return {
                 'value': origin_move.value * quantity / origin_move._get_valued_qty(),
                 'quantity': quantity,
-                'description': _('Value based on original move %(reference)s', reference=origin_move.reference),
+                'description': self.env._('Value based on original move %(reference)s', reference=origin_move.reference),
             }
         return dict(VALUATION_DICT)
 

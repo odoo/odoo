@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class ExpiryPickingConfirmation(models.TransientModel):
@@ -20,13 +20,13 @@ class ExpiryPickingConfirmation(models.TransientModel):
         self.show_lots = len(self.lot_ids) > 1
         if self.show_lots:
             # For multiple expired lots, they are listed in the wizard view.
-            self.description = _(
+            self.description = self.env._(
                 "You are going to deliver some product expired lots."
                 "\nDo you confirm you want to proceed?"
             )
         else:
             # For one expired lot, its name is written in the wizard message.
-            self.description = _(
+            self.description = self.env._(
                 "You are going to deliver the product %(product_name)s, %(lot_name)s which is expired or should at least be removed from stock."
                 "\nDo you confirm you want to proceed?",
                 product_name=self.lot_ids.product_id.display_name,

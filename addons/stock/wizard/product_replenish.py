@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools.misc import clean_context
@@ -96,8 +96,8 @@ class ProductReplenish(models.TransientModel):
                     self.quantity,
                     self.product_uom_id,
                     self.warehouse_id.lot_stock_id,  # Location
-                    _("Manual Replenishment"),  # Name
-                    _("Manual Replenishment"),  # Origin
+                    self.env._("Manual Replenishment"),  # Name
+                    self.env._("Manual Replenishment"),  # Origin
                     self.warehouse_id.company_id,
                     self._prepare_run_values()  # Values
                 )
@@ -155,7 +155,7 @@ class ProductReplenish(models.TransientModel):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': _('The following replenishment order have been generated'),
+                'title': self.env._('The following replenishment order have been generated'),
                 'message': '%s',
                 'links': link,
                 'sticky': False,

@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
+from babel.dates import format_date
+from collections import defaultdict
 from datetime import timedelta, datetime
+from dateutil import relativedelta
 from functools import partial
 from random import randint
 from zoneinfo import ZoneInfo
 
-from babel.dates import format_date
-from collections import defaultdict
-from dateutil import relativedelta
-
-from odoo import api, exceptions, fields, models, _
+from odoo import api, exceptions, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.intervals import Intervals
 from odoo.tools.date_utils import start_of, end_of, localized, to_timezone
@@ -91,7 +90,7 @@ class MrpWorkcenter(models.Model):
     def _check_alternative_workcenter(self):
         for workcenter in self:
             if workcenter in workcenter.alternative_workcenter_ids:
-                raise ValidationError(_("Workcenter %s cannot be an alternative of itself.", workcenter.name))
+                raise ValidationError(self.env._("Workcenter %s cannot be an alternative of itself.", workcenter.name))
 
     def _compute_kanban_dashboard_graph(self):
         week_range, date_start, date_stop = self._get_week_range_and_first_last_days()
@@ -125,7 +124,7 @@ class MrpWorkcenter(models.Model):
             short_name = (format_date(week_start, 'd - ', locale=locale)
                           + format_date(week_end, 'd MMM', locale=locale))
             if not delta:
-                short_name = _('This Week')
+                short_name = self.env._('This Week')
             week_range[week_start] = short_name
         date_start = start_of(today + relativedelta.relativedelta(days=-7 - day_offset), 'day')
         date_stop = end_of(today + relativedelta.relativedelta(days=27 - day_offset), 'day')
@@ -285,7 +284,7 @@ class MrpWorkcenter(models.Model):
     def unblock(self):
         self.ensure_one()
         if self.working_state != 'blocked':
-            raise exceptions.UserError(_("It has already been unblocked."))
+            raise exceptions.UserError(self.env._("It has already been unblocked."))
         times = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', self.id), ('date_end', '=', False)])
         times.write({'date_end': datetime.now()})
         return True
@@ -411,7 +410,7 @@ class MrpWorkcenter(models.Model):
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
-                'title': _("Note that archived work center(s): '%s' is/are still linked to active Bill of Materials, which means that operations can still be planned on it/them. "
+                'title': self.env._("Note that archived work center(s): '%s' is/are still linked to active Bill of Materials, which means that operations can still be planned on it/them. "
                            "To prevent this, deletion of the work center is recommended instead.", filtered_workcenters),
                 'type': 'warning',
                 'sticky': True,  #True/False will display for few seconds if false
@@ -574,7 +573,7 @@ class MrpWorkcenterProductivity(models.Model):
                 ["user_id"], having=[("__count", ">", 1)],
             )
             if open_time_ids_by_user:
-                raise ValidationError(_('The Workorder (%s) cannot be started twice!', workorder.display_name))
+                raise ValidationError(self.env._('The Workorder (%s) cannot be started twice!', workorder.display_name))
 
     def button_block(self):
         self.ensure_one()
@@ -602,7 +601,7 @@ class MrpWorkcenterProductivity(models.Model):
         if underperformance_timers:
             underperformance_type = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
             if not underperformance_type:
-                raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+                raise UserError(self.env._("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
             underperformance_timers.write({'loss_id': underperformance_type.id})
 
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class PickingLabelType(models.TransientModel):
@@ -16,7 +16,7 @@ class PickingLabelType(models.TransientModel):
             return self.production_ids.action_open_label_layout()
         view = self.env.ref('stock.lot_label_layout_form_picking')
         return {
-            'name': _('Choose Labels Layout'),
+            'name': self.env._('Choose Labels Layout'),
             'type': 'ir.actions.act_window',
             'res_model': 'lot.label.layout',
             'views': [(view.id, 'form')],

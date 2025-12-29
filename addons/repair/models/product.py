@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -38,7 +38,7 @@ class ProductProduct(models.Model):
             ['id:recordset'],
         ):
             if uom != product.product_tmpl_id.uom_id:
-                raise UserError(_(
+                raise UserError(self.env._(
                 'As other units of measure (ex : %(problem_uom)s) '
                 'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
                 'If you want to change it, please archive the product and create a new one.',

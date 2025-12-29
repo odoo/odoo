@@ -2,7 +2,7 @@
 
 import json
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -59,7 +59,7 @@ class SaleOrder(models.Model):
         to_delete = delivery_lines.filtered(lambda x: x.qty_invoiced == 0)
         if not to_delete:
             raise UserError(
-                _('You can not update the shipping costs on an order where it was already invoiced!\n\nThe following delivery lines (product, invoiced quantity and price) have already been processed:\n\n')
+                self.env._('You can not update the shipping costs on an order where it was already invoiced!\n\nThe following delivery lines (product, invoiced quantity and price) have already been processed:\n\n')
                 + '\n'.join(['- %s: %s x %s' % (line.product_id.with_context(display_default_code=False).display_name, line.qty_invoiced, line.price_unit) for line in delivery_lines])
             )
         to_delete.unlink()
@@ -113,7 +113,7 @@ class SaleOrder(models.Model):
         else:
             partner_address = self.partner_shipping_id
         try:
-            error = {'error': _("No pick-up points are available for this delivery address.")}
+            error = {'error': self.env._("No pick-up points are available for this delivery address.")}
             function_name = f'_{self.carrier_id.delivery_type}_get_close_locations'
             if not hasattr(self.carrier_id, function_name):
                 return error
@@ -127,9 +127,9 @@ class SaleOrder(models.Model):
     def action_open_delivery_wizard(self):
         view_id = self.env.ref('delivery.choose_delivery_carrier_view_form').id
         if self.env.context.get('carrier_recompute'):
-            name = _('Update shipping cost')
+            name = self.env._('Update shipping cost')
         else:
-            name = _('Add a delivery method')
+            name = self.env._('Add a delivery method')
         return {
             'name': name,
             'type': 'ir.actions.act_window',
@@ -223,7 +223,7 @@ class SaleOrder(models.Model):
             'is_delivery': True,
         }
         if carrier.free_over and self.currency_id.is_zero(price_unit) :
-            values['name'] = _('%s\nFree Shipping', values['name'])
+            values['name'] = self.env._('%s\nFree Shipping', values['name'])
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
         del context

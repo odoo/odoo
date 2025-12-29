@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from odoo import _, api, models
+from odoo import api, models
 
 
 class StockMoveLine(models.Model):
@@ -16,7 +16,7 @@ class StockMoveLine(models.Model):
             # we want to avoid auto-updating source location in this case + change the warning message
             self.location_id = current_location_id
             res['warning']['message'] = res['warning']['message'].split("\n\n", 1)[0] + "\n\n" + \
-                _("Make sure you validate or adapt the related resupply picking to your subcontractor in order to avoid inconsistencies in your stock.")
+                self.env._("Make sure you validate or adapt the related resupply picking to your subcontractor in order to avoid inconsistencies in your stock.")
         return res
 
     def write(self, vals):

@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from collections import defaultdict
+
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools.misc import clean_context, OrderedSet
-
-from collections import defaultdict
 
 
 class MrpBom(models.Model):
@@ -118,8 +118,8 @@ class MrpBom(models.Model):
                 self.byproduct_ids.bom_product_template_attribute_value_ids
             ) and {
                 'warning': {
-                    'title': _("Warning"),
-                    'message': _("Changing the product or variant will permanently reset all previously encoded variant-related data."),
+                    'title': self.env._("Warning"),
+                    'message': self.env._("Changing the product or variant will permanently reset all previously encoded variant-related data."),
                 }
             }
             self.bom_line_ids.bom_product_template_attribute_value_ids = False
@@ -143,7 +143,7 @@ class MrpBom(models.Model):
             for component in components:
                 if component in finished_products:
                     names = finished_products.mapped('display_name')
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         "The current configuration is incorrect because it would create a cycle between these products: %s.",
                         ', '.join(names)))
                 if component not in subcomponents_dict:
@@ -185,10 +185,10 @@ class MrpBom(models.Model):
         for bom in self:
             apply_variants = bom.bom_line_ids.bom_product_template_attribute_value_ids | bom.operation_ids.bom_product_template_attribute_value_ids | bom.byproduct_ids.bom_product_template_attribute_value_ids
             if bom.product_id and apply_variants:
-                raise ValidationError(_("You cannot use the 'Apply on Variant' functionality and simultaneously create a BoM for a specific variant."))
+                raise ValidationError(self.env._("You cannot use the 'Apply on Variant' functionality and simultaneously create a BoM for a specific variant."))
             for ptav in apply_variants:
                 if ptav.product_tmpl_id != bom.product_tmpl_id:
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         "The attribute value %(attribute)s set on product %(product)s does not match the BoM product %(bom_product)s.",
                         attribute=ptav.display_name,
                         product=ptav.product_tmpl_id.display_name,
@@ -200,19 +200,19 @@ class MrpBom(models.Model):
                 else:
                     same_product = bom.product_tmpl_id == byproduct.product_id.product_tmpl_id
                 if same_product:
-                    raise ValidationError(_("By-product %s should not be the same as BoM product.", bom.display_name))
+                    raise ValidationError(self.env._("By-product %s should not be the same as BoM product.", bom.display_name))
                 if byproduct.cost_share < 0:
-                    raise ValidationError(_("By-products cost shares must be positive."))
+                    raise ValidationError(self.env._("By-products cost shares must be positive."))
             if sum(bom.byproduct_ids.mapped('cost_share')) > 100:
-                raise ValidationError(_("The total cost share for a BoM's by-products cannot exceed 100."))
+                raise ValidationError(self.env._("The total cost share for a BoM's by-products cannot exceed 100."))
 
     @api.onchange('bom_line_ids', 'product_qty', 'product_id', 'product_tmpl_id')
     def onchange_bom_structure(self):
         if self.type == 'phantom' and self._origin and self.env['stock.move'].search_count([('bom_line_id', 'in', self._origin.bom_line_ids.ids)], limit=1):
             return {
                 'warning': {
-                    'title': _('Warning'),
-                    'message': _(
+                    'title': self.env._('Warning'),
+                    'message': self.env._(
                         'The product has already been used at least once, editing its structure may lead to undesirable behaviours. '
                         'You should rather archive the product and create a new one with a new bill of materials.'),
                 }
@@ -227,8 +227,8 @@ class MrpBom(models.Model):
                 self.byproduct_ids.bom_product_template_attribute_value_ids
             ) and {
                 'warning': {
-                    'title': _("Warning"),
-                    'message': _("Changing the product or variant will permanently reset all previously encoded variant-related data."),
+                    'title': self.env._("Warning"),
+                    'message': self.env._("Changing the product or variant will permanently reset all previously encoded variant-related data."),
                 }
             }
             default_uom_id = self.env.context.get('default_product_uom_id')
@@ -246,7 +246,7 @@ class MrpBom(models.Model):
                 domain.append(('id', '!=', self.id.origin))
             number_of_bom_of_this_product = self.env['mrp.bom'].search_count(domain)
             if number_of_bom_of_this_product:  # add a reference to the bom if there is already a bom for this product
-                self.code = _("%(product_name)s (new) %(number_of_boms)s", product_name=self.product_tmpl_id.name, number_of_boms=number_of_bom_of_this_product)
+                self.code = self.env._("%(product_name)s (new) %(number_of_boms)s", product_name=self.product_tmpl_id.name, number_of_boms=number_of_bom_of_this_product)
             if warning:
                 return warning
 
@@ -302,7 +302,7 @@ class MrpBom(models.Model):
                 result = super().name_create(self.env.context[key])
                 self.browse(result[0]).code = name
                 return result
-            raise UserError(_("You cannot create a new Bill of Material from here."))
+            raise UserError(self.env._("You cannot create a new Bill of Material from here."))
         return super(MrpBom, self).name_create(name)
 
     def action_archive(self):
@@ -319,7 +319,7 @@ class MrpBom(models.Model):
             display_name = f"{bom.code + ': ' if bom.code else ''}{bom.product_tmpl_id.display_name}"
             if self.env.context.get('display_bom_uom_qty') and (bom.product_qty > 1 or bom.product_uom_id != bom.product_tmpl_id.uom_id):
                 display_name += f" ({bom.product_qty} {bom.product_uom_id.name})"
-            bom.display_name = _('%(display_name)s', display_name=display_name)
+            bom.display_name = self.env._('%(display_name)s', display_name=display_name)
 
     @api.depends('operation_ids')
     def _compute_operation_count(self):
@@ -344,7 +344,7 @@ class MrpBom(models.Model):
                     'type': 'ir.actions.client',
                     'tag': 'display_notification',
                     'params': {
-                        'title': _('Cannot compute days to prepare due to missing route info for at least 1 component or for the final product.'),
+                        'title': self.env._('Cannot compute days to prepare due to missing route info for at least 1 component or for the final product.'),
                         'sticky': False,
                     }
                 }
@@ -354,7 +354,7 @@ class MrpBom(models.Model):
         product_ids = [pid for bom in self.filtered(lambda bom: bom.type == "phantom")
                            for pid in (bom.product_id.ids or bom.product_tmpl_id.product_variant_ids.ids)]
         if self.env['stock.warehouse.orderpoint'].search_count([('product_id', 'in', product_ids)], limit=1):
-            raise ValidationError(_("You can not create a kit-type bill of materials for products that have at least one reordering rule."))
+            raise ValidationError(self.env._("You can not create a kit-type bill of materials for products that have at least one reordering rule."))
 
     @api.constrains('enable_batch_size', 'batch_size')
     def _check_valid_batch_size(self):
@@ -364,7 +364,7 @@ class MrpBom(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_running_mo(self):
         if self.env['mrp.production'].search_count([('bom_id', 'in', self.ids), ('state', 'not in', ['done', 'cancel'])], limit=1):
-            raise UserError(_('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
+            raise UserError(self.env._('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
 
     @api.model
     def _bom_find_domain(self, products, picking_type=None, company_id=False, bom_type=False):
@@ -471,7 +471,7 @@ class MrpBom(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Bills of Materials'),
+            'label': self.env._('Import Template for Bills of Materials'),
             'template': '/mrp/static/xls/mrp_bom.xls'
         }]
 
@@ -781,13 +781,13 @@ class MrpBomLine(models.Model):
         }
 
         return {
-            'name': _('Attachments'),
+            'name': self.env._('Attachments'),
             'domain': domain,
             'res_model': 'product.document',
             'type': 'ir.actions.act_window',
             'view_mode': 'kanban,list,form',
             'target': 'current',
-            'help': _('''<p class="o_view_nocontent_smiling_face">
+            'help': self.env._('''<p class="o_view_nocontent_smiling_face">
                         Upload files to your product
                     </p><p>
                         Use this feature to store any files, like drawings or specifications.

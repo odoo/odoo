@@ -2,7 +2,7 @@
 
 from markupsafe import Markup
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -216,7 +216,7 @@ class StockPickingBatch(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_if_not_done(self):
         if any(batch.state == 'done' for batch in self):
-            raise UserError(_("You cannot delete Done batch transfers."))
+            raise UserError(self.env._("You cannot delete Done batch transfers."))
 
     # -------------------------------------------------------------------------
     # Action methods
@@ -225,7 +225,7 @@ class StockPickingBatch(models.Model):
         """Sanity checks, confirm the pickings and mark the batch as confirmed."""
         self.ensure_one()
         if not self.picking_ids:
-            raise UserError(_("You have to set some pickings to batch."))
+            raise UserError(self.env._("You have to set some pickings to batch."))
         self.picking_ids.action_confirm()
         self._check_company()
         self.state = 'in_progress'
@@ -268,13 +268,13 @@ class StockPickingBatch(models.Model):
         for picking in pickings:
             picking.message_post(
                 body=Markup("<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.batch>%s</a>") % (
-                    _("Transferred by"),
-                    _("Batch Transfer"),
+                    self.env._("Transferred by"),
+                    self.env._("Batch Transfer"),
                     picking.batch_id.id,
                     picking.batch_id.name))
 
         if empty_waiting_pickings:
-            self.message_post(body=_(
+            self.message_post(body=self.env._(
                 "%s was removed from the batch, no quantity processed",
                 Markup(', ').join([picking._get_html_link() for picking in empty_waiting_pickings])
             ))
@@ -302,7 +302,7 @@ class StockPickingBatch(models.Model):
         if self.env.user.has_group('stock.group_production_lot') and self.move_line_ids.lot_id:
             view = self.env.ref('stock.picking_label_type_form')
             return {
-                'name': _('Choose Type of Labels To Print'),
+                'name': self.env._('Choose Type of Labels To Print'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'picking.label.type',
                 'views': [(view.id, 'form')],
@@ -311,7 +311,7 @@ class StockPickingBatch(models.Model):
             }
         view = self.env.ref('stock.product_label_layout_form_picking')
         return {
-            'name': _('Choose Labels Layout'),
+            'name': self.env._('Choose Labels Layout'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'product.label.layout',
@@ -330,13 +330,13 @@ class StockPickingBatch(models.Model):
         if len(self) < 2:
             raise UserError(self.env._('Please select at least two batch/wave transfers to merge.'))
         if len(self.picking_type_id) > 1:
-            raise UserError(_('Batch/Wave transfers with different operation types cannot be merged.'))
+            raise UserError(self.env._('Batch/Wave transfers with different operation types cannot be merged.'))
         if len(set(self.mapped('is_wave'))) > 1:
-            raise UserError(_('Batch transfers cannot be merged with wave transfers and vice versa.'))
+            raise UserError(self.env._('Batch transfers cannot be merged with wave transfers and vice versa.'))
         if len(set(self.mapped('state'))) > 1:
-            raise UserError(_('Batch/Wave transfers with different states cannot be merged.'))
+            raise UserError(self.env._('Batch/Wave transfers with different states cannot be merged.'))
         if self[0].state in ['done', 'cancel']:
-            raise UserError(_('You cannot merge done or cancelled batch/wave transfers.'))
+            raise UserError(self.env._('You cannot merge done or cancelled batch/wave transfers.'))
 
         target_batch = self[:1]
         other_batches = self[1:]
@@ -350,7 +350,7 @@ class StockPickingBatch(models.Model):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': _('Batch/Wave transfers have been merged into the following transfer'),
+                'title': self.env._('Batch/Wave transfers have been merged into the following transfer'),
                 'message': '%s',
                 'links': [{
                     'label': target_batch.name,
@@ -365,7 +365,7 @@ class StockPickingBatch(models.Model):
         self.ensure_one()
         view_id = self.env.ref('stock_picking_batch.view_move_line_tree').id
         return {
-            'name': _('Detailed Operations'),
+            'name': self.env._('Detailed Operations'),
             'view_mode': 'list',
             'type': 'ir.actions.act_window',
             'res_model': 'stock.move.line',
@@ -423,7 +423,7 @@ class StockPickingBatch(models.Model):
         for batch in self:
             if not batch.picking_ids <= batch.allowed_picking_ids:
                 erroneous_pickings = batch.picking_ids - batch.allowed_picking_ids
-                raise UserError(_(
+                raise UserError(self.env._(
                     "The following transfers cannot be added to batch transfer %(batch)s. "
                     "Please check their states and operation types.\n\n"
                     "Incompatibilities: %(incompatible_transfers)s",

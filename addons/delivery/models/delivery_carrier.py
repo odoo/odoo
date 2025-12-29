@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import psycopg2
 import re
 
-import psycopg2
-
-from odoo import SUPERUSER_ID, Command, _, api, fields, models
+from odoo import SUPERUSER_ID, Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import safe_eval
@@ -122,7 +121,7 @@ class DeliveryCarrier(models.Model):
     def _check_tags(self):
         for carrier in self:
             if carrier.must_have_tag_ids & carrier.excluded_tag_ids:
-                raise UserError(_("Delivery method %(name)s cannot have the same tag in both Must Have Tags and Excluded Tags."), name=carrier.name)
+                raise UserError(self.env._("Delivery method %(name)s cannot have the same tag in both Must Have Tags and Excluded Tags."), name=carrier.name)
 
     def _compute_weight_uom_name(self):
         self.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -151,7 +150,7 @@ class DeliveryCarrier(models.Model):
     def install_more_provider(self):
         exclude_apps = ['delivery_barcode', 'delivery_stock_picking_batch', 'delivery_iot']
         return {
-            'name': _('New Providers'),
+            'name': self.env._('New Providers'),
             'res_model': 'ir.module.module',
             'view_mode': 'kanban,list',
             'views': [
@@ -160,7 +159,7 @@ class DeliveryCarrier(models.Model):
             ],
             'domain': [['name', '=like', 'delivery_%'], ['name', 'not in', exclude_apps]],
             'type': 'ir.actions.act_window',
-            'help': _('''<p class="o_view_nocontent">
+            'help': self.env._('''<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
                 </p>'''),
         }
@@ -208,7 +207,7 @@ class DeliveryCarrier(models.Model):
         elif source._name == 'stock.picking':
             products = source.move_ids.with_prefetch().mapped('product_id')
         else:
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         return not self.must_have_tag_ids or any(
             tag in products.all_product_tag_ids
             for tag in self.must_have_tag_ids
@@ -221,7 +220,7 @@ class DeliveryCarrier(models.Model):
         elif source._name == 'stock.picking':
             products = source.move_ids.with_prefetch().mapped('product_id')
         else:
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         return not any(tag in products.all_product_tag_ids for tag in self.excluded_tag_ids)
 
     def _match_weight(self, source):
@@ -237,7 +236,7 @@ class DeliveryCarrier(models.Model):
                 for move in source.move_ids
             )
         else:
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         return not self.max_weight or total_weight <= self.max_weight
 
     def _match_volume(self, source):
@@ -253,7 +252,7 @@ class DeliveryCarrier(models.Model):
                 for move in source.move_ids
             )
         else:
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         return not self.max_volume or total_volume <= self.max_volume
 
     @api.onchange('integration_level')
@@ -343,14 +342,14 @@ class DeliveryCarrier(models.Model):
                 and self.delivery_type != 'base_on_rule'
                 and self._compute_currency(order, amount_without_delivery, 'pricelist_to_company') >= self.amount
             ):
-                res['warning_message'] = _('The shipping is free since the order amount exceeds %.2f.', self.amount)
+                res['warning_message'] = self.env._('The shipping is free since the order amount exceeds %.2f.', self.amount)
                 res['price'] = 0.0
             return res
         else:
             return {
                 'success': False,
                 'price': 0.0,
-                'error_message': _('Error: this delivery method is not available.'),
+                'error_message': self.env._('Error: this delivery method is not available.'),
                 'warning_message': False,
             }
 
@@ -398,7 +397,7 @@ class DeliveryCarrier(models.Model):
         if not carrier:
             return {'success': False,
                     'price': 0.0,
-                    'error_message': _('Error: this delivery method is not available for this address.'),
+                    'error_message': self.env._('Error: this delivery method is not available for this address.'),
                     'warning_message': False}
         price = order.pricelist_id._get_product_price(self.product_id, 1.0)
         return {'success': True,
@@ -415,7 +414,7 @@ class DeliveryCarrier(models.Model):
         if not carrier:
             return {'success': False,
                     'price': 0.0,
-                    'error_message': _('Error: this delivery method is not available for this address.'),
+                    'error_message': self.env._('Error: this delivery method is not available for this address.'),
                     'warning_message': False}
 
         try:
@@ -500,6 +499,6 @@ class DeliveryCarrier(models.Model):
                 criteria_found = True
                 break
         if not criteria_found:
-            raise UserError(_("Not available for current order"))
+            raise UserError(self.env._("Not available for current order"))
 
         return price

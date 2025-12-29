@@ -1,14 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import heapq
 import logging
-from collections import namedtuple
-
 from ast import literal_eval
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from markupsafe import escape
 from psycopg2 import Error
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL
@@ -243,7 +241,7 @@ class StockQuant(models.Model):
         return self.env['product.product']._get_domain_locations()[0]
 
     def copy(self, default=None):
-        raise UserError(_('You cannot duplicate stock quants.'))
+        raise UserError(self.env._('You cannot duplicate stock quants.'))
 
     @api.model
     def name_create(self, name):
@@ -266,7 +264,7 @@ class StockQuant(models.Model):
         for vals in vals_list:
             if is_inventory_mode and any(f in vals for f in ['inventory_quantity', 'inventory_quantity_auto_apply']):
                 if any(field for field in vals.keys() if field not in allowed_fields):
-                    raise UserError(_("Quant's creation is restricted, you can't do this operation."))
+                    raise UserError(self.env._("Quant's creation is restricted, you can't do this operation."))
                 auto_apply = 'inventory_quantity_auto_apply' in vals
                 inventory_quantity = vals.pop('inventory_quantity_auto_apply', False) or vals.pop(
                     'inventory_quantity', False) or 0
@@ -339,7 +337,7 @@ class StockQuant(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Inventory Adjustments'),
+            'label': self.env._('Import Template for Inventory Adjustments'),
             'template': '/stock/static/xlsx/stock_quant.xlsx'
         }]
 
@@ -356,14 +354,14 @@ class StockQuant(models.Model):
                 # Do nothing when user tries to modify manually a inventory loss
                 return
             self = self.sudo()
-            raise UserError(_("Quant's editing is restricted, you can't do this operation."))
+            raise UserError(self.env._("Quant's editing is restricted, you can't do this operation."))
         return super(StockQuant, self).write(vals)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_wrong_permission(self):
         if not self.env.is_superuser():
             if not self.env.user.has_group('stock.group_stock_manager'):
-                raise UserError(_("Quants are auto-deleted when appropriate. If you must manually delete them, please ask a stock manager to do it."))
+                raise UserError(self.env._("Quants are auto-deleted when appropriate. If you must manually delete them, please ask a stock manager to do it."))
             self = self.with_context(inventory_mode=True)
             self.inventory_quantity = 0
             self._apply_inventory()
@@ -411,7 +409,7 @@ class StockQuant(models.Model):
             ctx['search_default_my_count'] = True
         view_id = self.env.ref('stock.view_stock_quant_tree_inventory_editable').id
         action = {
-            'name': _('Physical Inventory'),
+            'name': self.env._('Physical Inventory'),
             'view_mode': 'list',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
@@ -425,8 +423,8 @@ class StockQuant(models.Model):
                 <p>
                     {} <span class="fa fa-cog"/>
                 </p>
-                """.format(escape(_('Your stock is currently empty')),
-                           escape(_('Press the "New" button to define the quantity for a product in your stock or import quantities from a spreadsheet via the Actions menu'))),
+                """.format(escape(self.env._('Your stock is currently empty')),
+                           escape(self.env._('Press the "New" button to define the quantity for a product in your stock or import quantities from a spreadsheet via the Actions menu'))),
         }
         return action
 
@@ -438,7 +436,7 @@ class StockQuant(models.Model):
         if quants_outdated:
             ctx['default_quant_to_fix_ids'] = quants_outdated.ids
             return {
-                'name': _('Conflict in Inventory Adjustment'),
+                'name': self.env._('Conflict in Inventory Adjustment'),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'views': [(False, 'form')],
@@ -451,7 +449,7 @@ class StockQuant(models.Model):
 
     def action_stock_quant_relocate(self):
         if len(self.company_id) > 1 or any(not q.company_id.id for q in self) or any(q <= 0 for q in self.mapped('quantity')):
-            raise UserError(_('You can only move positive quantities stored in locations used by a single company per relocation.'))
+            raise UserError(self.env._('You can only move positive quantities stored in locations used by a single company per relocation.'))
         context = {
             'default_quant_ids': self.ids,
             'default_lot_id': self.env.context.get("default_lot_id", False),
@@ -468,7 +466,7 @@ class StockQuant(models.Model):
     def action_inventory_history(self):
         self.ensure_one()
         action = {
-            'name': _('History'),
+            'name': self.env._('History'),
             'view_mode': 'list,form',
             'res_model': 'stock.move.line',
             'views': [(self.env.ref('stock.view_move_line_tree').id, 'list'), (False, 'form')],
@@ -500,7 +498,7 @@ class StockQuant(models.Model):
             ctx = dict(self.env.context or {}, default_quant_ids=self.ids)
             view = self.env.ref('stock.inventory_warning_set_view', False)
             return {
-                'name': _('Quantities Already Set'),
+                'name': self.env._('Quantities Already Set'),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'views': [(view.id, 'form')],
@@ -520,7 +518,7 @@ class StockQuant(models.Model):
         ctx = dict(self.env.context or {}, default_quant_ids=quant_ids)
         view = self.env.ref('stock.stock_inventory_adjustment_name_form_view', False)
         return {
-            'name': _('Inventory Adjustment'),
+            'name': self.env._('Inventory Adjustment'),
             'type': 'ir.actions.act_window',
             'views': [(view.id, 'form')],
             'res_model': 'stock.inventory.adjustment.name',
@@ -532,7 +530,7 @@ class StockQuant(models.Model):
         ctx = dict(self.env.context or {}, default_quant_ids=self.ids)
         view = self.env.ref('stock.inventory_warning_reset_view', False)
         return {
-            'name': _('Quantities To Reset'),
+            'name': self.env._('Quantities To Reset'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'views': [(view.id, 'form')],
@@ -581,7 +579,7 @@ class StockQuant(models.Model):
     @api.constrains('product_id')
     def check_product_id(self):
         if any(not elem.product_id.is_storable for elem in self):
-            raise ValidationError(_('Quants cannot be created for consumables or services.'))
+            raise ValidationError(self.env._('Quants cannot be created for consumables or services.'))
 
     def check_quantity(self):
         sn_quants = self.filtered(lambda q: q.product_id.tracking == 'serial' and q.location_id.usage != 'inventory' and q.lot_id)
@@ -599,19 +597,19 @@ class StockQuant(models.Model):
         )
         for product, _location, lot, qty in groups:
             if product.uom_id.compare(abs(qty), 1) > 0:
-                raise ValidationError(_('The serial number has already been assigned: \n Product: %(product)s, Serial Number: %(serial_number)s', product=product.display_name, serial_number=lot.name))
+                raise ValidationError(self.env._('The serial number has already been assigned: \n Product: %(product)s, Serial Number: %(serial_number)s', product=product.display_name, serial_number=lot.name))
 
     @api.constrains('location_id')
     def check_location_id(self):
         for quant in self:
             if quant.location_id.usage == 'view':
-                raise ValidationError(_('You cannot take products from or deliver products to a location of type "view" (%s).', quant.location_id.name))
+                raise ValidationError(self.env._('You cannot take products from or deliver products to a location of type "view" (%s).', quant.location_id.name))
 
     @api.constrains('lot_id')
     def check_lot_id(self):
         for quant in self:
             if quant.lot_id.product_id and quant.lot_id.product_id != quant.product_id:
-                raise ValidationError(_('The Lot/Serial number (%s) is linked to another product.', quant.lot_id.name))
+                raise ValidationError(self.env._('The Lot/Serial number (%s) is linked to another product.', quant.lot_id.name))
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
@@ -744,7 +742,7 @@ class StockQuant(models.Model):
             return 'in_date DESC, id DESC'
         elif removal_strategy == 'closest':
             return False
-        raise UserError(_('Removal strategy %s not implemented.', removal_strategy))
+        raise UserError(self.env._('Removal strategy %s not implemented.', removal_strategy))
 
     def _get_gather_domain(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
         domains = [Domain('product_id', '=', product_id.id)]
@@ -878,7 +876,7 @@ class StockQuant(models.Model):
             # if we want to unreserve
             available_quantity = sum(quants.mapped('reserved_quantity'))
             if product_id.uom_id.compare(abs(quantity), available_quantity) > 0:
-                raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.', product_id.display_name))
+                raise UserError(self.env._('It is not possible to unreserve more products of %s than you have in stock.', product_id.display_name))
         else:
             return reserved_quants
 
@@ -959,8 +957,8 @@ class StockQuant(models.Model):
     def _onchange_inventory_quantity(self):
         if self.location_id and self.location_id.usage == 'inventory':
             warning = {
-                'title': _('You cannot modify inventory loss quantity'),
-                'message': _(
+                'title': self.env._('You cannot modify inventory loss quantity'),
+                'message': self.env._(
                     'Editing quantities in an Inventory Adjustment location is forbidden,'
                     'those locations are used as counterpart when correcting the quantities.'
                 )
@@ -974,7 +972,7 @@ class StockQuant(models.Model):
                                                                                  self.lot_id,
                                                                                  self.company_id)
             if message:
-                return {'warning': {'title': _('Warning'), 'message': message}}
+                return {'warning': {'title': self.env._('Warning'), 'message': message}}
 
     @api.onchange('product_id', 'company_id')
     def _onchange_product_id(self):
@@ -1041,7 +1039,7 @@ class StockQuant(models.Model):
         :return: tuple (available_quantity, in_date as a datetime)
         """
         if not (quantity or reserved_quantity):
-            raise ValidationError(_('Quantity or Reserved Quantity should be set.'))
+            raise ValidationError(self.env._('Quantity or Reserved Quantity should be set.'))
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
         if lot_id:
@@ -1478,7 +1476,7 @@ class StockQuant(models.Model):
             if quants:
                 if not source_location_id:
                     # trying to assign an already existing SN
-                    message = _('The Serial Number (%(serial_number)s) is already used in location(s): %(location_list)s.\n\n'
+                    message = self.env._('The Serial Number (%(serial_number)s) is already used in location(s): %(location_list)s.\n\n'
                                 'Is this expected? For example, this can occur if a delivery operation is validated '
                                 'before its corresponding receipt operation is validated. In this case the issue will be solved '
                                 'automatically once all steps are completed. Otherwise, the serial number should be corrected to '
@@ -1499,14 +1497,14 @@ class StockQuant(models.Model):
                                 recommended_location = location
                                 break
                     if recommended_location and recommended_location.company_id == company_id:
-                        message = _('Serial number (%(serial_number)s) is not located in %(source_location)s, but is located in location(s): %(other_locations)s.\n\n'
+                        message = self.env._('Serial number (%(serial_number)s) is not located in %(source_location)s, but is located in location(s): %(other_locations)s.\n\n'
                                     'Source location for this move will be changed to %(recommended_location)s',
                                     serial_number=lot_id.name,
                                     source_location=source_location_id.display_name,
                                     other_locations=sn_locations.mapped('display_name'),
                                     recommended_location=recommended_location.display_name)
                     else:
-                        message = _('Serial number (%(serial_number)s) is not located in %(source_location)s, but is located in location(s): %(other_locations)s.\n\n'
+                        message = self.env._('Serial number (%(serial_number)s) is not located in %(source_location)s, but is located in location(s): %(other_locations)s.\n\n'
                                     'Please correct this to prevent inconsistent data.',
                                     serial_number=lot_id.name,
                                     source_location=source_location_id.display_name,
@@ -1532,7 +1530,7 @@ class StockQuant(models.Model):
             package.package_dest_id = package.parent_package_id
             return set_parent_package(all_quants, package.parent_package_id, limit_ids)
 
-        message = message or _('Quantity Relocated')
+        message = message or self.env._('Quantity Relocated')
         move_vals = []
         limit_ids = set(up_to_parent_packages.ids if up_to_parent_packages else [])
         for quant in self:
