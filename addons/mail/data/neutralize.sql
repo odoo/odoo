@@ -12,4 +12,4 @@ DELETE FROM ir_config_parameter
 -- * delete delayed messages (CRON)
 TRUNCATE mail_push;
 -- * delete Devices for each partners
-TRUNCATE mail_push_device CASCADE;
+DELETE FROM mail_push_device;
