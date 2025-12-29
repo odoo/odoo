@@ -230,7 +230,7 @@ class ProductTemplate(models.Model):
             products |= products.mapped("pos_optional_product_ids")
 
         fields = self._load_pos_data_fields(config.id)
-        return self.with_context(config_id=config.id)._post_read_pos_data(products.read(fields, load=False))
+        return products.read(fields, load=False)
 
     def _post_read_pos_data(self, data):
         config = self.env['pos.config'].browse(self.env.context.get('config_id'))

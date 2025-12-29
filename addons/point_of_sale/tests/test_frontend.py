@@ -3318,6 +3318,35 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_orderline_merge_with_higher_price_precision', login="pos_user")
 
+    def test_different_currencies_correct_convertion(self):
+        """
+        Tests that if the config and the company's currencies are different, the product_template's list_price
+        is correctly converted.
+        """
+        foreign_currency = self.env['res.currency'].create({
+            'name': "XYZ",
+            'symbol': 'X',
+            'rate_ids': [
+                (0, 0, {'name': '2020-01-01', 'rate': 0.5}),
+            ],
+        })
+        sale_journal = self.env['account.journal'].create({
+            'name': 'POS Sales XYZ',
+            'code': 'POSX',
+            'type': 'sale',
+            'company_id': self.env.company.id,
+            'currency_id': foreign_currency.id,
+        })
+        self.main_pos_config.available_pricelist_ids.write({
+            'currency_id': foreign_currency.id
+        })
+        self.main_pos_config.write({
+            'currency_id': foreign_currency.id,
+            'journal_id': sale_journal.id,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_different_currencies_correct_convertion', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
