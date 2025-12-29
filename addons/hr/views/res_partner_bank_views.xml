@@ -6,13 +6,12 @@
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='allow_out_payment']" position="after">
-                <field name="employee_salary_amount_is_percentage" invisible="1"/>
                 <field name="employee_has_multiple_bank_accounts" invisible="1"/>
                 <label string="Salary Allocation" for="employee_salary_amount" 
                     invisible="not employee_has_multiple_bank_accounts" groups="hr.group_hr_user"/>
                 <div class="d-flex" invisible="not employee_has_multiple_bank_accounts" groups="hr.group_hr_user">
-                    <field name="employee_salary_amount" style="max-width: 200px;"/>
-                    <div invisible="not employee_salary_amount_is_percentage">%</div>
+                    <span><field name="employee_salary_amount" style="max-width: 200px;"/></span>
+                    <span invisible="not employee_salary_amount_is_percentage">%</span>
                     <field name="currency_id" invisible="employee_salary_amount_is_percentage" readonly="True"/>
                 </div>
                 <field name="employee_id" invisible="not employee_id" widget="many2many_avatar_employee"/>

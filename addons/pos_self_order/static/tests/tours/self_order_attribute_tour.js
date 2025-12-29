@@ -94,6 +94,15 @@ registry.category("web_tour.tours").add("self_order_product_info", {
     ],
 });
 
+registry.category("web_tour.tours").add("self_attribute_selector_shows_images", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Desk Organizer"),
+        ProductPage.attributeHasColorDot("White"),
+        ProductPage.attributeHasImage("Blue"),
+    ],
+});
+
 registry.category("web_tour.tours").add("test_self_order_multi_check_attribute_with_extra_price", {
     steps: () =>
         [

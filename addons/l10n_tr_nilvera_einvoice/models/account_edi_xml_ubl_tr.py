@@ -22,7 +22,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _get_tax_category_code(self, customer, supplier, tax):
         # OVERRIDES account.edi.ubl_21
-        if tax.amount < 0:  # This is a withholding
+        if tax and tax.amount < 0:  # This is a withholding
             return '9015'
         return '0015'
 
@@ -168,7 +168,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _get_address_node(self, vals):
         partner = vals['partner']
-        model = vals.get('model', 'res.partner')
+        model = partner._name
         country = partner['country' if model == 'res.bank' else 'country_id']
         state = partner['state' if model == 'res.bank' else 'state_id']
 

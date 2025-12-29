@@ -91,7 +91,7 @@ test("with an empty selector and a <br>", async () => {
     );
 });
 
-test("no arrow key press or mouse click should keep selection near a contenteditable='false'", async () => {
+test("no arrow key press or mouse click should keep selection near a contenteditable='false' (1)", async () => {
     await testEditor({
         contentBefore: '[]<hr contenteditable="false">',
         contentAfterEdit:
@@ -100,6 +100,9 @@ test("no arrow key press or mouse click should keep selection near a contentedit
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         contentAfter: "[]<hr>",
     });
+});
+
+test("no arrow key press or mouse click should keep selection near a contenteditable='false' (2)", async () => {
     await testEditor({
         contentBefore: '<hr contenteditable="false">[]',
         // Wait for selectionchange listener:

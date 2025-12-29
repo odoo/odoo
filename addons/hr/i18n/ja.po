@@ -17,11 +17,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:34+0000\n"
+"POT-Creation-Date: 2025-12-26 18:35+0000\n"
+"PO-Revision-Date: 2025-12-24 10:24+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/hr/ja/>"
-"\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/hr/ja/"
+">\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -433,6 +433,11 @@ msgstr "<span class=\"text-muted small\">回答までの時間</span>"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span invisible=\"not contract_date_start\">to</span>"
 msgstr "<span invisible=\"not contract_date_start\">から</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1431,7 +1436,8 @@ msgstr "従業員の唯一のアクティブな記録をアーカイブできま
 msgid ""
 "Cannot modify multiple versions contract dates with different contracts at "
 "once."
-msgstr "複数の異なる契約について、契約日の複数バージョンを同時に変更することはできま"
+msgstr ""
+"複数の異なる契約について、契約日の複数バージョンを同時に変更することはできま"
 "せん。"
 
 #. module: hr
@@ -2341,13 +2347,13 @@ msgstr "従業員プロパティ"
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_graph_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_pivot_view
 msgid "Employee Records"
-msgstr ""
+msgstr "従業員レコード"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount_is_percentage
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_salary_amount_is_percentage
 msgid "Employee Salary Amount Is Percentage"
-msgstr ""
+msgstr "従業員の給与額はパーセンテージである"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -2379,7 +2385,7 @@ msgstr "従業員バージョン"
 #: model:ir.model.fields,help:hr.field_res_users__bank_account_ids
 #: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_ids
 msgid "Employee bank accounts to pay salaries"
-msgstr ""
+msgstr "給与支払い用の従業員銀行口座"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2390,12 +2396,12 @@ msgstr "従業員の成長にフォーカスした業務を行う"
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee will be excluded from Pay Runs"
-msgstr ""
+msgstr "従業員は給与計算対象から除外されます"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
 msgid "Employee's Bank Accounts"
-msgstr ""
+msgstr "従業員の銀行口座"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -2460,7 +2466,7 @@ msgstr "従業員タグ"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Employees profile"
-msgstr ""
+msgstr "従業員プロフィール"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
@@ -2520,6 +2526,8 @@ msgid ""
 "(e.g., Aadhaar, SIN, NIN). This is used for official records and statutory "
 "compliance."
 msgstr ""
+"政府発行の従業員の国民識別番号(例：Aadhaar、SIN、NIN)を入力してください。これ"
+"は公式記録および法令遵守のために使用されます。"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2767,7 +2775,7 @@ msgstr "従業員をアーカイブする理由をさらに細かく記入して
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 msgid "Go to contact"
-msgstr ""
+msgstr "お問い合わせへ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -2834,7 +2842,7 @@ msgstr "メッセージあり"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_multiple_bank_accounts
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_has_multiple_bank_accounts
 msgid "Has Multiple Bank Accounts"
-msgstr ""
+msgstr "複数の銀行口座あり"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -2851,7 +2859,7 @@ msgstr "採用中"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Hiring Process"
-msgstr ""
+msgstr "採用プロセス"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -3005,7 +3013,7 @@ msgstr "選択されている場合、一部のメッセージで配信エラー
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_wizard__remove_related_user
 msgid "If checked, the related user will be removed from the system."
-msgstr ""
+msgstr "チェックされた場合、関連ユーザはシステムから削除されます。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -3400,7 +3408,7 @@ msgstr "主要添付"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Main Work Location"
-msgstr ""
+msgstr "主な勤務地"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -4100,7 +4108,7 @@ msgstr "過去の研修・プロジェクト経験"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__primary_bank_account_id
 msgid "Primary Bank Account"
-msgstr ""
+msgstr "主要銀行口座"
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
@@ -4219,7 +4227,7 @@ msgstr "イノベーションの実績のある方"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Provide additional information about this version..."
-msgstr ""
+msgstr "このバージョンに関する追加情報を提供してください..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4958,6 +4966,12 @@ msgstr "論文"
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This employee already has an user."
 msgstr "この従業員はユーザを既に持っています。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz

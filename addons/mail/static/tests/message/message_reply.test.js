@@ -8,6 +8,7 @@ import {
     openFormView,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { queryFirst } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
 import { serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -212,4 +213,26 @@ test("reply with only attachment shows parent message context", async () => {
     await contains(".o-mail-MessageInReply-message", {
         text: "Original message content",
     });
+});
+
+test("replying to a note restores focus on an already open composer", async () => {
+    const pyEnv = await startServer();
+    const partnerBId = pyEnv["res.partner"].create({ name: "Partner B" });
+    pyEnv["mail.message"].create({
+        author_id: partnerBId,
+        body: "Test message from B",
+        model: "res.partner",
+        res_id: serverState.partnerId,
+        subtype_id: pyEnv["mail.message.subtype"].search([
+            ["subtype_xmlid", "=", "mail.mt_note"],
+        ])[0],
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button:not(.active):text('Log note')");
+    await contains(".o-mail-Composer.o-focused");
+    queryFirst(".o-mail-Composer-input").blur();
+    await contains(".o-mail-Composer.o-focused", { count: 0 });
+    await click(".o-mail-Message-actions [title='Reply']");
+    await contains(".o-mail-Composer.o-focused");
 });

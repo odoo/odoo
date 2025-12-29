@@ -335,8 +335,9 @@ describe("pos_store.js", () => {
         const store = await setupPosEnv();
         store.selectedCategory = store.models["pos.category"].get(1);
         let products = store.productsToDisplay;
-        expect(products.length).toBe(1);
-        expect(products[0].id).toBe(5);
+        expect(products.length).toBe(2);
+        expect(products[0].id).toBe(17);
+        expect(products[1].id).toBe(5);
         expect(store.selectedCategory.id).toBe(1);
         store.selectedCategory = store.models["pos.category"].get(1);
         store.searchProductWord = "TEST";
@@ -358,18 +359,22 @@ describe("pos_store.js", () => {
         store.config.iface_group_by_categ = false;
         let grouped = store.productToDisplayByCateg;
         expect(grouped.length).toBe(1); //Only one group
-        expect(grouped[0][0]).toBe(0);
-        expect(grouped[0][1].length).toBe(12); //10 products in same group
+        expect(grouped[0][0]).toBe("0");
+        expect(grouped[0][1].length).toBe(13);
 
         // Case 2: Grouping enabled
         store.config.iface_group_by_categ = true;
         grouped = store.productToDisplayByCateg;
-        expect(grouped.length).toBe(5);
+        expect(grouped.length).toBe(6);
         // Confirm grouping structure
         for (const [catId, prods] of grouped) {
             expect(Array.isArray(prods)).toBe(true);
             expect(prods.length).toBeGreaterThan(0);
             for (const prod of prods) {
+                if (catId === "0") {
+                    expect(prod.pos_categ_ids.length).toBe(0);
+                    continue;
+                }
                 const categoryIds = prod.pos_categ_ids.map((c) => c.id);
                 expect(categoryIds).toInclude(parseInt(catId));
             }
@@ -378,9 +383,20 @@ describe("pos_store.js", () => {
         // Case 3: Grouping with search filtering
         store.searchProductWord = "TEST";
         grouped = store.productToDisplayByCateg;
-        expect(grouped.length).toBe(2);
+        expect(grouped.length).toBe(3);
         expect(grouped[0][1][0].name).toBe("TEST");
         expect(grouped[1][1][0].name).toBe("TEST 2");
+        expect(grouped[2][1][0].name).toBe("Accounting Test Product 1");
+        expect(grouped[2][1][1].name).toBe("Accounting Test Product 2");
+
+        // Case 4: Grouping with category filtering
+        store.searchProductWord = "";
+        store.selectedCategory = store.models["pos.category"].get(1);
+        grouped = store.productToDisplayByCateg;
+        expect(grouped.length).toBe(1);
+        expect(grouped[0][0]).toBe("1");
+        expect(grouped[0][1][0].name).toBe("Multi Category Product");
+        expect(grouped[0][1][1].name).toBe("TEST");
     });
 
     test("onDeleteOrder", async () => {
@@ -445,6 +461,14 @@ describe("pos_store.js", () => {
         const { cashPm: cash2, cardPm: card2 } = prepareRoundingVals(store, 0.05, "HALF-UP", true);
         expect(store.getPaymentMethodFmtAmount(cash2, order)).toBe("$ 17.85");
         expect(store.getPaymentMethodFmtAmount(card2, order)).toBeEmpty();
+    });
+
+    test("canEditPayment", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        expect(store.canEditPayment(order)).toBe(true);
+        order.nb_print = 1;
+        expect(store.canEditPayment(order)).toBe(false);
     });
 
     describe("cacheReceiptLogo", () => {

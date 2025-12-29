@@ -221,7 +221,7 @@ class TestIrSequenceGenerate(BaseCase):
             isoyear, isoweek, weekday = datetime.now().isocalendar()
             self.assertEqual(
                 env['ir.sequence'].next_by_code('test_sequence_type_9'),
-                f"{isoyear}/{isoyear % 100}/1/{isoweek}/{weekday % 7}",
+                f"{isoyear}/{isoyear % 100:02d}/1/{isoweek:02d}/{weekday % 7}",
             )
 
     def test_ir_sequence_suffix(self):
