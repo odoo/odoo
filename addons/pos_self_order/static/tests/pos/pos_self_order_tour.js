@@ -6,18 +6,34 @@ import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add("test_pos_self_order_preparation_changes", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Chrome.clickOrders(),
-            TicketScreen.checkStatus("Self-order", "Ongoing"),
-            TicketScreen.selectOrder("Self-order"),
-            TicketScreen.loadSelectedOrder(),
-            ProductScreen.isShown(),
-            ProductScreen.orderlinesHaveNoChange(),
-        ].flat(),
-});
+registry
+    .category("web_tour.tours")
+    .add("test_pos_self_order_preparation_changes_from_ticket_screen", {
+        steps: () =>
+            [
+                Chrome.startPoS(),
+                Chrome.clickOrders(),
+                TicketScreen.checkStatus("Self-order", "Ongoing"),
+                TicketScreen.selectOrder("Self-order"),
+                TicketScreen.loadSelectedOrder(),
+                ProductScreen.isShown(),
+                ProductScreen.clickReview(),
+                ProductScreen.orderlinesHaveNoChange(),
+            ].flat(),
+    });
+
+registry
+    .category("web_tour.tours")
+    .add("test_pos_self_order_preparation_changes_from_register_screen", {
+        steps: () =>
+            [
+                Chrome.startPoS(),
+                FloorScreen.clickTable("1"),
+                ProductScreen.isShown(),
+                ProductScreen.clickReview(),
+                ProductScreen.orderlinesHaveNoChange(),
+            ].flat(),
+    });
 
 registry.category("web_tour.tours").add("test_pos_self_order_table_transfer", {
     steps: () =>
