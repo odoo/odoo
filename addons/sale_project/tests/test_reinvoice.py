@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import Form, tagged
@@ -366,6 +366,46 @@ class TestReInvoice(TestSaleCommon):
             (sol.price_unit, sol.qty_delivered, sol.product_uom_qty, sol.qty_invoiced),
             (160, 2, 2, 0),
             'Sale: line is wrong after confirming vendor invoice')
+
+    def test_cost_re_invoicing_on_most_recent_so(self):
+        """ Test confirming a vendor bill to reinvoice cost on the most recent so """
+        project = self.env['project.project'].create({'name': "SO Project"})
+        if not project.account_id:
+            project._create_analytic_account()
+
+        self.sale_order.write({'project_id': project.id})
+        sale_order_2 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'project_id': project.id,
+        })
+        self.env.cr.execute("UPDATE sale_order SET create_date=%s WHERE id=%s",
+                           (self.sale_order.create_date - relativedelta(months=3), self.sale_order.id))
+        self.sale_order.invalidate_recordset(['create_date'])
+        self.assertTrue(sale_order_2.create_date > self.sale_order.create_date, 'Newly created sale order should be more recent')
+
+        (self.sale_order + sale_order_2).action_confirm()
+
+        product = self.company_data['product_order_cost']
+        bill = self.env['account.move'].create({
+            'name': "Bill name",
+            'move_type': 'in_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': self.sale_order.date_order,
+            'invoice_line_ids': [Command.create({
+                'analytic_distribution': {project.account_id.id: 100},
+                'product_id': product.id,
+                'quantity': 1,
+                'product_uom_id': product.uom_id.id,
+                'price_unit': product.standard_price,
+            })],
+        })
+        self.assertFalse(self.sale_order.order_line, 'Sales: there should not be any order line before confirming the bill')
+        self.assertFalse(sale_order_2.order_line, 'Sales: there should not be any order line before confirming the bill')
+
+        bill.action_post()
+
+        self.assertFalse(self.sale_order.order_line, 'Sales: order line should be empty for the oldest sales order')
+        self.assertTrue(sale_order_2.order_line, 'Sale: order line should be added to the most recent sales order')
 
     def test_invoice_analytic_account_so_not_default(self):
         """ Tests whether, when an analytic account rule is set and the so has an analytic account,
