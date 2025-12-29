@@ -230,7 +230,6 @@ class HrVersion(models.Model):
             leaves = mapped_leaves[resource.id]
             worked_leaves = mapped_worked_leaves[resource.id]
 
-            real_attendances = attendances - leaves - worked_leaves
             if not calendar:
                 real_leaves = leaves
                 real_worked_leaves = worked_leaves - real_leaves
@@ -251,9 +250,9 @@ class HrVersion(models.Model):
                 ) - real_leaves
 
             elif version.has_static_work_entries() or not leaves:
-                # Empty leaves means empty real_leaves
-                real_worked_leaves = attendances - real_attendances - leaves
-                real_leaves = attendances - real_attendances - real_worked_leaves
+                real_leaves, real_worked_leaves = version._get_duration_based_real_leaves(
+                    start_dt, end_dt, attendances, leaves, worked_leaves
+                )
             else:
                 # In the case of attendance based versions use regular attendances to generate leave intervals
                 static_attendances = calendar._attendance_intervals_batch(
@@ -261,7 +260,9 @@ class HrVersion(models.Model):
                 real_leaves = static_attendances & leaves
                 real_worked_leaves = (static_attendances & worked_leaves) - real_leaves
 
-            real_attendances = self._get_real_attendances(attendances, leaves, worked_leaves)
+            real_attendances = version._get_duration_based_real_attendances(
+                start_dt, end_dt, attendances, leaves, worked_leaves
+            )
 
             if not version.has_static_work_entries():
                 # An attendance based version might have an invalid planning, by definition it may not happen with
@@ -341,6 +342,18 @@ class HrVersion(models.Model):
     # will override in attendance bridge to add overtime vals
     def _get_real_attendances(self, attendances, leaves, worked_leaves):
         return attendances - leaves - worked_leaves
+
+    # will override in hr_work_entry_holidays to actually compute duration_based real_leaves
+    def _get_duration_based_real_leaves(self, start_dt, end_dt, attendances, leaves, worked_leaves):
+        # Empty leaves means empty real_leaves
+        real_attendances = attendances - leaves - worked_leaves
+        real_worked_leaves = attendances - real_attendances - leaves
+        real_leaves = attendances - real_attendances - real_worked_leaves
+        return real_leaves, real_worked_leaves
+
+    # will override in hr_work_entry_holidays to actually compute duration_based real_attendances
+    def _get_duration_based_real_attendances(self, start_dt, end_dt, attendances, leaves, worked_leaves):
+        return self._get_real_attendances(attendances, leaves, worked_leaves)
 
     def _get_work_entries_values(self, date_start, date_stop):
         """
