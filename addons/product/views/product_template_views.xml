@@ -111,10 +111,10 @@
                             <field
                                     name="value_ids"
                                     placeholder="List of possible values (e.g. Blue, Green, White, ... )"
-                                    widget="many2many_tags"
+                                    widget="many2many_tags_color_dot"
                                     options="{
-                                        'on_tag_click': 'open_form',
-                                        'color_field': 'color',
+                                        'can_open': True,
+                                        'color_field': 'html_color',
                                     }"
                                     context="{
                                         'default_attribute_id': attribute_id,
@@ -127,11 +127,6 @@
                                 groups="product.group_product_variant"/>
                         </list>
                     </field>
-                        <p class="opacity-50 oe_edit_only">
-                        <strong>Warning</strong>: adding or deleting attributes
-                        will delete and recreate existing variants and lead
-                        to the loss of their possible customizations.
-                    </p>
                 </page>
             </xpath>
             <xpath expr="//group[@name='group_standard_price']" position="after">

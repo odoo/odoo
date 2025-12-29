@@ -7,7 +7,13 @@
         <field name="arch" type="xml">
             <list string="Update Quantities" editable="bottom" create="false">
                 <field name="display_name" readonly="1"/>
-                <field name="product_template_variant_value_ids" widget="many2many_tags" groups="product.group_product_variant" readonly="1"/>
+                <field
+                    name="product_template_variant_value_ids"
+                    widget="many2many_tags_color_dot"
+                    options="{'color_field': 'html_color'}"
+                    groups="product.group_product_variant"
+                    readonly="1"
+                />
                 <field name="qty_available" string="On Hand" decoration-danger="qty_available &lt; 0" sum="Total On Hand"/>
                 <field name="virtual_available" string="Forecasted" decoration-danger="virtual_available &lt; 0" decoration-bf="1" sum="Total Forecasted"/>
             </list>
@@ -75,7 +81,6 @@
                             options="{'convert_to_webp': True, 'preview_image': 'image_128', 'size': [90, 90], 'zoom': True}"
                         />
                     </div>
-                    
                     <notebook>
                         <page string="General Information" name="general_information">
                             <group>
@@ -156,6 +161,11 @@
                                         />
                                     </div>
                                     <field name="categ_id" string="Category"/>
+                                    <field
+                                        name="product_tag_ids"
+                                        widget="many2many_tags"
+                                        context="{'product_template_id': id}"
+                                    />
                                     <field name="company_id"
                                         groups="base.group_multi_company"
                                         options="{'no_create': True}"
@@ -179,9 +189,6 @@
                                         groups="uom.group_uom"
                                         force_save="1"
                                         context="{'product_id': product_variant_id if product_variant_count == 1 else False, 'product_ids': product_variant_ids, 'show_variant_name': product_variant_count > 1}"/>
-                                </group>
-                                <group name="extra_info" string="Extra Info">
-                                    <field name="product_tag_ids" widget="many2many_tags" context="{'product_template_id': id}"/>
                                 </group>
                                 <group string="Short Description" name="description">
                                     <field colspan="2" name="description_sale" nolabel="1" placeholder="This note is added to sales orders and invoices."/>
@@ -264,13 +271,13 @@
                         >
                             <group name="inventory">
                                 <group name="group_lots_and_weight" string="Logistics" invisible="type != 'consu'">
-                                    <label for="weight" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
-                                    <div class="o_row" name="weight" invisible="product_variant_count &gt; 1 and not is_product_variant">
+                                    <label for="weight"/>
+                                    <div class="o_row" name="weight">
                                         <field name="weight" class="oe_inline" style="max-width: 7rem;"/>
                                         <field name="weight_uom_name"/>
                                     </div>
-                                    <label for="volume" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
-                                    <div class="o_row" name="volume" invisible="product_variant_count &gt; 1 and not is_product_variant">
+                                    <label for="volume"/>
+                                    <div class="o_row" name="volume">
                                         <field name="volume" string="Volume" class="oe_inline" style="max-width: 7rem;"/>
                                         <field name="volume_uom_name"/>
                                     </div>
@@ -355,135 +362,28 @@
                 </field>
                 <field name="attribute_line_ids" position="replace">
                     <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/>
-                    <field name="product_tmpl_id" string="Product Template"/>
+                    <field name="product_tmpl_id" string="Product"/>
                 </field>
                 <filter name="group_by_categ_id" position="after">
-                    <filter string="Product Template" name="group_by_product_tmpl_id" context="{'group_by':'product_tmpl_id'}"/>
+                    <filter
+                        string="Product"
+                        name="group_by_product_tmpl_id"
+                        context="{'group_by':'product_tmpl_id'}"
+                    />
                 </filter>
             </field>
         </record>
-
-        <record id="product_normal_action" model="ir.actions.act_window">
-            <field name="name">Product Variants</field>
-            <field name="res_model">product.product</field>
-            <field name="view_mode">list,form,kanban,activity</field>
-            <field name="search_view_id" ref="product_search_form_view"/>
-            <field name="view_id" eval="False"/> <!-- Force empty -->
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new product variant
-              </p><p>
-                You must define a product for everything you sell or purchase,
-                whether it's a storable product, a consumable or a service.
-              </p>
-            </field>
-        </record>
-
-        <record id="product_variant_easy_edit_view" model="ir.ui.view">
-            <field name="name">product.product.view.form.easy</field>
-            <field name="model">product.product</field>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <form string="Variant Information" duplicate="false">
-                    <sheet>
-                        <div class="oe_button_box" name="button_box"/>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                        <field name="active" invisible="1"/>
-                        <field name="id" invisible="1"/>
-                        <field name="company_id" invisible="1"/>
-                        <div class="d-flex flex-column flex-md-row align-items-center gap-3">
-                            <field name="image_1920" widget="image" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
-                            <group class="d-flex flex-column gap-md-0 w-100">
-                                <label for="name" class="d-md-none"/>
-                                <h1>
-                                    <field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/>
-                                </h1>
-                                <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"/>
-                                <p>
-                                    <span>All general settings about this product are managed on</span>
-                                    <button name="open_product_template" type="object" string="the product template." class="oe_link oe_link_product ps-0 ms-1 mb-1"/>
-                                </p>
-                            </group>
-                        </div>
-                        <group>
-                            <group name="codes" string="Codes">
-                                <field name="default_code"/>
-                                <field name="barcode"/>
-                                <field name="type" invisible="1"/>
-                            </group>
-                            <group name="pricing" string="Pricing">
-                                <field name="product_variant_count" invisible="1"/>
-                                <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                                <label for="base_unit_count" groups="product.group_show_uom_price"/>
-                                <div name="base_unit_price" groups="product.group_show_uom_price" class="d-flex flex-row">
-                                    <field name="base_unit_count" style="width: 4rem;"/>
-                                    <field name="base_unit_id" options="{'no_open': True}" placeholder="Specify unit" style="width: 10rem;"/>
-                                    <div class="d-flex flex-row" invisible="base_unit_price == 0">
-                                        (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
-                                    </div>
-                                </div>
-                                <field name="standard_price"
-                                    widget="monetary"
-                                    options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
-                                <field name="currency_id" invisible='1'/>
-                                <field name="cost_currency_id" invisible="1"/>
-                            </group>
-                        </group>
-                        <group>
-                            <group name="weight" string="Logistics" invisible="type != 'consu'">
-                                <label for="qty_available"  invisible="not is_storable"/>
-                                <div class="d-flex" name="no_stock_variant_qty_edit" invisible="not is_storable">
-                                    <div class="d-flex">
-                                        <field name="qty_available" class="oe_inline"/>
-                                        <field name="uom_name" groups="uom.group_uom"/>
-                                    </div>
-                                </div>
-                                <label for="volume"/>
-                                <div class="d-flex">
-                                    <field name="volume" class="oe_inline"/>
-                                    <field name="volume_uom_name"/>
-                                </div>
-                                <label for="weight"/>
-                                <div class="d-flex">
-                                    <field name="weight" class="oe_inline"/>
-                                    <field name="weight_uom_name"/>
-                                </div>
-                            </group>
-                            <group name="sales" string="Sales">
-                                <field
-                                    name="uom_ids"
-                                    widget="many2many_uom_tags"
-                                    options="{'no_quick_create': True, 'on_tag_click': 'open_form'}"
-                                    groups="uom.group_uom"
-                                    force_save="1"
-                                    readonly="1"
-                                    context="{'product_id': id}"/>
-                                <field
-                                    name="extra_uom_ids"
-                                    widget="many2many_uom_tags"
-                                    options="{'no_quick_create': True, 'on_tag_click': 'open_form'}"
-                                    groups="uom.group_uom"
-                                    context="{'product_id': id}"/>
-                                <field name="product_tag_ids" widget="many2many_tags" readonly="1"/>
-                                <field name="additional_product_tag_ids" widget="many2many_tags" context="{'product_variant_id': id}"/>
-                            </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
         <record id="product_variant_action" model="ir.actions.act_window">
             <field name="name">Product Variants</field>
             <field name="res_model">product.product</field>
-            <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id, 'create': False}</field>
+            <field name="context">{
+                'create': False,
+                'search_default_product_tmpl_id': active_id,
+                'display_attribute_name': False,
+            }</field>
             <field name="search_view_id" ref="product_search_form_view"/>
-            <field name="view_ids"
-                   eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'list'}),
-                          (0, 0, {'view_mode': 'form', 'view_id': ref('product_variant_easy_edit_view')}),
-                          (0, 0, {'view_mode': 'kanban'})]"/>
-             <field name="help" type="html">
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new product variant
               </p><p>
@@ -500,30 +400,90 @@
             <field name="model">product.product</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <list string="Product Variants" multi_edit="1" duplicate="false" sample="1" default_order="is_favorite desc, default_code, name, id">
-                    <field name="is_favorite" widget="boolean_favorite" nolabel="1" readonly="1"/>
-                    <field name="default_code" optional="show" readonly="1"/>
-                    <field name="barcode" optional="hide" readonly="1"/>
-                    <field name="name" readonly="1"/>
-                    <field name="product_template_variant_value_ids" widget="many2many_tags" groups="product.group_product_variant" readonly="1"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="hide" readonly="1"/>
-                    <field name="lst_price" optional="show" string="Sales Price"/>
-                    <field name="standard_price" optional="show"/>
-                    <field name="categ_id" optional="hide"/>
-                    <field name="product_tag_ids" widget="many2many_tags" readonly="1" optional="hide"/>
-                    <field name="additional_product_tag_ids" widget="many2many_tags" optional="hide"/>
-                    <field name="type" optional="hide" readonly="1"/>
-                    <field name="qty_available" invisible="not is_storable" string="On Hand" readonly="1" optional="show"
-                           decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1"
-                           sum="Total On Hand"
+                <list
+                    string="Product Variants"
+                    default_order="default_code, name, id"
+                    duplicate="false"
+                    editable="bottom"
+                    multi_edit="1"
+                    open_form_view="1"
+                    sample="1"
+                >
+                    <field name="default_code" optional="hide"/>
+                    <field
+                        name="image_128"
+                        widget="image"
+                        nolabel="1"
+                        readonly="1"
+                        options="{
+                            'size':[24, 24],
+                            'img_class':'o_avatar rounded border object-fit-contain',
+                        }"
+                        width="30"
                     />
-                    <field name="free_qty" invisible="not is_storable" readonly="1" optional="show" sum="Total Free To Use"/>
-                    <field name="virtual_available" invisible="not is_storable" string="Forecasted" readonly="1" optional="show"
-                           decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" sum="Total Forecasted"
+                    <field name="name" readonly="1"/>
+                    <field
+                        name="product_template_variant_value_ids"
+                        widget="many2many_tags_color_dot"
+                        groups="product.group_product_variant"
+                        options="{'color_field': 'html_color'}"
+                        readonly="1"
+                    />
+                    <!-- Currency, needed for monetary widgets to display the currency symbol -->
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="cost_currency_id" column_invisible="True"/>
+                    <field
+                        name="lst_price"
+                        optional="show"
+                        options="{'currency_field': 'currency_id'}"
+                        widget="monetary"
+                    />
+                    <field
+                        name="standard_price"
+                        optional="show"
+                        options="{'currency_field': 'cost_currency_id'}"
+                        widget="monetary"
+                    />
+                    <field name="barcode" optional="show"/>
+                    <field
+                        string="On Hand"
+                        name="qty_available"
+                        decoration-bf="1"
+                        decoration-danger="virtual_available &lt; 0"
+                        decoration-warning="virtual_available == 0"
+                        invisible="not is_storable"
+                        optional="show"
+                        readonly="1"
+                        sum="Total On Hand"
+                    />
+                    <field
+                        name="free_qty"
+                        invisible="not is_storable"
+                        readonly="1"
+                        optional="show"
+                        sum="Total Free To Use"
+                    />
+                    <field
+                        string="Forecasted"
+                        name="virtual_available"
+                        decoration-danger="virtual_available &lt; 0"
+                        decoration-warning="virtual_available == 0"
+                        invisible="not is_storable"
+                        optional="hide"
+                        readonly="1"
+                        sum="Total Forecasted"
                     />
                     <field name="uom_id" groups="uom.group_uom" optional="show" readonly="1"/>
-                    <field name="product_tmpl_id" readonly="1" column_invisible="True"/>
-                    <field name="active" column_invisible="True"/>
+                    <field
+                        name="extra_uom_ids"
+                        widget="many2many_uom_tags"
+                        groups="uom.group_uom"
+                        context="{'product_id': id}"
+                        options="{'no_quick_create': True, 'on_tag_click': 'open_form'}"
+                        optional="hide"
+                    />
+                    <field name="volume" optional="hide"/>
+                    <field name="weight" optional="hide"/>
                 </list>
             </field>
         </record>
@@ -535,23 +495,6 @@
                 <list string="Product Templates" editable="bottom">
                     <field name="name" readonly="1"/>
                     <field name="default_code" readonly="1" optional="show"/>
-                    <field name="description" readonly="1" optional="show"/>
-                </list>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="product_product_view_tree_tag">
-            <field name="name">product.product.view.list.tag</field>
-            <field name="model">product.product</field>
-            <field name="arch" type="xml">
-                <list string="Product Variants" editable="bottom" default_order="is_favorite desc, default_code, name, id">
-                    <field name="name" readonly="1"/>
-                    <field name="default_code" readonly="1" optional="show"/>
-                    <field name="product_template_variant_value_ids"
-                           widget="many2many_tags"
-                           groups="product.group_product_variant"
-                           readonly="1"
-                    />
                     <field name="description" readonly="1" optional="show"/>
                 </list>
             </field>
@@ -578,13 +521,23 @@
                     <attribute name="string">Product Variant</attribute>
                     <attribute name="duplicate">false</attribute>
                 </form>
-                <xpath expr="//div[@name='standard_price_uom']" position="after">
+                <field name="is_favorite" position="replace"/>
+                <div name="options" position="after">
+                    <field
+                        name="product_template_variant_value_ids"
+                        widget="many2many_tags_color_dot"
+                        options="{'color_field': 'html_color'}"
+                        groups="product.group_product_variant"
+                        invisible="not product_template_variant_value_ids"
+                        nolabel="1"
+                        colspan="2"
+                        readonly="1"
+                    />
+                </div>
+                <field name="categ_id" position="after">
                     <field name="default_code"/>
                     <field name="barcode"/>
-                </xpath>
-                <xpath expr="//field[@name='is_favorite']" position="attributes">
-                    <attribute name="readonly">1</attribute>
-                </xpath>
+                </field>
                 <field name="list_price" position="attributes">
                    <attribute name="invisible">1</attribute>
                    <attribute name="readonly">product_variant_count &gt; 1</attribute>
@@ -608,12 +561,9 @@
                 <field name="name" position="after">
                     <field name="product_tmpl_id" readonly="1" invisible="1" required="id"/>
                 </field>
-                <xpath expr="//div[@name='options']" position="before">
-                    <field name="product_template_variant_value_ids" widget="many2many_tags" readonly="1" invisible="not product_template_variant_value_ids" groups="product.group_product_variant"/>
-                </xpath>
                 <field name="product_tag_ids" position="attributes">
-                    <attribute name="options">{'no_open': True}</attribute>
-                    <attribute name="context">{'product_template_id': product_tmpl_id}</attribute>
+                    <attribute name="string">Product Tags</attribute>
+                    <attribute name="readonly">1</attribute>
                 </field>
                 <field name="product_tag_ids" position="after">
                     <field
@@ -622,18 +572,15 @@
                         invisible="product_variant_count == 1"
                     />
                 </field>
-                <field name="uom_ids" position="attributes">
-                    <attribute name="readonly">product_variant_count != 1</attribute>
-                    <attribute name="context">{'product_id': id}</attribute>
-                </field>
-                <field name="uom_ids" position="after">
-                    <field
-                        name="extra_uom_ids"
-                        widget="many2many_uom_tags"
-                        options="{'no_quick_create': True, 'on_tag_click': 'open_form'}"
-                        groups="uom.group_uom"
-                        invisible="product_variant_count == 1"
-                        context="{'product_id': id}"/>
+                <field name="uom_ids" position="replace">
+                <field
+                    name="extra_uom_ids"
+                    widget="many2many_uom_tags"
+                    options="{'no_quick_create': True, 'on_tag_click': 'open_form'}"
+                    groups="uom.group_uom"
+                    invisible="product_variant_count == 1"
+                    context="{'product_id': id}"
+                />
                 </field>
             </field>
         </record>
@@ -722,25 +669,6 @@
             </field>
         </record>
 
-        <record id="product_normal_action_sell" model="ir.actions.act_window">
-            <field name="name">Product Variants</field>
-            <field name="res_model">product.product</field>
-            <field name="view_mode">kanban,list,form,activity</field>
-            <field name="context">{"search_default_filter_to_sell":1}</field>
-            <field name="view_id" ref="product_product_tree_view"/>
-            <field name="search_view_id" ref="product_search_form_view"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new product variant
-              </p><p>
-                You must define a product for everything you sell, whether it's a physical product,
-                a consumable or a service you offer to customers.
-                The product form contains information to simplify the sale process:
-                price, notes in the quotation, accounting data, procurement methods, etc.
-              </p>
-            </field>
-        </record>
-
     <record id="action_product_print_labels" model="ir.actions.server">
         <field name="name">Print Labels</field>
         <field name="model_id" ref="product.model_product_product"/>
@@ -795,12 +723,14 @@ action = {
                                         readonly="1"/>
                                     <field name="name" class="fw-bold fs-4 text-reset"/>
                                 </div>
-                                <field name="product_template_attribute_value_ids"
-                                    widget="many2many_tags"
+                                <field
+                                    name="product_template_attribute_value_ids"
+                                    widget="many2many_tags_color_dot"
                                     domain="[('id', 'in', parent.ids)]"
                                     groups="product.group_product_variant"
-                                    options="{'color_field': 'color'}"
-                                    invisible="not product_template_attribute_value_ids"/>
+                                    options="{'color_field': 'html_color'}"
+                                    invisible="not product_template_attribute_value_ids"
+                                />
                                 <!-- Used by @web/product/js/product_catalog/order_line to
                                         show the price using a t-portal. -->
                                 <div name="o_kanban_price"

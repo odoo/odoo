@@ -2,7 +2,6 @@
 
 import io
 import unittest.mock
-
 from collections import OrderedDict
 from datetime import timedelta
 from unittest.mock import patch
@@ -1594,7 +1593,7 @@ class TestVariantsArchive(ProductVariantsCommon):
 
 
 @tagged('post_install', '-at_install')
-class TestVariantWrite(TransactionCase):
+class TestVariantWrite(ProductVariantsCommon):
 
     def test_write_inherited_field(self):
         product = self.env['product.product'].create({'name': 'Foo', 'sequence': 1})
@@ -1624,6 +1623,44 @@ class TestVariantWrite(TransactionCase):
             self.assertEqual(product.name, 'Bar')
             self.assertEqual(product.sequence, 2)
 
+    def test_weight_volume_multi_variant(self):
+        """Make sure that weight and volumes are correctly set & computed.
+
+        Those two fields are stored and expected to behave differently from
+        the other template fields based on variant values.
+
+        * they can be used to update the value on all the variants.
+        * their value is not restricted to their unique variant (if only one),
+        but also holds the value shared by all the variants (if identical).
+        """
+        template = self.env['product.template'].create({
+            'name': 'Multi Variant Product',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.color_attribute.id,
+                    'value_ids': [
+                        Command.link(self.color_attribute_red.id),
+                        Command.link(self.color_attribute_blue.id),
+                    ],
+                })
+            ],
+        })
+        self.assertEqual(len(template.product_variant_ids), 2)
+        v1, v2 = template.product_variant_ids
+
+        v1.weight = 5.0
+        v2.weight = 5.0
+        self.assertEqual(template.weight, 5.0)
+
+        v1.volume = 2.0
+        v2.volume = 2.0
+        self.assertEqual(template.volume, 2.0)
+
+        v1.weight = 3.0
+        self.assertEqual(template.weight, 5.0)
+
+        v1.volume = 1.0
+        self.assertEqual(template.volume, 2.0)
 
 @tagged('post_install', '-at_install')
 class TestVariantsExclusion(ProductVariantsCommon):

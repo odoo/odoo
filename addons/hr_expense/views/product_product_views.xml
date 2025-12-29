@@ -111,8 +111,12 @@
                 <list string="Product Variants" default_order="is_favorite desc, default_code, name, id">
                     <field name="default_code"/>
                     <field name="name"/>
-                    <field name="product_template_attribute_value_ids" widget="many2many_tags"
-                           groups="product.group_product_variant"/>
+                    <field
+                        name="product_template_attribute_value_ids"
+                        widget="many2many_tags_color_dot"
+                        options="{'color_field': 'html_color'}"
+                        groups="product.group_product_variant"
+                    />
                     <field name="standard_price"/>
                     <field name="uom_id" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                     <field name="barcode"/>

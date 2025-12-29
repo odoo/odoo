@@ -24,19 +24,11 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_product_tree_view"/>
         <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="website_id" groups="website.group_multi_website" optional="show"/>
-                <field name="is_published" string="Is Published" optional="hide"/>
-            </field>
-            <field name="additional_product_tag_ids" position="after">
+            <field name="weight" position="after">
                 <field
-                    name="website_ribbon_id"
-                    invisible="variant_ribbon_id"
+                    name="variant_ribbon_id"
+                    options="{'no_quick_create': True}"
                     optional="hide"
-                    readonly="1"
-                />
-                <field
-                    name="variant_ribbon_id" options="{'no_quick_create': True}" optional="hide"
                 />
             </field>
         </field>
@@ -154,12 +146,8 @@
             <field name="description_sale" position="attributes">
                 <attribute name="placeholder">This note is added to sales orders, invoices, eCommerce listing and SEO descriptions.</attribute>
             </field>
-            <!-- Move all extra info fields into "eCommerce" page -->
-            <group name="extra_info" position="attributes">
-                <attribute name="invisible" add="True" separator="or"/>
-            </group>
             <notebook position="inside">
-                <page name="website_sale" string="eCommerce" invisible="not sale_ok">
+                <page string="eCommerce" name="website_sale" invisible="not sale_ok">
                     <group>
                         <group name="shop" string="Shop">
                             <field name="publish_on" invisible="1"/> <!-- Needed for next fields and elements -->
@@ -181,8 +169,6 @@
                                 name="website_ribbon_id"
                                 options="{'no_quick_create': True}"
                             />
-                            <!-- From hidden "Extra Info" group -->
-                            <field name="product_tag_ids" widget="many2many_tags" context="{'product_template_id': id}"/>
                         </group>
                         <group name="ecommerce_inventory" string="Inventory" invisible="not is_storable">
                             <field name="allow_out_of_stock_order"/>
@@ -225,20 +211,33 @@
         </field>
     </record>
 
-    <record id="product_product_view_form_easy_inherit_website_sale" model="ir.ui.view">
-        <field name="name">product.product.view.form.easy.inherit.website_sale</field>
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.product.form.website_sale</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
-            <group name="sales" position="inside">
-                <field name="website_ribbon_id" options="{'no_open': True}" readonly="True"/>
-                <field name="variant_ribbon_id" options="{'no_quick_create': True}"/>
-            </group>
-            <group name="sales" position="after">
-                <group colspan="2" name="product_variant_images" string="Extra Variant Media">
-                    <field name="product_variant_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add Media" nolabel="1" widget="x2_many_media_viewer" options="{'convert_to_webp': True}"/>
-                </group>
-            </group>
+            <page name="website_sale" position="replace">
+                <page string="eCommerce" name="website_sale" invisible="not sale_ok">
+                    <group>
+                        <group string="Ribbon" name="ribbon">
+                            <field name="variant_ribbon_id" options="{'no_quick_create': True}"/>
+                        </group>
+                        <group string="Extra Variant Media" name="product_template_images">
+                            <field
+                                name="product_variant_image_ids"
+                                class="o_website_sale_image_list"
+                                context="{'default_name': name}"
+                                mode="kanban"
+                                add-label="Add Media"
+                                nolabel="1"
+                                colspan="2"
+                                widget="x2_many_media_viewer"
+                                options="{'convert_to_webp': True}"
+                            />
+                        </group>
+                    </group>
+                </page>
+            </page>
         </field>
     </record>
 

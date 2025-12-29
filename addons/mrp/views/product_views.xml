@@ -27,20 +27,6 @@
             </field>
         </record>
 
-        <record id="mrp_product_product_search_view" model="ir.ui.view">
-            <field name="name">mrp.product.product.search</field>
-            <field name="model">product.product</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="product.product_search_form_view"/>
-            <field name="arch" type="xml">
-                <filter name="combo" position="after">
-                    <separator/>
-                    <filter string="Manufactured Products" name="manufactured_products" domain="[('bom_ids', '!=', False)]"/>
-                    <filter string="BoM Components" name="components" domain="[('bom_line_ids', '!=', False)]"/>
-                </filter>
-            </field>
-        </record>
-
         <record id="product_template_action" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="res_model">product.template</field>
@@ -85,18 +71,6 @@
             name="Products"
             action="product_template_action"
             parent="menu_mrp_bom" sequence="1"/>
-
-        <record id="mrp_product_variant_action" model="ir.actions.act_window">
-            <field name="name">Product Variants</field>
-            <field name="res_model">product.product</field>
-            <field name="search_view_id" ref="mrp_product_product_search_view"/>
-            <field name="view_mode">kanban,list,form</field>
-        </record>
-
-        <menuitem id="product_variant_mrp" name="Product Variants"
-            action="mrp_product_variant_action"
-            parent="menu_mrp_bom" groups="product.group_product_variant" sequence="2"/>
-
 
         <record id="product_template_form_view_bom_button" model="ir.ui.view">
             <field name="name">product.template.procurement</field>
