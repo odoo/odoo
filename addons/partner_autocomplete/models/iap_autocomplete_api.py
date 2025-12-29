@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-
-from odoo import api, exceptions, models, modules, _, release
-from odoo.addons.iap.tools import iap_tools
 from requests.exceptions import HTTPError
+
+from odoo import api, exceptions, models, modules, release
+
+from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
 
@@ -18,10 +19,10 @@ class IapAutocompleteApi(models.AbstractModel):
     @api.model
     def _contact_iap(self, local_endpoint, action, params, timeout=15):
         if modules.module.current_test:
-            raise exceptions.ValidationError(_('Test mode'))
+            raise exceptions.ValidationError(self.env._('Test mode'))
         account = self.env['iap.account'].get('partner_autocomplete')
         if not account.sudo().account_token:
-            raise ValueError(_('No account token'))
+            raise ValueError(self.env._('No account token'))
         params.update({
             'db_uuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
             'db_version': release.version,

@@ -6,14 +6,13 @@ import secrets
 import uuid
 import werkzeug.urls
 
-from odoo import api, fields, models, _
-from odoo.addons.iap.tools import iap_tools
+from odoo import Command, api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.modules import module
 from odoo.tools import get_lang
 from odoo.tools.urls import urljoin as url_join
 
-from odoo import Command
+from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
 
@@ -78,10 +77,10 @@ class IapAccount(models.Model):
     def validate_warning_alerts(self):
         for account in self:
             if account.warning_threshold < 0:
-                raise UserError(_("Please set a positive email alert threshold."))
+                raise UserError(self.env._("Please set a positive email alert threshold."))
             users_with_no_email = [user.name for user in self.warning_user_ids if not user.email]
             if users_with_no_email:
-                raise UserError(_(
+                raise UserError(self.env._(
                     "One of the email alert recipients doesn't have an email address set. Users: %s",
                     ",".join(users_with_no_email),
                 ))
@@ -294,7 +293,7 @@ class IapAccount(models.Model):
         # disregard possible suffix
         key = (key or '').split('+')[0]
         if not key:
-            raise UserError(_('The IAP token provided is invalid or empty.'))
+            raise UserError(self.env._('The IAP token provided is invalid or empty.'))
         return hashlib.sha1(key.encode('utf-8')).hexdigest()
 
     def action_buy_credits(self):

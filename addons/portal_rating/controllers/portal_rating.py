@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http, _
+from odoo import http
 from odoo.http import request
 
 
@@ -14,7 +14,7 @@ class PortalRating(http.Controller):
             ['publisher_comment', 'publisher_id', 'publisher_datetime'],
         )
         if not rating:
-            return {'error': _('Invalid rating')}
+            return {'error': self.env._('Invalid rating')}
         rating.write({'publisher_comment': publisher_comment})
         # return to the front-end the created/updated publisher comment
         return request.env['mail.message']._portal_message_format_rating(

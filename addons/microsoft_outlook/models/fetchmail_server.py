@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -17,7 +17,7 @@ class FetchmailServer(models.Model):
 
     def _compute_server_type_info(self):
         outlook_servers = self.filtered(lambda server: server.server_type == 'outlook')
-        outlook_servers.server_type_info = _(
+        outlook_servers.server_type_info = self.env._(
             'Connect your personal Outlook account using OAuth. \n'
             'You will be redirected to the Outlook login page to accept '
             'the permissions.')
@@ -27,7 +27,7 @@ class FetchmailServer(models.Model):
     def _check_use_microsoft_outlook_service(self):
         for server in self:
             if server.server_type == 'outlook' and not server.is_ssl:
-                raise UserError(_('SSL is required for server “%s”.', server.name))
+                raise UserError(self.env._('SSL is required for server “%s”.', server.name))
 
     @api.onchange('server_type')
     def onchange_server_type(self):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class ResCompany(models.Model):
@@ -28,7 +28,7 @@ class ResCompany(models.Model):
     def _prepare_resource_calendar_values(self):
         self.ensure_one()
         return {
-            'name': _('Standard 40 hours/week'),
+            'name': self.env._('Standard 40 hours/week'),
             'company_id': self.id,
         }
 

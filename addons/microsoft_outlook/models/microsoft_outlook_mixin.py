@@ -5,13 +5,13 @@ import json
 import logging
 import time
 import requests
-
 from werkzeug.urls import url_encode
 
-from odoo import _, api, fields, models, release
+from odoo import api, fields, models, release
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import hmac, email_normalize
 from odoo.tools.urls import urljoin as url_join
+
 from odoo.addons.google_gmail.tools import get_iap_error_message
 
 _logger = logging.getLogger(__name__)
@@ -75,12 +75,12 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         self.ensure_one()
 
         if not self.env.is_admin():
-            raise AccessError(_('Only the administrator can link an Outlook mail server.'))
+            raise AccessError(self.env._('Only the administrator can link an Outlook mail server.'))
 
         email_normalized = email_normalize(self[self._email_field])
 
         if not email_normalized:
-            raise UserError(_('Please enter a valid email address.'))
+            raise UserError(self.env._('Please enter a valid email address.'))
 
         Config = self.env['ir.config_parameter'].sudo()
         microsoft_outlook_client_id = Config.get_str('microsoft_outlook_client_id')
@@ -89,7 +89,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
 
         if not is_configured:  # use IAP (see '/microsoft_outlook/iap_confirm')
             if release.version_info[-1] != 'e':
-                raise UserError(_('Please configure your Outlook credentials.'))
+                raise UserError(self.env._('Please configure your Outlook credentials.'))
 
             outlook_iap_endpoint = self.env['ir.config_parameter'].sudo().get_str(
                 'mail.server.outlook.iap.endpoint',
@@ -113,7 +113,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
                 response.raise_for_status()
             except requests.exceptions.RequestException as e:
                 _logger.error('Can not contact IAP: %s.', e)
-                raise UserError(_('Oops, we could not authenticate you. Please try again later.'))
+                raise UserError(self.env._('Oops, we could not authenticate you. Please try again later.'))
 
             response = response.json()
             if 'error' in response:
@@ -126,7 +126,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
             microsoft_outlook_uri = self.microsoft_outlook_uri
 
         if not microsoft_outlook_uri:
-            raise UserError(_('Please configure your Outlook credentials.'))
+            raise UserError(self.env._('Please configure your Outlook credentials.'))
 
         return {
             'type': 'ir.actions.act_url',
@@ -197,8 +197,8 @@ class MicrosoftOutlookMixin(models.AbstractModel):
             try:
                 error_description = response.json()['error_description']
             except Exception:
-                error_description = _('Unknown error.')
-            raise UserError(_('An error occurred when fetching the access token. %s', error_description))
+                error_description = self.env._('Unknown error.')
+            raise UserError(self.env._('An error occurred when fetching the access token. %s', error_description))
 
         return response.json()
 
@@ -223,7 +223,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
 
         if not response.ok:
             _logger.error('Can not contact IAP: %s.', response.text)
-            raise UserError(_('Oops, we could not authenticate you. Please try again later.'))
+            raise UserError(self.env._('Oops, we could not authenticate you. Please try again later.'))
 
         response = response.json()
         if 'error' in response:
@@ -246,7 +246,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
            or not self.microsoft_outlook_access_token_expiration \
            or self.microsoft_outlook_access_token_expiration - OUTLOOK_TOKEN_VALIDITY_THRESHOLD < now_timestamp:
             if not self.microsoft_outlook_refresh_token:
-                raise UserError(_('Please connect with your Outlook account before using it.'))
+                raise UserError(self.env._('Please connect with your Outlook account before using it.'))
             (
                 self.microsoft_outlook_refresh_token,
                 self.microsoft_outlook_access_token,

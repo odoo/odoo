@@ -1,6 +1,6 @@
 import json
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.tools import file_open
 
 
@@ -78,7 +78,7 @@ class SpreadsheetDashboard(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for dashboard, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", dashboard.name)
+                vals['name'] = self.env._("%s (copy)", dashboard.name)
         return vals_list
 
     def action_open_dashboard(self):

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, Command, fields, models
-from odoo.addons.onboarding.models.onboarding_progress import ONBOARDING_PROGRESS_STATES
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
+
+from odoo.addons.onboarding.models.onboarding_progress import ONBOARDING_PROGRESS_STATES
 
 
 class OnboardingOnboardingStep(models.Model):
@@ -65,7 +66,7 @@ class OnboardingOnboardingStep(models.Model):
     @api.constrains('onboarding_ids')
     def check_step_on_onboarding_has_action(self):
         if steps_without_action := self.filtered(lambda step: step.onboarding_ids and not step.panel_step_open_action_name):
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 'An "Opening Action" is required for the following steps to be '
                 'linked to an onboarding panel: %(step_titles)s',
                 step_titles=steps_without_action.mapped('title'),

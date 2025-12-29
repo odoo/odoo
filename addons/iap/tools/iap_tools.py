@@ -5,7 +5,7 @@ import logging
 import requests
 import uuid
 
-from odoo import exceptions, modules, _
+from odoo import _, exceptions, modules
 from odoo.tools import email_normalize, exception_to_unicode
 
 _logger = logging.getLogger(__name__)

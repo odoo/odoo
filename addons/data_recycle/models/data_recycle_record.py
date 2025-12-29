@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import models, api, fields, _
+from odoo import api, fields, models
 
 
 class Data_RecycleRecord(models.Model):
@@ -33,9 +33,9 @@ class Data_RecycleRecord(models.Model):
         for record in self:
             original_record = original_records.get((record.res_model_name, record.res_id))
             if original_record:
-                record.name = original_record.display_name or _('Undefined Name')
+                record.name = original_record.display_name or self.env._('Undefined Name')
             else:
-                record.name = _('**Record Deleted**')
+                record.name = self.env._('**Record Deleted**')
 
     @api.depends('res_id')
     def _compute_company_id(self):

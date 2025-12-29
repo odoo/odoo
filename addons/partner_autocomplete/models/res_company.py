@@ -2,10 +2,10 @@
 
 import logging
 
-from odoo.addons.iap.tools import iap_tools
-from odoo import api, fields, models, modules, _
-from odoo.tools import config
+from odoo import api, fields, models, modules
 from odoo.tools.mail import email_domain_extract, url_domain_extract
+
+from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
 

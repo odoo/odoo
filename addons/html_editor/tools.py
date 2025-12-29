@@ -4,7 +4,6 @@ import contextlib
 import logging
 import re
 import requests
-
 from markupsafe import Markup
 from urllib.parse import parse_qs, urlparse
 from werkzeug.urls import url_encode
@@ -236,7 +235,7 @@ def handle_history_divergence(record, html_field_name, vals):
             server_last_history_id = server_history_matches[1].split(',')[-1]
             if server_last_history_id not in incoming_history_ids:
                 logger.warning('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
-                raise ValidationError(_(
+                raise ValidationError(record.env._(
                     'The document was already saved from someone with a different history for model "%(model)s", field "%(field)s" with id "%(id)d".',
                     model=record._name,
                     field=html_field_name,

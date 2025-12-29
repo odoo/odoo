@@ -2,13 +2,14 @@
 
 import logging
 import requests
-from odoo.addons.microsoft_calendar.models.microsoft_sync import microsoft_calendar_token
 from datetime import datetime, timedelta
 
-from odoo import api, fields, models, _, Command
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.loglevels import exception_to_unicode
+
 from odoo.addons.microsoft_account.models import microsoft_service
+from odoo.addons.microsoft_calendar.models.microsoft_sync import microsoft_calendar_token
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import InvalidSyncToken
 
 _logger = logging.getLogger(__name__)
@@ -58,7 +59,7 @@ class ResUsers(models.Model):
                 })
                 self.env.cr.commit()
             error_key = error.response.json().get("error", "nc")
-            error_msg = _(
+            error_msg = self.env._(
                 "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. "
                 "You should check your Client ID and secret on the Microsoft Azure portal or try to stop and restart your calendar synchronisation.",
                 error_key)

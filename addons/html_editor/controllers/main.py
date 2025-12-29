@@ -1,24 +1,25 @@
 import contextlib
 import re
+import requests
 import uuid
-from base64 import b64decode, b64encode
-from datetime import datetime
 import werkzeug.exceptions
 import werkzeug.urls
-import requests
+from base64 import b64decode, b64encode
+from datetime import datetime
+from lxml import html, etree
 from os.path import join as opj
 from urllib.parse import urlparse, urljoin
 
-from odoo import _, http, tools, SUPERUSER_ID
-from odoo.addons.html_editor.tools import get_video_url_data
-from odoo.exceptions import UserError, MissingError, AccessError
+from odoo import SUPERUSER_ID, http, tools
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request
 from odoo.tools.image import image_process, image_data_uri, binary_to_image, get_webp_size
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
+
 from odoo.addons.iap.tools import iap_tools
+from odoo.addons.html_editor.tools import get_video_url_data
 from odoo.addons.mail.tools import link_preview
-from lxml import html, etree
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
@@ -292,7 +293,7 @@ class HTML_Editor(http.Controller):
                 if mime_type in SUPPORTED_IMAGE_MIMETYPES:
                     attachment_data['mimetype'] = mime_type
         else:
-            raise UserError(_("You need to specify either data or url to create an attachment."))
+            raise UserError(self.env._("You need to specify either data or url to create an attachment."))
 
         # Despite the user having no right to create an attachment, he can still
         # create an image attachment through some flows
@@ -413,7 +414,7 @@ class HTML_Editor(http.Controller):
     def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
         data = b64decode(data)
         if is_image:
-            format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_MIMETYPES.values()))
+            format_error_msg = self.env._("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_MIMETYPES.values()))
             try:
                 mimetype = guess_mimetype(data)
                 if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
@@ -553,7 +554,7 @@ class HTML_Editor(http.Controller):
         }
         response = requests.post('%s/media-library/1/download_urls' % library_endpoint, data=params)
         if response.status_code != requests.codes.ok:
-            raise Exception(_("ERROR: couldn't get download urls from media library."))
+            raise Exception(self.env._("ERROR: couldn't get download urls from media library."))
 
         slug = request.env['ir.http']._slug
         for id, url in response.json().items():
@@ -683,13 +684,13 @@ class HTML_Editor(http.Controller):
             if response['status'] == 'success':
                 return response['content']
             elif response['status'] == 'error_prompt_too_long':
-                raise UserError(_("Sorry, your prompt is too long. Try to say it in fewer words."))
+                raise UserError(self.env._("Sorry, your prompt is too long. Try to say it in fewer words."))
             elif response['status'] == 'limit_call_reached':
-                raise UserError(_("You have reached the maximum number of requests for this service. Try again later."))
+                raise UserError(self.env._("You have reached the maximum number of requests for this service. Try again later."))
             else:
-                raise UserError(_("Sorry, we could not generate a response. Please try again later."))
+                raise UserError(self.env._("Sorry, we could not generate a response. Please try again later."))
         except AccessError:
-            raise AccessError(_("Oops, it looks like our AI is unreachable!"))
+            raise AccessError(self.env._("Oops, it looks like our AI is unreachable!"))
 
     @http.route(["/web_editor/get_ice_servers", "/html_editor/get_ice_servers"], type='jsonrpc', auth="user")
     def get_ice_servers(self):
@@ -749,10 +750,10 @@ class HTML_Editor(http.Controller):
             else:
                 action = Actions.sudo().search([('path', '=', action_name)])
                 if not action:
-                    return {'error_msg': _("Action %s not found, link preview is not available, please check your url is correct", action_name)}
+                    return {'error_msg': self.env._("Action %s not found, link preview is not available, please check your url is correct", action_name)}
                 action_type = action.type
                 if action_type != 'ir.actions.act_window':
-                    return {'other_error_msg': _("Action %s is not a window action, link preview is not available", action_name)}
+                    return {'other_error_msg': self.env._("Action %s is not a window action, link preview is not available", action_name)}
                 action_sudo = request.env[action_type].sudo().browse(action.id)
 
                 model = request.env[action_sudo.res_model].with_context(context)
@@ -770,7 +771,7 @@ class HTML_Editor(http.Controller):
 
             return result
         except (MissingError) as e:
-            return {'error_msg': _("Link preview is not available because %s, please check if your url is correct", str(e))}
+            return {'error_msg': self.env._("Link preview is not available because %s, please check if your url is correct", str(e))}
         # catch all other exceptions and return the error message to display in the console but not blocking the flow
         except Exception as e:  # noqa: BLE001
             return {'other_error_msg': str(e)}
