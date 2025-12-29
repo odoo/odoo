@@ -6,7 +6,7 @@ import requests
 import werkzeug.utils
 from werkzeug.urls import url_encode
 
-from odoo import http, modules, _
+from odoo import http, modules
 from odoo.http import request
 from odoo.tools.image import image_process
 from odoo.tools.mimetypes import guess_mimetype
@@ -32,7 +32,7 @@ class Web_Unsplash(http.Controller):
         '''
         try:
             if not url.startswith('https://api.unsplash.com/photos/') and not modules.module.current_test:
-                raise Exception(_("ERROR: Unknown Unsplash notify URL!"))
+                raise Exception(self.env._("ERROR: Unknown Unsplash notify URL!"))
             access_key = self._get_access_key()
             requests.get(url, params=url_encode({'client_id': access_key}))
         except Exception as e:
@@ -83,7 +83,7 @@ class Web_Unsplash(http.Controller):
             try:
                 if not url.startswith(('https://images.unsplash.com/', 'https://plus.unsplash.com/')) and not modules.module.current_test:
                     logger.exception("ERROR: Unknown Unsplash URL!: " + url)
-                    raise Exception(_("ERROR: Unknown Unsplash URL!"))
+                    raise Exception(self.env._("ERROR: Unknown Unsplash URL!"))
 
                 req = requests.get(url)
                 if req.status_code != requests.codes.ok:

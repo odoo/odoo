@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.translate import LazyTranslate
 
@@ -60,7 +60,7 @@ class CrmLeadForwardToPartner(models.TransientModel):
         self.ensure_one()
         template = self.env.ref('website_crm_partner_assign.email_template_lead_forward_mail', False)
         if not template:
-            raise UserError(_('The Forward Email Template is not in the database'))
+            raise UserError(self.env._('The Forward Email Template is not in the database'))
         portal_group = self.env.ref('base.group_portal')
 
         local_context = self.env.context.copy()
@@ -70,9 +70,9 @@ class CrmLeadForwardToPartner(models.TransientModel):
                 if lead.partner_assigned_id and not lead.partner_assigned_id.email:
                     no_email.add(lead.partner_assigned_id.name)
             if no_email:
-                raise UserError(_('Set an email address for the partner(s): %s', ", ".join(no_email)))
+                raise UserError(self.env._('Set an email address for the partner(s): %s', ", ".join(no_email)))
         if self.forward_type == 'single' and not self.partner_id.email:
-            raise UserError(_('Set an email address for the partner %s', self.partner_id.name))
+            raise UserError(self.env._('Set an email address for the partner %s', self.partner_id.name))
 
         partners_leads = {}
         for lead in self.assignation_lines:

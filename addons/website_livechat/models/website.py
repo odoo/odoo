@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
+
 from odoo.addons.mail.tools.discuss import add_guest_to_context
 
 

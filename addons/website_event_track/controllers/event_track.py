@@ -1,18 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import babel
+import babel.dates
 import base64
 import json
 import operator
 from ast import literal_eval
 from collections import defaultdict
 from datetime import timedelta, UTC
+from werkzeug.exceptions import Forbidden, NotFound
 from zoneinfo import ZoneInfo
 
-import babel
-import babel.dates
-from werkzeug.exceptions import Forbidden, NotFound
-
-from odoo import http, fields, tools, _
+from odoo import fields, http, tools
 from odoo.fields import Domain
 from odoo.http import content_disposition, request
 from odoo.tools import is_html_empty, plaintext2html
@@ -147,7 +146,7 @@ class EventTrackController(http.Controller):
             tracks_by_day.append({'date': display_date, 'name': display_date, 'tracks': matching_tracks})
         if tracks_announced:
             tracks_announced = tracks_announced.sorted('wishlisted_by_default', reverse=True)
-            tracks_by_day.append({'date': False, 'name': _('Coming soon'), 'tracks': tracks_announced})
+            tracks_by_day.append({'date': False, 'name': self.env._('Coming soon'), 'tracks': tracks_announced})
         # Check if there are any ongoing or upcoming tracks
         has_upcoming_or_ongoing = any(track for track in tracks_sudo if not track.is_track_done)
 
@@ -439,13 +438,13 @@ class EventTrackController(http.Controller):
         valid_email_to = tools.email_normalize(email_to if request.env.user._is_public() else request.env.user.email)
         error_message = ''
         if not track:
-            error_message = _('Invalid data.')
+            error_message = self.env._('Invalid data.')
         elif not valid_email_to:
-            error_message = _('Invalid email.')
+            error_message = self.env._('Invalid email.')
         elif track.is_track_done or track.event_id.is_finished:
-            error_message = _('The talk is already finished.')
+            error_message = self.env._('The talk is already finished.')
         elif not track.is_track_upcoming:
-            error_message = _('The talk has already begun.')
+            error_message = self.env._('The talk has already begun.')
         if error_message:
             return {'success': False, 'message': error_message}
 

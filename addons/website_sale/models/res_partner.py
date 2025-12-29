@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
-from odoo.http import request
+from odoo import api, models
 
 
 class ResPartner(models.Model):
@@ -19,8 +18,8 @@ class ResPartner(models.Model):
 
         if open_order:
             return {'warning': {
-                'title': _('Open Sale Orders'),
-                'message': _(
+                'title': self.env._('Open Sale Orders'),
+                'message': self.env._(
                     "This partner has an open cart. "
                     "Please note that the pricelist will not be updated on that cart. "
                     "Also, the cart might not be visible for the customer until you update the pricelist of that cart."

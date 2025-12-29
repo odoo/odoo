@@ -4,7 +4,7 @@
 
 from lxml import etree, html
 
-from odoo import api, models, _
+from odoo import api, models
 
 
 class Website(models.Model):
@@ -73,13 +73,13 @@ class Website(models.Model):
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()
-        suggested_controllers.append((_('Events'), self.env['ir.http']._url_for('/event'), 'website_event'))
+        suggested_controllers.append((self.env._('Events'), self.env['ir.http']._url_for('/event'), 'website_event'))
         return suggested_controllers
 
     def get_cta_data(self, website_purpose, website_type):
         cta_data = super(Website, self).get_cta_data(website_purpose, website_type)
         if website_purpose == 'sell_more' and website_type == 'event':
-            cta_btn_text = _('Next Events')
+            cta_btn_text = self.env._('Next Events')
             return {'cta_btn_text': cta_btn_text, 'cta_btn_href': '/event'}
         return cta_data
 

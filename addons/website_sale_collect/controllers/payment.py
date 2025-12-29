@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
 from odoo.exceptions import ValidationError
 
 from odoo.addons.website_sale.controllers.payment import PaymentPortal
@@ -30,5 +29,5 @@ class OnSitePaymentPortal(PaymentPortal):
             and provider.custom_mode == 'on_site'
         ):
             raise ValidationError(
-                _("You can only pay on site when selecting the pick up in store delivery method.")
+                self.env._("You can only pay on site when selecting the pick up in store delivery method.")
             )

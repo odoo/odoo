@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, tools, _
-from odoo.addons.base.models.res_lang import LangDataDict, LangData
+from odoo import models, tools
 from odoo.exceptions import UserError
 from odoo.http import request
+
+from odoo.addons.base.models.res_lang import LangDataDict, LangData
 
 
 class ResLang(models.Model):
@@ -12,7 +13,7 @@ class ResLang(models.Model):
     def write(self, vals):
         if 'active' in vals and not vals['active']:
             if self.env['website'].search_count([('language_ids', 'in', self._ids)], limit=1):
-                raise UserError(_("Cannot deactivate a language that is currently used on a website."))
+                raise UserError(self.env._("Cannot deactivate a language that is currently used on a website."))
         return super().write(vals)
 
     @tools.ormcache('self.env.context.get("website_id")', 'self.env.context.get("web_force_installed_langs")')
@@ -60,7 +61,7 @@ class ResLang(models.Model):
         """
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Add languages'),
+            'name': self.env._('Add languages'),
             'view_mode': 'form',
             'res_model': 'base.language.install',
             'views': [[False, 'form']],

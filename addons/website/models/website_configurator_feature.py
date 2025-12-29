@@ -2,7 +2,7 @@
 
 import re
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError
 
 
@@ -27,7 +27,7 @@ class WebsiteConfiguratorFeature(models.Model):
     @api.constrains('module_id', 'page_view_id')
     def _check_module_xor_page_view(self):
         if bool(self.module_id) == bool(self.page_view_id):
-            raise ValidationError(_("One and only one of the two fields 'page_view_id' and 'module_id' should be set"))
+            raise ValidationError(self.env._("One and only one of the two fields 'page_view_id' and 'module_id' should be set"))
 
     @staticmethod
     def _process_svg(theme, colors, image_mapping):

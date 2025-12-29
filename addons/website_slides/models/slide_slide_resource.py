@@ -3,7 +3,7 @@
 
 from werkzeug.urls import url_encode
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.mimetypes import get_extension
 
@@ -44,9 +44,9 @@ class SlideSlideResource(models.Model):
     @api.depends('file_name', 'resource_type', 'data', 'link')
     def _compute_name(self):
         for resource in self:
-            to_update = not resource.name or resource.name == _("Resource")
+            to_update = not resource.name or resource.name == self.env._("Resource")
             if to_update:
-                new_name = _("Resource")
+                new_name = self.env._("Resource")
                 if resource.resource_type == 'file' and (resource.data or resource.file_name):
                     new_name = resource.file_name
                 elif resource.resource_type == 'url':
@@ -70,4 +70,4 @@ class SlideSlideResource(models.Model):
     def _check_link_type(self):
         for record in self:
             if record.resource_type != 'file' and record.data:
-                raise ValidationError(_("Resource %(resource_name)s is a link and should not contain a data file", resource_name=record.name))
+                raise ValidationError(self.env._("Resource %(resource_name)s is a link and should not contain a data file", resource_name=record.name))

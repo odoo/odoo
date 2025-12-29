@@ -2,7 +2,7 @@
 
 from lxml import etree
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 HIERARCHY_VALID_ATTRIBUTES = {
     '__validate__',                     # ir.ui.view implementation detail
@@ -38,15 +38,15 @@ class IrUiView(models.Model):
                 if not templates_count:
                     templates_count += 1
                 else:
-                    msg = _('Hierarchy view can contain only one templates tag')
+                    msg = self.env._('Hierarchy view can contain only one templates tag')
                     self._raise_view_error(msg, child)
             elif child.tag != 'field':
-                msg = _('Hierarchy child can only be field or template, got %s', child.tag)
+                msg = self.env._('Hierarchy child can only be field or template, got %s', child.tag)
                 self._raise_view_error(msg, child)
 
         remaining = set(node.attrib) - HIERARCHY_VALID_ATTRIBUTES
         if remaining:
-            msg = _(
+            msg = self.env._(
                 "Invalid attributes (%(invalid_attributes)s) in hierarchy view. Attributes must be in (%(valid_attributes)s)",
                 invalid_attributes=remaining,
                 valid_attributes=HIERARCHY_VALID_ATTRIBUTES,

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import _, api, models
+from odoo import api, models
 
 
 class ProductPricelistItem(models.Model):
@@ -12,11 +12,11 @@ class ProductPricelistItem(models.Model):
             msg = ''
             if ((self.applied_on == '1_product' and self.product_tmpl_id.service_tracking == 'event') or
                     (self.applied_on == '0_product_variant' and self.product_id.service_tracking == 'event')):
-                msg = _("A pricelist item with a positive min. quantity cannot be applied to this event tickets product.")
+                msg = self.env._("A pricelist item with a positive min. quantity cannot be applied to this event tickets product.")
             if msg:
                 return {'warning':
                     {
-                        'title': _("Warning"),
+                        'title': self.env._("Warning"),
                         'message': msg
                     }
                 }

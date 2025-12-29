@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.http import request
+from odoo.tools import html2plaintext
 
-from odoo import _
 from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
 from odoo.addons.website.controllers import form
-from odoo.tools import html2plaintext
 
 
 class WebsiteForm(form.WebsiteForm):
@@ -23,8 +22,8 @@ class WebsiteForm(form.WebsiteForm):
         if model_name != 'project.task':
             return res
         task = request.env['project.task'].sudo().browse(res)
-        custom = custom.replace('email_from', _('Email'))
-        custom_label = nl2br_enclose(_("Other Information"), 'h4')  # Title for custom fields
+        custom = custom.replace('email_from', self.env._('Email'))
+        custom_label = nl2br_enclose(self.env._("Other Information"), 'h4')  # Title for custom fields
         default_field = model_sudo.website_form_default_field_id
         default_field_data = values.get(default_field.name, '')
         default_field_content = nl2br_enclose(default_field.name.capitalize(), 'h4') + nl2br_enclose(html2plaintext(default_field_data), 'p')

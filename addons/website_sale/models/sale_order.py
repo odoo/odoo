@@ -2,10 +2,9 @@
 
 import random
 from datetime import datetime
-
 from dateutil.relativedelta import relativedelta
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request
@@ -174,7 +173,7 @@ class SaleOrder(models.Model):
                 if 'company_id' in vals:
                     company = self.env['res.company'].browse(vals['company_id'])
                     if website.company_id.id != company.id:
-                        raise ValueError(_(
+                        raise ValueError(self.env._(
                             "The company of the website you are trying to sell from (%(website_company)s)"
                             " is different than the one you want to use (%(company)s)",
                             website_company=website.company_id.name,
@@ -446,7 +445,7 @@ class SaleOrder(models.Model):
             # Note that if the cart is empty, the zero cart_quantity will trigger a page reload
             # and this warning won't be shown.
             return {
-                'warning': _(
+                'warning': self.env._(
                     "We weren't able to update your cart. Please refresh your page before trying"
                     " again."
                 )
@@ -581,11 +580,11 @@ class SaleOrder(models.Model):
         product = product_template._create_product_variant(combination)
 
         if not product:
-            raise UserError(_("The given combination does not exist therefore it cannot be added to cart."))
+            raise UserError(self.env._("The given combination does not exist therefore it cannot be added to cart."))
 
         if linked_line_id and linked_line_id not in self.order_line.ids:
             # Make sure the provided parent line belongs to the current order.
-            raise UserError(_("Invalid request parameters."))
+            raise UserError(self.env._("Invalid request parameters."))
 
         values = {
             'product_id': product.id,
@@ -742,7 +741,7 @@ class SaleOrder(models.Model):
         if customer_portal_group:
             access_opt = customer_portal_group[2].setdefault('button_access', {})
             if self.env.context.get('website_sale_send_recovery_email'):
-                access_opt['title'] = _('Resume Order')
+                access_opt['title'] = self.env._('Resume Order')
                 access_opt['url'] = f'{self.get_base_url()}/shop/cart?id={self.id}&access_token={self.access_token}'
         return groups
 
@@ -897,12 +896,12 @@ class SaleOrder(models.Model):
         :rtype: bool
         """
         if not self._is_cart_ready():
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 "Your cart is not ready to be paid, please verify previous steps."
             ))
 
         if not self.only_services and not self.carrier_id:
-            raise ValidationError(_("No delivery method is selected."))
+            raise ValidationError(self.env._("No delivery method is selected."))
 
     def _recompute_cart(self):
         """Recompute taxes and prices for the current cart."""

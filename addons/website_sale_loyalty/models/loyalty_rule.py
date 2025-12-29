@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -29,10 +29,10 @@ class LoyaltyRule(models.Model):
             for website in website_checks:
                 val = (res['code'], website)
                 if val in existing_codes:
-                    raise ValidationError(_('The promo code must be unique.'))
+                    raise ValidationError(self.env._('The promo code must be unique.'))
                 existing_codes.add(val)
         # Prevent coupons and programs from sharing a code
         if self.env['loyalty.card'].search_count([
             ('code', 'in', mapped_codes), ('active', '=', True)
         ]):
-            raise ValidationError(_('A coupon with the same code was found.'))
+            raise ValidationError(self.env._('A coupon with the same code was found.'))

@@ -4,7 +4,7 @@
 import logging
 import re
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.translate import LazyTranslate
 
@@ -61,9 +61,9 @@ class SlideChannelInvite(models.TransientModel):
         if not self.send_email:
             return
         if not self.env.user.email:
-            raise UserError(_("Unable to post message, please configure the sender's email address."))
+            raise UserError(self.env._("Unable to post message, please configure the sender's email address."))
         if not self.partner_ids:
-            raise UserError(_("Please select at least one recipient."))
+            raise UserError(self.env._("Please select at least one recipient."))
 
         mail_values = []
         attendees_to_reinvite = self.env['slide.channel.partner'].search([

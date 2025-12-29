@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
 from odoo.http import request
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -58,14 +57,14 @@ class WebsiteSaleCollect(WebsiteSale):
         if order._has_deliverable_products() and order.carrier_id.delivery_type == 'in_store':
             if not order.pickup_location_data:
                 errors.append((
-                    _("Sorry, we are unable to ship your order."),
-                    _("Please choose a store to collect your order."),
+                    self.env._("Sorry, we are unable to ship your order."),
+                    self.env._("Please choose a store to collect your order."),
                 ))
             else:
                 selected_wh_id = order.pickup_location_data['id']
                 if not order._is_in_stock(selected_wh_id):
                     errors.append((
-                        _("Sorry, we are unable to ship your order."),
-                        _("Some products are not available in the selected store."),
+                        self.env._("Sorry, we are unable to ship your order."),
+                        self.env._("Some products are not available in the selected store."),
                     ))
         return errors

@@ -1,12 +1,13 @@
 
+import logging
 from ast import literal_eval
 from collections import OrderedDict
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError, MissingError
-from odoo.fields import Domain
 from lxml import etree, html
-import logging
 from random import randint
+
+from odoo import api, fields, models
+from odoo.exceptions import MissingError, ValidationError
+from odoo.fields import Domain
 
 _logger = logging.getLogger(__name__)
 
@@ -42,27 +43,27 @@ class WebsiteSnippetFilter(models.Model):
     def _check_data_source_is_provided(self):
         for record in self:
             if bool(record.action_server_id) == bool(record.filter_id):
-                raise ValidationError(_("Either action_server_id or filter_id must be provided."))
+                raise ValidationError(self.env._("Either action_server_id or filter_id must be provided."))
 
     @api.constrains('limit')
     def _check_limit(self):
         """Limit must be between 1 and 16."""
         for record in self:
             if not 0 < record.limit <= 16:
-                raise ValidationError(_("The limit must be between 1 and 16."))
+                raise ValidationError(self.env._("The limit must be between 1 and 16."))
 
     @api.constrains('field_names')
     def _check_field_names(self):
         for record in self:
             for field_name in record.field_names.split(","):
                 if not field_name.strip():
-                    raise ValidationError(_("Empty field name in “%s”", record.field_names))
+                    raise ValidationError(self.env._("Empty field name in “%s”", record.field_names))
 
     def _render(self, template_key, limit, search_domain=None, with_sample=False, res_model=None, res_id=None, **custom_template_data):
         """Renders the website dynamic snippet items"""
         self and self.ensure_one()
 
-        assert '.dynamic_filter_template_' in template_key, _("You can only use template prefixed by dynamic_filter_template_ ")
+        assert '.dynamic_filter_template_' in template_key, self.env._("You can only use template prefixed by dynamic_filter_template_ ")
         if search_domain is None:
             search_domain = []
 
@@ -224,7 +225,7 @@ class WebsiteSnippetFilter(models.Model):
                 elif field_widget in ('integer', 'float'):
                     sample[field_name] = index
                 else:
-                    sample[field_name] = _('Sample %s', index + 1)
+                    sample[field_name] = self.env._('Sample %s', index + 1)
         return sample
 
     def _get_hardcoded_sample(self, model):

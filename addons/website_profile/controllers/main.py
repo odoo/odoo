@@ -1,16 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from urllib.parse import urlsplit
+import math
 import werkzeug
 import werkzeug.exceptions
-import werkzeug.urls
-import werkzeug.wrappers
-import math
-
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
+from urllib.parse import urlsplit
 
-from odoo import _, fields, http, tools
+from odoo import fields, http, tools
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.translate import LazyTranslate
@@ -50,12 +47,12 @@ class WebsiteProfile(http.Controller):
 
         # Profile being published is more specific than general karma requirement (check it first!)
         if not user_sudo.website_published:
-            return False, _('This profile is private!')
+            return False, self.env._('This profile is private!')
         elif not user_sudo.exists():
             raise request.not_found()
 
         elif request.env.user.karma < request.website.karma_profile_min:
-            return False, _("Not have enough karma to view other users' profile.")
+            return False, self.env._("Not have enough karma to view other users' profile.")
         return user_sudo, False
 
     def _prepare_user_values(self, **kwargs):
@@ -104,7 +101,7 @@ class WebsiteProfile(http.Controller):
             return next(
                 (
                     {'url_from_label': label, 'url_from': url_from}
-                    for prefix, label in (('forum', _('Forum')), ('slides', _('All Courses')))
+                    for prefix, label in (('forum', self.env._('Forum')), ('slides', self.env._('All Courses')))
                     if path == f'/{prefix}' or path.startswith(f'/{prefix}/')
                 ), void_from_url)
         return void_from_url

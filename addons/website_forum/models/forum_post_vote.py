@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError, AccessError
+from odoo import api, fields, models
+from odoo.exceptions import AccessError, UserError
 
 
 class ForumPostVote(models.Model):
@@ -27,15 +27,15 @@ class ForumPostVote(models.Model):
         karma = karma_values[new_vote] - karma_values[old_vote]
 
         if old_vote == new_vote:
-            reason = _('no changes')
+            reason = self.env._('no changes')
         elif new_vote == '1':
-            reason = _('upvoted')
+            reason = self.env._('upvoted')
         elif new_vote == '-1':
-            reason = _('downvoted')
+            reason = self.env._('downvoted')
         elif old_vote == '1':
-            reason = _('no more upvoted')
+            reason = self.env._('no more upvoted')
         else:
-            reason = _('no more downvoted')
+            reason = self.env._('no more downvoted')
 
         return karma, reason
 
@@ -85,17 +85,17 @@ class ForumPostVote(models.Model):
         if not self.env.is_admin():
             # own post check
             if self.env.uid == post.create_uid.id:
-                raise UserError(_('It is not allowed to vote for its own post.'))
+                raise UserError(self.env._('It is not allowed to vote for its own post.'))
             # own vote check
             if self.env.uid != self.user_id.id:
-                raise UserError(_('It is not allowed to modify someone else\'s vote.'))
+                raise UserError(self.env._('It is not allowed to modify someone else\'s vote.'))
 
     def _check_karma_rights(self, upvote=False):
         # karma check
         if upvote and not self.post_id.can_upvote:
-            raise AccessError(_('%d karma required to upvote.', self.post_id.forum_id.karma_upvote))
+            raise AccessError(self.env._('%d karma required to upvote.', self.post_id.forum_id.karma_upvote))
         elif not upvote and not self.post_id.can_downvote:
-            raise AccessError(_('%d karma required to downvote.', self.post_id.forum_id.karma_downvote))
+            raise AccessError(self.env._('%d karma required to downvote.', self.post_id.forum_id.karma_downvote))
 
     def _vote_update_karma(self, old_vote, new_vote):
         if self.post_id.parent_id:
@@ -104,12 +104,12 @@ class ForumPostVote(models.Model):
                 new_vote,
                 self.forum_id.karma_gen_answer_upvote,
                 self.forum_id.karma_gen_answer_downvote)
-            source = _('Answer %s', reason)
+            source = self.env._('Answer %s', reason)
         else:
             karma, reason = self._get_karma_value(
                 old_vote,
                 new_vote,
                 self.forum_id.karma_gen_question_upvote,
                 self.forum_id.karma_gen_question_downvote)
-            source = _('Question %s', reason)
+            source = self.env._('Question %s', reason)
         self.recipient_id.sudo()._add_karma(karma, self.post_id, source)

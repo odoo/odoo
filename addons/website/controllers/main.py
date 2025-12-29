@@ -4,24 +4,22 @@ import datetime
 import logging
 import os
 import re
-import zipfile
-from hashlib import md5, sha256
-from io import BytesIO
-from itertools import islice
-from textwrap import shorten
-from xml.etree import ElementTree as ET
-
 import requests
 import urllib.parse
 import werkzeug.urls
 import werkzeug.utils
 import werkzeug.wrappers
+import zipfile
+from hashlib import md5, sha256
+from io import BytesIO
+from itertools import islice
 from lxml import etree, html
 from markupsafe import escape as markup_escape
+from textwrap import shorten
 from werkzeug.exceptions import NotFound
+from xml.etree import ElementTree as ET
 
-import odoo
-from odoo import _, fields, http, models, release, tools
+from odoo import fields, http, models, release, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import SessionExpiredException, request
@@ -420,8 +418,8 @@ class Website(Home):
         return {
             'matching_pages': sorted(matching_pages, key=lambda o: o['label']),
             'others': [
-                dict(title=_('Last modified pages'), values=matching_last_modified),
-                dict(title=_('Apps url'), values=suggested_controllers),
+                dict(title=self.env._('Last modified pages'), values=matching_last_modified),
+                dict(title=self.env._('Apps url'), values=suggested_controllers),
             ]
         }
 
@@ -1262,7 +1260,7 @@ class Website(Home):
             with zipfile.ZipFile(readable_data, "r") as zip_file:
                 for entry in zip_file.infolist():
                     if entry.file_size > MAX_FONT_FILE_SIZE:
-                        raise UserError(_("File '%s' exceeds maximum allowed file size", entry.filename))
+                        raise UserError(self.env._("File '%s' exceeds maximum allowed file size", entry.filename))
                     if entry.filename.rsplit('.', 1)[-1].lower() not in SUPPORTED_FONT_EXTENSIONS \
                             or entry.filename.startswith('__MACOSX') \
                             or '/.' in entry.filename:
@@ -1278,7 +1276,7 @@ class Website(Home):
                 'name': name,
             }, binary_data))
         if not result:
-            raise UserError(_("File '%s' is not recognized as a font", name))
+            raise UserError(self.env._("File '%s' is not recognized as a font", name))
         return result
 
     @http.route([

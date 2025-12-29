@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -63,7 +63,7 @@ class ProductRibbon(models.Model):
                 ], limit=1)
                 if existing_ribbons:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Only one ribbon with the assign %s is allowed.",
                             dict(self._fields['assign'].selection).get(ribbon.assign)
                         )

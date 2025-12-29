@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -45,9 +45,9 @@ class EventQuizQuestion(models.Model):
     def _check_answers_integrity(self):
         for question in self:
             if len(question.correct_answer_id) != 1:
-                raise ValidationError(_('Question "%s" must have 1 correct answer to be valid.', question.name))
+                raise ValidationError(self.env._('Question "%s" must have 1 correct answer to be valid.', question.name))
             if len(question.answer_ids) < 2:
-                raise ValidationError(_('Question "%s" must have 1 correct answer and at least 1 incorrect answer to be valid.', question.name))
+                raise ValidationError(self.env._('Question "%s" must have 1 correct answer and at least 1 incorrect answer to be valid.', question.name))
 
 
 class EventQuizAnswer(models.Model):

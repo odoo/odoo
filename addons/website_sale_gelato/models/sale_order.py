@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 
 
 class SaleOrder(models.Model):
@@ -28,7 +28,7 @@ class SaleOrder(models.Model):
             for line in self.order_line.filtered(lambda l: l.product_id.type != 'service')
         )  # Whether Gelato and non-Gelato products that require delivery are mixed.
         if mixing_products:
-            return 0, _(
+            return 0, self.env._(
                 "The product %(product_name)s cannot be added to the cart as it requires separate"
                 " shipping. Please place your order for the current cart first.",
                 product_name=product.name,

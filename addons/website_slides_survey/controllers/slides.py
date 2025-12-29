@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug
-import werkzeug.utils
 import werkzeug.exceptions
 
-from odoo import _
 from odoo import http
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
@@ -48,7 +46,7 @@ class WebsiteSlidesSurvey(WebsiteSlides):
         if create_new_survey:
             # If user cannot create a new survey, no need to create the slide either.
             if not request.env['survey.survey'].has_access('create'):
-                return {'error': _('You are not allowed to create a survey.')}
+                return {'error': self.env._('You are not allowed to create a survey.')}
 
             # Create survey first as certification slide needs a survey_id (constraint)
             post['survey_id'] = request.env['survey.survey'].create({
@@ -66,7 +64,7 @@ class WebsiteSlidesSurvey(WebsiteSlides):
             try:
                 request.env['survey.survey'].browse([linked_survey_id]).read(['title'])
             except AccessError:
-                return {'error': _('You are not allowed to link a certification.')}
+                return {'error': self.env._('You are not allowed to link a certification.')}
 
             post['survey_id'] = post['survey']['id']
 
@@ -84,7 +82,7 @@ class WebsiteSlidesSurvey(WebsiteSlides):
     # ---------------------------------------------------
     def _slide_mark_completed(self, slide):
         if slide.slide_category == 'certification':
-            raise werkzeug.exceptions.Forbidden(_("Certification slides are completed when the survey is succeeded."))
+            raise werkzeug.exceptions.Forbidden(self.env._("Certification slides are completed when the survey is succeeded."))
         return super(WebsiteSlidesSurvey, self)._slide_mark_completed(slide)
 
     def _get_valid_slide_post_values(self):

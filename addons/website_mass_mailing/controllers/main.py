@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools, _
+from odoo import tools
 from odoo.exceptions import UserError
 from odoo.http import route, request
+
 from odoo.addons.mass_mailing.controllers import main
 
 
@@ -47,7 +48,7 @@ class MassMailController(main.MassMailController):
         self.subscribe_to_newsletter(subscription_type, value, list_id, fname)
         return {
             'toast_type': 'success',
-            'toast_content': _("Thanks for subscribing!"),
+            'toast_content': self.env._("Thanks for subscribing!"),
         }
 
     @staticmethod

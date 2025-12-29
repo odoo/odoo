@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ResUsers(models.Model):
@@ -16,7 +16,7 @@ class ResUsers(models.Model):
     def get_gamification_redirection_data(self):
         res = super().get_gamification_redirection_data()
         res.append({
-            'label': _('See our Forum'),
+            'label': self.env._('See our Forum'),
             'url': '/forum',
         })
         return res

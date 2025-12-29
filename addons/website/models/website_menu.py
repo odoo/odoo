@@ -2,10 +2,9 @@
 
 import werkzeug.exceptions
 import werkzeug.urls
-
 from werkzeug.urls import url_parse
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -96,16 +95,16 @@ class WebsiteMenu(models.Model):
                 level += 1
                 current_menu = current_menu.parent_id
                 if level > 2:
-                    raise UserError(_("Menus cannot have more than two levels of hierarchy."))
+                    raise UserError(self.env._("Menus cannot have more than two levels of hierarchy."))
 
             if parent_menu:
                 # Mega menu constraint
                 if parent_menu.is_mega_menu or (record.is_mega_menu and (parent_menu.parent_id or record.child_id)):
-                    raise UserError(_("A mega menu cannot have a parent or child menu."))
+                    raise UserError(self.env._("A mega menu cannot have a parent or child menu."))
 
                 # Submenu structure constraint
                 if record.child_id and (parent_menu.parent_id or record.child_id.child_id):
-                    raise UserError(_("Menus with child menus cannot be added as a submenu."))
+                    raise UserError(self.env._("Menus with child menus cannot be added as a submenu."))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -175,7 +174,7 @@ class WebsiteMenu(models.Model):
     def _unlink_except_master_tags(self):
         main_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         if main_menu and main_menu in self:
-            raise UserError(_("You cannot delete this website menu as this serves as the default parent menu for new websites (e.g., /shop, /event, ...)."))
+            raise UserError(self.env._("You cannot delete this website menu as this serves as the default parent menu for new websites (e.g., /shop, /event, ...)."))
 
     def _compute_visible(self):
         for menu in self:

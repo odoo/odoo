@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-import random
-
-from odoo import api, models, fields, _
-from odoo.addons.website.tools import text_from_html
+from odoo import api, models, fields
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 from odoo.tools import html_escape
+
+from odoo.addons.website.tools import text_from_html
 
 
 class BlogBlog(models.Model):
@@ -181,7 +179,7 @@ class BlogPost(models.Model):
                 blog_post.website_url = "/blog/%s/%s" % (self.env['ir.http']._slug(blog_post.blog_id), self.env['ir.http']._slug(blog_post))
 
     def _default_content(self):
-        text = html_escape(_("Start writing here..."))
+        text = html_escape(self.env._("Start writing here..."))
         return """
             <p>%(text)s</p>
         """ % {"text": text}

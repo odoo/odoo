@@ -2,7 +2,7 @@
 
 from markupsafe import Markup
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class PaymentTransaction(models.Model):
@@ -14,7 +14,7 @@ class PaymentTransaction(models.Model):
         super()._post_process()
         for donation_tx in self.filtered(lambda tx: tx.state == 'done' and tx.is_donation):
             donation_tx._send_donation_email()
-            msg = [_('Payment received from donation with following details:')]
+            msg = [self.env._('Payment received from donation with following details:')]
             for field in ['company_id', 'partner_id', 'partner_name', 'partner_country_id', 'partner_email']:
                 field_name = donation_tx._fields[field].string
                 value = donation_tx[field]
@@ -27,7 +27,7 @@ class PaymentTransaction(models.Model):
     def _send_donation_email(self, is_internal_notification=False, comment=None, recipient_email=None):
         self.ensure_one()
         if is_internal_notification or self.state == 'done':
-            subject = _('A donation has been made on your website') if is_internal_notification else _('Donation confirmation')
+            subject = self.env._('A donation has been made on your website') if is_internal_notification else self.env._('Donation confirmation')
             body = self.env['ir.qweb'].with_context(lang=self.partner_id.lang)._render('website_payment.donation_mail_body', {
                 'is_internal_notification': is_internal_notification,
                 'tx': self,

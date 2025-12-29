@@ -1,21 +1,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
-
 import lxml
 import requests
 import werkzeug.exceptions
 import werkzeug.urls
-import werkzeug.wrappers
 
-from odoo import _, http, tools
-from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.addons.website_profile.controllers.main import WebsiteProfile
+from odoo import http, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import is_html_empty
 from odoo.tools.translate import LazyTranslate
+
+from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website_profile.controllers.main import WebsiteProfile
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
@@ -234,7 +233,7 @@ class WebsiteForum(WebsiteProfile):
         """
         if not isinstance(tag_char, str) or len(tag_char) > 1 or (tag_char and not tag_char.isalpha()):
             # So that further development does not miss this. Users shouldn't see it with normal usage.
-            raise werkzeug.exceptions.BadRequest(_('Bad "tag_char" value "%(tag_char)s"', tag_char=tag_char))
+            raise werkzeug.exceptions.BadRequest(self.env._('Bad "tag_char" value "%(tag_char)s"', tag_char=tag_char))
 
         domain = [('forum_id', '=', forum.id), ('posts_count', '=' if filters == "unused" else '>', 0)]
         if filters == 'followed' and not request.env.user._is_public():
@@ -261,11 +260,11 @@ class WebsiteForum(WebsiteProfile):
             if not search:
                 tags = request.env['forum.tag'].search(domain, limit=None, order=order)
         else:
-            raise werkzeug.exceptions.BadRequest(_('Bad "filters" value "%(filters)s".', filters=filters))
+            raise werkzeug.exceptions.BadRequest(self.env._('Bad "filters" value "%(filters)s".', filters=filters))
 
         first_char_tag = forum._get_tags_first_char(tags=tags)
         first_char_list = [(t, t.lower()) for t in first_char_tag if t.isalnum()]
-        first_char_list.insert(0, (_('All'), ''))
+        first_char_list.insert(0, (self.env._('All'), ''))
         if tag_char:
             tags = tags.filtered(lambda t: t.name.startswith((tag_char.lower(), tag_char.upper())))
 
@@ -424,8 +423,8 @@ class WebsiteForum(WebsiteProfile):
     def post_create(self, forum, post_parent=None, **post):
         if is_html_empty(post.get('content', '')):
             return request.render('http_routing.http_error', {
-                'status_code': _('Bad Request'),
-                'status_message': post_parent and _('Reply should not be empty.') or _('Question should not be empty.')
+                'status_code': self.env._('Bad Request'),
+                'status_message': post_parent and self.env._('Reply should not be empty.') or self.env._('Question should not be empty.')
             })
 
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
@@ -504,8 +503,8 @@ class WebsiteForum(WebsiteProfile):
         if 'post_name' in kwargs:
             if not kwargs.get('post_name').strip():
                 return request.render('http_routing.http_error', {
-                    'status_code': _('Bad Request'),
-                    'status_message': _('Title should not be empty.')
+                    'status_code': self.env._('Bad Request'),
+                    'status_message': self.env._('Title should not be empty.')
                 })
 
             vals['name'] = kwargs.get('post_name')
@@ -635,14 +634,14 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.post"):post>/ask_for_mark_as_offensive', type='jsonrpc', auth="user", website=True)
     def post_json_ask_for_mark_as_offensive(self, post, **kwargs):
         if not post.can_moderate:
-            raise AccessError(_('%d karma required to mark a post as offensive.', post.forum_id.karma_moderate))
+            raise AccessError(self.env._('%d karma required to mark a post as offensive.', post.forum_id.karma_moderate))
         values = self._prepare_mark_as_offensive_values(post, **kwargs)
         return request.env['ir.ui.view']._render_template('website_forum.mark_as_offensive', values)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/ask_for_mark_as_offensive', type='http', auth="user", methods=['GET'], website=True)
     def post_http_ask_for_mark_as_offensive(self, forum, post, **kwargs):
         if not post.can_moderate:
-            raise AccessError(_('%d karma required to mark a post as offensive.', forum.karma_moderate))
+            raise AccessError(self.env._('%d karma required to mark a post as offensive.', forum.karma_moderate))
         values = self._prepare_mark_as_offensive_values(post, **kwargs)
         return request.render("website_forum.close_post", values)
 

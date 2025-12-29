@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from datetime import datetime, timedelta
+
+from odoo import fields, models
+
 from odoo.addons.im_livechat.models.discuss_channel import is_livechat_channel
 from odoo.addons.mail.tools.discuss import Store
-from datetime import datetime, timedelta
 
 
 class DiscussChannel(models.Model):
@@ -41,12 +43,12 @@ class DiscussChannel(models.Model):
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         if not cancel:
             if self.livechat_visitor_id.id:
-                return _("Visitor #%(id)d left the conversation.", id=self.livechat_visitor_id.id)
-            return _("Visitor left the conversation.")
-        return _(
+                return self.env._("Visitor #%(id)d left the conversation.", id=self.livechat_visitor_id.id)
+            return self.env._("Visitor left the conversation.")
+        return self.env._(
             "%(visitor)s started a conversation with %(operator)s.\nThe chat request has been cancelled",
-            visitor=self.livechat_visitor_id.display_name or _("The visitor"),
-            operator=operator or _("an operator"),
+            visitor=self.livechat_visitor_id.display_name or self.env._("The visitor"),
+            operator=operator or self.env._("an operator"),
         )
 
     def _store_livechat_extra_fields(self, res: Store.FieldList):

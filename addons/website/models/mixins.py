@@ -2,16 +2,16 @@
 
 import re
 
-from odoo import api, fields, models, _
-from odoo.fields import Domain
-from odoo.addons.website.tools import text_from_html
-from odoo.http import request
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError
+from odoo.fields import Domain
+from odoo.http import request
 from odoo.models import Query
-from odoo.tools import SQL, escape_psql
-from odoo.tools import split_every
+from odoo.tools import SQL, escape_psql, split_every
 from odoo.tools.urls import urljoin as url_join
 from odoo.tools.json import scriptsafe as json_safe
+
+from odoo.addons.website.tools import text_from_html
 
 
 class WebsiteSeoMetadata(models.AbstractModel):
@@ -293,7 +293,7 @@ class WebsitePublishedMixin(models.AbstractModel):
         )
         if not scheduled_action:
             raise UserError(
-                _(
+                self.env._(
                     'The scheduled action "Website Publish Mixin: Publish scheduled website page" '
                     "has been deleted. Please contact your administrator to restore it or reinstall the website module."
                 )
@@ -556,7 +556,7 @@ class WebsitePublishedMixin(models.AbstractModel):
     def _get_can_publish_error_message(self):
         """ Override this method to customize the error message shown when the user doesn't
         have the rights to publish/unpublish. """
-        return _("You do not have the rights to publish/unpublish")
+        return self.env._("You do not have the rights to publish/unpublish")
 
 
 class WebsitePublishedMultiMixin(WebsitePublishedMixin):

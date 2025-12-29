@@ -1,19 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import warnings
-
 from collections import defaultdict, OrderedDict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from functools import partial
 from operator import itemgetter
 
-from odoo import http, _
-from odoo.addons.website.controllers.form import WebsiteForm
+from odoo import http
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import email_normalize, escape_psql
 from odoo.tools.translate import LazyTranslate
+
+from odoo.addons.website.controllers.form import WebsiteForm
 
 _lt = LazyTranslate(__name__)
 
@@ -172,7 +171,7 @@ class WebsiteHrRecruitment(WebsiteForm):
     def jobs_add(self, **kwargs):
         # avoid branding of website_description by setting rendering_bundle in context
         job = request.env['hr.job'].with_context(rendering_bundle=True).create({
-            'name': _('Job Title'),
+            'name': self.env._('Job Title'),
         })
         return f"/jobs/{request.env['ir.http']._slug(job)}"
 
@@ -235,7 +234,7 @@ class WebsiteHrRecruitment(WebsiteForm):
         refused_applicants = applications_by_status.get('refused', http.request.env['hr.applicant'])
         if any(applicant for applicant in refused_applicants if refused_applicants_condition(applicant)):
             return {
-                'message':  _(
+                'message':  self.env._(
                     'We\'ve found a previous closed application in our system within the last 6 months.'
                     ' Please consider before applying in order not to duplicate efforts.'
                 )
@@ -246,13 +245,13 @@ class WebsiteHrRecruitment(WebsiteForm):
 
         ongoing_application = applications_by_status.get('ongoing')[0]
         if ongoing_application.job_id.id == int(job_id):
-            recruiter_contact = "" if not ongoing_application.user_id else _(
+            recruiter_contact = "" if not ongoing_application.user_id else self.env._(
                 ' In case of issue, contact %(contact_infos)s',
                 contact_infos=", ".join(
                     [value for value in itemgetter('name', 'email', 'phone')(ongoing_application.user_id) if value]
                 ))
             return {
-                'message':  _(
+                'message':  self.env._(
                     'An application already exists for %(value)s.'
                     ' Duplicates might be rejected. %(recruiter_contact)s',
                     value=value,
@@ -261,7 +260,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             }
 
         return {
-            'message':  _(
+            'message':  self.env._(
                 'We found a recent application with a similar name, email, phone number.'
                 ' You can continue if it\'s not a mistake.'
             )

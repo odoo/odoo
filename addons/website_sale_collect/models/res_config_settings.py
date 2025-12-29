@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -19,7 +19,7 @@ class ResConfigSettings(models.TransientModel):
             }
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Delivery Methods"),
+            'name': self.env._("Delivery Methods"),
             'res_model': 'delivery.carrier',
             'view_mode': 'list,form',
             'context': '{"search_default_delivery_type": "in_store"}',

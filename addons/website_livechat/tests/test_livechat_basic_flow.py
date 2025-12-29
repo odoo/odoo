@@ -2,11 +2,12 @@
 
 from freezegun import freeze_time
 
-from odoo import fields, _
+from odoo import fields
+from odoo.tests.common import new_test_user
+
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
-from odoo.tests.common import new_test_user
 
 
 class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
@@ -104,7 +105,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         )
 
         # Check Channel and Visitor naming
-        self.assertEqual(self.visitor.display_name, "%s #%s" % (_("Website Visitor"), self.visitor.id))
+        self.assertEqual(self.visitor.display_name, "%s #%s" % (self.env._("Website Visitor"), self.visitor.id))
         self.assertEqual(channel.name, "%s %s" % (f'Visitor #{channel.livechat_visitor_id.id}', self.operator.livechat_username))
 
         # Post Message from visitor

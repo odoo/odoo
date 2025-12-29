@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http, _
+from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.http import request
@@ -41,16 +41,16 @@ class PaymentPortal(payment_portal.PaymentPortal):
     @http.route('/donation/transaction/<minimum_amount>', type='jsonrpc', auth='public', website=True, sitemap=False)
     def donation_transaction(self, amount, currency_id, partner_id, access_token, minimum_amount=0, **kwargs):
         if float(amount) < float(minimum_amount):
-            raise ValidationError(_('Donation amount must be at least %.2f.', float(minimum_amount)))
+            raise ValidationError(self.env._('Donation amount must be at least %.2f.', float(minimum_amount)))
         use_public_partner = request.env.user._is_public() or not partner_id
         if use_public_partner:
             details = kwargs['partner_details']
             if not details.get('name'):
-                raise ValidationError(_('Name is required.'))
+                raise ValidationError(self.env._('Name is required.'))
             if not details.get('email'):
-                raise ValidationError(_('Email is required.'))
+                raise ValidationError(self.env._('Email is required.'))
             if not details.get('country_id'):
-                raise ValidationError(_('Country is required.'))
+                raise ValidationError(self.env._('Country is required.'))
             partner_id = request.website.user_id.partner_id.id
             del kwargs['partner_details']
         else:
@@ -122,7 +122,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             rendering_context.update({
                 'is_donation': True,
                 'partner': partner_sudo,
-                'submit_button_label': _("Donate"),
+                'submit_button_label': self.env._("Donate"),
                 'transaction_route': '/donation/transaction/%s' % donation_options.get('minimumAmount', 0),
                 'partner_details': partner_details,
                 'error': {},

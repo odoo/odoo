@@ -1,16 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from ast import literal_eval
 import json
-from datetime import UTC
-from zoneinfo import ZoneInfo
-
 import werkzeug.urls
+from ast import literal_eval
+from datetime import UTC
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
+from zoneinfo import ZoneInfo
 
-from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError, ValidationError
+from odoo import api, fields, models, tools
+from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools.misc import get_lang, format_date
 
@@ -236,7 +235,7 @@ class EventEvent(models.Model):
     def _check_website_id(self):
         for event in self:
             if event.website_id and event.website_id.company_id != event.company_id:
-                raise ValidationError(_("The website must be from the same company as the event."))
+                raise ValidationError(self.env._("The website must be from the same company as the event."))
 
     # ------------------------------------------------------------
     # CRUD
@@ -351,9 +350,9 @@ class EventEvent(models.Model):
         """
         self.ensure_one()
         return [
-            (_('Home'), False, 'website_event.template_intro', 1, 'introduction', False),
-            (_('Practical'), '/event/%s/register' % self.env['ir.http']._slug(self), False, 100, 'register', False),
-            (_('Rooms'), '/event/%s/community' % self.env['ir.http']._slug(self), False, 80, 'community', False),
+            (self.env._('Home'), False, 'website_event.template_intro', 1, 'introduction', False),
+            (self.env._('Practical'), '/event/%s/register' % self.env['ir.http']._slug(self), False, 100, 'register', False),
+            (self.env._('Rooms'), '/event/%s/community' % self.env['ir.http']._slug(self), False, 80, 'community', False),
         ]
 
     def _update_website_menus(self, menus_update_by_field=None):
@@ -536,7 +535,7 @@ class EventEvent(models.Model):
         def get_month_filter_domain(filter_name, months_delta):
             localized_month_begin = localized_today_begin.replace(day=1)
             utc_months_delta_end = (localized_month_begin + relativedelta(months=months_delta + 1)).astimezone(UTC)
-            filter_string = _('This month') if months_delta == 0 \
+            filter_string = self.env._('This month') if months_delta == 0 \
                 else format_date(self.env, value=localized_today_begin + relativedelta(months=months_delta),
                     date_format='LLLL', lang_code=get_lang(self.env).code).capitalize()
             return [filter_name, filter_string, [
@@ -545,16 +544,16 @@ class EventEvent(models.Model):
                 0]
 
         return [
-            ['scheduled', _('Scheduled Events'), [("date_end", ">=", sd(now))], 0],
-            ['today', _('Today'), [
+            ['scheduled', self.env._('Scheduled Events'), [("date_end", ">=", sd(now))], 0],
+            ['today', self.env._('Today'), [
                 ("date_end", ">", sd(now)),
                 ("date_begin", "<", sd(utc_today_end))],
                 0],
             get_month_filter_domain('month', 0),
-            ['old', _('Past Events'), [
+            ['old', self.env._('Past Events'), [
                 ("date_end", "<", sd(now))],
                 0],
-            ['all', _('All Events'), [], 0]
+            ['all', self.env._('All Events'), [], 0]
         ]
 
     @api.model

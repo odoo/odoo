@@ -6,10 +6,11 @@ import logging
 import re
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
+from odoo.exceptions import ValidationError
+
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.crm.models import crm_stage
-from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -83,7 +84,7 @@ class CrmRevealRule(models.Model):
             if self.regex_url:
                 re.compile(self.regex_url)
         except Exception:
-            raise ValidationError(_('Enter Valid Regex.'))
+            raise ValidationError(self.env._('Enter Valid Regex.'))
 
     def action_get_lead_tree_view(self):
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_all_leads")
@@ -354,7 +355,7 @@ class CrmRevealRule(models.Model):
 
         template_values = result['reveal_data']
         template_values.update({
-            'flavor_text': _("Opportunity created by Odoo Lead Generation"),
+            'flavor_text': self.env._("Opportunity created by Odoo Lead Generation"),
             'people_data': result.get('people_data'),
         })
         lead.message_post_with_source(
