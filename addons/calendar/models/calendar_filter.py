@@ -20,3 +20,20 @@ class CalendarFilters(models.Model):
     @api.model
     def unlink_from_partner_id(self, partner_id):
         return self.search([('partner_id', '=', partner_id)]).unlink()
+
+    @api.model
+    def create_partner_calendar_filters(self, partner_ids):
+        """Create missing filters for the given partners."""
+        user_id = self.env.user.id
+        existing_filters = self.with_context(active_test=False).search([
+            ('user_id', '=', user_id),
+            ('partner_id', 'in', partner_ids),
+        ])
+        existing_filters.write({
+            'partner_checked': True,
+        })
+        if missing_partner_ids := list(set(partner_ids) - set(existing_filters.partner_id.ids)):
+            self.create([
+                {'user_id': user_id, 'partner_id': pid, 'active': False}
+                for pid in missing_partner_ids
+            ])

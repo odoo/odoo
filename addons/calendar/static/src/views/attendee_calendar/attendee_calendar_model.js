@@ -72,6 +72,27 @@ export class AttendeeCalendarModel extends CalendarModel {
     }
 
     /**
+     * Load calendar filters using partner IDs from context.
+     * @override
+     */
+    fetchFilters(resModel, fieldNames) {
+        const partnerIds = this.meta.context.calendar_filter_partner_ids;
+        if (resModel !== "calendar.filters" || !partnerIds?.length) {
+            return super.fetchFilters(resModel, fieldNames);
+        }
+
+        const domain = [
+            ["user_id", "=", user.userId],
+            "|",
+            ["active", "=", true],
+            "&",
+            ["active", "=", false],
+            ["partner_id", "in", partnerIds],
+        ];
+        return this.orm.searchRead(resModel, domain, fieldNames);
+    }
+
+    /**
      * Load the filter section and add both 'user' and 'everybody' filters to the context.
      * @override
      */

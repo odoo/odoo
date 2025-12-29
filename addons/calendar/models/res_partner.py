@@ -96,9 +96,11 @@ class ResPartner(models.Model):
         self.ensure_one()
         partner_ids = self.ids
         partner_ids.append(self.env.user.partner_id.id)
+        self.env['calendar.filters'].create_partner_calendar_filters(self.ids)
         action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
         action['context'] = {
             'default_partner_ids': partner_ids,
+            'calendar_filter_partner_ids': self.ids,
         }
         action['domain'] = ['|', ('id', 'in', self._compute_meeting()[self.id]), ('partner_ids', 'in', self.ids)]
         return action
