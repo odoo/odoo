@@ -359,17 +359,20 @@ patch(PosStore.prototype, {
         return false;
     },
     removeOrder(order) {
-        const wasCurrentOrder = this.selectedOrderUuid === order?.uuid;
         const orderRemoved = super.removeOrder(...arguments);
-        if (
-            orderRemoved &&
-            wasCurrentOrder &&
-            this.config.module_pos_restaurant &&
-            this.router.state.current !== "TicketScreen"
-        ) {
+        if (this.removeOrderShouldRedirect(order, orderRemoved)) {
             this.navigate("FloorScreen");
         }
         return orderRemoved;
+    },
+    removeOrderShouldRedirect(order, hasBeenRemoved) {
+        const wasCurrentOrder = this.selectedOrderUuid === order?.uuid;
+        return (
+            hasBeenRemoved &&
+            wasCurrentOrder &&
+            this.config.module_pos_restaurant &&
+            this.router.state.current !== "TicketScreen"
+        );
     },
     async closingSessionNotification(data) {
         await super.closingSessionNotification(...arguments);
