@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 import odoo.tests
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestUi(odoo.tests.HttpCase):
+class TestUi(HttpCaseWithUserDemo):
 
     @classmethod
     def setUpClass(cls):
@@ -15,5 +16,7 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour("/web", 'project_tour', login="admin")
 
     def test_limited_user_log_note_permission(self):
+        # Fallback of user access to demo user in No demo test cases
+        self.user_demo.groups_id += self.env.ref('project.group_project_user')
         self.start_tour('/', 'project_chatter_log_disabled', login='demo')
         self.start_tour('/', 'project_chatter_log_enabled', login='admin')
