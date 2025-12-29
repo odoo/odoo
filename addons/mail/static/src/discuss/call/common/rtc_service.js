@@ -311,6 +311,8 @@ export class Rtc extends Record {
     fallbackMode = false;
     isPipMode = false;
     isFullscreen = false;
+    /** Whether fullscreen was active before opening PIP. */
+    hadFullscreen = false;
     /** @type {RtcLog} */
     logs = {};
     notifications = reactive(new Map());
@@ -633,7 +635,10 @@ export class Rtc extends Record {
 
     async openPip(options) {
         if (this.isHost) {
-            this.exitFullscreen();
+            this.hadFullscreen = this.isFullscreen;
+            if (this.isFullscreen) {
+                this.exitFullscreen();
+            }
             await this.pipService.openPip(options);
             return;
         }
@@ -2389,6 +2394,10 @@ export const rtcService = {
         onChange(rtc.pipService.state, "active", () => {
             const isPipMode = rtc.pipService.state.active;
             if (!isPipMode) {
+                if (rtc.hadFullscreen && rtc.channel) {
+                    rtc.enterFullscreen();
+                }
+                rtc.hadFullscreen = false;
                 rtc.channel?.openChatWindow();
             }
             rtc.isPipMode = isPipMode;

@@ -16,6 +16,8 @@ import { MeetingSideActions } from "./meeting_side_actions";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
 
+const PIP_EXTRA_ACTION_IDS = ["copy-invite-link", "meeting-chat"];
+
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
 /**
@@ -69,5 +71,12 @@ export class Meeting extends Component {
 
     get channel() {
         return this.store.rtc.channel;
+    }
+
+    get pipExtraActions() {
+        if (!this.rtc.isPipMode) {
+            return [];
+        }
+        return this.threadActions.actions.filter((a) => PIP_EXTRA_ACTION_IDS.includes(a.id));
     }
 }

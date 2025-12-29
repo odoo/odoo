@@ -60,7 +60,7 @@
                 <hr t-if="props.channel?.invitationLink" class="border-dark-subtle"/>
                 <div t-if="props.channel?.invitationLink" class="input-group">
                     <input class="border border-secondary form-control lh-1 rounded-start border-0 smaller" type="text" t-att-value="props.channel.invitationLink" readonly="" disabled="" t-on-focus="onFocusInvitationLinkInput"/>
-                    <button class="btn btn-primary px-2 o-py-0_5" t-on-click="onClickCopy">
+                    <button class="btn btn-primary px-2 o-py-0_5" t-on-click="() => this.props.channel.copyInvitationLink()">
                         <i class="fa fa-copy"/>
                     </button>
                     <button
