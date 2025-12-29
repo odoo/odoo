@@ -508,12 +508,9 @@ class TestPackingDelivery(TestPackingCommon):
         self.assertEqual(picking_in.state, 'done')
 
         # Process return
-        wiz_form_return = Form(self.env['stock.return.picking'].with_context(active_id=picking_in.id, active_model='stock.picking'))
-        wiz_return = wiz_form_return.save()
-        wiz_return.product_return_moves.quantity = 3
-        action = wiz_return.action_create_returns()
-        return_picking = self.env["stock.picking"].browse(action["res_id"])
-        return_picking.move_line_ids.quantity = 3
+        return_picking = picking_in._create_return()
+        return_picking.move_ids.product_uom_qty = 3
+        return_picking.action_confirm()
         return_picking.carrier_id = self.test_carrier
         return_picking.button_validate()
         self.test_carrier.can_generate_return = True

@@ -10,6 +10,7 @@ Add relation information between Sale Orders and Purchase Orders if Make to Orde
     'depends': ['sale_stock', 'purchase_stock', 'sale_purchase'],
     'data': [
         'views/purchase_order_views.xml',
+        'views/stock_picking_views.xml',
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',

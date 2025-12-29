@@ -125,17 +125,11 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         # Create return picking
         pick = self.po.picking_ids
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=pick.ids, active_id=pick.ids[0],
-            active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        return_wiz.product_return_moves.write({'quantity': 2.0, 'to_refund': True})  # Return only 2
-        res = return_wiz.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick = pick._create_return()
+        return_pick.move_ids.product_uom_qty = 2.0
 
         # Validate picking
-        return_pick.move_line_ids.write({'quantity': 2})
-        return_pick.move_ids.picked = True
+        return_pick.action_assign()
         return_pick.button_validate()
 
         # Check Received quantity
@@ -194,19 +188,9 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         picking.button_validate()
 
         # Return 5 units
-        stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
-            active_ids=picking.ids,
-            active_id=picking.ids[0],
-            active_model='stock.picking'
-        ))
-        return_wiz = stock_return_picking_form.save()
-        for return_move in return_wiz.product_return_moves:
-            return_move.write({
-                'quantity': 5,
-                'to_refund': True
-            })
-        res = return_wiz.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick = picking._create_return()
+        return_pick.move_ids.product_uom_qty = 5
+        return_pick.action_assign()
         return_pick.button_validate()
 
         self.assertEqual(po1.order_line.qty_received, 5)
@@ -592,22 +576,15 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         receipt01.move_ids.quantity = 5
         receipt01.button_validate()
 
-        wizard = Form(self.env['stock.return.picking'].with_context(active_ids=receipt01.ids, active_id=receipt01.id, active_model='stock.picking')).save()
-        wizard.product_return_moves.quantity = 5
-        wizard.product_return_moves.to_refund = False
-        res = wizard.action_create_returns()
-
-        return_pick = self.env['stock.picking'].browse(res['res_id'])
-        return_pick.move_ids.quantity = 5
+        return_pick = receipt01._create_return()
+        return_pick.move_ids.product_uom_qty = 5
+        return_pick.action_assign()
         return_pick.button_validate()
 
-        wizard = Form(self.env['stock.return.picking'].with_context(active_ids=return_pick.ids, active_id=return_pick.id, active_model='stock.picking')).save()
-        wizard.product_return_moves.quantity = 5
-        wizard.product_return_moves.to_refund = False
-        res = wizard.action_create_returns()
-
-        receipt02 = self.env['stock.picking'].browse(res['res_id'])
-        receipt02.move_ids.quantity = 5
+        return_pick.move_ids.to_refund = False
+        receipt02 = return_pick._create_return()
+        receipt02.move_ids.product_uom_qty = 5
+        receipt02.action_assign()
         receipt02.button_validate()
 
         self.assertEqual(po.order_line[0].qty_received, 5)

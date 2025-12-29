@@ -419,17 +419,10 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.assertEqual(order_line.qty_received, 7.0)
 
         # Return all components processed by backorder_3
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=backorder_3.ids, active_id=backorder_3.ids[0],
-            active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        for return_move in return_wiz.product_return_moves:
-            return_move.write({
-                'quantity': expected_quantities[return_move.product_id],
-                'to_refund': True
-            })
-        res = return_wiz.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick = backorder_3._create_return()
+        for move in return_pick.move_ids:
+            move.product_uom_qty = expected_quantities[move.product_id]
+        return_pick.action_assign()
 
         # Process all components and validate the picking
         return_pick.button_validate()
@@ -437,21 +430,10 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         # Now quantity received should be 3 again
         self.assertEqual(order_line.qty_received, 3)
 
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=return_pick.ids, active_id=return_pick.ids[0],
-            active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        for move in return_wiz.product_return_moves:
-            move.quantity = expected_quantities[move.product_id]
-        res = return_wiz.action_create_returns()
-        return_of_return_pick = self.env['stock.picking'].browse(res['res_id'])
-
-        # Process all components except one of each
+        return_of_return_pick = return_pick._create_return()
         for move in return_of_return_pick.move_ids:
-            move.write({
-                'quantity': expected_quantities[move.product_id] - 1,
-                'to_refund': True
-            })
+            move.product_uom_qty = expected_quantities[move.product_id] - 1
+        return_of_return_pick.action_assign()
 
         Form.from_action(self.env, return_of_return_pick.button_validate()).save().process()
 
@@ -936,17 +918,9 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.assertEqual(po.order_line.qty_received, 25 / 5 * 6)
 
         # Return 10 components
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking.ids, active_id=picking.id,
-            active_model='stock.picking'))
-        return_wiz = stock_return_picking_form.save()
-        for return_move in return_wiz.product_return_moves:
-            return_move.write({
-                'quantity': 10,
-                'to_refund': True
-            })
-        res = return_wiz.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick = picking._create_return()
+        return_pick.move_ids.product_uom_qty = 10
+        return_pick.action_assign()
 
         # Process all components and validate the return
         return_pick.button_validate()

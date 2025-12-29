@@ -125,7 +125,8 @@
                             full_name="partner_id" groups="stock.group_stock_sign_delivery"/>
                     <button name="do_print_picking" string="Print" groups="stock.group_stock_user" type="object" invisible="state != 'assigned'" data-hotkey="o"/>
                     <button name="%(action_report_delivery)d" string="Print" invisible="state != 'done'" type="action" groups="base.group_user" data-hotkey="o"/>
-                    <button name="%(act_stock_return_picking)d" string="Return" invisible="state != 'done'" type="action" groups="base.group_user" data-hotkey="k"/>
+                    <button name="action_return" string="Return" invisible="not show_return or state != 'done'" type="object" groups="base.group_user" data-hotkey="k"/>
+                    <button name="action_exchange" string="Exchange" invisible="show_return or state not in ('assigned', 'done')" type="object" groups="base.group_user"/>
                     <field name="state" widget="stock_picking_locked_statusbar" invisible="picking_type_code != 'incoming'" statusbar_visible="draft,assigned,done"/>
                     <field name="state" widget="stock_picking_locked_statusbar" invisible="picking_type_code == 'incoming'" statusbar_visible="draft,confirmed,assigned,done"/>
                     <button name="action_cancel" invisible="state not in ('assigned', 'confirmed', 'draft', 'waiting')" string="Cancel" groups="base.group_user" type="object" confirm="Are you sure you want to cancel this transfer?" data-hotkey="x"/>
@@ -323,6 +324,8 @@
                             </field>
                             <field name="id" invisible="1"/>
                             <button class="btn-secondary float-end" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel')" groups="stock.group_tracking_lot" data-hotkey="shift+g"/>
+                            <button class="btn-secondary float-end me-2" name="action_return_all" type="object" string="Return All" invisible="state != 'draft' or not return_id" groups="base.group_user"/>
+                            <button class="btn-secondary float-end me-2" name="action_clear_return" type="object" string="Clear" invisible="state != 'draft' or not return_id" groups="base.group_user"/>
                         </page>
                         <page string="Additional Info" name="extra">
                             <group>

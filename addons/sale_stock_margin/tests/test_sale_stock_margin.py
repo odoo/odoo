@@ -468,12 +468,10 @@ class TestSaleStockMargin(TestStockValuationCommon):
         second_delivery.move_ids.quantity = 1
         second_delivery.button_validate()
         self.assertEqual(second_delivery.move_ids.sale_line_id, sale_order.order_line - sale_order_line)
-        stock_picking_return = self.env['stock.return.picking'].create({
-            'picking_id': second_delivery.id,
-        })
-        stock_picking_return.product_return_moves.quantity = 1
-        return_picking = stock_picking_return._create_return()
-        return_picking.move_ids.quantity = 1
+        return_picking = second_delivery._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.action_confirm()
+        return_picking.action_assign()
         return_picking.button_validate()
         self.assertEqual(return_picking.state, 'done')
 
@@ -571,11 +569,10 @@ class TestSaleStockMargin(TestStockValuationCommon):
             self._make_in_move(self.product_avco_auto, 2, 5)
             self.assertEqual(self.product_avco_auto.standard_price, 30, "standard_price for avco = (5 * 40 + 2 * 5) / (5 + 2) = 30: 1 delivered, 5 remaining + 2 added to stock")
             freeze.tick(delta=datetime.timedelta(seconds=2))
-            stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking'))
-            stock_return_picking = stock_return_picking_form.save()
-            stock_return_picking.product_return_moves.quantity = 3.0
-            stock_return_picking_action = stock_return_picking.action_create_returns()
-            return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+            return_pick = delivery._create_return()
+            return_pick.move_ids.product_uom_qty = 3
+            return_pick.action_confirm()
+            return_pick.action_assign()
             return_pick.button_validate()
             self.assertEqual(sol.product_uom_qty, 1)
             self.assertEqual(sol.qty_delivered, -2)
@@ -618,11 +615,10 @@ class TestSaleStockMargin(TestStockValuationCommon):
             self._make_in_move(self.product_avco_auto, 2, 17.5)  # force different standard_price
             self.assertEqual(self.product_avco_auto.standard_price, 30, "standard_price for avco = (10 * 32.5 + 2 * 17.5) / (10 + 2) = 30: 2 delivered, 10 remaining + 2 added to stock")
             freeze.tick(delta=datetime.timedelta(seconds=2))
-            stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking'))
-            stock_return_picking = stock_return_picking_form.save()
-            stock_return_picking.product_return_moves.quantity = 1.0
-            stock_return_picking_action = stock_return_picking.action_create_returns()
-            return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+            return_pick = delivery._create_return()
+            return_pick.move_ids.product_uom_qty = 1.0
+            return_pick.action_confirm()
+            return_pick.action_assign()
             return_pick.button_validate()
             self.assertEqual(sol3.product_uom_qty, 0)
             self.assertEqual(sol3.qty_delivered, 1)

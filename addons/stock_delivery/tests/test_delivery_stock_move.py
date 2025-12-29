@@ -215,11 +215,9 @@ class TestStockMoveInvoice(TestSaleCommon):
         sale_order.picking_ids.button_validate()
 
         # Return picking
-        return_form = Form(self.env["stock.return.picking"].with_context(active_id=sale_order.picking_ids.id, active_model="stock.picking"))
-        return_wizard = return_form.save()
-        return_wizard.product_return_moves.quantity = 2
-        action = return_wizard.action_create_returns()
-        return_picking = self.env["stock.picking"].browse(action["res_id"])
+        return_picking = sale_order.picking_ids._create_return()
+        return_picking.move_ids.product_uom_qty = 2
+        return_picking.action_assign()
 
         # add new product so new picking is created
         sale_order.write({

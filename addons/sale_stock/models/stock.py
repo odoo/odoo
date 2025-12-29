@@ -312,6 +312,18 @@ class StockPicking(models.Model):
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
 
+    def _prepare_return_move_default_values(self, move_id):
+        vals = super()._prepare_return_move_default_values(move_id)
+        if move_id.sale_line_id:
+            vals['sale_line_id'] = move_id.sale_line_id.id
+        return vals
+
+    def _prepare_return_picking_default_values(self):
+        vals = super()._prepare_return_picking_default_values()
+        if self.sale_id:
+            vals['sale_id'] = self.sale_id.id
+        return vals
+
 
 class StockLot(models.Model):
     _inherit = 'stock.lot'

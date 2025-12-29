@@ -106,13 +106,9 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         ])
 
         # return to subcontracting location
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking'))
-        with return_form.product_return_moves.edit(0) as line:
-            line.quantity = 1
-        return_wizard = return_form.save()
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.quantity = 1
-        return_picking.move_ids.picked = True
+        return_picking = delivery._create_return()
+        return_picking.move_ids[0].product_uom_qty = 1
+        return_picking.action_assign()
         return_picking.button_validate()
 
         amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
@@ -125,13 +121,9 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         # return to stock location
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         stock_location = warehouse.lot_stock_id
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking'))
-        with return_form.product_return_moves.edit(0) as line:
-            line.quantity = 1
-        return_wizard = return_form.save()
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.quantity = 1
-        return_picking.move_ids.picked = True
+        return_picking = delivery._create_return()
+        return_picking.move_ids[0].product_uom_qty = 1
+        return_picking.action_assign()
         return_picking.location_dest_id = stock_location
         return_picking.button_validate()
 

@@ -226,3 +226,19 @@ class StockPicking(models.Model):
     def _should_generate_commercial_invoice(self):
         self.ensure_one()
         return self.picking_type_id.warehouse_id.partner_id.country_id != self.partner_id.country_id
+
+    def _create_return(self):
+        # Prevent copy of the carrier and carrier price when generating return picking
+        # (we have no integration of returns for now)
+        new_picking = super()._create_return()
+        self._reset_carrier_id(new_picking)
+        return new_picking
+
+    def _reset_carrier_id(self, picking):
+        """ Prevent copy of the carrier and carrier price when generating return picking
+        (we have no integration of returns for now).
+        """
+        picking.write({
+            'carrier_id': False,
+            'carrier_price': 0.0,
+        })
