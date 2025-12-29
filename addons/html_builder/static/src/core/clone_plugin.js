@@ -94,7 +94,8 @@ export class ClonePlugin extends Plugin {
 
         // Scroll to the clone if required and if it is not visible.
         if (scrollToClone && !isElementInViewport(cloneEl)) {
-            cloneEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
+            cloneEl.scrollIntoView({ behavior: "smooth", block: "start" });
         }
 
         for (const onCloned of this.getResource("on_cloned_handlers")) {
