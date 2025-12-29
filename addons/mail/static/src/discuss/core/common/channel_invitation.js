@@ -210,6 +210,7 @@ export class ChannelInvitation extends Component {
                 partnerIds.unshift(this.props.channel.correspondent.partner_id.id);
             }
             await this.store.startChat(partnerIds);
+            this.props.close?.();
             return;
         }
         const invitePromises = [];
