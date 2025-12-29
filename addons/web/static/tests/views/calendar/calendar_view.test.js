@@ -2204,6 +2204,51 @@ test(`set filter with many2many field on mobile`, async () => {
 });
 
 test.tags("desktop");
+test("many2many filter handles archived records without crashing on desktop", async () => {
+    CalendarPartner._fields.active = fields.Boolean({ default: true });
+    CalendarPartner._records.push({
+        id: 99,
+        name: "Joni",
+        active: false,
+    });
+    Event._records[0].attendee_ids = [99];
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start">
+                <field name="attendee_ids" filters="1"/>
+            </calendar>
+        `,
+    });
+    expect(`.o_calendar_filter_item`).toHaveCount(4);
+});
+
+test.tags("mobile");
+test("many2many filter handles archived records without crashing on mobile", async () => {
+    CalendarPartner._fields.active = fields.Boolean({ default: true });
+    CalendarPartner._records.push({
+        id: 99,
+        name: "Joni",
+        active: false,
+    });
+    Event._records[0].attendee_ids = [99];
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start">
+                <field name="attendee_ids" filters="1"/>
+            </calendar>
+        `,
+    });
+    await contains(`.o_filter`).click();
+    expect(`.o_calendar_filter_item`).toHaveCount(4);
+});
+
+test.tags("desktop");
 test(`set filter with one2many field on desktop`, async () => {
     Event._fields.attendee_ids = fields.One2many({
         relation: "calendar.partner",
