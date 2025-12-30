@@ -212,6 +212,29 @@ describe("deleteBackward applied to toggle", () => {
             <p>Riddance</p>
         `);
     });
+    test("press 'ctrl+a' with leading toggle block should select and delete all content", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
+                    <div data-embedded-editable="title">
+                        <p>HelloWorld</p>
+                    </div>
+                    <div data-embedded-editable="content">
+                        <p>Good</p>
+                        <p>Riddance</p>
+                    </div>
+                </div>
+                <div class="o-paragraph">hello[]</div>
+            `),
+            { config: getConfig([toggleBlockEmbedding]) }
+        );
+        await embeddedToggleMountedPromise;
+        await press(["CTRL", "A"]); // select all
+        deleteBackward(editor);
+        expect(getContent(el)).toBe(
+            `<div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>`
+        );
+    });
 });
 describe("deleteForward applied to toggle", () => {
     test("empty paragraph, before toggle: should remove empty paragraph", async () => {
