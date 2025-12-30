@@ -682,9 +682,17 @@ registry.category("web_tour.tours").add("test_confirm_coupon_programs_one_by_one
                     // Create 5 orders that will be synced one by one
                     for (let i = 0; i < 5; i++) {
                         const order = posmodel.createNewOrder();
+<<<<<<< 25e4dd42d44ed8f366250dc678d8868c45d65e8e
                         const product = posmodel.models["product.template"].find(
                             (p) => p.name === "Desk Pad"
                         );
+||||||| 5f8336c7d8ab891103a3035a9ebb5242cfa46ce6
+                        const product = posmodel.models["product.product"].getFirst();
+=======
+                        const product = posmodel.models["product.product"].find(
+                            (el) => el.attribute_line_ids.length == 0
+                        );
+>>>>>>> 9b382b81d49f7d309e9a6c141037130f0c8355d5
                         const pm = posmodel.models["pos.payment.method"].getFirst();
                         const program = posmodel.models["loyalty.program"].find(
                             (p) => p.program_type === "gift_card"
