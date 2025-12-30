@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 
 class ProductPricelist(models.Model):
@@ -290,10 +289,54 @@ class ProductPricelist(models.Model):
                 results[product_id][pricelist.id] = price
         return results
 
+    def _get_country_pricelist_multi(self, country_ids):
+        """ Retrieve the default pricelist for the given countries.
+
+        :param list country_ids: list of country ids
+        :return: a dict {country_id: pricelist}
+        """
+        company_id = self.env.company.id
+        pl_domain = self._get_partner_pricelist_multi_search_domain_hook(company_id)
+
+        # check `country_code` context value if we want to default to a country-specific pricelist
+        if ctx_code := self.env.context.get('country_code'):
+            ctx_country = self.env['res.country'].search([('code', '=', ctx_code)], limit=1)
+            if ctx_country and ctx_country.id not in country_ids:
+                country_ids = [ctx_country.id, *country_ids]
+        else:
+            ctx_country = False
+
+        # get fallback pricelist when no pricelist for a given country
+        fallback_domain = Domain.AND([pl_domain, [('country_group_ids', '=', False)]])
+        if not (pl_fallback := self.search(fallback_domain, limit=1)):
+            # save data in ir.config_parameter instead of ir.default for
+            # res.partner.property_product_pricelist
+            # otherwise the data will become the default value while
+            # creating without specifying the property_product_pricelist
+            # however if the property_product_pricelist is not specified
+            # the result of the previous line should have high priority
+            # when computing
+            get_icp_id = self.env['ir.config_parameter'].sudo().get_int
+            pl_fallback = (
+                self.browse(get_icp_id(f'res.partner.property_product_pricelist_{company_id}'))
+                or self.browse(get_icp_id('res.partner.property_product_pricelist'))
+                or self.search(pl_domain, limit=1)
+            )
+
+        result = {}
+        for country_id in country_ids:
+            pl = self.search(Domain.AND([
+                pl_domain,
+                [('country_group_ids.country_ids', '=', country_id)],
+            ]), limit=1)
+            result[country_id] = pl or pl_fallback
+        result[False] = result[ctx_country.id] if ctx_country else pl_fallback
+        return result
+
     # res.partner.property_product_pricelist field computation
     @api.model
     def _get_partner_pricelist_multi(self, partner_ids):
-        """ Retrieve the applicable pricelist for given partners in a given company.
+        """ Retrieve the applicable pricelist for the given partners.
 
         It will return the first found pricelist in this order:
         First, the pricelist of the specific property (res_id set), this one
@@ -304,17 +347,13 @@ class ProductPricelist(models.Model):
 
         :return: a dict {partner_id: pricelist}
         """
-        ProductPricelist = self.env['product.pricelist']
-
         if not self.env['res.groups']._is_feature_enabled('product.group_product_pricelist'):
             # Skip pricelist computation if pricelists are disabled.
-            return defaultdict(lambda: ProductPricelist)
+            return dict.fromkeys(partner_ids, self.env['product.pricelist'])
 
         # `partner_ids` might be ID from inactive users. We should use active_test
         # as we will do a search() later (real case for website public user).
         Partner = self.env['res.partner'].with_context(active_test=False)
-        company_id = self.env.company.id
-        pl_domain = self._get_partner_pricelist_multi_search_domain_hook(company_id)
 
         # if no specific property, try to find a fitting pricelist
         result = {}
@@ -326,29 +365,13 @@ class ProductPricelist(models.Model):
                 remaining_partner_ids.append(partner.id)
 
         if remaining_partner_ids:
-            IrConfigParameter = self.env['ir.config_parameter'].sudo()
-            # get fallback pricelist when no pricelist for a given country
-            pl_fallback = (
-                ProductPricelist.search(pl_domain + [('country_group_ids', '=', False)], limit=1) or
-                # save data in ir.config_parameter instead of ir.default for
-                # res.partner.property_product_pricelist
-                # otherwise the data will become the default value while
-                # creating without specifying the property_product_pricelist
-                # however if the property_product_pricelist is not specified
-                # the result of the previous line should have high priority
-                # when computing
-                ProductPricelist.browse(IrConfigParameter.get_int(f'res.partner.property_product_pricelist_{company_id}')) or
-                ProductPricelist.browse(IrConfigParameter.get_int('res.partner.property_product_pricelist')) or
-                ProductPricelist.search(pl_domain, limit=1)
-            )
             # group partners by country, and find a pricelist for each country
             remaining_partners = self.env['res.partner'].browse(remaining_partner_ids)
             partners_by_country = remaining_partners.grouped('country_id')
+            country_ids = remaining_partners.country_id.ids
+            pricelists_by_country_id = self._get_country_pricelist_multi(country_ids)
             for country, partners in partners_by_country.items():
-                if not country and (country_code := self.env.context.get('country_code')):
-                    country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
-                pl = ProductPricelist.search(pl_domain + [('country_group_ids.country_ids', '=', country.id if country else False)], limit=1)
-                pl = pl or pl_fallback
+                pl = pricelists_by_country_id[country.id]
                 result.update(dict.fromkeys(partners._ids, pl))
 
         return result
