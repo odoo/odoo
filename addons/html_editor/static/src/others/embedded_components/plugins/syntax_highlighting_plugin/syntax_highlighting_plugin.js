@@ -7,6 +7,8 @@ import {
     newlinesToLineBreaks,
 } from "../../core/syntax_highlighting/syntax_highlighting_utils";
 import { removeInvisibleWhitespace } from "@html_editor/utils/dom";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { closestBlock } from "@html_editor/utils/blocks";
 
 const CODE_BLOCK_CLASS = "o_syntax_highlighting";
 const CODE_BLOCK_SELECTOR = `div.${CODE_BLOCK_CLASS}`;
@@ -50,6 +52,44 @@ export class SyntaxHighlightingPlugin extends Plugin {
 
     setup() {
         this.addCodeBlocks();
+        this.addDomListener(this.editable, "keydown", (ev) => {
+            const arrowHandled = ["arrowup", "control+arrowup", "arrowdown", "control+arrowdown"];
+            if (arrowHandled.includes(getActiveHotkey(ev))) {
+                this.navigateAroundCodeBlock(ev);
+            }
+        });
+    }
+
+    navigateAroundCodeBlock(ev) {
+        const isArrowUp = ev.key === "ArrowUp";
+        const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
+        if (!selection.isCollapsed) {
+            return;
+        }
+        const anchorNode = selection.anchorNode;
+        const currentBlock = closestBlock(anchorNode);
+        const adjacentBlock = isArrowUp
+            ? currentBlock.previousElementSibling
+            : currentBlock.nextElementSibling;
+        if (!adjacentBlock?.matches(CODE_BLOCK_SELECTOR)) {
+            return;
+        }
+
+        const actualSelection = this.document.getSelection();
+        const preserveSelection = this.dependencies.selection.preserveSelection();
+        actualSelection.modify("extend", isArrowUp ? "backward" : "forward", "line");
+        const reachedBlock = closestBlock(actualSelection.focusNode);
+        preserveSelection.restore();
+
+        // If extending the selection reaches another block, the cursor
+        // is at the block boundary.
+        if (currentBlock !== reachedBlock) {
+            ev.preventDefault();
+            const textarea = adjacentBlock.querySelector("textarea");
+            const position = isArrowUp ? textarea.value.length : 0;
+            textarea.focus({ preventScroll: true });
+            textarea.setSelectionRange(position, position);
+        }
     }
 
     cleanForSave(root) {
@@ -137,6 +177,7 @@ export class SyntaxHighlightingPlugin extends Plugin {
                     this.dependencies.selection.setCursorStart(baseContainer);
                     this.dependencies.history.addStep();
                 },
+                setSelection: (selection) => this.dependencies.selection.setSelection(selection),
             });
             props.host.removeAttribute("data-syntax-highlighting-autofocus");
         }

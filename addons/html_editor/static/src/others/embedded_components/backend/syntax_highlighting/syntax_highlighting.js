@@ -12,6 +12,7 @@ import {
     highlightPre,
 } from "../../core/syntax_highlighting/syntax_highlighting_utils";
 import { CodeToolbar } from "./code_toolbar";
+import { nodeSize } from "@html_editor/utils/position";
 
 export class EmbeddedSyntaxHighlightingComponent extends Component {
     static template = "html_editor.EmbeddedSyntaxHighlighting";
@@ -23,6 +24,7 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
         codeWrap: { type: Boolean, optional: true },
         onTextareaFocus: { type: Function },
         convertToParagraph: { type: Function },
+        setSelection: { type: Function },
         host: { type: Object },
     };
 
@@ -154,6 +156,27 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
                 ev.preventDefault();
                 this.props.convertToParagraph({ target: this.pre });
             }
+        } else if (ev.key === "ArrowUp" || ev.key === "ArrowDown") {
+            const { value, selectionStart, selectionEnd } = this.textarea;
+            if (selectionStart !== selectionEnd) {
+                return;
+            }
+            const isArrowUp = ev.key === "ArrowUp";
+            const isCursorAtBoundary = isArrowUp
+                ? value.slice(0, selectionStart).lastIndexOf("\n") === -1
+                : value.indexOf("\n", selectionEnd) === -1;
+            if (!isCursorAtBoundary) {
+                return;
+            }
+            ev.preventDefault();
+            this.textarea.blur();
+            const node = isArrowUp
+                ? this.props.host.previousElementSibling
+                : this.props.host.nextElementSibling;
+            this.props.setSelection({
+                anchorNode: node,
+                anchorOffset: isArrowUp ? nodeSize(node) : 0,
+            });
         }
     }
 
