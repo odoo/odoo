@@ -24,7 +24,7 @@
 ^BCN,100,Y,N,N
 ^FD<t t-out="move_line.lot_id.name"/>^FS
 </t>
-<t t-elif="move_line.product_id.tracking == 'none' and move_line.product_id.barcode">
+<t t-elif="(move_line.product_id.tracking not in ['lot', 'serial']) and move_line.product_id.barcode">
 ^FO100,100^BY3
 ^BCN,100,Y,N,N
 ^FD<t t-out="move_line.product_id.barcode"/>^FS

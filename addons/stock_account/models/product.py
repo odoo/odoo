@@ -49,10 +49,10 @@ class ProductTemplate(models.Model):
         domain_company = Domain(['|', ('categ_id.property_valuation', '=', False), ('categ_id', '=', False), ('company_id.inventory_valuation', operator, value)])
         return domain_company | domain_categ
 
-    @api.depends('tracking')
+    @api.depends('tracking', 'is_storable')
     def _compute_lot_valuated(self):
         for product in self:
-            if product.tracking == 'none':
+            if product.tracking not in ['lot', 'serial']:
                 product.lot_valuated = False
 
     @api.depends_context('company')

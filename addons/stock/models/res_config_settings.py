@@ -152,7 +152,7 @@ class ResConfigSettings(models.TransientModel):
                     view.active = True
 
         if not self.group_stock_production_lot and previous_group.get('group_stock_production_lot'):
-            if self.env['product.product'].search_count([('tracking', '!=', 'none')], limit=1):
+            if self.env['product.product'].search_count([('tracking', 'in', ['lot', 'serial'])], limit=1):
                 raise UserError(_("You have product(s) in stock that have lot/serial number tracking enabled. \nSwitch off tracking on all the products before switching off this setting."))
 
         return

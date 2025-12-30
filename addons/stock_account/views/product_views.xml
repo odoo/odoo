@@ -46,7 +46,7 @@
             <field name="inherit_id" ref="stock.view_template_property_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//label[@for='serial_prefix_format']" position="before">
-                    <field name="lot_valuated" widget="confirm_boolean" invisible="tracking == 'none'"/>
+                    <field name="lot_valuated" widget="confirm_boolean" invisible="tracking not in ['lot', 'serial']"/>
                 </xpath>
             </field>
         </record>

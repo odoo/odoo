@@ -187,7 +187,7 @@
                         column_invisible="not parent.show_quant"
                         options="{'no_create': True, 'no_open': True}"/>
                     <field name="lot_id" groups="stock.group_production_lot"
-                        column_invisible="parent.show_quant or parent.has_tracking == 'none' or not parent.show_lots_m2o"
+                        column_invisible="parent.show_quant or parent.has_tracking not in ['lot', 'serial'] or not parent.show_lots_m2o"
                         domain="[('product_id', '=', parent.product_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
                         context="{
                             'active_picking_id': picking_id,
@@ -195,7 +195,7 @@
                         }"/>
                     <field name="lot_name" string="Lot/Serial Number" groups="stock.group_production_lot"
                         placeholder="e.g. SN000001"
-                        column_invisible="parent.has_tracking == 'none' or not parent.show_lots_text"/>
+                        column_invisible="parent.has_tracking not in ['lot', 'serial'] or not parent.show_lots_text"/>
                     <field name="location_dest_id" string="Store To"
                         column_invisible="parent.show_quant and parent.picking_code != 'internal'"
                         domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"

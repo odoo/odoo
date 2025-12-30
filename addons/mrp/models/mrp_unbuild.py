@@ -167,7 +167,7 @@ class MrpUnbuild(models.Model):
         self._check_company()
         # remove the default_* keys that were only needed in the unbuild wizard
         self = self.with_env(self.env(context=clean_context(self.env)))  # noqa: PLW0642
-        if self.product_id.tracking != 'none' and not self.lot_id.id:
+        if self.product_id.tracking in ['lot', 'serial'] and not self.lot_id.id:
             raise UserError(_('You should provide a lot number for the final product.'))
 
         if self.mo_id and self.mo_id.state != 'done':
@@ -189,10 +189,10 @@ class MrpUnbuild(models.Model):
             "It will allow us to retrieve the lots/serial numbers of the correct components and/or byproducts."
         )
 
-        if any(produce_move.has_tracking != 'none' and not self.mo_id for produce_move in produce_moves):
+        if any(produce_move.product_id.tracking in ['lot', 'serial'] and not self.mo_id for produce_move in produce_moves):
             raise UserError(error_message)
 
-        if any(consume_move.has_tracking != 'none' and not self.mo_id for consume_move in consume_moves):
+        if any(consume_move.product_id.tracking in ['lot', 'serial'] and not self.mo_id for consume_move in consume_moves):
             raise UserError(error_message)
 
         for finished_move in finished_moves:

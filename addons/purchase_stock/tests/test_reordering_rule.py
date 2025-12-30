@@ -30,7 +30,7 @@ class TestReorderingRule(TransactionCase):
         # create product and set the vendor
         product_form = Form(cls.env['product.product'])
         product_form.name = 'Product A'
-        product_form.is_storable = True
+        product_form.tracking = 'none'
         product_form.description = 'Internal Notes'
         with product_form.seller_ids.new() as seller:
             seller.partner_id = cls.partner
@@ -371,7 +371,7 @@ class TestReorderingRule(TransactionCase):
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Simple Product'
-        product_form.is_storable = True
+        product_form.tracking = 'none'
         with product_form.seller_ids.new() as s:
             s.partner_id = partner
             s.uom_id = product_form.uom_id
@@ -379,7 +379,7 @@ class TestReorderingRule(TransactionCase):
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Product BUY + MTO'
-        product_form.is_storable = True
+        product_form.tracking = 'none'
         product_form.route_ids.add(route_buy)
         product_form.route_ids.add(route_mto)
         with product_form.seller_ids.new() as s:
@@ -471,7 +471,7 @@ class TestReorderingRule(TransactionCase):
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Simple Product'
-        product_form.is_storable = True
+        product_form.tracking = 'none'
         with product_form.seller_ids.new() as s:
             s.partner_id = partner
             s.uom_id = product_form.uom_id
@@ -479,7 +479,7 @@ class TestReorderingRule(TransactionCase):
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Product BUY + MTO'
-        product_form.is_storable = True
+        product_form.tracking = 'none'
         product_form.route_ids.add(route_buy)
         product_form.route_ids.add(route_mto)
         with product_form.seller_ids.new() as s:

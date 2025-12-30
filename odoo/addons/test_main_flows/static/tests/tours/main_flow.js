@@ -59,10 +59,12 @@ registry.category("web_tour.tours").add('main_flow_tour', {
     tooltipPosition: 'left',
     run: "edit the_flow.product",
 }, {
-    trigger: ".o_field_widget[name=is_storable] input",
-    content: _t("Let's enter the product type"),
+    trigger: ".o_field_widget[name=tracking] input",
+    content: _t("Un-set product tracking"),
     tooltipPosition: 'right',
-    run: "click",
+    run: function({ anchor }) {
+        anchor.value = "";
+    },
 }, {
     trigger: '.o_notebook .nav-link:contains("Inventory")',
     content: _t('Go to inventory tab'),

@@ -278,7 +278,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         """ Test that movement of pack in backorder is correctly handled. """
         self.warehouse_1.manufacture_steps = 'pbm'
 
-        self.product_1.is_storable = True
+        self.product_1.tracking = 'none'
         self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 100)
 
         mo_form = Form(self.env['mrp.production'])
@@ -353,10 +353,10 @@ class TestKitPicking(common.TestMrpCommon):
         super().setUpClass()
 
         def create_product(name):
-            p = Form(cls.env['product.product'])
-            p.name = name
-            p.is_storable = True
-            return p.save()
+            return cls.env['product.product'].create({
+                'name': name,
+                'tracking': 'none',
+            })
 
         # Create a kit 'kit_parent' :
         # ---------------------------

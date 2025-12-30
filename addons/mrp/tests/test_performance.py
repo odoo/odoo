@@ -78,7 +78,7 @@ class TestMrpSerialMassProducePerformance(common.TransactionCase):
                         'lot_id': lot.id,
                     })._apply_inventory()
                     qty -= 10
-            else:
+            elif raw_materials[i].tracking == 'serial':
                 for _ in range(total_quantity):
                     lot = self.env['stock.lot'].create({
                         'product_id': raw_materials[i].id,

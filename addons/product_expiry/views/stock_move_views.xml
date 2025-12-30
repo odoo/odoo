@@ -42,8 +42,8 @@
                 <field name="tracking" column_invisible="True"/>
                 <field name="expiration_date" decoration-danger="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
                  decoration-bf="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
-                 force_save="1" readonly="picking_type_use_existing_lots" invisible="tracking == 'none'"/>
-                <field name="removal_date" force_save="1" readonly="1" invisible="tracking == 'none'"
+                 force_save="1" readonly="picking_type_use_existing_lots" invisible="tracking not in ['lot', 'serial']"/>
+                <field name="removal_date" force_save="1" readonly="1" invisible="tracking not in ['lot', 'serial']"
                  decoration-danger="removal_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')" decoration-bf="removal_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"/>
             </xpath>
             <xpath expr="//field[@name='lot_id']" position="after">

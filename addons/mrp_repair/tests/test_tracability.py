@@ -20,6 +20,7 @@ class TestRepairTraceability(TestMrpCommon):
         product_to_repair = self.env['product.product'].create({
             'name': 'product first serial to act repair',
             'tracking': 'serial',
+            'is_storable': True,
         })
         ptrepair_lot = self.env['stock.lot'].create({
             'name': 'A1',
@@ -28,11 +29,16 @@ class TestRepairTraceability(TestMrpCommon):
         product_to_remove = self.env['product.product'].create({
             'name': 'other first serial to remove with repair',
             'tracking': 'serial',
+            'is_storable': True,
         })
         ptremove_lot = self.env['stock.lot'].create({
             'name': 'B2',
             'product_id': product_to_remove.id,
         })
+        # Add stock for the component so move lines are created during reservation
+        self.env['stock.quant']._update_available_quantity(
+            product_to_remove, self.stock_location, 1, lot_id=ptremove_lot
+        )
         # Create a manufacturing order with product (with SN A1)
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = product_to_repair
@@ -41,6 +47,7 @@ class TestRepairTraceability(TestMrpCommon):
             move.product_uom_qty = 1
         mo = mo_form.save()
         mo.action_confirm()
+        mo.action_assign()
         # Set serial to A1
         mo.lot_producing_ids = ptrepair_lot
         # Set component serial to B2
@@ -62,6 +69,14 @@ class TestRepairTraceability(TestMrpCommon):
         ro.action_repair_end()
 
         # Create a manufacturing order with product (with SN A2)
+        ptremove_lot2 = self.env['stock.lot'].create({
+            'name': 'B3',
+            'product_id': product_to_remove.id,
+        })
+        # Add stock for the component so move lines are created during reservation
+        self.env['stock.quant']._update_available_quantity(
+            product_to_remove, self.stock_location, 1, lot_id=ptremove_lot2
+        )
         mo2_form = Form(self.env['mrp.production'])
         mo2_form.product_id = product_to_repair
         with mo2_form.move_raw_ids.new() as move:

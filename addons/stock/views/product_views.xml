@@ -180,15 +180,16 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
+                <xpath expr="//label[@for='is_storable']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
                 <xpath expr="//div[@name='tracking_and_qty_no_stock']" position="replace">
                     <!-- Replace the single line tacking + qty without stock with 2 individual lines with stock (tracking + tracking method // qty) -->
-                    <div name="tracking_with_stock" class="o_row w-100" invisible="type != 'consu'">
-                        <field name="is_storable"/>
-                    </div>
-                    <field name="tracking" invisible="not is_storable" groups="stock.group_production_lot"/>
+                    <field name="is_storable" groups="!stock.group_production_lot"/>
+                    <field name="tracking" placeholder="None" invisible="type != 'consu'" groups="stock.group_production_lot"/>
                     <!-- Qty line if storable -->
-                    <label for="qty_available" class="oe_inline" invisible="not is_storable" groups="stock.group_stock_user"/>
-                    <div name="qty_available_with_stock" class="o_row" invisible="not is_storable" groups="stock.group_stock_user">
+                    <label for="qty_available" class="oe_inline" invisible="not is_storable or not tracking" groups="stock.group_stock_user"/>
+                    <div name="qty_available_with_stock" class="o_row" invisible="not is_storable or not tracking" groups="stock.group_stock_user">
                         <a type="object" name="action_open_quants"
                            invisible="not show_qty_update_button" groups="stock.group_stock_manager">
                             <field name="qty_available" readonly="True"/>
@@ -219,9 +220,9 @@
                     </group>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="after">
-                    <group string="Traceability" name="traceability" groups="stock.group_production_lot" invisible="tracking == 'none'">
-                        <label for="serial_prefix_format" string="Custom Lot/Serial" invisible="tracking == 'none'"/>
-                        <div class="d-flex" invisible="tracking == 'none'">
+                    <group string="Traceability" name="traceability" groups="stock.group_production_lot" invisible="tracking not in ['lot', 'serial']">
+                        <label for="serial_prefix_format" string="Custom Lot/Serial" invisible="tracking not in ['lot', 'serial']"/>
+                        <div class="d-flex" invisible="tracking not in ['lot', 'serial']">
                             <field name="serial_prefix_format" style="max-width: 150px;"/>
                             <field name="next_serial" style="max-width: 150px;"/>
                         </div>
@@ -391,7 +392,7 @@
                             </button>
                             <button type="object"
                                 name="action_open_product_lot"
-                                invisible="tracking == 'none'"
+                                invisible="tracking not in ['lot', 'serial']"
                                 class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot">
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Lot/Serial Numbers</span>
@@ -514,7 +515,7 @@
                             </button>
                             <button type="object"
                                 name="action_open_product_lot"
-                                invisible="tracking == 'none'"
+                                invisible="tracking not in ['lot', 'serial']"
                                 class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot">
                                 <div class="o_stat_info">
                                     <span class="o_stat_text">Lot/Serial Numbers</span>

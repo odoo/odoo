@@ -41,7 +41,7 @@ class StockMove(models.Model):
         done_moves = self.env['stock.move']
         for move in self:
             if move.is_subcontract:
-                move.is_quantity_done_editable = move.has_tracking == 'none'
+                move.is_quantity_done_editable = move.has_tracking not in ['lot', 'serial']
                 done_moves |= move
         return super(StockMove, self - done_moves)._compute_is_quantity_done_editable()
 
@@ -239,7 +239,7 @@ class StockMove(models.Model):
             productions = move._get_subcontract_production()
             if not productions:
                 continue
-            if move.has_tracking == 'none':
+            if move.has_tracking not in ['lot', 'serial']:
                 if productions.uom_id.compare(productions.product_qty, move.quantity) != 0:
                     self.sudo().env['change.production.qty'].with_context(skip_activity=True).create([{
                         'mo_id': productions.id,

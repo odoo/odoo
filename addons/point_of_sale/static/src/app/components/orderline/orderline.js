@@ -119,7 +119,8 @@ export class Orderline extends Component {
             productImage: this.props.showImage && imageUrl,
             taxGroup: this.props.showTaxGroup && taxGroup,
             price: this.line.currencyDisplayPrice,
-            lotLines: line.product_id.tracking !== "none" && (line.packLotLines || []),
+            lotLines:
+                ["lot", "serial"].includes(line.product_id.tracking) && (line.packLotLines || []),
         };
     }
 }

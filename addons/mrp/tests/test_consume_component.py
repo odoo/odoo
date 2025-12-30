@@ -136,7 +136,7 @@ class TestConsumeComponentCommon(common.TransactionCase):
                 'inventory_quantity': qty,
             }
 
-            if product.tracking != 'none':
+            if product.tracking in ['lot', 'serial']:
                 qDict['lot_id'] = cls.env['stock.lot'].create({
                     'name': name + str(offset + x),
                     'product_id': product.id,
@@ -186,7 +186,6 @@ class TestConsumeComponentCommon(common.TransactionCase):
 
         isSerial = tracking == 'serial'
         isAvailable = all(move.state == 'assigned' for move in mrp_productions.move_raw_ids)
-        isComponentTracking = any(move.has_tracking != 'none' for move in mrp_productions.move_raw_ids)
 
         countOk = True
         length = len(mrp_productions)
@@ -276,7 +275,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         self.executeConsumptionTriggers(mo_lot)
 
         for mov in mo_all.move_raw_ids:
-            if mov.has_tracking == 'none':
+            if mov.has_tracking not in ['lot', 'serial']:
                 self.assertTrue(mov.picked, "components should be picked even without no quantity reserved")
             else:
                 self.assertEqual(mov.product_qty, mov.quantity, "Done quantity shall be equal to To Consume quantity.")
@@ -308,7 +307,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             #  are partially reserved (stock.move state is partially_available)
             mo.action_assign()
             for mov in mo.move_raw_ids:
-                if mov.has_tracking == "none":
+                if mov.has_tracking not in ['lot', 'serial']:
                     self.assertEqual(raw_none_qty, mov.quantity, "Reserved quantity shall be equal to " + str(raw_none_qty) + ".")
                 else:
                     self.assertEqual(raw_tracked_qty, mov.quantity, "Reserved quantity shall be equal to " + str(raw_tracked_qty) + ".")
@@ -322,7 +321,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
                 mo.action_generate_serial()
 
             for mov in mo.move_raw_ids:
-                if mov.has_tracking == "none":
+                if mov.has_tracking not in ['lot', 'serial']:
                     self.assertTrue(mov.picked, "non tracked components should be picked")
                 else:
                     self.assertEqual(mov.product_qty, mov.quantity, "Done quantity shall be equal to To Consume quantity.")

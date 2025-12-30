@@ -23,7 +23,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         product_form = Form(cls.env['product.product'])
         product_form.name = 'Stick'
         product_form.uom_id = cls.uom_unit
-        product_form.is_storable = True
+        product_form.tracking = 'none'
         product_form.route_ids.clear()
         product_form.route_ids.add(cls.route_mto)
         cls.finished_product = product_form.save()
@@ -31,7 +31,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         # Create raw product for manufactured product
         product_form = Form(cls.env['product.product'])
         product_form.name = 'Raw Stick'
-        product_form.is_storable = True
+        product_form.tracking = 'none'
         product_form.uom_id = cls.uom_unit
         cls.raw_product = product_form.save()
 
@@ -419,7 +419,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         # Create an additional BoM for component
         product_form = Form(self.env['product.product'])
         product_form.name = 'Wood'
-        product_form.is_storable = True
+        product_form.tracking = 'none'
         product_form.uom_id = self.uom_unit
         self.wood_product = product_form.save()
 

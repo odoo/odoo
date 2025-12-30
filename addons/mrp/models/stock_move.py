@@ -213,7 +213,8 @@ class StockMove(models.Model):
 
     @api.onchange('product_uom_qty', 'uom_id')
     def _onchange_product_uom_qty(self):
-        if self.uom_id and self.raw_material_production_id and self.has_tracking == 'none'\
+        if self.uom_id and self.raw_material_production_id \
+            and (self.has_tracking not in ['lot', 'serial']) \
             and self.state not in ('draft', 'cancel', 'done'):
             mo = self.raw_material_production_id
             new_qty = self.uom_id.round((mo.qty_producing - mo.qty_produced) * self.unit_factor)
