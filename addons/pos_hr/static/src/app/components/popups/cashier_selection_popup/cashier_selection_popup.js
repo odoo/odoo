@@ -12,14 +12,14 @@ export class CashierSelectionPopup extends Component {
     };
 
     setup() {
+        this.initialLimit = 5;
         this.pos = usePos();
-        this.state = useState({ visibleOptions: 5 });
+        this.state = useState({ showAll: false });
     }
 
     get displayableOptions() {
-        return this.state.visibleOptions
-            ? this.props.employees.slice(0, this.state.visibleOptions)
-            : this.props.employees;
+        const employees = this.props.employees;
+        return this.state.showAll ? employees : employees.slice(0, this.initialLimit);
     }
 
     async lock() {
@@ -28,5 +28,8 @@ export class CashierSelectionPopup extends Component {
     selectEmployee(employee) {
         this.props.getPayload(employee);
         this.props.close();
+    }
+    get displayMoreButton() {
+        return !this.state.showAll && this.props.employees.length > this.initialLimit;
     }
 }
