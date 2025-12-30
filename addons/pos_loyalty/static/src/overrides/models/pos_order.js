@@ -566,19 +566,39 @@ patch(PosOrder.prototype, {
                 }
                 const linesForRule = linesPerRule[rule.id] ? linesPerRule[rule.id] : [];
                 const amountWithTax = linesForRule.reduce(
+<<<<<<< db572d2e9804a9b1d5604e0123dc5394e6a5e340:addons/pos_loyalty/static/src/overrides/models/pos_order.js
                     (sum, line) =>
                         sum +
                         (line.combo_line_ids.length > 0
                             ? line.getComboTotalPrice()
                             : line.get_price_with_tax()),
+||||||| 5ffa422cf15f2ffa15512844abd63d56f9491908:addons/pos_loyalty/static/src/overrides/models/loyalty.js
+                    (sum, line) => sum + (line.comboLines ? line.getComboTotalPrice() : line.get_price_with_tax()),
+=======
+                    (sum, line) =>
+                        sum +
+                        (line.comboLines?.length > 0
+                            ? line.getComboTotalPrice()
+                            : line.get_price_with_tax()),
+>>>>>>> 0f3ad66ce1d23900ee6584f9c29a7dc1ca1b7af6:addons/pos_loyalty/static/src/overrides/models/loyalty.js
                     0
                 );
                 const amountWithoutTax = linesForRule.reduce(
+<<<<<<< db572d2e9804a9b1d5604e0123dc5394e6a5e340:addons/pos_loyalty/static/src/overrides/models/pos_order.js
                     (sum, line) =>
                         sum +
                         (line.combo_line_ids.length > 0
                             ? line.getComboTotalPriceWithoutTax()
                             : line.get_price_without_tax()),
+||||||| 5ffa422cf15f2ffa15512844abd63d56f9491908:addons/pos_loyalty/static/src/overrides/models/loyalty.js
+                    (sum, line) => sum + (line.comboLines ? line.getComboTotalPriceWithoutTax() : line.get_price_without_tax()),
+=======
+                    (sum, line) =>
+                        sum +
+                        (line.comboLines?.length > 0
+                            ? line.getComboTotalPriceWithoutTax()
+                            : line.get_price_without_tax()),
+>>>>>>> 0f3ad66ce1d23900ee6584f9c29a7dc1ca1b7af6:addons/pos_loyalty/static/src/overrides/models/loyalty.js
                     0
                 );
                 const amountCheck =
@@ -619,10 +639,19 @@ patch(PosOrder.prototype, {
                             qtyPerProduct[line._reward_product_id?.id || line.get_product().id] =
                                 lineQty;
                         }
+<<<<<<< db572d2e9804a9b1d5604e0123dc5394e6a5e340:addons/pos_loyalty/static/src/overrides/models/pos_order.js
                         orderedProductPaid +=
                             line.combo_line_ids.length > 0
                                 ? line.getComboTotalPrice()
                                 : line.get_price_with_tax();
+||||||| 5ffa422cf15f2ffa15512844abd63d56f9491908:addons/pos_loyalty/static/src/overrides/models/loyalty.js
+                        orderedProductPaid += line.comboLines ? line.getComboTotalPrice() : line.get_price_with_tax();
+=======
+                        orderedProductPaid +=
+                            line.comboLines?.length > 0
+                                ? line.getComboTotalPrice()
+                                : line.get_price_with_tax();
+>>>>>>> 0f3ad66ce1d23900ee6584f9c29a7dc1ca1b7af6:addons/pos_loyalty/static/src/overrides/models/loyalty.js
                         if (!line.is_reward_line) {
                             totalProductQty += lineQty;
                         }
@@ -983,12 +1012,24 @@ patch(PosOrder.prototype, {
      * @returns the order's cheapest line
      */
     _getCheapestLine() {
+<<<<<<< db572d2e9804a9b1d5604e0123dc5394e6a5e340:addons/pos_loyalty/static/src/overrides/models/pos_order.js
         const filtered_lines = this.get_orderlines().filter(
             (line) => !line.comboParent && !line.reward_id && line.get_quantity
         );
         return filtered_lines.toSorted(
             (lineA, lineB) => lineA.getComboTotalPrice() - lineB.getComboTotalPrice()
         )[0];
+||||||| 5ffa422cf15f2ffa15512844abd63d56f9491908:addons/pos_loyalty/static/src/overrides/models/loyalty.js
+        const filtered_lines = this.get_orderlines().filter((line) => !line.comboParent && !line.reward_id && line.get_quantity);
+        return filtered_lines.toSorted((lineA, lineB) => 
+            lineA.getComboTotalPrice() - lineB.getComboTotalPrice()
+       )[0]
+=======
+        const filtered_lines = this.get_orderlines().filter((line) => !line.comboParent && !line.reward_id && line.get_quantity);
+        return filtered_lines.toSorted((lineA, lineB) =>
+            lineA.getComboTotalPrice() - lineB.getComboTotalPrice()
+       )[0]
+>>>>>>> 0f3ad66ce1d23900ee6584f9c29a7dc1ca1b7af6:addons/pos_loyalty/static/src/overrides/models/loyalty.js
     },
     /**
      * @returns the discountable and discountable per tax for this discount on cheapest reward.
