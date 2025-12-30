@@ -82,6 +82,13 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
                 if c.id != self.desks_combo.id
             ],
         })
+        floor = self.env["restaurant.floor"].create({
+            "name": 'Main Floor',
+            "background_color": 'rgb(249,250,251)',
+            "table_ids": [(0, 0, {
+                "table_number": 1,
+            })],
+        })
 
         # --- Kiosk Mode Tour ---
         self.pos_config.write({
@@ -97,4 +104,4 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
         self.pos_config.write({
             'self_ordering_mode': 'mobile',
         })
-        self.start_tour(self.pos_config._get_self_order_route(), "test_self_order_product_availability")
+        self.start_tour(self.pos_config._get_self_order_route(floor.table_ids[0].id), "test_self_order_product_availability")
