@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError
 
 
@@ -34,19 +34,19 @@ class PaymentTransaction(models.Model):
             if tx and tx.pos_order_id and tx.state in ('authorized', 'done') and not tx.payment_id.pos_order_id:
                 pos_order = tx.pos_order_id
                 if tools.float_compare(tx.amount, 0.0, precision_rounding=pos_order.currency_id.rounding) <= 0:
-                    raise ValidationError(_('The payment transaction (%d) has a negative amount.', tx.id))
+                    raise ValidationError(self.env._('The payment transaction (%d) has a negative amount.', tx.id))
 
                 if not tx.payment_id: # the payment could already have been created by account_payment module
                     tx._create_payment()
                 if not tx.payment_id:
-                    raise ValidationError(_('The POS online payment (tx.id=%d) could not be saved correctly', tx.id))
+                    raise ValidationError(self.env._('The POS online payment (tx.id=%d) could not be saved correctly', tx.id))
 
                 payment_method = pos_order.online_payment_method_id
                 if not payment_method:
                     pos_config = pos_order.config_id
                     payment_method = self.env['pos.payment.method'].sudo()._get_or_create_online_payment_method(pos_config.company_id.id, pos_config.id)
                     if not payment_method:
-                        raise ValidationError(_('The POS online payment (tx.id=%d) could not be saved correctly because the online payment method could not be found', tx.id))
+                        raise ValidationError(self.env._('The POS online payment (tx.id=%d) could not be saved correctly because the online payment method could not be found', tx.id))
 
                 pos_order.add_payment({
                     'amount': tx.amount,
@@ -74,7 +74,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         action = {
-            'name': _("POS Order"),
+            'name': self.env._("POS Order"),
             'type': 'ir.actions.act_window',
             'res_model': 'pos.order',
             'target': 'current',

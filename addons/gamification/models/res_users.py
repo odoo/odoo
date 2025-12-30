@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools import SQL
 
 
@@ -76,7 +76,7 @@ class ResUsers(models.Model):
                 'gain': int(vals['karma']),
                 'old_value': 0,
                 'origin_ref': f'res.users,{self.env.uid}',
-                'reason': _('User Creation'),
+                'reason': self.env._('User Creation'),
             }
             for user, vals in zip(res, vals_list)
             if vals.get('karma')
@@ -108,7 +108,7 @@ class ResUsers(models.Model):
         create_values = []
         for user, values in values_per_user.items():
             origin = values.get('source') or self.env.user
-            reason = values.get('reason') or _('Add Manually')
+            reason = values.get('reason') or self.env._('Add Manually')
             origin_description = f'{origin.display_name} #{origin.id}'
             old_value = values.get('old_value', user.karma)
 
@@ -355,7 +355,7 @@ WHERE sub.user_id IN %s""",
         self.ensure_one()
 
         return {
-            'name': _('Karma Updates'),
+            'name': self.env._('Karma Updates'),
             'res_model': 'gamification.karma.tracking',
             'target': 'current',
             'type': 'ir.actions.act_window',

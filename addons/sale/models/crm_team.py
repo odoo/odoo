@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import SQL
 
@@ -59,7 +59,7 @@ class CrmTeam(models.Model):
     def _compute_dashboard_button_name(self):
         super(CrmTeam,self)._compute_dashboard_button_name()
         if self._in_sale_scope():
-            self.dashboard_button_name = _("Sales Analysis")
+            self.dashboard_button_name = self.env._("Sales Analysis")
 
     def action_primary_channel_button(self):
         if self._in_sale_scope():
@@ -78,7 +78,7 @@ class CrmTeam(models.Model):
         for team in self:
             if team.sale_order_count >= SO_COUNT_TRIGGER:
                 raise UserError(
-                    _('Team %(team_name)s has %(sale_order_count)s active sale orders. Consider cancelling them or archiving the team instead.',
+                    self.env._('Team %(team_name)s has %(sale_order_count)s active sale orders. Consider cancelling them or archiving the team instead.',
                       team_name=team.name,
                       sale_order_count=team.sale_order_count
                       ))

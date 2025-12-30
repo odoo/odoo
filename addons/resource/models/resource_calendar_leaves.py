@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Datetime
 
@@ -76,7 +76,7 @@ class ResourceCalendarLeaves(models.Model):
     @api.constrains('date_from', 'date_to')
     def check_dates(self):
         if self.filtered(lambda leave: leave.date_from > leave.date_to):
-            raise ValidationError(_('The start date of the time off must be earlier than the end date.'))
+            raise ValidationError(self.env._('The start date of the time off must be earlier than the end date.'))
 
     def _copy_leave_vals(self):
         self.ensure_one()

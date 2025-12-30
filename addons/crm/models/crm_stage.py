@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Low'),
@@ -43,8 +43,8 @@ class CrmStage(models.Model):
     def _onchange_is_won(self):
         return {
             'warning': {
-                'title': _("Do you really want to update this stage?"),
-                'message': _("Changing the value of 'Is Won Stage' may induce a large number of operations, "
+                'title': self.env._("Do you really want to update this stage?"),
+                'message': self.env._("Changing the value of 'Is Won Stage' may induce a large number of operations, "
                             "as the probabilities of opportunities in this stage will be recomputed on saving."),
             }
         }

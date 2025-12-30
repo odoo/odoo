@@ -2,7 +2,7 @@
 
 import base64
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 
@@ -39,11 +39,11 @@ class ProductDocument(models.Model):
     def _check_attached_on_and_datas_compatibility(self):
         for doc in self.filtered(lambda doc: doc.attached_on_sale == 'inside'):
             if doc.type != 'binary':
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "When attached inside a quote, the document must be a file, not a URL."
                 ))
             if doc.datas and not doc.mimetype.endswith('pdf'):
-                raise ValidationError(_("Only PDF documents can be attached inside a quote."))
+                raise ValidationError(self.env._("Only PDF documents can be attached inside a quote."))
             if doc.datas:
                 utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))
 
@@ -67,7 +67,7 @@ class ProductDocument(models.Model):
     def action_open_pdf_form_fields(self):
         self.ensure_one()
         return {
-            'name': _('Form Fields'),
+            'name': self.env._('Form Fields'),
             'type': 'ir.actions.act_window',
             'res_model': 'sale.pdf.form.field',
             'view_mode': 'list',

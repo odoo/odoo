@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, html2plaintext
 
@@ -43,9 +43,9 @@ class AccountTax(models.Model):
         for tax in self:
             if tax.country_id.code == 'IT':
                 if tax.amount_type == 'percent' and tax.amount == 0 and not (tax.l10n_it_exempt_reason and html2plaintext(tax.invoice_legal_notes)):
-                    raise ValidationError(_("If the tax amount is 0%, you must enter the exoneration code and the related legal notes."))
+                    raise ValidationError(self.env._("If the tax amount is 0%, you must enter the exoneration code and the related legal notes."))
                 if tax.l10n_it_exempt_reason == 'N6' and tax._l10n_it_is_split_payment():
-                    raise UserError(_("Split Payment is not compatible with exoneration of kind 'N6'"))
+                    raise UserError(self.env._("Split Payment is not compatible with exoneration of kind 'N6'"))
 
     def _l10n_it_filter_kind(self, kind):
         if kind == 'vat':

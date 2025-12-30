@@ -2,8 +2,8 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import SUPERUSER_ID, api, Command, fields, models, _
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo import SUPERUSER_ID, api, Command, fields, models
+from odoo.tools.float_utils import float_compare, float_round
 from odoo.exceptions import UserError
 
 
@@ -191,7 +191,7 @@ class PurchaseOrderLine(models.Model):
                     # inviting the user to create a refund.
                     line.invoice_lines[0].move_id.activity_schedule(
                         'mail.mail_activity_data_warning',
-                        note=_('The quantities on your purchase order indicate less than billed. You should ask for a refund.'),
+                        note=self.env._('The quantities on your purchase order indicate less than billed. You should ask for a refund.'),
                         user_id=self.env.uid,
                     )
 
@@ -294,7 +294,7 @@ class PurchaseOrderLine(models.Model):
         warehouse_loc = self.order_id.picking_type_id.warehouse_id.view_location_id
         dest_loc = self.move_dest_ids.location_id or self.orderpoint_id.location_id
         if warehouse_loc and dest_loc and dest_loc.warehouse_id and not warehouse_loc.parent_path in dest_loc[0].parent_path:
-            raise UserError(_('The warehouse of operation type (%(operation_type)s) is inconsistent with location (%(location)s) of reordering rule (%(reordering_rule)s) for product %(product)s. Change the operation type or cancel the request for quotation.',
+            raise UserError(self.env._('The warehouse of operation type (%(operation_type)s) is inconsistent with location (%(location)s) of reordering rule (%(reordering_rule)s) for product %(product)s. Change the operation type or cancel the request for quotation.',
                               product=self.product_id.display_name, operation_type=self.order_id.picking_type_id.display_name, location=self.orderpoint_id.location_id.display_name, reordering_rule=self.orderpoint_id.display_name))
 
     def _prepare_stock_move_vals(self, picking, price_unit, product_uom_qty, product_uom):

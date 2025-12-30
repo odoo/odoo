@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class PurchaseOrder(models.Model):
@@ -23,7 +23,7 @@ class PurchaseOrder(models.Model):
         if self.repair_count == 1:
             action['res_id'] = repair_ids.id
         elif self.repair_count > 1:
-            action['name'] = _("Repair Source of %s", self.name)
+            action['name'] = self.env._("Repair Source of %s", self.name)
             action['views'] = [[False, 'list']]
             action['domain'] = [('id', 'in', repair_ids.ids)]
         return action

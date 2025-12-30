@@ -3,7 +3,7 @@
 import hashlib
 import hmac
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.addons.portal.utils import validate_thread_with_hash_pid, validate_thread_with_token
 
 
@@ -71,7 +71,7 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         # check token field exists
         if self._mail_post_token_field not in self._fields:
-            raise NotImplementedError(_(
+            raise NotImplementedError(self.env._(
                 "Model %(model_name)s does not support token signature, as it does not have %(field_name)s field.",
                 model_name=self._name,
                 field_name=self._mail_post_token_field

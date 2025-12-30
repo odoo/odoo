@@ -5,7 +5,7 @@ from json import dumps, loads
 import logging
 from collections import defaultdict
 
-from odoo import models, api, fields, release, _
+from odoo import models, api, fields, release
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ class PosConfig(models.Model):
     def open_ui(self):
         for config in self:
             if not config.company_id.country_id:
-                raise UserError(_("You have to set a country in your company setting."))
+                raise UserError(self.env._("You have to set a country in your company setting."))
             if config.company_id._is_accounting_unalterable():
                 if config.current_session_id:
                     config.current_session_id._check_session_timing()
@@ -75,7 +75,7 @@ class PosOrder(models.Model):
             for order in orders:
                 match = prev_map.get(order.l10n_fr_secure_sequence_number - 1, [])
                 if len(match) > 1:
-                    raise UserError(_('An error occurred when computing the inalterability. Impossible to get the unique previous posted point of sale order.'))
+                    raise UserError(self.env._('An error occurred when computing the inalterability. Impossible to get the unique previous posted point of sale order.'))
                 order.previous_order_id = match[0] if match else False
 
     def _get_new_hash(self):
@@ -202,10 +202,10 @@ class PosOrder(models.Model):
                 else:
                     ORDER_FIELDS = ORDER_FIELDS_BEFORE_17_4
                 if (order.state in ['paid', 'done'] and set(vals).intersection(ORDER_FIELDS)):
-                    raise UserError(_('According to the French law, you cannot modify a point of sale order. Forbidden fields: %s.') % ', '.join(ORDER_FIELDS))
+                    raise UserError(self.env._('According to the French law, you cannot modify a point of sale order. Forbidden fields: %s.') % ', '.join(ORDER_FIELDS))
                 # restrict the operation in case we are trying to overwrite existing hash
                 if (order.l10n_fr_hash and 'l10n_fr_hash' in vals) or (order.l10n_fr_secure_sequence_number and 'l10n_fr_secure_sequence_number' in vals):
-                    raise UserError(_('You cannot overwrite the values ensuring the inalterability of the point of sale.'))
+                    raise UserError(self.env._('You cannot overwrite the values ensuring the inalterability of the point of sale.'))
         res = super().write(vals)
         # write the hash and the secure_sequence_number when posting or invoicing a pos order
         if has_been_posted:
@@ -220,7 +220,7 @@ class PosOrder(models.Model):
     def _unlink_except_pos_so(self):
         for order in self:
             if order.company_id._is_accounting_unalterable():
-                raise UserError(_("According to French law, you cannot delete a point of sale order."))
+                raise UserError(self.env._("According to French law, you cannot delete a point of sale order."))
 
 
 class PosOrderLine(models.Model):
@@ -230,5 +230,5 @@ class PosOrderLine(models.Model):
         # restrict the operation in case we are trying to write a forbidden field
         if set(vals).intersection(LINE_FIELDS):
             if any(l.company_id._is_accounting_unalterable() and (l.order_id.account_move or l.order_id.state == 'done') for l in self):
-                raise UserError(_('According to the French law, you cannot modify a point of sale order line. Forbidden fields: %s.') % ', '.join(LINE_FIELDS))
+                raise UserError(self.env._('According to the French law, you cannot modify a point of sale order line. Forbidden fields: %s.') % ', '.join(LINE_FIELDS))
         return super(PosOrderLine, self).write(vals)

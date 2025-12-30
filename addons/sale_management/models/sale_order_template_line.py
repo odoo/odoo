@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -117,7 +117,7 @@ class SaleOrderTemplateLine(models.Model):
 
     def write(self, vals):
         if 'display_type' in vals and self.filtered(lambda line: line.display_type != vals.get('display_type')):
-            raise UserError(_("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."))
+            raise UserError(self.env._("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."))
         return super().write(vals)
 
     #=== BUSINESS METHODS ===#

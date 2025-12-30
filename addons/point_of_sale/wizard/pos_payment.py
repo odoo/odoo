@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import fields, models
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 
@@ -49,7 +49,7 @@ class PosMakePayment(models.TransientModel):
 
         order = self.env['pos.order'].browse(self.env.context.get('active_id', False))
         if self.payment_method_id.split_transactions and not order.partner_id:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "Customer is required for %s payment method.",
                 self.payment_method_id.name
             ))
@@ -77,7 +77,7 @@ class PosMakePayment(models.TransientModel):
 
     def launch_payment(self):
         return {
-            'name': _('Payment'),
+            'name': self.env._('Payment'),
             'view_mode': 'form',
             'res_model': 'pos.make.payment',
             'view_id': False,

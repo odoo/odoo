@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import models
 from odoo.exceptions import AccessError
 
 
@@ -16,5 +16,5 @@ class ResUsersApikeysDescription(models.TransientModel):
                 if self.env.user._is_portal():
                     return
                 else:
-                    raise AccessError(_("Only internal and portal users can create API keys"))
+                    raise AccessError(self.env._("Only internal and portal users can create API keys"))
             raise

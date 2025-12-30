@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from ast import literal_eval
 
 
@@ -29,7 +29,7 @@ class ProjectTaskTypeDeleteWizard(models.TransientModel):
             return self.action_confirm()
 
         return {
-            'name': _('Confirmation'),
+            'name': self.env._('Confirmation'),
             'view_mode': 'form',
             'res_model': 'project.task.type.delete.wizard',
             'views': [(self.env.ref('project.view_project_task_type_delete_confirmation_wizard').id, 'form')],

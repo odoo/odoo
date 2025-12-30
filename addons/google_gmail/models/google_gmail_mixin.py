@@ -8,7 +8,7 @@ import requests
 
 from werkzeug.urls import url_encode
 
-from odoo import _, fields, models, tools, release
+from odoo import fields, models, tools, release
 from odoo.exceptions import AccessError, UserError
 from odoo.tools.urls import urljoin as url_join
 from odoo.addons.google_gmail.tools import get_iap_error_message
@@ -76,11 +76,11 @@ class GoogleGmailMixin(models.AbstractModel):
         self.ensure_one()
 
         if not self.env.is_admin():
-            raise AccessError(_('Only the administrator can link a Gmail mail server.'))
+            raise AccessError(self.env._('Only the administrator can link a Gmail mail server.'))
 
         email_normalized = tools.email_normalize(self[self._email_field])
         if not email_normalized:
-            raise UserError(_('Please enter a valid email address.'))
+            raise UserError(self.env._('Please enter a valid email address.'))
 
         Config = self.env['ir.config_parameter'].sudo()
         google_gmail_client_id = Config.get_str('google_gmail_client_id')
@@ -89,7 +89,7 @@ class GoogleGmailMixin(models.AbstractModel):
 
         if not is_configured:  # use IAP (see '/google_gmail/iap_confirm')
             if release.version_info[-1] != 'e':
-                raise UserError(_('Please configure your Gmail credentials.'))
+                raise UserError(self.env._('Please configure your Gmail credentials.'))
 
             gmail_iap_endpoint = self.env['ir.config_parameter'].sudo().get_str(
                 'mail.server.gmail.iap.endpoint',
@@ -114,7 +114,7 @@ class GoogleGmailMixin(models.AbstractModel):
                 response.raise_for_status()
             except requests.exceptions.RequestException as e:
                 _logger.error('Can not contact IAP: %s.', e)
-                raise UserError(_('Oops, we could not authenticate you. Please try again later.'))
+                raise UserError(self.env._('Oops, we could not authenticate you. Please try again later.'))
 
             response = response.json()
             if 'error' in response:
@@ -127,7 +127,7 @@ class GoogleGmailMixin(models.AbstractModel):
             google_gmail_uri = self.google_gmail_uri
 
         if not google_gmail_uri:
-            raise UserError(_('Please configure your Gmail credentials.'))
+            raise UserError(self.env._('Please configure your Gmail credentials.'))
 
         return {
             'type': 'ir.actions.act_url',
@@ -195,7 +195,7 @@ class GoogleGmailMixin(models.AbstractModel):
         )
 
         if not response.ok:
-            raise UserError(_('An error occurred when fetching the access token.'))
+            raise UserError(self.env._('An error occurred when fetching the access token.'))
 
         return response.json()
 
@@ -220,7 +220,7 @@ class GoogleGmailMixin(models.AbstractModel):
 
         if not response.ok:
             _logger.error('Can not contact IAP: %s.', response.text)
-            raise UserError(_('Oops, we could not authenticate you. Please try again later.'))
+            raise UserError(self.env._('Oops, we could not authenticate you. Please try again later.'))
 
         response = response.json()
         if 'error' in response:

@@ -4,7 +4,7 @@ from datetime import datetime
 
 from dateutil import relativedelta
 
-from odoo import SUPERUSER_ID, Command, _, api, fields, models
+from odoo import SUPERUSER_ID, Command, api, fields, models
 
 
 class PaymentTransaction(models.Model):
@@ -239,7 +239,7 @@ class PaymentTransaction(models.Model):
     @api.readonly
     def action_view_sales_orders(self):
         action = {
-            'name': _('Sales Order(s)'),
+            'name': self.env._('Sales Order(s)'),
             'type': 'ir.actions.act_window',
             'res_model': 'sale.order',
             'target': 'current',

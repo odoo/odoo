@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -50,7 +50,7 @@ class SaleOrderLine(models.Model):
     @api.constrains('event_booth_registration_ids')
     def _check_event_booth_registration_ids(self):
         if len(self.event_booth_registration_ids.event_booth_id.event_id) > 1:
-            raise ValidationError(_('Registrations from the same Order Line must belong to a single event.'))
+            raise ValidationError(self.env._('Registrations from the same Order Line must belong to a single event.'))
 
     @api.onchange('product_id')
     def _onchange_product_id_booth(self):
@@ -78,7 +78,7 @@ class SaleOrderLine(models.Model):
                 unavailable = so_line.event_booth_pending_ids.filtered(lambda booth: not booth.is_available)
                 if unavailable:
                     raise ValidationError(
-                        _('The following booths are unavailable, please remove them to continue : %(booth_names)s',
+                        self.env._('The following booths are unavailable, please remove them to continue : %(booth_names)s',
                           booth_names=''.join('\n\t- %s' % booth.display_name for booth in unavailable)))
                 so_line.event_booth_registration_ids.sudo().action_confirm()
             if so_line.event_booth_ids and set_paid:

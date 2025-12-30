@@ -7,7 +7,7 @@ import uuid
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import float_is_zero
 
@@ -289,7 +289,7 @@ class SurveyUser_Input(models.Model):
             ('question_id', '=', question.id)
         ])
         if old_answers and not overwrite_existing:
-            raise UserError(_("This answer cannot be overwritten."))
+            raise UserError(self.env._("This answer cannot be overwritten."))
 
         if question.question_type in ['char_box', 'text_box', 'scale', 'numerical_box', 'date', 'datetime']:
             self._save_line_simple_answer(question, old_answers, answer)
@@ -443,7 +443,7 @@ class SurveyUser_Input(models.Model):
             if question.question_type in ['simple_choice', 'multiple_choice']:
                 question_correct_suggested_answers = question.suggested_answer_ids.filtered(lambda answer: answer.is_correct)
 
-            question_section = question.page_id.title or _('Uncategorized')
+            question_section = question.page_id.title or self.env._('Uncategorized')
             for user_input in self:
                 user_input_lines = user_input.user_input_line_ids.filtered(lambda line:
                     line.question_id == question and (line.answer_type != 'char_box' or question.comment_count_as_answer))
@@ -479,10 +479,10 @@ class SurveyUser_Input(models.Model):
                 skipped_count += section_counts.get('skipped', 0)
 
             res[user_input]['totals'] = [
-                {'text': _("Correct"), 'count': correct_count},
-                {'text': _("Partially"), 'count': partial_count},
-                {'text': _("Incorrect"), 'count': incorrect_count},
-                {'text': _("Unanswered"), 'count': skipped_count}
+                {'text': self.env._("Correct"), 'count': correct_count},
+                {'text': self.env._("Partially"), 'count': partial_count},
+                {'text': self.env._("Incorrect"), 'count': incorrect_count},
+                {'text': self.env._("Unanswered"), 'count': skipped_count}
             ]
 
         return res
@@ -706,13 +706,13 @@ class SurveyUser_Input(models.Model):
         for user_input in self.filtered(lambda user_input_: user_input_.survey_id.id in followed_survey_ids):
             survey_title = user_input.survey_id.title
             if user_input.partner_id:
-                body = _(
+                body = self.env._(
                     '%(participant)s just participated in "%(survey_title)s".',
                     participant=user_input.partner_id.display_name,
                     survey_title=survey_title,
                 )
             else:
-                body = _('Someone just participated in "%(survey_title)s".', survey_title=survey_title)
+                body = self.env._('Someone just participated in "%(survey_title)s".', survey_title=survey_title)
 
             user_input.message_post(author_id=author_id, body=body, subtype_xmlid='survey.mt_survey_user_input_completed')
 
@@ -778,7 +778,7 @@ class SurveyUser_InputLine(models.Model):
                     line.display_name = line.suggested_answer_id.value
 
             if not line.display_name:
-                line.display_name = _('Skipped')
+                line.display_name = self.env._('Skipped')
 
     @api.depends('answer_type', 'value_text_box', 'value_numerical_box', 'value_date', 'value_datetime',
                  'suggested_answer_id', 'user_input_id')
@@ -847,7 +847,7 @@ class SurveyUser_InputLine(models.Model):
     def _check_answer_type_skipped(self):
         for line in self:
             if (line.skipped == bool(line.answer_type)):
-                raise ValidationError(_('A question can either be skipped or answered, not both.'))
+                raise ValidationError(self.env._('A question can either be skipped or answered, not both.'))
 
             # allow 0 for numerical box and scale
             if line.answer_type == 'numerical_box' and float_is_zero(line['value_numerical_box'], precision_digits=6):
@@ -863,7 +863,7 @@ class SurveyUser_InputLine(models.Model):
                 field_name = False
 
             if field_name and not line[field_name]:
-                raise ValidationError(_('The answer must be in the right type'))
+                raise ValidationError(self.env._('The answer must be in the right type'))
 
     def _get_answer_matching_domain(self):
         self.ensure_one()

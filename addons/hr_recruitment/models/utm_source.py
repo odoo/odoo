@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 
 from odoo.exceptions import UserError
 
@@ -17,7 +17,7 @@ class UtmSource(models.Model):
         ])
 
         if linked_recruitment_sources:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "You cannot delete these UTM Sources as they are linked to the following recruitment sources in "
                 "Recruitment:\n%(recruitment_sources)s",
                 recruitment_sources=', '.join(['"%s"' % name for name in linked_recruitment_sources.job_id.mapped('name')])))

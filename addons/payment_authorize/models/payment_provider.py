@@ -3,7 +3,7 @@
 import json
 import pprint
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 
@@ -53,7 +53,7 @@ class PaymentProvider(models.Model):
         for provider in self.filtered(lambda p: p.code == 'authorize'):
             if len(provider.available_currency_ids) > 1 and provider.state != 'disabled':
                 raise ValidationError(
-                    _("Only one currency can be selected by Authorize.Net account.")
+                    self.env._("Only one currency can be selected by Authorize.Net account.")
                 )
 
     # === COMPUTE METHODS === #
@@ -83,7 +83,7 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         if self.state == 'disabled':
-            raise UserError(_("This action cannot be performed while the provider is disabled."))
+            raise UserError(self.env._("This action cannot be performed while the provider is disabled."))
 
         authorize_API = AuthorizeAPI(self)
 
@@ -91,13 +91,13 @@ class PaymentProvider(models.Model):
         res_content = authorize_API.test_authenticate()
         _logger.info("test_authenticate request response:\n%s", pprint.pformat(res_content))
         if res_content.get('err_msg'):
-            raise UserError(_("Failed to authenticate.\n%s", res_content['err_msg']))
+            raise UserError(self.env._("Failed to authenticate.\n%s", res_content['err_msg']))
 
         # Update the merchant details
         res_content = authorize_API.merchant_details()
         _logger.info("merchant_details request response:\n%s", pprint.pformat(res_content))
         if res_content.get('err_msg'):
-            raise UserError(_("Could not fetch merchant details:\n%s", res_content['err_msg']))
+            raise UserError(self.env._("Could not fetch merchant details:\n%s", res_content['err_msg']))
 
         currency = self.env['res.currency'].search([('name', 'in', res_content.get('currencies'))])
         self.available_currency_ids = [Command.set(currency.ids)]

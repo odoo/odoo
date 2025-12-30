@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class MrpProduction(models.Model):
@@ -20,7 +20,7 @@ class MrpProduction(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'account.analytic.account',
             'domain': [('id', 'in', self.project_id._get_analytic_accounts().ids)],
-            'name': _('Analytic Accounts'),
+            'name': self.env._('Analytic Accounts'),
             'view_mode': 'list,form',
         }
 

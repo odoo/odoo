@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, api, _
+from odoo import models, api
 from odoo.exceptions import UserError
 
 
@@ -11,7 +11,7 @@ class ResPartner(models.Model):
         consumidor_final_anonimo = self.env.ref('l10n_ar.par_cfa').id
         for partner in self.ids:
             if partner == consumidor_final_anonimo:
-                raise UserError(_('Deleting this partner is not allowed.'))
+                raise UserError(self.env._('Deleting this partner is not allowed.'))
 
     @api.model
     def _load_pos_data_fields(self, config):

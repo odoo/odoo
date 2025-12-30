@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -29,7 +29,7 @@ class SlideQuestion(models.Model):
             if question.answers_validation_error
         ]
         if questions_to_fix:
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 'All questions must have at least one correct answer and one incorrect answer: \n%s\n',
                 '\n'.join(questions_to_fix)))
 
@@ -54,7 +54,7 @@ class SlideQuestion(models.Model):
     def _compute_answers_validation_error(self):
         for question in self:
             correct = question.answer_ids.filtered('is_correct')
-            question.answers_validation_error = _(
+            question.answers_validation_error = self.env._(
                 'This question must have at least one correct answer and one incorrect answer.'
             ) if not correct or correct == question.answer_ids else ''
 

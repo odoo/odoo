@@ -9,7 +9,7 @@ from binascii import Error as binascii_error
 from collections import defaultdict
 from lxml import html
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import api, fields, models, modules, tools
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Command, Domain
 from odoo.tools import clean_context, groupby, SQL
@@ -532,7 +532,7 @@ class MailMessage(models.Model):
                 """, self.ids,
             )
         else:
-            raise ValueError(_('Wrong operation name (%s)', operation))
+            raise ValueError(self.env._('Wrong operation name (%s)', operation))
 
         # trick: messages_to_check doesn't contain missing records from messages
         messages_to_check = {
@@ -632,7 +632,7 @@ class MailMessage(models.Model):
         return forbidden
 
     def _make_access_error(self, operation: str) -> AccessError:
-        return AccessError(_(
+        return AccessError(self.env._(
             "The requested operation cannot be completed due to security restrictions. "
             "Please contact your system administrator.\n\n"
             "(Document type: %(type)s, Operation: %(operation)s)\n\n"
@@ -796,7 +796,7 @@ class MailMessage(models.Model):
             vals.pop('email_from', None)
         record_changed = 'model' in vals or 'res_id' in vals
         if record_changed and not self.env.is_system():
-            raise AccessError(_("Only administrators can modify 'model' and 'res_id' fields."))
+            raise AccessError(self.env._("Only administrators can modify 'model' and 'res_id' fields."))
         if record_changed or 'message_type' in vals:
             self._invalidate_documents()
         res = super().write(vals)
@@ -831,7 +831,7 @@ class MailMessage(models.Model):
 
     def export_data(self, fields_to_export):
         if not self.env.is_admin():
-            raise AccessError(_("Only administrators are allowed to export mail message"))
+            raise AccessError(self.env._("Only administrators are allowed to export mail message"))
 
         return super().export_data(fields_to_export)
 

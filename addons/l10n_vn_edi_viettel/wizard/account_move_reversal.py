@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -56,7 +56,7 @@ class AccountMoveReversal(models.TransientModel):
             if move.l10n_vn_edi_invoice_symbol.name.startswith('C'):
                 invoice_lookup, _error_message = move._l10n_vn_edi_lookup_invoice()
                 if 'result' in invoice_lookup and invoice_lookup['result'][0].get('exchangeStatus') != 'INVOICE_HAS_CODE_APPROVED':
-                    raise UserError(_('You cannot adjust/replace invoice %s, it has not been approved by the tax authorities.\n'
+                    raise UserError(self.env._('You cannot adjust/replace invoice %s, it has not been approved by the tax authorities.\n'
                                       'Please cancel/reverse it and create a new invoice instead.', move.name))
 
             # Makes sure to keep the original status up to date by tagging them by either replaced, or adjusted.

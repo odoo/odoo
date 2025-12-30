@@ -5,7 +5,7 @@ from collections import deque
 
 from werkzeug.datastructures import FileStorage
 
-from odoo import http, _
+from odoo import http
 from odoo.http import content_disposition, request
 from odoo.tools import osutil
 
@@ -85,7 +85,7 @@ class TableExporter(http.Controller):
 
         workbook.close()
         xlsx_data = output.getvalue()
-        filename = osutil.clean_filename(_("Pivot %(title)s (%(model_name)s)", title=jdata['title'], model_name=jdata['model']))
+        filename = osutil.clean_filename(self.env._("Pivot %(title)s (%(model_name)s)", title=jdata['title'], model_name=jdata['model']))
         response = request.make_response(xlsx_data,
             headers=[('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
                     ('Content-Disposition', content_disposition(filename + '.xlsx'))],

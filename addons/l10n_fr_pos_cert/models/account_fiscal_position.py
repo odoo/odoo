@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -11,7 +11,7 @@ class AccountFiscalPosition(models.Model):
         if "tax_ids" in vals:
             if self.env["pos.order"].sudo().search_count([("fiscal_position_id", "in", self.ids)]):
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot modify a fiscal position used in a POS order. "
                         "You should archive it and create a new one."
                     )

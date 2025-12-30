@@ -3,7 +3,7 @@
 from lxml import etree
 from markupsafe import Markup
 
-from odoo import api, models, _
+from odoo import api, models
 from odoo.addons.website.tools import add_form_signature
 
 
@@ -14,9 +14,9 @@ class IrQwebFieldContact(models.AbstractModel):
     def get_available_options(self):
         options = super().get_available_options()
         options.update(
-            website_description=dict(type='boolean', string=_('Display the website description')),
-            UserBio=dict(type='boolean', string=_('Display the biography')),
-            badges=dict(type='boolean', string=_('Display the badges'))
+            website_description=dict(type='boolean', string=self.env._('Display the website description')),
+            UserBio=dict(type='boolean', string=self.env._('Display the biography')),
+            badges=dict(type='boolean', string=self.env._('Display the badges'))
         )
         return options
 

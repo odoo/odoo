@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 
 from werkzeug.exceptions import NotFound
 
-from odoo import http, _
+from odoo import http
 from odoo.http import content_disposition, request
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
@@ -66,7 +66,7 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/loader/<int:channel_id>', type='http', auth='public')
     def loader(self, channel_id, **kwargs):
-        username = kwargs.get("username", _("Visitor"))
+        username = kwargs.get("username", self.env._("Visitor"))
         channel = request.env['im_livechat.channel'].sudo().browse(channel_id)
         info = channel.get_livechat_info(username=username)
         return request.render('im_livechat.loader', {'info': info}, headers=[('Content-Type', 'application/javascript')])
@@ -76,7 +76,7 @@ class LivechatController(http.Controller):
         return {}, {}
 
     def _get_guest_name(self):
-        return _("Visitor")
+        return self.env._("Visitor")
 
     @http.route('/im_livechat/get_session', methods=["POST"], type="jsonrpc", auth='public')
     @add_guest_to_context

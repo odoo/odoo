@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -12,7 +12,7 @@ class IrAttachment(models.Model):
         '''
         restricted_moves = self._get_posted_pdf_moves_to_check().filtered(lambda move: move.country_code == 'SA' and move.state == 'posted')
         if restricted_moves:
-            raise UserError(_("The Invoice PDF(s) cannot be deleted according to ZATCA rules: %s", ', '.join(restricted_moves.mapped('invoice_pdf_report_id.name'))))
+            raise UserError(self.env._("The Invoice PDF(s) cannot be deleted according to ZATCA rules: %s", ', '.join(restricted_moves.mapped('invoice_pdf_report_id.name'))))
 
     def _get_posted_pdf_moves_to_check(self):
         '''

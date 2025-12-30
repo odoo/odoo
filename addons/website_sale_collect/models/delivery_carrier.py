@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request
@@ -24,7 +24,7 @@ class DeliveryCarrier(models.Model):
             and not dm.warehouse_ids
         )):
             raise ValidationError(
-                _("The delivery method must have at least one warehouse to be published.")
+                self.env._("The delivery method must have at least one warehouse to be published.")
             )
 
     @api.constrains('delivery_type', 'company_id', 'warehouse_ids')
@@ -34,7 +34,7 @@ class DeliveryCarrier(models.Model):
                 wh.company_id and dm.company_id != wh.company_id for wh in dm.warehouse_ids
             ):
                 raise ValidationError(
-                    _("The delivery method and a warehouse must share the same company")
+                    self.env._("The delivery method and a warehouse must share the same company")
                 )
 
     @api.model_create_multi

@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, api, _
+from odoo import models, api
 
 
 class AccountPayment(models.Model):
@@ -10,4 +10,4 @@ class AccountPayment(models.Model):
         # OVERRIDE
         super()._compute_payment_receipt_title()
         for payment in self.filtered(lambda p: p.country_code == 'AU' and p.partner_type == 'supplier'):
-            payment.payment_receipt_title = _('Remittance Advice')
+            payment.payment_receipt_title = self.env._('Remittance Advice')

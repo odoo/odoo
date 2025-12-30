@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class ApplicantSendMail(models.TransientModel):
@@ -26,7 +26,7 @@ class ApplicantSendMail(models.TransientModel):
                 'tag': 'display_notification',
                 'params': {
                     'type': 'danger',
-                    'message': _("The following applicants are missing an email address: %s.", ', '.join(without_emails.mapped(lambda a: a.partner_name or a.display_name))),
+                    'message': self.env._("The following applicants are missing an email address: %s.", ', '.join(without_emails.mapped(lambda a: a.partner_name or a.display_name))),
                 }
             }
 

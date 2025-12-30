@@ -2,8 +2,7 @@
 
 import logging
 
-from odoo import _, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo import fields, models
 
 
 _logger = logging.getLogger(__name__)
@@ -135,7 +134,7 @@ class PaymentTransaction(models.Model):
         elif state == 'cancel':
             self._set_canceled()
         else:  # Simulate an error state.
-            self._set_error(_("You selected the following demo payment status: %s", state))
+            self._set_error(self.env._("You selected the following demo payment status: %s", state))
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

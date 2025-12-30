@@ -1,4 +1,4 @@
-from odoo import _, models, tools
+from odoo import models, tools
 from odoo.tools import html2plaintext
 
 DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID = '320'
@@ -57,9 +57,9 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
             partner = vals[partner_type]
             building_number = tools.street_split(partner.street).get('street_number')
             if not building_number:
-                constraints[f"oioubl21_{partner_type}_building_number_required"] = _("The following partner's street number is missing: %s", partner.display_name)
+                constraints[f"oioubl21_{partner_type}_building_number_required"] = self.env._("The following partner's street number is missing: %s", partner.display_name)
             if partner.country_code == "FR" and not partner.commercial_partner_id.company_registry:
-                constraints["oioubl21_company_registry_required_for_french_partner"] = _("The company registry is required for french partner: %s", partner.display_name)
+                constraints["oioubl21_company_registry_required_for_french_partner"] = self.env._("The company registry is required for french partner: %s", partner.display_name)
             constraints[f'oioubl21_{partner_type}_vat_required'] = self._check_required_fields(partner.commercial_partner_id, 'vat')
         constraints['oioubl21_supplier_company_registry_required'] = self._check_required_fields(vals['supplier'], 'company_registry')
 

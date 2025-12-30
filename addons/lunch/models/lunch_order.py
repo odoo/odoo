@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Domain
@@ -141,8 +141,8 @@ class LunchOrder(models.Model):
     @api.constrains('topping_ids_1', 'topping_ids_2', 'topping_ids_3')
     def _check_topping_quantity(self):
         errors = {
-            '1_more': _('You should order at least one %s'),
-            '1': _('You have to order one and only one %s'),
+            '1_more': self.env._('You should order at least one %s'),
+            '1': self.env._('You have to order one and only one %s'),
         }
         for line in self:
             for index in range(1, 4):
@@ -254,14 +254,14 @@ class LunchOrder(models.Model):
         self.env.flush_all()
         for line in self:
             if self.env['lunch.cashmove'].get_wallet_balance(line.user_id) < 0:
-                raise ValidationError(_('Oh no! You don’t have enough money in your wallet to order your selected lunch! Contact your lunch manager to add some money to your wallet.'))
+                raise ValidationError(self.env._('Oh no! You don’t have enough money in your wallet to order your selected lunch! Contact your lunch manager to add some money to your wallet.'))
 
     def action_order(self):
         for order in self:
             if not order.available_on_date:
-                raise UserError(_('The vendor related to this order is not available at the selected date.'))
+                raise UserError(self.env._('The vendor related to this order is not available at the selected date.'))
         if self.filtered(lambda line: not line.product_id.active):
-            raise ValidationError(_('Product is no longer available.'))
+            raise ValidationError(self.env._('Product is no longer available.'))
         self.write({
             'state': 'ordered',
         })
@@ -270,7 +270,7 @@ class LunchOrder(models.Model):
     def action_reorder(self):
         self.ensure_one()
         if not self.supplier_id.available_today:
-            raise UserError(_('The vendor related to this order is not available today.'))
+            raise UserError(self.env._('The vendor related to this order is not available today.'))
         self.copy({
             'date': fields.Date.context_today(self),
             'state': 'ordered',
@@ -304,7 +304,7 @@ class LunchOrder(models.Model):
             _key = (order.company_id, user.lang)
             if _key not in translate_cache:
                 context = {'lang': user.lang}
-                translate_cache[_key] = (_('Lunch notification'), order.company_id.with_context(lang=user.lang).lunch_notify_message)
+                translate_cache[_key] = (self.env._('Lunch notification'), order.company_id.with_context(lang=user.lang).lunch_notify_message)
                 del context
             subject, body = translate_cache[_key]
             user.partner_id.message_notify(

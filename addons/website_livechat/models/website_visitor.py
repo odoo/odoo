@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import api, Command, fields, models, _
+from odoo import api, Command, fields, models
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
 from odoo.tools import get_lang
@@ -55,11 +55,11 @@ class WebsiteVisitor(models.Model):
             [("livechat_visitor_id", "in", self.ids), ("livechat_end_dt", "=", False)]
         )
         if unavailable_visitors_count:
-            raise UserError(_('Recipients are not available. Please refresh the page to get latest visitors status.'))
+            raise UserError(self.env._('Recipients are not available. Please refresh the page to get latest visitors status.'))
         # check if user is available as operator
         for website in self.mapped('website_id'):
             if not website.channel_id:
-                raise UserError(_('No Livechat Channel allows you to send a chat request for website %s.', website.name))
+                raise UserError(self.env._('No Livechat Channel allows you to send a chat request for website %s.', website.name))
         self.website_id.channel_id.write({'user_ids': [(4, self.env.user.id)]})
         # Create chat_requests and linked discuss_channels
         discuss_channel_vals_list = []
@@ -84,7 +84,7 @@ class WebsiteVisitor(models.Model):
                     {
                         "country_id": country.id,
                         "lang": get_lang(self.env).code,
-                        "name": _("Visitor #%d", visitor.id),
+                        "name": self.env._("Visitor #%d", visitor.id),
                         "timezone": visitor.timezone,
                     }
                 )

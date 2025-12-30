@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 
 
 class MailGroupMessageReject(models.TransientModel):
@@ -19,7 +19,7 @@ class MailGroupMessageReject(models.TransientModel):
     @api.depends('mail_group_message_id')
     def _compute_subject(self):
         for wizard in self:
-            wizard.subject = _('Re: %s', wizard.mail_group_message_id.subject or '')
+            wizard.subject = self.env._('Re: %s', wizard.mail_group_message_id.subject or '')
 
     @api.depends('body')
     def _compute_send_email(self):

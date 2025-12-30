@@ -4,7 +4,7 @@ import logging
 import requests
 import uuid
 
-from odoo import models, fields, _
+from odoo import models, fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import Stream
 
@@ -37,7 +37,7 @@ class IrAttachment(models.Model):
         super()._post_add_create(**kwargs)
         if kwargs.get('cloud_storage'):
             if not self.env['ir.config_parameter'].sudo().get_str('cloud_storage_provider'):
-                raise UserError(_('Cloud Storage is not enabled'))
+                raise UserError(self.env._('Cloud Storage is not enabled'))
             for record in self:
                 record.write({
                     'raw': False,
@@ -52,7 +52,7 @@ class IrAttachment(models.Model):
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         if response.status_code != 200:
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 "Failed to download attachment (%(id)s) from cloud: %(code)s - %(reason)s",
                 id=self.id, code=response.status_code, reason=response.reason,
             ))

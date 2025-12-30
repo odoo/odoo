@@ -3,8 +3,8 @@
 
 from collections import defaultdict, OrderedDict
 
-from odoo import _, api, models
-from odoo.tools import float_compare, float_is_zero, format_date
+from odoo import api, models
+from odoo.tools import format_date
 
 
 class ReportStockReport_Reception(models.AbstractModel):
@@ -30,10 +30,10 @@ class ReportStockReport_Reception(models.AbstractModel):
         # unsupported cases
         doc_types = self._get_doc_types()
         if not docs:
-            msg = _("No %s selected or a delivery order selected", doc_types)
+            msg = self.env._("No %s selected or a delivery order selected", doc_types)
         elif 'done' in doc_states and len(set(doc_states)) > 1:
             docs = False
-            msg = _("This report cannot be used for done and not done %s at the same time", doc_types)
+            msg = self.env._("This report cannot be used for done and not done %s at the same time", doc_types)
         if not docs:
             return {'pickings': False, 'reason': msg}
 

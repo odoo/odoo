@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -115,11 +115,11 @@ class FleetVehicleModel(models.Model):
         context = {'default_model_id': self.id}
         if self.vehicle_count:
             view_mode = 'kanban,list,form'
-            name = _('Vehicles')
+            name = self.env._('Vehicles')
             context['search_default_model_id'] = self.id
         else:
             view_mode = 'form'
-            name = _('Vehicle')
+            name = self.env._('Vehicle')
         view = {
             'type': 'ir.actions.act_window',
             'view_mode': view_mode,

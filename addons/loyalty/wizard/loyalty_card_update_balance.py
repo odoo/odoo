@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -20,7 +20,7 @@ class LoyaltyCardUpdateBalance(models.TransientModel):
     def action_update_card_point(self):
         if self.old_balance == self.new_balance or self.new_balance < 0:
             raise ValidationError(
-                _("New Balance should be positive and different then old balance.")
+                self.env._("New Balance should be positive and different then old balance.")
             )
         difference = self.new_balance - self.old_balance
         used = 0
@@ -32,7 +32,7 @@ class LoyaltyCardUpdateBalance(models.TransientModel):
 
         self.env['loyalty.history'].create({
             'card_id': self.card_id.id,
-            'description': self.description or _("Gift for customer"),
+            'description': self.description or self.env._("Gift for customer"),
             'used': used,
             'issued': issued,
         })

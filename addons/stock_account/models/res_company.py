@@ -1,7 +1,7 @@
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.fields import Domain
 from odoo.exceptions import UserError
 
@@ -57,7 +57,7 @@ class ResCompany(models.Model):
 
         if not aml_vals_list:
             # No account moves to create, so nothing to display.
-            raise UserError(_("Everything is correctly closed"))
+            raise UserError(self.env._("Everything is correctly closed"))
         if not self.account_stock_journal_id:
             raise UserError(self.env._("Please set the Journal for Inventory Valuation in the settings."))
         if not self.account_stock_valuation_id:
@@ -66,7 +66,7 @@ class ResCompany(models.Model):
         moves_vals = {
             'journal_id': self.account_stock_journal_id.id,
             'date': at_date or fields.Date.today(),
-            'ref': _('Stock Closing'),
+            'ref': self.env._('Stock Closing'),
             'inventory_closing': True,
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
         }
@@ -76,7 +76,7 @@ class ResCompany(models.Model):
 
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Journal Items"),
+            'name': self.env._("Journal Items"),
             'res_model': 'account.move',
             'res_id': account_move.id,
             'views': [(False, 'form')],
@@ -214,7 +214,7 @@ class ResCompany(models.Model):
                 location_account,
                 stock_account,
                 balance,
-                _('Closing: Location Reclassification - [%(account)s]', account=location_account.display_name),
+                self.env._('Closing: Location Reclassification - [%(account)s]', account=location_account.display_name),
             )
             amls_vals_list += amls_vals
         return amls_vals_list
@@ -246,7 +246,7 @@ class ResCompany(models.Model):
                 account,
                 account_variation,
                 balance,
-                _('Closing: Stock Variation Global for company [%(company)s]', company=self.display_name),
+                self.env._('Closing: Stock Variation Global for company [%(company)s]', company=self.display_name),
             )
             amls_vals_list += amls_vals
 
@@ -294,7 +294,7 @@ class ResCompany(models.Model):
                 expense_acc,
                 variation_acc,
                 balance_over_period,
-                _('Closing: Stock Variation Over Period'),
+                self.env._('Closing: Stock Variation Over Period'),
             )
             amls_vals_list += amls_vals
 

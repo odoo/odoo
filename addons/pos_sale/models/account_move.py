@@ -1,4 +1,4 @@
-from odoo import models, _
+from odoo import models
 
 
 class AccountMove(models.Model):
@@ -10,7 +10,7 @@ class AccountMove(models.Model):
                 for pos_order_line in invoice.pos_order_ids.mapped('lines'):
                     if pos_order_line.sale_order_line_id:
                         if isCancelled and "(Cancelled)" not in pos_order_line.sale_order_line_id.name:
-                            name = _("%(old_name)s (Cancelled)", old_name=pos_order_line.sale_order_line_id.name)
+                            name = self.env._("%(old_name)s (Cancelled)", old_name=pos_order_line.sale_order_line_id.name)
                             pos_order_line.sale_order_line_id.name = name
                         elif not isCancelled and "(Cancelled)" in pos_order_line.sale_order_line_id.name:
                             pos_order_line.sale_order_line_id.name = pos_order_line.sale_order_line_id.name.replace(" (Cancelled)", "")

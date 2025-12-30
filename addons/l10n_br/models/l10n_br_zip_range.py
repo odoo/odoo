@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
 
@@ -28,7 +28,7 @@ class L10n_BrZipRange(models.Model):
         for zip_range in self:
             if not zip_format.fullmatch(zip_range.start) or not zip_format.fullmatch(zip_range.end):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "Invalid zip range format: %(start)s %(end)s. It should follow this format: 01000-001",
                         start=zip_range.start,
                         end=zip_range.end,
@@ -37,5 +37,5 @@ class L10n_BrZipRange(models.Model):
 
             if zip_range.start >= zip_range.end:
                 raise ValidationError(
-                    _("Start should be less than end: %(start)s %(end)s", start=zip_range.start, end=zip_range.end)
+                    self.env._("Start should be less than end: %(start)s %(end)s", start=zip_range.start, end=zip_range.end)
                 )

@@ -2,7 +2,7 @@
 
 import json
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -92,7 +92,7 @@ class SaleOrder(models.Model):
                         Therefore, it only raises an Error for now.
                         """
                         if len(order_lines) > 1:
-                            raise ValidationError(_("You cannot change the quantity of a product present in multiple sale lines."))
+                            raise ValidationError(self.env._("You cannot change the quantity of a product present in multiple sale lines."))
                         else:
                             order_lines[0].product_uom_qty = qty
                             # If we want to support multiple lines edition:

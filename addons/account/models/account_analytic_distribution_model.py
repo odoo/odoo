@@ -1,6 +1,6 @@
 import re
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class AccountAnalyticDistributionModel(models.Model):
@@ -67,4 +67,4 @@ class AccountAnalyticDistributionModel(models.Model):
                 except ValueError:
                     pass
 
-            model.prefix_placeholder = _("e.g. %(prefix)s", prefix=account_prefixes)
+            model.prefix_placeholder = self.env._("e.g. %(prefix)s", prefix=account_prefixes)

@@ -2,7 +2,7 @@
 
 from ast import literal_eval
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -75,7 +75,7 @@ class StockPickingType(models.Model):
     def _check_default_location(self):
         for record in self:
             if record.code == 'mrp_operation' and record.default_location_dest_id.usage == 'inventory':
-                raise ValidationError(_("You cannot set a scrap location as the destination location for a manufacturing type operation."))
+                raise ValidationError(self.env._("You cannot set a scrap location as the destination location for a manufacturing type operation."))
 
     def _get_mo_count(self):
         mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')
@@ -162,7 +162,7 @@ class StockPicking(models.Model):
     def action_view_mrp_production(self):
         self.ensure_one()
         action = {
-            'name': _("Manufacturing Orders"),
+            'name': self.env._("Manufacturing Orders"),
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', self.production_ids.ids)],

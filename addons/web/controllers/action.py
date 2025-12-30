@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-from odoo import _
 from odoo.exceptions import UserError, MissingError, AccessError
 from odoo.http import Controller, request, route
 from .utils import clean_action
@@ -36,11 +34,11 @@ class Action(Controller):
                     assert action
                 action_id = action.id
             except Exception as exc:
-                raise MissingActionError(_("The action “%s” does not exist.", action_id)) from exc
+                raise MissingActionError(self.env._("The action “%s” does not exist.", action_id)) from exc
 
         base_action = Actions.browse([action_id]).sudo().read(['type'])
         if not base_action:
-            raise MissingActionError(_("The action “%s” does not exist", action_id))
+            raise MissingActionError(self.env._("The action “%s” does not exist", action_id))
         action_type = base_action[0]['type']
         if action_type == 'ir.actions.report':
             request.update_context(bin_size=True)
@@ -81,7 +79,7 @@ class Action(Controller):
                     if record_id:
                         # some actions may not have a res_model (e.g. a client action)
                         if record_id == 'new':
-                            results.append({'display_name': _("New")})
+                            results.append({'display_name': self.env._("New")})
                         elif act['res_model']:
                             results.append({'display_name': request.env[act['res_model']].browse(record_id).display_name})
                         else:
@@ -98,7 +96,7 @@ class Action(Controller):
                     Model = request.env[action.get('model')]
                     if record_id:
                         if record_id == 'new':
-                            results.append({'display_name': _("New")})
+                            results.append({'display_name': self.env._("New")})
                         else:
                             results.append({'display_name': Model.browse(record_id).display_name})
                     else:

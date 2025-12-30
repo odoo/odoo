@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -19,7 +19,7 @@ class MailActivityPlanTemplate(models.Model):
         """ Ensure that hr types are used only on employee model """
         for template in self.filtered(lambda tpl: tpl.plan_id.res_model != 'hr.employee'):
             if template.responsible_type in {'coach', 'manager', 'employee'}:
-                raise ValidationError(_('Those responsible types are limited to Employee plans.'))
+                raise ValidationError(self.env._('Those responsible types are limited to Employee plans.'))
 
     def _get_closest_parent_user(self, employee, responsible, error_message):
         responsible_parent = responsible
@@ -39,7 +39,7 @@ class MailActivityPlanTemplate(models.Model):
                 }
             if responsible_parent in viewed_responsible:
                 return {
-                    "error": _(
+                    "error": self.env._(
                         "Oops! It seems there is a problem with your team structure.\
                         We found a circular reporting loop and no one in that loop is linked to a user.\
                         Please double-check that everyone reports to the correct manager."
@@ -57,7 +57,7 @@ class MailActivityPlanTemplate(models.Model):
         result = {"error": "", "warning": "", "responsible": False}
         if self.responsible_type == 'coach':
             if not employee.coach_id:
-                result['error'] = _('Coach of employee %s is not set.', employee.name)
+                result['error'] = self.env._('Coach of employee %s is not set.', employee.name)
             result['responsible'] = employee.coach_id.user_id
             if employee.coach_id and not result['responsible']:
                 # If a plan cannot be launched due to the coach not being linked to an user,
@@ -67,14 +67,14 @@ class MailActivityPlanTemplate(models.Model):
                 result = self._get_closest_parent_user(
                     employee=employee,
                     responsible=employee.coach_id.parent_id,
-                    error_message=_(
+                    error_message=self.env._(
                         "The user of %s's coach is not set.", employee.name
                     ),
                 )
 
         elif self.responsible_type == 'manager':
             if not employee.parent_id:
-                result['error'] = _('Manager of employee %s is not set.', employee.name)
+                result['error'] = self.env._('Manager of employee %s is not set.', employee.name)
             result['responsible'] = employee.parent_id.user_id
             if employee.parent_id and not result['responsible']:
                 # If a plan cannot be launched due to the manager not being linked to an user,
@@ -84,7 +84,7 @@ class MailActivityPlanTemplate(models.Model):
                 result = self._get_closest_parent_user(
                     employee=employee,
                     responsible=employee.parent_id.parent_id,
-                    error_message=_(
+                    error_message=self.env._(
                         "The manager of %s should be linked to a user.", employee.name
                     ),
                 )
@@ -99,7 +99,7 @@ class MailActivityPlanTemplate(models.Model):
                 result = self._get_closest_parent_user(
                     employee=employee,
                     responsible=employee.parent_id,
-                    error_message=_(
+                    error_message=self.env._(
                         "The employee %s should be linked to a user.", employee.name
                     ),
                 )

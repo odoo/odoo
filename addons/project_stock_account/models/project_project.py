@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _lt
+from odoo import models
 from odoo.fields import Domain
 
 
@@ -10,7 +10,7 @@ class Project(models.Model):
     def _get_profitability_labels(self):
         return {
             **super()._get_profitability_labels(),
-            'other_costs': _lt('Materials'),
+            'other_costs': self.env._('Materials'),
         }
 
     def _get_profitability_sequence_per_invoice_type(self):

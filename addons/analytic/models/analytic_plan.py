@@ -4,7 +4,7 @@ import re
 
 from random import randint
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import ormcache, make_index_name, create_index
 
@@ -106,7 +106,7 @@ class AccountAnalyticPlan(models.Model):
     def __get_all_plans(self):
         project_plan = self.browse(self.env['ir.config_parameter'].sudo().get_int('analytic.project_plan'))
         if not project_plan:
-            raise UserError(_("A 'Project' plan needs to exist and its id needs to be set as `analytic.project_plan` in the system variables"))
+            raise UserError(self.env._("A 'Project' plan needs to exist and its id needs to be set as `analytic.project_plan` in the system variables"))
         other_plans = self.sudo().search([('parent_id', '=', False)]) - project_plan
         return project_plan.id, other_plans.ids
 
@@ -186,7 +186,7 @@ class AccountAnalyticPlan(models.Model):
     def _onchange_parent_id(self):
         project_plan, __ = self._get_all_plans()
         if self._origin.id == project_plan.id:
-            raise UserError(_("You cannot add a parent to the base plan '%s'", project_plan.name))
+            raise UserError(self.env._("You cannot add a parent to the base plan '%s'", project_plan.name))
 
     def action_view_analytical_accounts(self):
         result = {
@@ -194,7 +194,7 @@ class AccountAnalyticPlan(models.Model):
             "res_model": "account.analytic.account",
             "domain": [('plan_id', "child_of", self.id)],
             "context": {'default_plan_id': self.id},
-            "name": _("Analytical Accounts"),
+            "name": self.env._("Analytical Accounts"),
             'view_mode': 'list,form',
         }
         return result
@@ -206,7 +206,7 @@ class AccountAnalyticPlan(models.Model):
             "domain": [('parent_id', '=', self.id)],
             "context": {'default_parent_id': self.id,
                         'default_color': self.color},
-            "name": _("Analytical Plans"),
+            "name": self.env._("Analytical Plans"),
             'view_mode': 'list,form',
         }
         return result

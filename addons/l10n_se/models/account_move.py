@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, models
 from odoo.exceptions import UserError, ValidationError
 from stdnum import luhn
 
@@ -24,7 +24,7 @@ class AccountMove(models.Model):
         ocr_length = self.journal_id.l10n_se_invoice_ocr_length
 
         if len(reference) + 1 > ocr_length:
-            raise UserError(_("OCR Reference Number length is greater than allowed. Allowed length in invoice journal setting is %s.", ocr_length))
+            raise UserError(self.env._("OCR Reference Number length is greater than allowed. Allowed length in invoice journal setting is %s.", ocr_length))
 
         reference = reference.rjust(ocr_length - 1, '0')
         return reference + luhn.calc_check_digit(reference)
@@ -74,4 +74,4 @@ class AccountMove(models.Model):
                 try:
                     luhn.validate(invoice.payment_reference)
                 except Exception:
-                    raise ValidationError(_("Vendor require OCR Number as payment reference. Payment reference isn't a valid OCR Number."))
+                    raise ValidationError(self.env._("Vendor require OCR Number as payment reference. Payment reference isn't a valid OCR Number."))

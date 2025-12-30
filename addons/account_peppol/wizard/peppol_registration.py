@@ -5,7 +5,7 @@ try:
 except ImportError:
     phonenumbers = None
 
-from odoo import _, api, fields, models, modules
+from odoo import api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
@@ -144,7 +144,7 @@ class PeppolRegistration(models.TransientModel):
             )):
                 peppol_warnings['company_peppol_endpoint_warning'] = {
                     'level': 'warning',
-                    'message': _("The endpoint number might not be correct. "
+                    'message': self.env._("The endpoint number might not be correct. "
                                  "Please check if you entered the right identification number."),
                 }
             if all((
@@ -155,13 +155,13 @@ class PeppolRegistration(models.TransientModel):
             )):
                 peppol_warnings['company_already_on_smp'] = {
                     'level': 'info',
-                    'message': _("Your company is already registered on an Access Point (%s) for receiving invoices. "
+                    'message': self.env._("Your company is already registered on an Access Point (%s) for receiving invoices. "
                                  "We will register you on Odoo as a sender only.", wizard.peppol_external_provider)
                 }
             if wizard.peppol_eas == '9925':
                 peppol_warnings['be_9925_warning'] = {
                     'level': 'warning',
-                    'message': _("You are about to register with your VAT number. Make sure you register with your "
+                    'message': self.env._("You are about to register with your VAT number. Make sure you register with your "
                                 "Company Registry (BCE/KBO) first to be compliant with the new regulation."),
                 }
             wizard.peppol_warnings = peppol_warnings or False
@@ -202,15 +202,15 @@ class PeppolRegistration(models.TransientModel):
         if self.use_parent_connection:
             return
         if not self.contact_email or not self.phone_number:
-            raise ValidationError(_("Contact email and phone number are required."))
+            raise ValidationError(self.env._("Contact email and phone number are required."))
         if not self.peppol_eas or not self.peppol_endpoint:
-            raise ValidationError(_("Peppol Address should be provided."))
+            raise ValidationError(self.env._("Peppol Address should be provided."))
         if self._branch_with_same_address():
-            raise ValidationError(_("Peppol ID should be different from main company."))
+            raise ValidationError(self.env._("Peppol ID should be different from main company."))
 
     def _action_open_peppol_form(self, reopen=True):
         action_dict = {
-            'name': _("Activate Electronic Invoicing (via Peppol)"),
+            'name': self.env._("Activate Electronic Invoicing (via Peppol)"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'peppol.registration',
@@ -260,7 +260,7 @@ class PeppolRegistration(models.TransientModel):
 
         if not self.is_branch_company and self.account_peppol_proxy_state in ('smp_registration', 'receiver', 'rejected'):
             raise UserError(
-                _('Cannot register a user with a %s application', self.account_peppol_proxy_state))
+                self.env._('Cannot register a user with a %s application', self.account_peppol_proxy_state))
 
         edi_user = self.edi_user_id or self.env['account_edi_proxy_client.user']._register_proxy_user(self.company_id, 'peppol', self.edi_mode)
 
@@ -284,17 +284,17 @@ class PeppolRegistration(models.TransientModel):
         # success or rejected
         notifications = {
             'sender': {
-                'message': _('You can now send electronic invoices via Peppol.'),
+                'message': self.env._('You can now send electronic invoices via Peppol.'),
             },
             'smp_registration': {
-                'message': _('Your Peppol registration will be activated soon. You can already send invoices.'),
+                'message': self.env._('Your Peppol registration will be activated soon. You can already send invoices.'),
             },
             'receiver': {
-                'message': _('You can now send and receive electronic invoices via Peppol'),
+                'message': self.env._('You can now send and receive electronic invoices via Peppol'),
             },
             'rejected': {
-                'title': _('Registration rejected.'),
-                'message': _('Your registration has been rejected. Please contact the support for further assistance.'),
+                'title': self.env._('Registration rejected.'),
+                'message': self.env._('Your registration has been rejected. Please contact the support for further assistance.'),
             },
         }
         state = self.company_id.account_peppol_proxy_state

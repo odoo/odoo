@@ -2,7 +2,7 @@ import re
 import datetime
 import calendar
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools.barcode import get_barcode_check_digit
@@ -27,7 +27,7 @@ class BarcodeNomenclature(models.Model):
                 try:
                     re.compile("(?:%s)?" % nom.gs1_separator_fnc1)
                 except re.error as error:
-                    raise ValidationError(_("The FNC1 Separator Alternative is not a valid Regex: %(error)s", error))
+                    raise ValidationError(self.env._("The FNC1 Separator Alternative is not a valid Regex: %(error)s", error))
 
     @api.model
     def gs1_date_to_date(self, gs1_date):
@@ -55,7 +55,7 @@ class BarcodeNomenclature(models.Model):
             try:
                 date = datetime.datetime.strptime(str(year) + gs1_date[2:], '%Y%m%d')
             except ValueError as e:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "A GS1 barcode nomenclature pattern was matched. However, the barcode failed to be converted to a valid date: '%(error_message)s'",
                     error_message=e
                 ))
@@ -78,7 +78,7 @@ class BarcodeNomenclature(models.Model):
                 else:
                     result['value'] = int(match.group(2))
             except Exception:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "There is something wrong with the barcode rule \"%s\" pattern.\n"
                     "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
                     "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure.",

@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -23,7 +23,7 @@ class ProductUom(models.Model):
         to ensure the uniqueness between products' barcodes and packagings' ones"""
         domain = [('barcode', 'in', [b for b in self.mapped('barcode') if b])]
         if self.env['product.product'].search_count(domain, limit=1):
-            raise ValidationError(_("A product already uses the barcode"))
+            raise ValidationError(self.env._("A product already uses the barcode"))
 
     def _compute_display_name(self):
         if not self.env.context.get('show_variant_name'):

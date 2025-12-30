@@ -1,11 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import timedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import float_round
 
 
 class HrLeave(models.Model):
@@ -82,8 +80,8 @@ class HrLeave(models.Model):
         for leave in leaves.filtered('overtime_deductible'):
             if hours[leave.employee_id] < 0:
                 if leave.employee_id.user_id == self.env.user:
-                    raise ValidationError(_('You do not have enough extra hours to request this leave'))
-                raise ValidationError(_('The employee does not have enough extra hours to request this leave.'))
+                    raise ValidationError(self.env._('You do not have enough extra hours to request this leave'))
+                raise ValidationError(self.env._('The employee does not have enough extra hours to request this leave.'))
 
     def action_reset_confirm(self):
         self._check_overtime_deductible(self)

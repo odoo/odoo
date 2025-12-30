@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 
@@ -61,14 +61,14 @@ class ProductTemplateAttributeLine(models.Model):
     def _check_valid_values(self):
         for ptal in self:
             if ptal.active and not ptal.value_ids:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "The attribute %(attribute)s must have at least one value for the product %(product)s.",
                     attribute=ptal.attribute_id.display_name,
                     product=ptal.product_tmpl_id.display_name,
                 ))
             for pav in ptal.value_ids:
                 if pav.attribute_id != ptal.attribute_id:
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         "On the product %(product)s you cannot associate the value %(value)s"
                         " with the attribute %(attribute)s because they do not match.",
                         product=ptal.product_tmpl_id.display_name,
@@ -125,7 +125,7 @@ class ProductTemplateAttributeLine(models.Model):
         if 'product_tmpl_id' in values:
             for ptal in self:
                 if ptal.product_tmpl_id.id != values['product_tmpl_id']:
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         "You cannot move the attribute %(attribute)s from the product"
                         " %(product_src)s to the product %(product_dest)s.",
                         attribute=ptal.attribute_id.display_name,
@@ -136,7 +136,7 @@ class ProductTemplateAttributeLine(models.Model):
         if 'attribute_id' in values:
             for ptal in self:
                 if ptal.attribute_id.id != values['attribute_id']:
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         "On the product %(product)s you cannot transform the attribute"
                         " %(attribute_src)s into the attribute %(attribute_dest)s.",
                         product=ptal.product_tmpl_id.display_name,

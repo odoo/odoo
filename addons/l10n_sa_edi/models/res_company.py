@@ -1,5 +1,5 @@
 import re
-from odoo import models, fields, _
+from odoo import models, fields
 from odoo.exceptions import UserError
 
 
@@ -32,13 +32,13 @@ class ResCompany(models.Model):
                 if company.l10n_sa_api_mode == 'prod' and vals['l10n_sa_api_mode'] != 'prod':
                     # Prevent API mode change from 'Production' if any invoice was submitted to ZATCA in Production mode.
                     if company.l10n_sa_edi_is_production:
-                        raise UserError(_("ZATCA API Mode cannot be changed after an invoice has been successfully submitted under the Production Mode."))
+                        raise UserError(self.env._("ZATCA API Mode cannot be changed after an invoice has been successfully submitted under the Production Mode."))
                 journals = self.env['account.journal'].search(self.env['account.journal']._check_company_domain(company))
                 journals._l10n_sa_reset_certificates()
                 journals.l10n_sa_latest_submission_hash = False
                 api_mode = dict(self._fields['l10n_sa_api_mode'].selection).get(vals['l10n_sa_api_mode'])
                 for journal in journals.filtered(lambda j: j.type == 'sale'):
-                    journal.message_post(body=_("ZATCA API Mode changed to %s", api_mode))
+                    journal.message_post(body=self.env._("ZATCA API Mode changed to %s", api_mode))
         return super().write(vals)
 
     def _get_company_address_field_names(self):

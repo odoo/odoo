@@ -6,7 +6,7 @@ from datetime import timedelta
 from operator import itemgetter
 from re import findall as regex_findall
 
-from odoo import _, api, Command, fields, models, SUPERUSER_ID
+from odoo import api, Command, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
@@ -362,7 +362,7 @@ class StockMove(models.Model):
                 if move.inventory_name:
                     move.reference = move.inventory_name
                 else:
-                    move.reference = _('Product Quantity Confirmed') if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding) else _('Product Quantity Updated')
+                    move.reference = self.env._('Product Quantity Confirmed') if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding) else self.env._('Product Quantity Updated')
                     if move.create_uid and move.create_uid.id != SUPERUSER_ID:
                         move.reference += f' ({move.create_uid.display_name})'
             else:
@@ -465,7 +465,7 @@ class StockMove(models.Model):
         for move in self:
             rounded_qty = float_round(move.quantity, precision_digits=precision_digits, rounding_method='HALF-UP')
             if float_compare(rounded_qty, move.quantity, precision_digits=precision_digits) != 0:
-                err.append(_("""
+                err.append(self.env._("""
 The quantity done for the product %(product)s doesn't respect the rounding precision defined on the system.
 Please change the quantity done or the rounding precision in your settings.""",
                              product=move.product_id.display_name))
@@ -483,7 +483,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         in the default product UoM. This code has been added to raise an error if a write is made given a value
         for `product_qty`, where the same write should set the `product_uom_qty` field instead, in order to
         detect errors. """
-        raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
+        raise UserError(self.env._('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
 
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
     def _compute_product_availability(self):
@@ -762,9 +762,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         move_to_check_location = self.env['stock.move']
         if 'quantity' in vals:
             if any(move.state == 'cancel' for move in self):
-                raise UserError(_('You cannot change a cancelled stock move, create a new line instead.'))
+                raise UserError(self.env._('You cannot change a cancelled stock move, create a new line instead.'))
         if 'product_uom' in vals and any(move.state == 'done' for move in self) and not self.env.context.get('skip_uom_conversion'):
-            raise UserError(_('You cannot change the UoM for a stock move that has been set to \'Done\'.'))
+            raise UserError(self.env._('You cannot change the UoM for a stock move that has been set to \'Done\'.'))
         if 'product_uom_qty' in vals:
             for move in self.filtered(lambda m: m.state not in ('done', 'draft') and m.picking_id):
                 if move.product_uom.compare(vals['product_uom_qty'], move.product_uom_qty):
@@ -859,8 +859,8 @@ Please change the quantity done or the rounding precision in your settings.""",
         if not documents or not doc_orig:
             return
 
-        msg = _("The deadline has been automatically updated due to a delay on %s.", doc_orig[0]._get_html_link())
-        msg_subject = _("Deadline updated due to delay on %s", doc_orig[0].name)
+        msg = self.env._("The deadline has been automatically updated due to a delay on %s.", doc_orig[0]._get_html_link())
+        msg_subject = self.env._("Deadline updated due to delay on %s", doc_orig[0].name)
         # write the message on each document
         for doc in documents:
             last_message = doc.message_ids[:1]
@@ -898,7 +898,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         view = self.env.ref('stock.view_stock_move_operations')
 
         return {
-            'name': _('Detailed Operations'),
+            'name': self.env._('Detailed Operations'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'stock.move',
@@ -936,7 +936,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 # We may have done move in an open picking in a scrap scenario.
                 continue
             elif move.state == 'done':
-                raise UserError(_("You cannot unreserve a stock move that has been set to 'Done'."))
+                raise UserError(self.env._("You cannot unreserve a stock move that has been set to 'Done'."))
             moves_to_unreserve.add(move.id)
         moves_to_unreserve = self.env['stock.move'].browse(moves_to_unreserve)
 
@@ -968,7 +968,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             location_id = self.location_dest_id
         count = next_serial_count or self.next_serial_count
         if not count:
-            raise ValidationError(_("The number of Serial Numbers to generate must be greater than zero."))
+            raise ValidationError(self.env._("The number of Serial Numbers to generate must be greater than zero."))
         lot_names = self.env['stock.lot'].generate_lot_names(next_serial, count)
         field_data = [{'lot_name': lot_name['lot_name'], 'quantity': 1} for lot_name in lot_names]
         if self._can_create_lot():
@@ -1044,13 +1044,13 @@ Please change the quantity done or the rounding precision in your settings.""",
     @api.model
     def action_generate_lot_line_vals(self, context_data, mode, first_lot, count, lot_text):
         if not context_data.get('default_product_id'):
-            raise UserError(_("No product found to generate Serials/Lots for."))
+            raise UserError(self.env._("No product found to generate Serials/Lots for."))
         assert mode in ('generate', 'import')
         default_vals = {}
 
         def generate_lot_qty(quantity, qty_per_lot):
             if qty_per_lot <= 0:
-                raise UserError(_("The quantity per lot should always be a positive value."))
+                raise UserError(self.env._("The quantity per lot should always be a positive value."))
             line_count = int(quantity // qty_per_lot)
             leftover = quantity % qty_per_lot
             qty_array = [qty_per_lot] * line_count
@@ -1363,9 +1363,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         if quants:
             sn_to_location = ""
             for quant in quants:
-                sn_to_location += _("\n(%(serial_number)s) exists in location %(location)s", serial_number=quant.lot_id.display_name, location=quant.location_id.display_name)
+                sn_to_location += self.env._("\n(%(serial_number)s) exists in location %(location)s", serial_number=quant.lot_id.display_name, location=quant.location_id.display_name)
             return {
-                'warning': {'title': _('Warning'), 'message': _('Unavailable Serial numbers. Please correct the serial numbers encoded: %(serial_numbers_to_locations)s', serial_numbers_to_locations=sn_to_location)}
+                'warning': {'title': self.env._('Warning'), 'message': self.env._('Unavailable Serial numbers. Please correct the serial numbers encoded: %(serial_numbers_to_locations)s', serial_numbers_to_locations=sn_to_location)}
             }
 
     def _key_assign_picking(self):
@@ -2024,7 +2024,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _action_cancel(self):
         if any(move.state == 'done' and move.location_dest_usage != 'inventory' for move in self):
-            raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'. Create a return in order to reverse the moves which took place.'))
+            raise UserError(self.env._('You cannot cancel a stock move that has been set to \'Done\'. Create a return in order to reverse the moves which took place.'))
         moves_to_cancel = self.filtered(lambda m: m.state != 'cancel' and not (m.state == 'done' and m.location_dest_usage == 'inventory'))
         moves_to_cancel.picked = False
         # self cannot contain moves that are either cancelled or done, therefore we can safely
@@ -2099,7 +2099,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 .move_line_ids.filtered(lambda ml: ml.picked).mapped('result_package_id')\
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
             if len(result_package.quant_ids.filtered(lambda q: q.product_uom_id.compare(q.quantity, 0.0) > 0).mapped('location_id')) > 1:
-                raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
+                raise UserError(self.env._('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
         if any(ml.package_id and ml.package_id == ml.result_package_id for ml in moves_todo.move_line_ids):
             self.env['stock.quant']._unlink_zero_quants()
         picking = moves_todo.mapped('picking_id')
@@ -2156,7 +2156,7 @@ Please change the quantity done or the rounding precision in your settings.""",
     @api.ondelete(at_uninstall=False)
     def _unlink_if_draft_or_cancel(self):
         if any(move.state not in ('draft', 'cancel') and (move.move_orig_ids or move.move_dest_ids) for move in self):
-            raise UserError(_('You can not delete moves linked to another operation'))
+            raise UserError(self.env._('You can not delete moves linked to another operation'))
 
     def unlink(self):
         # With the non plannified picking, draft moves could have some move lines.
@@ -2185,11 +2185,11 @@ Please change the quantity done or the rounding precision in your settings.""",
         :returns: list of dict. stock move values """
         self.ensure_one()
         if self.state in ('done', 'cancel'):
-            raise UserError(_('You cannot split a stock move that has been set to \'Done\' or \'Cancel\'.'))
+            raise UserError(self.env._('You cannot split a stock move that has been set to \'Done\' or \'Cancel\'.'))
         elif self.state == 'draft':
             # we restrict the split of a draft move because if not confirmed yet, it may be replaced by several other moves in
             # case of phantom bom (with mrp module). And we don't want to deal with this complexity by copying the product that will explode.
-            raise UserError(_('You cannot split a draft move. It needs to be confirmed first.'))
+            raise UserError(self.env._('You cannot split a draft move. It needs to be confirmed first.'))
 
         if self.product_id.uom_id.is_zero(qty):
             return []
@@ -2567,10 +2567,10 @@ Please change the quantity done or the rounding precision in your settings.""",
             elif state == 'unavailable':
                 return moves if moves.filtered(lambda m: m.forecast_availability < m.product_qty) else self.env['stock.move']
             else:
-                raise UserError(_('Selection not supported.'))
+                raise UserError(self.env._('Selection not supported.'))
 
         if not value:
-            raise UserError(_('Search not supported without a value.'))
+            raise UserError(self.env._('Search not supported without a value.'))
 
         # We consider an operation without any moves as always available since there is no goods to wait.
         if len(self) == 0:
@@ -2594,7 +2594,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 search_moves |= get_stock_moves(moves, state)
             moves = self - search_moves
         else:
-            raise UserError(_('Operation not supported'))
+            raise UserError(self.env._('Operation not supported'))
         return bool(moves)
 
     def _break_mto_link(self, parent_move):

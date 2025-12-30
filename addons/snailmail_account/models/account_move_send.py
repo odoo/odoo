@@ -1,4 +1,4 @@
-from odoo import api, models, _
+from odoo import api, models
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -15,13 +15,13 @@ class AccountMoveSend(models.AbstractModel):
         ):
             alerts['snailmail_account_partner_invalid_address'] = {
                 'level': 'danger' if len(snailmail_moves_without_valid_address) == 1 else 'warning',
-                'message': _(
+                'message': self.env._(
                     "The partners on the following invoices have no valid address, "
                     "so those invoices will not be sent: %s",
                     ", ".join(snailmail_moves_without_valid_address.mapped('name'))
                 ),
-                'action_text': _("View Invoice(s)"),
-                'action': snailmail_moves_without_valid_address._get_records_action(name=_("Check Invoice(s)")),
+                'action_text': self.env._("View Invoice(s)"),
+                'action': snailmail_moves_without_valid_address._get_records_action(name=self.env._("Check Invoice(s)")),
             }
         return alerts
 

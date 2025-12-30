@@ -2,7 +2,7 @@
 
 import json
 
-from odoo import fields, models, _
+from odoo import fields, models
 from odoo.fields import Domain
 
 
@@ -64,8 +64,8 @@ class ProjectProject(models.Model):
                 'default_project_id': self.id,
             },
             'help': "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s</p>" % (
-                _("No purchase order found. Let's create one."),
-                _("Once you ordered your products from your supplier, confirm your request for quotation and it will turn "
+                self.env._("No purchase order found. Let's create one."),
+                self.env._("Once you ordered your products from your supplier, confirm your request for quotation and it will turn "
                     "into a purchase order."),
             ),
         }

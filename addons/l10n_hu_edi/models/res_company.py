@@ -6,7 +6,7 @@ from itertools import islice
 
 from lxml import etree
 
-from odoo import models, fields, _
+from odoo import models, fields
 from odoo.exceptions import UserError
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import L10nHuEdiConnection, L10nHuEdiConnectionError, XML_NAMESPACES
 
@@ -93,19 +93,19 @@ class ResCompany(models.Model):
             'replacement_key': self.l10n_hu_edi_replacement_key,
         }
         if self.l10n_hu_edi_server_mode != 'demo' and not all(credentials_dict.values()):
-            raise UserError(_('Missing NAV credentials for company %s', self.name))
+            raise UserError(self.env._('Missing NAV credentials for company %s', self.name))
         return credentials_dict
 
     def _l10n_hu_edi_test_credentials(self):
         with L10nHuEdiConnection(self.env) as connection:
             for company in self:
                 if not company.vat:
-                    raise UserError(_('NAV Credentials: Please set the hungarian vat number on the company first!'))
+                    raise UserError(self.env._('NAV Credentials: Please set the hungarian vat number on the company first!'))
                 try:
                     connection.do_token_exchange(company._l10n_hu_edi_get_credentials_dict())
                 except L10nHuEdiConnectionError as e:
                     raise UserError(
-                        _('Incorrect NAV Credentials! Check that your company VAT number is set correctly. \nError details: %s', e)
+                        self.env._('Incorrect NAV Credentials! Check that your company VAT number is set correctly. \nError details: %s', e)
                     ) from e
 
     def _l10n_hu_edi_recover_transactions(self, connection):
@@ -151,7 +151,7 @@ class ResCompany(models.Model):
                     )
                 except L10nHuEdiConnectionError as e:
                     return {
-                        'error_title': _('Error listing transactions while attempting transaction recovery.'),
+                        'error_title': self.env._('Error listing transactions while attempting transaction recovery.'),
                         'errors': e.errors,
                     }
 
@@ -177,7 +177,7 @@ class ResCompany(models.Model):
                     )
                 except L10nHuEdiConnectionError as e:
                     return {
-                        'error_title': _('Error querying transaction while attempting transaction recovery.'),
+                        'error_title': self.env._('Error querying transaction while attempting transaction recovery.'),
                         'errors': e.errors,
                     }
 

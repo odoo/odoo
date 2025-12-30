@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.fields import Domain
 
@@ -17,7 +17,7 @@ class AccountAnalyticLine(models.Model):
     def _get_redirect_action(self):
         leave_form_view_id = self.env.ref('hr_holidays.hr_leave_view_form').id
         action_data = {
-           'name': _('Time Off'),
+           'name': self.env._('Time Off'),
            'type': 'ir.actions.act_window',
            'res_model': 'hr.leave',
            'views': [(self.env.ref('hr_holidays.hr_leave_view_tree_my').id, 'list'), (leave_form_view_id, 'form')],
@@ -31,22 +31,22 @@ class AccountAnalyticLine(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_leave(self):
         if any(line.global_leave_id for line in self):
-            raise UserError(_('You cannot delete timesheets that are linked to global time off.'))
+            raise UserError(self.env._('You cannot delete timesheets that are linked to global time off.'))
         elif any(line.holiday_id for line in self):
-            error_message = _('You cannot delete timesheets that are linked to time off requests. Please cancel your time off request from the Time Off application instead.')
+            error_message = self.env._('You cannot delete timesheets that are linked to time off requests. Please cancel your time off request from the Time Off application instead.')
             if not self.env.user.has_group('hr_holidays.group_hr_holidays_user') and self.env.user not in self.holiday_id.sudo().user_id:
                 raise UserError(error_message)
             action = self._get_redirect_action()
-            raise RedirectWarning(error_message, action, _('View Time Off'))
+            raise RedirectWarning(error_message, action, self.env._('View Time Off'))
 
     def _check_can_write(self, values):
         if not self.env.su and self.holiday_id:
-            raise UserError(_('You cannot modify timesheets that are linked to time off requests. Please use the Time Off application to modify your time off requests instead.'))
+            raise UserError(self.env._('You cannot modify timesheets that are linked to time off requests. Please use the Time Off application to modify your time off requests instead.'))
         return super()._check_can_write(values)
 
     def _check_can_create(self):
         if not self.env.su and any(task.is_timeoff_task for task in self.task_id):
-            raise UserError(_('You cannot create timesheets for a task that is linked to a time off type. Please use the Time Off application to request new time off instead.'))
+            raise UserError(self.env._('You cannot create timesheets for a task that is linked to a time off type. Please use the Time Off application to request new time off instead.'))
         return  super()._check_can_create()
 
     def _get_favorite_project_id_domain(self, employee_id=False):

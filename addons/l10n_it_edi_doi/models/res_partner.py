@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class ResPartner(models.Model):
@@ -16,7 +16,7 @@ class ResPartner(models.Model):
     def l10n_it_edi_doi_action_open_declarations(self):
         self.ensure_one()
         return {
-            'name': _("Declaration of Intent of %s", self.display_name),
+            'name': self.env._("Declaration of Intent of %s", self.display_name),
             'type': 'ir.actions.act_window',
             'res_model': 'l10n_it_edi_doi.declaration_of_intent',
             'domain': [('partner_id', '=', self.commercial_partner_id.id)],

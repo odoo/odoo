@@ -1,7 +1,6 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import get_lang
-from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.addons.mail.wizard.mail_compose_message import _reopen
 
 
@@ -284,7 +283,7 @@ class AccountMoveSendWizard(models.TransientModel):
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'view_id': self.env.ref('mail.mail_compose_message_view_form_template_save').id,
-            'name': _('Create a Mail Template'),
+            'name': self.env._('Create a Mail Template'),
             'res_model': 'account.move.send.wizard',
             'context': {'dialog_size': 'medium'},
             'target': 'new',
@@ -296,7 +295,7 @@ class AccountMoveSendWizard(models.TransientModel):
         """ Creates a mail template with the current mail composer's fields. """
         self.ensure_one()
         if not self.model or not self.model in self.env:
-            raise UserError(_('Template creation from composer requires a valid model.'))
+            raise UserError(self.env._('Template creation from composer requires a valid model.'))
         model_id = self.env['ir.model']._get_id(self.model)
         values = {
             'name': self.template_name or self.subject,

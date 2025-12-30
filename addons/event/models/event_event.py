@@ -10,11 +10,11 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import escape
 from urllib.parse import urlparse
 
-from odoo import _, api, Command, fields, models, tools
+from odoo import api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.fields import Datetime, Domain
-from odoo.tools import format_date, format_datetime, format_time, frozendict
+from odoo.tools import format_date, frozendict
 from odoo.tools.mail import is_html_empty, html_to_inner_content
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
@@ -599,7 +599,7 @@ class EventEvent(models.Model):
                 not (event.date_begin <= max_end <= event.date_end)):
                 events_w_slots_outside_bounds.append(event)
         if events_w_slots_outside_bounds:
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 "These events cannot have slots scheduled outside of their time range:\n%(event_names)s",
                 event_names="\n".join(f"- {event.name}" for event in events_w_slots_outside_bounds)
             ))
@@ -608,14 +608,14 @@ class EventEvent(models.Model):
     def _check_closing_date(self):
         for event in self:
             if event.date_end < event.date_begin:
-                raise ValidationError(_('The closing date cannot be earlier than the beginning date.'))
+                raise ValidationError(self.env._('The closing date cannot be earlier than the beginning date.'))
 
     @api.constrains('event_url')
     def _check_event_url(self):
         for event in self.filtered('event_url'):
             url = urlparse(event.event_url)
             if not (url.scheme and url.netloc):
-                raise ValidationError(_('Please enter a valid event URL.'))
+                raise ValidationError(self.env._('Please enter a valid event URL.'))
 
     @api.onchange('event_url')
     def _onchange_event_url(self):
@@ -632,8 +632,8 @@ class EventEvent(models.Model):
                 (event.event_slot_ids if event.is_multi_slots else True):
                 return {
                     'warning': {
-                        'title': _("Update the limit of registrations?"),
-                        'message': _("There are more registrations than this limit, "
+                        'title': self.env._("Update the limit of registrations?"),
+                        'message': self.env._("There are more registrations than this limit, "
                                     "the event will be sold out and the extra registrations will remain."),
                     }
                 }
@@ -647,9 +647,9 @@ class EventEvent(models.Model):
         for event in self:
             # event or its tickets are sold out
             if event.event_registrations_sold_out:
-                name = _('%(event_name)s (Sold out)', event_name=event.name)
+                name = self.env._('%(event_name)s (Sold out)', event_name=event.name)
             elif event.seats_limited and event.seats_max:
-                name = _(
+                name = self.env._(
                     '%(event_name)s (%(count)s seats remaining)',
                     event_name=event.name,
                     count=formatLang(self.env, event.seats_available, digits=0),
@@ -744,9 +744,9 @@ class EventEvent(models.Model):
         if sold_out:
             info = []  # note: somehow using list comprehension make translate.py crash in default lang
             for item in sold_out:
-                info.append(_('%(slot_name)s: missing %(count)s seat(s)', slot_name=item[0], count=item[1]))
+                info.append(self.env._('%(slot_name)s: missing %(count)s seat(s)', slot_name=item[0], count=item[1]))
             raise ValidationError(
-                _('There are not enough seats available for %(event_name)s:\n%(sold_out_info)s',
+                self.env._('There are not enough seats available for %(event_name)s:\n%(sold_out_info)s',
                   event_name=self.name,
                   sold_out_info='\n'.join(info),
                 )
@@ -762,7 +762,7 @@ class EventEvent(models.Model):
         next_hour = now + timedelta(hours=1)
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Slots'),
+            'name': self.env._('Slots'),
             'view_mode': 'calendar,list,form',
             'mobile_view_mode': 'list',
             'res_model': 'event.slot',
@@ -800,16 +800,16 @@ class EventEvent(models.Model):
         event_date_tz = datetime.replace(tzinfo=UTC).astimezone(ZoneInfo(self.date_tz))
         diff = (event_date_tz.date() - today_tz.date())
         if diff.days <= 0:
-            return _('today')
+            return self.env._('today')
         if diff.days == 1:
-            return _('tomorrow')
+            return self.env._('tomorrow')
         if (diff.days < 7):
-            return _('in %d days', diff.days)
+            return self.env._('in %d days', diff.days)
         if (diff.days < 14):
-            return _('next week')
+            return self.env._('next week')
         if event_date_tz.month == (today_tz + relativedelta(months=+1)).month:
-            return _('next month')
-        return _('on %(date)s', date=format_date(self.env, datetime, lang_code=lang_code, date_format='medium'))
+            return self.env._('next month')
+        return self.env._('on %(date)s', date=format_date(self.env, datetime, lang_code=lang_code, date_format='medium'))
 
     def _get_external_description(self):
         """

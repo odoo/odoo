@@ -1,7 +1,7 @@
 from datetime import datetime, UTC
 from zoneinfo import ZoneInfo
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.date_utils import float_to_time
 from odoo.tools import (
@@ -48,9 +48,9 @@ class EventSlot(models.Model):
     def _check_hours(self):
         for slot in self:
             if not (0 <= slot.start_hour <= 23.99 and 0 <= slot.end_hour <= 23.99):
-                raise ValidationError(_("A slot hour must be between 0:00 and 23:59."))
+                raise ValidationError(self.env._("A slot hour must be between 0:00 and 23:59."))
             if slot.end_hour <= slot.start_hour:
-                raise ValidationError(_("A slot end hour must be later than its start hour.\n%s", slot.display_name))
+                raise ValidationError(self.env._("A slot end hour must be later than its start hour.\n%s", slot.display_name))
 
     @api.constrains("date", "start_hour", "end_hour")
     def _check_time_range(self):
@@ -58,7 +58,7 @@ class EventSlot(models.Model):
             event_start = slot.event_id.date_begin
             event_end = slot.event_id.date_end
             if not (event_start <= slot.start_datetime <= event_end) or not (event_start <= slot.end_datetime <= event_end):
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "A slot cannot be scheduled outside of its event time range.\n\n"
                     "Event:\t%(event_start)s - %(event_end)s\n"
                     "Slot:\t%(slot_name)s",
@@ -93,8 +93,8 @@ class EventSlot(models.Model):
                 self.env.context.get('name_with_seats_availability') and slot.event_id.seats_limited
                 and not slot.event_id.is_multi_slots
             ):
-                name = _('%(slot_name)s (Sold out)', slot_name=name) if not slot.seats_available else \
-                    _(
+                name = self.env._('%(slot_name)s (Sold out)', slot_name=name) if not slot.seats_available else \
+                    self.env._(
                         '%(slot_name)s (%(count)s seats remaining)',
                         slot_name=name,
                         count=formatLang(self.env, slot.seats_available, digits=0),
@@ -139,6 +139,6 @@ class EventSlot(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_if_registrations(self):
         if self.registration_ids:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "The following slots cannot be deleted while they have one or more registrations linked to them:\n- %s",
                 '\n- '.join(self.mapped('display_name'))))

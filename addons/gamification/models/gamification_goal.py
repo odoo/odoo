@@ -5,7 +5,7 @@ import ast
 import logging
 from datetime import date, datetime, timedelta
 
-from odoo import api, fields, models, _, exceptions
+from odoo import api, fields, models, exceptions
 from odoo.tools.safe_eval import safe_eval, time
 
 _logger = logging.getLogger(__name__)
@@ -290,7 +290,7 @@ class GamificationGoal(models.Model):
         for goal in self:
             if goal.state != "draft" and ('definition_id' in vals or 'user_id' in vals):
                 # avoid drag&drop in kanban view
-                raise exceptions.UserError(_('Can not modify the configuration of a started goal'))
+                raise exceptions.UserError(self.env._('Can not modify the configuration of a started goal'))
 
             if vals.get('current') and 'no_remind_goal' not in self.env.context:
                 if goal.challenge_id.report_message_frequency == 'onchange':
@@ -324,7 +324,7 @@ class GamificationGoal(models.Model):
         if self.computation_mode == 'manually':
             # open a wizard window to update the value manually
             action = {
-                'name': _("Update %s", self.definition_id.name),
+                'name': self.env._("Update %s", self.definition_id.name),
                 'id': self.id,
                 'type': 'ir.actions.act_window',
                 'views': [[False, 'form']],

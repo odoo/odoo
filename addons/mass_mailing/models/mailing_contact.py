@@ -3,7 +3,7 @@
 
 import json
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -111,7 +111,7 @@ class MailingContact(models.Model):
 
         for vals in vals_list:
             if vals.get('list_ids') and vals.get('subscription_ids'):
-                raise UserError(_('You should give either list_ids, either subscription_ids to create new contacts.'))
+                raise UserError(self.env._('You should give either list_ids, either subscription_ids to create new contacts.'))
 
         if default_list_ids:
             for vals in vals_list:
@@ -184,7 +184,7 @@ class MailingContact(models.Model):
         return {
             'type': 'ir.actions.client',
             'tag': 'import',
-            'name': _('Import Mailing Contacts'),
+            'name': self.env._('Import Mailing Contacts'),
             'params': {
                 'context': self.env.context,
                 'active_model': 'mailing.contact',
@@ -194,7 +194,7 @@ class MailingContact(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Mailing List Contacts'),
+            'label': self.env._('Import Template for Mailing List Contacts'),
             'template': '/mass_mailing/static/xls/mailing_contact.xls'
         }]
 

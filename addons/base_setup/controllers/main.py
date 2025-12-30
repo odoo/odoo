@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
 
@@ -10,7 +10,7 @@ class BaseSetup(http.Controller):
     @http.route('/base_setup/data', type='jsonrpc', auth='user')
     def base_setup_data(self, **kw):
         if not request.env.user.has_group('base.group_erp_manager'):
-            raise AccessError(_("Access Denied"))
+            raise AccessError(self.env._("Access Denied"))
 
         cr = self.env.cr
         cr.execute("""

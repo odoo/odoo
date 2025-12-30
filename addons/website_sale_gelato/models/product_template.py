@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 
 
@@ -14,7 +14,7 @@ class ProductTemplate(models.Model):
         for product in self.filtered('gelato_template_ref'):
             if product.is_published and product.gelato_missing_images:
                 raise ValidationError(
-                    _("Print images must be set on products before they can be published.")
+                    self.env._("Print images must be set on products before they can be published.")
                 )
 
     # === ACTION METHODS === #

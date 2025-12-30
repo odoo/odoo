@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 
 
 class OnboardingOnboardingStep(models.Model):
@@ -13,7 +13,7 @@ class OnboardingOnboardingStep(models.Model):
         company = self.env['account.journal'].browse(self.env.context.get('journal_id', None)).company_id or self.env.company
         action = {
             'type': 'ir.actions.act_window',
-            'name': _('Set your company data'),
+            'name': self.env._('Set your company data'),
             'res_model': 'res.company',
             'res_id': company.id,
             'views': [(self.env.ref('account.res_company_form_view_onboarding').id, "form")],
@@ -25,7 +25,7 @@ class OnboardingOnboardingStep(models.Model):
     def action_open_step_base_document_layout(self):
         view_id = self.env.ref('web.view_base_document_layout').id
         return {
-            'name': _('Configure your document layout'),
+            'name': self.env._('Configure your document layout'),
             'type': 'ir.actions.act_window',
             'res_model': 'base.document.layout',
             'target': 'new',
@@ -50,7 +50,7 @@ class OnboardingOnboardingStep(models.Model):
     def action_open_step_create_invoice(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Create first invoice'),
+            'name': self.env._('Create first invoice'),
             'views': [(self.env.ref("account.view_move_form").id, 'form')],
             'res_model': 'account.move',
             'context': {'default_move_type': 'out_invoice'},
@@ -64,7 +64,7 @@ class OnboardingOnboardingStep(models.Model):
 
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Accounting Periods'),
+            'name': self.env._('Accounting Periods'),
             'view_mode': 'form',
             'res_model': 'account.financial.year.op',
             'target': 'new',
@@ -94,7 +94,7 @@ class OnboardingOnboardingStep(models.Model):
         ]
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Chart of Accounts'),
+            'name': self.env._('Chart of Accounts'),
             'res_model': 'account.account',
             'view_mode': 'list',
             'limit': 99999999,
@@ -110,7 +110,7 @@ class OnboardingOnboardingStep(models.Model):
 
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Sales tax'),
+            'name': self.env._('Sales tax'),
             'res_id': self.env.company.id,
             'res_model': 'res.company',
             'target': 'new',

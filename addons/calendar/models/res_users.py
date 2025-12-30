@@ -3,7 +3,7 @@
 import datetime
 from zoneinfo import ZoneInfo
 
-from odoo import api, fields, models, modules, _
+from odoo import api, fields, models, modules
 from odoo.exceptions import AccessError
 
 
@@ -59,7 +59,7 @@ class ResUsers(models.Model):
         """ Forbid the calendar default privacy update from different users for keeping private events secured. """
         privacy_update = 'calendar_default_privacy' in vals
         if privacy_update and self != self.env.user:
-            raise AccessError(_("You are not allowed to change the calendar default privacy of another user due to privacy constraints."))
+            raise AccessError(self.env._("You are not allowed to change the calendar default privacy of another user due to privacy constraints."))
         return super().write(vals)
 
     @api.depends("res_users_settings_id.calendar_default_privacy")
@@ -155,7 +155,7 @@ class ResUsers(models.Model):
             ['id', 'start', 'name', 'allday'],
             order='start')
         if meetings_lines:
-            meeting_label = _("Today's Meetings")
+            meeting_label = self.env._("Today's Meetings")
             meetings_systray = {
                 'id': self.env['ir.model']._get('calendar.event').id,
                 'type': 'meeting',

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
@@ -128,14 +128,14 @@ class PaymentTransaction(models.Model):
             return super()._apply_updates(payment_data)
 
         if not payment_data:
-            self._set_canceled(state_message=_("The customer left the payment page."))
+            self._set_canceled(state_message=self.env._("The customer left the payment page."))
             return
 
         # Update the provider reference.
         txn_id = payment_data.get('id')
         txn_type = payment_data.get('txn_type')
         if not all((txn_id, txn_type)):
-            self._set_error(_(
+            self._set_error(self.env._(
                 "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s).",
                 txn_id=txn_id, txn_type=txn_type
             ))
@@ -162,4 +162,4 @@ class PaymentTransaction(models.Model):
                 "Received data with invalid payment status (%s) for transaction %s.",
                 payment_status, self.reference
             )
-            self._set_error(_("Received data with invalid payment status: %s", payment_status))
+            self._set_error(self.env._("Received data with invalid payment status: %s", payment_status))

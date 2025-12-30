@@ -13,7 +13,7 @@ from datetime import timedelta
 import psycopg2
 from dateutil.parser import parse
 
-from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
+from odoo import api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.registry import Registry
@@ -101,7 +101,7 @@ class MailMail(models.Model):
     def _check_mail_server_id(self):
         for mail in self:
             if mail.mail_server_id and not mail._filter_mail_mail_servers(mail.mail_server_id):
-                raise ValidationError(_("You may not create a message using another user's mail server."))
+                raise ValidationError(self.env._("You may not create a message using another user's mail server."))
 
     def _compute_body_content(self):
         for mail in self:
@@ -720,7 +720,7 @@ class MailMail(models.Model):
                 if raise_exception:
                     # To be consistent and backward compatible with mail_mail.send() raised
                     # exceptions, it is encapsulated into an Odoo MailDeliveryException
-                    raise MailDeliveryException(_('Unable to connect to SMTP Server'), exc)
+                    raise MailDeliveryException(self.env._('Unable to connect to SMTP Server'), exc)
                 else:
                     batch = self.browse(batch_ids)
                     batch.write({'state': 'exception', 'failure_reason': tools.exception_to_unicode(exc)})
@@ -751,7 +751,7 @@ class MailMail(models.Model):
         """ An action sending the selected mail and redirecting to mail.mail list view. """
         self.send()
         return {
-            'name': _('Emails'),
+            'name': self.env._('Emails'),
             'res_model': 'mail.mail',
             'view_mode': 'list',
             'views': [[False, 'list'], [False, 'form']],
@@ -767,7 +767,7 @@ class MailMail(models.Model):
             return True
         # check that every email is allowed on this mail server
         if mail_server and not self._filter_mail_mail_servers(mail_server):
-            raise UserError(_('Unauthorized server for some of the sending mails.'))
+            raise UserError(self.env._('Unauthorized server for some of the sending mails.'))
         # Only retrieve recipient followers of the mails if needed
         mails_with_unfollow_link = self.filtered(lambda m: m.body_html and '/mail/unfollow' in m.body_html)
         doc_to_followers = self.env['mail.followers']._get_mail_doc_to_followers(mails_with_unfollow_link.ids)
@@ -789,7 +789,7 @@ class MailMail(models.Model):
                 # To avoid sending twice the same email, provoke the failure earlier
                 mail.write({
                     'state': 'exception',
-                    'failure_reason': IrMailServer.NO_VALID_RECIPIENT if no_recipients else _('Error without exception. Probably due to sending an email without computed recipients.'),
+                    'failure_reason': IrMailServer.NO_VALID_RECIPIENT if no_recipients else self.env._('Error without exception. Probably due to sending an email without computed recipients.'),
                     'failure_type': 'mail_email_missing' if no_recipients else 'unknown',
                 })
                 # Update notification in a transient exception state to avoid concurrent
@@ -801,7 +801,7 @@ class MailMail(models.Model):
                     ('notification_status', 'not in', ('sent', 'canceled'))
                 ])
                 if notifs:
-                    notif_msg = _('Error without exception. Probably due to concurrent access update of notification records. Please see with an administrator.')
+                    notif_msg = self.env._('Error without exception. Probably due to concurrent access update of notification records. Please see with an administrator.')
                     notifs.sudo().write({
                         'notification_status': 'exception',
                         'failure_type': 'unknown',

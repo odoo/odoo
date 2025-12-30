@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class ResCompany(models.Model):
@@ -22,7 +22,7 @@ class ResCompany(models.Model):
     def _create_subcontracting_location(self):
         for company in self:
             subcontracting_location = self.env['stock.location'].create({
-                'name': _('Subcontracting'),
+                'name': self.env._('Subcontracting'),
                 'usage': 'internal',
                 'company_id': company.id,
             })

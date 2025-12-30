@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import AccessError
 
 
@@ -42,7 +42,7 @@ class ForumTag(models.Model):
         for vals in vals_list:
             forum = self.env['forum.forum'].browse(vals.get('forum_id'))
             if self.env.user.karma < forum.karma_tag_create and not self.env.is_admin():
-                raise AccessError(_('%d karma required to create a new Tag.', forum.karma_tag_create))
+                raise AccessError(self.env._('%d karma required to create a new Tag.', forum.karma_tag_create))
         return super(ForumTag, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals_list)
 
     # ----------------------------------------------------------------------

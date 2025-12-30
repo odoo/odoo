@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -93,7 +93,7 @@ class PosOrder(models.Model):
         self.email = email
         mail_template = self.env['mail.template'].browse(mail_template_id)
         if not mail_template:
-            raise UserError(_("The mail template with xmlid %s has been deleted.", mail_template_id))
+            raise UserError(self.env._("The mail template with xmlid %s has been deleted.", mail_template_id))
         email_values = {'email_to': email}
         if self.state == 'paid' and ticket_image:
             email_values['attachment_ids'] = self._get_mail_attachments(self.name, ticket_image, basic_image)

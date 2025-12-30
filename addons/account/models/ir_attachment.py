@@ -1,4 +1,4 @@
-from odoo import api, models, fields, _
+from odoo import api, models, fields
 from odoo.exceptions import UserError
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import format_date
@@ -34,7 +34,7 @@ class IrAttachment(models.Model):
         for attachment in audit_trail_attachments:
             move = id2move.get(attachment.res_id)
             if move and move.posted_before and move.company_id.restrictive_audit_trail:
-                ue = UserError(_("You cannot remove parts of a restricted audit trail."))
+                ue = UserError(self.env._("You cannot remove parts of a restricted audit trail."))
                 ue._audit_trail = True
                 raise ue
 
@@ -72,7 +72,7 @@ class IrAttachment(models.Model):
                 if dot_index > 0:
                     attachment_name = attachment.name[:dot_index]
                     attachment_extension = attachment.name[dot_index:]
-                attachment.name = _(
+                attachment.name = self.env._(
                     '%(attachment_name)s (detached by %(user)s on %(date)s)%(attachment_extension)s',
                     attachment_name=attachment_name,
                     attachment_extension=attachment_extension,

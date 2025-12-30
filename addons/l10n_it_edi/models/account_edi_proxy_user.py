@@ -2,7 +2,7 @@
 
 import logging
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -30,7 +30,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     def _get_proxy_identification(self, company, proxy_type):
         if proxy_type == 'l10n_it_edi':
             if not company.l10n_it_codice_fiscale:
-                raise UserError(_('Please fill your codice fiscale to be able to receive invoices from FatturaPA'))
+                raise UserError(self.env._('Please fill your codice fiscale to be able to receive invoices from FatturaPA'))
             return company.partner_id._l10n_it_edi_normalized_codice_fiscale()
         return super()._get_proxy_identification(company, proxy_type)
 

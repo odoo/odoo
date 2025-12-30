@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -67,7 +67,7 @@ class AccountPaymentMethodLine(models.Model):
         """
         active_provider = self.payment_provider_id.filtered(lambda provider: provider.state in ['enabled', 'test'])
         if active_provider:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "You can't delete a payment method that is linked to a provider in the enabled "
                 "or test state.\n""Linked providers(s): %s",
                 ', '.join(a.display_name for a in active_provider),
@@ -77,7 +77,7 @@ class AccountPaymentMethodLine(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Provider'),
+            'name': self.env._('Provider'),
             'view_mode': 'form',
             'res_model': 'payment.provider',
             'target': 'current',

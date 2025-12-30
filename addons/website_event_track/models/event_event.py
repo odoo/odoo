@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class EventEvent(models.Model):
@@ -97,8 +97,8 @@ class EventEvent(models.Model):
     def _get_website_menu_entries(self):
         self.ensure_one()
         return super()._get_website_menu_entries() + [
-            (_('Talks'), '#', False, 10, 'track', False),
-            (_('Talks'), '/event/%s/track' % self.env['ir.http']._slug(self), False, 10, 'track', 'track'),
-            (_('Agenda'), '/event/%s/agenda' % self.env['ir.http']._slug(self), False, 15, 'track', 'track'),
-            (_('Propose a talk'), '/event/%s/track_proposal' % self.env['ir.http']._slug(self), False, 20, 'track_proposal', 'track')
+            (self.env._('Talks'), '#', False, 10, 'track', False),
+            (self.env._('Talks'), '/event/%s/track' % self.env['ir.http']._slug(self), False, 10, 'track', 'track'),
+            (self.env._('Agenda'), '/event/%s/agenda' % self.env['ir.http']._slug(self), False, 15, 'track', 'track'),
+            (self.env._('Propose a talk'), '/event/%s/track_proposal' % self.env['ir.http']._slug(self), False, 20, 'track_proposal', 'track')
         ]

@@ -1,4 +1,4 @@
-from odoo import _, api, models, Command
+from odoo import api, models, Command
 
 
 class PurchaseOrder(models.Model):
@@ -33,7 +33,7 @@ class PurchaseOrder(models.Model):
         """ Create activity on purchase order to set details.
         :return: None.
         """
-        activity_message = _("Some information could not be imported:")
+        activity_message = self.env._("Some information could not be imported:")
         activity_message += body
         self.activity_schedule(
             'mail.mail_activity_data_todo',

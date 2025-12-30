@@ -1,7 +1,7 @@
 import logging
 import re
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
 from odoo.tools.misc import clean_context
@@ -53,13 +53,13 @@ class ResPartner(models.Model):
                 and partner.check_vat_in(partner.vat)
             ):
                 if partner.vat[:2] == "99":
-                    partner.l10n_in_gst_state_warning = _(
+                    partner.l10n_in_gst_state_warning = self.env._(
                         "As per GSTN the country should be other than India, so it's recommended to"
                     )
                 else:
                     state_id = self.env['res.country.state'].search([('l10n_in_tin', '=', partner.vat[:2])], limit=1)
                     if state_id and state_id != partner.state_id:
-                        partner.l10n_in_gst_state_warning = _(
+                        partner.l10n_in_gst_state_warning = self.env._(
                             "As per GSTN the state should be %s, so it's recommended to", state_id.name
                         )
                     else:
@@ -119,11 +119,11 @@ class ResPartner(models.Model):
         self.ensure_one()
         self.check_access('write')
         if self.env.company.sudo().account_fiscal_country_id.code != 'IN':
-            raise UserError(_('You must be logged in an Indian company to use this feature'))
+            raise UserError(self.env._('You must be logged in an Indian company to use this feature'))
         if not self.vat:
-            raise ValidationError(_("Please enter the GSTIN"))
+            raise ValidationError(self.env._("Please enter the GSTIN"))
         if not self.env.company.l10n_in_gstin_status_feature:
-            raise ValidationError(_("This feature is not activated. Go to Settings to activate this feature."))
+            raise ValidationError(self.env._("This feature is not activated. Go to Settings to activate this feature."))
         is_production = self.env.company.sudo().l10n_in_edi_production_env
         params = {
             "gstin_to_search": self.vat,
@@ -137,12 +137,12 @@ class ResPartner(models.Model):
                 "l10n_in.endpoint"
             )
         except AccessError:
-            raise UserError(_("Unable to connect with GST network"))
+            raise UserError(self.env._("Unable to connect with GST network"))
         if response.get('error') and any(e.get('code') == 'no-credit' for e in response['error']):
             return self.env["bus.bus"]._sendone(self.env.user.partner_id, "iap_notification",
                 {
                     "type": "no_credit",
-                    "title": _("Not enough credits to check GSTIN status"),
+                    "title": self.env._("Not enough credits to check GSTIN status"),
                     "get_credits_url": self.env["iap.account"].get_credits_url(service_name=IAP_SERVICE_NAME),
                 },
             )
@@ -153,35 +153,35 @@ class ResPartner(models.Model):
             l10n_in_gstin_verified_status = False
             date_from = response.get("data", {}).get("cxdt", '')
             if date_from and re.search(r'\d', date_from):
-                message = _(
+                message = self.env._(
                     "GSTIN %(vat)s is %(status)s and Effective from %(date_from)s.",
                     vat=self.vat,
                     status=gst_status,
                     date_from=date_from,
                 )
             else:
-                message = _(
+                message = self.env._(
                     "GSTIN %(vat)s is %(status)s, effective date is not available.",
                     vat=self.vat,
                     status=gst_status
                 )
             if not is_production:
-                message += _(" Warning: You are currently in a test environment. The result is a dummy.")
+                message += self.env._(" Warning: You are currently in a test environment. The result is a dummy.")
             self.message_post(body=message)
         else:
             _logger.info("GST status check error %s", response)
             if response.get('error') and any(e.get('code') == 'SWEB_9035' for e in response['error']):
                 raise UserError(
-                    _("The provided GSTIN is invalid. Please check the GSTIN and try again.")
+                    self.env._("The provided GSTIN is invalid. Please check the GSTIN and try again.")
                 )
-            default_error_message = _(
+            default_error_message = self.env._(
                 "Something went wrong while fetching the GST status."
                 "Please Contact Support if the error persists with"
                 "Response: %(response)s",
                 response=response
             )
             error_messages = [
-                f"[{error.get('code') or _('Unknown')}] {error.get('message') or default_error_message}"
+                f"[{error.get('code') or self.env._('Unknown')}] {error.get('message') or default_error_message}"
                 for error in response.get('error')
             ]
             raise UserError(
@@ -198,7 +198,7 @@ class ResPartner(models.Model):
             "tag": "display_notification",
             "params": {
                 "type": "info",
-                "message": _("GSTIN Status Updated Successfully"),
+                "message": self.env._("GSTIN Status Updated Successfully"),
                 "next": {"type": "ir.actions.act_window_close"},
             },
         }

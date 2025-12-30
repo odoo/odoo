@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -21,9 +21,9 @@ class StockPicking(models.Model):
         self.ensure_one()
         if product_with_no_hsn := self.move_ids.mapped('product_id').filtered(lambda p: not p.l10n_in_hsn_code):
             raise UserError(
-                _("Please set HSN code in below products: \n%s", '\n'.join(product_with_no_hsn.mapped('name'))))
+                self.env._("Please set HSN code in below products: \n%s", '\n'.join(product_with_no_hsn.mapped('name'))))
         if self.l10n_in_ewaybill_ids:
-            raise UserError(_("Ewaybill already created for this picking."))
+            raise UserError(self.env._("Ewaybill already created for this picking."))
         action = self._get_l10n_in_ewaybill_form_action()
         type_xml_trailing_id = (
             'type_delivery_challan_sub_sales_return'

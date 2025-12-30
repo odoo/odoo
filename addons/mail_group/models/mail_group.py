@@ -11,7 +11,7 @@ from dateutil import relativedelta
 from markupsafe import Markup
 from werkzeug import urls
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Domain
@@ -206,27 +206,27 @@ class MailGroup(models.Model):
     @api.constrains('moderator_ids')
     def _check_moderator_email(self):
         if any(not moderator.email for group in self for moderator in group.moderator_ids):
-            raise ValidationError(_('Moderators must have an email address.'))
+            raise ValidationError(self.env._('Moderators must have an email address.'))
 
     @api.constrains('moderation_notify', 'moderation_notify_msg')
     def _check_moderation_notify(self):
         if any(group.moderation_notify and not group.moderation_notify_msg for group in self):
-            raise ValidationError(_('The notification message is missing.'))
+            raise ValidationError(self.env._('The notification message is missing.'))
 
     @api.constrains('moderation_guidelines', 'moderation_guidelines_msg')
     def _check_moderation_guidelines(self):
         if any(group.moderation_guidelines and not group.moderation_guidelines_msg for group in self):
-            raise ValidationError(_('The guidelines description is missing.'))
+            raise ValidationError(self.env._('The guidelines description is missing.'))
 
     @api.constrains('moderator_ids', 'moderation')
     def _check_moderator_existence(self):
         if any(not group.moderator_ids for group in self if group.moderation):
-            raise ValidationError(_('Moderated group must have moderators.'))
+            raise ValidationError(self.env._('Moderated group must have moderators.'))
 
     @api.constrains('access_mode', 'access_group_id')
     def _check_access_mode(self):
         if any(group.access_mode == 'groups' and not group.access_group_id for group in self):
-            raise ValidationError(_('The "Authorized Group" is missing.'))
+            raise ValidationError(self.env._('The "Authorized Group" is missing.'))
 
     def _alias_get_creation_values(self):
         """Return the default values for the automatically created alias."""
@@ -258,12 +258,12 @@ class MailGroup(models.Model):
         email_has_access = self.search_count([('id', '=', self.id), ('access_group_id.user_ids.email_normalized', '=', email)])
         if self.access_mode == 'groups' and not email_has_access:
             return AliasError('error_mail_group_members_restricted',
-                                  _('Only selected groups of users can send email to the mailing list.'))
+                                  self.env._('Only selected groups of users can send email to the mailing list.'))
 
         # Error Case: Access for members, but no member found for that email
         elif self.access_mode == 'members' and not self._find_member(message_dict.get('email_from')):
             return AliasError('error_mail_group_members_restricted',
-                                  _('Only members can send email to the mailing list.'))
+                                  self.env._('Only members can send email to the mailing list.'))
 
         return None
 
@@ -373,17 +373,17 @@ class MailGroup(models.Model):
         self.ensure_one()
 
         if not self.env.is_admin() and not self.is_moderator:
-            raise UserError(_('Only an administrator or a moderator can send guidelines to group members.'))
+            raise UserError(self.env._('Only an administrator or a moderator can send guidelines to group members.'))
 
         if not self.moderation_guidelines_msg:
-            raise UserError(_('The guidelines description is empty.'))
+            raise UserError(self.env._('The guidelines description is empty.'))
 
         if self.is_closed:
-            raise UserError(_("You can not send guidelines for a closed group."))
+            raise UserError(self.env._("You can not send guidelines for a closed group."))
 
         template = self.env.ref('mail_group.mail_template_guidelines', raise_if_not_found=False)
         if not template:
-            raise UserError(_('Template "mail_group.mail_template_guidelines" was not found. No email has been sent. Please contact an administrator to fix this issue.'))
+            raise UserError(self.env._('Template "mail_group.mail_template_guidelines" was not found. No email has been sent. Please contact an administrator to fix this issue.'))
 
         banned_emails = self.env['mail.group.moderation'].sudo().search([
             ('status', '=', 'ban'),
@@ -412,7 +412,7 @@ class MailGroup(models.Model):
         self.ensure_one()
 
         if message.mail_group_id != self:
-            raise UserError(_('The group of the message do not match.'))
+            raise UserError(self.env._('The group of the message do not match.'))
 
         if not message.mail_message_id.reply_to:
             _logger.error('The alias or the catchall domain is missing, group might not work properly.')
@@ -514,7 +514,7 @@ class MailGroup(models.Model):
                 email_from = moderator.company_id.catchall_formatted or moderator.company_id.email_formatted
                 MailThread.message_notify(
                     partner_ids=moderator.partner_id.ids,
-                    subject=_('Messages are pending moderation'),
+                    subject=self.env._('Messages are pending moderation'),
                     body=body,
                     email_from=email_from,
                     model='mail.group',
@@ -556,7 +556,7 @@ class MailGroup(models.Model):
     def action_join(self):
         self.check_access('read')
         if self.is_closed:
-            raise UserError(_("You can not join a closed group."))
+            raise UserError(self.env._("You can not join a closed group."))
         partner = self.env.user.partner_id
         self.sudo()._join_group(partner.email, partner.id)
 
@@ -575,7 +575,7 @@ class MailGroup(models.Model):
         if partner_id:
             partner = self.env['res.partner'].browse(partner_id).exists()
             if not partner:
-                raise ValidationError(_('The partner can not be found.'))
+                raise ValidationError(self.env._('The partner can not be found.'))
             email = partner.email
 
         existing_member = self._find_member(email, partner_id)
@@ -661,7 +661,7 @@ class MailGroup(models.Model):
     def _generate_action_url(self, email, action):
         """Generate the confirmation URL to subscribe / unsubscribe from the mailing list."""
         if action not in ['subscribe', 'unsubscribe']:
-            raise ValueError(_('Invalid action for URL generation (%s)', action))
+            raise ValueError(self.env._('Invalid action for URL generation (%s)', action))
         self.ensure_one()
 
         confirm_action_url = '/group/%s-confirm?%s' % (
@@ -679,12 +679,12 @@ class MailGroup(models.Model):
     def _generate_action_token(self, email, action):
         """Generate an action token to be able to subscribe / unsubscribe from the mailing list."""
         if action not in ['subscribe', 'unsubscribe']:
-            raise ValueError(_('Invalid action for URL generation (%s)', action))
+            raise ValueError(self.env._('Invalid action for URL generation (%s)', action))
         self.ensure_one()
 
         email_normalized = email_normalize(email)
         if not email_normalized:
-            raise UserError(_('Email %s is invalid', email))
+            raise UserError(self.env._('Email %s is invalid', email))
 
         data = (self.id, email_normalized, action)
         return hmac(self.env(su=True), 'mail_group-email-subscription', data)

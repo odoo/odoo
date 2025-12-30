@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 
@@ -68,7 +68,7 @@ class ProductTemplate(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'type': 'danger',
-                    'title': _("Could not synchronize with Gelato"),
+                    'title': self.env._("Could not synchronize with Gelato"),
                     'message': str(e),
                     'sticky': True,
                 }
@@ -84,8 +84,8 @@ class ProductTemplate(models.Model):
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'title': _("Successfully synchronized with Gelato"),
-                'message': _("Missing product variants and images have been successfully created."),
+                'title': self.env._("Successfully synchronized with Gelato"),
+                'message': self.env._("Missing product variants and images have been successfully created."),
                 'sticky': False,
                 'next': {
                     'type': 'ir.actions.client',

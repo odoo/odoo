@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, _
+from odoo import models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('cn_common')
     def _get_cn_common_template_data(self):
         return {
-            'name': _('Common'),
+            'name': self.env._('Common'),
             'visible': 0,
             'code_digits': 6,
             'use_storno_accounting': True,
@@ -36,7 +36,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_cn_account_journal(self):
         return {
             'cash': {
-                'name': _("Cash"),
+                'name': self.env._("Cash"),
                 'type': 'cash',
                 'default_account_id': 'l10n_cn_common_account_1001',
             },

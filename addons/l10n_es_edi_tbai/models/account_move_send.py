@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -11,7 +11,7 @@ class AccountMoveSend(models.AbstractModel):
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'
         res = super()._get_all_extra_edis()
-        res.update({'es_tbai': {'label': _("TicketBAI"), 'is_applicable': self._is_tbai_applicable, 'help': _('Send the e-invoice to the Basque Government.')}})
+        res.update({'es_tbai': {'label': self.env._("TicketBAI"), 'is_applicable': self._is_tbai_applicable, 'help': self.env._('Send the e-invoice to the Basque Government.')}})
         return res
 
     # -------------------------------------------------------------------------
@@ -55,7 +55,7 @@ class AccountMoveSend(models.AbstractModel):
 
                 if error:
                     invoice_data['error'] = {
-                        'error_title': _("Error when sending the invoice to TicketBAI:"),
+                        'error_title': self.env._("Error when sending the invoice to TicketBAI:"),
                         'errors': [error],
                     }
 

@@ -3,8 +3,7 @@ import uuid
 import base64
 import logging
 
-from collections import defaultdict
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 from odoo.tools.misc import clean_context
@@ -80,7 +79,7 @@ class CalendarAttendee(models.Model):
         return super().unlink()
 
     def copy(self, default=None):
-        raise UserError(_('You cannot duplicate a calendar attendee.'))
+        raise UserError(self.env._('You cannot duplicate a calendar attendee.'))
 
     def _unsubscribe_partner(self):
         for event in self.event_id:
@@ -230,7 +229,7 @@ class CalendarAttendee(models.Model):
         for attendee in self:
             attendee.event_id.message_post(
                 author_id=attendee.partner_id.id,
-                body=_("%s has accepted the invitation", attendee.common_name),
+                body=self.env._("%s has accepted the invitation", attendee.common_name),
                 subtype_xmlid="calendar.subtype_invitation",
             )
         return self.write({'state': 'accepted'})
@@ -240,7 +239,7 @@ class CalendarAttendee(models.Model):
         for attendee in self:
             attendee.event_id.message_post(
                 author_id=attendee.partner_id.id,
-                body=_("%s has declined the invitation", attendee.common_name),
+                body=self.env._("%s has declined the invitation", attendee.common_name),
                 subtype_xmlid="calendar.subtype_invitation",
             )
         return self.write({'state': 'declined'})

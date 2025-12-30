@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_is_zero
+from odoo.tools import float_compare
 from odoo.tools.misc import clean_context
 
 
@@ -14,7 +14,7 @@ class StockScrap(models.Model):
     _description = 'Scrap'
 
     name = fields.Char(
-        'Reference',  default=lambda self: _('New'),
+        'Reference',  default=lambda self: self.env._('New'),
         copy=False, readonly=True, required=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True)
     origin = fields.Char(string='Source Document')
@@ -115,12 +115,12 @@ class StockScrap(models.Model):
             if message:
                 if recommended_location:
                     self.location_id = recommended_location
-                return {'warning': {'title': _('Warning'), 'message': message}}
+                return {'warning': {'title': self.env._('Warning'), 'message': message}}
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
         if 'done' in self.mapped('state'):
-            raise UserError(_('You cannot delete a scrap which is done.'))
+            raise UserError(self.env._('You cannot delete a scrap which is done.'))
 
     def _prepare_move_values(self):
         self.ensure_one()
@@ -152,7 +152,7 @@ class StockScrap(models.Model):
     def do_scrap(self):
         self._check_company()
         for scrap in self:
-            scrap.name = self.env['ir.sequence'].next_by_code('stock.scrap') or _('New')
+            scrap.name = self.env['ir.sequence'].next_by_code('stock.scrap') or self.env._('New')
             move = self.env['stock.move'].create(scrap._prepare_move_values())
             # master: replace context by cancel_backorder
             move.with_context(is_scrap=True)._action_done()
@@ -207,7 +207,7 @@ class StockScrap(models.Model):
     def action_validate(self):
         self.ensure_one()
         if self.product_uom_id.is_zero(self.scrap_qty):
-            raise UserError(_('You can only enter positive quantities.'))
+            raise UserError(self.env._('You can only enter positive quantities.'))
         if self.check_available_qty():
             return self.do_scrap()
         else:
@@ -220,7 +220,7 @@ class StockScrap(models.Model):
                 'default_product_uom_name': self.product_id.uom_name
             })
             return {
-                'name': _('%(product)s: Insufficient Quantity To Scrap', product=self.product_id.display_name),
+                'name': self.env._('%(product)s: Insufficient Quantity To Scrap', product=self.product_id.display_name),
                 'view_mode': 'form',
                 'res_model': 'stock.warn.insufficient.qty.scrap',
                 'view_id': self.env.ref('stock.stock_warn_insufficient_qty_scrap_form_view').id,

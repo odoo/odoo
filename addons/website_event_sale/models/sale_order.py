@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -34,15 +34,15 @@ class SaleOrder(models.Model):
             if not order_line.event_ticket_id or new_qty < order_line.product_uom_qty:
                 return new_qty, warning
             else:
-                return order_line.product_uom_qty, _("You cannot raise manually the event ticket quantity in your cart")
+                return order_line.product_uom_qty, self.env._("You cannot raise manually the event ticket quantity in your cart")
 
         # Adding new ticket to the cart (might be automatically linked to an existing line)
         ticket = self.env['event.event.ticket'].browse(event_ticket_id).exists()
         if not ticket:
-            raise UserError(_("The provided ticket doesn't exist"))
+            raise UserError(self.env._("The provided ticket doesn't exist"))
         slot = self.env['event.slot'].browse(event_slot_id).exists()
         if event_slot_id and not slot:
-            raise UserError(_("The provided ticket slot doesn't exist"))
+            raise UserError(self.env._("The provided ticket slot doesn't exist"))
 
         # TODO TDE consider full cart qty and not only added qty
         # if event seats are not auto confirmed.
@@ -57,14 +57,14 @@ class SaleOrder(models.Model):
             # Remove existing line if exists and do not add a new one
             # if no ticket is available anymore
             new_qty = existing_qty
-            warning = _(
+            warning = self.env._(
                 'Sorry, The %(ticket)s tickets for the %(event)s event are sold out.',
                 ticket=ticket.name,
                 event=ticket.event_id.name,
             )
         elif ticket.seats_limited and qty_added > ticket_seats_available:
             new_qty = existing_qty + ticket_seats_available
-            warning = _(
+            warning = self.env._(
                 'Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event%(slot)s.',
                 remaining_seats=ticket_seats_available,
                 slot=f' on {slot.name}' if slot else '',
@@ -86,7 +86,7 @@ class SaleOrder(models.Model):
         ticket = self.env['event.event.ticket'].browse(event_ticket_id)
 
         if ticket.product_id.id != product_id:
-            raise UserError(_("The ticket doesn't match with this product."))
+            raise UserError(self.env._("The ticket doesn't match with this product."))
 
         values['event_id'] = ticket.event_id.id
         values['event_ticket_id'] = ticket.id

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
@@ -179,7 +179,7 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['error']:
-            self._set_error(_(
+            self._set_error(self.env._(
                 "An error occurred during the processing of your payment (status %s). Please try "
                 "again.", payment_status
             ))
@@ -188,7 +188,7 @@ class PaymentTransaction(models.Model):
                 "Received data with invalid payment status (%s) for transaction %s.",
                 payment_status, self.reference
             )
-            self._set_error(_("Unknown payment status: %s", payment_status))
+            self._set_error(self.env._("Unknown payment status: %s", payment_status))
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

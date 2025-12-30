@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.tools import OrderedSet
 
 
@@ -37,7 +37,7 @@ class PurchaseOrder(models.Model):
             })
         else:
             action.update({
-                'name': _("Manufacturing Source of %s", self.name),
+                'name': self.env._("Manufacturing Source of %s", self.name),
                 'domain': [('id', 'in', mrp_production_ids)],
                 'view_mode': 'list,form',
             })

@@ -2,7 +2,7 @@
 
 import re
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.fields import Domain
 from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
@@ -97,11 +97,11 @@ class ResPartner(models.Model):
     def find_or_create(self, email, assert_valid_email=False):
         """ Override to use the email_normalized field. """
         if not email:
-            raise ValueError(_('An email is required for find_or_create to work'))
+            raise ValueError(self.env._('An email is required for find_or_create to work'))
 
         parsed_name, parsed_email_normalized = tools.parse_contact_from_email(email)
         if not parsed_email_normalized and assert_valid_email:
-            raise ValueError(_('%(email)s is not recognized as a valid email. This is required to create a new customer.'))
+            raise ValueError(self.env._('%(email)s is not recognized as a valid email. This is required to create a new customer.'))
         if parsed_email_normalized:
             partners = self.search([('email_normalized', '=', parsed_email_normalized)], limit=1)
             if partners:

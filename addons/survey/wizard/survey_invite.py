@@ -3,9 +3,8 @@
 
 import logging
 import re
-import werkzeug
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.tools.mail import email_split_and_format, email_normalize
 
@@ -88,13 +87,13 @@ class SurveyInvite(models.TransientModel):
             existing_text = False
             if wizard.existing_partner_ids:
                 existing_text = '%s: %s.' % (
-                    _('The following customers have already received an invite'),
+                    self.env._('The following customers have already received an invite'),
                     ', '.join(wizard.mapped('existing_partner_ids.name'))
                 )
             if wizard.existing_emails:
                 existing_text = '%s\n' % existing_text if existing_text else ''
                 existing_text += '%s: %s.' % (
-                    _('The following emails have already received an invite'),
+                    self.env._('The following emails have already received an invite'),
                     wizard.existing_emails
                 )
 
@@ -113,7 +112,7 @@ class SurveyInvite(models.TransientModel):
     @api.onchange('emails')
     def _onchange_emails(self):
         if self.emails and (self.survey_users_login_required and not self.survey_id.users_can_signup):
-            raise UserError(_('This survey does not allow external people to participate. You should create user accounts or update survey access mode accordingly.'))
+            raise UserError(self.env._('This survey does not allow external people to participate. You should create user accounts or update survey access mode accordingly.'))
         if not self.emails:
             return
         valid, error = [], []
@@ -125,7 +124,7 @@ class SurveyInvite(models.TransientModel):
             else:
                 valid.extend(email_check)
         if error:
-            raise UserError(_("Some emails you just entered are incorrect: %s", ', '.join(error)))
+            raise UserError(self.env._("Some emails you just entered are incorrect: %s", ', '.join(error)))
         self.emails = '\n'.join(valid)
 
     @api.onchange('partner_ids')
@@ -137,7 +136,7 @@ class SurveyInvite(models.TransientModel):
                     ('id', 'in', self.partner_ids.ids)
                 ])
                 if invalid_partners:
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         'The following recipients have no user account: %s. You should create user accounts for them or allow external signup in configuration.',
                         ', '.join(invalid_partners.mapped('name'))
                     ))
@@ -159,7 +158,7 @@ class SurveyInvite(models.TransientModel):
             if invite.template_id and invite.template_id.subject:
                 invite.subject = invite.template_id.subject
             else:
-                invite.subject = _("Participate to %(survey_name)s", survey_name=invite.survey_id.display_name)
+                invite.subject = self.env._("Participate to %(survey_name)s", survey_name=invite.survey_id.display_name)
 
     @api.depends('template_id', 'partner_ids')
     def _compute_body(self):
@@ -232,7 +231,7 @@ class SurveyInvite(models.TransientModel):
         """ Create mail specific for recipient containing notably its access token """
         email_from = self.template_id._render_field('email_from', answer.ids)[answer.id] if self.template_id.email_from else self.author_id.email_formatted
         if not email_from:
-            raise UserError(_("Unable to post message, please configure the sender's email address."))
+            raise UserError(self.env._("Unable to post message, please configure the sender's email address."))
         subject = self._render_field('subject', answer.ids)[answer.id]
         body = self._render_field('body', answer.ids)[answer.id]
         # post the message
@@ -286,7 +285,7 @@ class SurveyInvite(models.TransientModel):
                     valid_emails.extend(email_formatted)
 
         if not valid_partners and not valid_emails:
-            raise UserError(_("Please enter at least one valid recipient."))
+            raise UserError(self.env._("Please enter at least one valid recipient."))
 
         answers = self._prepare_answers(valid_partners, valid_emails)
         for answer in answers:

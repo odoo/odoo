@@ -3,9 +3,8 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_is_zero
 
 
 SPLIT_METHOD = [
@@ -29,7 +28,7 @@ class StockLandedCost(models.Model):
         return self.env.company.lc_journal_id or ProductCategory._fields['property_stock_journal'].get_company_dependent_fallback(ProductCategory)
 
     name = fields.Char(
-        'Name', default=lambda self: _('New'),
+        'Name', default=lambda self: self.env._('New'),
         copy=False, readonly=True, tracking=True)
     date = fields.Date(
         'Date', default=fields.Date.context_today,
@@ -87,7 +86,7 @@ class StockLandedCost(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', _('New')) == _('New'):
+            if vals.get('name', self.env._('New')) == self.env._('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('stock.landed.cost')
         return super().create(vals_list)
 
@@ -103,7 +102,7 @@ class StockLandedCost(models.Model):
     def button_cancel(self):
         if any(cost.state == 'done' for cost in self):
             raise UserError(
-                _('Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them'))
+                self.env._('Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them'))
         return self.write({'state': 'cancel'})
 
     def button_validate(self):
@@ -112,7 +111,7 @@ class StockLandedCost(models.Model):
         if cost_without_adjusment_lines:
             cost_without_adjusment_lines.compute_landed_cost()
         if not self._check_sum():
-            raise UserError(_('Cost and adjustments lines do not match. You should maybe recompute the landed costs.'))
+            raise UserError(self.env._('Cost and adjustments lines do not match. You should maybe recompute the landed costs.'))
 
         for cost in self:
             cost = cost.with_company(cost.company_id)
@@ -180,7 +179,7 @@ class StockLandedCost(models.Model):
 
         if not lines:
             target_model_descriptions = dict(self._fields['target_model']._description_selection(self.env))
-            raise UserError(_("You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method.", target_model_descriptions[self.target_model]))
+            raise UserError(self.env._("You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method.", target_model_descriptions[self.target_model]))
         return lines
 
     def compute_landed_cost(self):
@@ -268,11 +267,11 @@ class StockLandedCost(models.Model):
 
     def _check_can_validate(self):
         if any(cost.state != 'draft' for cost in self):
-            raise UserError(_('Only draft landed costs can be validated'))
+            raise UserError(self.env._('Only draft landed costs can be validated'))
         for cost in self:
             if not cost._get_targeted_move_ids():
                 target_model_descriptions = dict(self._fields['target_model']._description_selection(self.env))
-                raise UserError(_('Please define %s on which those additional costs should apply.', target_model_descriptions[cost.target_model]))
+                raise UserError(self.env._('Please define %s on which those additional costs should apply.', target_model_descriptions[cost.target_model]))
 
     def _check_sum(self):
         """ Check if each cost line its valuation lines sum to the correct amount
@@ -374,7 +373,7 @@ class StockValuationAdjustmentLines(models.Model):
         credit_account_id = self.cost_line_id.account_id.id or cost_product._get_product_accounts()['expense'].id
 
         if not credit_account_id:
-            raise UserError(_('Please configure Stock Expense Account for product: %s.', cost_product.name))
+            raise UserError(self.env._('Please configure Stock Expense Account for product: %s.', cost_product.name))
 
         return self._create_account_move_line(credit_account_id, debit_account_id, remaining_qty)
 

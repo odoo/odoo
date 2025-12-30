@@ -2,7 +2,7 @@
 import psycopg2.errors
 from werkzeug.exceptions import NotFound
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import consteq, email_normalize, replace_exceptions
@@ -98,7 +98,7 @@ class PublicPageController(http.Controller):
         with replace_exceptions(UserError, by=NotFound()):
             # sudo: mail.guest - creating a guest and its member inside a channel of which they have the token
             __, guest = channel.sudo()._find_or_create_persona_for_channel(
-                guest_name=guest_email if guest_email else _("Guest"),
+                guest_name=guest_email if guest_email else self.env._("Guest"),
                 country_code=request.geoip.country_code,
                 timezone=request.env["mail.guest"]._get_timezone_from_request(request),
             )

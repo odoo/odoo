@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
+from odoo import fields, models, api
 
 
 class AccountMove(models.Model):
@@ -105,7 +105,7 @@ class AccountMove(models.Model):
         if self.sudo().pos_order_ids.filtered(lambda o: o.session_id.state != 'closed'):
             self.env.user._bus_send("simple_notification", {
                 'type': 'danger',
-                'message': _("You can't reset this invoice to draft because the POS session is still open. Please close the ongoing session first, then try again."),
+                'message': self.env._("You can't reset this invoice to draft because the POS session is still open. Please close the ongoing session first, then try again."),
                 'sticky': True,
             })
             return False

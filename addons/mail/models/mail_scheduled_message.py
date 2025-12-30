@@ -4,7 +4,7 @@ import json
 from collections import defaultdict
 from markupsafe import Markup
 
-from odoo import _, api, fields, models, modules
+from odoo import api, fields, models, modules
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import clean_context
@@ -59,12 +59,12 @@ class MailScheduledMessage(models.Model):
     @api.constrains('model')
     def _check_model(self):
         if not all(model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']) for model in self.mapped("model")):
-            raise ValidationError(_("A message cannot be scheduled on a model that does not have a mail thread."))
+            raise ValidationError(self.env._("A message cannot be scheduled on a model that does not have a mail thread."))
 
     @api.constrains('scheduled_date')
     def _check_scheduled_date(self):
         if any(scheduled_message.scheduled_date < fields.Datetime().now() for scheduled_message in self):
-            raise ValidationError(_("A Scheduled Message cannot be scheduled in the past"))
+            raise ValidationError(self.env._("A Scheduled Message cannot be scheduled in the past"))
 
     # ------------------------------------------------------
     # CRUD / ORM
@@ -136,7 +136,7 @@ class MailScheduledMessage(models.Model):
     def write(self, vals):
         # prevent changing the records on which the messages are scheduled
         if vals.get('model') or vals.get('res_id'):
-            raise UserError(_('You are not allowed to change the target record of a scheduled message.'))
+            raise UserError(self.env._('You are not allowed to change the target record of a scheduled message.'))
         # make sure user can write on the record the messages are scheduled on
         self._check()
         res = super().write(vals)
@@ -152,7 +152,7 @@ class MailScheduledMessage(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Edit Scheduled Note") if self.is_note else _("Edit Scheduled Message"),
+            'name': self.env._("Edit Scheduled Note") if self.is_note else self.env._("Edit Scheduled Message"),
             'res_model': self._name,
             'view_mode': 'form',
             'views': [[False, 'form']],
@@ -165,7 +165,7 @@ class MailScheduledMessage(models.Model):
         if self.env.is_admin() or self.create_uid.id == self.env.uid:
             self._post_message()
         else:
-            raise UserError(_("You are not allowed to send this scheduled message"))
+            raise UserError(self.env._("You are not allowed to send this scheduled message"))
 
     def _message_created_hook(self, message):
         """Hook called after scheduled messages have been posted."""
@@ -210,8 +210,8 @@ class MailScheduledMessage(models.Model):
                 try:
                     self.env['mail.thread'].message_notify(
                         partner_ids=[message_creator.partner_id.id],
-                        subject=_("A scheduled message could not be sent"),
-                        body=_("The message scheduled on %(model)s(%(id)s) with the following content could not be sent:%(original_message)s",
+                        subject=self.env._("A scheduled message could not be sent"),
+                        body=self.env._("The message scheduled on %(model)s(%(id)s) with the following content could not be sent:%(original_message)s",
                             model=scheduled_message.model,
                             id=scheduled_message.res_id,
                             original_message=Markup("<br>-----<br>%s<br>-----<br>") % scheduled_message.body,

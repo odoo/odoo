@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class AccountMove(models.Model):
@@ -87,16 +87,16 @@ class AccountMove(models.Model):
             #         - The first format is in case the code and label are the same in both lists
             #         - The second format is in case the code, label pair is only in one of the lists
             # VAT & IGIC
-            ('01', _("General regime operation")),
-            ('02', _("Export")),
-            ('11', _("Leasing of business premises")),
+            ('01', self.env._("General regime operation")),
+            ('02', self.env._("Export")),
+            ('11', self.env._("Leasing of business premises")),
             # VAT only
-            ('17_iva', _("Operation under one of the regimes provided for in Chapter XI of Title IX (OSS and IOSS).")),
-            ('18_iva', _("Recargo de equivalencia")),
-            ('19_iva', _("Operations of activities included in the Special Regime for Agriculture, Livestock and Fishing (REAGYP)")),
-            ('20_iva', _("Simplified Regime")),
+            ('17_iva', self.env._("Operation under one of the regimes provided for in Chapter XI of Title IX (OSS and IOSS).")),
+            ('18_iva', self.env._("Recargo de equivalencia")),
+            ('19_iva', self.env._("Operations of activities included in the Special Regime for Agriculture, Livestock and Fishing (REAGYP)")),
+            ('20_iva', self.env._("Simplified Regime")),
             # IGIC only
-            ('17_igic', _("Special retailer regime")),
+            ('17_igic', self.env._("Special retailer regime")),
         ]
 
     def _l10n_es_edi_verifactu_get_tax_applicability(self):
@@ -189,14 +189,14 @@ class AccountMove(models.Model):
                 warning_level = 'danger'
             elif move.state == 'draft':
                 if move.l10n_es_edi_verifactu_state:
-                    warning = _("You are modifying a journal entry for which a Veri*Factu document has been sent to the AEAT already.")
+                    warning = self.env._("You are modifying a journal entry for which a Veri*Factu document has been sent to the AEAT already.")
                     warning_level = 'warning'
                 elif last_document._filter_waiting():
-                    warning = _("You are modifying a journal entry for which a Veri*Factu document is waiting to be sent.")
+                    warning = self.env._("You are modifying a journal entry for which a Veri*Factu document is waiting to be sent.")
                     warning_level = 'warning'
 
             if last_document._filter_waiting():
-                warning = _("%(existing_warning)sA Veri*Factu document is waiting to be sent as soon as possible.",
+                warning = self.env._("%(existing_warning)sA Veri*Factu document is waiting to be sent as soon as possible.",
                             existing_warning=(warning + '\n' if warning else ''))
                 warning_level = warning_level or 'info'
 
@@ -242,13 +242,13 @@ class AccountMove(models.Model):
         errors = []
 
         if self.state != 'posted':
-            errors.append(_("The journal entry has to be posted."))
+            errors.append(self.env._("The journal entry has to be posted."))
 
         tax_applicability = self._l10n_es_edi_verifactu_get_tax_applicability()
         selected_clave_regimen = self.l10n_es_edi_verifactu_clave_regimen
         available_clave_regimens_map = self._l10n_es_edi_verifactu_get_available_clave_regimens_map()
         if selected_clave_regimen and selected_clave_regimen not in available_clave_regimens_map.get(tax_applicability, set()):
-            errors.append(_("The Veri*Factu Regime Key is not compatible with the Veri*Factu Tax Applicability."))
+            errors.append(self.env._("The Veri*Factu Regime Key is not compatible with the Veri*Factu Tax Applicability."))
 
         return errors
 

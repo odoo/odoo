@@ -1,4 +1,4 @@
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.fields import Domain
 
 
@@ -14,7 +14,7 @@ class MailingMailing(models.Model):
         for mailing in self:
             if mailing.card_campaign_id:
                 if mailing.sudo().mailing_model_id.model != mailing.card_campaign_id.res_model:
-                    raise exceptions.ValidationError(_(
+                    raise exceptions.ValidationError(self.env._(
                         "Card Campaign Mailing should target model %(model_name)s",
                         model_name=self.env['ir.model']._get(mailing.card_campaign_id.res_model).display_name
                     ))
@@ -43,7 +43,7 @@ class MailingMailing(models.Model):
         """Detect mismatches before scheduling."""
         for mailing in self.filtered('card_campaign_id'):
             if mailing.card_requires_sync_count:
-                raise exceptions.UserError(_(
+                raise exceptions.UserError(self.env._(
                     'You should update all the cards for %(mailing)s before scheduling a mailing.',
                     mailing=mailing.display_name
                 ))
@@ -52,7 +52,7 @@ class MailingMailing(models.Model):
     def action_send_mail(self, res_ids=None):
         for mailing in self.filtered('card_campaign_id'):
             if mailing.card_requires_sync_count:
-                raise exceptions.UserError(_(
+                raise exceptions.UserError(self.env._(
                     'You should update all the cards for %(mailing)s before scheduling a mailing.',
                     mailing=mailing.display_name
                 ))

@@ -4,7 +4,7 @@ from collections import defaultdict
 
 import werkzeug
 import werkzeug.exceptions
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
 from odoo.tools.image import image_data_uri
@@ -63,14 +63,14 @@ class ResPartnerBank(models.Model):
     def _check_journal_id(self):
         for bank in self:
             if len(bank.journal_id) > 1:
-                raise ValidationError(_('A bank account can belong to only one journal.'))
+                raise ValidationError(self.env._('A bank account can belong to only one journal.'))
 
     def _check_allow_out_payment(self):
         """ Block enabling the setting, but it can be set to false without the group. (For example, at creation) """
         for bank in self:
             if bank.allow_out_payment:
                 if not self.env.user.has_group('account.group_validate_bank_account'):
-                    raise ValidationError(_('You do not have the right to trust or un-trust a bank account.'))
+                    raise ValidationError(self.env._('You do not have the right to trust or un-trust a bank account.'))
 
     @api.depends('account_number')
     def _compute_duplicate_bank_partner_ids(self):
@@ -196,7 +196,7 @@ class ResPartnerBank(models.Model):
 
         self.ensure_one()
         if not currency:
-            raise UserError(_("Currency must always be provided in order to generate a QR-code"))
+            raise UserError(self.env._("Currency must always be provided in order to generate a QR-code"))
 
         available_qr_methods = self.get_available_qr_methods_in_sequence()
         candidate_methods = qr_method and [(qr_method, dict(available_qr_methods)[qr_method])] or available_qr_methods
@@ -331,15 +331,15 @@ class ResPartnerBank(models.Model):
             if (partner_id := vals.get('partner_id')) and (account_number := vals.get('account_number')):
                 archived_res_partner_bank = self.env['res.partner.bank'].search([('active', '=', False), ('partner_id', '=', partner_id), ('account_number', '=', account_number)])
                 if archived_res_partner_bank:
-                    raise UserError(_("A bank account with Account Number %(number)s already exists for Partner %(partner)s, but is archived. Please unarchive it instead.", number=account_number, partner=archived_res_partner_bank.partner_id.name))
+                    raise UserError(self.env._("A bank account with Account Number %(number)s already exists for Partner %(partner)s, but is archived. Please unarchive it instead.", number=account_number, partner=archived_res_partner_bank.partner_id.name))
 
         res = super().create(vals_list)
         res._check_allow_out_payment()
         for account in res:
             partner = account.partner_id
-            msg = _("Partner set to %s", partner._get_html_link(title=f"#{partner.display_name}"))
+            msg = self.env._("Partner set to %s", partner._get_html_link(title=f"#{partner.display_name}"))
             account._message_log(body=msg)
-            msg = _("Bank Account %s created", account._get_html_link(title=f"#{account.id}"))
+            msg = self.env._("Bank Account %s created", account._get_html_link(title=f"#{account.id}"))
             partner._message_log(body=msg)
         return res
 
@@ -383,10 +383,10 @@ class ResPartnerBank(models.Model):
             for fname in lock_fields & set(vals)
             for account in trusted_accounts
         ):
-            raise UserError(_("You cannot modify the account number or partner of an account that has been trusted."))
+            raise UserError(self.env._("You cannot modify the account number or partner of an account that has been trusted."))
 
         if 'allow_out_payment' in vals and not self.env.user.has_group('account.group_validate_bank_account') and not self.env.su:
-            raise UserError(_("You do not have the rights to trust or un-trust accounts."))
+            raise UserError(self.env._("You do not have the rights to trust or un-trust accounts."))
 
         res = super().write(vals)
 
@@ -398,7 +398,7 @@ class ResPartnerBank(models.Model):
         for account, initial_values in account_initial_values.items():
             tracking_value_ids = account._mail_track(fields_definition, initial_values)[1]
             if tracking_value_ids:
-                msg = _("Bank Account %s updated", account._get_html_link(title=f"#{account.id}"))
+                msg = self.env._("Bank Account %s updated", account._get_html_link(title=f"#{account.id}"))
                 account.partner_id._message_log(body=msg, tracking_value_ids=tracking_value_ids)
                 if 'partner_id' in initial_values:  # notify previous partner as well
                     initial_values['partner_id']._message_log(body=msg, tracking_value_ids=tracking_value_ids)

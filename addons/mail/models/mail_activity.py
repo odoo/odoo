@@ -7,7 +7,7 @@ from datetime import date, datetime, timedelta
 
 from dateutil.relativedelta import MO, relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.tools import is_html_empty
@@ -261,7 +261,7 @@ class MailActivity(models.Model):
         return result
 
     def _make_access_error(self, operation: str) -> AccessError:
-        return AccessError(_(
+        return AccessError(self.env._(
             "The requested operation cannot be completed due to security restrictions. "
             "Please contact your system administrator.\n\n"
             "(Document type: %(type)s, Operation: %(operation)s)\n\n"
@@ -460,7 +460,7 @@ class MailActivity(models.Model):
                     body=body,
                     model_description=model_description,
                     email_layout_xmlid='mail.mail_notification_layout',
-                    subject=_('"%(activity_name)s: %(summary)s" assigned to you',
+                    subject=self.env._('"%(activity_name)s: %(summary)s" assigned to you',
                               activity_name=activity.res_name,
                               summary=activity.summary or activity.activity_type_id.name or ''),
                     subtitles=[
@@ -523,7 +523,7 @@ class MailActivity(models.Model):
         if next_activities:
             return False
         return {
-            'name': _('Schedule an Activity'),
+            'name': self.env._('Schedule an Activity'),
             'context': ctx,
             'view_mode': 'form',
             'res_model': 'mail.activity',

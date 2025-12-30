@@ -4,7 +4,7 @@ from ast import literal_eval
 
 from lxml import etree
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.http import request
@@ -160,7 +160,7 @@ class IrModelFields(models.Model):
                     arch_parsed = etree.fromstring(record[field_name])
                     xpath_selector = f'//form[@data-model_name="{field.model}"]//*[@name="{field.name}"]'
                     if arch_parsed.xpath(xpath_selector):
-                        raise ValidationError(_(
+                        raise ValidationError(self.env._(
                             "The field '%(field)s' cannot be deleted because it is referenced in a website view.\n"
                             "Model: %(model)s\n"
                             "View: %(view)s",

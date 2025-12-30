@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 
@@ -83,7 +83,7 @@ class StockPickingType(models.Model):
             if not picking_type.auto_batch:
                 continue
             if not any(picking_type[key] for key in group_by_keys):
-                raise ValidationError(_("If the Automatic Batches feature is enabled, at least one 'Group by' option must be selected."))
+                raise ValidationError(self.env._("If the Automatic Batches feature is enabled, at least one 'Group by' option must be selected."))
 
 
 class StockPicking(models.Model):
@@ -120,7 +120,7 @@ class StockPicking(models.Model):
     def action_add_operations(self):
         view = self.env.ref('stock_picking_batch.view_move_line_tree_detailed_wave')
         return {
-            'name': _('Add Operations'),
+            'name': self.env._('Add Operations'),
             'type': 'ir.actions.act_window',
             'view_mode': 'list',
             'view': view,
@@ -311,9 +311,9 @@ class StockPicking(models.Model):
         pickings.write({'user_id': user_id})
         for pick in pickings:
             if user_id:
-                log_message = _('Assigned to %s Responsible', pick.batch_id._get_html_link())
+                log_message = self.env._('Assigned to %s Responsible', pick.batch_id._get_html_link())
             else:
-                log_message = _('Unassigned responsible from %s', pick.batch_id._get_html_link())
+                log_message = self.env._('Unassigned responsible from %s', pick.batch_id._get_html_link())
             pick.message_post(body=log_message)
 
     def action_view_batch(self):

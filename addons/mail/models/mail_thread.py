@@ -24,7 +24,7 @@ from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
 
-from odoo import _, api, exceptions, fields, models, tools
+from odoo import api, exceptions, fields, models, tools
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import (
     push_to_end_point, DeviceUnreachableError,
@@ -430,7 +430,7 @@ class MailThread(models.AbstractModel):
         that adds alias information. """
         model = self.env.context.get('empty_list_help_model')
         res_id = self.env.context.get('empty_list_help_id')
-        document_name = self.env.context.get('empty_list_help_document_name', _('document'))
+        document_name = self.env.context.get('empty_list_help_document_name', self.env._('document'))
         nothing_here = is_html_empty(help_message)
         alias = None
 
@@ -457,21 +457,21 @@ class MailThread(models.AbstractModel):
         if alias:
             email_link = Markup("<a href='mailto:%s'>%s</a>") % (alias.display_name, alias.display_name)
             if nothing_here:
-                dyn_help = _("Add a new %(document)s or send an email to %(email_link)s",
+                dyn_help = self.env._("Add a new %(document)s or send an email to %(email_link)s",
                              document=html_escape(document_name),
                              email_link=email_link,
                             )
                 return super().get_empty_list_help(f"<p class='o_view_nocontent_smiling_face'>{dyn_help}</p>")
             # do not add alias two times if it was added previously
             if "oe_view_nocontent_alias" not in help_message:
-                dyn_help = _("Create new %(document)s by sending an email to %(email_link)s",
+                dyn_help = self.env._("Create new %(document)s by sending an email to %(email_link)s",
                              document=html_escape(document_name),
                              email_link=email_link,
                             )
                 return super().get_empty_list_help(f"{help_message}<p class='oe_view_nocontent_alias'>{dyn_help}</p>")
 
         if nothing_here:
-            dyn_help = _("Create new %(document)s", document=html_escape(document_name))
+            dyn_help = self.env._("Create new %(document)s", document=html_escape(document_name))
             return super().get_empty_list_help(f"<p class='o_view_nocontent_smiling_face'>{dyn_help}</p>")
 
         return super().get_empty_list_help(help_message)
@@ -506,7 +506,7 @@ class MailThread(models.AbstractModel):
         """
         self.ensure_one()
         doc_name = self.env['ir.model']._get(self._name).name
-        return _('%s created', doc_name)
+        return self.env._('%s created', doc_name)
 
     def _valid_field_parameter(self, field, name):
         # allow tracking on models inheriting from 'mail.thread'
@@ -525,9 +525,9 @@ class MailThread(models.AbstractModel):
           * only for user generated content;
         """
         if messages.tracking_value_ids:
-            raise exceptions.UserError(_("Messages with tracking values cannot be modified"))
+            raise exceptions.UserError(self.env._("Messages with tracking values cannot be modified"))
         if any(message.message_type != 'comment' for message in messages):
-            raise exceptions.UserError(_("Only messages type comment can have their content updated"))
+            raise exceptions.UserError(self.env._("Only messages type comment can have their content updated"))
 
     # ------------------------------------------------------
     # TRACKING / LOG
@@ -762,7 +762,7 @@ class MailThread(models.AbstractModel):
 
     def _routing_warn(self, error_message, message_id, route, raise_exception=True):
         """ Tools method used in _routing_check_route: whether to log a warning or raise an error """
-        short_message = _("Mailbox unavailable - %s", error_message)
+        short_message = self.env._("Mailbox unavailable - %s", error_message)
         full_message = ('Routing mail with Message-Id %s: route %s: %s' %
                         (message_id, route, error_message))
         _logger.info(full_message)
@@ -895,10 +895,10 @@ class MailThread(models.AbstractModel):
 
         # Wrong model
         if not model:
-            self._routing_warn(_('target model unspecified'), message_id, route, raise_exception)
+            self._routing_warn(self.env._('target model unspecified'), message_id, route, raise_exception)
             return ()
         if model not in self.env:
-            self._routing_warn(_('unknown target model %s', model), message_id, route, raise_exception)
+            self._routing_warn(self.env._('unknown target model %s', model), message_id, route, raise_exception)
             return ()
         record_set = self.env[model].browse(thread_id) if thread_id else self.env[model]
 
@@ -906,19 +906,19 @@ class MailThread(models.AbstractModel):
         if thread_id:
             if not record_set.exists():
                 self._routing_warn(
-                    _('reply to missing document (%(model)s,%(thread)s), fall back on document creation', model=model, thread=thread_id),
+                    self.env._('reply to missing document (%(model)s,%(thread)s), fall back on document creation', model=model, thread=thread_id),
                     message_id,
                     route,
                     False
                 )
                 thread_id = None
             elif not hasattr(record_set, 'message_update'):
-                self._routing_warn(_('reply to model %s that does not accept document update, fall back on document creation', model), message_id, route, False)
+                self._routing_warn(self.env._('reply to model %s that does not accept document update, fall back on document creation', model), message_id, route, False)
                 thread_id = None
 
         # New Document: check model accepts the mailgateway
         if not thread_id and model and not hasattr(record_set, 'message_new'):
-            self._routing_warn(_('model %s does not accept document creation', model), message_id, route, raise_exception)
+            self._routing_warn(self.env._('model %s does not accept document creation', model), message_id, route, raise_exception)
             return ()
 
         # Alias: check alias_contact settings
@@ -943,7 +943,7 @@ class MailThread(models.AbstractModel):
             error = obj._alias_get_error(message, message_dict, alias)
             if error:
                 self._routing_warn(
-                    _('alias %(name)s: %(error)s', name=alias.alias_name, error=error.message or _('unknown error')),
+                    self.env._('alias %(name)s: %(error)s', name=alias.alias_name, error=error.message or self.env._('unknown error')),
                     message_id,
                     route,
                     False
@@ -1806,7 +1806,7 @@ class MailThread(models.AbstractModel):
                 }
         """
         if not isinstance(message, EmailMessage):
-            raise ValueError(_('Message should be a valid EmailMessage instance'))
+            raise ValueError(self.env._('Message should be a valid EmailMessage instance'))
         msg_dict = {'message_type': 'email'}
 
         message_id = message.get('Message-Id')
@@ -2240,9 +2240,9 @@ class MailThread(models.AbstractModel):
             forbidden_names={'model', 'res_id', 'subtype'}
         )
         if self._name == 'mail.thread' or not self.id:
-            raise ValueError(_("Posting a message should be done on a business document. Use message_notify to send a notification to an user."))
+            raise ValueError(self.env._("Posting a message should be done on a business document. Use message_notify to send a notification to an user."))
         if message_type == 'user_notification':
-            raise ValueError(_("Use message_notify to send a notification to an user."))
+            raise ValueError(self.env._("Use message_notify to send a notification to an user."))
         if attachments:
             # attachments should be a list (or tuples) of 3-elements list (or tuple)
             format_error = not is_list_of(attachments, list) and not is_list_of(attachments, tuple)
@@ -2250,20 +2250,20 @@ class MailThread(models.AbstractModel):
                 format_error = not all(len(attachment) in {2, 3} for attachment in attachments)
             if format_error:
                 raise ValueError(
-                    _('Posting a message should receive attachments as a list of list or tuples (received %(aids)s)',
+                    self.env._('Posting a message should receive attachments as a list of list or tuples (received %(aids)s)',
                       aids=repr(attachment_ids),
                      )
                 )
         if attachment_ids and not is_list_of(attachment_ids, int):
             raise ValueError(
-                _('Posting a message should receive attachments records as a list of IDs (received %(aids)s)',
+                self.env._('Posting a message should receive attachments records as a list of IDs (received %(aids)s)',
                   aids=repr(attachment_ids),
                  )
             )
         attachment_ids = list(attachment_ids or [])
         if partner_ids and not is_list_of(partner_ids, int):
             raise ValueError(
-                _('Posting a message should receive partners as a list of IDs (received %(pids)s)',
+                self.env._('Posting a message should receive partners as a list of IDs (received %(pids)s)',
                   pids=repr(partner_ids),
                  )
             )
@@ -2773,19 +2773,19 @@ class MailThread(models.AbstractModel):
             valid = all(isinstance(attachment, (list, tuple)) and len(attachment) in (3, 2) for attachment in attachments)
             if not valid:
                 raise ValueError(
-                    _('Notification should receive attachments as a list of list or tuples (received %(aids)s)',
+                    self.env._('Notification should receive attachments as a list of list or tuples (received %(aids)s)',
                       aids=repr(attachment_ids),
                      )
                 )
         if attachment_ids and not is_list_of(attachment_ids, int):
             raise ValueError(
-                _('Notification should receive attachments records as a list of IDs (received %(aids)s)',
+                self.env._('Notification should receive attachments records as a list of IDs (received %(aids)s)',
                   aids=repr(attachment_ids),
                  )
             )
         if not is_list_of(partner_ids, int):
             raise ValueError(
-                _('Notification should receive partners given as a list of IDs (received %(pids)s)',
+                self.env._('Notification should receive partners given as a list of IDs (received %(pids)s)',
                   pids=repr(partner_ids),
                  )
             )
@@ -2918,7 +2918,7 @@ class MailThread(models.AbstractModel):
         """
         # protect against side-effect prone usage
         if len(self) > 1 and (attachment_ids or tracking_value_ids):
-            raise ValueError(_('Batch log cannot support attachments or tracking values on more than 1 document'))
+            raise ValueError(self.env._('Batch log cannot support attachments or tracking values on more than 1 document'))
 
         author_id, email_from = self._message_compute_author(author_id, email_from)
 
@@ -3145,14 +3145,14 @@ class MailThread(models.AbstractModel):
                 view = source_ref
             else:
                 raise ValueError(
-                    _('Invalid template or view source record %(svalue)s, is %(model)s instead',
+                    self.env._('Invalid template or view source record %(svalue)s, is %(model)s instead',
                        svalue=source_ref,
                        model=source_ref._name,
                     ))
             if not template and not view:
                 raise ValueError(
-                    _('Mailing or posting with a source should not be called with an empty %(source_type)s',
-                      source_type=_('template') if template is not False else _('view'))
+                    self.env._('Mailing or posting with a source should not be called with an empty %(source_type)s',
+                      source_type=self.env._('template') if template is not False else self.env._('view'))
                 )
         elif isinstance(source_ref, str):
             try:
@@ -3162,7 +3162,7 @@ class MailThread(models.AbstractModel):
                 )
             except ValueError as e:
                 raise ValueError(
-                    _('Invalid template or view source Xml ID %(source_ref)s does not exist anymore',
+                    self.env._('Invalid template or view source Xml ID %(source_ref)s does not exist anymore',
                       source_ref=source_ref)
                 ) from e
             if res_model == 'mail.template':
@@ -3171,13 +3171,13 @@ class MailThread(models.AbstractModel):
                 view = self.env['ir.ui.view'].browse(res_id)
             else:
                 raise ValueError(
-                    _('Invalid template or view source reference %(svalue)s, is %(model)s instead',
+                    self.env._('Invalid template or view source reference %(svalue)s, is %(model)s instead',
                        svalue=source_ref,
                        model=res_model,
                     ))
         else:
             raise ValueError(
-                _('Invalid template or view source %(svalue)s (type %(stype)s), should be a record or an XMLID',
+                self.env._('Invalid template or view source %(svalue)s (type %(stype)s), should be a record or an XMLID',
                   svalue=source_ref,
                   stype=type(source_ref),
                 ))
@@ -3242,7 +3242,7 @@ class MailThread(models.AbstractModel):
             conflicting_names = parameter_names - restricting_names
         if conflicting_names:
             raise ValueError(
-                _('Those values are not supported when posting or notifying: %(param_names)s',
+                self.env._('Those values are not supported when posting or notifying: %(param_names)s',
                   param_names=', '.join(conflicting_names))
             )
 
@@ -3285,7 +3285,7 @@ class MailThread(models.AbstractModel):
          * or implements their own logic
         """
         if not self.env.user._is_internal():
-            raise exceptions.AccessError(_("Access Denied"))
+            raise exceptions.AccessError(self.env._("Access Denied"))
         self.browse().check_access('read')
 
         if notification_type == 'email':
@@ -4269,9 +4269,9 @@ class MailThread(models.AbstractModel):
         access_link = self._notify_get_action_link('view', **msg_vals)
 
         if model_description:
-            view_title = _('View %s', model_description)
+            view_title = self.env._('View %s', model_description)
         else:
-            view_title = _('View')
+            view_title = self.env._('View')
 
         is_thread_message = self.env['mail.message']._is_thread_message(vals=msg_vals, thread=self)
 
@@ -4472,7 +4472,7 @@ class MailThread(models.AbstractModel):
                 notify_skip_followers=True,
                 outgoing_email_to=email_to,
                 partner_ids=recipient.ids,
-                subject=_('Auto: %(subject)s', subject=(original_subject or self.display_name)),
+                subject=self.env._('Auto: %(subject)s', subject=(original_subject or self.display_name)),
                 subtype_id=self.env.ref('mail.mt_comment').id,  # TDE check: note ? but what about portal / internal ?
             )
         return ooo_messages
@@ -4564,7 +4564,7 @@ class MailThread(models.AbstractModel):
         if not model_name:
             return False
         if not 'lang' in self.env.context:
-            raise ValueError(_('At this point lang should be correctly set'))
+            raise ValueError(self.env._('At this point lang should be correctly set'))
         return self.env['ir.model']._get(model_name).display_name  # one query for display name
 
     @api.model
@@ -4774,7 +4774,7 @@ class MailThread(models.AbstractModel):
             assignation_msg = self.env['ir.qweb']._render(template, values, minimal_qcontext=True)
             assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
             record.message_notify(
-                subject=_('You have been assigned to %s', record.display_name),
+                subject=self.env._('You have been assigned to %s', record.display_name),
                 body=assignation_msg,
                 partner_ids=partner_ids,
                 email_layout_xmlid='mail.mail_notification_layout',

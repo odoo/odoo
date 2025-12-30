@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.release
-from odoo import http, _
+from odoo import http
 from odoo.http import content_disposition, request
 from odoo.fields import Domain
 from odoo.tools import float_round, py_to_js_locale, SQL
@@ -64,14 +64,14 @@ class HrAttendance(http.Controller):
             if location_request and location_request.get('display_name'):
                 location = location_request.get('display_name')
             else:
-                location = _('Unknown')
+                location = self.env._('Unknown')
         else:
             city = request.geoip.city.name
             country = request.geoip.country.name
             if city and country:
                 location = f"{city}, {country}"
             else:
-                location = _('Unknown')
+                location = self.env._('Unknown')
 
         response.update({
             'location': location,

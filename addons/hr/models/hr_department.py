@@ -3,7 +3,7 @@
 import ast
 import re
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -53,7 +53,7 @@ class HrDepartment(models.Model):
     def _search_complete_name(self, operator, value):
         supported_operators = ["=", "!=", "ilike", "not ilike", "in", "not in", "=ilike"]
         if operator not in supported_operators or not isinstance(value, (str, list)):
-            raise NotImplementedError(_('Operation not Supported.'))
+            raise NotImplementedError(self.env._('Operation not Supported.'))
         department = self.env['hr.department'].search([])
         if operator == '=':
             department = department.filtered(lambda m: m.complete_name == value)
@@ -176,7 +176,7 @@ class HrDepartment(models.Model):
             res_model = "hr.employee.public"
             search_view_id = self.env.ref('hr.hr_employee_public_view_search').id
         return {
-            'name': _("Employees"),
+            'name': self.env._("Employees"),
             'type': 'ir.actions.act_window',
             'res_model': res_model,
             'view_mode': 'list,kanban,form',

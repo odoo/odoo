@@ -5,7 +5,7 @@ from cryptography import x509
 from cryptography.hazmat.primitives import constant_time, serialization
 from cryptography.hazmat.primitives.serialization import Encoding, pkcs12
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from .key import STR_TO_HASH, _get_formatted_value
 from odoo.exceptions import UserError
 from odoo.tools import parse_version
@@ -178,7 +178,7 @@ class CertificateCertificate(models.Model):
                     certificate.date_start = None
                     certificate.date_end = None
                     certificate.serial_number = None
-                    certificate.loading_error = _("This certificate could not be loaded. Either the content or the password is erroneous.")
+                    certificate.loading_error = self.env._("This certificate could not be loaded. Either the content or the password is erroneous.")
                     continue
 
                 try:
@@ -241,7 +241,7 @@ class CertificateCertificate(models.Model):
                         certificate.private_key_id._get_public_key_bytes(encoding='pem')
                     )
                     if not constant_time.bytes_eq(pkey_public_key_bytes, cert_public_key_bytes):
-                        raise UserError(_("The certificate and private key are not compatible."))
+                        raise UserError(self.env._("The certificate and private key are not compatible."))
 
                 if certificate.public_key_id:
                     if certificate.public_key_id.loading_error:
@@ -250,7 +250,7 @@ class CertificateCertificate(models.Model):
                         certificate.public_key_id._get_public_key_bytes(encoding='pem')
                     )
                     if not constant_time.bytes_eq(pkey_public_key_bytes, cert_public_key_bytes):
-                        raise UserError(_("The certificate and public key are not compatible."))
+                        raise UserError(self.env._("The certificate and public key are not compatible."))
 
     # -------------------------------------------------------
     #                   Business Methods                    #
@@ -344,7 +344,7 @@ class CertificateCertificate(models.Model):
             cert = x509.load_pem_x509_certificate(base64.b64decode(self.with_context(bin_size=False).pem_certificate))
             public_key = cert.public_key()
         except ValueError:
-            raise UserError(_("The public key from the certificate could not be loaded."))
+            raise UserError(self.env._("The public key from the certificate could not be loaded."))
 
         encoding = serialization.Encoding.DER if encoding == 'der' else serialization.Encoding.PEM
         return _get_formatted_value(
@@ -370,8 +370,8 @@ class CertificateCertificate(models.Model):
         self.ensure_one()
 
         if not self.is_valid:
-            raise UserError(self.loading_error or _("This certificate is not valid, its validity has expired."))
+            raise UserError(self.loading_error or self.env._("This certificate is not valid, its validity has expired."))
         if not self.private_key_id:
-            raise UserError(_("No private key linked to the certificate, it is required to sign documents."))
+            raise UserError(self.env._("No private key linked to the certificate, it is required to sign documents."))
 
         return self.private_key_id._sign(message, hashing_algorithm=hashing_algorithm, formatting=formatting)

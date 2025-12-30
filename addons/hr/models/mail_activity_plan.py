@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -21,7 +21,7 @@ class MailActivityPlan(models.Model):
         failing_plans = plan_tocheck.filtered('department_id')
         if failing_plans:
             raise UserError(
-                _('Plan %(plan_names)s cannot use a department as it is used only for some HR plans.',
+                self.env._('Plan %(plan_names)s cannot use a department as it is used only for some HR plans.',
                   plan_names=', '.join(failing_plans.mapped('name')))
             )
         plan_tocheck = self.filtered(lambda plan: plan.res_model != 'hr.employee')
@@ -30,7 +30,7 @@ class MailActivityPlan(models.Model):
         )
         if failing_templates:
             raise UserError(
-                _('Plan activities %(template_names)s cannot use coach, manager or employee responsible as it is used only for employee plans.',
+                self.env._('Plan activities %(template_names)s cannot use coach, manager or employee responsible as it is used only for employee plans.',
                   template_names=', '.join(failing_templates.mapped('activity_type_id.name')))
             )
 

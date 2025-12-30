@@ -16,7 +16,7 @@ import werkzeug
 from collections import defaultdict
 from collections.abc import Collection
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, MissingError, ValidationError, UserError
 from odoo.fields import Domain
 from odoo.http import Stream, root, request
@@ -91,7 +91,7 @@ class IrAttachment(models.Model):
     def force_storage(self):
         """Force all attachments to be stored in the currently configured storage"""
         if not self.env.is_admin():
-            raise AccessError(_('Only administrators can execute this action.'))
+            raise AccessError(self.env._('Only administrators can execute this action.'))
 
         # Migrate only binary attachments and bypass the res_field automatic
         # filter added in _search override
@@ -127,7 +127,7 @@ class IrAttachment(models.Model):
 
         # prevent sha-1 collision
         if os.path.isfile(full_path) and not self._same_content(bin_data, full_path):
-            raise UserError(_("The attachment collides with an existing file."))
+            raise UserError(self.env._("The attachment collides with an existing file."))
         return fname, full_path
 
     @api.model
@@ -466,7 +466,7 @@ class IrAttachment(models.Model):
             if attachment.type == 'binary' and attachment.url:
                 has_group = self.env.user.has_group
                 if not any(has_group(g) for g in attachment.get_serving_groups()):
-                    raise ValidationError(_("Sorry, you are not allowed to write on this document"))
+                    raise ValidationError(self.env._("Sorry, you are not allowed to write on this document"))
 
     @api.model
     def check(self, mode, values=None):
@@ -474,10 +474,10 @@ class IrAttachment(models.Model):
         warnings.warn("Since 19.0, use check_access", DeprecationWarning, stacklevel=2)
         # Always require an internal user (aka, employee) to access to a attachment
         if not (self.env.is_admin() or self.env.user._is_internal()):
-            raise AccessError(_("Sorry, you are not allowed to access this document."))
+            raise AccessError(self.env._("Sorry, you are not allowed to access this document."))
         self.check_access(mode)
         if values and any(self._inaccessible_comodel_records({values.get('res_model'): [values.get('res_id')]}, mode)):
-            raise AccessError(_("Sorry, you are not allowed to access this document."))
+            raise AccessError(self.env._("Sorry, you are not allowed to access this document."))
 
     def _check_access(self, operation):
         """Check access for attachments.
@@ -686,7 +686,7 @@ class IrAttachment(models.Model):
                 for record in self:
                     model_and_ids[vals.get('res_model', record.res_model)].add(vals.get('res_id', record.res_id))
             if any(self._inaccessible_comodel_records(model_and_ids, 'write')):
-                raise AccessError(_("Sorry, you are not allowed to access this document."))
+                raise AccessError(self.env._("Sorry, you are not allowed to access this document."))
         # remove computed field depending of datas
         for field in ('file_size', 'checksum', 'store_fname'):
             vals.pop(field, False)
@@ -761,7 +761,7 @@ class IrAttachment(models.Model):
         for res_model, res_id in record_tuple_set:
             model_and_ids[res_model].add(res_id)
         if any(self._inaccessible_comodel_records(model_and_ids, 'write')):
-            raise AccessError(_("Sorry, you are not allowed to access this document."))
+            raise AccessError(self.env._("Sorry, you are not allowed to access this document."))
         records = super().create(vals_list)
         if self._storage() != 'db':
             for checksum, raw in checksum_raw_map.items():
@@ -801,7 +801,7 @@ class IrAttachment(models.Model):
             try:
                 bin_data = base64.b64decode(values.get('datas', '')) or False
             except binascii.Error:
-                raise UserError(_("Attachment is not encoded in base64."))
+                raise UserError(self.env._("Attachment is not encoded in base64."))
             checksum = self._compute_checksum(bin_data)
             existing_domain = [
                 ['id', '!=', False],  # No implicit condition on res_field.
@@ -952,4 +952,4 @@ class IrAttachment(models.Model):
         if self.type == 'binary':
             return
         if self.type == 'url':
-            raise ValidationError(_("URL attachment (%s) shouldn't be migrated to local.", self.id))
+            raise ValidationError(self.env._("URL attachment (%s) shouldn't be migrated to local.", self.id))

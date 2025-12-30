@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -18,4 +18,4 @@ class EventQuestionAnswer(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_selected_answer(self):
         if self.env['event.registration.answer'].search_count([('value_answer_id', 'in', self.ids)]):
-            raise UserError(_('You cannot delete an answer that has already been selected by attendees.'))
+            raise UserError(self.env._('You cannot delete an answer that has already been selected by attendees.'))

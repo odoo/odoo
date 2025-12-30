@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 import re
 
@@ -24,7 +24,7 @@ class L10n_LatamDocumentType(models.Model):
         serie_part = re.findall(r'^[A-Za-z]+', document_number)
         if not serie_part or len(serie_part) > 1 or len(serie_part[0]) > 2 \
            or not number_part or len(number_part) > 1 or len(number_part[0]) > 7:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "%(document_number)s is not a valid value for %(document_type)s.\n"
                 "The document number must be entered with a maximum of 2 letters for the first part "
                 "and 7 numbers for the second. The following are examples of valid document numbers:\n"

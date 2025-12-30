@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api, _
+from odoo import models, api
 from odoo.addons.account.tools import is_valid_structured_reference, sanitize_structured_reference
 
 
@@ -54,11 +54,11 @@ class ResPartnerBank(models.Model):
             sepa_iban_codes = {code for code in sepa_country_codes if code not in non_iban_codes}
             error_messages = []
             if currency.name != 'EUR':
-                error_messages.append(_("Can't generate a SEPA QR Code with the %s currency.", currency.name))
+                error_messages.append(self.env._("Can't generate a SEPA QR Code with the %s currency.", currency.name))
             if self.account_type != 'iban':
-                error_messages.append(_("Can't generate a SEPA QR code if the account type isn't IBAN."))
+                error_messages.append(self.env._("Can't generate a SEPA QR code if the account type isn't IBAN."))
             if not (self.sanitized_account_number and self.sanitized_account_number[:2] in sepa_iban_codes):
-                error_messages.append(_("Can't generate a SEPA QR code with a non SEPA iban."))
+                error_messages.append(self.env._("Can't generate a SEPA QR code with a non SEPA iban."))
             if len(error_messages) > 0:
                 return '\r\n'.join(error_messages)
             return None
@@ -67,12 +67,12 @@ class ResPartnerBank(models.Model):
     def _check_for_qr_code_errors(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'sct_qr':
             if not self.holder_name and not self.partner_id.name:
-                return _("The account receiving the payment must have an account holder name or partner name set.")
+                return self.env._("The account receiving the payment must have an account holder name or partner name set.")
 
         return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
     @api.model
     def _get_available_qr_methods(self):
         rslt = super()._get_available_qr_methods()
-        rslt.append(('sct_qr', _("SEPA Credit Transfer QR"), 20))
+        rslt.append(('sct_qr', self.env._("SEPA Credit Transfer QR"), 20))
         return rslt

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _, exceptions
+from odoo import api, fields, models, exceptions
 from odoo.fields import Domain
 from odoo.tools.safe_eval import safe_eval
 
@@ -70,11 +70,11 @@ class GamificationGoalDefinition(models.Model):
                 continue
 
             if not definition.field_id:
-                errors.append(_("A field is required to compute the sum for '%s'.", definition.name))
+                errors.append(self.env._("A field is required to compute the sum for '%s'.", definition.name))
                 continue
 
             if definition.field_id.ttype not in {"integer", "float", "monetary"}:
-                errors.append(_("The sum cannot be computed for '%(definition)s' on '%(field)s'.",
+                errors.append(self.env._("The sum cannot be computed for '%(definition)s' on '%(field)s'.",
                     definition=definition.name, field=definition.field_id.name))
 
         if errors:
@@ -108,7 +108,7 @@ class GamificationGoalDefinition(models.Model):
                 msg = e
                 if isinstance(e, SyntaxError):
                     msg = (e.msg + '\n' + e.text)
-                raise exceptions.UserError(_(
+                raise exceptions.UserError(self.env._(
                     "The domain for the definition %(definition)s seems incorrect, please check it.\n\n%(error_message)s",
                     definition=definition.name,
                     error_message=msg,
@@ -125,13 +125,13 @@ class GamificationGoalDefinition(models.Model):
                 Model = self.env[definition.model_id.model]
                 field = Model._fields.get(definition.field_id.name)
                 if not (field and field.store):
-                    raise exceptions.UserError(_(
+                    raise exceptions.UserError(self.env._(
                         "The model configuration for the definition %(name)s seems incorrect, please check it.\n\n%(field_name)s not stored",
                         name=definition.name,
                         field_name=definition.field_id.name
                     ))
             except KeyError as e:
-                raise exceptions.UserError(_(
+                raise exceptions.UserError(self.env._(
                     "The model configuration for the definition %(name)s seems incorrect, please check it.\n\n%(error)s not found",
                     name=definition.name,
                     error=e

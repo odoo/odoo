@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 
 
 class AccountMove(models.Model):
@@ -24,7 +24,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Debit Notes'),
+            'name': self.env._('Debit Notes'),
             'res_model': 'account.move',
             'view_mode': 'list,form',
             'domain': [('debit_origin_id', '=', self.id)],
@@ -53,5 +53,5 @@ class AccountMove(models.Model):
     def _get_copy_message_content(self, default):
         """Override to handle debit note specific messages."""
         if default and default.get('debit_origin_id'):
-            return _('This debit note was created from: %s', self._get_html_link())
+            return self.env._('This debit note was created from: %s', self._get_html_link())
         return super()._get_copy_message_content(default)

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.fields import Domain
 
 
@@ -20,7 +20,7 @@ class ProductCatalogMixin(models.AbstractModel):
         additional_context = self._get_action_add_from_catalog_extra_context()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Products'),
+            'name': self.env._('Products'),
             'res_model': 'product.product',
             'views': [(kanban_view_id, 'kanban'), (False, 'form')],
             'search_view_id': [search_view_id, 'search'],

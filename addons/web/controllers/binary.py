@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import functools
-import io
 import json
 import logging
 import os
@@ -12,17 +10,15 @@ from contextlib import nullcontext
 try:
     from werkzeug.utils import send_file
 except ImportError:
-    from odoo.tools._vendor.send_file import send_file
+    pass
 
 import odoo
-import odoo.modules.registry
-from odoo import SUPERUSER_ID, _, http, api
+from odoo import SUPERUSER_ID, http, api
 from odoo.addons.base.models.assetsbundle import ANY_UNIQUE
 from odoo.exceptions import AccessError, UserError
-from odoo.http import request, Response
+from odoo.http import request
 from odoo.tools import file_open, file_path, replace_exceptions, str2bool
 from odoo.tools.image import image_guess_size_from_field_name
-from odoo.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
 
@@ -242,9 +238,9 @@ class Binary(http.Controller):
                 })
                 attachment._post_add_create()
             except AccessError:
-                args.append({'error': _("You are not allowed to upload an attachment here.")})
+                args.append({'error': self.env._("You are not allowed to upload an attachment here.")})
             except Exception:
-                args.append({'error': _("Something horrible happened")})
+                args.append({'error': self.env._("Something horrible happened")})
                 _logger.exception("Fail to upload attachment %s", ufile.filename)
             else:
                 args.append({

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.exceptions import ValidationError
 
@@ -56,7 +56,7 @@ class HrEmployee(models.Model):
         ])
         # Prevent from removing employee address when linked to a car
         if car_ids:
-            raise ValidationError(_('Cannot remove address from employees with linked cars.'))
+            raise ValidationError(self.env._('Cannot remove address from employees with linked cars.'))
 
     def write(self, vals):
         # Update car partner when it is changed on the employee

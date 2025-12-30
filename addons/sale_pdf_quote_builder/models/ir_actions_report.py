@@ -4,7 +4,7 @@ import base64
 import io
 import json
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.tools import format_amount, format_date, format_datetime, pdf
 from odoo.tools.pdf import (
     NameObject,
@@ -148,7 +148,7 @@ class IrActionsReport(models.Model):
             for record_ in records:
                 value_ = record_[field_name]
                 if field_type_ == 'boolean':
-                    formatted_value_ = _("Yes") if value_ else _("No")
+                    formatted_value_ = self.env._("Yes") if value_ else self.env._("No")
                 elif field_type_ == 'monetary':
                     currency_id_ = record_[field_.get_currency_field(record_)]
                     formatted_value_ = format_amount(

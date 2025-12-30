@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.tools import float_round
 
 
@@ -20,7 +20,7 @@ class LunchCashmove(models.Model):
 
     def _compute_display_name(self):
         for cashmove in self:
-            cashmove.display_name = '{} {}'.format(_('Lunch Cashmove'), '#%s' % (cashmove.id or "_"))
+            cashmove.display_name = '{} {}'.format(self.env._('Lunch Cashmove'), '#%s' % (cashmove.id or "_"))
 
     @api.model
     def get_wallet_balance(self, user, include_config=True):

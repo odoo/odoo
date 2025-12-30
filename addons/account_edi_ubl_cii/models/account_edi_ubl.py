@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 from odoo.tools import frozendict
 
@@ -755,7 +755,7 @@ class AccountEdiUBL(models.AbstractModel):
             'cbc:ChargeIndicator': {'_text': 'true' if amount < 0.0 else 'false'},
             'cbc:MultiplierFactorNumeric': {'_text': abs(percent)},
             'cbc:AllowanceChargeReasonCode': {'_text': '95'},
-            'cbc:AllowanceChargeReason': {'_text': _("Discount")},
+            'cbc:AllowanceChargeReason': {'_text': self.env._("Discount")},
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
                 'currencyID': currency.name,
@@ -774,7 +774,7 @@ class AccountEdiUBL(models.AbstractModel):
             '_currency': currency,
             'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
             'cbc:AllowanceChargeReasonCode': {'_text': 'ZZZ' if is_charge else '66'},
-            'cbc:AllowanceChargeReason': {'_text': _("Conditional cash/payment discount")},
+            'cbc:AllowanceChargeReason': {'_text': self.env._("Conditional cash/payment discount")},
             'cbc:Amount': {
                 '_text': currency.round(abs(amount)),
                 'currencyID': currency.name,

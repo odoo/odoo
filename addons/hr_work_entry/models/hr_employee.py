@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, _
+from odoo import models, fields
 from odoo.tools import SQL
 
 
@@ -40,7 +40,7 @@ class HrEmployee(models.Model):
             ctx['initial_date'] = initial_date
         return {
             'type': 'ir.actions.act_window',
-            'name': _('%s work entries', self.display_name),
+            'name': self.env._('%s work entries', self.display_name),
             'view_mode': 'calendar,list,form',
             'res_model': 'hr.work.entry',
             'path': 'work-entries',

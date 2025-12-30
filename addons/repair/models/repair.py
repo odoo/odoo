@@ -3,7 +3,7 @@
 from collections import defaultdict
 from random import randint
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import float_compare
@@ -285,7 +285,7 @@ class RepairOrder(models.Model):
     def _compute_parts_availability(self):
         repairs = self.filtered(lambda ro: ro.state in ('confirmed', 'under_repair'))
         repairs.parts_availability_state = 'available'
-        repairs.parts_availability = _('Available')
+        repairs.parts_availability = self.env._('Available')
 
         other_repairs = self - repairs
         other_repairs.parts_availability = False
@@ -296,13 +296,13 @@ class RepairOrder(models.Model):
         all_moves._fields['forecast_availability'].compute_value(all_moves)
         for repair in repairs:
             if any(move.product_id.uom_id.compare(move.forecast_availability, move.product_qty) < 0 for move in repair.move_ids):
-                repair.parts_availability = _('Not Available')
+                repair.parts_availability = self.env._('Not Available')
                 repair.parts_availability_state = 'late'
                 continue
             forecast_date = max(repair.move_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
             if not forecast_date:
                 continue
-            repair.parts_availability = _('Exp %s', format_date(self.env, forecast_date))
+            repair.parts_availability = self.env._('Exp %s', format_date(self.env, forecast_date))
             if repair.schedule_date:
                 repair.parts_availability_state = 'late' if forecast_date > repair.schedule_date else 'expected'
 
@@ -355,7 +355,7 @@ class RepairOrder(models.Model):
         picking_warehouse = self.picking_id.location_dest_id.warehouse_id
         if location_warehouse and picking_warehouse and location_warehouse != picking_warehouse:
             return {
-                'warning': {'title': _("Warning"), 'message': _("Note that the warehouses of the return and repair locations don't match!")},
+                'warning': {'title': self.env._("Warning"), 'message': self.env._("Note that the warehouses of the return and repair locations don't match!")},
             }
 
     @api.model
@@ -427,7 +427,7 @@ class RepairOrder(models.Model):
         if exist_lot:
             name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
         if not name:
-            raise UserError(_("Please set the first Serial Number or a default sequence"))
+            raise UserError(self.env._("Please set the first Serial Number or a default sequence"))
         self.lot_id = self.env['stock.lot'].create({'product_id': self.product_id.id, 'name': name})
 
     def action_assign(self):
@@ -438,7 +438,7 @@ class RepairOrder(models.Model):
             concerned_ro = self.filtered('sale_order_id')
             ref_str = "\n".join(ro.name for ro in concerned_ro)
             raise UserError(
-                _(
+                self.env._(
                     "You cannot create a quotation for a repair order that is already linked to an existing sale order.\nConcerned repair order(s):\n%(ref_str)s",
                     ref_str=ref_str,
                 ),
@@ -447,7 +447,7 @@ class RepairOrder(models.Model):
             concerned_ro = self.filtered(lambda ro: not ro.partner_id)
             ref_str = "\n".join(ro.name for ro in concerned_ro)
             raise UserError(
-                _(
+                self.env._(
                     "You need to define a customer for a repair order in order to create an associated quotation.\nConcerned repair order(s):\n%(ref_str)s",
                     ref_str=ref_str,
                 ),
@@ -468,7 +468,7 @@ class RepairOrder(models.Model):
 
     def action_repair_cancel(self):
         if any(repair.state == 'done' for repair in self):
-            raise UserError(_("You cannot cancel a Repair Order that's already been completed"))
+            raise UserError(self.env._("You cannot cancel a Repair Order that's already been completed"))
         for repair in self:
             if repair.sale_order_id:
                 repair.sale_order_line_id.write({'product_uom_qty': 0.0})  # Quantity of the product that generated the RO is set to 0
@@ -511,7 +511,7 @@ class RepairOrder(models.Model):
                 continue
 
             if repair.product_id.product_tmpl_id.tracking != 'none' and not repair.lot_id:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "Serial number is required for product to repair : %s",
                     repair.product_id.display_name
                 ))
@@ -570,7 +570,7 @@ class RepairOrder(models.Model):
         @return: True
         """
         if self.filtered(lambda repair: repair.state != 'under_repair'):
-            raise UserError(_("Repair must be under repair in order to end reparation."))
+            raise UserError(self.env._("Repair must be under repair in order to end reparation."))
         partial_moves = set()
         picked_moves = set()
         for move in self.move_ids:
@@ -593,7 +593,7 @@ class RepairOrder(models.Model):
     def action_validate(self):
         self.ensure_one()
         if self.filtered(lambda repair: any(m.product_uom_qty < 0 for m in repair.move_ids)):
-            raise UserError(_("You can not enter negative quantities."))
+            raise UserError(self.env._("You can not enter negative quantities."))
         return self._action_repair_confirm()
 
     def action_view_sale_order(self):

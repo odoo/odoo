@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class SurveyUser_Input(models.Model):
@@ -12,6 +12,6 @@ class SurveyUser_Input(models.Model):
         odoobot = self.env.ref('base.partner_root')
         for user_input in self:
             if user_input.applicant_id:
-                body = _('The applicant "%s" has finished the survey.', user_input.applicant_id.partner_name)
+                body = self.env._('The applicant "%s" has finished the survey.', user_input.applicant_id.partner_name)
                 user_input.applicant_id.message_post(body=body, author_id=odoobot.id)
         return super()._mark_done()

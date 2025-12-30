@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
+from odoo import fields, models, api
 
 
 class StockPicking(models.Model):
@@ -63,9 +63,9 @@ class StockPickingType(models.Model):
         ir_seq_prefix = sequence_code + 'DDT'
         if warehouse_id:
             wh = self.env['stock.warehouse'].browse(warehouse_id)
-            ir_seq_name = _('%(warehouse)s Sequence %(code)s', warehouse=wh.name, code=sequence_code)
+            ir_seq_name = self.env._('%(warehouse)s Sequence %(code)s', warehouse=wh.name, code=sequence_code)
         else:
-            ir_seq_name = _('Sequence %(code)s', code=sequence_code)
+            ir_seq_name = self.env._('Sequence %(code)s', code=sequence_code)
         return ir_seq_name, ir_seq_prefix
 
     @api.model_create_multi

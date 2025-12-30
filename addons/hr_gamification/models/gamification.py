@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -17,7 +17,7 @@ class GamificationBadgeUser(models.Model):
         for badge_user in self:
             if badge_user.employee_id and badge_user.employee_id not in badge_user.user_id.\
                 with_context(allowed_company_ids=badge_user.user_id.company_ids.ids).employee_ids:
-                raise ValidationError(_('The selected employee does not correspond to the selected user.'))
+                raise ValidationError(self.env._('The selected employee does not correspond to the selected user.'))
 
     def _compute_has_edit_delete_access(self):
         is_hr_user = self.env.user.has_group('hr.group_hr_user')
@@ -27,7 +27,7 @@ class GamificationBadgeUser(models.Model):
     def action_open_badge(self):
         self.ensure_one()
         return {
-            'name': _('Received Badge'),
+            'name': self.env._('Received Badge'),
             'type': 'ir.actions.act_window',
             'res_model': 'gamification.badge.user',
             'res_id': self.id,
@@ -48,7 +48,7 @@ class GamificationBadgeUser(models.Model):
 
                     group[2]['button_access'] = {
                         'url': employee_form_url,
-                        'title': _('View Your Badge'),
+                        'title': self.env._('View Your Badge'),
                     }
                     group[2]['has_button_access'] = True
                 else:

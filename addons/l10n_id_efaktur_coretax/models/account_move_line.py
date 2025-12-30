@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 from odoo.tools.float_utils import float_repr, float_compare
 from odoo.exceptions import ValidationError
 
@@ -14,7 +14,7 @@ class AccountMoveLine(models.Model):
         idr = self.env.ref('base.IDR')
 
         if float_compare(self.price_subtotal, 0.0, precision_rounding=self.currency_id.rounding) < 0:
-            raise ValidationError(_("Price for line '%s' cannot be a negative amount. Please check again.", self.name))
+            raise ValidationError(self.env._("Price for line '%s' cannot be a negative amount. Please check again.", self.name))
 
         # initialize
         if not vals.get('lines'):

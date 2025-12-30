@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import email_normalize
 
@@ -18,13 +18,13 @@ class ResPartner(models.Model):
     def _ensure_same_company_than_projects(self):
         for partner in self:
             if partner.company_id and partner.project_ids.company_id and partner.project_ids.company_id != partner.company_id:
-                raise UserError(_("Partner company cannot be different from its assigned projects' company"))
+                raise UserError(self.env._("Partner company cannot be different from its assigned projects' company"))
 
     @api.constrains('company_id', 'task_ids')
     def _ensure_same_company_than_tasks(self):
         for partner in self:
             if partner.company_id and partner.task_ids.company_id and partner.task_ids.company_id != partner.company_id:
-                raise UserError(_("Partner company cannot be different from its assigned tasks' company"))
+                raise UserError(self.env._("Partner company cannot be different from its assigned tasks' company"))
 
     def _compute_task_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
@@ -66,7 +66,7 @@ class ResPartner(models.Model):
         self.ensure_one()
         action = {
             **self.env["ir.actions.actions"]._for_xml_id("project.project_task_action_from_partner"),
-            'display_name': _("%(partner_name)s's Tasks", partner_name=self.name),
+            'display_name': self.env._("%(partner_name)s's Tasks", partner_name=self.name),
             'context': {
                 'default_partner_id': self.id,
             },

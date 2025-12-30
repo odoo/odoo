@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, _
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -22,7 +22,7 @@ class ReportPoint_Of_SaleReport_Invoice(models.AbstractModel):
         if not_invoiced_orders_ids:
             not_invoiced_posorders = PosOrder.browse(not_invoiced_orders_ids)
             not_invoiced_orders_names = [a.name for a in not_invoiced_posorders]
-            raise UserError(_('No link to an invoice for %s.', ', '.join(not_invoiced_orders_names)))
+            raise UserError(self.env._('No link to an invoice for %s.', ', '.join(not_invoiced_orders_names)))
 
         return {
             'docs': self.env['account.move'].sudo().browse(ids_to_print),

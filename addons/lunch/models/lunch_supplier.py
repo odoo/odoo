@@ -6,7 +6,7 @@ from datetime import datetime, time, timedelta, UTC
 from textwrap import dedent
 from zoneinfo import ZoneInfo
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import float_round
@@ -251,7 +251,7 @@ class LunchSupplier(models.Model):
             return
 
         if self.send_by != 'mail':
-            raise UserError(_("Cannot send an email to this supplier!"))
+            raise UserError(self.env._("Cannot send an email to this supplier!"))
 
         orders = self._get_current_orders()
         if not orders:
@@ -362,7 +362,7 @@ class LunchSupplier(models.Model):
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'message': _('The orders have been sent!'),
+                'message': self.env._('The orders have been sent!'),
                 'next': {'type': 'ir.actions.act_window_close'},
             }
         }
@@ -376,7 +376,7 @@ class LunchSupplier(models.Model):
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'message': _('The orders have been confirmed!'),
+                'message': self.env._('The orders have been confirmed!'),
                 'next': {'type': 'ir.actions.act_window_close'},
             }
         }

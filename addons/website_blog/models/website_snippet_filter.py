@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 
 
 class WebsiteSnippetFilter(models.Model):
@@ -14,38 +14,38 @@ class WebsiteSnippetFilter(models.Model):
         if model._name == 'blog.post':
             data = [{
                 'cover_properties': '{"background-image": "url(\'/website_blog/static/src/img/cover_2.jpg\')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}',
-                'name': _('Islands'),
-                'subtitle': _('Alone in the ocean'),
+                'name': self.env._('Islands'),
+                'subtitle': self.env._('Alone in the ocean'),
                 'published_date': fields.Date.today() - timedelta(days=1),
                 'website_url': "",
             }, {
                 'cover_properties': '{"background-image": "url(\'/website_blog/static/src/img/cover_3.jpg\')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}',
-                'name': _('With a View'),
-                'subtitle': _('Awesome hotel rooms'),
+                'name': self.env._('With a View'),
+                'subtitle': self.env._('Awesome hotel rooms'),
                 'published_date': fields.Date.today() - timedelta(days=2),
                 'website_url': "",
             }, {
                 'cover_properties': '{"background-image": "url(\'/website_blog/static/src/img/cover_4.jpg\')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}',
-                'name': _('Skies'),
-                'subtitle': _('Taking pictures in the dark'),
+                'name': self.env._('Skies'),
+                'subtitle': self.env._('Taking pictures in the dark'),
                 'published_date': fields.Date.today() - timedelta(days=3),
                 'website_url': "",
             }, {
                 'cover_properties': '{"background-image": "url(\'/website_blog/static/src/img/cover_5.jpg\')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}',
-                'name': _('Satellites'),
-                'subtitle': _('Seeing the world from above'),
+                'name': self.env._('Satellites'),
+                'subtitle': self.env._('Seeing the world from above'),
                 'published_date': fields.Date.today() - timedelta(days=4),
                 'website_url': "",
             }, {
                 'cover_properties': '{"background-image": "url(\'/website_blog/static/src/img/cover_6.jpg\')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}',
-                'name': _('Viewpoints'),
-                'subtitle': _('Seaside vs mountain side'),
+                'name': self.env._('Viewpoints'),
+                'subtitle': self.env._('Seaside vs mountain side'),
                 'published_date': fields.Date.today() - timedelta(days=5),
                 'website_url': "",
             }, {
                 'cover_properties': '{"background-image": "url(\'/website_blog/static/src/img/cover_7.jpg\')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}',
-                'name': _('Jungle'),
-                'subtitle': _('Spotting the fauna'),
+                'name': self.env._('Jungle'),
+                'subtitle': self.env._('Spotting the fauna'),
                 'published_date': fields.Date.today() - timedelta(days=6),
                 'website_url': "",
             }]

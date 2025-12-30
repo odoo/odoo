@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _, SUPERUSER_ID
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -11,12 +11,12 @@ class ProductTemplate(models.Model):
     def _selection_service_policy(self):
         service_policies = [
             # (service_policy, string)
-            ('ordered_prepaid', _('Prepaid/Fixed Price')),
-            ('delivered_manual', _('Based on Delivered Quantity (Manual)')),
+            ('ordered_prepaid', self.env._('Prepaid/Fixed Price')),
+            ('delivered_manual', self.env._('Based on Delivered Quantity (Manual)')),
         ]
 
         if self.env['res.groups']._is_feature_enabled('project.group_project_milestone'):
-            service_policies.insert(1, ('delivered_milestones', _('Based on Milestones')))
+            service_policies.insert(1, ('delivered_milestones', self.env._('Based on Milestones')))
         return service_policies
 
     service_tracking = fields.Selection(
@@ -65,25 +65,25 @@ class ProductTemplate(models.Model):
 
     def _prepare_service_tracking_tooltip(self):
         if self.service_tracking == 'task_global_project':
-            return _("Create a task in an existing project to track the time spent.")
+            return self.env._("Create a task in an existing project to track the time spent.")
         elif self.service_tracking == 'project_only':
-            return _(
+            return self.env._(
                 "Create an empty project for the order to track the time spent."
             )
         elif self.service_tracking == 'task_in_project':
-            return _(
+            return self.env._(
                 "Create a project for the order with a task for each sales order line "
                 "to track the time spent."
             )
         elif self.service_tracking == 'no':
-            return _(
+            return self.env._(
                 "Create projects or tasks later, and link them to order to track the time spent."
             )
         return super()._prepare_service_tracking_tooltip()
 
     def _prepare_invoicing_tooltip(self):
         if self.service_policy == 'delivered_milestones':
-            return _("Invoice your milestones when they are reached.")
+            return self.env._("Invoice your milestones when they are reached.")
         # ordered_prepaid and delivered_manual are handled in the super call, according to the
         # corresponding value in the `invoice_policy` field (delivered/ordered quantities)
         return super()._prepare_invoicing_tooltip()
@@ -120,11 +120,11 @@ class ProductTemplate(models.Model):
         """
         for product in self:
             if product.service_tracking == 'no' and (product.project_id or product.project_template_id):
-                raise ValidationError(_('The product %s should not have a project nor a project template since it will not generate project.', product.name))
+                raise ValidationError(self.env._('The product %s should not have a project nor a project template since it will not generate project.', product.name))
             elif product.service_tracking == 'task_global_project' and product.project_template_id:
-                raise ValidationError(_('The product %s should not have a project template since it will generate a task in a global project.', product.name))
+                raise ValidationError(self.env._('The product %s should not have a project template since it will generate a task in a global project.', product.name))
             elif product.service_tracking in ['task_in_project', 'project_only'] and product.project_id:
-                raise ValidationError(_('The product %s should not have a global project since it will generate a project.', product.name))
+                raise ValidationError(self.env._('The product %s should not have a global project since it will generate a project.', product.name))
 
     @api.onchange('service_tracking')
     def _onchange_service_tracking(self):

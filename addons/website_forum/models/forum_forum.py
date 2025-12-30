@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import textwrap
 from collections import defaultdict
 from operator import itemgetter
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools.translate import html_translate
 
 MOST_USED_TAGS_COUNT = 5  # Number of tags to track as "most used" to display on frontend
@@ -40,13 +39,13 @@ class ForumForum(models.Model):
                     </p>
                 </div>
             """) % {
-            'message_intro': _("Welcome!"),
-            'message_post': _(
+            'message_intro': self.env._("Welcome!"),
+            'message_post': self.env._(
                 "Share and discuss the best content and new marketing ideas, build your professional profile and become"
                 " a better marketer together."
             ),
-            'hide_text': _('Dismiss'),
-            'register_text': _('Sign up'),
+            'hide_text': self.env._('Dismiss'),
+            'register_text': self.env._('Sign up'),
         }
 
     # description and use

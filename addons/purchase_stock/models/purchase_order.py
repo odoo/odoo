@@ -3,9 +3,9 @@
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import api, Command, fields, models, SUPERUSER_ID, _
+from odoo import api, Command, fields, models, SUPERUSER_ID
 from odoo.fields import Domain
-from odoo.tools.float_utils import float_compare, float_repr
+from odoo.tools.float_utils import float_repr
 from odoo.exceptions import UserError
 from odoo.tools.misc import OrderedSet
 
@@ -286,8 +286,8 @@ class PurchaseOrder(models.Model):
             if po.user_id == self.env.user:
                 my_otd_purchase_count += 1
 
-        result['global']['otd'] = _("%(otd)s %%", otd=float_repr(otd_purchase_count / len(purchases) * 100 if purchases else 100, precision_digits=0))
-        result['my']['otd'] = _("%(otd)s %%", otd=float_repr(my_otd_purchase_count / my_purchase_count * 100 if my_purchase_count else 100, precision_digits=0))
+        result['global']['otd'] = self.env._("%(otd)s %%", otd=float_repr(otd_purchase_count / len(purchases) * 100 if purchases else 100, precision_digits=0))
+        result['my']['otd'] = self.env._("%(otd)s %%", otd=float_repr(my_otd_purchase_count / my_purchase_count * 100 if my_purchase_count else 100, precision_digits=0))
         result['days_to_purchase'] = self.env.company.days_to_purchase
         return result
 
@@ -385,7 +385,7 @@ class PurchaseOrder(models.Model):
         if not self.reference_ids:
             self.reference_ids = self.reference_ids.create(self._prepare_reference_vals())
         if not self.partner_id.property_stock_supplier.id:
-            raise UserError(_("You must set a Vendor Location for this partner %s", self.partner_id.name))
+            raise UserError(self.env._("You must set a Vendor Location for this partner %s", self.partner_id.name))
         return {
             'picking_type_id': self.picking_type_id.id,
             'partner_id': self.partner_id.id,
@@ -433,11 +433,11 @@ class PurchaseOrder(models.Model):
         """
         validated_picking = self.picking_ids.filtered(lambda p: p.state == 'done')
         if validated_picking:
-            message = _("Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.", validated_picking[0].name)
+            message = self.env._("Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.", validated_picking[0].name)
         elif not self.picking_ids:
-            message = _("Corresponding receipt not found.")
+            message = self.env._("Corresponding receipt not found.")
         else:
-            message = _("Those dates have been updated accordingly on the receipt %s.", self.picking_ids[0].name)
+            message = self.env._("Those dates have been updated accordingly on the receipt %s.", self.picking_ids[0].name)
         activity.note += Markup('<p>{}</p>').format(message)
 
     def _create_update_date_activity(self, updated_dates):

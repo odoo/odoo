@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, _
+from odoo import api, models
 
 
 class ResUsers(models.Model):
@@ -15,6 +15,6 @@ class ResUsers(models.Model):
         activities = super()._get_activity_groups()
         for activity in activities:
             if activity.get('model') == 'mailing.mailing':
-                activity['name'] = _('Email Marketing')
+                activity['name'] = self.env._('Email Marketing')
                 break
         return activities

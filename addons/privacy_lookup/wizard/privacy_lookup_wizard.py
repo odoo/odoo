@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.tools import SQL
 
@@ -28,7 +28,7 @@ class PrivacyLookupWizard(models.TransientModel):
             wizard.line_count = len(wizard.line_ids)
 
     def _compute_display_name(self):
-        self.display_name = _('Privacy Lookup')
+        self.display_name = self.env._('Privacy Lookup')
 
     def _get_query_models_blacklist(self):
         return [
@@ -48,7 +48,7 @@ class PrivacyLookupWizard(models.TransientModel):
         email = f"%{self.email.strip()}%"
         email_normalized = tools.email_normalize(self.email.strip())
         if not email_normalized:
-            raise UserError(_('Invalid email address “%s”', self.email))
+            raise UserError(self.env._('Invalid email address “%s”', self.email))
 
         # Step 1: Retrieve users/partners liked to email address or name
         query = SQL("""
@@ -290,16 +290,16 @@ class PrivacyLookupWizardLine(models.TransientModel):
         for line in self:
             if not line.res_model_id or not line.res_id:
                 continue
-            action = _('Unarchived') if line.is_active else _('Archived')
+            action = self.env._('Unarchived') if line.is_active else self.env._('Archived')
             line.execution_details = '%s %s #%s' % (action, line.res_model_id.name, line.res_id)
             self.env[line.res_model].sudo().browse(line.res_id).write({'active': line.is_active})
 
     def action_unlink(self):
         self.ensure_one()
         if self.is_unlinked:
-            raise UserError(_('The record is already unlinked.'))
+            raise UserError(self.env._('The record is already unlinked.'))
         self.env[self.res_model].sudo().browse(self.res_id).unlink()
-        self.execution_details = '%s %s #%s' % (_('Deleted'), self.res_model_id.name, self.res_id)
+        self.execution_details = '%s %s #%s' % (self.env._('Deleted'), self.res_model_id.name, self.res_id)
         self.is_unlinked = True
 
     def action_archive_all(self):

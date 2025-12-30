@@ -2,7 +2,7 @@
 
 from markupsafe import Markup
 
-from odoo import models, fields, _
+from odoo import models, fields
 
 
 class ResUsers(models.Model):
@@ -31,9 +31,9 @@ class ResUsers(models.Model):
         odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
         channel = self.env['discuss.channel']._get_or_create_chat([odoobot_id, self.partner_id.id])
         message = Markup("%s<br/>%s<br/><b>%s</b> <span class=\"o_odoobot_command\">:)</span>") % (
-            _("Hello,"),
-            _("Odoo's chat helps employees collaborate efficiently. I'm here to help you discover its features."),
-            _("Try to send me an emoji")
+            self.env._("Hello,"),
+            self.env._("Odoo's chat helps employees collaborate efficiently. I'm here to help you discover its features."),
+            self.env._("Try to send me an emoji")
         )
         channel.sudo().message_post(
             author_id=odoobot_id,

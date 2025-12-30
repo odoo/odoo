@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from collections import defaultdict
 from odoo.tools import SQL, is_html_empty
@@ -289,7 +289,7 @@ class ProductTemplate(models.Model):
         product_ctx = dict(self.env.context or {}, active_test=False)
         if self.with_context(product_ctx).search_count([('id', 'in', self.ids), ('available_in_pos', '=', True)]):
             if self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
-                raise UserError(_(
+                raise UserError(self.env._(
                     "To delete a product, make sure all point of sale sessions are closed.\n\n"
                     "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
                 ))
@@ -298,7 +298,7 @@ class ProductTemplate(models.Model):
         open_pos_sessions = self.env['pos.session'].sudo().search([('state', '!=', 'closed')])
         used_products = open_pos_sessions.order_ids.filtered(lambda o: o.state == "draft").lines.product_id.product_tmpl_id
         if used_products & self:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
                 "Make sure to close all sessions first to avoid any issues.",
             ))
@@ -323,7 +323,7 @@ class ProductTemplate(models.Model):
             if not product.available_in_pos:
                 combo_name = self.env['product.combo.item'].sudo().search([('product_id', 'in', product.product_variant_ids.ids)], limit=1).combo_id.name
                 if combo_name:
-                    raise UserError(_('You must first remove this product from the %s combo', combo_name))
+                    raise UserError(self.env._('You must first remove this product from the %s combo', combo_name))
 
     def get_product_info_pos(self, price, quantity, pos_config_id, product_variant_id=False):
         self.ensure_one()

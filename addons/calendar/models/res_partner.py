@@ -3,7 +3,7 @@
 from collections import defaultdict
 from datetime import datetime
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools import SQL
 
 
@@ -58,7 +58,7 @@ class ResPartner(models.Model):
     def _compute_application_statistics_hook(self):
         data_list = super()._compute_application_statistics_hook()
         for partner in self.filtered('meeting_count'):
-            stat_info = {'iconClass': 'fa-calendar', 'value': partner.meeting_count, 'label': _('Meetings')}
+            stat_info = {'iconClass': 'fa-calendar', 'value': partner.meeting_count, 'label': self.env._('Meetings')}
             data_list[partner.id].append(stat_info)
         return data_list
 

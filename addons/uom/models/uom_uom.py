@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import TYPE_CHECKING, Literal
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.tools import float_round
 
@@ -81,8 +81,8 @@ class UomUom(models.Model):
         if self._filter_protected_uoms() and self.create_date < (fields.Datetime.now() - timedelta(days=1)):
             return {
                 'warning': {
-                    'title': _("Warning for %s", self.name),
-                    'message': _(
+                    'title': self.env._("Warning for %s", self.name),
+                    'message': self.env._(
                         "Some critical fields have been modified on %s.\n"
                         "Note that existing data WON'T be updated by this change.\n\n"
                         "As units of measure impact the whole system, this may cause critical issues.\n"
@@ -98,7 +98,7 @@ class UomUom(models.Model):
     def _check_factor(self):
         for uom in self:
             if not uom.relative_uom_id and uom.relative_factor != 1.0:
-                raise UserError(_("Reference unit of measure is missing."))
+                raise UserError(self.env._("Reference unit of measure is missing."))
 
     # === CRUD METHODS === #
 
@@ -106,7 +106,7 @@ class UomUom(models.Model):
     def _unlink_except_master_data(self):
         locked_uoms = self._filter_protected_uoms()
         if locked_uoms:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "The following units of measure are used by the system and cannot be deleted: %s\nYou can archive them instead.",
                 ", ".join(locked_uoms.mapped('name')),
             ))

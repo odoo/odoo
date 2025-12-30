@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import float_compare
@@ -77,7 +77,7 @@ class SaleOrder(models.Model):
         created_records = super().create(vals_list)
         if self.env.context.get('create_for_employee_mapping'):
             if not next((sol for sol in created_records.order_line if sol.is_service), False):
-                raise UserError(_('The Sales Order must contain at least one service product.'))
+                raise UserError(self.env._('The Sales Order must contain at least one service product.'))
             created_records.with_context(disable_project_task_generation=True).action_confirm()
         return created_records
 
@@ -138,7 +138,7 @@ class SaleOrder(models.Model):
         action.update({
             'context': context,
             'domain': [('so_line', 'in', self.order_line.ids), ('project_id', '!=', False)],
-            'help': _("""
+            'help': self.env._("""
                 <p class="o_view_nocontent_smiling_face">
                     No activities found. Let's start a new one!
                 </p><p>

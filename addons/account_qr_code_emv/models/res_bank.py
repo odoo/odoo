@@ -2,7 +2,7 @@
 
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools.misc import remove_accents
 from odoo.addons.account_qr_code_emv.const import CURRENCY_MAPPING
 
@@ -109,26 +109,26 @@ class ResPartnerBank(models.Model):
     def _check_for_qr_code_errors(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'emv_qr':
             if not self._get_merchant_account_info():
-                return _("Missing Merchant Account Information.")
+                return self.env._("Missing Merchant Account Information.")
             if not self.partner_id.city:
-                return _("Missing Merchant City.")
+                return self.env._("Missing Merchant City.")
             if not self.proxy_type:
-                return _("Missing Proxy Type.")
+                return self.env._("Missing Proxy Type.")
             if not self.proxy_value:
-                return _("Missing Proxy Value.")
+                return self.env._("Missing Proxy Value.")
         return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
     @api.model
     def _get_available_qr_methods(self):
         rslt = super()._get_available_qr_methods()
-        rslt.append(('emv_qr', _("EMV Merchant-Presented QR-code"), 30))
+        rslt.append(('emv_qr', self.env._("EMV Merchant-Presented QR-code"), 30))
         return rslt
 
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         """ Return an error for emv_qr if the account's country does no match any methods found in inheriting modules."""
         if qr_method == 'emv_qr':
             if not self:
-                return _("A bank account is required for EMV QR Code generation.")
-            return _("No EMV QR Code is available for the country of the account %(account_number)s.", account_number=self.account_number)
+                return self.env._("A bank account is required for EMV QR Code generation.")
+            return self.env._("No EMV QR Code is available for the country of the account %(account_number)s.", account_number=self.account_number)
 
         return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)

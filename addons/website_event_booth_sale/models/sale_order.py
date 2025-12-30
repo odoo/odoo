@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 from odoo.fields import Command
 
 
@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
         """Forbid quantity updates on event booth lines."""
         product = self.env['product.product'].browse(product_id)
         if product.service_tracking == 'event_booth' and new_qty > 1:
-            return 1, _('You cannot manually change the quantity of an Event Booth product.')
+            return 1, self.env._('You cannot manually change the quantity of an Event Booth product.')
         return super()._verify_updated_quantity(order_line, product_id, new_qty, uom_id, **kwargs)
 
     def _prepare_order_line_values(

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale_collect import const
@@ -59,7 +59,7 @@ class PaymentProvider(models.Model):
                 report,
                 unfiltered_providers - compatible_providers,
                 available=False,
-                reason=_("no in-store delivery methods available"),
+                reason=self.env._("no in-store delivery methods available"),
             )
 
         return compatible_providers

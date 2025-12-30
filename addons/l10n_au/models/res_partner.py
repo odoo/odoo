@@ -1,4 +1,4 @@
-from odoo import models, _
+from odoo import models
 
 
 class ResPartner(models.Model):
@@ -6,5 +6,5 @@ class ResPartner(models.Model):
 
     def _get_company_registry_labels(self):
         labels = super()._get_company_registry_labels()
-        labels['AU'] = _("ACN")
+        labels['AU'] = self.env._("ACN")
         return labels

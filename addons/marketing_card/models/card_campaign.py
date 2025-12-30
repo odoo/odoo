@@ -2,7 +2,7 @@ import base64
 from datetime import date, datetime, UTC
 from zoneinfo import ZoneInfo
 
-from odoo import _, api, exceptions, fields, models, modules
+from odoo import api, exceptions, fields, models, modules
 
 from .card_template import TEMPLATE_DIMENSIONS
 
@@ -53,7 +53,7 @@ class CardCampaign(models.Model):
 
     reward_message = fields.Html(string='Thank You Message')
     reward_target_url = fields.Char(string='Reward Link')
-    request_title = fields.Char('Request', default=lambda self: _('Help us share the news'))
+    request_title = fields.Char('Request', default=lambda self: self.env._('Help us share the news'))
     request_description = fields.Text('Request Description')
 
     # Static Content fields
@@ -199,7 +199,7 @@ class CardCampaign(models.Model):
         ])
         for campaign in updated_model_campaigns:
             if campaign.card_count:
-                raise exceptions.ValidationError(_(
+                raise exceptions.ValidationError(self.env._(
                     "Model of campaign %(campaign)s may not be changed as it already has cards",
                     campaign=campaign.display_name,
                 ))
@@ -229,7 +229,7 @@ class CardCampaign(models.Model):
     def action_view_mailings(self):
         self.ensure_one()
         return {
-            'name': _('%(card_campaign_name)s Mailings', card_campaign_name=self.name),
+            'name': self.env._('%(card_campaign_name)s Mailings', card_campaign_name=self.name),
             'type': 'ir.actions.act_window',
             'res_model': 'mailing.mailing',
             'domain': [('card_campaign_id', '=', self.id)],
@@ -246,7 +246,7 @@ class CardCampaign(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Send Cards'),
+            'name': self.env._('Send Cards'),
             'res_model': 'mailing.mailing',
             'context': {
                 'create': False,
@@ -297,10 +297,10 @@ class CardCampaign(models.Model):
 
 <div class="s_text_block o_mail_snippet_general pt24 pb24" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text">
     <div class="container s_allow_columns">
-        <p">{_("Hello everyone")}</p>
-        <p>{_("Here's the link to advertise your participation.")}
-        <br>{_("Your help with this promotion would be greatly appreciated!")}</p>
-        <p>{_("Many thanks")}</p>
+        <p">{self.env._("Hello everyone")}</p>
+        <p>{self.env._("Here's the link to advertise your participation.")}
+        <br>{self.env._("Your help with this promotion would be greatly appreciated!")}</p>
+        <p>{self.env._("Many thanks")}</p>
     </div>
 </div>
 
@@ -310,7 +310,7 @@ class CardCampaign(models.Model):
             <tr>
                 <td align="center">
                     <a href="/cards/{preview_card.id or 0}/preview" style="padding-left: 3px !important; padding-right: 3px !important">
-                        <img src="/web/image/card.campaign/{self.id or 0}/image_preview" alt="{_("Card Preview")}" class="img-fluid" style="width: 540px;"
+                        <img src="/web/image/card.campaign/{self.id or 0}/image_preview" alt="{self.env._("Card Preview")}" class="img-fluid" style="width: 540px;"
                             data-original-src="/web/image/card.campaign/{self.id or 0}/image_preview"/>
                     </a>
                 </td>
@@ -338,7 +338,7 @@ class CardCampaign(models.Model):
         # None means there was a logged error at image rendering time.
         # Tests also do not render by default, in that case ignore.
         if image_bytes is None and not modules.module.current_test:
-            raise exceptions.UserError(_(
+            raise exceptions.UserError(self.env._(
                 'An error occured while rendering a card for %(record_name)s. '
                 'Try again or check the server logs for more details.',
                 record_name=record.display_name

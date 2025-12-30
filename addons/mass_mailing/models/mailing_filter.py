@@ -3,7 +3,7 @@
 
 from ast import literal_eval
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -31,5 +31,5 @@ class MailingFilter(models.Model):
                     self.env[mailing_filter.mailing_model_id.model].search_count(literal_eval(mailing_filter.mailing_domain))
                 except:
                     raise ValidationError(
-                        _("The filter domain is not valid for this recipients.")
+                        self.env._("The filter domain is not valid for this recipients.")
                     )

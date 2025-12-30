@@ -2,9 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
-from random import randint
 
-from odoo import _, api, Command, fields, models, tools
+from odoo import api, Command, fields, models, tools
 from odoo.exceptions import UserError
 
 
@@ -120,7 +119,7 @@ class MailingList(models.Model):
             ])
 
             if mass_mailings > 0:
-                raise UserError(_("At least one of the mailing list you are trying to archive is used in an ongoing mailing campaign."))
+                raise UserError(self.env._("At least one of the mailing list you are trying to archive is used in an ongoing mailing campaign."))
 
         return super().write(vals)
 
@@ -129,7 +128,7 @@ class MailingList(models.Model):
     def _compute_display_name(self):
         for mailing_list in self:
             if self.env.context.get('formatted_display_name'):
-                mailing_list.display_name = f"{mailing_list.name}\t --{mailing_list.contact_count} {_('Recipients')}--"
+                mailing_list.display_name = f"{mailing_list.name}\t --{mailing_list.contact_count} {self.env._('Recipients')}--"
             else:
                 mailing_list.display_name = mailing_list.name
 
@@ -339,12 +338,12 @@ class MailingList(models.Model):
                 body = force_message
             elif opt_out:
                 body = Markup('<p>%s</p><ul>%s</ul>') % (
-                    _('%(contact_name)s unsubscribed from the following mailing list(s)', contact_name=contact.display_name),
+                    self.env._('%(contact_name)s unsubscribed from the following mailing list(s)', contact_name=contact.display_name),
                     Markup().join(Markup('<li>%s</li>') % name for name in updated.mapped('name')),
                 )
             else:
                 body = Markup('<p>%s</p><ul>%s</ul>') % (
-                    _('%(contact_name)s subscribed to the following mailing list(s)', contact_name=contact.display_name),
+                    self.env._('%(contact_name)s subscribed to the following mailing list(s)', contact_name=contact.display_name),
                     Markup().join(Markup('<li>%s</li>') % name for name in updated.mapped('name')),
                 )
             contact.with_context(mail_post_autofollow_author_skip=True).message_post(

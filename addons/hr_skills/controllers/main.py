@@ -3,7 +3,6 @@
 
 import re
 
-from odoo import _
 
 from odoo.http import request, route, Controller, content_disposition
 
@@ -37,9 +36,9 @@ class HrEmployeeCV(Controller):
         })
 
         if len(employees) == 1:
-            report_name = _('Resume %s', employees.name)
+            report_name = self.env._('Resume %s', employees.name)
         else:
-            report_name = _('Resumes')
+            report_name = self.env._('Resumes')
 
         pdfhttpheaders = [
             ('Content-Type', 'application/pdf'),

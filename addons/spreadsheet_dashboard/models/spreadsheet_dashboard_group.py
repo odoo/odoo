@@ -1,4 +1,4 @@
-from odoo import fields, models, api, _
+from odoo import fields, models, api
 from odoo.exceptions import UserError
 
 
@@ -17,7 +17,7 @@ class SpreadsheetDashboardGroup(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for group, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", group.name)
+                vals['name'] = self.env._("%s (copy)", group.name)
         return vals_list
 
     @api.ondelete(at_uninstall=False)
@@ -26,4 +26,4 @@ class SpreadsheetDashboardGroup(models.Model):
         for group in self:
             external_id = external_ids[group.id]
             if external_id and not external_id.startswith('__export__'):
-                raise UserError(_("You cannot delete %s as it is used in another module.", group.name))
+                raise UserError(self.env._("You cannot delete %s as it is used in another module.", group.name))

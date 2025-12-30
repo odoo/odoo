@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.tools import mute_logger
 from odoo.tools.urls import urljoin as url_join
 from odoo.tools.translate import html_translate
@@ -20,7 +20,7 @@ class HrJob(models.Model):
         return self.env['ir.qweb']._render("website_hr_recruitment.default_website_description", raise_if_not_found=False)
 
     def _get_default_job_details(self):
-        return _("""
+        return self.env._("""
             <span class="text-muted small">Time to Answer</span>
             <h6>2 open days</h6>
             <span class="text-muted small">Process</span>

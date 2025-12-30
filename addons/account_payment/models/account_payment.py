@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, Command, fields, models
+from odoo import api, Command, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -160,7 +160,7 @@ class AccountPayment(models.Model):
     def action_refund_wizard(self):
         self.ensure_one()
         return {
-            'name': _("Refund"),
+            'name': self.env._("Refund"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'payment.refund.wizard',
@@ -170,7 +170,7 @@ class AccountPayment(models.Model):
     def action_view_refunds(self):
         self.ensure_one()
         action = {
-            'name': _("Refund"),
+            'name': self.env._("Refund"),
             'res_model': 'account.payment',
             'type': 'ir.actions.act_window',
         }
@@ -190,12 +190,12 @@ class AccountPayment(models.Model):
     def _create_payment_transaction(self, **extra_create_values):
         for payment in self:
             if payment.payment_transaction_id:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "A payment transaction with reference %s already exists.",
                     payment.payment_transaction_id.reference
                 ))
             elif not payment.payment_token_id:
-                raise ValidationError(_("A token is required to create a new payment transaction."))
+                raise ValidationError(self.env._("A token is required to create a new payment transaction."))
 
         transactions = self.env['payment.transaction']
         for payment in self:

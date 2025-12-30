@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import config, SQL
-from odoo.tools.safe_eval import safe_eval, time
+from odoo.tools.safe_eval import safe_eval
 
 
 _logger = logging.getLogger(__name__)
@@ -59,7 +59,7 @@ class IrRule(models.Model):
     def _check_model_name(self):
         # Don't allow rules on rules records (this model).
         if any(rule.model_id.model == self._name for rule in self):
-            raise ValidationError(_('Rules can not be applied on the Record Rules model.'))
+            raise ValidationError(self.env._('Rules can not be applied on the Record Rules model.'))
 
     @api.constrains('active', 'domain_force', 'model_id')
     def _check_domain(self):
@@ -71,7 +71,7 @@ class IrRule(models.Model):
                     model = self.env[rule.model_id.model].sudo()
                     Domain(domain).validate(model)
                 except Exception as e:
-                    raise ValidationError(_('Invalid domain: %s', e))
+                    raise ValidationError(self.env._('Invalid domain: %s', e))
 
     def _compute_domain_keys(self):
         """ Return the list of context keys to use for caching ``_compute_domain``. """
@@ -210,17 +210,17 @@ class IrRule(models.Model):
         model = records._name
         description = self.env['ir.model']._get(model).name or model
         operations = {
-            'read':  _("read"),
-            'write': _("write"),
-            'create': _("create"),
-            'unlink': _("unlink"),
+            'read':  self.env._("read"),
+            'write': self.env._("write"),
+            'create': self.env._("create"),
+            'unlink': self.env._("unlink"),
         }
         user_description = f"{self.env.user.name} (id={self.env.user.id})"
-        operation_error = _("Uh-oh! Looks like you have stumbled upon some top-secret records.\n\n" \
+        operation_error = self.env._("Uh-oh! Looks like you have stumbled upon some top-secret records.\n\n" \
             "Sorry, %(user)s doesn't have '%(operation)s' access to:", user=user_description, operation=operations[operation])
-        failing_model = _("- %(description)s (%(model)s)", description=description, model=model)
+        failing_model = self.env._("- %(description)s (%(model)s)", description=description, model=model)
 
-        resolution_info = _("If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.")
+        resolution_info = self.env._("If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.")
 
         # Note that by default, public and portal users do not have
         # the group "base.group_no_one", even if debug mode is enabled,
@@ -241,12 +241,12 @@ class IrRule(models.Model):
         if company_related:
             suggested_companies = display_records._get_redirect_suggested_company()
             if suggested_companies and len(suggested_companies) != 1:
-                resolution_info += _('\n\nNote: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!')
+                resolution_info += self.env._('\n\nNote: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!')
             elif suggested_companies and suggested_companies in self.env.user.company_ids:
                 context = {'suggested_company': {'id': suggested_companies.id, 'display_name': suggested_companies.display_name}}
-                resolution_info += _('\n\nThis seems to be a multi-company issue, you might be able to access the record by switching to the company: %s.', suggested_companies.display_name)
+                resolution_info += self.env._('\n\nThis seems to be a multi-company issue, you might be able to access the record by switching to the company: %s.', suggested_companies.display_name)
             elif suggested_companies:
-                resolution_info += _('\n\nThis seems to be a multi-company issue, but you do not have access to the proper company to access the record anyhow.')
+                resolution_info += self.env._('\n\nThis seems to be a multi-company issue, but you do not have access to the proper company to access the record anyhow.')
 
         if not self.env.user.has_group('base.group_no_one') or not self.env.user._is_internal():
             msg = f"{operation_error}\n{failing_model}\n\n{resolution_info}"
@@ -254,7 +254,7 @@ class IrRule(models.Model):
             # This extended AccessError is only displayed in debug mode.
             failing_records = '\n'.join(f'- {get_record_description(rec)}' for rec in display_records)
             rules_description = '\n'.join(f'- {rule.name}' for rule in rules)
-            failing_rules = _("Blame the following rules:\n%s", rules_description)
+            failing_rules = self.env._("Blame the following rules:\n%s", rules_description)
             msg = f"{operation_error}\n{failing_records}\n\n{failing_rules}\n\n{resolution_info}"
 
         # clean up the cache of records because of filtered_domain to check ir.rule + display_name above

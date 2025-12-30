@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import clean_context
 
@@ -134,10 +134,10 @@ class CalendarRecurrence(models.Model):
 
     def _get_daily_recurrence_name(self):
         if self.end_type == 'count':
-            return _("Every %(interval)s Days for %(count)s events", interval=self.interval, count=self.count)
+            return self.env._("Every %(interval)s Days for %(count)s events", interval=self.interval, count=self.count)
         if self.end_type == 'end_date':
-            return _("Every %(interval)s Days until %(until)s", interval=self.interval, until=self.until)
-        return _("Every %(interval)s Days", interval=self.interval)
+            return self.env._("Every %(interval)s Days until %(until)s", interval=self.interval, until=self.until)
+        return self.env._("Every %(interval)s Days", interval=self.interval)
 
     def _get_weekly_recurrence_name(self):
         weekday_selection = dict(self._fields['weekday']._description_selection(self.env))
@@ -151,10 +151,10 @@ class CalendarRecurrence(models.Model):
         days = ", ".join(day_strings)
 
         if self.end_type == 'count':
-            return _("Every %(interval)s Weeks on %(days)s for %(count)s events", interval=self.interval, days=days, count=self.count)
+            return self.env._("Every %(interval)s Weeks on %(days)s for %(count)s events", interval=self.interval, days=days, count=self.count)
         if self.end_type == 'end_date':
-            return _("Every %(interval)s Weeks on %(days)s until %(until)s", interval=self.interval, days=days, until=self.until)
-        return _("Every %(interval)s Weeks on %(days)s", interval=self.interval, days=days)
+            return self.env._("Every %(interval)s Weeks on %(days)s until %(until)s", interval=self.interval, days=days, until=self.until)
+        return self.env._("Every %(interval)s Weeks on %(days)s", interval=self.interval, days=days)
 
     def _get_monthly_recurrence_name(self):
         if self.month_by == 'day':
@@ -164,23 +164,23 @@ class CalendarRecurrence(models.Model):
             weekday_label = weekday_selection[self.weekday]
 
             if self.end_type == 'count':
-                return _("Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s events", interval=self.interval, position=position_label, weekday=weekday_label, count=self.count)
+                return self.env._("Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s events", interval=self.interval, position=position_label, weekday=weekday_label, count=self.count)
             if self.end_type == 'end_date':
-                return _("Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s", interval=self.interval, position=position_label, weekday=weekday_label, until=self.until)
-            return _("Every %(interval)s Months on the %(position)s %(weekday)s", interval=self.interval, position=position_label, weekday=weekday_label)
+                return self.env._("Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s", interval=self.interval, position=position_label, weekday=weekday_label, until=self.until)
+            return self.env._("Every %(interval)s Months on the %(position)s %(weekday)s", interval=self.interval, position=position_label, weekday=weekday_label)
         else:
             if self.end_type == 'count':
-                return _("Every %(interval)s Months day %(day)s for %(count)s events", interval=self.interval, day=self.day, count=self.count)
+                return self.env._("Every %(interval)s Months day %(day)s for %(count)s events", interval=self.interval, day=self.day, count=self.count)
             if self.end_type == 'end_date':
-                return _("Every %(interval)s Months day %(day)s until %(until)s", interval=self.interval, day=self.day, until=self.until)
-            return _("Every %(interval)s Months day %(day)s", interval=self.interval, day=self.day)
+                return self.env._("Every %(interval)s Months day %(day)s until %(until)s", interval=self.interval, day=self.day, until=self.until)
+            return self.env._("Every %(interval)s Months day %(day)s", interval=self.interval, day=self.day)
 
     def _get_yearly_recurrence_name(self):
         if self.end_type == 'count':
-            return _("Every %(interval)s Years for %(count)s events", interval=self.interval, count=self.count)
+            return self.env._("Every %(interval)s Years for %(count)s events", interval=self.interval, count=self.count)
         if self.end_type == 'end_date':
-            return _("Every %(interval)s Years until %(until)s", interval=self.interval, until=self.until)
-        return _("Every %(interval)s Years", interval=self.interval)
+            return self.env._("Every %(interval)s Years until %(until)s", interval=self.interval, until=self.until)
+        return self.env._("Every %(interval)s Years", interval=self.interval)
 
     def get_recurrence_name(self):
         if self.rrule_type == 'daily':
@@ -384,9 +384,9 @@ class CalendarRecurrence(models.Model):
         :return: string containing recurring rule (empty if no rule)
         """
         if self.interval <= 0:
-            raise UserError(_('The interval cannot be negative.'))
+            raise UserError(self.env._('The interval cannot be negative.'))
         if self.end_type == 'count' and self.count <= 0:
-            raise UserError(_('The number of repetitions cannot be negative.'))
+            raise UserError(self.env._('The number of repetitions cannot be negative.'))
 
         return str(self._get_rrule()) if self.rrule_type else ''
 
@@ -597,7 +597,7 @@ class CalendarRecurrence(models.Model):
         elif freq == 'weekly':
             weekdays = self._get_week_days()
             if not weekdays:
-                raise UserError(_("You have to choose at least one day in the week"))
+                raise UserError(self.env._("You have to choose at least one day in the week"))
             rrule_params['byweekday'] = weekdays
             rrule_params['wkst'] = self._get_lang_week_start()
 

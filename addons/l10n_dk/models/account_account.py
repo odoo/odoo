@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import api, models, _
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -29,4 +29,4 @@ class AccountAccount(models.Model):
         for company_id, count in nb_account_per_company.items():
             nb_to_delete = sum(1 for account in nb_account_to_delete_per_company.get(company_id) if account.account_type == 'asset_cash')
             if count - nb_to_delete < 1:
-                raise UserError(_("You must keep at least one bank and cash account for %(company)s!", company=company_id.name))
+                raise UserError(self.env._("You must keep at least one bank and cash account for %(company)s!", company=company_id.name))

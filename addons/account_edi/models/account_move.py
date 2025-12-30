@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import io
-import zipfile
-from werkzeug.urls import url_encode
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -78,13 +75,13 @@ class AccountMove(models.Model):
                 error_levels = set([doc.blocking_level for doc in move.edi_document_ids])
                 count = str(move.edi_error_count)
                 if 'error' in error_levels:
-                    move.edi_error_message = _("%(count)s Electronic invoicing error(s)", count=count)
+                    move.edi_error_message = self.env._("%(count)s Electronic invoicing error(s)", count=count)
                     move.edi_blocking_level = 'error'
                 elif 'warning' in error_levels:
-                    move.edi_error_message = _("%(count)s Electronic invoicing warning(s)", count=count)
+                    move.edi_error_message = self.env._("%(count)s Electronic invoicing warning(s)", count=count)
                     move.edi_blocking_level = 'warning'
                 else:
-                    move.edi_error_message = _("%(count)s Electronic invoicing info(s)", count=count)
+                    move.edi_error_message = self.env._("%(count)s Electronic invoicing info(s)", count=count)
                     move.edi_blocking_level = 'info'
 
     @api.depends(
@@ -243,7 +240,7 @@ class AccountMove(models.Model):
                 if move_applicability:
                     errors = edi_format._check_move_configuration(move)
                     if errors:
-                        raise UserError(_("Invalid invoice configuration:\n\n%s", '\n'.join(errors)))
+                        raise UserError(self.env._("Invalid invoice configuration:\n\n%s", '\n'.join(errors)))
 
                     existing_edi_document = move.edi_document_ids.filtered(lambda x: x.edi_format_id == edi_format)
                     if existing_edi_document:
@@ -269,7 +266,7 @@ class AccountMove(models.Model):
         """
         for move in self:
             to_cancel_edi_documents = move.edi_document_ids.filtered(lambda doc: doc.state == 'to_cancel')
-            move.message_post(body=_("This invoice was canceled while the EDIs %s still had a pending cancellation request.", ", ".join(to_cancel_edi_documents.mapped('edi_format_id.name'))))
+            move.message_post(body=self.env._("This invoice was canceled while the EDIs %s still had a pending cancellation request.", ", ".join(to_cancel_edi_documents.mapped('edi_format_id.name'))))
         self.button_cancel()
 
     def button_cancel(self):
@@ -292,7 +289,7 @@ class AccountMove(models.Model):
         # OVERRIDE
         for move in self:
             if not move._edi_allow_button_draft():
-                raise UserError(_(
+                raise UserError(self.env._(
                     "You can't edit the following journal entry %s because an electronic document has already been "
                     "sent. Please use the 'Request EDI Cancellation' button instead.",
                     move.display_name))
@@ -320,7 +317,7 @@ class AccountMove(models.Model):
                     to_cancel_documents |= doc
                     is_move_marked = True
             if is_move_marked:
-                move.message_post(body=_("A cancellation of the EDI has been requested."))
+                move.message_post(body=self.env._("A cancellation of the EDI has been requested."))
 
         to_cancel_documents.write({'state': 'to_cancel', 'error': False, 'blocking_level': False})
 
@@ -336,7 +333,7 @@ class AccountMove(models.Model):
                     documents |= doc
                     is_move_marked = True
             if is_move_marked:
-                move.message_post(body=_("A request for cancellation of the EDI has been called off."))
+                move.message_post(body=self.env._("A request for cancellation of the EDI has been called off."))
 
         documents.write({'state': 'sent', 'error': False, 'blocking_level': False})
 

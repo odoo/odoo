@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import RedirectWarning
 
 
@@ -189,6 +189,6 @@ class ResCompany(models.Model):
 
         is_l10n_in_reports_installed = 'l10n_in_reports' in self.env['ir.module.module']._installed()
         if not is_l10n_in_reports_installed:
-            msg = _("First enable GST e-Filing feature from configuration for company %s.", (self.name))
+            msg = self.env._("First enable GST e-Filing feature from configuration for company %s.", (self.name))
             action = self.env.ref("account.action_account_config")
-            raise RedirectWarning(msg, action.id, _('Go to configuration'))
+            raise RedirectWarning(msg, action.id, self.env._('Go to configuration'))

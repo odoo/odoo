@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo import exceptions
 
 
@@ -17,7 +17,7 @@ class MailActivityPlanTemplate(models.Model):
         """ Ensure that hr types are used only on employee model """
         for template in self.filtered(lambda tpl: tpl.plan_id.res_model != 'hr.employee'):
             if template.responsible_type == 'fleet_manager':
-                raise exceptions.ValidationError(_("Fleet Manager is limited to Employee plans."))
+                raise exceptions.ValidationError(self.env._("Fleet Manager is limited to Employee plans."))
 
     def _determine_responsible(self, on_demand_responsible, employee):
         if self.responsible_type == 'fleet_manager' and self.plan_id.res_model == 'hr.employee':
@@ -26,9 +26,9 @@ class MailActivityPlanTemplate(models.Model):
             error = False
             warning = False
             if not vehicle:
-                error = _('Employee %s is not linked to a vehicle.', employee_id.name)
+                error = self.env._('Employee %s is not linked to a vehicle.', employee_id.name)
             if vehicle and not vehicle.manager_id:
-                warning = _("The vehicle of employee %(employee)s is not linked to a fleet manager, assigning to you.", employee=employee_id.name)
+                warning = self.env._("The vehicle of employee %(employee)s is not linked to a fleet manager, assigning to you.", employee=employee_id.name)
             return {
                 'responsible': vehicle.manager_id or self.env.user,
                 'error': error,

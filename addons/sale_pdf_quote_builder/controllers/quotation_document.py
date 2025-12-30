@@ -4,7 +4,6 @@ import base64
 import json
 import logging
 
-from odoo import _
 from odoo.http import Controller, request, route
 
 from odoo.addons.sale_pdf_quote_builder import utils
@@ -38,7 +37,7 @@ class QuotationDocumentController(Controller):
                 'company_id': request.env.company.id,
             }
         files = request.httprequest.files.getlist('ufile')
-        result = {'success': _("All files uploaded")}
+        result = {'success': self.env._("All files uploaded")}
         for ufile in files:
             try:
                 mimetype = ufile.content_type

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -11,7 +11,7 @@ class ProductTemplate(models.Model):
 
     def _prepare_service_tracking_tooltip(self):
         if self.service_tracking == 'event_booth':
-            return _("Mark the selected Booth as Unavailable.")
+            return self.env._("Mark the selected Booth as Unavailable.")
         return super()._prepare_service_tracking_tooltip()
 
     @api.onchange('service_tracking')
@@ -33,7 +33,7 @@ class ProductTemplate(models.Model):
             ], limit=1)
             if linked_booth_category:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'The "service_tracking" for the product template, %(product_template_name)s cannot be changed because '
                         'one of its variants is assigned to the Event Booth Category, %(event_booth_category_name)s. '
                         'The service_tracking must remain "Event Booth".',

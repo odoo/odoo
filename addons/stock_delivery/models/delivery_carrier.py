@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_round
@@ -117,7 +117,7 @@ class DeliveryCarrier(models.Model):
         total_weight = order_weight or total_weight
         if total_weight == 0.0:
             weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
-            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s", weight_uom_name))
+            raise UserError(self.env._("The package cannot be created because the total weight of the products in the picking is 0.0 %s", weight_uom_name))
         # If max weight == 0 => division by 0. If this happens, we want to have
         # more in the max weight than in the total weight, so that it only
         # creates ONE package with everything.
@@ -197,7 +197,7 @@ class DeliveryCarrier(models.Model):
                 picking=picking,
             ))
         elif not packages:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "The package cannot be created because the total weight of the "
                 "products in the picking is 0.0 %s",
                 picking.weight_uom_name
@@ -268,7 +268,7 @@ class DeliveryCarrier(models.Model):
         for p in pickings:
             carrier = self._match_address(p.partner_id)
             if not carrier:
-                raise ValidationError(_('There is no matching delivery rule.'))
+                raise ValidationError(self.env._('There is no matching delivery rule.'))
             res = res + [{'exact_price': p.carrier_id._get_price_available(p.sale_id) if p.sale_id else 0.0,  # TODO cleanme
                           'tracking_number': False}]
         return res

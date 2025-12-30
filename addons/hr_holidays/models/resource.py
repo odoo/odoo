@@ -3,7 +3,7 @@
 from datetime import datetime, time, UTC
 from zoneinfo import ZoneInfo
 
-from odoo import fields, models, api, _
+from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools import babel_locale_parse
@@ -35,7 +35,7 @@ class ResourceCalendarLeaves(models.Model):
                 if record.calendar_id:
                     existing_leaves = existing_leaves.filtered(lambda l: not l.calendar_id or l.calendar_id == record.calendar_id)
                 if existing_leaves:
-                    raise ValidationError(_('Two public holidays cannot overlap each other for the same working hours.'))
+                    raise ValidationError(self.env._('Two public holidays cannot overlap each other for the same working hours.'))
 
     def _get_domain(self, time_domain_dict):
         return Domain.OR(
@@ -76,10 +76,10 @@ class ResourceCalendarLeaves(models.Model):
             duration_difference = previous_duration - leave.number_of_days
             message = False
             if duration_difference > 0 and leave.holiday_status_id.requires_allocation:
-                message = _("Due to a change in global time offs, you have been granted %s day(s) back.", duration_difference)
+                message = self.env._("Due to a change in global time offs, you have been granted %s day(s) back.", duration_difference)
             if leave.number_of_days > previous_duration\
                     and (not sick_time_status or leave.holiday_status_id not in sick_time_status):
-                message = _("Due to a change in global time offs, %s extra day(s) have been taken from your allocation. Please review this leave if you need it to be changed.", -1 * duration_difference)
+                message = self.env._("Due to a change in global time offs, %s extra day(s) have been taken from your allocation. Please review this leave if you need it to be changed.", -1 * duration_difference)
             try:
                 leave.sudo().write({'state': state})  # sudo in order to skip _check_approval_update
                 leave._check_validity()
@@ -88,7 +88,7 @@ class ResourceCalendarLeaves(models.Model):
                     leaves_to_recreate |= leave
             except ValidationError:
                 leave.action_refuse()
-                message = _("Due to a change in global time offs, this leave no longer has the required amount of available allocation and has been set to refused. Please review this leave.")
+                message = self.env._("Due to a change in global time offs, this leave no longer has the required amount of available allocation and has been set to refused. Please review this leave.")
             if message:
                 leave._notify_change(message)
         leaves_to_recreate.sudo()._create_resource_leave()

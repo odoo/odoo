@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class HrHolidaysCancelLeave(models.TransientModel):
@@ -21,7 +21,7 @@ class HrHolidaysCancelLeave(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'message': _("Your time off has been cancelled."),
+                'message': self.env._("Your time off has been cancelled."),
                 'next': {'type': 'ir.actions.act_window_close'},
             }
         }

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -17,4 +17,4 @@ class ProductDocument(models.Model):
         for document in self:
             if document.res_model == 'product.product' and document.shown_on_product_page:
                 raise ValidationError(
-                    _("Documents shown on product page cannot be restricted to a specific variant"))
+                    self.env._("Documents shown on product page cannot be restricted to a specific variant"))

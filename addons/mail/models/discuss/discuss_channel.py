@@ -7,7 +7,7 @@ from secrets import choice
 from markupsafe import Markup
 from datetime import timedelta
 
-from odoo import _, api, fields, models, tools, Command
+from odoo import api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tools.discuss import Store
@@ -147,7 +147,7 @@ class DiscussChannel(models.Model):
             )
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     "Cannot create %(channels)s: initial message should belong to parent channel or one of its sub-channels.",
                     channels=failing_channels.mapped("name"),
                 )
@@ -165,7 +165,7 @@ class DiscussChannel(models.Model):
             )
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     "Cannot create %(channels)s: parent should not be a sub-channel and should be of type 'channel' or 'group'. The sub-channel should have the same type as the parent.",
                     channels=failing_channels.mapped("name"),
                 ),
@@ -176,14 +176,14 @@ class DiscussChannel(models.Model):
         # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
         for ch in self.sudo().filtered(lambda ch: ch.channel_type == 'chat'):
             if len(ch.channel_member_ids) > 2:
-                raise ValidationError(_("A channel of type 'chat' cannot have more than two users."))
+                raise ValidationError(self.env._("A channel of type 'chat' cannot have more than two users."))
 
     @api.constrains('group_public_id', 'group_ids')
     def _constraint_group_id_channel(self):
         # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
         failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != 'channel' and (channel.group_public_id or channel.group_ids))
         if failing_channels:
-            raise ValidationError(_("For %(channels)s, channel_type should be 'channel' to have the group-based authorization or group auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
+            raise ValidationError(self.env._("For %(channels)s, channel_type should be 'channel' to have the group-based authorization or group auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
 
     # COMPUTE / INVERSE
 
@@ -401,7 +401,7 @@ class DiscussChannel(models.Model):
             # find partners to add from partner_ids
             partner_ids_cmd = vals.get('channel_partner_ids') or []
             if any(cmd[0] not in (4, 6) for cmd in partner_ids_cmd):
-                raise ValidationError(_('Invalid value when creating a channel with members, only 4 or 6 are allowed.'))
+                raise ValidationError(self.env._('Invalid value when creating a channel with members, only 4 or 6 are allowed.'))
             partner_ids = [cmd[1] for cmd in partner_ids_cmd if cmd[0] == 4]
             partner_ids += [cmd[2] for cmd in partner_ids_cmd if cmd[0] == 6]
 
@@ -409,11 +409,11 @@ class DiscussChannel(models.Model):
             membership_ids_cmd = vals.get('channel_member_ids', [])
             for cmd in membership_ids_cmd:
                 if cmd[0] != 0:
-                    raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
+                    raise ValidationError(self.env._('Invalid value when creating a channel with memberships, only 0 is allowed.'))
                 for field_name in cmd[2]:
                     if field_name not in self._get_allowed_channel_member_create_params():
                         raise ValidationError(
-                            _(
+                            self.env._(
                                 "Invalid field “%(field_name)s” when creating a channel with members.",
                                 field_name=field_name,
                             )
@@ -465,7 +465,7 @@ class DiscussChannel(models.Model):
         except ValueError:
             all_emp_group = None
         if all_emp_group and all_emp_group in self:
-            raise UserError(_('You cannot delete those groups, as the Whole Company group is required by other modules.'))
+            raise UserError(self.env._('You cannot delete those groups, as the Whole Company group is required by other modules.'))
         for channel in self:
             channel._bus_send("discuss.channel/delete", {"id": channel.id})
 
@@ -473,10 +473,10 @@ class DiscussChannel(models.Model):
         if 'channel_type' in vals:
             failing_channels = self.filtered(lambda channel: channel.channel_type != vals.get('channel_type'))
             if failing_channels:
-                raise UserError(_('Cannot change the channel type of: %(channel_names)s', channel_names=', '.join(failing_channels.mapped('name'))))
+                raise UserError(self.env._('Cannot change the channel type of: %(channel_names)s', channel_names=', '.join(failing_channels.mapped('name'))))
         if {"from_message_id", "parent_channel_id"} & set(vals):
             raise UserError(
-                _(
+                self.env._(
                     "Cannot change initial message nor parent channel of: %(channels)s.",
                     channels=self.mapped("name"),
                 )
@@ -578,7 +578,7 @@ class DiscussChannel(models.Model):
         if not member:
             return
         if self.channel_type != "channel" and post_leave_message:
-            notification = Markup('<div class="o_mail_notification" data-oe-type="channel-left">%s</div>') % _(
+            notification = Markup('<div class="o_mail_notification" data-oe-type="channel-left">%s</div>') % self.env._(
                 "left the channel"
             )
             # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
@@ -652,9 +652,9 @@ class DiscussChannel(models.Model):
                 member._bus_send("discuss.channel/joined", payload)
                 if channel.channel_type != "channel" and post_joined_message:
                     notification = (
-                        _("joined the channel")
+                        self.env._("joined the channel")
                         if member.is_self
-                        else _("invited %s to the channel", member._get_html_link(for_persona=True))
+                        else self.env._("invited %s to the channel", member._get_html_link(for_persona=True))
                     )
                     member.channel_id.message_post(
                         author_id=inviting_partner.id or None,
@@ -1032,7 +1032,7 @@ class DiscussChannel(models.Model):
     def _check_can_update_message_content(self, message):
         # Don't call super in this override as we want to ignore the mail.thread behavior completely
         if not message.message_type == 'comment':
-            raise UserError(_("Only messages type comment can have their content updated on model 'discuss.channel'"))
+            raise UserError(self.env._("Only messages type comment can have their content updated on model 'discuss.channel'"))
 
     def _create_attachments_for_post(self, values_list, extra_list):
         # Create voice metadata from meta information
@@ -1047,7 +1047,7 @@ class DiscussChannel(models.Model):
 
     def _message_subscribe(self, partner_ids=None, subtype_ids=None, customer_ids=None):
         # Do not allow follower subscription on channels. Only members are considered
-        raise UserError(_('Adding followers on channels is not possible. Consider adding members instead.'))
+        raise UserError(self.env._('Adding followers on channels is not possible. Consider adding members instead.'))
 
     def _should_invite_members_to_join_call(self):
         self.ensure_one()
@@ -1107,9 +1107,9 @@ class DiscussChannel(models.Model):
             notification = Markup(notification_text) % {
                 'user_pinned_a_message_to_this_channel': Markup('<a href="#" data-oe-type="highlight" data-oe-id="%s">%s</a>') % (
                     message_id,
-                    _('%(user_name)s pinned a message to this channel.', user_name=self.self_member_id._get_html_link_title()),
+                    self.env._('%(user_name)s pinned a message to this channel.', user_name=self.self_member_id._get_html_link_title()),
                 ),
-                'see_all_pins': _('See all pinned messages.'),
+                'see_all_pins': self.env._('See all pinned messages.'),
             }
             self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
         return result
@@ -1277,7 +1277,7 @@ class DiscussChannel(models.Model):
             .search([("id", "in", partners_to)])
         ) | self.env.user.partner_id
         if len(partners) > 2:
-            raise UserError(_("A chat should not be created with more than 2 persons. Create a group instead."))
+            raise UserError(self.env._("A chat should not be created with more than 2 persons. Create a group instead."))
         # determine type according to the number of partner in the channel
         self.flush_model()
         self.env['discuss.channel.member'].flush_model()
@@ -1440,7 +1440,7 @@ class DiscussChannel(models.Model):
         new_channel = self.create(vals)
         group = self.env['res.groups'].search([('id', '=', group_id)]) if group_id else None
         new_channel.group_public_id = group.id if group else None
-        notification = Markup('<div class="o_mail_notification">%s</div>') % _("created this channel.")
+        notification = Markup('<div class="o_mail_notification">%s</div>') % self.env._("created this channel.")
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
         return new_channel
 
@@ -1499,7 +1499,7 @@ class DiscussChannel(models.Model):
         sub_channel.add_members(partner_ids=(self.env.user.partner_id | message.author_id).ids, post_joined_message=False)
         notification = (
             Markup('<div class="o_mail_notification">%s</div>')
-            % _(
+            % self.env._(
                 "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s."
             )
         ) % {
@@ -1575,7 +1575,7 @@ class DiscussChannel(models.Model):
     def execute_command_help(self, **kwargs):
         self.ensure_one()
         if self.channel_type == 'channel':
-            msg = _(
+            msg = self.env._(
                 "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s.",
                 bold_start=Markup("<b>"),
                 bold_end=Markup("</b>"),
@@ -1587,17 +1587,17 @@ class DiscussChannel(models.Model):
                     f"member_{member.id}": member._get_html_link(for_persona=True)
                     for member in members
                 }
-                msg = _(
+                msg = self.env._(
                     "You are in a private conversation with %(member_names)s.",
                     member_names=member_names,
                 )
             else:
-                msg = _("You are alone in a private conversation.")
+                msg = self.env._("You are alone in a private conversation.")
         msg += self._execute_command_help_message_extra()
         self.env.user._bus_send_transient_message(self, msg)
 
     def _execute_command_help_message_extra(self):
-        msg = _(
+        msg = self.env._(
             "%(new_line)s"
             "%(new_line)sType %(bold_start)s@username%(bold_end)s to mention someone, and grab their attention."
             "%(new_line)sType %(bold_start)s#channel%(bold_end)s to mention a channel."
@@ -1615,17 +1615,17 @@ class DiscussChannel(models.Model):
             members = all_other_members[:30]
             list_params = [f"%(member_{member.id})s" for member in members]
             if len(all_other_members) != len(members):
-                list_params.append(_("more"))
+                list_params.append(self.env._("more"))
             else:
-                list_params.append(_("you"))
+                list_params.append(self.env._("you"))
             member_names = html_escape(format_list(self.env, list_params)) % {
                 f"member_{member.id}": member._get_html_link(for_persona=True)
                 for member in members
             }
-            msg = _(
+            msg = self.env._(
                 "Users in this channel: %(members)s.",
                 members=member_names,
             )
         else:
-            msg = _("You are alone in this channel.")
+            msg = self.env._("You are alone in this channel.")
         self.env.user._bus_send_transient_message(self, msg)

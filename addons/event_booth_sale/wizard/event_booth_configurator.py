@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields
 from odoo.exceptions import ValidationError
 
 
@@ -31,4 +31,4 @@ class EventBoothConfigurator(models.TransientModel):
     @api.constrains('event_booth_ids')
     def _check_if_no_booth_ids(self):
         if any(not wizard.event_booth_ids for wizard in self):
-            raise ValidationError(_('You have to select at least one booth.'))
+            raise ValidationError(self.env._('You have to select at least one booth.'))

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import UserError
-from odoo import _, models
+from odoo import models
 
 
 class PosPaymentMethod(models.Model):
@@ -15,7 +15,7 @@ class PosPaymentMethod(models.Model):
             return True
         trx = self.env['l10n_id.qris.transaction']._get_latest_transaction('pos.order', trx_uuid)
         if not trx:
-            raise UserError(_("No QRIS transaction record is found based on this order"))
+            raise UserError(self.env._("No QRIS transaction record is found based on this order"))
 
         result = trx._l10n_id_get_qris_qr_statuses()
         return result['paid']

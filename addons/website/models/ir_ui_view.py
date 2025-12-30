@@ -7,7 +7,7 @@ import werkzeug
 from lxml import etree, html
 
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
@@ -504,7 +504,7 @@ class IrUiView(models.Model):
                     self._copy_custom_snippet_translations(record, field)
 
         except (ValueError, TypeError):
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 "Invalid field value for %(field_name)s: %(value)s",
                 field_name=Model._fields[field].string,
                 value=el.text_content().strip(),

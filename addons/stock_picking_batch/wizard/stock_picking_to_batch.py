@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -21,17 +21,17 @@ class StockPickingToBatch(models.TransientModel):
         if self.mode == 'new':
             company = pickings.company_id
             if len(company) > 1:
-                raise UserError(_("The selected pickings should belong to an unique company."))
+                raise UserError(self.env._("The selected pickings should belong to an unique company."))
             batch = self.env['stock.picking.batch'].create({
                 'user_id': self.user_id.id,
                 'company_id': company.id,
                 'picking_type_id': pickings[0].picking_type_id.id,
                 'description': self.description,
             })
-            notification_title = _('The following batch transfer has been created')
+            notification_title = self.env._('The following batch transfer has been created')
         else:
             batch = self.batch_id
-            notification_title = _('The following batch transfer has been updated')
+            notification_title = self.env._('The following batch transfer has been updated')
 
         pickings.write({'batch_id': batch.id})
         # you have to set some pickings to batch before confirm it.

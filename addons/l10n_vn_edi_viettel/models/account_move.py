@@ -196,7 +196,7 @@ class AccountMove(models.Model):
         # EXTEND 'account'
         if self._l10n_vn_need_cancel_request():
             return {
-                'name': _('Invoice Cancellation'),
+                'name': self.env._('Invoice Cancellation'),
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
                 'view_mode': 'form',
@@ -236,7 +236,7 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         if not self._l10n_vn_edi_is_sent():
-            return {}, _("In order to download the invoice's PDF file, you must first send it to SInvoice")
+            return {}, self.env._("In order to download the invoice's PDF file, you must first send it to SInvoice")
 
         # == Lock ==
         self.env['res.company']._with_locked_records(self)
@@ -403,28 +403,28 @@ class AccountMove(models.Model):
         commercial_partner = self.commercial_partner_id
         errors = []
         if not company.l10n_vn_edi_username or not company.l10n_vn_edi_password:
-            errors.append(_('Sinvoice credentials are missing on company %s.', company.display_name))
+            errors.append(self.env._('Sinvoice credentials are missing on company %s.', company.display_name))
         if not company.vat:
-            errors.append(_('VAT number is missing on company %s.', company.display_name))
+            errors.append(self.env._('VAT number is missing on company %s.', company.display_name))
         company_phone = company.phone and self._l10n_vn_edi_format_phone_number(company.phone)
         if company_phone and not company_phone.isdecimal():
-            errors.append(_('Phone number for company %s must only contain digits or +.', company.display_name))
+            errors.append(self.env._('Phone number for company %s must only contain digits or +.', company.display_name))
         commercial_partner_phone = commercial_partner.phone and self._l10n_vn_edi_format_phone_number(commercial_partner.phone)
         if commercial_partner_phone and not commercial_partner_phone.isdecimal():
-            errors.append(_('Phone number for partner %s must only contain digits or +.', commercial_partner.display_name))
+            errors.append(self.env._('Phone number for partner %s must only contain digits or +.', commercial_partner.display_name))
         if not self.l10n_vn_edi_invoice_symbol:
-            errors.append(_('The invoice symbol must be provided.'))
+            errors.append(self.env._('The invoice symbol must be provided.'))
         if self.l10n_vn_edi_invoice_symbol and not self.l10n_vn_edi_invoice_symbol.invoice_template_id:
-            errors.append(_("The invoice symbol's template must be provided."))
+            errors.append(self.env._("The invoice symbol's template must be provided."))
         if self.move_type == 'out_refund' and (not self.reversed_entry_id or not self.reversed_entry_id._l10n_vn_edi_is_sent()):
-            errors.append(_('You can only send a credit note linked to a previously sent invoice.'))
+            errors.append(self.env._('You can only send a credit note linked to a previously sent invoice.'))
         if not company.street or not company.state_id or not company.country_id:
-            errors.append(_('The street, state and country of company %s must be provided.', company.display_name))
+            errors.append(self.env._('The street, state and country of company %s must be provided.', company.display_name))
         if self.company_currency_id.name != 'VND':
             vnd = self.env.ref('base.VND')
             rate = vnd.with_context(date=self.invoice_date or self.date).rate
             if not vnd.active or rate == 1:
-                errors.append(_('Please make sure that the VND currency is enabled, and that the exchange rates are set.'))
+                errors.append(self.env._('Please make sure that the VND currency is enabled, and that the exchange rates are set.'))
         return errors
 
     def _l10n_vn_edi_send_invoice(self, invoice_json_data):
@@ -521,11 +521,11 @@ class AccountMove(models.Model):
             self.button_cancel()
 
             self.message_post(
-                body=_('The invoice has been canceled for reason: %(reason)s', reason=reason),
+                body=self.env._('The invoice has been canceled for reason: %(reason)s', reason=reason),
             )
         except UserError as e:
             self.message_post(
-                body=_('The invoice has been canceled on sinvoice for reason: %(reason)s'
+                body=self.env._('The invoice has been canceled on sinvoice for reason: %(reason)s'
                        'But the cancellation in Odoo failed with error: %(error)s', reason=reason, error=e),
             )
 
@@ -781,14 +781,14 @@ class AccountMove(models.Model):
         if error_message:
             return "", error_message
         if 'access_token' not in request_response:  # Just in case something else go wrong and it's missing the token
-            return "", _('Connection to the API failed, please try again later.')
+            return "", self.env._('Connection to the API failed, please try again later.')
 
         access_token = request_response['access_token']
 
         try:
             access_token_expiry = datetime.now() + timedelta(seconds=int(request_response['expires_in']))
         except ValueError:  # Simple security measure in case we don't get the expected format in the response.
-            return "", _('Error while parsing API answer. Please try again later.')
+            return "", self.env._('Error while parsing API answer. Please try again later.')
 
         # Tokens are valid for 5 minutes. Storing it helps reduce api calls and speed up things a little bit.
         credentials_company.write({

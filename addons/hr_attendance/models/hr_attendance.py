@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import MO, SU, relativedelta
 from dateutil.rrule import DAILY, rrule
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import request
@@ -134,12 +134,12 @@ class HrAttendance(models.Model):
         tz = request.httprequest.cookies.get('tz') if request else None
         for attendance in self:
             if not attendance.check_out:
-                attendance.display_name = _(
+                attendance.display_name = self.env._(
                     "From %s",
                     format_time(self.env, attendance.check_in, time_format=None, tz=tz, lang_code=self.env.lang),
                 )
             else:
-                attendance.display_name = _(
+                attendance.display_name = self.env._(
                     "%(worked_hours)s (%(check_in)s-%(check_out)s)",
                     worked_hours=format_duration(attendance.worked_hours),
                     check_in=format_time(self.env, attendance.check_in, time_format=None, tz=tz, lang_code=self.env.lang),
@@ -196,7 +196,7 @@ class HrAttendance(models.Model):
         for attendance in self:
             if attendance.check_in and attendance.check_out:
                 if attendance.check_out < attendance.check_in:
-                    raise exceptions.ValidationError(_('"Check Out" time cannot be earlier than "Check In" time.'))
+                    raise exceptions.ValidationError(self.env._('"Check Out" time cannot be earlier than "Check In" time.'))
 
     @api.constrains('check_in', 'check_out', 'employee_id')
     def _check_validity(self):
@@ -213,7 +213,7 @@ class HrAttendance(models.Model):
                 ('id', '!=', attendance.id),
             ], order='check_in desc', limit=1)
             if last_attendance_before_check_in and last_attendance_before_check_in.check_out and last_attendance_before_check_in.check_out > attendance.check_in:
-                raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
+                raise exceptions.ValidationError(self.env._("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
                                                    empl_name=attendance.employee_id.name,
                                                    datetime=format_datetime(self.env, attendance.check_in, dt_format=False)))
 
@@ -225,7 +225,7 @@ class HrAttendance(models.Model):
                     ('id', '!=', attendance.id),
                 ], order='check_in desc', limit=1)
                 if no_check_out_attendances:
-                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s",
+                    raise exceptions.ValidationError(self.env._("Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s",
                                                        empl_name=attendance.employee_id.name,
                                                        datetime=format_datetime(self.env, no_check_out_attendances.check_in, dt_format=False)))
             else:
@@ -237,7 +237,7 @@ class HrAttendance(models.Model):
                     ('id', '!=', attendance.id),
                 ], order='check_in desc', limit=1)
                 if last_attendance_before_check_out and last_attendance_before_check_in != last_attendance_before_check_out:
-                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
+                    raise exceptions.ValidationError(self.env._("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
                                                        empl_name=attendance.employee_id.name,
                                                        datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
 
@@ -334,7 +334,7 @@ class HrAttendance(models.Model):
         if vals.get('employee_id') and \
             vals['employee_id'] not in self.env.user.employee_ids.ids and \
             not self.env.user.has_group('hr_attendance.group_hr_attendance_officer'):
-            raise AccessError(_("Do not have access, user cannot edit the attendances that are not his own."))
+            raise AccessError(self.env._("Do not have access, user cannot edit the attendances that are not his own."))
         domain_pre = self._get_overtimes_to_update_domain()
         result = super(HrAttendance, self).write(vals)
         if any(field in vals for field in ['employee_id', 'check_in', 'check_out']):
@@ -351,7 +351,7 @@ class HrAttendance(models.Model):
         return res
 
     def copy(self, default=None):
-        raise exceptions.UserError(_('You cannot duplicate an attendance.'))
+        raise exceptions.UserError(self.env._('You cannot duplicate an attendance.'))
 
     def action_in_attendance_maps(self):
         self.ensure_one()
@@ -514,7 +514,7 @@ class HrAttendance(models.Model):
                     'type': 'ir.actions.client',
                     'tag': 'display_notification',
                     'params': {
-                        'message': _("You don't have the rights to execute that action."),
+                        'message': self.env._("You don't have the rights to execute that action."),
                         'type': 'info',
                     }
             }
@@ -624,7 +624,7 @@ class HrAttendance(models.Model):
                         "out_mode": "auto_check_out"
                     })
                     att.message_post(
-                        body=_('This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
+                        body=self.env._('This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
                     )
 
     def _cron_absence_detection(self):
@@ -659,7 +659,7 @@ class HrAttendance(models.Model):
         technical_attendances = self.env['hr.attendance'].create(technical_attendances_vals)
         to_unlink = technical_attendances.filtered(lambda a: a.overtime_hours == 0)
 
-        body = _('This attendance was automatically created to cover an unjustified absence on that day.')
+        body = self.env._('This attendance was automatically created to cover an unjustified absence on that day.')
         for technical_attendance in technical_attendances - to_unlink:
             technical_attendance.message_post(body=body)
 

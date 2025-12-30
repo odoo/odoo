@@ -6,7 +6,7 @@ import re
 from collections import defaultdict
 from psycopg2 import errors as pgerrors
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, unique
@@ -127,21 +127,21 @@ class AccountFiscalPosition(models.Model):
     def _check_zip(self):
         for position in self:
             if bool(position.zip_from) != bool(position.zip_to) or position.zip_from > position.zip_to:
-                raise ValidationError(_('Invalid "Zip Range", You have to configure both "From" and "To" values for the zip range and "To" should be greater than "From".'))
+                raise ValidationError(self.env._('Invalid "Zip Range", You have to configure both "From" and "To" values for the zip range and "To" should be greater than "From".'))
 
     @api.constrains('country_id', 'country_group_id', 'state_ids', 'foreign_vat')
     def _validate_foreign_vat_country(self):
         for record in self:
             if record.foreign_vat:
                 if not record.country_id:
-                    raise ValidationError(_("The country of the foreign VAT number could not be detected. Please assign a country to the fiscal position."))
+                    raise ValidationError(self.env._("The country of the foreign VAT number could not be detected. Please assign a country to the fiscal position."))
                 if record.country_id == record.company_id.account_fiscal_country_id:
                     if not record.state_ids:
                         if record.company_id.account_fiscal_country_id.state_ids:
-                            raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country without assigning it a state."))
+                            raise ValidationError(self.env._("You cannot create a fiscal position with a foreign VAT within your fiscal country without assigning it a state."))
                 if record.country_group_id and record.country_id:
                     if record.country_id not in record.country_group_id.country_ids:
-                        raise ValidationError(_("You cannot create a fiscal position with a country outside of the selected country group."))
+                        raise ValidationError(self.env._("You cannot create a fiscal position with a country outside of the selected country group."))
 
                 similar_fpos_count = self.env['account.fiscal.position'].search_count([
                     *self.env['account.fiscal.position']._check_company_domain(record.company_id),
@@ -150,7 +150,7 @@ class AccountFiscalPosition(models.Model):
                     ('country_id', '=', record.country_id.id),
                 ])
                 if similar_fpos_count:
-                    raise ValidationError(_("A fiscal position with a foreign VAT already exists in this country."))
+                    raise ValidationError(self.env._("A fiscal position with a foreign VAT already exists in this country."))
 
     @api.onchange('country_id', 'foreign_vat')
     def _onchange_foreign_vat(self):
@@ -162,7 +162,7 @@ class AccountFiscalPosition(models.Model):
                 continue
 
             if record.country_id:
-                fp_label = _("fiscal position [%s]", record.name)
+                fp_label = self.env._("fiscal position [%s]", record.name)
                 record.foreign_vat, _country_code = self.env['res.partner']._run_vat_checks(record.country_id, record.foreign_vat, partner_name=fp_label)
 
     def map_tax(self, taxes):
@@ -701,7 +701,7 @@ class ResPartner(models.Model):
         if not self.env.user.has_group('account.group_account_invoice'):
             return data_list
         for partner in self.filtered(lambda p: p._get_account_statistics_count()):
-            stat_info = {'iconClass': 'fa-pencil-square-o', 'value': partner._get_account_statistics_count(), 'label': _('Invoices/Bills/Mandates')}
+            stat_info = {'iconClass': 'fa-pencil-square-o', 'value': partner._get_account_statistics_count(), 'label': self.env._('Invoices/Bills/Mandates')}
             data_list[partner.id].append(stat_info)
         return data_list
 
@@ -765,7 +765,7 @@ class ResPartner(models.Model):
             partner2move_lines = self.sudo().env['account.move.line'].search([('partner_id', 'in', self.ids)]).grouped('partner_id')
             parent_vat = self.env['res.partner'].browse(vals['parent_id']).vat
             if partner2move_lines and vals['parent_id'] and any((partner.vat or '') != (parent_vat or '') for partner in self):
-                raise UserError(_("You cannot set a partner as an invoicing address of another if they have a different %(vat_label)s.", vat_label=self.vat_label))
+                raise UserError(self.env._("You cannot set a partner as an invoicing address of another if they have a different %(vat_label)s.", vat_label=self.vat_label))
 
         res = super().write(vals)
 
@@ -777,7 +777,7 @@ class ResPartner(models.Model):
 
                 # Update the commercial partner on account.move that were *entirely* dedicated to that partner (exclude moves shared between partners, e.g misc entries or batch bank payments)
                 move_lines.move_id.filtered(lambda m: m.partner_id == partner).with_context(bypass_lock_check=BYPASS_LOCK_CHECK).commercial_partner_id = partner.commercial_partner_id
-                partner._message_log(body=_("The commercial partner has been updated for all related accounting entries."))
+                partner._message_log(body=self.env._("The commercial partner has been updated for all related accounting entries."))
         return res
 
     @api.model_create_multi
@@ -805,7 +805,7 @@ class ResPartner(models.Model):
             ('state', 'in', ['draft', 'posted']),
         ])
         if moves:
-            raise UserError(_("The partner cannot be deleted because it is used in Accounting"))
+            raise UserError(self.env._("The partner cannot be deleted because it is used in Accounting"))
 
     def _increase_rank(self, field: str, n: int = 1):
         assert field in ('customer_rank', 'supplier_rank')
@@ -1014,7 +1014,7 @@ class ResPartner(models.Model):
         Prevent merging partners that are linked to already hashed journal items.
         """
         if self.env['account.move.line'].sudo().search_count([('move_id.inalterable_hash', '!=', False), ('partner_id', 'in', source.ids)], limit=1):
-            raise UserError(_('Partners that are used in hashed entries cannot be merged.'))
+            raise UserError(self.env._('Partners that are used in hashed entries cannot be merged.'))
         return super()._merge_method(destination, source)
 
     def _deduce_country_code(self):
@@ -1031,11 +1031,11 @@ class ResPartner(models.Model):
     @api.depends('country_id')
     def _compute_partner_vat_placeholder(self):
         for partner in self:
-            placeholder = _("not applicable")
+            placeholder = self.env._("not applicable")
             if partner.country_id:
                 expected_vat = _ref_vat.get(partner.country_id.code.lower())
                 if expected_vat:
-                    placeholder = _("%s, or not applicable", expected_vat)
+                    placeholder = self.env._("%s, or not applicable", expected_vat)
 
             partner.partner_vat_placeholder = placeholder
 

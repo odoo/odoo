@@ -5,7 +5,7 @@ import zipfile
 
 from itertools import chain
 
-from odoo import http, _
+from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import request, content_disposition
 
@@ -42,7 +42,7 @@ class AccountDocumentDownloadController(http.Controller):
                 invoice = request.env['account.move'].browse(inv_ids[0])
                 filename = invoice._get_invoice_report_filename(extension='zip')
             else:
-                filename = _('invoices') + '.zip'
+                filename = self.env._('invoices') + '.zip'
             content = attachments._build_zip_from_attachments()
             headers = _get_headers(filename, 'zip', content)
             return request.make_response(content, headers)
@@ -57,7 +57,7 @@ class AccountDocumentDownloadController(http.Controller):
                 docs_data += doc_data
             elif doc_data := invoice._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback):
                 if len(invoices) == 1 and (errors := [error for data in docs_data for error in data.get('errors', [])]):
-                    raise UserError(_("Error while creating XML:\n- %s", '\n- '.join(errors)))
+                    raise UserError(self.env._("Error while creating XML:\n- %s", '\n- '.join(errors)))
                 docs_data.extend(doc_data)
         if len(docs_data) == 1:
             doc_data = docs_data[0]
@@ -65,7 +65,7 @@ class AccountDocumentDownloadController(http.Controller):
             return request.make_response(doc_data['content'], headers)
         if len(docs_data) > 1:
             zip_content = _build_zip_from_data(docs_data)
-            headers = _get_headers(_('invoices') + '.zip', 'zip', zip_content)
+            headers = _get_headers(self.env._('invoices') + '.zip', 'zip', zip_content)
             return request.make_response(zip_content, headers)
 
     @http.route('/account/download_move_attachments/<models("account.move"):moves>', type='http', auth='user')

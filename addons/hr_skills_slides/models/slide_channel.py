@@ -2,7 +2,7 @@
 
 from markupsafe import Markup
 
-from odoo import fields, models, _
+from odoo import fields, models
 from odoo.tools import html2plaintext
 
 
@@ -56,7 +56,7 @@ class SlideChannelPartner(models.Model):
         super()._send_completed_mail()
         for scp in self:
             if self.env.user.employee_ids:
-                msg = _('The employee has completed the course %s',
+                msg = self.env._('The employee has completed the course %s',
                     Markup('<a href="%(link)s">%(course)s</a>') % {
                         'link': scp.channel_id.website_absolute_url,
                         'course': scp.channel_id.name,
@@ -72,7 +72,7 @@ class SlideChannel(models.Model):
         if member_status == 'joined':
             for channel in self:
                 channel._message_employee_chatter(
-                    _('The employee subscribed to the course %s',
+                    self.env._('The employee subscribed to the course %s',
                         Markup('<a href="%(link)s">%(course)s</a>') % {
                             'link': channel.website_absolute_url,
                             'course': channel.name
@@ -88,7 +88,7 @@ class SlideChannel(models.Model):
 
         for channel in self:
             channel._message_employee_chatter(
-                _('The employee left the course %s',
+                self.env._('The employee left the course %s',
                     Markup('<a href="%(link)s">%(course)s</a>') % {
                         'link': channel.website_absolute_url,
                         'course': channel.name,

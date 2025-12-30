@@ -3,7 +3,7 @@
 import json
 import logging
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.fields import Command
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
@@ -136,11 +136,11 @@ class SaleOrder(models.Model):
                 other_company.add(order_line.route_ids.company_id.id)
                 continue
             if order_line.order_id.company_id.id in company_ids_with_wh:
-                raise UserError(_('You must set a warehouse on your sale order to proceed.'))
+                raise UserError(self.env._('You must set a warehouse on your sale order to proceed.'))
             self.env['stock.warehouse'].with_company(order_line.order_id.company_id)._warehouse_redirect_warning()
         other_company_warehouses = self.env['stock.warehouse'].search([('company_id', 'in', list(other_company))])
         if any(c not in other_company_warehouses.company_id.ids for c in other_company):
-            raise UserError(_("You must have a warehouse for line using a delivery in different company."))
+            raise UserError(self.env._("You must have a warehouse for line using a delivery in different company."))
 
     def write(self, vals):
         values = vals
@@ -155,7 +155,7 @@ class SaleOrder(models.Model):
             new_partner = self.env['res.partner'].browse(values.get('partner_shipping_id'))
             for record in self:
                 picking = record.mapped('picking_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
-                message = _("""The delivery address has been changed on the Sales Order<br/>
+                message = self.env._("""The delivery address has been changed on the Sales Order<br/>
                         From <strong>"%(old_address)s"</strong> to <strong>"%(new_address)s"</strong>,
                         You should probably update the partner on this document.""",
                             old_address=record.partner_shipping_id.display_name, new_address=new_partner.display_name)
@@ -234,8 +234,8 @@ class SaleOrder(models.Model):
         )
         if pickings:
             res['warning'] = {
-                'title': _('Warning!'),
-                'message': _(
+                'title': self.env._('Warning!'),
+                'message': self.env._(
                     'Do not forget to change the partner on the following delivery orders: %s',
                     ','.join(pickings.mapped('name')))
             }

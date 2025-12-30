@@ -3,10 +3,9 @@
 import contextlib
 import logging
 
-from ast import literal_eval
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.tools.translate import LazyTranslate
@@ -98,7 +97,7 @@ class ResUsers(models.Model):
         # check that uninvited users may sign up
         if 'partner_id' not in values:
             if self._get_signup_invitation_scope() != 'b2c':
-                raise SignupError(_('Signup is not allowed for uninvited users'))
+                raise SignupError(self.env._('Signup is not allowed for uninvited users'))
         return self._create_user_from_template(values)
 
     def _notify_inviter(self):
@@ -112,12 +111,12 @@ class ResUsers(models.Model):
         template_user_id = self.env['ir.config_parameter'].sudo().get_int('base.template_portal_user_id')
         template_user = self.browse(template_user_id)
         if not template_user.exists():
-            raise ValueError(_('Signup: invalid template user'))
+            raise ValueError(self.env._('Signup: invalid template user'))
 
         if not values.get('login'):
-            raise ValueError(_('Signup: no login given for new user'))
+            raise ValueError(self.env._('Signup: no login given for new user'))
         if not values.get('partner_id') and not values.get('name'):
-            raise ValueError(_('Signup: no name or partner given for new user'))
+            raise ValueError(self.env._('Signup: no name or partner given for new user'))
 
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True
@@ -136,9 +135,9 @@ class ResUsers(models.Model):
         if not users:
             users = self.search(self._get_email_domain(login))
         if not users:
-            raise Exception(_('No account found for this login'))
+            raise Exception(self.env._('No account found for this login'))
         if len(users) > 1:
-            raise Exception(_('Multiple accounts found for this login'))
+            raise Exception(self.env._('Multiple accounts found for this login'))
         return users.action_reset_password()
 
     def action_reset_password(self):
@@ -149,20 +148,20 @@ class ResUsers(models.Model):
                 return self._action_reset_password(signup_type="reset")
         except MailDeliveryException as mde:
             if len(mde.args) == 2 and isinstance(mde.args[1], ConnectionRefusedError):
-                raise UserError(_("Could not contact the mail server, please check your outgoing email server configuration")) from mde
+                raise UserError(self.env._("Could not contact the mail server, please check your outgoing email server configuration")) from mde
             else:
-                raise UserError(_("There was an error when trying to deliver your Email, please check your configuration")) from mde
+                raise UserError(self.env._("There was an error when trying to deliver your Email, please check your configuration")) from mde
 
     def get_reset_password_link(self):
         """ Generate a new valid link to reset the password. """
         self.ensure_one()
 
         if not self.env.is_admin:
-            raise AccessError(_("Only administrators can generate reset password link."))
+            raise AccessError(self.env._("Only administrators can generate reset password link."))
         if self.id == self.env.user.id:
-            raise UserError(_("You cannot perform this action on your own user."))
+            raise UserError(self.env._("You cannot perform this action on your own user."))
         if not self.active:
-            raise UserError(_("You cannot perform this action on an archived user."))
+            raise UserError(self.env._("You cannot perform this action on an archived user."))
 
         self.partner_id.signup_prepare(signup_type='reset')
         return self.partner_id._get_signup_url()
@@ -172,7 +171,7 @@ class ResUsers(models.Model):
         if self.env.context.get('install_mode') or self.env.context.get('import_file'):
             return
         if self.filtered(lambda user: not user.active):
-            raise UserError(_("You cannot perform this action on an archived user."))
+            raise UserError(self.env._("You cannot perform this action on an archived user."))
         # prepare reset password signup
         create_mode = bool(self.env.context.get('create_user'))
 
@@ -205,7 +204,7 @@ class ResUsers(models.Model):
 
         for user in self:
             if not user.email:
-                raise UserError(_("Cannot send email: user %s has no email address.", user.name))
+                raise UserError(self.env._("Cannot send email: user %s has no email address.", user.name))
             email_values['email_to'] = user.email
             with contextlib.closing(self.env.cr.savepoint()):
                 is_internal = user._is_internal()
@@ -244,10 +243,10 @@ class ResUsers(models.Model):
                     mail.send()
             if signup_type == 'reset':
                 _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
-                message = _('A reset password link was sent by email')
+                message = self.env._('A reset password link was sent by email')
             else:
                 _logger.info("Signup email sent for user <%s> to <%s>", user.login, user.email)
-                message = _('A signup link was sent by email')
+                message = self.env._('A signup link was sent by email')
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',

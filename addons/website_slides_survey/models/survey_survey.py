@@ -3,7 +3,7 @@
 
 import ast
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -39,7 +39,7 @@ class SurveySurvey(models.Model):
                 )
                 for certi in certifications
             ]
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 'Uh-oh! You can’t delete surveys used as a Course Certification! Otherwise, students might think diplomas just grow on trees.\n'
                 'The courses that need them are:\n%s',
                 '\n'.join(certifications_course_mapping)))
@@ -53,7 +53,7 @@ class SurveySurvey(models.Model):
         in no-create as link between those two comes through a slide, hard to
         keep as default values. """
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_action_overview")
-        action['display_name'] = _("Courses")
+        action['display_name'] = self.env._("Courses")
         if self.slide_channel_count == 1:
             action.update({'views': [(False, 'form')],
                            'res_id': self.slide_channel_ids[0].id})

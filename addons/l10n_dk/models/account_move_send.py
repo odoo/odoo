@@ -1,7 +1,7 @@
 from base64 import b64encode
 from datetime import timedelta
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -65,12 +65,12 @@ class AccountMoveSend(models.AbstractModel):
 
             if not partner.nemhandel_identifier_type or not partner.nemhandel_identifier_value:
                 invoice.nemhandel_move_state = 'error'
-                invoice_data['error'] = _('The partner is missing Nemhandel Endpoint Type or Value.')
+                invoice_data['error'] = self.env._('The partner is missing Nemhandel Endpoint Type or Value.')
                 continue
 
             if partner._get_nemhandel_verification_state(invoice_data['invoice_edi_format']) != 'valid':
                 invoice.nemhandel_move_state = 'error'
-                invoice_data['error'] = _('Please verify partner configuration in partner settings.')
+                invoice_data['error'] = self.env._('Please verify partner configuration in partner settings.')
                 continue
 
             if not self._is_applicable_to_move('nemhandel', invoice, **invoice_data):
@@ -85,7 +85,7 @@ class AccountMoveSend(models.AbstractModel):
             else:
                 invoice.nemhandel_move_state = 'error'
                 builder = invoice.partner_id.commercial_partner_id._get_edi_builder(invoice_data['invoice_edi_format'])
-                invoice_data['error'] = _(
+                invoice_data['error'] = self.env._(
                     "Errors occurred while creating the EDI document (format: %s):",
                     builder._description,
                 )
@@ -127,7 +127,7 @@ class AccountMoveSend(models.AbstractModel):
                     invoice.nemhandel_message_uuid = message['message_uuid']
                     invoice.nemhandel_move_state = 'processing'
                     invoices |= invoice
-                log_message = _('The document has been sent to the Nemhandel Access Point for processing')
+                log_message = self.env._('The document has been sent to the Nemhandel Access Point for processing')
                 invoices._message_log_batch(bodies={invoice.id: log_message for invoice in invoices})
                 self.env.ref('l10n_dk.ir_cron_nemhandel_get_message_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=5))
 

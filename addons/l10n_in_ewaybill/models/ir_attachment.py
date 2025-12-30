@@ -1,4 +1,4 @@
-from odoo import api, models, _
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -16,4 +16,4 @@ class IrAttachment(models.Model):
             and attachment.res_field == 'attachment_file'
             for attachment in self
         ):
-            raise UserError(_("You can't unlink an attachment that you received from the government"))
+            raise UserError(self.env._("You can't unlink an attachment that you received from the government"))

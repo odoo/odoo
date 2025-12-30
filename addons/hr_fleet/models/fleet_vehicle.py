@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import api, fields, models
 
 
 class FleetVehicle(models.Model):
@@ -110,7 +109,7 @@ class FleetVehicle(models.Model):
     def action_open_employee(self):
         self.ensure_one()
         return {
-            'name': _('Related Employee'),
+            'name': self.env._('Related Employee'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.employee',
             'view_mode': 'form',

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class MailingContactToList(models.TransientModel):
@@ -28,9 +28,9 @@ class MailingContactToList(models.TransientModel):
             ]
         })
         already_on_list_count = len(self.contact_ids) - len(contacts_to_add)
-        message = _("%(added_contacts_count)s Mailing Contacts have been added.", added_contacts_count=len(contacts_to_add))
+        message = self.env._("%(added_contacts_count)s Mailing Contacts have been added.", added_contacts_count=len(contacts_to_add))
         if already_on_list_count:
-            message += _("\n\n%(already_on_list_count)s Mailing Contacts were already on this list.", already_on_list_count=already_on_list_count)
+            message += self.env._("\n\n%(already_on_list_count)s Mailing Contacts were already on this list.", already_on_list_count=already_on_list_count)
 
         return {
             'type': 'ir.actions.client',

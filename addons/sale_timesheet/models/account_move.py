@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -45,12 +45,12 @@ class AccountMove(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Timesheets'),
+            'name': self.env._('Timesheets'),
             'domain': [('project_id', '!=', False)],
             'res_model': 'account.analytic.line',
             'view_id': False,
             'view_mode': 'list,form',
-            'help': _("""
+            'help': self.env._("""
                 <p class="o_view_nocontent_smiling_face">
                     Record timesheets
                 </p><p>

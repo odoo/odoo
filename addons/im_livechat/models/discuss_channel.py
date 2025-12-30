@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 
 from markupsafe import Markup
 
-from odoo import api, fields, models, _, tools
+from odoo import api, fields, models, tools
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
@@ -528,7 +528,7 @@ class DiscussChannel(models.Model):
         )
 
     def _get_visitor_leave_message(self, operator=False, cancel=False):
-        return _('Visitor left the conversation.')
+        return self.env._('Visitor left the conversation.')
 
     def _close_livechat_session(self, **kwargs):
         """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
@@ -589,7 +589,7 @@ class DiscussChannel(models.Model):
             'body_html': mail_body_html,
             'email_from': company.catchall_formatted or company.email_formatted,
             'email_to': email_split(email)[0],
-            'subject': _('Conversation with %(agent)s',
+            'subject': self.env._('Conversation with %(agent)s',
                          agent=self.livechat_operator_id.user_livechat_username or self.livechat_operator_id.name),
         })
         mail.send()
@@ -737,7 +737,7 @@ class DiscussChannel(models.Model):
         posted_message = False
         error_message = False
         if not email_normalized:
-            error_message = _(
+            error_message = self.env._(
                 "'%(input_email)s' does not look like a valid email. Can you please try again?",
                 input_email=email_address
             )
@@ -863,7 +863,7 @@ class DiscussChannel(models.Model):
         self.sudo().chatbot_message_ids.unlink()
         return self._chatbot_post_message(
             chatbot_script,
-            Markup('<div class="o_mail_notification">%s</div>') % _('Restarting conversation...'),
+            Markup('<div class="o_mail_notification">%s</div>') % self.env._('Restarting conversation...'),
         )
 
     def _get_allowed_channel_member_create_params(self):

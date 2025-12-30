@@ -7,7 +7,7 @@ import requests
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import consteq, email_normalize
@@ -28,7 +28,7 @@ class GoogleGmailController(http.Controller):
         if error:
             _logger.warning("Google Gmail: an error occurred %s", error)
             return request.render('google_gmail.google_gmail_oauth_error', {
-                'error': _('An error occurred during the authentication process.'),
+                'error': self.env._('An error occurred during the authentication process.'),
                 'redirect_url': '/odoo',
             })
 
@@ -106,7 +106,7 @@ class GoogleGmailController(http.Controller):
             if not response.get('verified_email') or email_normalize(response.get('email')) != email_normalize(record[record._email_field]):
                 _logger.error('Google Gmail: Invalid email address: %r != %s.', response, record[record._email_field])
                 return request.render('google_gmail.google_gmail_oauth_error', {
-                    'error': _(
+                    'error': self.env._(
                         "Oops, you're creating an authorization to send from %(email_login)s but your address is %(email_server)s. Make sure your addresses match!",
                         email_login=response.get('email'),
                         email_server=record[record._email_field],

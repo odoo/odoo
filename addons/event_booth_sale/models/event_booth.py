@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -28,7 +28,7 @@ class EventBooth(models.Model):
     def _unlink_except_linked_sale_order(self):
         booth_with_so = self.sudo().filtered('sale_order_id')
         if booth_with_so:
-            raise UserError(_(
+            raise UserError(self.env._(
                 'You can\'t delete the following booths as they are linked to sales orders: '
                 '%(booths)s', booths=', '.join(booth_with_so.mapped('name'))))
 

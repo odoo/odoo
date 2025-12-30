@@ -1,7 +1,7 @@
 from datetime import datetime
 from itertools import product
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -48,7 +48,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
             applicants = wizard.applicant_ids.filtered(lambda x: not x.email_from and not x.partner_id.email)
             if applicants:
                 wizard.applicant_without_email = "%s\n%s" % (
-                    _("You can't select Send email option.\nThe email will not be sent to the following applicant(s) as they don't have an email address:"),
+                    self.env._("You can't select Send email option.\nThe email will not be sent to the following applicant(s) as they don't have an email address:"),
                     ", ".join([i.partner_name or i.display_name or '' for i in applicants])
                 )
             else:
@@ -104,9 +104,9 @@ class ApplicantGetRefuseReason(models.TransientModel):
     def action_refuse_reason_apply(self):
         if self.send_mail:
             if not self.env.user.email:
-                raise UserError(_("Unable to post message, please configure the sender's email address."))
+                raise UserError(self.env._("Unable to post message, please configure the sender's email address."))
             if any(not (applicant.email_from or applicant.partner_id.email) for applicant in self.applicant_ids):
-                raise UserError(_("At least one applicant doesn't have a email; you can't use send email option."))
+                raise UserError(self.env._("At least one applicant doesn't have a email; you can't use send email option."))
 
         refused_applications = self.applicant_ids
         if self.duplicates_count and self.duplicates:
@@ -116,7 +116,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
             message_by_duplicate_applicant = {}
             for duplicate_applicant in self.duplicate_applicant_ids:
                 url = original_applicant_by_duplicate_applicant[duplicate_applicant]._get_html_link()
-                message_by_duplicate_applicant[duplicate_applicant.id] = _(
+                message_by_duplicate_applicant[duplicate_applicant.id] = self.env._(
                     "Refused automatically because this application has been identified as a duplicate of %(link)s",
                     link=url)
             self.duplicate_applicant_ids._message_log_batch(bodies={

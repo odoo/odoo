@@ -5,12 +5,11 @@ from datetime import datetime
 from uuid import uuid4
 
 import odoo.release
-from odoo import SUPERUSER_ID, Command, _, api, fields, models, tools
+from odoo import SUPERUSER_ID, Command, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.tools import SQL, convert
 
-from odoo.addons.point_of_sale.models.pos_printer import format_epson_certified_domain
 
 DEFAULT_LIMIT_LOAD_PRODUCT = 5000
 DEFAULT_LIMIT_LOAD_PARTNER = 100
@@ -443,7 +442,7 @@ class PosConfig(models.Model):
                     if key == "add_invoice_line":
                         selection_value = val
                         break
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'",
                     pos=config.name,
                     value=selection_value,
@@ -453,37 +452,37 @@ class PosConfig(models.Model):
         if self.cash_control and self.payment_method_ids:
             for method in self.payment_method_ids:
                 if method.is_cash_count and (not method.journal_id.loss_account_id or not method.journal_id.profit_account_id):
-                    raise ValidationError(_("You need a loss and profit account on your cash journal."))
+                    raise ValidationError(self.env._("You need a loss and profit account on your cash journal."))
 
     @api.constrains('company_id', 'payment_method_ids')
     def _check_company_payment(self):
         for config in self:
             if self.env['pos.payment.method'].search_count([('id', 'in', config.payment_method_ids.ids), ('company_id', '!=', config.company_id.id)]):
-                raise ValidationError(_("The payment methods for the point of sale %s must belong to its company.", self.name))
+                raise ValidationError(self.env._("The payment methods for the point of sale %s must belong to its company.", self.name))
 
     @api.constrains('pricelist_id', 'use_pricelist', 'available_pricelist_ids', 'journal_id', 'invoice_journal_id', 'payment_method_ids')
     def _check_currencies(self):
         for config in self:
             if config.use_pricelist and config.pricelist_id and config.pricelist_id not in config.available_pricelist_ids:
-                raise ValidationError(_("The default pricelist must be included in the available pricelists."))
+                raise ValidationError(self.env._("The default pricelist must be included in the available pricelists."))
 
             # Check if the config's payment methods are compatible with its currency
             for pm in config.payment_method_ids:
                 if pm.journal_id and pm.journal_id.currency_id and pm.journal_id.currency_id != config.currency_id:
-                    raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
+                    raise ValidationError(self.env._("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
 
             if config.use_pricelist and any(config.available_pricelist_ids.mapped(lambda pricelist: pricelist.currency_id != config.currency_id)):
-                raise ValidationError(_("All available pricelists must be in the same currency as the company or"
+                raise ValidationError(self.env._("All available pricelists must be in the same currency as the company or"
                                         " as the Sales Journal set on this point of sale if you use"
                                         " the Accounting application."))
             if config.invoice_journal_id.currency_id and config.invoice_journal_id.currency_id != config.currency_id:
-                raise ValidationError(_("The invoice journal must be in the same currency as the Sales Journal or the company currency if that is not set."))
+                raise ValidationError(self.env._("The invoice journal must be in the same currency as the Sales Journal or the company currency if that is not set."))
 
     def _check_payment_method_ids(self):
         self.ensure_one()
         if not self.payment_method_ids:
             raise ValidationError(
-                _("You must have at least one payment method configured to launch a session.")
+                self.env._("You must have at least one payment method configured to launch a session.")
             )
 
     @api.constrains('pricelist_id', 'available_pricelist_ids')
@@ -492,18 +491,18 @@ class PosConfig(models.Model):
         self = self.sudo()
         if self.pricelist_id.company_id and self.pricelist_id.company_id != self.company_id:
             raise ValidationError(
-                _("The default pricelist must belong to no company or the company of the point of sale."))
+                self.env._("The default pricelist must belong to no company or the company of the point of sale."))
 
     @api.constrains('company_id', 'available_pricelist_ids')
     def _check_companies(self):
         for config in self:
             if any(pricelist.company_id.id not in [False, config.company_id.id] for pricelist in config.available_pricelist_ids):
-                raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
+                raise ValidationError(self.env._("The selected pricelists must belong to no company or the company of the point of sale."))
 
     def _check_company_has_template(self):
         self.ensure_one()
         if not self.company_has_template:
-            raise ValidationError(_("No chart of account configured, go to the \"configuration / settings\" menu, and "
+            raise ValidationError(self.env._("No chart of account configured, go to the \"configuration / settings\" menu, and "
                                     "install one from the Invoicing tab."))
 
     @api.constrains('payment_method_ids')
@@ -511,26 +510,26 @@ class PosConfig(models.Model):
         for config in self:
             for cash_method in config.payment_method_ids.filtered(lambda m: m.journal_id.type == 'cash'):
                 if self.env['pos.config'].search_count([('id', '!=', config.id), ('payment_method_ids', 'in', cash_method.ids)], limit=1):
-                    raise ValidationError(_("This cash payment method is already used in another Point of Sale.\n"
+                    raise ValidationError(self.env._("This cash payment method is already used in another Point of Sale.\n"
                                             "A new cash payment method should be created for this Point of Sale."))
                 if len(cash_method.journal_id.pos_payment_method_ids) > 1:
-                    raise ValidationError(_("You cannot use the same journal on multiples cash payment methods."))
+                    raise ValidationError(self.env._("You cannot use the same journal on multiples cash payment methods."))
 
     @api.constrains('trusted_config_ids')
     def _check_trusted_config_ids_currency(self):
         for config in self:
             for trusted_config in config.trusted_config_ids:
                 if trusted_config.currency_id != config.currency_id:
-                    raise ValidationError(_("You cannot share open orders with configuration that does not use the same currency."))
+                    raise ValidationError(self.env._("You cannot share open orders with configuration that does not use the same currency."))
 
     def _check_header_footer(self, values):
         if not self.env.is_admin() and {'use_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
-            raise AccessError(_('Only administrators can edit receipt headers and footers'))
+            raise AccessError(self.env._('Only administrators can edit receipt headers and footers'))
 
     def _check_company_has_fiscal_country(self):
         self.ensure_one()
         if not self.company_id.account_fiscal_country_id:
-            raise ValidationError(_("The company must have a fiscal country set."))
+            raise ValidationError(self.env._("The company must have a fiscal country set."))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -566,25 +565,25 @@ class PosConfig(models.Model):
             # Create sequences for all orders
             pos_config.order_seq_id = self.env['ir.sequence'].sudo().create({
                 **sequence_vals,
-                'name': _('POS order from config #%s', pos_config.id),
+                'name': self.env._('POS order from config #%s', pos_config.id),
             })
 
             # Create sequences for order that are created from self ore backend
             pos_config.order_backend_seq_id = self.env['ir.sequence'].sudo().create({
                 **sequence_vals,
-                'name': _('POS order backend from config #%s', pos_config.id),
+                'name': self.env._('POS order backend from config #%s', pos_config.id),
             })
 
             # Create sequences for all order lines
             pos_config.order_line_seq_id = self.env['ir.sequence'].sudo().create({
                 **sequence_vals,
-                'name': _('POS order line from config #%s', pos_config.id),
+                'name': self.env._('POS order line from config #%s', pos_config.id),
             })
 
             # Create sequences for devices
             pos_config.device_seq_id = self.env['ir.sequence'].sudo().create({
                 **sequence_vals,
-                'name': _('POS device from config #%s', pos_config.id),
+                'name': self.env._('POS device from config #%s', pos_config.id),
                 'padding': 0,
             })
 
@@ -601,7 +600,7 @@ class PosConfig(models.Model):
             if default_product:
                 vals['tip_product_id'] = default_product.id
             else:
-                raise UserError(_('The default tip product is missing. Please manually specify the tip product. (See Tips field.)'))
+                raise UserError(self.env._('The default tip product is missing. Please manually specify the tip product. (See Tips field.)'))
 
     def _update_preparation_printers_menuitem_visibility(self):
         prepa_printers_menuitem = self.sudo().env.ref('point_of_sale.menu_pos_preparation_printer', raise_if_not_found=False)
@@ -641,7 +640,7 @@ class PosConfig(models.Model):
                     forbidden_fields.append(field_name)
 
             if len(forbidden_fields) > 0:
-                raise UserError(_(
+                raise UserError(self.env._(
                     "Unable to modify this PoS Configuration because you can't modify %s while a session is open.",
                     ", ".join(forbidden_fields)
                 ))
@@ -803,7 +802,7 @@ class PosConfig(models.Model):
         self.ensure_one()
         # In case of test environment, don't create the pdf
         if self.env.uid == SUPERUSER_ID and not tools.config['test_enable']:
-            raise UserError(_("You do not have permission to open a POS session. Please try opening a session with a different user"))
+            raise UserError(self.env._("You do not have permission to open a POS session. Please try opening a session with a different user"))
 
         if not self.current_session_id:
             res = self._check_before_creating_new_session()
@@ -842,7 +841,7 @@ class PosConfig(models.Model):
     def _open_session(self, session_id):
         self._check_pricelists()  # The pricelist company might have changed after the first opening of the session
         return {
-            'name': _('Session'),
+            'name': self.env._('Session'),
             'view_mode': 'form,list',
             'res_model': 'pos.session',
             'res_id': session_id,
@@ -862,7 +861,7 @@ class PosConfig(models.Model):
             }
         else:
             return {
-                'name': _('Rescue Sessions'),
+                'name': self.env._('Rescue Sessions'),
                 'res_model': 'pos.session',
                 'view_mode': 'list,form',
                 'domain': [('id', 'in', rescue_session_ids.ids)],
@@ -938,7 +937,7 @@ class PosConfig(models.Model):
         if cash_journal_vals is None:
             cash_journal_vals = {}
         journal_vals = {
-            'name': _('Cash'),
+            'name': self.env._('Cash'),
             'type': 'cash',
             'company_id': self.env.company.id,
             **cash_journal_vals,
@@ -955,7 +954,7 @@ class PosConfig(models.Model):
 
         cash_journal = self.env['account.journal'].create(journal_vals)
         return self.env['pos.payment.method'].create({
-            'name': _('Cash'),
+            'name': self.env._('Cash'),
             'journal_id': cash_journal.id,
             'company_id': self.env.company.id,
         })
@@ -991,9 +990,9 @@ class PosConfig(models.Model):
         if not bank_pm:
             bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)
             if not bank_journal:
-                raise UserError(_('Ensure that there is an existing bank journal. Check if chart of accounts is installed in your company.'))
+                raise UserError(self.env._('Ensure that there is an existing bank journal. Check if chart of accounts is installed in your company.'))
             bank_pm = self.env['pos.payment.method'].create({
-                'name': _('Card'),
+                'name': self.env._('Card'),
                 'journal_id': bank_journal.id,
                 'company_id': self.env.company.id,
                 'sequence': 1,
@@ -1004,7 +1003,7 @@ class PosConfig(models.Model):
         pay_later_pm = self.env['pos.payment.method'].search([('journal_id', '=', False), ('company_id', 'in', self.env.company.parent_ids.ids)])
         if not pay_later_pm:
             pay_later_pm = self.env['pos.payment.method'].create({
-                'name': _('Customer Account'),
+                'name': self.env._('Customer Account'),
                 'company_id': self.env.company.id,
                 'split_transactions': True,
                 'sequence': 2,
@@ -1040,9 +1039,9 @@ class PosConfig(models.Model):
     @api.model
     def load_onboarding_clothes_scenario(self, with_demo_data=True):
         journal, payment_methods_ids = self._create_journal_and_payment_methods(
-            cash_journal_vals={'name': _('Cash Clothes Shop'), 'show_on_dashboard': False})
+            cash_journal_vals={'name': self.env._('Cash Clothes Shop'), 'show_on_dashboard': False})
         config = self.env['pos.config'].create([{
-            'name': _('Clothes Shop'),
+            'name': self.env._('Clothes Shop'),
             'company_id': self.env.company.id,
             'journal_id': journal.id,
             'payment_method_ids': payment_methods_ids
@@ -1075,9 +1074,9 @@ class PosConfig(models.Model):
     @api.model
     def load_onboarding_bakery_scenario(self, with_demo_data=True):
         journal, payment_methods_ids = self._create_journal_and_payment_methods(
-            cash_journal_vals={'name': _('Cash Bakery'), 'show_on_dashboard': False})
+            cash_journal_vals={'name': self.env._('Cash Bakery'), 'show_on_dashboard': False})
         config = self.env['pos.config'].create({
-            'name': _('Bakery Shop'),
+            'name': self.env._('Bakery Shop'),
             'company_id': self.env.company.id,
             'journal_id': journal.id,
             'payment_method_ids': payment_methods_ids
@@ -1108,10 +1107,10 @@ class PosConfig(models.Model):
     def load_onboarding_furniture_scenario(self, with_demo_data=True):
         journal, payment_methods_ids = self._create_journal_and_payment_methods(
             cash_ref='point_of_sale.cash_payment_method_furniture',
-            cash_journal_vals={'name': _("Cash Furn. Shop"), 'show_on_dashboard': False},
+            cash_journal_vals={'name': self.env._("Cash Furn. Shop"), 'show_on_dashboard': False},
         )
         config = self.env['pos.config'].create([{
-            'name': _('Furniture Shop'),
+            'name': self.env._('Furniture Shop'),
             'company_id': self.env.company.id,
             'journal_id': journal.id,
             'payment_method_ids': payment_methods_ids
@@ -1150,7 +1149,7 @@ class PosConfig(models.Model):
     @api.model
     def load_onboarding_retail_scenario(self, with_demo_data=False):
         journal, payment_methods_ids = self._create_journal_and_payment_methods(
-            cash_journal_vals={'name': _("Cash %s", self.env.company.name), 'show_on_dashboard': False},
+            cash_journal_vals={'name': self.env._("Cash %s", self.env.company.name), 'show_on_dashboard': False},
         )
         config = self.env['pos.config'].create([{
             'name': self.env.company.name,

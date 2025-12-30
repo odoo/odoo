@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 from markupsafe import Markup
 
-from odoo import api, fields, models, tools, _
-from odoo.addons.phone_validation.tools import phone_validation
+from odoo import api, fields, models, tools
 
 
 class EventRegistration(models.Model):
@@ -150,7 +148,7 @@ class EventRegistration(models.Model):
                 for lead in leads_attendee:
                     lead_values['description'] = "%s<br/>%s" % (
                         lead.description,
-                        registration._get_lead_description(_("Updated registrations"), line_counter=True)
+                        registration._get_lead_description(self.env._("Updated registrations"), line_counter=True)
                     )
                     lead.write(lead_values)
             elif lead_values:
@@ -162,9 +160,9 @@ class EventRegistration(models.Model):
             if new_vals.get('partner_id'):
                 lead_values.update(lead.registration_ids._get_lead_contact_values())
                 if not lead.partner_id:
-                    lead_values['description'] = lead.registration_ids._get_lead_description(_("Participants"), line_counter=True)
+                    lead_values['description'] = lead.registration_ids._get_lead_description(self.env._("Participants"), line_counter=True)
                 elif new_vals['partner_id'] != lead.partner_id.id:
-                    lead_values['description'] = (lead.description or '') + "<br/>" + lead.registration_ids._get_lead_description(_("Updated registrations"), line_counter=True, line_suffix=_("(updated)"))
+                    lead_values['description'] = (lead.description or '') + "<br/>" + lead.registration_ids._get_lead_description(self.env._("Updated registrations"), line_counter=True, line_suffix=self.env._("(updated)"))
             if lead_values:
                 lead.write(lead_values)
 
@@ -193,7 +191,7 @@ class EventRegistration(models.Model):
             'medium_id': sorted_self._find_first_notnull('utm_medium_id'),
         }
         lead_values.update(sorted_self._get_lead_contact_values())
-        lead_values['description'] = sorted_self._get_lead_description(_("Participants"), line_counter=True)
+        lead_values['description'] = sorted_self._get_lead_description(self.env._("Participants"), line_counter=True)
         return lead_values
 
     def _get_lead_contact_values(self):

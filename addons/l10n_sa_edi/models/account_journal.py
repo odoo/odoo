@@ -7,7 +7,7 @@ from lxml import etree
 from markupsafe import Markup
 from requests.exceptions import HTTPError, RequestException
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import file_open
 from odoo.tools.translate import LazyTranslate
@@ -123,7 +123,7 @@ class AccountJournal(models.Model):
         )
         stuck_moves = [move for move in move_ids if not move._l10n_sa_is_in_chain()]
         if stuck_moves:
-            raise UserError(_("Oops! The journal is stuck. Please submit the pending invoices to ZATCA and try again."))
+            raise UserError(self.env._("Oops! The journal is stuck. Please submit the pending invoices to ZATCA and try again."))
 
     # ====== CSR Generation =======
 
@@ -138,7 +138,7 @@ class AccountJournal(models.Model):
         self.ensure_one()
         if any(not self.company_id[f] for f in self._l10n_sa_csr_required_fields()):
             raise UserError(
-                _(
+                self.env._(
                     "Please set the following on %(company_name)s: %(fields)s",
                     company_name=self.company_id.name,
                     fields=", ".join(
@@ -197,7 +197,7 @@ class AccountJournal(models.Model):
             # In case of an exception returned from ZATCA (not timeout), we will need to regenerate the CSR
             # As the same CSR cannot be used twice for the same CCSID request
             self._l10n_sa_reset_certificates()
-            self.l10n_sa_csr_errors = e.args[0] or _("Journal could not be onboarded")
+            self.l10n_sa_csr_errors = e.args[0] or self.env._("Journal could not be onboarded")
 
     def _l10n_sa_get_compliance_CSID(self, otp):
         """
@@ -206,7 +206,7 @@ class AccountJournal(models.Model):
         CCSID_data = self._l10n_sa_api_get_compliance_CSID(otp)
         if CCSID_data.get('errors') or CCSID_data.get('error'):
             error = CCSID_data['errors'][0]['message'] if CCSID_data.get('errors') else CCSID_data['error']
-            raise UserError(Markup("%s<br/>%s") % (_("Please check the details below and onboard the journal again:"), error))
+            raise UserError(Markup("%s<br/>%s") % (self.env._("Please check the details below and onboard the journal again:"), error))
         cert_id = self.env['certificate.certificate'].sudo().create({
             'name': 'CCSID Certificate',
             'content': b64decode(CCSID_data['binarySecurityToken']),
@@ -239,12 +239,12 @@ class AccountJournal(models.Model):
             if zatca_format._l10n_sa_get_zatca_datetime(validity_time) < time_now:
                 renew = True
             else:
-                raise UserError(_("The Journal is valid until (%s) and can only be renewed upon expiry.", validity_time))
+                raise UserError(self.env._("The Journal is valid until (%s) and can only be renewed upon expiry.", validity_time))
 
         CCSID_data = json.loads(self_sudo.l10n_sa_compliance_csid_json)
         PCSID_data = self_sudo._l10n_sa_request_production_csid(CCSID_data, renew, OTP)
         if PCSID_data.get('error'):
-            raise UserError(_("Could not obtain Production CSID: %s", PCSID_data['error']))
+            raise UserError(self.env._("Could not obtain Production CSID: %s", PCSID_data['error']))
         self_sudo.l10n_sa_production_csid_json = json.dumps(PCSID_data)
         pcsid_certificate = self_sudo.env['certificate.certificate'].create({
             'name': 'PCSID Certificate',
@@ -284,7 +284,7 @@ class AccountJournal(models.Model):
         self.ensure_one()
         self_sudo = self.sudo()
         if self.country_code != 'SA':
-            raise UserError(_("Please change the (%s)'s country to Saudi Arabia and try again.", self.company_id.name))
+            raise UserError(self.env._("Please change the (%s)'s country to Saudi Arabia and try again.", self.company_id.name))
         if not self_sudo.l10n_sa_compliance_csid_json or not self_sudo.l10n_sa_compliance_csid_certificate_id:
             raise UserError(str(ERROR_MESSAGE))
         CCSID_data = json.loads(self_sudo.l10n_sa_compliance_csid_json)
@@ -299,7 +299,7 @@ class AccountJournal(models.Model):
                 raise UserError(Markup("<p class='mb-0'>%s</p>") % (str(ERROR_MESSAGE)))
             if result['validationResults']['status'] == 'WARNING':
                 warnings = Markup().join(Markup("<li><b>%(code)s</b>: %(message)s </li>") % e for e in result['validationResults']['warningMessages'])
-                self.l10n_sa_csr_errors = Markup("<br/><br/><ul class='pl-3'><b>%s</b>%s</ul>") % (_("Warnings:"), warnings)
+                self.l10n_sa_csr_errors = Markup("<br/><br/><ul class='pl-3'><b>%s</b>%s</ul>") % (self.env._("Warnings:"), warnings)
             elif result['validationResults']['status'] != 'PASS':
                 raise UserError(Markup("<p class='mb-0'>%s</p>") % (str(ERROR_MESSAGE)))
         self.l10n_sa_compliance_checks_passed = True
@@ -350,10 +350,10 @@ class AccountJournal(models.Model):
         self.ensure_one()
         if self.l10n_sa_chain_sequence_id:
             self.l10n_sa_chain_sequence_id.number_next = 1
-            message = _("Journal re-onboarded with ZATCA successfully")
+            message = self.env._("Journal re-onboarded with ZATCA successfully")
         else:
             self.l10n_sa_chain_sequence_id = self._l10n_sa_edi_create_new_chain()
-            message = _("Journal onboarded with ZATCA successfully")
+            message = self.env._("Journal onboarded with ZATCA successfully")
         self.message_post(body=message)
 
     def _l10n_sa_edi_create_new_chain(self):
@@ -395,7 +395,7 @@ class AccountJournal(models.Model):
         """
         self.ensure_one()
         if not otp:
-            raise UserError(_("The OTP is invalid. Please try again."))
+            raise UserError(self.env._("The OTP is invalid. Please try again."))
         if not self.l10n_sa_csr:
             raise UserError(str(ERROR_MESSAGE))
         request_data = {
@@ -514,7 +514,7 @@ class AccountJournal(models.Model):
             raise UserError(str(ERROR_MESSAGE))
         certificate = self_sudo.l10n_sa_production_csid_certificate_id
         if not certificate.is_valid and self.company_id.l10n_sa_api_mode != 'sandbox':
-            raise UserError(_("The Journal is not valid anymore. Please Renew it."))
+            raise UserError(self.env._("The Journal is not valid anymore. Please Renew it."))
         return json.loads(self_sudo.l10n_sa_production_csid_json), certificate.id
 
     # ====== API Helper Methods =======
@@ -539,7 +539,7 @@ class AccountJournal(models.Model):
             # erase the index chain (excepted) because for ZATCA, one ICV (index chain) needs to correspond to one invoice.
             if (status_code := ex.response.status_code) not in {400, 409}:
                 return {
-                    'error': (Markup("<b>[%s]</b>") % status_code) + _("Server returned an unexpected error: %(error)s",
+                    'error': (Markup("<b>[%s]</b>") % status_code) + self.env._("Server returned an unexpected error: %(error)s",
                                error=(request_response.text or str(ex))),
                     'blocking_level': 'warning',
                     'status_code': status_code,
@@ -551,14 +551,14 @@ class AccountJournal(models.Model):
             return {'error': str(ex), 'blocking_level': 'warning', 'excepted': True}
 
         if request_response.status_code == '303':
-            return {'error': _('Clearance and reporting seem to have been mixed up. '),
+            return {'error': self.env._('Clearance and reporting seem to have been mixed up. '),
                     'blocking_level': 'warning', 'excepted': True}
 
         try:
             response_data = request_response.json()
         except json.decoder.JSONDecodeError:
             return {
-                'error': _("JSON response from ZATCA could not be decoded"),
+                'error': self.env._("JSON response from ZATCA could not be decoded"),
                 'blocking_level': 'error'
             }
         response_data['status_code'] = request_response.status_code
@@ -570,7 +570,7 @@ class AccountJournal(models.Model):
         if not request_response.ok and (val_res.get('errorMessages') or val_res.get('warningMessages')):
             error = "" if not status_code else Markup("<b>[%s]</b>") % (status_code)
             if isinstance(response_data, dict) and val_res.get('errorMessages'):
-                error += _("Invoice submission to ZATCA returned errors")
+                error += self.env._("Invoice submission to ZATCA returned errors")
                 return {
                     'error': error,
                     'json_errors': response_data,

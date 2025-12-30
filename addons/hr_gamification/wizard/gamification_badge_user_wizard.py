@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError, AccessError
+from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class GamificationBadgeUserWizard(models.TransientModel):
@@ -15,7 +15,7 @@ class GamificationBadgeUserWizard(models.TransientModel):
     def action_grant_badge(self):
         """Wizard action for sending a badge to a chosen employee"""
         if self.env.uid == self.user_id.id:
-            raise UserError(_('You can not send a badge to yourself.'))
+            raise UserError(self.env._('You can not send a badge to yourself.'))
         values = {
             'user_id': self.user_id.id,
             'sender_id': self.env.uid,

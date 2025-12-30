@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from markupsafe import Markup
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class MailBlacklistRemove(models.TransientModel):
@@ -13,7 +13,7 @@ class MailBlacklistRemove(models.TransientModel):
 
     def action_unblacklist_apply(self):
         if self.reason:
-            message = Markup('<p>%s</p>') % _("Unblock Reason: %(reason)s", reason=self.reason)
+            message = Markup('<p>%s</p>') % self.env._("Unblock Reason: %(reason)s", reason=self.reason)
         else:
             message = None
         return self.env['mail.blacklist']._remove(

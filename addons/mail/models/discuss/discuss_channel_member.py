@@ -6,7 +6,7 @@ import uuid
 from datetime import timedelta
 from markupsafe import Markup
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.web.models.models import lazymapping
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_ACTION, PUSH_NOTIFICATION_TYPE
@@ -114,14 +114,14 @@ class DiscussChannelMember(models.Model):
     def _contrains_no_public_member(self):
         for member in self:
             if any(user._is_public() for user in member.partner_id.user_ids):
-                raise ValidationError(_("Channel members cannot include public users."))
+                raise ValidationError(self.env._("Channel members cannot include public users."))
 
     @api.constrains("channel_role", "channel_id")
     def _check_channel_role_supported(self):
         for member in self:
             if member.channel_role and member.channel_id.channel_type not in ["group", "channel"]:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The role '%(role_name)s' is not supported for the channel type '%(channel_type)s'.",
                         role_name=member.channel_role,
                         channel_type=member.channel_id.channel_type,
@@ -191,7 +191,7 @@ class DiscussChannelMember(models.Model):
     @api.depends("partner_id.name", "guest_id.name", "channel_id.display_name")
     def _compute_display_name(self):
         for member in self:
-            member.display_name = _(
+            member.display_name = self.env._(
                 "“%(member_name)s” in “%(channel_name)s”",
                 member_name=member.partner_id.name or member.guest_id.name,
                 channel_name=member.channel_id.display_name,
@@ -226,7 +226,7 @@ class DiscussChannelMember(models.Model):
         for vals in vals_list:
             if "channel_id" not in vals:
                 raise UserError(
-                    _(
+                    self.env._(
                         "It appears you're trying to create a channel member, but it seems like you forgot to specify the related channel. "
                         "To move forward, please make sure to provide the necessary channel information."
                     )
@@ -234,7 +234,7 @@ class DiscussChannelMember(models.Model):
             channel = self.env["discuss.channel"].browse(vals["channel_id"])
             if channel.channel_type == "chat" and len(channel.channel_member_ids) > 0:
                 raise UserError(
-                    _("Adding more members to this chat isn't possible; it's designed for just two people.")
+                    self.env._("Adding more members to this chat isn't possible; it's designed for just two people.")
                 )
         name_members_by_channel = {
             channel: channel.channel_name_member_ids
@@ -264,7 +264,7 @@ class DiscussChannelMember(models.Model):
         for channel_member in self:
             for field_name in ['channel_id', 'partner_id', 'guest_id']:
                 if field_name in vals and vals[field_name] != channel_member[field_name].id:
-                    raise AccessError(_('You can not write on %(field_name)s.', field_name=field_name))
+                    raise AccessError(self.env._('You can not write on %(field_name)s.', field_name=field_name))
         res = super().write(vals)
         self._write_after_hook(vals)
         return res

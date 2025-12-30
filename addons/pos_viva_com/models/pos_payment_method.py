@@ -3,7 +3,7 @@
 import logging
 import requests
 
-from odoo import api, fields, models, modules, _
+from odoo import api, fields, models, modules
 from odoo.exceptions import UserError, AccessError
 
 _logger = logging.getLogger(__name__)
@@ -83,7 +83,7 @@ class PosPaymentMethod(models.Model):
             self.viva_com_bearer_token = access_token
             return {'Authorization': f"Bearer {access_token}"}
         else:
-            raise UserError(_(
+            raise UserError(self.env._(
                 'Unable to retrieve Viva.com Bearer Token: Please verify that the Client ID '
                 'and Client Secret are correct'
             ))
@@ -95,7 +95,7 @@ class PosPaymentMethod(models.Model):
         try:
             resp = session.request(action, endpoint, json=data, timeout=TIMEOUT)
         except requests.exceptions.RequestException as e:
-            return {'error': _("There are some issues between us and Viva.com, try again later.%s)", e)}
+            return {'error': self.env._("There are some issues between us and Viva.com, try again later.%s)", e)}
         if resp.text and resp.json().get('detail') == 'Could not validate credentials':
             session.headers.update(self._bearer_token(session))
             resp = session.request(action, endpoint, json=data, timeout=TIMEOUT)
@@ -105,7 +105,7 @@ class PosPaymentMethod(models.Model):
                 return resp.json()
             return {'success': resp.status_code}
         else:
-            return {'error': _("There are some issues between us and Viva.com, try again later. %s", resp.json().get('detail'))}
+            return {'error': self.env._("There are some issues between us and Viva.com, try again later. %s", resp.json().get('detail'))}
 
     def _retrieve_session_id(self, data_webhook):
         # Send a request to confirm the status of the sesions_id
@@ -114,7 +114,7 @@ class PosPaymentMethod(models.Model):
         MerchantTrns = data_webhook.get('MerchantTrns')
         if not MerchantTrns:
             return self._send_notification({
-                'error': _("Your transaction with Viva.com failed. Please try again later.")
+                'error': self.env._("Your transaction with Viva.com failed. Please try again later.")
             })
         session_id, pos_session_id = MerchantTrns.split("/")  # Split to retrieve pos_sessions_id
         endpoint = f"sessions/{session_id}"
@@ -125,7 +125,7 @@ class PosPaymentMethod(models.Model):
             self._send_notification(data)
         else:
             self._send_notification({
-                'error': _("There are some issues between us and Viva.com, try again later. %s",data.get('detail'))
+                'error': self.env._("There are some issues between us and Viva.com, try again later. %s",data.get('detail'))
             })
 
     def _send_notification(self, data):
@@ -146,21 +146,21 @@ class PosPaymentMethod(models.Model):
 
     def viva_com_send_payment_request(self, data):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Only 'group_pos_user' are allowed to send a Viva.com payment request"))
+            raise AccessError(self.env._("Only 'group_pos_user' are allowed to send a Viva.com payment request"))
 
         endpoint = "transactions:sale"
         return self._call_viva_com(endpoint, 'post', data)
 
     def viva_com_send_refund_request(self, data):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Only 'group_pos_user' are allowed to send a Viva.com refund request"))
+            raise AccessError(self.env._("Only 'group_pos_user' are allowed to send a Viva.com refund request"))
 
         endpoint = "transactions:refund" if data.get("parentSessionId") else "transactions:unreferenced-refund"
         return self._call_viva_com(endpoint, 'post', data)
 
     def viva_com_send_payment_cancel(self, data):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Only 'group_pos_user' are allowed to cancel a Viva.com payment"))
+            raise AccessError(self.env._("Only 'group_pos_user' are allowed to cancel a Viva.com payment"))
 
         session_id = data.get('sessionId')
         cash_register_id = data.get('cashRegisterId')
@@ -169,7 +169,7 @@ class PosPaymentMethod(models.Model):
 
     def viva_com_get_payment_status(self, session_id):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Only 'group_pos_user' are allowed to get the payment status from Viva.com"))
+            raise AccessError(self.env._("Only 'group_pos_user' are allowed to get the payment status from Viva.com"))
 
         endpoint = f"sessions/{session_id}"
         return self._call_viva_com(endpoint, 'get', should_retry=False)
@@ -184,7 +184,7 @@ class PosPaymentMethod(models.Model):
                 self.viva_com_api_key,
             )
             if not self.viva_com_webhook_verification_key:
-                raise UserError(_("Can't update payment method. Please check the data and update it."))
+                raise UserError(self.env._("Can't update payment method. Please check the data and update it."))
 
         return record
 
@@ -200,7 +200,7 @@ class PosPaymentMethod(models.Model):
                     record.viva_com_api_key,
                 )
                 if not record.viva_com_webhook_verification_key:
-                    raise UserError(_("Can't create payment method. Please check the data and update it."))
+                    raise UserError(self.env._("Can't create payment method. Please check the data and update it."))
 
         return records
 
@@ -217,7 +217,7 @@ class PosPaymentMethod(models.Model):
                     'viva_com_terminal_id',
                 ])
             ):
-                raise UserError(_('It is essential to provide API key for the use of Viva.com'))
+                raise UserError(self.env._('It is essential to provide API key for the use of Viva.com'))
 
 
 def get_viva_com_session(should_retry=True):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class StockWarehouse(models.Model):
@@ -33,7 +33,7 @@ class StockWarehouse(models.Model):
         '''update (archive/unarchive) any warehouse subcontracting location dropship rules'''
         subcontracting_locations = self._get_subcontracting_locations()
         route_id = self._find_or_create_global_route('stock_dropshipping.route_drop_shipping',
-                                           _('Dropship Subcontractor on Order'))
+                                           self.env._('Dropship Subcontractor on Order'))
         warehouses_dropship = self.filtered(lambda w: w.subcontracting_to_resupply and w.active)
         if warehouses_dropship:
             self.env['stock.rule'].with_context(active_test=False).search([
@@ -52,7 +52,7 @@ class StockWarehouse(models.Model):
 
     def update_global_route_dropship_subcontractor(self):
         route_id = self._find_or_create_global_route('stock_dropshipping.route_drop_shipping',
-                                           _('Dropship Subcontractor on Order'))
+                                           self.env._('Dropship Subcontractor on Order'))
         # if route has no pull rules, it means all warehouses have Dropship Subcontractor disabled
         # Pick type is per company so we need to check rules per company to archive it, however
         # the route is global so we need to check all rules regardless of company

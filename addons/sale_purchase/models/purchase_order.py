@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class PurchaseOrder(models.Model):
@@ -43,7 +43,7 @@ class PurchaseOrder(models.Model):
             })
         else:
             action.update({
-                'name': _('Sources Sale Orders %s', self.name),
+                'name': self.env._('Sources Sale Orders %s', self.name),
                 'domain': [('id', 'in', sale_order_ids)],
                 'view_mode': 'list,form',
             })

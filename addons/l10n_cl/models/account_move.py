@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import ValidationError
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from odoo.tools.misc import formatLang
 from odoo.tools.float_utils import float_repr, float_round
 
@@ -65,35 +65,35 @@ class AccountMove(models.Model):
                 continue
             if (not tax_payer_type or not vat) and (country_id.code == "CL" and latam_document_type_code
                                                   and latam_document_type_code not in ['35', '38', '39', '41']):
-                raise ValidationError(_('Tax payer type and vat number are mandatory for this type of '
+                raise ValidationError(self.env._('Tax payer type and vat number are mandatory for this type of '
                                         'document. Please set the current tax payer type of this customer'))
             if rec.journal_id.type == 'sale' and rec.l10n_latam_use_documents:
                 if country_id.code != "CL":
                     if not ((tax_payer_type == '4' and latam_document_type_code in ['110', '111', '112']) or (
                             tax_payer_type == '3' and latam_document_type_code in ['39', '41', '61', '56'])):
-                        raise ValidationError(_(
+                        raise ValidationError(self.env._(
                             'Document types for foreign customers must be export type (codes 110, 111 or 112) or you should define the customer as an end consumer and use receipts (codes 39 or 41)'))
             if rec.journal_id.type == 'purchase' and rec.l10n_latam_use_documents:
                 if vat != SII_VAT and latam_document_type_code == '914':
-                    raise ValidationError(_('The DIN document is intended to be used only with RUT 60805000-0'
+                    raise ValidationError(self.env._('The DIN document is intended to be used only with RUT 60805000-0'
                                             ' (Tesorería General de La República)'))
                 if not tax_payer_type or not vat:
                     if country_id.code == "CL" and latam_document_type_code not in [
                             '35', '38', '39', '41']:
-                        raise ValidationError(_('Tax payer type and vat number are mandatory for this type of '
+                        raise ValidationError(self.env._('Tax payer type and vat number are mandatory for this type of '
                                                 'document. Please set the current tax payer type of this supplier'))
                 if tax_payer_type == '2' and latam_document_type_code not in ['70', '71', '56', '61']:
-                    raise ValidationError(_('The tax payer type of this supplier is incorrect for the selected type'
+                    raise ValidationError(self.env._('The tax payer type of this supplier is incorrect for the selected type'
                                             ' of document.'))
                 if tax_payer_type in ['1', '3']:
                     if latam_document_type_code in ['70', '71']:
-                        raise ValidationError(_('The tax payer type of this supplier is not entitled to deliver '
+                        raise ValidationError(self.env._('The tax payer type of this supplier is not entitled to deliver '
                                                 'fees documents'))
                     if latam_document_type_code in ['110', '111', '112']:
-                        raise ValidationError(_('The tax payer type of this supplier is not entitled to deliver '
+                        raise ValidationError(self.env._('The tax payer type of this supplier is not entitled to deliver '
                                                 'imports documents'))
                 if (tax_payer_type == '4' or country_id.code != "CL") and latam_document_type_code != '46':
-                    raise ValidationError(_('You need a journal without the use of documents for foreign '
+                    raise ValidationError(self.env._('You need a journal without the use of documents for foreign '
                                             'suppliers'))
 
     @api.onchange('journal_id')

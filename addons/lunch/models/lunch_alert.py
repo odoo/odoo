@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, UTC
 from textwrap import dedent
 from zoneinfo import ZoneInfo
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 from .lunch_supplier import float_to_time
@@ -189,5 +189,5 @@ class LunchAlert(models.Model):
                 res_id=self.id,
                 body=self.message,
                 partner_ids=partners.ids,
-                subject=_('Your Lunch Order'),
+                subject=self.env._('Your Lunch Order'),
             )

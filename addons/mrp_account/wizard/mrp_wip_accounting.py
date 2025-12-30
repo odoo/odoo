@@ -2,7 +2,7 @@
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, models, _, api, Command
+from odoo import fields, models, api, Command
 from odoo.exceptions import UserError
 
 
@@ -50,7 +50,7 @@ class MrpAccountWipAccounting(models.TransientModel):
             if default:
                 res['journal_id'] = default.id
         if 'reference' in fields:
-            res['reference'] = _("Manufacturing WIP - %(orders_list)s", orders_list=productions.mapped('name') or _("Manual Entry"))
+            res['reference'] = self.env._("Manufacturing WIP - %(orders_list)s", orders_list=productions.mapped('name') or self.env._("Manual Entry"))
         if 'mo_ids' in fields:
             res['mo_ids'] = [Command.set(productions.ids)]
         return res
@@ -86,17 +86,17 @@ class MrpAccountWipAccounting(models.TransientModel):
         sval_acc = self.env['product.category']._fields['property_stock_valuation_account_id'].get_company_dependent_fallback(self.env['product.category']).id
         return [
             Command.create({
-                'label': _("WIP - Component Value"),
+                'label': self.env._("WIP - Component Value"),
                 'credit': compo_value,
                 'account_id': sval_acc,
             }),
             Command.create({
-                'label': _("WIP - Overhead"),
+                'label': self.env._("WIP - Overhead"),
                 'credit': overhead_value,
                 'account_id': self._get_overhead_account(),
             }),
             Command.create({
-                'label': _("Manufacturing WIP - %(orders_list)s", orders_list=productions.mapped('name') or _("Manual Entry")),
+                'label': self.env._("Manufacturing WIP - %(orders_list)s", orders_list=productions.mapped('name') or self.env._("Manual Entry")),
                 'debit': compo_value + overhead_value,
                 'account_id': self.env.company.account_production_wip_account_id.id,
             })
@@ -120,9 +120,9 @@ class MrpAccountWipAccounting(models.TransientModel):
     def confirm(self):
         self.ensure_one()
         if self.env.company.currency_id.compare_amounts(sum(self.line_ids.mapped('credit')), sum(self.line_ids.mapped('debit'))) != 0:
-            raise UserError(_("Please make sure the total credit amount equals the total debit amount."))
+            raise UserError(self.env._("Please make sure the total credit amount equals the total debit amount."))
         if self.reversal_date <= self.date:
-            raise UserError(_("Reversal date must be after the posting date."))
+            raise UserError(self.env._("Reversal date must be after the posting date."))
         move = self.env['account.move'].sudo().create({
             'journal_id': self.journal_id.id,
             'wip_production_ids': self.mo_ids.ids,
@@ -140,7 +140,7 @@ class MrpAccountWipAccounting(models.TransientModel):
         })
         move._post()
         move._reverse_moves(default_values_list=[{
-            'ref': _("Reversal of: %s", self.reference),
+            'ref': self.env._("Reversal of: %s", self.reference),
             'wip_production_ids': self.mo_ids.ids,
             'date': self.reversal_date,
         }])._post()

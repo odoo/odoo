@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import _, models
+from odoo import models
 
 
 class ReportHr_SkillsReport_Employee_Cv(models.AbstractModel):
@@ -19,7 +19,7 @@ class ReportHr_SkillsReport_Employee_Cv(models.AbstractModel):
             for line in employee.resume_line_ids:
                 if not show_others and not line.line_type_id:
                     continue
-                resume_lines[employee][line.line_type_id.name or _('Other')] |= line
+                resume_lines[employee][line.line_type_id.name or self.env._('Other')] |= line
 
         return {
             'doc_ids': docids,

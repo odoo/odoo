@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
@@ -119,7 +119,7 @@ class PaymentTransaction(models.Model):
         elif status_code in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         elif status_code in const.PAYMENT_STATUS_MAPPING['error']:
-            self._set_error(_(
+            self._set_error(self.env._(
                 "An error occurred during processing of your payment (code %(code)s:"
                 " %(explanation)s). Please try again.",
                 code=status_code, explanation=payment_data.get('ResultExplanation'),
@@ -129,4 +129,4 @@ class PaymentTransaction(models.Model):
                 "Received data with invalid payment status (%s) for transaction %s.",
                 status_code, self.reference
             )
-            self._set_error(_("Unknown status code: %s", status_code))
+            self._set_error(self.env._("Unknown status code: %s", status_code))

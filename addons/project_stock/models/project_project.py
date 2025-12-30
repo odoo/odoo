@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import models
 from odoo.fields import Domain
 
 
@@ -9,15 +9,15 @@ class ProjectProject(models.Model):
 
     def action_open_deliveries(self):
         self.ensure_one()
-        return self._get_picking_action(_('From WH'), 'outgoing')
+        return self._get_picking_action(self.env._('From WH'), 'outgoing')
 
     def action_open_receipts(self):
         self.ensure_one()
-        return self._get_picking_action(_('To WH'), 'incoming')
+        return self._get_picking_action(self.env._('To WH'), 'incoming')
 
     def action_open_all_pickings(self):
         self.ensure_one()
-        return self._get_picking_action(_('Stock Moves'))
+        return self._get_picking_action(self.env._('Stock Moves'))
 
     def _get_picking_action(self, action_name, picking_type=None):
         domain = Domain('project_id', '=', self.id)

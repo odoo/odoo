@@ -5,7 +5,7 @@ import requests
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, models, api, _
+from odoo import fields, models, api
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.tools.urls import urljoin as url_join
@@ -73,7 +73,7 @@ class ResCompany(models.Model):
         """
         self.ensure_one()
         if 'access_token' not in response_json or 'refresh_token' not in response_json:
-            raise ValidationError(_("Token not found.\nResponse: %s", response_json))
+            raise ValidationError(self.env._("Token not found.\nResponse: %s", response_json))
 
         # The access_token is in JWT format, which consists of 3 parts separated by '.':
         # Header, Payload, and Signature. We only need the Payload part to decode the token
@@ -98,9 +98,9 @@ class ResCompany(models.Model):
         """
         self.ensure_one()
         if not self.l10n_ro_edi_client_id or not self.l10n_ro_edi_client_secret:
-            raise UserError(_("Client ID and Client Secret field must be filled."))
+            raise UserError(self.env._("Client ID and Client Secret field must be filled."))
         if not self.l10n_ro_edi_refresh_token:
-            raise UserError(_("Refresh token not found"))
+            raise UserError(self.env._("Refresh token not found"))
 
         response = session.post(
             url='https://logincert.anaf.ro/anaf-oauth2/v1/token',
@@ -139,14 +139,14 @@ class ResCompany(models.Model):
                 # From access/refresh token not found after sending request
                 error_cause = e
             except requests.exceptions.RequestException as e:
-                error_cause = _("Error when converting response to json: %s", e)
+                error_cause = self.env._("Error when converting response to json: %s", e)
             except binascii.Error as e:
-                error_cause = _("Error when decoding the access token payload: %s", e)
+                error_cause = self.env._("Error when decoding the access token payload: %s", e)
             except Exception as e:
-                error_cause = _("Error when refreshing the access token: %s", e)
+                error_cause = self.env._("Error when refreshing the access token: %s", e)
 
             if error_cause:
-                error_header = _("Refresh token failed [company=%(company_id)s]", company_id=company.id)
+                error_header = self.env._("Refresh token failed [company=%(company_id)s]", company_id=company.id)
                 self._l10n_ro_edi_log_message(
                     message=f'{error_header}\n{error_cause}',
                     func='_cron_l10n_ro_edi_refresh_access_token',

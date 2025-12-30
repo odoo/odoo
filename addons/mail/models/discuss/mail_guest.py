@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime, timedelta
 
 from odoo.tools import consteq, get_lang
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.http import request
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
@@ -88,9 +88,9 @@ class MailGuest(models.Model):
         self.ensure_one()
         name = name.strip()
         if len(name) < 1:
-            raise UserError(_("Guest's name cannot be empty."))
+            raise UserError(self.env._("Guest's name cannot be empty."))
         if len(name) > 512:
-            raise UserError(_("Guest's name is too long."))
+            raise UserError(self.env._("Guest's name is too long."))
         self.name = name
         for channel in self.channel_ids:
             Store(bus_channel=channel).add(self, "_store_avatar_fields").bus_send()

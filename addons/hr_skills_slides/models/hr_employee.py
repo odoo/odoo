@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class HrEmployee(models.Model):
@@ -21,7 +21,7 @@ class HrEmployee(models.Model):
                 continue
             total_completed_courses = len(employee.user_partner_id.slide_channel_completed_ids)
             total = len(employee.subscribed_courses)
-            employee.courses_completion_text = _("%(completed)s / %(total)s",
+            employee.courses_completion_text = self.env._("%(completed)s / %(total)s",
                 completed=total_completed_courses,
                 total=total)
             employee.has_subscribed_courses = total > 0

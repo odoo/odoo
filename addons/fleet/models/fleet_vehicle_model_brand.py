@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class FleetVehicleModelBrand(models.Model):
@@ -28,7 +28,7 @@ class FleetVehicleModelBrand(models.Model):
     def action_brand_model(self):
         self.ensure_one()
         view = {
-            'name': _('Models'),
+            'name': self.env._('Models'),
             'type': 'ir.actions.act_window',
             'view_mode': 'list,form',
             'res_model': 'fleet.vehicle.model',
@@ -40,7 +40,7 @@ class FleetVehicleModelBrand(models.Model):
     def action_open_brand_form(self):
         self.ensure_one()
         return {
-            'name': _('Manufacturer'),
+            'name': self.env._('Manufacturer'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'fleet.vehicle.model.brand',

@@ -3,7 +3,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -65,7 +65,7 @@ class MailActivityPlanTemplate(models.Model):
         for template in self.filtered(lambda tpl: tpl.activity_type_id.res_model):
             if template.activity_type_id.res_model != template.plan_id.res_model:
                 raise ValidationError(
-                    _('The activity type "%(activity_type_name)s" is not compatible with the plan "%(plan_name)s"'
+                    self.env._('The activity type "%(activity_type_name)s" is not compatible with the plan "%(plan_name)s"'
                       ' because it is limited to the model "%(activity_type_model)s".',
                       activity_type_name=template.activity_type_id.name,
                       activity_type_model=template.activity_type_id.res_model,
@@ -78,7 +78,7 @@ class MailActivityPlanTemplate(models.Model):
         """ Ensure that responsible_id is set when responsible is set to "other". """
         for template in self:
             if template.responsible_type == 'other' and not template.responsible_id:
-                raise ValidationError(_('When selecting "Default user" assignment, you must specify a responsible.'))
+                raise ValidationError(self.env._('When selecting "Default user" assignment, you must specify a responsible.'))
 
     @api.depends('activity_type_id')
     def _compute_next_activity_ids(self):
@@ -156,7 +156,7 @@ class MailActivityPlanTemplate(models.Model):
         elif self.responsible_type == 'on_demand':
             responsible = on_demand_responsible
             if not responsible:
-                error = _('No responsible specified for %(activity_type_name)s: %(activity_summary)s.',
+                error = self.env._('No responsible specified for %(activity_type_name)s: %(activity_summary)s.',
                           activity_type_name=self.activity_type_id.name,
                           activity_summary=self.summary or '-')
         else:

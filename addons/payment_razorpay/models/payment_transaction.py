@@ -7,7 +7,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_encode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.urls import urljoin as url_join
 
@@ -85,14 +85,14 @@ class PaymentTransaction(models.Model):
         :raise ValidationError: If the phone number is missing or incorrect.
         """
         if not phone and self.tokenize:
-            raise ValidationError(_("The phone number is missing."))
+            raise ValidationError(self.env._("The phone number is missing."))
 
         try:
             phone = self._phone_format(
                 number=phone, country=self.partner_country_id, raise_exception=self.tokenize
             )
         except Exception:
-            raise ValidationError(_("The phone number is invalid."))
+            raise ValidationError(self.env._("The phone number is invalid."))
         return phone
 
     def _razorpay_create_order(self, customer_id=None):
@@ -207,7 +207,7 @@ class PaymentTransaction(models.Model):
             ('id', '!=', self.id),
         ], limit=1)
         if earlier_pending_tx:
-            self._set_error(_(
+            self._set_error(self.env._(
                 "Your last payment %s will soon be processed. Please wait up to 24 hours before"
                 " trying again, or use another payment method.", earlier_pending_tx.reference
             ))
@@ -276,7 +276,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'razorpay':
             return super()._send_void_request()
 
-        raise UserError(_("Transactions processed by Razorpay can't be manually voided from Odoo."))
+        raise UserError(self.env._("Transactions processed by Razorpay can't be manually voided from Odoo."))
 
     @api.model
     def _search_by_reference(self, provider_code, payment_data):
@@ -332,7 +332,7 @@ class PaymentTransaction(models.Model):
         refund_provider_reference = payment_data.get('id')
         amount_to_refund = payment_data.get('amount')
         if not refund_provider_reference or not amount_to_refund:
-            raise ValidationError(_("Received incomplete refund data."))
+            raise ValidationError(self.env._("Received incomplete refund data."))
 
         converted_amount = payment_utils.to_major_currency_units(
             amount_to_refund, source_tx.currency_id
@@ -378,7 +378,7 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         entity_id = entity_data.get('id')
         if not entity_id:
-            self._set_error(_("Received data with missing entity id."))
+            self._set_error(self.env._("Received data with missing entity id."))
             return
 
         # One reference can have multiple entity ids as Razorpay allows retry on payment failure.
@@ -400,7 +400,7 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         entity_status = entity_data.get('status')
         if not entity_status:
-            self._set_error(_("Received data with missing status."))
+            self._set_error(self.env._("Received data with missing status."))
 
         if entity_status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
@@ -427,7 +427,7 @@ class PaymentTransaction(models.Model):
                 self.reference, entity_data.get('error_description')
             )
             self._set_error(
-                _("An error occurred during the processing of your payment. Please try again.")
+                self.env._("An error occurred during the processing of your payment. Please try again.")
             )
         else:  # Classify unsupported payment status as the `error` tx state.
             _logger.warning(
@@ -435,7 +435,7 @@ class PaymentTransaction(models.Model):
                 self.reference, entity_status
             )
             self._set_error(
-                "Razorpay: " + _("Received data with invalid status: %s", entity_status)
+                "Razorpay: " + self.env._("Received data with invalid status: %s", entity_status)
             )
 
     def _extract_token_values(self, payment_data):

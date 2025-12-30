@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ProductValue(models.Model):
@@ -57,7 +57,7 @@ class ProductValue(models.Model):
             quantity = move.quantity
             uom = move.product_uom.name
             price_unit = move.value / move.quantity
-            product_value.current_value_details = _("For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)",
+            product_value.current_value_details = self.env._("For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)",
                 quantity=quantity, uom=uom, price_unit=price_unit)
 
     def _compute_value_description(self):

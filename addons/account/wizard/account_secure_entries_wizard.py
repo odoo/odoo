@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 
@@ -152,11 +152,11 @@ class AccountSecureEntriesWizard(models.TransientModel):
             if wizard.unreconciled_bank_statement_line_ids:
                 ignored_sequence_prefixes = list(set(wizard.unreconciled_bank_statement_line_ids.move_id.mapped('sequence_prefix')))
                 warnings['account_unreconciled_bank_statement_line_ids'] = {
-                    'message': _("There are still unreconciled bank statement lines before the selected date. "
+                    'message': self.env._("There are still unreconciled bank statement lines before the selected date. "
                                  "The entries from journal prefixes containing them will not be secured: %(prefix_info)s",
                                  prefix_info=ignored_sequence_prefixes),
                     'level': 'danger',
-                    'action_text': _("Review Statements"),
+                    'action_text': self.env._("Review Statements"),
                     'action': wizard.company_id._get_unreconciled_statement_lines_redirect_action(wizard.unreconciled_bank_statement_line_ids),
                 }
 
@@ -166,16 +166,16 @@ class AccountSecureEntriesWizard(models.TransientModel):
             )
             if draft_entries:
                 warnings['account_unhashed_draft_entries'] = {
-                    'message': _("There are still draft entries before the selected date."),
-                    'action_text': _("Review Entries"),
+                    'message': self.env._("There are still draft entries before the selected date."),
+                    'action_text': self.env._("Review Entries"),
                     'action': wizard.action_show_draft_moves_in_hashed_period(),
                 }
 
             not_hashable_unlocked_moves = wizard.not_hashable_unlocked_move_ids
             if not_hashable_unlocked_moves:
                 warnings['account_not_hashable_unlocked_moves'] = {
-                    'message': _("There are entries that cannot be hashed. They can be protected by the Hard Lock Date."),
-                    'action_text': _("Review Entries"),
+                    'message': self.env._("There are entries that cannot be hashed. They can be protected by the Hard Lock Date."),
+                    'action_text': self.env._("Review Entries"),
                     'action': wizard.action_show_moves(not_hashable_unlocked_moves),
                 }
 
@@ -193,8 +193,8 @@ class AccountSecureEntriesWizard(models.TransientModel):
                     ])
                 domain = Domain.OR(OR_domains)
                 warnings['account_sequence_gap'] = {
-                    'message': _("Securing these entries will create at least one gap in the sequence."),
-                    'action_text': _("Review Entries"),
+                    'message': self.env._("Securing these entries will create at least one gap in the sequence."),
+                    'action_text': self.env._("Review Entries"),
                     'action': {
                         **self.env['account.journal']._show_sequence_holes(list(domain)),
                         'views': [[self.env.ref('account.view_move_tree_multi_edit').id, 'list'], [self.env.ref('account.view_move_form').id, 'form']],
@@ -204,8 +204,8 @@ class AccountSecureEntriesWizard(models.TransientModel):
             moves_to_hash_after_selected_date = wizard.move_to_hash_ids.filtered(lambda move: move.date > wizard.hash_date)
             if moves_to_hash_after_selected_date:
                 warnings['account_move_to_secure_after_selected_date'] = {
-                    'message': _("Securing these entries will also secure entries after the selected date."),
-                    'action_text': _("Review Entries"),
+                    'message': self.env._("Securing these entries will also secure entries after the selected date."),
+                    'action_text': self.env._("Review Entries"),
                     'action': wizard.action_show_moves(moves_to_hash_after_selected_date),
                 }
 
@@ -237,7 +237,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
         self.ensure_one()
         return {
             'view_mode': 'list',
-            'name': _('Journal Entries'),
+            'name': self.env._('Journal Entries'),
             'res_model': 'account.move',
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', moves.ids)],
@@ -249,7 +249,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
         self.ensure_one()
         return {
             'view_mode': 'list',
-            'name': _('Draft Entries'),
+            'name': self.env._('Draft Entries'),
             'res_model': 'account.move',
             'type': 'ir.actions.act_window',
             'domain': list(self._get_draft_moves_in_hashed_period_domain()),
@@ -261,7 +261,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
         self.ensure_one()
 
         if not self.hash_date:
-            raise UserError(_("Set a date. The moves will be secured up to including this date."))
+            raise UserError(self.env._("Set a date. The moves will be secured up to including this date."))
 
         if not self.move_to_hash_ids:
             return

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.tools import split_every
 
@@ -21,7 +21,7 @@ class AccountTax(models.Model):
             self_ids = set(self.ids)
             for lines_chunk in map(self.env['pos.order.line'].sudo().browse, split_every(100000, lines.ids)):
                 if any(tid in self_ids for ts in lines_chunk.read(['tax_ids']) for tid in ts['tax_ids']):
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         'It is forbidden to modify a tax used in a POS order not posted. '
                         'You must close the POS sessions before modifying the tax.'
                     ))

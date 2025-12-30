@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tools import float_round
 
 
 class ProductProduct(models.Model):
@@ -82,7 +81,7 @@ class ProductProduct(models.Model):
     @api.constrains('base_unit_count')
     def _check_base_unit_count(self):
         if any(product.base_unit_count < 0 for product in self):
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 "The value of Base Unit Count must be greater than 0."
                 " Use 0 to hide the price per unit on this product."
             ))

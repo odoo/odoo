@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment.logging import get_payment_logger
@@ -45,6 +45,6 @@ class PaymentToken(models.Model):
         payment_methods = response_content.get('data', [])
         payment_method_id = payment_methods and payment_methods[0].get('id')
         if not payment_method_id:
-            raise ValidationError(_("Unable to convert payment token to new API."))
+            raise ValidationError(self.env._("Unable to convert payment token to new API."))
         self.stripe_payment_method = payment_method_id
         _logger.info("converted token with id %s to new API", self.id)

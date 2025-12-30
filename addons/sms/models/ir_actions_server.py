@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class IrActionsServer(models.Model):
@@ -30,7 +30,7 @@ class IrActionsServer(models.Model):
     def _generate_action_name(self):
         self.ensure_one()
         if self.state == 'sms' and self.sms_template_id:
-            return _('Send %(template_name)s', template_name=self.sms_template_id.name)
+            return self.env._('Send %(template_name)s', template_name=self.sms_template_id.name)
         return super()._generate_action_name()
 
     @api.depends('state')
@@ -74,11 +74,11 @@ class IrActionsServer(models.Model):
 
         if self.state == 'sms':
             if self.model_id.transient or not self.model_id.is_mail_thread:
-                warnings.append(_("Sending SMS can only be done on a not transient mail.thread model"))
+                warnings.append(self.env._("Sending SMS can only be done on a not transient mail.thread model"))
 
             if self.sms_template_id and self.sms_template_id.model_id != self.model_id:
                 warnings.append(
-                    _('SMS template model of %(action_name)s does not match action model.',
+                    self.env._('SMS template model of %(action_name)s does not match action model.',
                       action_name=self.name
                      )
                 )

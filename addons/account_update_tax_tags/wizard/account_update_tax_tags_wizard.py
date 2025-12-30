@@ -1,5 +1,5 @@
 from datetime import timedelta
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -178,5 +178,5 @@ class AccountUpdateTaxTagsWizard(models.TransientModel):
         for tax in parent_taxes:
             children_taxes += tax.children_tax_ids.ids
         if len(children_taxes) > len(parent_taxes.children_tax_ids.ids):
-            raise UserError(_('Update with children taxes that are child of multiple parents is not supported.'))
+            raise UserError(self.env._('Update with children taxes that are child of multiple parents is not supported.'))
         self._modify_tag_to_aml_relation(self.company_id.id, self.date_from)

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools import convert
 
 
@@ -101,14 +101,14 @@ class PosConfig(models.Model):
 
     @api.model
     def load_onboarding_restaurant_scenario(self, with_demo_data=True):
-        journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': _('Cash Restaurant'), 'show_on_dashboard': False})
+        journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': self.env._('Cash Restaurant'), 'show_on_dashboard': False})
         presets = self.get_record_by_ref([
             'pos_restaurant.pos_takein_preset',
             'pos_restaurant.pos_takeout_preset',
             'pos_restaurant.pos_delivery_preset',
         ]) + self.env['pos.preset'].search([]).ids
         config = self.env['pos.config'].create({
-            'name': _('Restaurant'),
+            'name': self.env._('Restaurant'),
             'company_id': self.env.company.id,
             'journal_id': journal.id,
             'payment_method_ids': payment_methods_ids,

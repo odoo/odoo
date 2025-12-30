@@ -5,7 +5,7 @@ from collections import defaultdict
 from datetime import UTC
 from zoneinfo import ZoneInfo
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class ResourceCalendarLeaves(models.Model):
@@ -185,7 +185,7 @@ class ResourceCalendarLeaves(models.Model):
     def _timesheet_prepare_line_values(self, index, employee_id, work_hours_data, day_date, work_hours_count):
         self.ensure_one()
         return {
-            'name': _("Time Off (%(index)s/%(total)s)", index=index + 1, total=len(work_hours_data)),
+            'name': self.env._("Time Off (%(index)s/%(total)s)", index=index + 1, total=len(work_hours_data)),
             'project_id': employee_id.company_id.internal_project_id.id,
             'task_id': employee_id.company_id.leave_timesheet_task_id.id,
             'account_id': employee_id.company_id.internal_project_id.account_id.id,

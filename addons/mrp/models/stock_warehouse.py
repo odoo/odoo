@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, Command, fields, models, _
+from odoo import api, Command, fields, models
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import split_every
 
@@ -61,7 +61,7 @@ class StockWarehouse(models.Model):
                 manufacture_route.warehouse_ids = [Command.unlink(warehouse.id)]
 
     def _create_or_update_route(self):
-        manufacture_route = self._find_or_create_global_route('mrp.route_warehouse0_manufacture', _('Manufacture'))
+        manufacture_route = self._find_or_create_global_route('mrp.route_warehouse0_manufacture', self.env._('Manufacture'))
         for warehouse in self:
             if warehouse.manufacture_to_resupply:
                 manufacture_route.warehouse_ids = [Command.link(warehouse.id)]
@@ -90,7 +90,7 @@ class StockWarehouse(models.Model):
     def _get_production_location(self):
         location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.company_id.id)], limit=1)
         if not location:
-            raise UserError(_('Can\'t find any production location.'))
+            raise UserError(self.env._('Can\'t find any production location.'))
         return location
 
     def _get_routes_values(self):
@@ -120,9 +120,9 @@ class StockWarehouse(models.Model):
 
     def _get_route_name(self, route_type):
         names = {
-            'mrp_one_step': _('Manufacture (1 step)'),
-            'pbm': _('Pick components and then manufacture'),
-            'pbm_sam': _('Pick components, manufacture and then store products (3 steps)'),
+            'mrp_one_step': self.env._('Manufacture (1 step)'),
+            'pbm': self.env._('Pick components and then manufacture'),
+            'pbm_sam': self.env._('Pick components, manufacture and then store products (3 steps)'),
         }
         if route_type in names:
             return names[route_type]
@@ -140,7 +140,7 @@ class StockWarehouse(models.Model):
                     'procure_method': 'make_to_order',
                     'company_id': self.company_id.id,
                     'picking_type_id': self.manu_type_id.id,
-                    'route_id': self._find_or_create_global_route('mrp.route_warehouse0_manufacture', _('Manufacture')).id
+                    'route_id': self._find_or_create_global_route('mrp.route_warehouse0_manufacture', self.env._('Manufacture')).id
                 },
                 'update_values': {
                     'active': self.manufacture_to_resupply,
@@ -156,7 +156,7 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id,
+                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', self.env._('Replenish on Order (MTO)')).id,
                     'location_dest_id': production_location.id,
                     'location_src_id': self.lot_stock_id.id,
                     'picking_type_id': self.manu_type_id.id
@@ -173,7 +173,7 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id,
+                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', self.env._('Replenish on Order (MTO)')).id,
                     'name': self._format_rulename(self.lot_stock_id, self.pbm_loc_id, 'MTO'),
                     'location_dest_id': self.pbm_loc_id.id,
                     'location_src_id': self.lot_stock_id.id,
@@ -195,13 +195,13 @@ class StockWarehouse(models.Model):
         company_id = vals.get('company_id', def_values['company_id'])
         values.update({
             'pbm_loc_id': {
-                'name': _('Pre-Production'),
+                'name': self.env._('Pre-Production'),
                 'active': manufacture_steps in ('pbm', 'pbm_sam'),
                 'usage': 'internal',
                 'barcode': self._valid_barcode(code + 'PREPRODUCTION', company_id)
             },
             'sam_loc_id': {
-                'name': _('Post-Production'),
+                'name': self.env._('Post-Production'),
                 'active': manufacture_steps == 'pbm_sam',
                 'usage': 'internal',
                 'barcode': self._valid_barcode(code + 'POSTPRODUCTION', company_id)
@@ -212,9 +212,9 @@ class StockWarehouse(models.Model):
     def _get_sequence_values(self, name=False, code=False):
         values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
         values.update({
-            'pbm_type_id': {'name': _('%(name)s Sequence picking before manufacturing', name=self.name), 'prefix': self.code + '/PC/', 'padding': 5, 'company_id': self.company_id.id},
-            'sam_type_id': {'name': _('%(name)s Sequence stock after manufacturing', name=self.name), 'prefix': self.code + '/SFP/', 'padding': 5, 'company_id': self.company_id.id},
-            'manu_type_id': {'name': _('%(name)s Sequence production', name=self.name), 'prefix': self.code + '/MO/', 'padding': 5, 'company_id': self.company_id.id},
+            'pbm_type_id': {'name': self.env._('%(name)s Sequence picking before manufacturing', name=self.name), 'prefix': self.code + '/PC/', 'padding': 5, 'company_id': self.company_id.id},
+            'sam_type_id': {'name': self.env._('%(name)s Sequence stock after manufacturing', name=self.name), 'prefix': self.code + '/SFP/', 'padding': 5, 'company_id': self.company_id.id},
+            'manu_type_id': {'name': self.env._('%(name)s Sequence production', name=self.name), 'prefix': self.code + '/MO/', 'padding': 5, 'company_id': self.company_id.id},
         })
         return values
 
@@ -222,7 +222,7 @@ class StockWarehouse(models.Model):
         data, next_sequence = super(StockWarehouse, self)._get_picking_type_create_values(max_sequence)
         data.update({
             'pbm_type_id': {
-                'name': _('Pick Components'),
+                'name': self.env._('Pick Components'),
                 'code': 'internal',
                 'use_create_lots': True,
                 'use_existing_lots': True,
@@ -232,7 +232,7 @@ class StockWarehouse(models.Model):
                 'company_id': self.company_id.id,
             },
             'sam_type_id': {
-                'name': _('Store Finished Product'),
+                'name': self.env._('Store Finished Product'),
                 'code': 'internal',
                 'use_create_lots': True,
                 'use_existing_lots': True,
@@ -242,7 +242,7 @@ class StockWarehouse(models.Model):
                 'company_id': self.company_id.id,
             },
             'manu_type_id': {
-                'name': _('Manufacturing'),
+                'name': self.env._('Manufacturing'),
                 'code': 'mrp_operation',
                 'use_create_lots': True,
                 'use_existing_lots': True,
@@ -319,7 +319,7 @@ class StockWarehouseOrderpoint(models.Model):
                     ('company_id', '=', False),
         ]
         if self.env['mrp.bom'].search_count(domain, limit=1):
-            raise ValidationError(_("A product with a kit-type bill of materials can not have a reordering rule."))
+            raise ValidationError(self.env._("A product with a kit-type bill of materials can not have a reordering rule."))
 
     def _get_orderpoint_products(self):
         non_kit_ids = []

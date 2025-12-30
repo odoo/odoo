@@ -4,7 +4,7 @@ from datetime import date
 from markupsafe import Markup
 import json
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -71,9 +71,9 @@ class StockPicking(models.Model):
 
     def _carrier_exception_note(self, exception):
         self.ensure_one()
-        line_1 = _("Exception occurred with respect to carrier on the transfer")
-        line_2 = _("Manual actions might be needed.")
-        line_3 = _("Exception:")
+        line_1 = self.env._("Exception occurred with respect to carrier on the transfer")
+        line_2 = self.env._("Manual actions might be needed.")
+        line_3 = self.env._("Exception:")
         return Markup('<div> {line_1} <a href="#" data-oe-model="stock.picking" data-oe-id="{picking_id}"> {picking_name}</a>. {line_2}<div class="mt16"><p>{line_3} {exception}</p></div></div>').format(line_1=line_1, line_2=line_2, line_3=line_3, picking_id=self.id, picking_name=self.name, exception=exception)
 
     def _send_confirmation_email(self):
@@ -132,11 +132,11 @@ class StockPicking(models.Model):
             for p in related_pickings - without_tracking:
                 p.carrier_tracking_ref += "," + res['tracking_number']
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
-        msg = _("Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s",
+        msg = self.env._("Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s",
                 carrier_name=self.carrier_id.name,
                 ref=self.carrier_tracking_ref) + \
               Markup("<br/>") + \
-              _("Cost: %(price).2f %(currency)s",
+              self.env._("Cost: %(price).2f %(currency)s",
                 price=self.carrier_price,
                 currency=order_currency.name)
         self.message_post(body=msg)
@@ -178,7 +178,7 @@ class StockPicking(models.Model):
     def open_website_url(self):
         self.ensure_one()
         if not self.carrier_tracking_url:
-            raise UserError(_("Your delivery method has no redirect on courier provider's website to track this order."))
+            raise UserError(self.env._("Your delivery method has no redirect on courier provider's website to track this order."))
 
         carrier_trackers = []
         try:
@@ -186,7 +186,7 @@ class StockPicking(models.Model):
         except ValueError:
             carrier_trackers = self.carrier_tracking_url
         else:
-            msg = _("Tracking links for shipment:") + Markup("<br/>")
+            msg = self.env._("Tracking links for shipment:") + Markup("<br/>")
             for tracker in carrier_trackers:
                 msg += Markup('<a href="%s">%s</a><br/>') % (tracker[1], tracker[0])
             self.message_post(body=msg)

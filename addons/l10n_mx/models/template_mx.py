@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, _
+from odoo import models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -49,13 +49,13 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             "cbmx": {
                 'type': 'general',
-                'name': _('Effectively Paid'),
+                'name': self.env._('Effectively Paid'),
                 'code': 'CBMX',
                 'default_account_id': "cuenta118_01",
                 'show_on_dashboard': True,
             },
             'cash': {
-                'name': _("Cash"),
+                'name': self.env._("Cash"),
                 'type': 'cash',
             },
         }
@@ -65,7 +65,7 @@ class AccountChartTemplate(models.AbstractModel):
         if company.account_fiscal_country_id.code == 'MX':
             accounts_data.update({
                 'default_cash_difference_income_account_id': {
-                    'name': _('Other Income'),
+                    'name': self.env._('Other Income'),
                     'code': '403.01.01'
                 },
                 'default_cash_difference_expense_account_id': {

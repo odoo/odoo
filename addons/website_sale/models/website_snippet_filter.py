@@ -3,7 +3,7 @@
 from collections import Counter
 from functools import partial
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
 
@@ -65,47 +65,47 @@ class WebsiteSnippetFilter(models.Model):
         if model._name == 'product.product':
             data = [{
                 'image_512': b'/product/static/img/product_chair.jpg',
-                'display_name': _("Chair"),
-                'description_sale': _("Sit comfortably"),
+                'display_name': self.env._("Chair"),
+                'description_sale': self.env._("Sit comfortably"),
             }, {
                 'image_512': b'/product/static/img/product_lamp.png',
-                'display_name': _("Lamp"),
-                'description_sale': _("Lightbulb sold separately"),
+                'display_name': self.env._("Lamp"),
+                'description_sale': self.env._("Lightbulb sold separately"),
             }, {
                 'image_512': b'/product/static/img/product_product_20-image.png',
-                'display_name': _("Whiteboard"),
-                'description_sale': _("With three feet"),
+                'display_name': self.env._("Whiteboard"),
+                'description_sale': self.env._("With three feet"),
             }, {
                 'image_512': b'/product/static/img/product_product_27-image.jpg',
-                'display_name': _("Drawer"),
-                'description_sale': _("On wheels"),
+                'display_name': self.env._("Drawer"),
+                'description_sale': self.env._("On wheels"),
             }, {
                 'image_512': b'/product/static/img/product_product_7-image.png',
-                'display_name': _("Box"),
-                'description_sale': _("Reinforced for heavy loads"),
+                'display_name': self.env._("Box"),
+                'description_sale': self.env._("Reinforced for heavy loads"),
             }, {
                 'image_512': b'/product/static/img/product_product_9-image.jpg',
-                'display_name': _("Bin"),
-                'description_sale': _("Pedal-based opening system"),
+                'display_name': self.env._("Bin"),
+                'description_sale': self.env._("Pedal-based opening system"),
             }]
             samples = merge_samples_with_data(data)
         elif model._name == 'product.public.category':
             data = [{
                 'id': 1,
                 'cover_image': b'/website_sale/static/src/img/categories/desks.jpg',
-                'name': _("Desks"),
+                'name': self.env._("Desks"),
             }, {
                 'id': 2,
                 'cover_image': b'/website_sale/static/src/img/categories/furnitures.jpg',
-                'name': _("Furnitures"),
+                'name': self.env._("Furnitures"),
             }, {
                 'id': 3,
                 'cover_image': b'/website_sale/static/src/img/categories/boxes.jpg',
-                'name': _("Boxes"),
+                'name': self.env._("Boxes"),
             }, {
                 'id': 4,
                 'cover_image': b'/website_sale/static/src/img/categories/drawers.jpg',
-                'name': _("Drawers"),
+                'name': self.env._("Drawers"),
             }]
             samples = merge_samples_with_data(data)
         return samples

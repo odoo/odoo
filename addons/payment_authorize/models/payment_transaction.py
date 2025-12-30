@@ -2,7 +2,7 @@
 
 import pprint
 
-from odoo import _, models
+from odoo import models
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -80,7 +80,7 @@ class PaymentTransaction(models.Model):
             self.source_transaction_id.provider_reference
         )
         if 'err_code' in tx_details:  # Could not retrieve the transaction details.
-            self._set_error(_(
+            self._set_error(self.env._(
                 "Could not retrieve the transaction details. (error code: %(error_code)s; error_details: %(error_message)s)",
                 error_code=tx_details['err_code'], error_message=tx_details.get('err_msg'),
             ))
@@ -115,7 +115,7 @@ class PaymentTransaction(models.Model):
             data = {'reference': self.reference, 'response': res_content}
             self._process('authorize', data)
         else:
-            err_msg = _(
+            err_msg = self.env._(
                 "The transaction is not in a status to be refunded."
                 " (status: %(status)s, details: %(message)s)",
                 status=tx_status, message=tx_details.get('messages', {}).get('message'),
@@ -223,7 +223,7 @@ class PaymentTransaction(models.Model):
                     'ref': self.reference,
                 },
             )
-            self._set_error(_(
+            self._set_error(self.env._(
                 "Received data with status code \"%(status)s\" and error code \"%(error)s\".",
                 status=status_code, error=error_code
             ))

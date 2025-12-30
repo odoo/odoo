@@ -1,4 +1,4 @@
-from odoo import fields, models, api, _
+from odoo import fields, models, api
 from odoo.exceptions import UserError
 
 
@@ -39,4 +39,4 @@ class AccountTax(models.Model):
     def _l10n_sa_constrain_is_retention(self):
         for tax in self:
             if tax.amount >= 0 and tax.l10n_sa_is_retention and tax.type_tax_use == 'sale':
-                raise UserError(_("The tax is unable to be set as Retention as the Amount is greater than or equal to 0."))
+                raise UserError(self.env._("The tax is unable to be set as Retention as the Amount is greater than or equal to 0."))

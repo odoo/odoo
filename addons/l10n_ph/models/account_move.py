@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -16,4 +16,4 @@ class AccountMove(models.Model):
             })
             return wizard_action
         else:
-            raise UserError(_('Only Vendor Bills are available.'))
+            raise UserError(self.env._('Only Vendor Bills are available.'))

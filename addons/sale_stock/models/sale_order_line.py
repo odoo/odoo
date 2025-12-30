@@ -3,7 +3,7 @@
 from datetime import timedelta
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import float_compare
 from odoo.exceptions import UserError
@@ -166,7 +166,7 @@ class SaleOrderLine(models.Model):
             mto_route = line.warehouse_id.mto_pull_id.route_id
             if not mto_route:
                 try:
-                    mto_route = self.env['stock.warehouse']._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'), create=False)
+                    mto_route = self.env['stock.warehouse']._find_or_create_global_route('stock.route_warehouse0_mto', self.env._('Replenish on Order (MTO)'), create=False)
                 except UserError:
                     # if route MTO not found in ir_model_data, we treat the product as in MTS
                     pass
@@ -412,7 +412,7 @@ class SaleOrderLine(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit')
         line_products = self.filtered(lambda l: l.product_id.type == 'consu')
         if line_products.mapped('qty_delivered') and float_compare(values['product_uom_qty'], max(line_products.mapped('qty_delivered')), precision_digits=precision) == -1:
-            raise UserError(_('The ordered quantity of a sale order line cannot be decreased below the amount already delivered. Instead, create a return in your inventory.'))
+            raise UserError(self.env._('The ordered quantity of a sale order line cannot be decreased below the amount already delivered. Instead, create a return in your inventory.'))
         super(SaleOrderLine, self)._update_line_quantity(values)
 
     #=== HOOKS ===#

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -72,13 +72,13 @@ class IrModel(models.Model):
     def write(self, vals):
         if self and ('is_mail_thread' in vals or 'is_mail_activity' in vals or 'is_mail_blacklist' in vals):
             if any(rec.state != 'manual' for rec in self):
-                raise UserError(_('Only custom models can be modified.'))
+                raise UserError(self.env._('Only custom models can be modified.'))
             if 'is_mail_thread' in vals and any(rec.is_mail_thread > vals['is_mail_thread'] for rec in self):
-                raise UserError(_('Field "Mail Thread" cannot be changed to "False".'))
+                raise UserError(self.env._('Field "Mail Thread" cannot be changed to "False".'))
             if 'is_mail_activity' in vals and any(rec.is_mail_activity > vals['is_mail_activity'] for rec in self):
-                raise UserError(_('Field "Mail Activity" cannot be changed to "False".'))
+                raise UserError(self.env._('Field "Mail Activity" cannot be changed to "False".'))
             if 'is_mail_blacklist' in vals and any(rec.is_mail_blacklist > vals['is_mail_blacklist'] for rec in self):
-                raise UserError(_('Field "Mail Blacklist" cannot be changed to "False".'))
+                raise UserError(self.env._('Field "Mail Blacklist" cannot be changed to "False".'))
             res = super(IrModel, self).write(vals)
             self.env.flush_all()
             # setup models; this reloads custom models in registry

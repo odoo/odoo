@@ -3,7 +3,7 @@
 import re
 from collections import defaultdict
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools import float_compare, groupby
@@ -283,15 +283,15 @@ class ProductProduct(models.Model):
             for barcode, duplicate_products in products_by_barcode
         )
         if duplicates_as_str:
-            duplicates_as_str += _(
+            duplicates_as_str += self.env._(
                 "\n\nNote: products that you don't have access to will not be shown above."
             )
-            raise ValidationError(_("Barcode(s) already assigned:\n\n%s", duplicates_as_str))
+            raise ValidationError(self.env._("Barcode(s) already assigned:\n\n%s", duplicates_as_str))
 
     def _check_duplicated_packaging_barcodes(self, barcodes_within_company, company_id):
         packaging_domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
         if self.env['product.uom'].sudo().search_count(packaging_domain, limit=1):
-            raise ValidationError(_("A packaging already uses the barcode"))
+            raise ValidationError(self.env._("A packaging already uses the barcode"))
 
     @api.constrains('barcode')
     def _check_barcode_uniqueness(self):
@@ -442,7 +442,7 @@ class ProductProduct(models.Model):
     @api.onchange('standard_price')
     def _onchange_standard_price(self):
         if self.standard_price < 0:
-            raise ValidationError(_("The cost of a product can't be negative."))
+            raise ValidationError(self.env._("The cost of a product can't be negative."))
 
     @api.onchange('default_code')
     def _onchange_default_code(self):
@@ -455,8 +455,8 @@ class ProductProduct(models.Model):
 
         if self.env['product.product'].search_count(domain, limit=1):
             return {'warning': {
-                'title': _("Note:"),
-                'message': _("The Reference '%s' already exists.", self.default_code),
+                'title': self.env._("Note:"),
+                'message': self.env._("The Reference '%s' already exists.", self.default_code),
             }}
 
     def _trigger_uom_warning(self):
@@ -466,13 +466,13 @@ class ProductProduct(models.Model):
     def _onchange_uom_id(self):
         if self._origin.uom_id == self.uom_id or not self._trigger_uom_warning():
             return
-        message = _(
+        message = self.env._(
             'Changing the unit of measure for your product will apply a conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n'
             'All existing records (Sales orders, Purchase orders, etc.) using this product will be updated by replacing the unit name.',
             old_uom_name=self._origin.uom_id.display_name, new_uom_name=self.uom_id.display_name)
         return {
             'warning': {
-                'title': _('What to expect ?'),
+                'title': self.env._('What to expect ?'),
                 'message': message,
             }
         }
@@ -972,7 +972,7 @@ class ProductProduct(models.Model):
     @api.model
     def view_header_get(self, view_id, view_type):
         if self.env.context.get('categ_id'):
-            return _(
+            return self.env._(
                 'Products: %(category)s',
                 category=self.env['product.category'].browse(self.env.context['categ_id']).name,
             )
@@ -983,7 +983,7 @@ class ProductProduct(models.Model):
     @api.readonly
     def action_open_label_layout(self):
         if any(product.type == 'service' for product in self):
-            raise ValidationError(_('Labels cannot be printed for products of service type'))
+            raise ValidationError(self.env._('Labels cannot be printed for products of service type'))
         action = self.env['ir.actions.act_window']._for_xml_id('product.action_open_label_layout')
         action['context'] = {'default_product_ids': self.ids}
         return action
@@ -1134,7 +1134,7 @@ class ProductProduct(models.Model):
     @api.model
     def get_empty_list_help(self, help_message):
         self = self.with_context(
-            empty_list_help_document_name=_("product"),
+            empty_list_help_document_name=self.env._("product"),
         )
         return super().get_empty_list_help(help_message)
 

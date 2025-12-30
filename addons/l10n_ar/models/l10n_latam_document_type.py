@@ -1,4 +1,4 @@
-from odoo import models, api, fields, _
+from odoo import models, fields
 from odoo.exceptions import UserError
 
 
@@ -50,7 +50,7 @@ class L10n_LatamDocumentType(models.Model):
         if self.code in ['66', '67']:
             if len(document_number) != 16:
                 raise UserError(
-                    _(
+                    self.env._(
                         "%(value)s is not a valid value for %(field)s.\nThe number of import Dispatch must be 16 characters.",
                         value=document_number,
                         field=self.name,
@@ -72,7 +72,7 @@ class L10n_LatamDocumentType(models.Model):
             document_number = '{:>05s}-{:>08s}'.format(pos, number)
         if failed:
             raise UserError(
-                _(
+                self.env._(
                     "%(value)s is not a valid value for %(field)s.\nThe document number must be entered with a dash (-) and a maximum of 5 characters for the first part and 8 for the second. The following are examples of valid numbers:\n* 1-1\n* 0001-00000001\n* 00001-00000001",
                     value=document_number,
                     field=self.name,

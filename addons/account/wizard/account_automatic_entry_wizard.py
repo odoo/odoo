@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
 from odoo.tools.float_utils import float_repr
@@ -85,7 +85,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
     def _constraint_percentage(self):
         for record in self:
             if not (0.0 < record.percentage <= 100.0) and record.action == 'change_period':
-                raise UserError(_("Percentage must be between 0 and 100"))
+                raise UserError(self.env._("Percentage must be between 0 and 100"))
 
     @api.depends('percentage', 'move_line_ids')
     def _compute_total_amount(self):
@@ -128,7 +128,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             for move in wizard.move_line_ids.move_id:
                 violated_lock_dates = move._get_violated_lock_dates(wizard.date, False)
                 if violated_lock_dates:
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         "The date selected is protected by: %(lock_date_info)s.",
                         lock_date_info=self.env['res.company']._format_lock_dates(violated_lock_dates)
                     ))
@@ -140,16 +140,16 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             return res
 
         if self.env.context.get('active_model') != 'account.move.line' or not self.env.context.get('active_ids'):
-            raise UserError(_('This can only be used on journal items'))
+            raise UserError(self.env._('This can only be used on journal items'))
         move_line_ids = self.env['account.move.line'].browse(self.env.context['active_ids'])
         res['move_line_ids'] = [(6, 0, move_line_ids.ids)]
 
         if any(move.state != 'posted' for move in move_line_ids.mapped('move_id')):
-            raise UserError(_("Oops! You can only change the period or account for posted entries! Other ones aren't up for an adventure like that!"))
+            raise UserError(self.env._("Oops! You can only change the period or account for posted entries! Other ones aren't up for an adventure like that!"))
         if any(move_line.reconciled for move_line in move_line_ids):
-            raise UserError(_("Oops! You can only change the period or account for items that are not yet reconciled! Other ones aren't up for an adventure like that!"))
+            raise UserError(self.env._("Oops! You can only change the period or account for items that are not yet reconciled! Other ones aren't up for an adventure like that!"))
         if any(line.company_id.root_id != move_line_ids[0].company_id.root_id for line in move_line_ids):
-            raise UserError(_('You cannot use this wizard on journal entries belonging to different companies.'))
+            raise UserError(self.env._('You cannot use this wizard on journal entries belonging to different companies.'))
         res['company_id'] = move_line_ids[0].company_id.root_id.id
 
         allowed_actions = set(dict(self._fields['action'].selection))
@@ -158,14 +158,14 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         if any(line.account_id.account_type != move_line_ids[0].account_id.account_type for line in move_line_ids):
             allowed_actions.discard('change_period')
         if not allowed_actions:
-            raise UserError(_('No possible action found with the selected lines.'))
+            raise UserError(self.env._('No possible action found with the selected lines.'))
         res['action'] = allowed_actions.pop()
         return res
 
     def _get_cut_off_label_format(self):
         """ Get the translated format string used in cut-off labels """
         self.ensure_one()
-        return _("Cut-off {label}") if self.percentage == 100 else _("Cut-off {label} {percent}%")
+        return self.env._("Cut-off {label}") if self.percentage == 100 else self.env._("Cut-off {label} {percent}%")
 
     def _get_move_dict_vals_change_account(self):
         line_vals = []
@@ -204,7 +204,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         # Generate counterpart lines' vals
         for (counterpart_partner, counterpart_currency), counterpart_vals in counterpart_balances.items():
             source_accounts = self.move_line_ids.mapped('account_id')
-            counterpart_label = len(source_accounts) == 1 and _("Transfer from %s", source_accounts.display_name) or _("Transfer counterpart")
+            counterpart_label = len(source_accounts) == 1 and self.env._("Transfer from %s", source_accounts.display_name) or self.env._("Transfer counterpart")
 
             # We divide the amount for each account by the total balance to reflect the lines counter-parted
             analytic_distribution = {
@@ -234,7 +234,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             if not self.company_id.currency_id.is_zero(account_balance):
                 account_amount_currency = currency.round(sum(line.amount_currency for line in lines))
                 line_vals.append({
-                    'name': _('Transfer to %s', self.destination_account_id.display_name or _('[Not set]')),
+                    'name': self.env._('Transfer to %s', self.destination_account_id.display_name or self.env._('[Not set]')),
                     'debit': account_balance < 0 and self.company_id.currency_id.round(-account_balance) or 0,
                     'credit': account_balance > 0 and self.company_id.currency_id.round(account_balance) or 0,
                     'account_id': account.id,
@@ -256,7 +256,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             'journal_id': self.journal_id.id,
             'company_id': lowest_child_company.id,
             'date': fields.Date.to_string(self.date),
-            'ref': self.destination_account_id.display_name and _("Transfer entry to %s", self.destination_account_id.display_name or ''),
+            'ref': self.destination_account_id.display_name and self.env._("Transfer entry to %s", self.destination_account_id.display_name or ''),
             'line_ids': [(0, 0, line) for line in line_vals],
         }]
 
@@ -363,7 +363,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         for record in self:
             if record.action == 'change_period':
                 if any(line.account_id.account_type != record.move_line_ids[0].account_id.account_type for line in record.move_line_ids):
-                    raise UserError(_('All accounts on the lines must be of the same type.'))
+                    raise UserError(self.env._('All accounts on the lines must be of the same type.'))
             if record.action == 'change_period':
                 record.move_data = json.dumps(record._get_move_dict_vals_change_period())
             elif record.action == 'change_account':
@@ -373,13 +373,13 @@ class AccountAutomaticEntryWizard(models.TransientModel):
     def _compute_preview_move_data(self):
         for record in self:
             preview_columns = [
-                {'field': 'account_id', 'label': _('Account')},
-                {'field': 'name', 'label': _('Label')},
-                {'field': 'debit', 'label': _('Debit'), 'class': 'text-end text-nowrap'},
-                {'field': 'credit', 'label': _('Credit'), 'class': 'text-end text-nowrap'},
+                {'field': 'account_id', 'label': self.env._('Account')},
+                {'field': 'name', 'label': self.env._('Label')},
+                {'field': 'debit', 'label': self.env._('Debit'), 'class': 'text-end text-nowrap'},
+                {'field': 'credit', 'label': self.env._('Credit'), 'class': 'text-end text-nowrap'},
             ]
             if record.action == 'change_account':
-                preview_columns[2:2] = [{'field': 'partner_id', 'label': _('Partner')}]
+                preview_columns[2:2] = [{'field': 'partner_id', 'label': self.env._('Partner')}]
 
             move_vals = json.loads(record.move_data)
             preview_vals = []
@@ -390,7 +390,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             record.preview_move_data = json.dumps({
                 'groups_vals': preview_vals,
                 'options': {
-                    'discarded_number': _("%d moves", preview_discarded) if preview_discarded else False,
+                    'discarded_number': self.env._("%d moves", preview_discarded) if preview_discarded else False,
                     'columns': preview_columns,
                 },
             })
@@ -425,22 +425,22 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                 accrual_move_offsets[accrual_move] += 2
                 (accrual_move_lines + destination_move_lines).filtered(lambda line: not line.currency_id.is_zero(line.balance)).reconcile()
             body = Markup("%(title)s<ul><li>%(link1)s %(second)s</li><li>%(link2)s %(third)s</li></ul>") % {
-                'title': _("Adjusting Entries have been created for this invoice:"),
+                'title': self.env._("Adjusting Entries have been created for this invoice:"),
                 'link1': self._format_move_link(accrual_move),
-                'second': self._format_strings(_("cancelling {percent}%% of {amount}"), move, amount),
+                'second': self._format_strings(self.env._("cancelling {percent}%% of {amount}"), move, amount),
                 'link2': self._format_move_link(destination_move),
-                'third': self._format_strings(_("postponing it to {new_date}"), move, amount),
+                'third': self._format_strings(self.env._("postponing it to {new_date}"), move, amount),
             }
             move.message_post(body=body)
             destination_messages += [
                 self._format_strings(
-                    escape(_("Adjusting Entry {link} {percent}%% of {amount} recognized from {date}")),
+                    escape(self.env._("Adjusting Entry {link} {percent}%% of {amount} recognized from {date}")),
                     move, amount,
                 )
             ]
             accrual_move_messages[accrual_move] += [
                 self._format_strings(
-                    escape(_("Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}")),
+                    escape(self.env._("Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}")),
                     move, amount,
                 )
             ]
@@ -451,7 +451,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
 
         # open the generated entries
         action = {
-            'name': _('Generated Entries'),
+            'name': self.env._('Generated Entries'),
             'domain': [('id', 'in', created_moves.ids)],
             'res_model': 'account.move',
             'view_mode': 'list,form',
@@ -496,7 +496,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         new_move.message_post(body=self._format_new_transfer_move_log(acc_transfer_per_move))
 
         return {
-            'name': _("Transfer"),
+            'name': self.env._("Transfer"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'account.move',
@@ -506,8 +506,8 @@ class AccountAutomaticEntryWizard(models.TransientModel):
     # Transfer utils
     def _format_new_transfer_move_log(self, acc_transfer_per_move):
         transfer_format = Markup("<li>%s, <strong>%%(account_source_name)s</strong></li>") % \
-            _("{amount} ({debit_credit}) from {link}")
-        rslt = _(
+            self.env._("{amount} ({debit_credit}) from {link}")
+        rslt = self.env._(
             "This entry transfers the following amounts to %(destination)s",
             destination=Markup("<strong>%s</strong>") % self.destination_account_id.display_name,
         ) + Markup("<ul>%(transfer_logs)s</ul>") % {
@@ -527,7 +527,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             return None
 
         transfer_format = Markup(
-            _("{amount} ({debit_credit}) from <strong>{account_source_name}</strong> were transferred to <strong>{account_target_name}</strong> by {link}")
+            self.env._("{amount} ({debit_credit}) from <strong>{account_source_name}</strong> were transferred to <strong>{account_target_name}</strong> by {link}")
         )
 
         return Markup("<ul>%s</ul>") % Markup().join([
@@ -542,15 +542,15 @@ class AccountAutomaticEntryWizard(models.TransientModel):
 
     def _format_strings(self, string, move, amount=None, account_source_name=''):
         return string.format(
-            label=move.name or _('Adjusting Entry'),
+            label=move.name or self.env._('Adjusting Entry'),
             percent=float_repr(self.percentage, 2),
             name=move.name,
             id=move.id,
             amount=formatLang(self.env, abs(amount), currency_obj=self.company_id.currency_id) if amount else '',
-            debit_credit=amount < 0 and _('C') or _('D') if amount else None,
+            debit_credit=amount < 0 and self.env._('C') or self.env._('D') if amount else None,
             link=self._format_move_link(move),
             date=format_date(self.env, move.date),
-            new_date=self.date and format_date(self.env, self.date) or _('[Not set]'),
+            new_date=self.date and format_date(self.env, self.date) or self.env._('[Not set]'),
             account_source_name=account_source_name,
             account_target_name=self.destination_account_id.display_name,
         )

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 
@@ -93,7 +93,7 @@ class SaleOrderTemplate(models.Model):
                 continue
 
             if not template.company_id:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "Your template cannot contain products from specific companies if it's shared"
                     " between companies. Please restrict the template access, or remove those"
                     " products."
@@ -105,7 +105,7 @@ class SaleOrderTemplate(models.Model):
             if unauthorized_products := restricted_products - authorized_products:
                 unaccessible_companies = unauthorized_products.company_id
                 if len(unaccessible_companies) > 1:
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         "Your template belongs to company %(template_company)s but contains"
                         " products from other companies (%(product_company)s) that are not"
                         " accessible to %(template_company)s.\nPlease change the company of your"
@@ -114,7 +114,7 @@ class SaleOrderTemplate(models.Model):
                         template_company=template.company_id.display_name,
                     ))
 
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "Your template belongs to company %(template_company)s but contains"
                     " products from company (%(product_company)s) that are not"
                     " accessible to %(template_company)s.\nPlease change the company of your"
@@ -127,7 +127,7 @@ class SaleOrderTemplate(models.Model):
     def _check_prepayment_percent(self):
         for template in self:
             if template.require_payment and not (0 < template.prepayment_percent <= 1.0):
-                raise ValidationError(_("Prepayment percentage must be a valid percentage."))
+                raise ValidationError(self.env._("Prepayment percentage must be a valid percentage."))
 
     #=== CRUD METHODS ===#
 

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -61,18 +61,18 @@ class EventQuestion(models.Model):
             if questions_new_type:
                 answer_count = self.env['event.registration.answer'].search_count([('question_id', 'in', questions_new_type.ids)])
                 if answer_count > 0:
-                    raise UserError(_("You cannot change the question type of a question that already has answers!"))
+                    raise UserError(self.env._("You cannot change the question type of a question that already has answers!"))
         return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_answered_question(self):
         if self.env['event.registration.answer'].search_count([('question_id', 'in', self.ids)]):
-            raise UserError(_('You cannot delete a question that has already been answered by attendees. You can archive it instead.'))
+            raise UserError(self.env._('You cannot delete a question that has already been answered by attendees. You can archive it instead.'))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_default_question(self):
         if set(self.ids) & set(self.env['event.type']._default_question_ids()):
-            raise UserError(_('You cannot delete a default question.'))
+            raise UserError(self.env._('You cannot delete a default question.'))
 
     def action_view_question_answers(self):
         """ Allow analyzing the attendees answers to event questions in a convenient way:

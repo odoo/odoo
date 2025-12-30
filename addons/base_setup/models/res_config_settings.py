@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -59,7 +58,7 @@ class ResConfigSettings(models.TransientModel):
         default_group = self.env.ref('base.default_user_group', raise_if_not_found=False)
         if not default_group:
             default_group = self.env['res.groups'].create({
-                'name': _('Default access for new users'),
+                'name': self.env._('Default access for new users'),
             })
             self.env['ir.model.data'].create({
                 'name': 'default_user_group',
@@ -70,7 +69,7 @@ class ResConfigSettings(models.TransientModel):
             })
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Edit new user default group"),
+            'name': self.env._("Edit new user default group"),
             'view_mode': 'form',
             'res_model': 'res.groups',
             'res_id': default_group.id,
@@ -123,7 +122,7 @@ class ResConfigSettings(models.TransientModel):
         informations += '%s\n' % self.company_id.city if self.company_id.city else ''
         informations += '%s\n' % self.company_id.state_id.display_name if self.company_id.state_id else ''
         informations += '%s' % self.company_id.country_id.display_name if self.company_id.country_id else ''
-        vat_display = self.company_id.country_id.vat_label or _('VAT')
+        vat_display = self.company_id.country_id.vat_label or self.env._('VAT')
         vat_display = '\n' + vat_display + ': '
         informations += '%s %s' % (vat_display, self.company_id.vat) if self.company_id.vat else ''
 

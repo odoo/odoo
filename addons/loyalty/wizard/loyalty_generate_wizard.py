@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -46,7 +46,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
         self.confirmation_message = False
         for wizard in self:
             program_desc = dict(wizard._fields['program_type']._description_selection(wizard.env))
-            wizard.confirmation_message = _("You're about to generate %(program_type)s with a value of %(value)s for %(customer_number)i customers",
+            wizard.confirmation_message = self.env._("You're about to generate %(program_type)s with a value of %(value)s for %(customer_number)i customers",
                 program_type=program_desc[wizard.program_type],
                 value=wizard.points_granted,
                 customer_number=wizard.coupon_qty,
@@ -76,9 +76,9 @@ class LoyaltyGenerateWizard(models.TransientModel):
 
     def generate_coupons(self):
         if any(not wizard.program_id for wizard in self):
-            raise ValidationError(_("Can not generate coupon, no program is set."))
+            raise ValidationError(self.env._("Can not generate coupon, no program is set."))
         if any(wizard.coupon_qty <= 0 for wizard in self):
-            raise ValidationError(_("Invalid quantity."))
+            raise ValidationError(self.env._("Invalid quantity."))
         coupon_create_vals = []
         for wizard in self:
             customers = wizard._get_partners() or range(wizard.coupon_qty)
@@ -87,7 +87,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
         coupons = self.env['loyalty.card'].create(coupon_create_vals)
         self.env['loyalty.history'].create([
             {
-                'description': self.description or _("Gift For Customer"),
+                'description': self.description or self.env._("Gift For Customer"),
                 'card_id': coupon.id,
                 'issued': self.points_granted,
             } for coupon in coupons

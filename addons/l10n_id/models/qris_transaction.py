@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -31,7 +31,7 @@ class L10n_IdQrisTransaction(models.Model):
     def _constraint_model(self):
         # only allow supported models
         if self.model not in self._get_supported_models():
-            raise ValidationError(_("QRIS capability is not extended to model %s yet!", self.model))
+            raise ValidationError(self.env._("QRIS capability is not extended to model %s yet!", self.model))
 
     def _get_record(self):
         """ Get the backend invoice record that the qris transaction is handling

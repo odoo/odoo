@@ -22,7 +22,7 @@ from OpenSSL.SSL import VERIFY_FAIL_IF_NO_PEER_CERT, VERIFY_PEER
 from OpenSSL.SSL import Error as SSLError
 from urllib3.contrib.pyopenssl import PyOpenSSLContext, get_subj_alt_name
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import api, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.tools import (
     email_domain_extract,
@@ -199,16 +199,16 @@ class IrMail_Server(models.Model):
     def _compute_smtp_authentication_info(self):
         for server in self:
             if server.smtp_authentication == 'login':
-                server.smtp_authentication_info = _(
+                server.smtp_authentication_info = self.env._(
                     'Connect to your server through your usual username and password. \n'
                     'This is the most basic SMTP authentication process and '
                     'may not be accepted by all providers. \n')
             elif server.smtp_authentication == 'certificate':
-                server.smtp_authentication_info = _(
+                server.smtp_authentication_info = self.env._(
                     'Authenticate by using SSL certificates, belonging to your domain name. \n'
                     'SSL certificates allow you to authenticate your mail server for the entire domain name.')
             elif server.smtp_authentication == 'cli':
-                server.smtp_authentication_info = _(
+                server.smtp_authentication_info = self.env._(
                     'Use the SMTP configuration set in the "Command Line Interface" arguments.')
             else:
                 server.smtp_authentication = False
@@ -218,9 +218,9 @@ class IrMail_Server(models.Model):
         for mail_server in self:
             if mail_server.smtp_authentication == 'certificate':
                 if not mail_server.smtp_ssl_private_key:
-                    raise UserError(_('SSL private key is missing for %s.', mail_server.name))
+                    raise UserError(self.env._('SSL private key is missing for %s.', mail_server.name))
                 if not mail_server.smtp_ssl_certificate:
-                    raise UserError(_('SSL certificate is missing for %s.', mail_server.name))
+                    raise UserError(self.env._('SSL certificate is missing for %s.', mail_server.name))
 
     def write(self, vals):
         """Ensure we cannot archive a server in-use"""
@@ -239,7 +239,7 @@ class IrMail_Server(models.Model):
                 continue
             usage_details = []
             if is_multiple_server_usage:
-                usage_details.append(_('%s (Dedicated Outgoing Mail Server):', server.display_name))
+                usage_details.append(self.env._('%s (Dedicated Outgoing Mail Server):', server.display_name))
             usage_details.extend(map(lambda u: f'- {u}', usages_per_server[server.id]))
             usage_details_per_server[server] = usage_details
 
@@ -251,10 +251,10 @@ class IrMail_Server(models.Model):
                                         for line in usage_details_per_server[server])
         if is_multiple_server_usage:
             raise UserError(
-                _('You cannot archive these Outgoing Mail Servers (%(server_usage)s) because they are still used in the following case(s):\n%(usage_details)s',
+                self.env._('You cannot archive these Outgoing Mail Servers (%(server_usage)s) because they are still used in the following case(s):\n%(usage_details)s',
                   server_usage=error_server_usage, usage_details=error_usage_details))
         raise UserError(
-            _('You cannot archive this Outgoing Mail Server (%(server_usage)s) because it is still used in the following case(s):\n%(usage_details)s',
+            self.env._('You cannot archive this Outgoing Mail Server (%(server_usage)s) because it is still used in the following case(s):\n%(usage_details)s',
               server_usage=error_server_usage, usage_details=error_usage_details))
 
     def _active_usages_compute(self):
@@ -284,7 +284,7 @@ class IrMail_Server(models.Model):
             # Fallback to current user email if there's no from filter
             email_from = self.env.user.email
         if not email_from or "@" not in email_from:
-            raise UserError(_('Please configure an email on the current user to simulate '
+            raise UserError(self.env._('Please configure an email on the current user to simulate '
                               'sending an email message via this outgoing server'))
         return email_from
 
@@ -312,44 +312,44 @@ class IrMail_Server(models.Model):
                 # Testing the MAIL FROM step should detect sender filter problems
                 (code, repl) = smtp.mail(email_from)
                 if code != 250:
-                    raise UserError(_('The server refused the sender address (%(email_from)s) with error %(repl)s', email_from=email_from, repl=repl))  # noqa: TRY301
+                    raise UserError(self.env._('The server refused the sender address (%(email_from)s) with error %(repl)s', email_from=email_from, repl=repl))  # noqa: TRY301
                 # Testing the RCPT TO step should detect most relaying problems
                 (code, repl) = smtp.rcpt(email_to)
                 if code not in (250, 251):
-                    raise UserError(_('The server refused the test recipient (%(email_to)s) with error %(repl)s', email_to=email_to, repl=repl))  # noqa: TRY301
+                    raise UserError(self.env._('The server refused the test recipient (%(email_to)s) with error %(repl)s', email_to=email_to, repl=repl))  # noqa: TRY301
                 # Beginning the DATA step should detect some deferred rejections
                 # Can't use self.data() as it would actually send the mail!
                 smtp.putcmd("data")
                 (code, repl) = smtp.getreply()
                 if code != 354:
-                    raise UserError(_('The server refused the test connection with error %(repl)s', repl=repl))  # noqa: TRY301
+                    raise UserError(self.env._('The server refused the test connection with error %(repl)s', repl=repl))  # noqa: TRY301
                 if autodetect_max_email_size:
                     max_size = smtp.esmtp_features.get('size')
                     if not max_size:
-                        raise UserError(_('The server "%(server_name)s" doesn\'t return the maximum email size.',
+                        raise UserError(self.env._('The server "%(server_name)s" doesn\'t return the maximum email size.',
                                           server_name=server.name))
                     server.max_email_size = float(max_size) / (1024 ** 2)
             except (UnicodeError, idna.core.InvalidCodepoint) as e:
-                raise UserError(_("Invalid server name!\n %s", e)) from e
+                raise UserError(self.env._("Invalid server name!\n %s", e)) from e
             except (gaierror, timeout) as e:
-                raise UserError(_("No response received. Check server address and port number.\n %s", e)) from e
+                raise UserError(self.env._("No response received. Check server address and port number.\n %s", e)) from e
             except smtplib.SMTPServerDisconnected as e:
-                raise UserError(_("The server has closed the connection unexpectedly. Check configuration served on this port number.\n %s", e)) from e
+                raise UserError(self.env._("The server has closed the connection unexpectedly. Check configuration served on this port number.\n %s", e)) from e
             except smtplib.SMTPResponseException as e:
-                raise UserError(_("Server replied with following exception:\n %s", e)) from e
+                raise UserError(self.env._("Server replied with following exception:\n %s", e)) from e
             except smtplib.SMTPNotSupportedError as e:
-                raise UserError(_("An option is not supported by the server:\n %s", e)) from e
+                raise UserError(self.env._("An option is not supported by the server:\n %s", e)) from e
             except smtplib.SMTPException as e:
-                raise UserError(_("An SMTP exception occurred. Check port number and connection security type.\n %s", e)) from e
+                raise UserError(self.env._("An SMTP exception occurred. Check port number and connection security type.\n %s", e)) from e
             except CertificateError as e:
-                raise UserError(_("An SSL exception occurred. Check connection security type.\n CertificateError: %s", e)) from e
+                raise UserError(self.env._("An SSL exception occurred. Check connection security type.\n CertificateError: %s", e)) from e
             except (ssl.SSLError, SSLError) as e:
-                raise UserError(_("An SSL exception occurred. Check connection security type.\n %s", e)) from e
+                raise UserError(self.env._("An SSL exception occurred. Check connection security type.\n %s", e)) from e
             except UserError:
                 raise
             except Exception as e:
                 _logger.warning("Connection test on %s failed with a generic error.", server, exc_info=True)
-                raise UserError(_("Connection Test Failed! Here is what we got instead:\n %s", e)) from e
+                raise UserError(self.env._("Connection Test Failed! Here is what we got instead:\n %s", e)) from e
             finally:
                 try:
                     if smtp:
@@ -359,11 +359,11 @@ class IrMail_Server(models.Model):
                     pass
 
         if autodetect_max_email_size:
-            message = _(
+            message = self.env._(
                 'Email maximum size updated (%(details)s).',
                 details=', '.join(f'{server.name}: {human_size(server.max_email_size * 1024 ** 2)}' for server in self))
         else:
-            message = _('Connection Test Successful!')
+            message = self.env._('Connection Test Successful!')
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -456,9 +456,9 @@ class IrMail_Server(models.Model):
                     # Check that the private key match the certificate
                     ssl_context._ctx.check_privatekey()
                 except SSLCryptoError as e:
-                    raise UserError(_('The private key or the certificate is not a valid file. \n%s', str(e)))
+                    raise UserError(self.env._('The private key or the certificate is not a valid file. \n%s', str(e)))
                 except SSLError as e:
-                    raise UserError(_('Could not load your certificate / private key. \n%s', str(e)))
+                    raise UserError(self.env._('Could not load your certificate / private key. \n%s', str(e)))
             elif mail_server.smtp_encryption != 'none':
                 if mail_server.smtp_encryption in ('ssl_strict', 'starttls_strict'):
                     ssl_context = ssl.create_default_context()
@@ -494,12 +494,12 @@ class IrMail_Server(models.Model):
                     # Check that the private key match the certificate
                     ssl_context._ctx.check_privatekey()
                 except SSLCryptoError as e:
-                    raise UserError(_('The private key or the certificate is not a valid file. \n%s', str(e)))
+                    raise UserError(self.env._('The private key or the certificate is not a valid file. \n%s', str(e)))
                 except SSLError as e:
-                    raise UserError(_('Could not load your certificate / private key. \n%s', str(e)))
+                    raise UserError(self.env._('Could not load your certificate / private key. \n%s', str(e)))
 
         if not smtp_server:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "Missing SMTP Server\n"
                 "Please define at least one SMTP server, "
                 "or provide the SMTP parameters explicitly.",
@@ -539,7 +539,7 @@ class IrMail_Server(models.Model):
 
     def _check_forced_mail_server(self, mail_server, allow_archived, smtp_from):
         if not allow_archived and not mail_server.active:
-            raise UserError(_('The server "%s" cannot be used because it is archived.', mail_server.display_name))
+            raise UserError(self.env._('The server "%s" cannot be used because it is archived.', mail_server.display_name))
 
     def _smtp_login__(self, connection, smtp_user, smtp_password):  # noqa: PLW3201
         """Authenticate the SMTP connection.
@@ -850,14 +850,14 @@ class IrMail_Server(models.Model):
         except smtplib.SMTPServerDisconnected:
             raise
         except Exception as e:
-            msg = _(
+            msg = self.env._(
                 "Mail delivery failed via SMTP server '%(server)s'.\n%(exception_name)s: %(message)s",
                 server=smtp_server,
                 exception_name=e.__class__.__name__,
                 message=e,
             )
             _logger.info(msg)
-            raise MailDeliveryException(_("Mail Delivery Failed"), msg)
+            raise MailDeliveryException(self.env._("Mail Delivery Failed"), msg)
         return message_id
 
     def _find_mail_server_allowed_domain(self):
@@ -976,8 +976,8 @@ class IrMail_Server(models.Model):
             self.smtp_port = 465
             if not 'SMTP_SSL' in smtplib.__all__:
                 result['warning'] = {
-                    'title': _('Warning'),
-                    'message': _('Your server does not seem to support SSL, you may want to try STARTTLS instead'),
+                    'title': self.env._('Warning'),
+                    'message': self.env._('Your server does not seem to support SSL, you may want to try STARTTLS instead'),
                 }
         else:
             self.smtp_port = 25

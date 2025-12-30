@@ -1,6 +1,6 @@
 from urllib.parse import urljoin
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.account.models.company import PEPPOL_LIST
@@ -53,12 +53,12 @@ class ResCompany(models.Model):
     @api.model
     def _check_phonenumbers_import(self):
         if not phonenumbers:
-            raise ValidationError(_("Please install the phonenumbers library."))
+            raise ValidationError(self.env._("Please install the phonenumbers library."))
 
     def _sanitize_nemhandel_phone_number(self, phone_number=None):
         self.ensure_one()
 
-        error_message = _(
+        error_message = self.env._(
             "Please enter the phone number in the correct international format.\n"
             "For example: +32123456789, where +32 is the country code.\n"
             "Currently, only European countries are supported."
@@ -96,7 +96,7 @@ class ResCompany(models.Model):
     def _check_nemhandel_purchase_journal_id(self):
         for company in self:
             if company.nemhandel_purchase_journal_id and company.nemhandel_purchase_journal_id.type != 'purchase':
-                raise ValidationError(_("A purchase journal must be used to receive Nemhandel documents."))
+                raise ValidationError(self.env._("A purchase journal must be used to receive Nemhandel documents."))
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS

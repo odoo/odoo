@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -39,7 +39,7 @@ class PosPaymentMethod(models.Model):
         config_currency = self.sudo().env['pos.config'].browse(pos_config_id).currency_id
         valid_providers = providers_sudo.filtered(lambda p: not p.journal_id.currency_id or p.journal_id.currency_id == config_currency)
         if error_if_invalid and len(providers_sudo) != len(valid_providers):
-            raise ValidationError(_("All payment providers configured for an online payment method must use the same currency as the Sales Journal, or the company currency if that is not set, of the POS config."))
+            raise ValidationError(self.env._("All payment providers configured for an online payment method must use the same currency as the Sales Journal, or the company currency if that is not set, of the POS config."))
         return valid_providers
 
     @api.depends('is_online_payment', 'online_payment_provider_ids')
@@ -120,12 +120,12 @@ class PosPaymentMethod(models.Model):
             payment_method_id = self.env['pos.payment.method'].search([('is_online_payment', '=', True), ('company_id', '=', company_id)], limit=1).exists()
             if not payment_method_id:
                 payment_method_id = self.env['pos.payment.method'].create({
-                    'name': _('Online Payment'),
+                    'name': self.env._('Online Payment'),
                     'is_online_payment': True,
                     'company_id': company_id,
                 })
                 if not payment_method_id:
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         "Could not create an online payment method (company_id=%(company_id)d, pos_config_id=%(pos_config_id)d)",
                         company_id=company_id,
                         pos_config_id=pos_config_id,

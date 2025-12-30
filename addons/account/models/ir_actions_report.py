@@ -2,7 +2,7 @@
 from collections import OrderedDict
 from zlib import error as zlib_error
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import pdf
 
@@ -23,7 +23,7 @@ class IrActionsReport(models.Model):
         invoices = self.env['account.move'].browse(res_ids)
         original_attachments = invoices.message_main_attachment_id
         if not original_attachments:
-            raise UserError(_("No original purchase document could be found for any of the selected purchase documents."))
+            raise UserError(self.env._("No original purchase document could be found for any of the selected purchase documents."))
 
         collected_streams = OrderedDict()
         for invoice in invoices:
@@ -35,7 +35,7 @@ class IrActionsReport(models.Model):
                     try:
                         stream = pdf.add_banner(stream, record.name or '', logo=True)
                     except (ValueError, pdf.PdfReadError, TypeError, zlib_error, NotImplementedError, pdf.DependencyError, ArithmeticError):
-                        record._message_log(body=_(
+                        record._message_log(body=self.env._(
                             "There was an error when trying to add the banner to the original PDF.\n"
                             "Please make sure the source file is valid."
                         ))
@@ -69,7 +69,7 @@ class IrActionsReport(models.Model):
                 data = data and dict(data) or {}
                 data.update({'display_name_in_footer': True})
             if any(x.move_type == 'entry' for x in invoices):
-                raise UserError(_("Only invoices could be printed."))
+                raise UserError(self.env._("Only invoices could be printed."))
 
         return super()._pre_render_qweb_pdf(report_ref, res_ids=res_ids, data=data)
 
@@ -87,7 +87,7 @@ class IrActionsReport(models.Model):
         for master_xmlid in master_xmlids:
             master_report = self.env.ref(f"account.{master_xmlid}", raise_if_not_found=False)
             if master_report and master_report in self:
-                raise UserError(_("You cannot delete this report (%s), it is used by the accounting PDF generation engine.", master_report.name))
+                raise UserError(self.env._("You cannot delete this report (%s), it is used by the accounting PDF generation engine.", master_report.name))
 
     def _get_rendering_context(self, report, docids, data):
         data = super()._get_rendering_context(report, docids, data)

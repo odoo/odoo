@@ -4,7 +4,7 @@ import os
 from datetime import UTC
 from zoneinfo import ZoneInfo
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import api, fields, models, SUPERUSER_ID
 from odoo.fields import Domain
 from odoo.tools import email_normalize, format_date, formataddr
 from odoo.exceptions import ValidationError
@@ -201,14 +201,14 @@ class EventRegistration(models.Model):
     @api.constrains('event_id', 'event_slot_id')
     def _check_event_slot(self):
         if any(registration.event_id != registration.event_slot_id.event_id for registration in self if registration.event_slot_id):
-            raise ValidationError(_('Invalid event / slot choice'))
+            raise ValidationError(self.env._('Invalid event / slot choice'))
         if any(not registration.event_slot_id for registration in self if registration.is_multi_slots):
-            raise ValidationError(_('Slot choice is mandatory on multi-slots events.'))
+            raise ValidationError(self.env._('Slot choice is mandatory on multi-slots events.'))
 
     @api.constrains('event_id', 'event_ticket_id')
     def _check_event_ticket(self):
         if any(registration.event_id != registration.event_ticket_id.event_id for registration in self if registration.event_ticket_id):
-            raise ValidationError(_('Invalid event / ticket choice'))
+            raise ValidationError(self.env._('Invalid event / ticket choice'))
 
     def _synchronize_partner_values(self, partner, fnames=None):
         if fnames is None:
@@ -291,7 +291,7 @@ class EventRegistration(models.Model):
             to_confirm._update_mail_schedulers()
 
         if vals.get('state') == 'done':
-            message = _("Attended on %(attended_date)s", attended_date=format_date(env=self.env, value=fields.Datetime.now(), date_format='short'))
+            message = self.env._("Attended on %(attended_date)s", attended_date=format_date(env=self.env, value=fields.Datetime.now(), date_format='short'))
             self._message_log_batch(bodies={registration.id: message for registration in self})
 
         return ret
@@ -334,7 +334,7 @@ class EventRegistration(models.Model):
             default_email_layout_xmlid="mail.mail_notification_light",
         )
         return {
-            'name': _('Compose Email'),
+            'name': self.env._('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
@@ -397,12 +397,12 @@ class EventRegistration(models.Model):
 
     def _message_compute_subject(self):
         if self.name:
-            return _(
+            return self.env._(
                 "%(event_name)s - Registration for %(attendee_name)s",
                 event_name=self.event_id.name,
                 attendee_name=self.name,
             )
-        return _(
+        return self.env._(
             "%(event_name)s - Registration #%(registration_id)s",
             event_name=self.event_id.name,
             registration_id=self.id,

@@ -12,7 +12,7 @@ from zoneinfo import ZoneInfo
 
 from werkzeug import urls
 
-from odoo import api, fields, models, tools, _, Command
+from odoo import api, fields, models, tools, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.date_utils import all_timezones
 
@@ -51,7 +51,7 @@ class FormatVatLabelMixin(models.AbstractModel):
     def fields_get(self, allfields=None, attributes=None):
         res = super().fields_get(allfields, attributes)
         if attributes and 'string' in attributes and 'vat' in res:
-            res['vat']['string'] = self.env.company.country_id.vat_label or _("Tax ID")
+            res['vat']['string'] = self.env.company.country_id.vat_label or self.env._("Tax ID")
         return res
 
 
@@ -471,17 +471,17 @@ class ResPartner(models.Model):
 
     @api.depends_context('company')
     def _compute_vat_label(self):
-        self.vat_label = self.env.company.country_id.vat_label or _("Tax ID")
+        self.vat_label = self.env.company.country_id.vat_label or self.env._("Tax ID")
 
     @api.depends('parent_id', 'type')
     def _compute_type_address_label(self):
         for partner in self:
             if partner.type == 'invoice':
-                partner.type_address_label = _('Invoice Address')
+                partner.type_address_label = self.env._('Invoice Address')
             elif partner.type == 'delivery':
-                partner.type_address_label = _('Delivery Address')
+                partner.type_address_label = self.env._('Delivery Address')
             else:
-                partner.type_address_label = _('Address')
+                partner.type_address_label = self.env._('Address')
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):
@@ -510,7 +510,7 @@ class ResPartner(models.Model):
         label_by_country = self._get_company_registry_labels()
         for company in self:
             country_code = company.country_id.code
-            company.company_registry_label = label_by_country.get(country_code, _("Company ID"))
+            company.company_registry_label = label_by_country.get(country_code, self.env._("Company ID"))
 
     def _get_company_registry_labels(self):
         return {}
@@ -521,7 +521,7 @@ class ResPartner(models.Model):
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if self._has_cycle():
-            raise ValidationError(_('You cannot create recursive Partner hierarchies.'))
+            raise ValidationError(self.env._('You cannot create recursive Partner hierarchies.'))
 
     @api.constrains('company_id')
     def _check_partner_company(self):
@@ -534,7 +534,7 @@ class ResPartner(models.Model):
         companies = self.env['res.company'].search_fetch([('partner_id', 'in', partners.ids)], ['partner_id'])
         for company in companies:
             if company != company.partner_id.company_id:
-                raise ValidationError(_('The company assigned to this partner does not match the company this partner represents.'))
+                raise ValidationError(self.env._('The company assigned to this partner does not match the company this partner represents.'))
 
     def copy_data(self, default=None):
         default = dict(default or {})
@@ -610,12 +610,12 @@ class ResPartner(models.Model):
     def _check_barcode_unicity(self):
         for partner in self:
             if partner.barcode and self.env['res.partner'].search_count([('barcode', '=', partner.barcode)]) > 1:
-                raise ValidationError(_('Another partner already has this barcode'))
+                raise ValidationError(self.env._('Another partner already has this barcode'))
 
     def _convert_fields_to_values(self, field_names):
         """ Returns dict of write() values for synchronizing ``field_names`` """
         if any(self._fields[fname].type == 'one2many' for fname in field_names):
-            raise AssertionError(_('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`'))
+            raise AssertionError(self.env._('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`'))
         return self._convert_to_write({fname: self[fname] for fname in field_names})
 
     @api.model
@@ -837,13 +837,13 @@ class ResPartner(models.Model):
             users = self.env['res.users'].sudo().search([('partner_id', 'in', self.ids)])
             if users:
                 if users.sudo(False).has_access('write'):
-                    error_msg = _('You cannot archive contacts linked to an active user.\n'
+                    error_msg = self.env._('You cannot archive contacts linked to an active user.\n'
                                   'You first need to archive their associated user.\n\n'
                                   'Linked active users : %(names)s', names=", ".join([u.display_name for u in users]))
                     action_error = users._action_show()
-                    raise RedirectWarning(error_msg, action_error, _('Go to users'))
+                    raise RedirectWarning(error_msg, action_error, self.env._('Go to users'))
                 else:
-                    raise ValidationError(_('You cannot archive contacts linked to an active user.\n'
+                    raise ValidationError(self.env._('You cannot archive contacts linked to an active user.\n'
                                             'Ask an administrator to archive their associated user first.\n\n'
                                             'Linked active users :\n%(names)s', names=", ".join([u.display_name for u in users])))
         if vals.get('website'):
@@ -924,13 +924,13 @@ class ResPartner(models.Model):
         if not users:
             return  # no linked user, operation is allowed
         if self.env['res.users'].sudo(False).has_access('write'):
-            error_msg = _('You cannot delete contacts linked to an active user.\n'
+            error_msg = self.env._('You cannot delete contacts linked to an active user.\n'
                           'You should rather archive them after archiving their associated user.\n\n'
                           'Linked active users : %(names)s', names=", ".join([u.display_name for u in users]))
             action_error = users._action_show()
-            raise RedirectWarning(error_msg, action_error, _('Go to users'))
+            raise RedirectWarning(error_msg, action_error, self.env._('Go to users'))
         else:
-            raise ValidationError(_('You cannot delete contacts linked to an active user.\n'
+            raise ValidationError(self.env._('You cannot delete contacts linked to an active user.\n'
                                     'Ask an administrator to archive their associated user first.\n\n'
                                     'Linked active users :\n%(names)s', names=", ".join([u.display_name for u in users])))
 
@@ -977,7 +977,7 @@ class ResPartner(models.Model):
         a parent (often a company) consisting in a name only, not yet a record. """
         self.ensure_one()
         if not parent_name:
-            raise ValueError(_('Parent Name is required at this point'))
+            raise ValueError(self.env._('Parent Name is required at this point'))
         parent_values = dict(name=parent_name, vat=self.vat)
         parent_values.update(self._convert_fields_to_values(self._address_fields()))
         if additional_values:
@@ -1061,7 +1061,7 @@ class ResPartner(models.Model):
             self = self.with_context(context)
         name, email_normalized = tools.parse_contact_from_email(name)
         if self.env.context.get('force_email') and not email_normalized:
-            raise ValidationError(_("Couldn't create contact without email address!"))
+            raise ValidationError(self.env._("Couldn't create contact without email address!"))
 
         create_values = {self._rec_name: name or email_normalized}
         if email_normalized:  # keep default_email in context
@@ -1080,11 +1080,11 @@ class ResPartner(models.Model):
         :return: newly created record
         """
         if not email:
-            raise ValueError(_('An email is required for find_or_create to work'))
+            raise ValueError(self.env._('An email is required for find_or_create to work'))
 
         parsed_name, parsed_email_normalized = tools.parse_contact_from_email(email)
         if not parsed_email_normalized and assert_valid_email:
-            raise ValueError(_('A valid email is required for find_or_create to work properly.'))
+            raise ValueError(self.env._('A valid email is required for find_or_create to work properly.'))
 
         if parsed_email_normalized:
             partners = self.search([('email', '=ilike', parsed_email_normalized)], limit=1)
@@ -1137,7 +1137,7 @@ class ResPartner(models.Model):
     @api.model
     def view_header_get(self, view_id, view_type):
         if self.env.context.get('category_id'):
-            return  _(
+            return  self.env._(
                 'Partners: %(category)s',
                 category=self.env['res.partner.category'].browse(self.env.context['category_id']).name,
             )
@@ -1192,7 +1192,7 @@ class ResPartner(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Contacts'),
+            'label': self.env._('Import Template for Contacts'),
             'template': '/base/static/xls/contacts_import_template.xlsx',
         }]
 

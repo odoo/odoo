@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from ast import literal_eval
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.tools import float_round
 
 
@@ -31,7 +30,7 @@ class MrpProduction(models.Model):
                 production.move_raw_ids.analytic_account_line_ids.ref = production.display_name
                 for workorder in production.workorder_ids:
                     workorder.mo_analytic_account_line_ids.ref = production.display_name
-                    workorder.mo_analytic_account_line_ids.name = _("[WC] %s", workorder.display_name)
+                    workorder.mo_analytic_account_line_ids.name = self.env._("[WC] %s", workorder.display_name)
         return res
 
     def action_view_move_wip(self):
@@ -47,7 +46,7 @@ class MrpProduction(models.Model):
             })
         else:
             action.update({
-                'name': _("WIP Entries of %s", self.name),
+                'name': self.env._("WIP Entries of %s", self.name),
                 'domain': [('id', 'in', self.wip_move_ids.ids)],
                 'view_mode': 'list,form',
                 'views': [(self.env.ref('account.view_move_tree').id, 'list')],
@@ -106,7 +105,7 @@ class MrpProduction(models.Model):
             if mo.company_id.currency_id.is_zero(workcenter_cost):
                 continue
 
-            desc = _('%s - Labour', mo.name)
+            desc = self.env._('%s - Labour', mo.name)
             account = production_location.valuation_account_id
             labour_amounts[account] -= workcenter_cost
             account_move = self.env['account.move'].sudo().create({

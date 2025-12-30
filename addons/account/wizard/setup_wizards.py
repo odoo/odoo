@@ -3,7 +3,7 @@
 
 from datetime import date, timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -35,7 +35,7 @@ class AccountFinancialYearOp(models.TransientModel):
                 date(2020, int(wiz.fiscalyear_last_month), wiz.fiscalyear_last_day)
             except ValueError:
                 raise ValidationError(
-                    _('Incorrect fiscal year date: day is out of range for month. Month: %(month)s; Day: %(day)s',
+                    self.env._('Incorrect fiscal year date: day is out of range for month. Month: %(month)s; Day: %(day)s',
                     month=wiz.fiscalyear_last_month, day=wiz.fiscalyear_last_day)
                 )
 

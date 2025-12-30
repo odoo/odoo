@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -64,13 +64,13 @@ class ProductCombo(models.Model):
     @api.constrains('combo_item_ids')
     def _check_combo_item_ids_not_empty(self):
         if any(not combo.combo_item_ids for combo in self):
-            raise ValidationError(_("A combo choice must contain at least 1 product."))
+            raise ValidationError(self.env._("A combo choice must contain at least 1 product."))
 
     @api.constrains('combo_item_ids')
     def _check_combo_item_ids_no_duplicates(self):
         for combo in self:
             if len(combo.combo_item_ids.mapped('product_id')) < len(combo.combo_item_ids):
-                raise ValidationError(_("A combo choice can't contain duplicate products."))
+                raise ValidationError(self.env._("A combo choice can't contain duplicate products."))
 
     @api.constrains('company_id')
     def _check_company_id(self):

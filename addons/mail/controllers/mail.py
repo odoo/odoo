@@ -8,7 +8,7 @@ from werkzeug.urls import url_encode
 from werkzeug.exceptions import NotFound
 from urllib.parse import parse_qsl, urlencode, urlparse
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request, Response
 from odoo.tools import consteq
@@ -120,7 +120,7 @@ class MailController(http.Controller):
                     # - Make a new access test if it succeeds, redirect to the record. Otherwise,
                     #   redirect to the messaging.
                     if not suggested_company:
-                        raise AccessError(_("There is no candidate company that has read access to the record."))
+                        raise AccessError(self.env._("There is no candidate company that has read access to the record."))
                     cids = cids + [suggested_company.id]
                     record_sudo.with_user(uid).with_context(allowed_company_ids=cids).check_access('read')
                     request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
@@ -221,7 +221,7 @@ class MailController(http.Controller):
     def mail_action_unfollow(self, model, res_id, pid, token, **kwargs):
         comparison, record, __ = MailController._check_token_and_record_or_redirect(model, int(res_id), token)
         if not comparison or not record:
-            raise AccessError(_('Non existing record or wrong token.'))
+            raise AccessError(self.env._('Non existing record or wrong token.'))
 
         pid = int(pid)
         record_sudo = record.sudo()

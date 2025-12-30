@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -33,7 +33,7 @@ class ResPartner(models.Model):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
             return data_list
         for partner in self.filtered('pos_order_count'):
-            stat_info = {'iconClass': 'fa-shopping-bag', 'value': partner.pos_order_count, 'label': _('Shopping cart')}
+            stat_info = {'iconClass': 'fa-shopping-bag', 'value': partner.pos_order_count, 'label': self.env._('Shopping cart')}
             data_list[partner.id].append(stat_info)
         return data_list
 
@@ -58,7 +58,7 @@ class ResPartner(models.Model):
         for partner in self:
             if partner.barcode and not partner.barcode.startswith("042"):
                 self.env.user._bus_send("simple_notification", {
-                    'message': _("Barcode must start with 042")
+                    'message': self.env._("Barcode must start with 042")
             })
 
     @api.model
@@ -129,11 +129,11 @@ class ResPartner(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_if_pos_no_orders(self):
         if self.sudo().pos_order_ids:
-            raise ValidationError(_('You cannot delete a customer that has point of sales orders. You can archive it instead.'))
+            raise ValidationError(self.env._('You cannot delete a customer that has point of sales orders. You can archive it instead.'))
 
     def action_open_partner_view(self):
         return {
-            'name': _('Edit Partner') if self else _('Create Partner'),
+            'name': self.env._('Edit Partner') if self else self.env._('Create Partner'),
             'target': 'new',
             'view_mode': 'form',
             'type': 'ir.actions.act_window',

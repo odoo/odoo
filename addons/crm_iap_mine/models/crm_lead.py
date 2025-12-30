@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class CrmLead(models.Model):
@@ -15,7 +15,7 @@ class CrmLead(models.Model):
     @api.model
     def action_generate_leads(self):
         return {
-            "name": _("Need help reaching your target?"),
+            "name": self.env._("Need help reaching your target?"),
             "type": "ir.actions.act_window",
             "res_model": "crm.iap.lead.mining.request",
             "target": "new",

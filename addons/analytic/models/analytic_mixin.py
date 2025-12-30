@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, unique
@@ -95,7 +95,7 @@ class AnalyticMixin(models.AbstractModel):
             ids = search_value(value, exact=False)
             operator = 'not in' if operator.startswith('not') else 'in'
         else:
-            raise UserError(_('Operation not supported'))
+            raise UserError(self.env._('Operation not supported'))
 
         if not ids:
             # not ids found, just let it optimize to a constant
@@ -187,7 +187,7 @@ class AnalyticMixin(models.AbstractModel):
 
             for plan_id in mandatory_plans_ids:
                 if float_compare(distribution_by_root_plan.get(plan_id, 0), 100, precision_digits=decimal_precision) != 0:
-                    raise ValidationError(_("One or more lines require a 100% analytic distribution."))
+                    raise ValidationError(self.env._("One or more lines require a 100% analytic distribution."))
 
     def _sanitize_values(self, vals, decimal_precision):
         """ Normalize the float of the distribution """

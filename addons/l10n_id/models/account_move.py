@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class AccountMove(models.Model):
@@ -86,13 +86,13 @@ class AccountMove(models.Model):
             if statuses['paid']:
                 paid_status = statuses['qr_statuses'][0]
                 if 'qris_payment_customername' in paid_status and 'qris_payment_methodby' in paid_status:
-                    message = _(
+                    message = self.env._(
                         "This invoice was paid by %(customer)s using QRIS with the payment method %(method)s.",
                         customer=paid_status['qris_payment_customername'],
                         method=paid_status['qris_payment_methodby'],
                     )
                 else:
-                    message = _("This invoice was paid using QRIS.")
+                    message = self.env._("This invoice was paid using QRIS.")
                 paid_invoices |= invoice
                 paid_messages[invoice.id] = message
 

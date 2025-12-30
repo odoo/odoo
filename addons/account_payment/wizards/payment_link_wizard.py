@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools import format_date, formatLang
 
 from odoo.addons.payment import utils as payment_utils
@@ -30,7 +30,7 @@ class PaymentLinkWizard(models.TransientModel):
         super()._compute_warning_message()
         for wizard in self:
             if not wizard.warning_message and not self.env['ir.config_parameter'].sudo().get_bool('account_payment.enable_portal_payment'):
-                wizard.warning_message = _("Online payment option is not enabled in Configuration.")
+                wizard.warning_message = self.env._("Online payment option is not enabled in Configuration.")
 
     @api.depends('amount_max')
     def _compute_invoice_amount_due(self):
@@ -44,7 +44,7 @@ class PaymentLinkWizard(models.TransientModel):
             if wizard.display_open_installments:
                 for installment in wizard.open_installments or []:
                     preview += "<div>"
-                    preview += _(
+                    preview += self.env._(
                         '#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong class="text-primary">%(date)s</strong>',
                         number=installment['number'],
                         amount=formatLang(
@@ -62,7 +62,7 @@ class PaymentLinkWizard(models.TransientModel):
         for wizard in self:
             wizard.epd_info = ''
             if wizard.has_eligible_epd and wizard.amount == wizard.invoice_amount_due:
-                msg = _("A discount will be applied if the customer pays before %s included.", format_date(wizard.env, wizard.discount_date))
+                msg = self.env._("A discount will be applied if the customer pays before %s included.", format_date(wizard.env, wizard.discount_date))
                 wizard.epd_info = msg
 
     @api.depends('open_installments')

@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -37,7 +37,7 @@ class HrLeaveAllocation(models.Model):
         for allocation in res:
             if allocation.overtime_deductible:
                 if deductible[allocation.employee_id] < 0:
-                    raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
+                    raise ValidationError(self.env._('The employee does not have enough overtime hours to request this leave.'))
         return res
 
     def write(self, vals):
@@ -45,11 +45,11 @@ class HrLeaveAllocation(models.Model):
         if 'number_of_days' not in vals:
             return res
         if not self.env.user.has_group("hr_holidays.group_hr_holidays_user") and any(allocation.state not in ('draft', 'confirm') for allocation in self):
-            raise ValidationError(_('Only an Officer or Administrator is allowed to edit the allocation duration in this status.'))
+            raise ValidationError(self.env._('Only an Officer or Administrator is allowed to edit the allocation duration in this status.'))
         deductible = self.env['hr.leave']._get_deductible_employee_overtime(self.employee_id)
         for allocation in self.sudo().filtered('overtime_deductible'):
             if deductible[allocation.employee_id] < 0:
-                raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
+                raise ValidationError(self.env._('The employee does not have enough overtime hours to request this leave.'))
         return res
 
     def action_refuse(self):

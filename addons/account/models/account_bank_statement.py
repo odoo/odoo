@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from contextlib import contextmanager
 
-from odoo import api, fields, models, _, Command
+from odoo import api, fields, models, Command
 from odoo.exceptions import UserError
-from odoo.fields import Domain
 from odoo.tools.misc import formatLang
 
 
@@ -121,7 +120,7 @@ class AccountBankStatement(models.Model):
             name = ''
             if stmt.journal_id:
                 name = stmt.journal_id.code + ' '
-            stmt.name = name +_("Statement %(date)s", date=stmt.date or fields.Date.to_date(stmt.create_date))
+            stmt.name = name +self.env._("Statement %(date)s", date=stmt.date or fields.Date.to_date(stmt.create_date))
 
     @api.depends('line_ids.internal_index', 'line_ids.state')
     def _compute_first_line_index(self):
@@ -211,9 +210,9 @@ class AccountBankStatement(models.Model):
         for stmt in self:
             description = None
             if not stmt.is_valid:
-                description = _("The starting balance doesn't match the ending balance of the previous statement, or an earlier statement is missing.")
+                description = self.env._("The starting balance doesn't match the ending balance of the previous statement, or an earlier statement is missing.")
             elif not stmt.is_complete:
-                description = _("The running balance (%s) doesn't match the specified ending balance.", formatLang(self.env, stmt.balance_end, currency_obj=stmt.currency_id))
+                description = self.env._("The running balance (%s) doesn't match the specified ending balance.", formatLang(self.env, stmt.balance_end, currency_obj=stmt.currency_id))
             stmt.problem_description = description
 
     def _search_is_valid(self, operator, value):
@@ -316,7 +315,7 @@ class AccountBankStatement(models.Model):
         elif context_st_line_id and len(active_ids) > 1:
             lines = self.env['account.bank.statement.line'].browse(active_ids).sorted()
             if len(lines.journal_id) > 1:
-                raise UserError(_("A statement should only contain lines from the same journal."))
+                raise UserError(self.env._("A statement should only contain lines from the same journal."))
             # Check that the selected lines are contiguous (there might be canceled lines between the indexes and these should be ignored from the check)
             indexes = lines.mapped('internal_index')
             lines_between = self.env['account.bank.statement.line'].search([
@@ -326,7 +325,7 @@ class AccountBankStatement(models.Model):
             ])
             canceled_lines = lines_between.filtered(lambda l: l.state == 'cancel')
             if len(lines) != len(lines_between - canceled_lines):
-                raise UserError(_("Unable to create a statement due to missing transactions. You may want to reorder the transactions before proceeding."))
+                raise UserError(self.env._("Unable to create a statement due to missing transactions. You may want to reorder the transactions before proceeding."))
             lines |= canceled_lines
 
         if lines:

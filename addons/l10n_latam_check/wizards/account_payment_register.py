@@ -1,4 +1,4 @@
-from odoo import models, fields, api, Command, _
+from odoo import models, fields, api, Command
 from odoo.exceptions import ValidationError
 
 
@@ -54,7 +54,7 @@ class AccountPaymentRegister(models.TransientModel):
         if self._is_latam_check_payment(check_subtype="move_check"):
             latam_check_currencies = self.l10n_latam_move_check_ids.mapped("currency_id")
             if latam_check_currencies and (len(latam_check_currencies) > 1 or latam_check_currencies != self.currency_id):
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "You can't mix checks of different currencies in one payment, "
                     "and you can't change the payment's currency if checks are already created in that currency.\n"
                     "Please create separate payments for each currency."

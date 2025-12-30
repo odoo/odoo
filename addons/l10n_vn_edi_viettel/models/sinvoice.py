@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -112,7 +112,7 @@ class L10n_Vn_Edi_ViettelSinvoiceSymbol(models.Model):
 
         for record in self:
             if invoices_per_symbol[record.id] > 0:
-                raise UserError(_('You cannot change the symbol value or template of the symbol %s because it has '
+                raise UserError(self.env._('You cannot change the symbol value or template of the symbol %s because it has '
                                   'already been used to send invoices.', record.name))
 
     @api.depends('name', 'invoice_template_id')

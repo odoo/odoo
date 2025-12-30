@@ -6,7 +6,7 @@ import requests
 from lxml import etree
 from stdnum import get_cc_module, ean
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin
 from odoo.addons.account.models.company import PEPPOL_LIST
@@ -168,12 +168,12 @@ class ResCompany(models.Model):
     @api.model
     def _check_phonenumbers_import(self):
         if not phonenumbers:
-            raise ValidationError(_("Please install the phonenumbers library."))
+            raise ValidationError(self.env._("Please install the phonenumbers library."))
 
     def _sanitize_peppol_phone_number(self, phone_number=None):
         self.ensure_one()
 
-        error_message = _(
+        error_message = self.env._(
             "Please enter the mobile number in the correct international format.\n"
             "For example: +32123456789, where +32 is the country code.\n"
             "Currently, only European countries are supported.")
@@ -218,13 +218,13 @@ class ResCompany(models.Model):
             if not company.peppol_endpoint:
                 continue
             if not company._check_peppol_endpoint_number(PEPPOL_ENDPOINT_RULES):
-                raise ValidationError(_("The Peppol endpoint identification number is not correct."))
+                raise ValidationError(self.env._("The Peppol endpoint identification number is not correct."))
 
     @api.constrains('peppol_purchase_journal_id')
     def _check_peppol_purchase_journal_id(self):
         for company in self:
             if company.peppol_purchase_journal_id and company.peppol_purchase_journal_id.type != 'purchase':
-                raise ValidationError(_("A purchase journal must be used to receive Peppol documents."))
+                raise ValidationError(self.env._("A purchase journal must be used to receive Peppol documents."))
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -426,12 +426,12 @@ class ResCompany(models.Model):
             (participant_info := self.partner_id._peppol_lookup_participant(edi_identification)) is not None
             and (is_company_on_peppol := self.partner_id._check_peppol_participant_exists(participant_info, edi_identification))
         ):
-            error_msg = _(
+            error_msg = self.env._(
                 "A participant with these details has already been registered on the network. "
                 "If you have previously registered to a Peppol service, please deregister."
             )
             if (external_provider := _get_peppol_provider(participant_info)) and "Odoo" not in external_provider:
-                error_msg += _("The Peppol service that is used is %s.", external_provider)
+                error_msg += self.env._("The Peppol service that is used is %s.", external_provider)
         return {
             'is_on_peppol': is_company_on_peppol,
             'external_provider': external_provider,

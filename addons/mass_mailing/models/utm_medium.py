@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 
 from odoo.exceptions import UserError
 
@@ -17,7 +17,7 @@ class UtmMedium(models.Model):
         ])
 
         if linked_mailings:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "You cannot delete these UTM Mediums as they are linked to the following mailings in "
                 "Mass Mailing:\n%(mailing_names)s",
                 mailing_names=', '.join(['"%s"' % subject for subject in linked_mailings.mapped('subject')])))

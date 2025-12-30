@@ -5,7 +5,7 @@ import itertools
 import re
 import json
 
-from odoo import api, fields, models, _, Command
+from odoo import api, fields, models, Command
 from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.models import Query, TableSQL
@@ -29,7 +29,7 @@ class AccountAccount(models.Model):
     def _check_reconcile(self):
         for account in self:
             if account.account_type in ('asset_receivable', 'liability_payable') and not account.reconcile:
-                raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)', account.code))
+                raise ValidationError(self.env._('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)', account.code))
 
     name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True, translate=True)
     description = fields.Text(translate=True)
@@ -134,9 +134,9 @@ class AccountAccount(models.Model):
         for record in self:
             if record.account_type == 'off_balance':
                 if record.reconcile:
-                    raise UserError(_('An Off-Balance account can not be reconcilable'))
+                    raise UserError(self.env._('An Off-Balance account can not be reconcilable'))
                 if record.tax_ids:
-                    raise UserError(_('An Off-Balance account can not have taxes'))
+                    raise UserError(self.env._('An Off-Balance account can not have taxes'))
 
     @api.constrains('currency_id')
     def _check_journal_consistency(self):
@@ -205,7 +205,7 @@ class AccountAccount(models.Model):
         if res:
             account = self.env['account.account'].browse(res[0])
             journal = self.env['account.journal'].browse(res[1])
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 "The foreign currency set on the journal '%(journal)s' and the account '%(account)s' must be the same.",
                 journal=journal.display_name,
                 account=account.display_name
@@ -221,7 +221,7 @@ class AccountAccount(models.Model):
                 ),
             )
         if self.filtered(lambda a: a.account_type == 'asset_cash' and len(a.company_ids) > 1):
-            raise ValidationError(_("Bank & Cash accounts cannot be shared between companies."))
+            raise ValidationError(self.env._("Bank & Cash accounts cannot be shared between companies."))
 
         # Need to invalidate the sudo cache as we might have just written on `company_ids`
         self.invalidate_recordset(fnames=['company_ids'])
@@ -230,7 +230,7 @@ class AccountAccount(models.Model):
                 ('account_id', 'in', accounts.ids),
                 '!', ('company_id', 'child_of', companies.ids)
             ], limit=1):
-                raise UserError(_("You can't unlink this company from this account since there are some journal items linked to it."))
+                raise UserError(self.env._("You can't unlink this company from this account since there are some journal items linked to it."))
 
     @api.constrains('account_type')
     def _check_account_type_sales_purchase_journal(self):
@@ -250,7 +250,7 @@ class AccountAccount(models.Model):
         ''', [tuple(self.ids)])
 
         if self.env.cr.fetchone():
-            raise ValidationError(_("The account is already in use in a 'sale' or 'purchase' journal. This means that the account's type couldn't be 'receivable' or 'payable'."))
+            raise ValidationError(self.env._("The account is already in use in a 'sale' or 'purchase' journal. This means that the account's type couldn't be 'receivable' or 'payable'."))
 
     @api.constrains('reconcile')
     def _check_used_as_journal_default_debit_credit_account(self):
@@ -268,7 +268,7 @@ class AccountAccount(models.Model):
             id_ for id_, in self.env.execute_query(query.select(SQL("DISTINCT %s", journal_t.id))))
 
         if journals:
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 "This account is configured in %(journal_names)s journal(s) (ids %(journal_ids)s) as payment debit or credit account. This means that this account's type should be reconcilable.",
                 journal_names=journals.mapped('display_name'),
                 journal_ids=journals.ids
@@ -278,7 +278,7 @@ class AccountAccount(models.Model):
     def _check_account_code(self):
         for account in self:
             if account.code and not re.match(ACCOUNT_CODE_REGEX, account.code):
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "The account code can only contain alphanumeric characters and dots."
                 ))
 
@@ -296,7 +296,7 @@ class AccountAccount(models.Model):
         ''', [tuple(self.ids)])
 
         if self.env.cr.fetchone():
-            raise ValidationError(_("You cannot change the type of an account set as Bank Account on a journal to Receivable or Payable."))
+            raise ValidationError(self.env._("You cannot change the type of an account set as Bank Account on a journal to Receivable or Payable."))
 
     @api.depends_context('company')
     @api.depends('code_store')
@@ -549,7 +549,7 @@ class AccountAccount(models.Model):
             if code_is_available(new_code := f'{start_code}.copy{num and num + 1 or ""}'):
                 return new_code
 
-        raise UserError(_('Cannot generate an unused account code.'))
+        raise UserError(self.env._('Cannot generate an unused account code.'))
 
     @api.depends_context('company')
     def _compute_current_balance(self):
@@ -906,8 +906,8 @@ class AccountAccount(models.Model):
             if formatted_display_name and account.code:
                 account.display_name = (
                     f"""{account.code if self.env.user.has_group('account.group_account_readonly') else ''} {account.name}"""
-                    f"""{f' `{_("Suggested")}`' if account.id in preferred_account_ids else ''}"""
-                    f"""{f' `{_("Asset")}`' if account._should_display_asset_tag() else ''}"""
+                    f"""{f' `{self.env._("Suggested")}`' if account.id in preferred_account_ids else ''}"""
+                    f"""{f' `{self.env._("Asset")}`' if account._should_display_asset_tag() else ''}"""
                     f"""{f'{new_line}--{account.description}--' if account.description else ''}"""
                 )
             else:
@@ -998,7 +998,7 @@ class AccountAccount(models.Model):
             ('matched_credit_ids', '!=', False),
         ])
         if partial_lines_count > 0:
-            raise UserError(_('You cannot switch an account to prevent the reconciliation '
+            raise UserError(self.env._('You cannot switch an account to prevent the reconciliation '
                               'if some partial reconciliations are still pending.'))
 
         self.env['account.move.line'].invalidate_model(['amount_residual', 'amount_residual_currency'])
@@ -1019,7 +1019,7 @@ class AccountAccount(models.Model):
             code, name = self._split_code_name(name)
             record = self.create({'code': code, 'name': name})
             return record.id, record.display_name
-        raise ValidationError(_("Please create new accounts from the Chart of Accounts menu."))
+        raise ValidationError(self.env._("Please create new accounts from the Chart of Accounts menu."))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1073,10 +1073,10 @@ class AccountAccount(models.Model):
         if vals.get('currency_id'):
             for account in self:
                 if self.env['account.move.line'].search_count([('account_id', '=', account.id), ('currency_id', 'not in', (False, vals['currency_id']))]):
-                    raise UserError(_('You cannot set a currency on this account as it already has some journal entries having a different foreign currency.'))
+                    raise UserError(self.env._('You cannot set a currency on this account as it already has some journal entries having a different foreign currency.'))
 
         if vals.get('deprecated') and self.env["account.tax.repartition.line"].search_count([('account_id', 'in', self.ids)], limit=1):
-            raise UserError(_("You cannot deprecate an account that is used in a tax distribution."))
+            raise UserError(self.env._("You cannot deprecate an account that is used in a tax distribution."))
 
         res = super(AccountAccount, self.with_context(defer_account_code_checks=True, prefetch_fields=not any(field in vals for field in ['code', 'account_type']))).write(vals)
 
@@ -1104,7 +1104,7 @@ class AccountAccount(models.Model):
         for account in self.sudo():
             for company in account.company_ids.root_id:
                 if not account.with_company(company).code:
-                    raise ValidationError(_("The code must be set for every company to which this account belongs."))
+                    raise ValidationError(self.env._("The code must be set for every company to which this account belongs."))
 
         # Check 2: Check that no child or parent companies have an account with the same code.
 
@@ -1138,7 +1138,7 @@ class AccountAccount(models.Model):
                 duplicate_codes = duplicates.mapped('code')
             if duplicate_codes:
                 raise ValidationError(
-                    _("Account codes must be unique. You can't create accounts with these duplicate codes: %s", ", ".join(duplicate_codes))
+                    self.env._("Account codes must be unique. You can't create accounts with these duplicate codes: %s", ", ".join(duplicate_codes))
                 )
 
     def _load_records_write(self, values):
@@ -1150,17 +1150,17 @@ class AccountAccount(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_contains_journal_items(self):
         if self.env['account.move.line'].sudo().search_count([('account_id', 'in', self.ids)], limit=1):
-            raise UserError(_('You cannot perform this action on an account that contains journal items.'))
+            raise UserError(self.env._('You cannot perform this action on an account that contains journal items.'))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_to_fiscal_position(self):
         if self.env['account.fiscal.position.account'].search_count(['|', ('account_src_id', 'in', self.ids), ('account_dest_id', 'in', self.ids)], limit=1):
-            raise UserError(_('You cannot remove/deactivate the accounts "%s" which are set on the account mapping of a fiscal position.', ', '.join(f"{a.code} - {a.name}" for a in self)))
+            raise UserError(self.env._('You cannot remove/deactivate the accounts "%s" which are set on the account mapping of a fiscal position.', ', '.join(f"{a.code} - {a.name}" for a in self)))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_to_tax_repartition_line(self):
         if self.env['account.tax.repartition.line'].search_count([('account_id', 'in', self.ids)], limit=1):
-            raise UserError(_('You cannot remove/deactivate the accounts "%s" which are set on a tax repartition line.', ', '.join(f"{a.code} - {a.name}" for a in self)))
+            raise UserError(self.env._('You cannot remove/deactivate the accounts "%s" which are set on a tax repartition line.', ', '.join(f"{a.code} - {a.name}" for a in self)))
 
     def action_open_related_taxes(self):
         related_taxes_ids = self.env['account.tax'].search([
@@ -1168,7 +1168,7 @@ class AccountAccount(models.Model):
         ]).ids
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Taxes'),
+            'name': self.env._('Taxes'),
             'res_model': 'account.tax',
             'views': [[False, 'list'], [False, 'form']],
             'domain': [('id', 'in', related_taxes_ids)],
@@ -1177,12 +1177,12 @@ class AccountAccount(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Chart of Accounts'),
+            'label': self.env._('Import Template for Chart of Accounts'),
             'template': '/account/static/xls/coa_import_template.xlsx'
         }]
 
     def _merge_method(self, destination, source):
-        raise UserError(_("You cannot merge accounts."))
+        raise UserError(self.env._("You cannot merge accounts."))
 
     def action_unmerge(self):
         """ Split the account `self` into several accounts, one per company.
@@ -1206,13 +1206,13 @@ class AccountAccount(models.Model):
         self.check_access('write')
 
         if forbidden_companies := (self.sudo().company_ids - self.env.user.company_ids):
-            raise UserError(_(
+            raise UserError(self.env._(
                 "You do not have the right to perform this operation as you do not have access to the following companies: %s.",
                 ", ".join(c.name for c in forbidden_companies)
             ))
         for account in self:
             if len(account.company_ids) == 1:
-                raise UserError(_(
+                raise UserError(self.env._(
                     "Account %s cannot be unmerged as it already belongs to a single company. "
                     "The unmerge operation only splits an account based on its companies.",
                     account.display_name,
@@ -1223,16 +1223,16 @@ class AccountAccount(models.Model):
         if self.env.context.get('account_unmerge_confirm'):
             return
 
-        msg = _("Are you sure? This will perform the following operations:\n")
+        msg = self.env._("Are you sure? This will perform the following operations:\n")
         for account in self:
-            msg += _(
+            msg += self.env._(
                 "Account %(account)s will be split in %(num_accounts)s, one for each company:\n",
                 account=account.display_name,
                 num_accounts=len(account.company_ids),
             )
             msg += ''.join(f'    - {company.name}: {account.with_company(company).display_name}\n' for company in account.company_ids)
             action = self.env['ir.actions.actions']._for_xml_id('account.action_unmerge_accounts')
-        raise RedirectWarning(msg, action, _("Unmerge"), additional_context={**self.env.context, 'account_unmerge_confirm': True})
+        raise RedirectWarning(msg, action, self.env._("Unmerge"), additional_context={**self.env.context, 'account_unmerge_confirm': True})
 
     def _action_unmerge(self):
         """ Unmerge `self` into one account per company in `self.company_ids`.
@@ -1497,7 +1497,7 @@ class AccountAccount(models.Model):
         self.write(write_vals)
 
         # Step 5: Put a log in the chatter of the newly-created accounts
-        msg_body = _(
+        msg_body = self.env._(
             "This account was split off from %(account_name)s (%(company_name)s).",
             account_name=self._get_html_link(title=self.display_name),
             company_name=base_company.name,
@@ -1578,7 +1578,7 @@ class AccountGroup(models.Model):
         self.env.cr.execute(query, {'ids': tuple(self.ids)})
         res = self.env.cr.fetchall()
         if res:
-            raise ValidationError(_('Account Groups with the same granularity can\'t overlap'))
+            raise ValidationError(self.env._('Account Groups with the same granularity can\'t overlap'))
 
     def _sanitize_vals(self, vals):
         if vals.get('code_prefix_start') and 'code_prefix_end' in vals and not vals['code_prefix_end']:
@@ -1590,7 +1590,7 @@ class AccountGroup(models.Model):
     @api.constrains('parent_id')
     def _check_parent_not_circular(self):
         if self._has_cycle():
-            raise ValidationError(_("You cannot create recursive groups."))
+            raise ValidationError(self.env._("You cannot create recursive groups."))
 
     @api.model_create_multi
     def create(self, vals_list):

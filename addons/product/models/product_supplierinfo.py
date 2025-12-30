@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class ProductSupplierinfo(models.Model):
@@ -96,7 +96,7 @@ class ProductSupplierinfo(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Vendor Pricelists'),
+            'label': self.env._('Import Template for Vendor Pricelists'),
             'template': '/product/static/xls/product_supplierinfo.xls'
         }]
 

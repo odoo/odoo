@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.fields import Command
 
 
@@ -40,8 +40,8 @@ class ProductProduct(models.Model):
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'title': _("Successfully updated print images."),
-                'message': _("Missing images have been successfully created."),
+                'title': self.env._("Successfully updated print images."),
+                'message': self.env._("Missing images have been successfully created."),
                 'sticky': False,
                 'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
             },

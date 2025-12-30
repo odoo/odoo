@@ -3,7 +3,7 @@
 import base64
 import json
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools.urls import urljoin
 
 from odoo.addons.payment import utils as payment_utils
@@ -154,10 +154,10 @@ class PaymentTransaction(models.Model):
         elif status_code in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         elif status_code in const.PAYMENT_STATUS_MAPPING['error']:
-            self._set_error(_(
+            self._set_error(self.env._(
                 "An error occurred during the processing of your payment (%s). Please try again.",
                 payment_data.get('Ds_ErrorCode'),
             ))
         else:
             _logger.warning("Received invalid payment status (%s).", status_code)
-            self._set_error(_("Unknown status code: %s", status_code))
+            self._set_error(self.env._("Unknown status code: %s", status_code))

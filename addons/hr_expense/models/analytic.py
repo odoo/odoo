@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.tools import SQL
 from odoo.exceptions import UserError
 
@@ -42,4 +42,4 @@ class AccountAnalyticAccount(models.Model):
         )
         expense_ids = self.env.cr.fetchall()
         if expense_ids:
-            raise UserError(_("You cannot delete an analytic account that is used in an expense."))
+            raise UserError(self.env._("You cannot delete an analytic account that is used in an expense."))

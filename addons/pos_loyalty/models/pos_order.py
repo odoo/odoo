@@ -4,7 +4,7 @@
 from collections import defaultdict
 from markupsafe import Markup
 
-from odoo import _, models
+from odoo import models
 from odoo.tools import float_compare
 import base64
 
@@ -27,7 +27,7 @@ class PosOrder(models.Model):
             return {
                 'successful': False,
                 'payload': {
-                    'message': _('Some coupons are invalid. The applied coupons have been updated. Please check the order.'),
+                    'message': self.env._('Some coupons are invalid. The applied coupons have been updated. Please check the order.'),
                     'removed_coupons': list(coupon_difference),
                 }
             }
@@ -36,7 +36,7 @@ class PosOrder(models.Model):
                 return {
                     'successful': False,
                     'payload': {
-                        'message': _('There are not enough points for the coupon: %s.', coupon.code),
+                        'message': self.env._('There are not enough points for the coupon: %s.', coupon.code),
                         'updated_points': {c.id: c.points for c in coupons}
                     }
                 }
@@ -46,7 +46,7 @@ class PosOrder(models.Model):
             return {
                 'successful': False,
                 'payload': {
-                    'message': _('The following codes already exist in the database, perhaps they were already sold?\n%s',
+                    'message': self.env._('The following codes already exist in the database, perhaps they were already sold?\n%s',
                         ', '.join(coupons.mapped('code'))),
                 }
             }
@@ -69,7 +69,7 @@ class PosOrder(models.Model):
                     'card_id': card_id,
                     'order_model': self._name,
                     'order_id': self.id,
-                    'description': _('Onsite %s', self.display_name),
+                    'description': self.env._('Onsite %s', self.display_name),
                     'used': cost,
                     'issued': issued,
                 })
@@ -203,7 +203,7 @@ class PosOrder(models.Model):
                     gift_card.partner_id = self.partner_id
                     gift_card.history_ids.create({
                         'card_id': gift_card.id,
-                        'description': _('Assigning partner %s', self.partner_id.name),
+                        'description': self.env._('Assigning partner %s', self.partner_id.name),
                         'used': 0,
                         'issued': gift_card.points,
                     })
@@ -215,7 +215,7 @@ class PosOrder(models.Model):
                         'card_id': gift_card.id,
                         'order_model': self._name,
                         'order_id': self.id,
-                        'description': _('Assigning order %s', self.display_name),
+                        'description': self.env._('Assigning order %s', self.display_name),
                         'used': 0,
                         'issued': gift_card.points,
                     })
@@ -229,7 +229,7 @@ class PosOrder(models.Model):
                         'card_id': gift_card.id,
                         'order_model': self._name,
                         'order_id': self.id,
-                        'description': _('Onsite %s', self.display_name),
+                        'description': self.env._('Onsite %s', self.display_name),
                         'used': -coupon_vals['points'] if coupon_vals['points'] < 0 else 0,
                         'issued': coupon_vals['points'] if coupon_vals['points'] > 0 else 0,
                     })
@@ -251,7 +251,7 @@ class PosOrder(models.Model):
                 <i class='o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600'/>
                 <span class='o-mail-Message-trackingNew text-info fw-bold'>{order_name}</span>
             """
-        ).format(message=_('Loyalty coupon sold'), order_name=self._get_html_link())
+        ).format(message=self.env._('Loyalty coupon sold'), order_name=self._get_html_link())
         for gift_card in gift_cards:
             gift_card.message_post(body=body)
 

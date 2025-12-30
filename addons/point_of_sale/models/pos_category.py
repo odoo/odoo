@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from typing import List, Tuple
+from typing import List
 import random
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError, UserError
 
 
@@ -17,7 +17,7 @@ class PosCategory(models.Model):
     @api.constrains('parent_id')
     def _check_category_recursion(self):
         if self._has_cycle():
-            raise ValidationError(_('Error! You cannot create recursive categories.'))
+            raise ValidationError(self.env._('Error! You cannot create recursive categories.'))
 
     def get_default_color(self):
         return random.randint(0, 10)
@@ -61,7 +61,7 @@ class PosCategory(models.Model):
     def _unlink_except_session_open(self):
         if self.search_count([('id', 'in', self.ids)]):
             if self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
-                raise UserError(_('You cannot delete a point of sale category while a session is still opened.'))
+                raise UserError(self.env._('You cannot delete a point of sale category while a session is still opened.'))
 
     @api.depends('has_image')
     def _compute_has_image(self):
@@ -79,8 +79,8 @@ class PosCategory(models.Model):
     def _check_hour(self):
         for category in self:
             if category.hour_until and not (0.0 <= category.hour_until <= 24.0):
-                raise ValidationError(_('The Availability Until must be set between 00:00 and 24:00'))
+                raise ValidationError(self.env._('The Availability Until must be set between 00:00 and 24:00'))
             if category.hour_after and not (0.0 <= category.hour_after <= 24.0):
-                raise ValidationError(_('The Availability After must be set between 00:00 and 24:00'))
+                raise ValidationError(self.env._('The Availability After must be set between 00:00 and 24:00'))
             if category.hour_until and category.hour_after and category.hour_until < category.hour_after:
-                raise ValidationError(_('The Availability Until must be greater than Availability After.'))
+                raise ValidationError(self.env._('The Availability Until must be greater than Availability After.'))

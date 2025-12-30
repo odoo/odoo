@@ -2,7 +2,7 @@
 
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import single_email_re
 
@@ -18,13 +18,13 @@ class ResPartnerBank(models.Model):
         auto_mobn_re = re.compile(r"^[+]\d{1,3}-\d{6,12}$")
         for bank in self.filtered(lambda b: b.country_code == 'HK'):
             if bank.proxy_type not in ['id', 'mobile', 'email', 'none', False]:
-                raise ValidationError(_("The FPS Type must be either ID, Mobile or Email to generate a FPS QR code for account number %s.", bank.account_number))
+                raise ValidationError(self.env._("The FPS Type must be either ID, Mobile or Email to generate a FPS QR code for account number %s.", bank.account_number))
             if bank.proxy_type == 'id' and (not bank.proxy_value or len(bank.proxy_value) not in [7, 9]):
-                raise ValidationError(_("Invalid FPS ID! Please enter a valid FPS ID with length 7 or 9 for account number %s.", bank.account_number))
+                raise ValidationError(self.env._("Invalid FPS ID! Please enter a valid FPS ID with length 7 or 9 for account number %s.", bank.account_number))
             if bank.proxy_type == 'mobile' and (not bank.proxy_value or not auto_mobn_re.match(bank.proxy_value)):
-                raise ValidationError(_("Invalid Mobile! Please enter a valid mobile number with format +852-67891234 for account number %s.", bank.account_number))
+                raise ValidationError(self.env._("Invalid Mobile! Please enter a valid mobile number with format +852-67891234 for account number %s.", bank.account_number))
             if bank.proxy_type == 'email' and (not bank.proxy_value or not single_email_re.match(bank.proxy_value)):
-                raise ValidationError(_("Invalid Email! Please enter a valid email address for account number %s.", bank.account_number))
+                raise ValidationError(self.env._("Invalid Email! Please enter a valid email address for account number %s.", bank.account_number))
 
     @api.depends('country_code')
     def _compute_country_proxy_keys(self):
@@ -64,13 +64,13 @@ class ResPartnerBank(models.Model):
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         if qr_method == 'emv_qr' and self.country_code == 'HK':
             if currency.name not in ['HKD', 'CNY']:
-                return _("Can't generate a FPS QR code with a currency other than HKD or CNY.")
+                return self.env._("Can't generate a FPS QR code with a currency other than HKD or CNY.")
             return None
 
         return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)
 
     def _check_for_qr_code_errors(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'emv_qr' and self.country_code == 'HK' and self.proxy_type not in ['id', 'mobile', 'email']:
-            return _("The FPS Type must be either ID, Mobile or Email to generate a FPS QR code.")
+            return self.env._("The FPS Type must be either ID, Mobile or Email to generate a FPS QR code.")
 
         return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)

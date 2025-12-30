@@ -2,7 +2,7 @@
 
 from datetime import timedelta
 
-from odoo import _, models
+from odoo import models
 
 
 class HrDepartureWizard(models.TransientModel):
@@ -24,7 +24,7 @@ class HrDepartureWizard(models.TransientModel):
                 split_date_from=(self.departure_date + timedelta(days=1)))
             # Post message for changes leaves
             changes_leaves = leaves_with_departure.filtered(lambda leave: leave.date_to.date() <= self.departure_date)
-            changes_msg = _('End date has been updated because '
+            changes_msg = self.env._('End date has been updated because '
                 'the employee will leave the company on %(departure_date)s.',
                 departure_date=self.departure_date
             )
@@ -35,7 +35,7 @@ class HrDepartureWizard(models.TransientModel):
             leaves_after_departure |= leaves_with_departure - changes_leaves
             leaves_after_departure |= new_leaves
             leaves_to_cancel = leaves_after_departure.filtered(lambda leave: leave.state in ['validate', 'validate1'])
-            cancel_msg = _('The employee will leave the company on %(departure_date)s.',
+            cancel_msg = self.env._('The employee will leave the company on %(departure_date)s.',
                 departure_date=self.departure_date)
             leaves_to_cancel._force_cancel(cancel_msg, notify_responsibles=False)
             # Delete others leaves
@@ -52,7 +52,7 @@ class HrDepartureWizard(models.TransientModel):
             return action
         to_delete = self.env['hr.leave.allocation']
         to_modify = self.env['hr.leave.allocation']
-        allocation_msg = _('Validity End date has been updated because '
+        allocation_msg = self.env._('Validity End date has been updated because '
             'the employee will leave the company on %(departure_date)s.',
             departure_date=self.departure_date
         )

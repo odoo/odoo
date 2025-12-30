@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models, api, _
+from odoo import fields, models, api
 from odoo.exceptions import UserError, ValidationError
 import stdnum.ar
 import re
@@ -98,7 +98,7 @@ class ResPartner(models.Model):
         This method can be used to validate is the VAT is proper defined in the partner """
         self.ensure_one()
         if not self.l10n_ar_vat:
-            raise UserError(_('No VAT configured for partner [%i] %s', self.id, self.name))
+            raise UserError(self.env._('No VAT configured for partner [%i] %s', self.id, self.name))
         return self.l10n_ar_vat
 
     def _get_frontend_writable_fields(self):
@@ -127,15 +127,15 @@ class ResPartner(models.Model):
             try:
                 module.validate(rec.vat)
             except module.InvalidChecksum:
-                raise ValidationError(_('The validation digit is not valid for "%s"',
+                raise ValidationError(self.env._('The validation digit is not valid for "%s"',
                                         rec.l10n_latam_identification_type_id.name))
             except module.InvalidLength:
-                raise ValidationError(_('Invalid length for "%s"', rec.l10n_latam_identification_type_id.name))
+                raise ValidationError(self.env._('Invalid length for "%s"', rec.l10n_latam_identification_type_id.name))
             except module.InvalidFormat:
-                raise ValidationError(_('Only numbers allowed for "%s"', rec.l10n_latam_identification_type_id.name))
+                raise ValidationError(self.env._('Only numbers allowed for "%s"', rec.l10n_latam_identification_type_id.name))
             except module.InvalidComponent:
                 valid_cuit = ('20', '23', '24', '27', '30', '33', '34', '50', '51', '55')
-                raise ValidationError(_('CUIT number must be prefixed with one of the following: %s', ', '.join(valid_cuit)))
+                raise ValidationError(self.env._('CUIT number must be prefixed with one of the following: %s', ', '.join(valid_cuit)))
             except Exception as error:
                 raise ValidationError(repr(error))
 

@@ -1,4 +1,4 @@
-from odoo import fields, models, _
+from odoo import fields, models
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
 
@@ -34,20 +34,20 @@ class ResConfigSettings(models.TransientModel):
                 if self.env.company.vat == nilvera_registered_tax_number:
                     self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
                         'type': 'success',
-                        'message': _("Nilvera connection successful!"),
+                        'message': self.env._("Nilvera connection successful!"),
                     })
                 else:
                     self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
                         'type': 'success',
-                        'message': _("Nilvera connection successful but the tax number on Nilvera and Odoo doesn't match. Check Nilvera."),
+                        'message': self.env._("Nilvera connection successful but the tax number on Nilvera and Odoo doesn't match. Check Nilvera."),
                     })
             elif response.status_code == 401:
                 self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
                     'type': 'danger',
-                    'message': _("Nilvera connection was unsuccessful, check the API key."),
+                    'message': self.env._("Nilvera connection was unsuccessful, check the API key."),
                 })
             else:
                 self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
                     'type': 'danger',
-                    'message': _("An error occurred. Try again later."),
+                    'message': self.env._("An error occurred. Try again later."),
                 })

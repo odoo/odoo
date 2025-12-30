@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.website.models import ir_http
@@ -48,7 +48,7 @@ class ProductPricelist(models.Model):
         """
         for record in self.filtered(lambda pl: pl.website_id and pl.company_id):
             if record.website_id.company_id != record.company_id:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "Only the company's websites are allowed."
                     "\nLeave the Company field empty or select a website from that company."
                 ))

@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import AccessError
 
 
@@ -11,7 +11,7 @@ class PropertiesBaseDefinition(models.Model):
         model = self.env[model_name]
         model.check_access("read")
         if model._fields[field_name].type != "properties":
-            raise AccessError(_("You can not read that field definition."))
+            raise AccessError(self.env._("You can not read that field definition."))
         return self.sudo().web_search_read(
             [
                 ["properties_field_id.name", "=", field_name],

@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, convert, email_normalize, format_date, format_time
@@ -516,7 +516,7 @@ class HrEmployee(models.Model):
     def _get_first_version_date(self, no_gap=True):
         self.ensure_one()
         if not self.env.su and not self.env.user.has_group("hr.group_hr_user"):
-            raise AccessError(_("Only HR users can access first version date on an employee."))
+            raise AccessError(self.env._("Only HR users can access first version date on an employee."))
 
         def remove_gap(versions):
             # We do not consider a gap of more than 4 days to be a same occupation
@@ -892,7 +892,7 @@ class HrEmployee(models.Model):
 
     def _create_work_contacts(self):
         if any(employee.work_contact_id for employee in self):
-            raise UserError(_('Some employee already have a work contact'))
+            raise UserError(self.env._('Some employee already have a work contact'))
         work_contacts = self.env['res.partner'].create([{
             'email': employee.work_email,
             'phone': employee.work_phone,
@@ -1093,7 +1093,7 @@ class HrEmployee(models.Model):
     def action_related_contacts(self):
         related_partners = self._get_related_partners()
         action = {
-            'name': _("Related Contacts"),
+            'name': self.env._("Related Contacts"),
             'type': 'ir.actions.act_window',
             'res_model': 'res.partner',
             'view_mode': 'form',
@@ -1109,9 +1109,9 @@ class HrEmployee(models.Model):
     def action_create_user(self):
         self.ensure_one()
         if self.user_id:
-            raise ValidationError(_("This employee already has an user."))
+            raise ValidationError(self.env._("This employee already has an user."))
         return {
-            'name': _('Create User'),
+            'name': self.env._('Create User'),
             'type': 'ir.actions.act_window',
             'res_model': 'res.users',
             'view_mode': 'form',
@@ -1130,10 +1130,10 @@ class HrEmployee(models.Model):
 
     def action_create_users_confirmation(self):
         raise RedirectWarning(
-                message=_("You're about to invite new users. %s users will be created with the default user template's rights. "
+                message=self.env._("You're about to invite new users. %s users will be created with the default user template's rights. "
                 "Adding new users may increase your subscription cost. Do you wish to continue?", len(self.ids)),
                 action=self.env.ref('hr.action_hr_employee_create_users').id,
-                button_text=_('Confirm'),
+                button_text=self.env._('Confirm'),
                 additional_context={
                     'selected_ids': self.ids,
                 },
@@ -1192,7 +1192,7 @@ class HrEmployee(models.Model):
         next_action = {'type': 'ir.actions.act_window_close'}
         if new_users:
             self.env['res.users'].create(new_users)
-            message = _('Users %s creation successful', ', '.join([user['name'] for user in new_users]))
+            message = self.env._('Users %s creation successful', ', '.join([user['name'] for user in new_users]))
             next_action = _get_user_creation_notification_action(message, 'success', {
                 "type": "ir.actions.client",
                 "tag": "soft_reload",
@@ -1200,19 +1200,19 @@ class HrEmployee(models.Model):
             })
 
         if old_users:
-            message = _('User already exists for Those Employees %s', ', '.join(old_users))
+            message = self.env._('User already exists for Those Employees %s', ', '.join(old_users))
             next_action = _get_user_creation_notification_action(message, 'warning', next_action)
 
         if users_without_emails:
-            message = _("You need to set the work email address for %s", ', '.join(users_without_emails))
+            message = self.env._("You need to set the work email address for %s", ', '.join(users_without_emails))
             next_action = _get_user_creation_notification_action(message, 'danger', next_action)
 
         if users_with_invalid_emails:
-            message = _("You need to set a valid work email address for %s", ', '.join(users_with_invalid_emails))
+            message = self.env._("You need to set a valid work email address for %s", ', '.join(users_with_invalid_emails))
             next_action = _get_user_creation_notification_action(message, 'danger', next_action)
 
         if users_with_existing_email:
-            message = _('User already exists with the same email for Employees %s', ', '.join(users_with_existing_email))
+            message = self.env._('User already exists with the same email for Employees %s', ', '.join(users_with_existing_email))
             next_action = _get_user_creation_notification_action(message, 'warning', next_action)
 
         return next_action
@@ -1279,7 +1279,7 @@ class HrEmployee(models.Model):
         public_fields = self.env['hr.employee.public']._fields
         private_fields = [fname for fname in field_names if fname not in public_fields]
         if private_fields:
-            raise AccessError(_('The fields “%s”, which you are trying to read, are not available for employee public profiles.', ','.join(private_fields)))
+            raise AccessError(self.env._('The fields “%s”, which you are trying to read, are not available for employee public profiles.', ','.join(private_fields)))
 
     def _copy_cache_from(self, public, field_names):
         # HACK: retrieve publicly available values from hr.employee.public and
@@ -1374,12 +1374,12 @@ class HrEmployee(models.Model):
         # returning public employee data would cause a traceback when building
         # the private employee xml view
         raise RedirectWarning(
-            message=_(
+            message=self.env._(
             """You are not allowed to access "Employee" (hr.employee) records.
     We can redirect you to the public employee list."""
             ),
             action=self.env.ref('hr.hr_employee_public_action').id,
-            button_text=_("Employees profile"),
+            button_text=self.env._("Employees profile"),
         )
 
     @api.model
@@ -1447,14 +1447,14 @@ class HrEmployee(models.Model):
     def _verify_pin(self):
         for employee in self:
             if employee.pin and not employee.pin.isdigit():
-                raise ValidationError(_("The PIN must be a sequence of digits."))
+                raise ValidationError(self.env._("The PIN must be a sequence of digits."))
 
     @api.constrains('barcode')
     def _verify_barcode(self):
         for employee in self:
             if employee.barcode:
                 if not (re.match(r'^[A-Za-z0-9]+$', employee.barcode) and len(employee.barcode) <= 18):
-                    raise ValidationError(_("The Badge ID must be alphanumeric without any accents and no longer than 18 characters."))
+                    raise ValidationError(self.env._("The Badge ID must be alphanumeric without any accents and no longer than 18 characters."))
 
     @api.onchange('user_id')
     def _onchange_user(self):
@@ -1615,7 +1615,7 @@ class HrEmployee(models.Model):
         for employee in employees:
             # Launch onboarding plans
             url = '/odoo/%s/action-hr.plan_wizard_action?active_model=hr.employee&menu_id=%s' % (employee.id, hr_root_menu.id)
-            onboarding_notes_bodies[employee.id] = Markup(_(
+            onboarding_notes_bodies[employee.id] = Markup(self.env._(
                 '<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>',
             )) % url
         employees._message_log_batch(onboarding_notes_bodies)
@@ -1647,7 +1647,7 @@ class HrEmployee(models.Model):
             ])._subscribe_users_automatically()
         if vals.get('departure_description'):
             for employee in self:
-                employee.message_post(body=_(
+                employee.message_post(body=self.env._(
                     'Additional Information: \n %(description)s',
                     description=vals.get('departure_description')))
         # Only one write call for all the fields from hr.version
@@ -1721,7 +1721,7 @@ class HrEmployee(models.Model):
             if len(archived_employees) == 1 and not self.env.context.get('no_wizard', False):
                 return {
                     'type': 'ir.actions.act_window',
-                    'name': _('Register Departure'),
+                    'name': self.env._('Register Departure'),
                     'res_model': 'hr.departure.wizard',
                     'view_mode': 'form',
                     'target': 'new',
@@ -1734,8 +1734,8 @@ class HrEmployee(models.Model):
     def _onchange_company_id(self):
         if self._origin:
             return {'warning': {
-                'title': _("Warning"),
-                'message': _("To avoid multi company issues (losing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead.")
+                'title': self.env._("Warning"),
+                'message': self.env._("To avoid multi company issues (losing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead.")
             }}
 
     def _load_scenario(self):
@@ -1961,7 +1961,7 @@ class HrEmployee(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Employees'),
+            'label': self.env._('Import Template for Employees'),
             'template': '/hr/static/xls/hr_employee.xls'
         }]
 

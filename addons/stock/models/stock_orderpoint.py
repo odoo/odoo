@@ -8,13 +8,13 @@ from zoneinfo import ZoneInfo
 from dateutil import relativedelta
 from psycopg2 import OperationalError
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.modules.registry import Registry
 from odoo.fields import Domain
 from odoo.sql_db import BaseCursor
-from odoo.tools import float_compare, float_is_zero, frozendict, split_every, format_date
+from odoo.tools import float_compare, frozendict, split_every, format_date
 
 _logger = logging.getLogger(__name__)
 
@@ -254,7 +254,7 @@ class StockWarehouseOrderpoint(models.Model):
     @api.constrains('product_min_qty', 'product_max_qty')
     def _check_min_max_qty(self):
         if any(orderpoint.product_min_qty > orderpoint.product_max_qty for orderpoint in self):
-            raise ValidationError(_('The minimum quantity must be less than or equal to the maximum quantity.'))
+            raise ValidationError(self.env._('The minimum quantity must be less than or equal to the maximum quantity.'))
 
     @api.depends('location_id', 'company_id')
     def _compute_warehouse_id(self):
@@ -296,17 +296,17 @@ class StockWarehouseOrderpoint(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         if any(val.get('snoozed_until', False) and val.get('trigger', self.default_get(['trigger'])['trigger']) == 'auto' for val in vals_list):
-            raise UserError(_("You can not create a snoozed orderpoint that is not manually triggered."))
+            raise UserError(self.env._("You can not create a snoozed orderpoint that is not manually triggered."))
         return super().create(vals_list)
 
     def write(self, vals):
         if 'company_id' in vals:
             for orderpoint in self:
                 if orderpoint.company_id.id != vals['company_id']:
-                    raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
+                    raise UserError(self.env._("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         if 'snoozed_until' in vals:
             if any(orderpoint.trigger == 'auto' for orderpoint in self):
-                raise UserError(_("You can only snooze manual orderpoints. You should rather archive 'auto-trigger' orderpoints if you do not want them to be triggered."))
+                raise UserError(self.env._("You can only snooze manual orderpoints. You should rather archive 'auto-trigger' orderpoints if you do not want them to be triggered."))
         return super().write(vals)
 
     def action_product_forecast_report(self):
@@ -330,7 +330,7 @@ class StockWarehouseOrderpoint(models.Model):
     def action_stock_replenishment_info(self):
         self.ensure_one()
         action = self.env['ir.actions.actions']._for_xml_id('stock.action_stock_replenishment_info')
-        action['name'] = _(
+        action['name'] = self.env._(
             'Replenishment Information for %(product)s in %(warehouse)s',
             product=self.product_id.display_name,
             warehouse=self.warehouse_id.display_name,
@@ -356,7 +356,7 @@ class StockWarehouseOrderpoint(models.Model):
                 'res_model': 'product.product',
                 'res_id': self.product_id.id,
                 'views': [(self.env.ref('product.product_normal_form_view').id, 'form')],
-            }, _('Edit Product'))
+            }, self.env._('Edit Product'))
         notification = False
         if len(self) == 1:
             notification = self.with_context(written_after=now)._get_replenishment_order_notification()
@@ -624,7 +624,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint_values = self.env['stock.warehouse.orderpoint']._get_orderpoint_values(product, location_id)
                 location = self.env['stock.location'].browse(location_id)
                 orderpoint_values.update({
-                    'name': _('Replenishment Report'),
+                    'name': self.env._('Replenishment Report'),
                     'warehouse_id': location.warehouse_id.id or self.env['stock.warehouse'].search([('company_id', '=', location.company_id.id)], limit=1).id,
                     'company_id': location.company_id.id,
                 })
@@ -659,7 +659,7 @@ class StockWarehouseOrderpoint(models.Model):
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
-                    'title': _('The inter-warehouse transfers have been generated'),
+                    'title': self.env._('The inter-warehouse transfers have been generated'),
                     'message': '%s',
                     'links': [{
                         'label': move.picking_id.name,

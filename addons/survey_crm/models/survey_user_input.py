@@ -1,6 +1,6 @@
 from markupsafe import Markup, escape
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class SurveyUser_Input(models.Model):
@@ -74,10 +74,10 @@ class SurveyUser_Input(models.Model):
         # Get the username (or the email if the user was imported from a spreadsheet)
         username = participant_name = self.partner_id.name or self.partner_id.email
         if not username:  # Public user
-            participant_name = input_lead_values['user_nickname'] or input_lead_values['public_user_mail'] or _('New')
+            participant_name = input_lead_values['user_nickname'] or input_lead_values['public_user_mail'] or self.env._('New')
         lead_contact_name = username or input_lead_values['user_nickname']
-        lead_title = _('%(participant_name)s %(category_name)s results',
-                       participant_name=participant_name, category_name=_('live session') if self.is_session_answer else _('survey'))
+        lead_title = self.env._('%(participant_name)s %(category_name)s results',
+                       participant_name=participant_name, category_name=self.env._('live session') if self.is_session_answer else self.env._('survey'))
 
         lead_values = {
             'contact_name': lead_contact_name,
@@ -132,7 +132,7 @@ class SurveyUser_Input(models.Model):
             # In summary, the next recordset is empty when no response and no comment are left.
             input_lines_not_skipped = input_lines.filtered(lambda line: not line.skipped)
             if len(input_lines_not_skipped) == 0:
-                answers = [Markup(' — <i>%(skipped)s</i>') % {'skipped': _('Skipped')}]
+                answers = [Markup(' — <i>%(skipped)s</i>') % {'skipped': self.env._('Skipped')}]
             for input_line_index, input_line in enumerate(input_lines_not_skipped):
                 # Write description line according to the patterns explained above.
                 # We usually write the question first, then the answer; but if we have several answers
@@ -165,7 +165,7 @@ class SurveyUser_Input(models.Model):
                     initial_indent = True
                     # Leave the placeholder values in the constructor to keep line break with indentation
                     answers.append(Markup('<i><b>%(comment)s</b></i> — %(comment_answer)s' % {
-                        'comment': _('Comment'),
+                        'comment': self.env._('Comment'),
                         'comment_answer': escape(input_line._get_answer_value()).replace('\n', line_break_indented_markuped),
                         })
                     )
@@ -179,7 +179,7 @@ class SurveyUser_Input(models.Model):
                 elif question.question_type in ['simple_choice', 'multiple_choice'] and input_line.answer_type == 'char_box':  # Comment case
                     answers.append(Markup('%(line_break_indented_markuped)s<i><b>%(comment)s</b></i> — %(answer)s') % {
                         'line_break_indented_markuped': line_break_indented_markuped if multiple_answers or len(input_lines_not_skipped) == 1 else '',
-                        'comment': _('Comment'),
+                        'comment': self.env._('Comment'),
                         'answer': escape(str(input_line._get_answer_value())).replace('\n', line_break_indented_markuped),
                     })
                 elif question.question_type in ['simple_choice', 'multiple_choice']:
@@ -206,7 +206,7 @@ class SurveyUser_Input(models.Model):
 
         # Leave the placeholder values in the constructor so as not to escape the pretty print
         description = Markup('<div>%(answers)s:</div><ul>%(survey_answers)s</ul>') % {
-            'answers': _('Answers'),
+            'answers': self.env._('Answers'),
             'survey_answers': Markup('').join(html_input_lines),
         }
         return {

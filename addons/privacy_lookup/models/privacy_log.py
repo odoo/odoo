@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -43,6 +43,6 @@ class PrivacyLog(models.Model):
             split_domain = label.split('.')
             return '.'.join([e[0] + '*' * (len(e) - 1) for e in split_domain[:-1] if e] + [split_domain[-1]])
         if not label or '@' not in label:
-            return UserError(_('This email address is not valid (%s)', label))
+            return UserError(self.env._('This email address is not valid (%s)', label))
         user, domain = label.split('@')
         return '{}@{}'.format(_anonymize_user(user), _anonymize_domain(domain))

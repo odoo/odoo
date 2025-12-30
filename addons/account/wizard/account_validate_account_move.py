@@ -1,4 +1,4 @@
-from odoo import Command, models, fields, api, _
+from odoo import Command, models, fields, api
 from odoo.exceptions import UserError
 
 
@@ -52,11 +52,11 @@ class ValidateAccountMove(models.TransientModel):
             elif self.env.context.get('active_model') == 'account.journal':
                 domain = [('journal_id', '=', self.env.context.get('active_id')), ('state', '=', 'draft')]
             else:
-                raise UserError(_("Missing 'active_model' in context."))
+                raise UserError(self.env._("Missing 'active_model' in context."))
 
             moves = self.env['account.move'].search(domain).filtered('line_ids')
             if not moves:
-                raise UserError(_('There are no journal items in the draft state to post.'))
+                raise UserError(self.env._('There are no journal items in the draft state to post.'))
             result['move_ids'] = [Command.set(moves.ids)]
 
         return result

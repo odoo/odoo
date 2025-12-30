@@ -2,7 +2,7 @@
 
 from ast import literal_eval
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields
 from odoo.exceptions import UserError
 from odoo.tools import SQL
 
@@ -54,10 +54,10 @@ class HrEmployee(models.Model):
             'employee_ids': self.ids,
         })
         if not self.env.user.has_group('hr_timesheet.group_hr_timesheet_approver') and wizard.has_timesheet and not wizard.has_active_employee:
-            raise UserError(_('You cannot delete employees who have timesheets.'))
+            raise UserError(self.env._('You cannot delete employees who have timesheets.'))
 
         return {
-            'name': _('Confirmation'),
+            'name': self.env._('Confirmation'),
             'view_mode': 'form',
             'res_model': 'hr.employee.delete.wizard',
             'views': [(self.env.ref('hr_timesheet.hr_employee_delete_wizard_form').id, 'form')],

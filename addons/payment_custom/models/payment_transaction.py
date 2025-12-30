@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_custom.controllers.main import CustomController
@@ -79,7 +79,7 @@ class PaymentTransaction(models.Model):
         """
         message = super()._get_sent_message()
         if self.provider_code == 'custom':
-            message = _(
+            message = self.env._(
                 "The customer has selected %(provider_name)s to make the payment.",
                 provider_name=self.provider_id.name
             )

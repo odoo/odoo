@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 from odoo.addons.sms.tools.sms_api import ERROR_MESSAGES, SmsApi
 from odoo.exceptions import ValidationError
 
@@ -20,7 +20,7 @@ class SmsAccountPhone(models.TransientModel):
         return {
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'name': _('Register Account'),
+            'name': self.env._('Register Account'),
             'view_mode': 'form',
             'res_model': 'sms.account.code',
             'context': {'default_account_id': self.account_id.id},

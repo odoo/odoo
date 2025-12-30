@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round, float_is_zero
 
@@ -67,7 +67,7 @@ class MrpRoutingWorkcenter(models.Model):
     @api.depends('time_mode', 'time_mode_batch')
     def _compute_time_computed_on(self):
         for operation in self:
-            operation.time_computed_on = _('%i work orders', operation.time_mode_batch) if operation.time_mode != 'manual' else False
+            operation.time_computed_on = self.env._('%i work orders', operation.time_mode_batch) if operation.time_mode != 'manual' else False
 
     @api.depends('time_cycle_manual', 'time_mode', 'workorder_ids',
         'bom_id.product_id', 'bom_id.product_qty',
@@ -133,7 +133,7 @@ class MrpRoutingWorkcenter(models.Model):
     @api.constrains('blocked_by_operation_ids')
     def _check_no_cyclic_dependencies(self):
         if self._has_cycle('blocked_by_operation_ids'):
-            raise ValidationError(_("You cannot create cyclic dependency."))
+            raise ValidationError(self.env._("You cannot create cyclic dependency."))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -180,7 +180,7 @@ class MrpRoutingWorkcenter(models.Model):
     def copy_existing_operations(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Select Operations to Copy'),
+            'name': self.env._('Select Operations to Copy'),
             'res_model': 'mrp.routing.workcenter',
             'view_mode': 'list,form',
             'domain': ['|', ('bom_id', '=', False), ('bom_id.active', '=', True)],

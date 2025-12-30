@@ -1,9 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import io
-import zipfile
 
-from odoo import http, _
+from odoo import http
 from odoo.http import request, content_disposition
 # from odoo.addons.account.controllers.download_docs import _get_headers
 
@@ -25,7 +23,7 @@ class EfakturDownloadController(http.Controller):
             headers = _get_headers(attachments.name, attachments.mimetype, attachments.raw)
             return request.make_response(attachments.raw, headers)
         else:
-            filename = _('efaktur') + '.zip'
+            filename = self.env._('efaktur') + '.zip'
             content = attachments._build_zip_from_attachments()
             headers = _get_headers(filename, 'zip', content)
             return request.make_response(content, headers)

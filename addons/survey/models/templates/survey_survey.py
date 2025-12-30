@@ -1,6 +1,6 @@
 import ast
 
-from odoo import api, models, _
+from odoo import api, models
 
 
 class SurveySurvey(models.Model):
@@ -24,22 +24,22 @@ class SurveySurvey(models.Model):
     def get_survey_templates_data(self):
         return {
             'survey': {
-                'description': _('Gather feedbacks from your employees and customers'),
+                'description': self.env._('Gather feedbacks from your employees and customers'),
                 'icon': '/survey/static/src/img/survey_sample_survey.png',
                 'template_key': 'survey',
-                'title': _('Survey'),
+                'title': self.env._('Survey'),
             },
             'assessment': {
-                'description': _('Handle quiz & certifications'),
+                'description': self.env._('Handle quiz & certifications'),
                 'icon': '/survey/static/src/img/survey_sample_assessment.png',
                 'template_key': 'assessment',
-                'title': _('Assessment'),
+                'title': self.env._('Assessment'),
             },
             'live_session': {
-                'description': _('Make your presentations more fun by sharing questions live'),
+                'description': self.env._('Make your presentations more fun by sharing questions live'),
                 'icon': '/survey/static/src/img/survey_sample_live_session.png',
                 'template_key': 'live_session',
-                'title': _('Live Session'),
+                'title': self.env._('Live Session'),
             },
         }
 
@@ -57,59 +57,59 @@ class SurveySurvey(models.Model):
     def _prepare_survey_template_values(self):
         return {
             'survey_type': 'survey',
-            'title': _('Feedback Form'),
+            'title': self.env._('Feedback Form'),
             'description': '<br>'.join([
-                _('Please complete this very short survey to let us know how satisfied your are with our products.'),
-                _('Your responses will help us improve our product range to serve you even better.')
+                self.env._('Please complete this very short survey to let us know how satisfied your are with our products.'),
+                self.env._('Your responses will help us improve our product range to serve you even better.')
             ]),
-            'description_done': _('Thank you very much for your feedback. We highly value your opinion!'),
+            'description_done': self.env._('Thank you very much for your feedback. We highly value your opinion!'),
             'progression_mode': 'number',
             'questions_layout': 'page_per_question',
             'question_and_page_ids': [
                 (0, 0, {  # survey.question
-                    'title': _('How frequently do you use our products?'),
+                    'title': self.env._('How frequently do you use our products?'),
                     'question_type': 'simple_choice',
                     'constr_mandatory': True,
                     'suggested_answer_ids': [
                         (0, 0, {  # survey.question.answer
-                            'value': _('Often (1-3 times per week)')
+                            'value': self.env._('Often (1-3 times per week)')
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('Rarely (1-3 times per month)')
+                            'value': self.env._('Rarely (1-3 times per month)')
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('Never (less than once a month)')
+                            'value': self.env._('Never (less than once a month)')
                         })
                     ]
                 }),
                 (0, 0, {  # survey.question
-                    'title': _('How many orders did you pass during the last 6 months?'),
+                    'title': self.env._('How many orders did you pass during the last 6 months?'),
                     'question_type': 'numerical_box',
                 }),
                 (0, 0, {  # survey.question
-                    'title': _('How likely are you to recommend the following products to a friend?'),
+                    'title': self.env._('How likely are you to recommend the following products to a friend?'),
                     'question_type': 'matrix',
                     'matrix_subtype': 'simple',
                     'suggested_answer_ids': [
                         (0, 0, {  # survey.question.answer
-                            'value': _('Unlikely')
+                            'value': self.env._('Unlikely')
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('Neutral')
+                            'value': self.env._('Neutral')
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('Likely')
+                            'value': self.env._('Likely')
                         }),
                     ],
                     'matrix_row_ids': [
                         (0, 0, {  # survey.question.answer
-                            'value': _('Red Pen')
+                            'value': self.env._('Red Pen')
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('Blue Pen')
+                            'value': self.env._('Blue Pen')
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('Yellow Pen')
+                            'value': self.env._('Yellow Pen')
                         })
                     ]
                 })
@@ -120,7 +120,7 @@ class SurveySurvey(models.Model):
     def _prepare_assessment_template_values(self):
         survey_values = {
             'survey_type': 'assessment',
-            'title': _('Certification'),
+            'title': self.env._('Certification'),
             'certification': True,
             'access_mode': 'token',
             'is_time_limited': True,
@@ -131,73 +131,73 @@ class SurveySurvey(models.Model):
             'scoring_type': 'scoring_without_answers',
             'users_can_go_back': True,
             'description': ''.join([
-                _('Welcome to this Odoo certification. You will receive 2 random questions out of a pool of 3.'),
+                self.env._('Welcome to this Odoo certification. You will receive 2 random questions out of a pool of 3.'),
                 '(<span style="font-style: italic">',
-                _('Cheating on your neighbors will not help!'),
+                self.env._('Cheating on your neighbors will not help!'),
                 '</span> 😁).<br>',
-                _('Good luck!')
+                self.env._('Good luck!')
             ]),
-            'description_done': _('Thank you. We will contact you soon.'),
+            'description_done': self.env._('Thank you. We will contact you soon.'),
             'questions_layout': 'page_per_section',
             'questions_selection': 'random',
             'question_and_page_ids': [
                 (0, 0, {  # survey.question
-                    'title': _('Odoo Certification'),
+                    'title': self.env._('Odoo Certification'),
                     'is_page': True,
                     'question_type': False,
                     'random_questions_count': 2
                 }),
                 (0, 0, {  # survey.question
-                    'title': _('What does "ODOO" stand for?'),
+                    'title': self.env._('What does "ODOO" stand for?'),
                     'question_type': 'simple_choice',
                     'suggested_answer_ids': [
                         (0, 0, {  # survey.question.answer
-                            'value': _('It\'s a Belgian word for "Management"')
+                            'value': self.env._('It\'s a Belgian word for "Management"')
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('Object-Directed Open Organization')
+                            'value': self.env._('Object-Directed Open Organization')
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('Organizational Development for Operation Officers')
+                            'value': self.env._('Organizational Development for Operation Officers')
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('It does not mean anything specific'),
+                            'value': self.env._('It does not mean anything specific'),
                             'is_correct': True,
                             'answer_score': 10
                         }),
                     ]
                 }),
                 (0, 0, {  # survey.question
-                    'title': _('On Survey questions, one can define "placeholders". But what are they for?'),
+                    'title': self.env._('On Survey questions, one can define "placeholders". But what are they for?'),
                     'question_type': 'simple_choice',
                     'suggested_answer_ids': [
                         (0, 0, {  # survey.question.answer
-                            'value': _('They are a default answer, used if the participant skips the question')
+                            'value': self.env._('They are a default answer, used if the participant skips the question')
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('It is a small bit of text, displayed to help participants answer'),
+                            'value': self.env._('It is a small bit of text, displayed to help participants answer'),
                             'is_correct': True,
                             'answer_score': 10
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('They are technical parameters that guarantees the responsiveness of the page')
+                            'value': self.env._('They are technical parameters that guarantees the responsiveness of the page')
                         })
                     ]
                 }),
                 (0, 0, {  # survey.question
-                    'title': _('What does one need to get to pass an Odoo Survey?'),
+                    'title': self.env._('What does one need to get to pass an Odoo Survey?'),
                     'question_type': 'simple_choice',
                     'suggested_answer_ids': [
                         (0, 0, {  # survey.question.answer
-                            'value': _('It is an option that can be different for each Survey'),
+                            'value': self.env._('It is an option that can be different for each Survey'),
                             'is_correct': True,
                             'answer_score': 10
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('One needs to get 50% of the total score')
+                            'value': self.env._('One needs to get 50% of the total score')
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('One needs to answer at least half the questions correctly')
+                            'value': self.env._('One needs to answer at least half the questions correctly')
                         })
                     ]
                 }),
@@ -214,12 +214,12 @@ class SurveySurvey(models.Model):
     def _prepare_live_session_template_values(self):
         return {
             'survey_type': 'live_session',
-            'title': _('Live Session'),
+            'title': self.env._('Live Session'),
             'description': '<br>'.join([
-                _('How good of a presenter are you? Let\'s find out!'),
-                _('But first, keep listening to the host.')
+                self.env._('How good of a presenter are you? Let\'s find out!'),
+                self.env._('But first, keep listening to the host.')
             ]),
-            'description_done': _('Thank you for your participation, hope you had a blast!'),
+            'description_done': self.env._('Thank you for your participation, hope you had a blast!'),
             'progression_mode': 'number',
             'scoring_type': 'scoring_with_answers',
             'questions_layout': 'page_per_question',
@@ -227,55 +227,55 @@ class SurveySurvey(models.Model):
             'session_speed_rating_time_limit': 90,
             'question_and_page_ids': [
                 (0, 0, {  # survey.question
-                    'title': _('What is the best way to catch the attention of an audience?'),
+                    'title': self.env._('What is the best way to catch the attention of an audience?'),
                     'question_type': 'simple_choice',
                     'suggested_answer_ids': [
                         (0, 0, {  # survey.question.answer
-                            'value': _('Speak softly so that they need to focus to hear you')
+                            'value': self.env._('Speak softly so that they need to focus to hear you')
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('Use a fun visual support, like a live presentation'),
+                            'value': self.env._('Use a fun visual support, like a live presentation'),
                             'is_correct': True,
                             'answer_score': 20
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('Show them slides with a ton of text they need to read fast')
+                            'value': self.env._('Show them slides with a ton of text they need to read fast')
                         })
                     ]
                 }),
                 (0, 0, {  # survey.question
-                    'title': _('What is a frequent mistake public speakers do?'),
+                    'title': self.env._('What is a frequent mistake public speakers do?'),
                     'question_type': 'simple_choice',
                     'suggested_answer_ids': [
                         (0, 0, {  # survey.question.answer
-                            'value': _('Practice in front of a mirror')
+                            'value': self.env._('Practice in front of a mirror')
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('Speak too fast'),
+                            'value': self.env._('Speak too fast'),
                             'is_correct': True,
                             'answer_score': 20
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('Use humor and make jokes')
+                            'value': self.env._('Use humor and make jokes')
                         })
                     ]
                 }),
                 (0, 0, {  # survey.question
-                    'title': _('Why should you consider making your presentation more fun with a small quiz?'),
+                    'title': self.env._('Why should you consider making your presentation more fun with a small quiz?'),
                     'question_type': 'multiple_choice',
                     'suggested_answer_ids': [
                         (0, 0, {  # survey.question.answer
-                            'value': _('It helps attendees focus on what you are saying'),
+                            'value': self.env._('It helps attendees focus on what you are saying'),
                             'is_correct': True,
                             'answer_score': 20
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('It is more engaging for your audience'),
+                            'value': self.env._('It is more engaging for your audience'),
                             'is_correct': True,
                             'answer_score': 20
                         }),
                         (0, 0, {  # survey.question.answer
-                            'value': _('It helps attendees remember the content of your presentation'),
+                            'value': self.env._('It helps attendees remember the content of your presentation'),
                             'is_correct': True,
                             'answer_score': 20
                         })

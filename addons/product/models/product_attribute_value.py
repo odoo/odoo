@@ -2,7 +2,7 @@
 
 from random import randint
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -98,7 +98,7 @@ class ProductAttributeValue(models.Model):
         if 'attribute_id' in vals:
             for pav in self:
                 if pav.attribute_id.id != vals['attribute_id'] and pav.is_used_on_products:
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         "You cannot change the attribute of the value %(value)s because it is used"
                         " on the following products: %(products)s",
                         value=pav.display_name,
@@ -116,7 +116,7 @@ class ProductAttributeValue(models.Model):
 
     def check_is_used_on_products(self):
         for pav in self.filtered('is_used_on_products'):
-            return _(
+            return self.env._(
                 "You cannot delete the value %(value)s because it is used on the following"
                 " products:\n%(products)s\n",
                 value=pav.display_name,
@@ -152,7 +152,7 @@ class ProductAttributeValue(models.Model):
     @api.readonly
     def action_add_to_products(self):
         return {
-            'name': _("Add to all products"),
+            'name': self.env._("Add to all products"),
             'type': 'ir.actions.act_window',
             'res_model': 'update.product.attribute.value',
             'view_mode': 'form',
@@ -167,7 +167,7 @@ class ProductAttributeValue(models.Model):
     @api.readonly
     def action_update_prices(self):
         return {
-            'name': _("Update product extra prices"),
+            'name': self.env._("Update product extra prices"),
             'type': 'ir.actions.act_window',
             'res_model': 'update.product.attribute.value',
             'view_mode': 'form',

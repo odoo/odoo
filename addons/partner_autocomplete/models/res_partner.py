@@ -3,7 +3,7 @@ import re
 
 from stdnum.eu.vat import check_vies
 
-from odoo import api, models, _
+from odoo import api, models
 
 _logger = logging.getLogger(__name__)
 
@@ -134,7 +134,7 @@ class ResPartner(models.Model):
         elif response and response.get('error'):
             result.update({
                 'error': True,
-                'error_message': _('Unable to enrich company (no credit was consumed).'),
+                'error_message': self.env._('Unable to enrich company (no credit was consumed).'),
             })
         elif error:
             result.update({

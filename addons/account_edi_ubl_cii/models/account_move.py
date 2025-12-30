@@ -4,7 +4,7 @@ import binascii
 
 from lxml import etree
 
-from odoo import _, api, fields, models, Command
+from odoo import api, fields, models, Command
 from odoo.tools.mimetypes import guess_mimetype
 
 
@@ -92,7 +92,7 @@ class AccountMove(models.Model):
         if posted_moves.ubl_cii_xml_id or suggested_edi_formats:
             print_items.append({
                 'key': 'download_ubl',
-                'description': _('Export XML'),
+                'description': self.env._('Export XML'),
                 **posted_moves.action_invoice_download_ubl(),
             })
         return print_items

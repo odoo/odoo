@@ -4,7 +4,7 @@ import json
 
 from datetime import datetime
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 
@@ -59,12 +59,12 @@ class PaymentProvider(models.Model):
     def _check_available_country_currency_ids(self):
         for provider in self.filtered(lambda p: p.code == 'paymob'):
             if len(provider.available_currency_ids) > 1:
-                raise ValidationError(_("Only one currency can be selected per Paymob account."))
+                raise ValidationError(self.env._("Only one currency can be selected per Paymob account."))
             if (
                 provider.available_currency_ids
                 and provider.available_currency_ids.name not in const.CURRENCY_MAPPING.values()
             ):
-                raise ValidationError(_("Only currencies supported by Paymob can be selected."))
+                raise ValidationError(self.env._("Only currencies supported by Paymob can be selected."))
 
     # === COMPUTE METHODS === #
 
@@ -116,8 +116,8 @@ class PaymentProvider(models.Model):
         if len(matched_gateways_data) < len(self.payment_method_ids):
             displayed_notification['params'].update({
                 'type': 'warning',
-                'title': _("Payment methods not found"),
-                'message': _("Not all enabled payment methods were found on your account."),
+                'title': self.env._("Payment methods not found"),
+                'message': self.env._("Not all enabled payment methods were found on your account."),
             })
             return displayed_notification
 
@@ -127,8 +127,8 @@ class PaymentProvider(models.Model):
         # All payment methods were successfully updated.
         displayed_notification['params'].update({
             'type': 'success',
-            'title': _("Successfully synchronized with Paymob"),
-            'message': _("Payment methods have been successfully set up!"),
+            'title': self.env._("Successfully synchronized with Paymob"),
+            'message': self.env._("Payment methods have been successfully set up!"),
         })
         return displayed_notification
 
@@ -254,7 +254,7 @@ class PaymentProvider(models.Model):
         )
         access_token = response_content['token']
         if not access_token:
-            raise ValidationError(_("Could not generate a new access token."))
+            raise ValidationError(self.env._("Could not generate a new access token."))
         return access_token
 
     def _parse_response_error(self, response):
@@ -266,5 +266,5 @@ class PaymentProvider(models.Model):
         # Paymob errors: https://developers.paymob.com/egypt/error-codes
         if "This field may not be blank" in msg:
             missing_fields = ", ".join(json.loads(msg).get('billing_data', {}).keys())
-            return _("The following fields must be filled: %(fields)s", fields=missing_fields)
+            return self.env._("The following fields must be filled: %(fields)s", fields=missing_fields)
         return msg

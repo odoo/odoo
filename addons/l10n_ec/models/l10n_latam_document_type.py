@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models
 from odoo.exceptions import UserError
 import re
 
@@ -32,7 +32,7 @@ class L10n_LatamDocumentType(models.Model):
                 # Fill each number group with zeroes (3, 3 and 9 respectively)
                 document_number = "-".join([n.zfill(3 if i < 2 else 9) for i, n in enumerate(num_match.groups())])
             else:
-                raise UserError(_(
+                raise UserError(self.env._(
                     "Ecuadorian Document %s must be like 001-001-123456789",
                     self.display_name
                 ))

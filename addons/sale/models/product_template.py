@@ -2,9 +2,8 @@
 
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import float_round
 
 
 class ProductTemplate(models.Model):
@@ -77,9 +76,9 @@ class ProductTemplate(models.Model):
 
     def _prepare_invoicing_tooltip(self):
         if self.invoice_policy == 'delivery' and self.type != 'consu':
-            return _("Invoice after delivery, based on quantities delivered, not ordered.")
+            return self.env._("Invoice after delivery, based on quantities delivered, not ordered.")
         elif self.invoice_policy == 'order' and self.type == 'service':
-            return _("Invoice ordered quantities as soon as this service is sold.")
+            return self.env._("Invoice ordered quantities as soon as this service is sold.")
         return ""
 
     def _prepare_service_tracking_tooltip(self):
@@ -124,7 +123,7 @@ class ProductTemplate(models.Model):
                 fields=['id', 'product_id'])
             if so_lines:
                 used_products = [sol['product_id'][1] for sol in so_lines]
-                raise ValidationError(_('The following products cannot be restricted to the company'
+                raise ValidationError(self.env._('The following products cannot be restricted to the company'
                                         ' %(company)s because they have already been used in quotations or '
                                         'sales orders in another company:\n%(used_products)s\n'
                                         'You can archive these products and recreate them '
@@ -150,8 +149,8 @@ class ProductTemplate(models.Model):
         res = super()._onchange_type()
         if self._origin and self.sales_count > 0:
             res['warning'] = {
-                'title': _("Warning"),
-                'message': _("You cannot change the product's type because it is already used in sales orders.")
+                'title': self.env._("Warning"),
+                'message': self.env._("You cannot change the product's type because it is already used in sales orders.")
             }
         return res
 
@@ -172,7 +171,7 @@ class ProductTemplate(models.Model):
         if self.env.context.get('sale_multi_pricelist_product_template'):
             if self.env.user.has_group('product.group_product_pricelist'):
                 return [{
-                    'label': _("Import Template for Products"),
+                    'label': self.env._("Import Template for Products"),
                     'template': '/product/static/xls/product_template.xls'
                 }]
         return res
@@ -195,7 +194,7 @@ class ProductTemplate(models.Model):
         for val in values:
             incompatible_fields = [f for f in incompatible_types if val[f]]
             if len(incompatible_fields) > 1:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "The product (%(product)s) has incompatible values: %(value_list)s",
                     product=val['name'],
                     value_list=[field_descriptions[v] for v in incompatible_fields],

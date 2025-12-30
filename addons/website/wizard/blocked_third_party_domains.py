@@ -1,7 +1,7 @@
 from urllib3.util import parse_url
 from urllib3.exceptions import LocationParseError
 
-from odoo import fields, models, _
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -32,7 +32,7 @@ class WebsiteCustom_Blocked_Third_Party_Domains(models.TransientModel):
                     # valid.
                     domain = parse_url(domain).host
                 except LocationParseError:
-                    raise ValidationError(_("The following domain is not valid:") + '\n' + domain)
+                    raise ValidationError(self.env._("The following domain is not valid:") + '\n' + domain)
                 if domain:
                     domains.append(domain)
 

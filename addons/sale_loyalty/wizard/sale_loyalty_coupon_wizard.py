@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -15,7 +15,7 @@ class SaleLoyaltyCouponWizard(models.TransientModel):
     def action_apply(self):
         self.ensure_one()
         if not self.order_id:
-            raise ValidationError(_('Invalid sales order.'))
+            raise ValidationError(self.env._('Invalid sales order.'))
         status = self.order_id._try_apply_code(self.coupon_code)
         if 'error' in status:
             raise ValidationError(status['error'])

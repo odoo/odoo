@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 
@@ -322,13 +322,13 @@ class AccountBankStatementLine(models.Model):
 
         for st_line in self:
             if st_line.foreign_currency_id == st_line.currency_id:
-                raise ValidationError(_("The foreign currency must be different than the journal one: %s",
+                raise ValidationError(self.env._("The foreign currency must be different than the journal one: %s",
                                         st_line.currency_id.name))
             if not st_line.foreign_currency_id and st_line.amount_currency:
-                raise ValidationError(_("You can't provide an amount in foreign currency without "
+                raise ValidationError(self.env._("You can't provide an amount in foreign currency without "
                                         "specifying a foreign currency."))
             if not st_line.amount_currency and st_line.foreign_currency_id:
-                raise ValidationError(_("You can't provide a foreign currency without specifying an amount in "
+                raise ValidationError(self.env._("You can't provide a foreign currency without specifying an amount in "
                                         "'Amount in Currency' field."))
 
     # -------------------------------------------------------------------------
@@ -477,7 +477,7 @@ class AccountBankStatementLine(models.Model):
     @api.ondelete(at_uninstall=False)
     def _check_allow_unlink(self):
         if self.statement_id.filtered(lambda stmt: stmt.is_valid and stmt.is_complete):
-            raise UserError(_("You can not delete a transaction from a valid statement.\n"
+            raise UserError(self.env._("You can not delete a transaction from a valid statement.\n"
                               "If you want to delete it, please remove the statement first."))
 
     def _find_or_create_bank_account(self):
@@ -636,7 +636,7 @@ class AccountBankStatementLine(models.Model):
             counterpart_account_id = self.journal_id.suspense_account_id.id
 
         if not counterpart_account_id:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "You can't create a new statement line without a suspense account set on the %s journal.",
                 self.journal_id.display_name,
             ))
@@ -728,7 +728,7 @@ class AccountBankStatementLine(models.Model):
                     else False
 
                 if len(liquidity_lines) != 1:
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         "The journal entry %s reached an invalid state regarding its related statement line.\n"
                         "To be consistent, the journal entry must always have exactly one journal item involving the "
                         "bank/cash account.",
@@ -751,7 +751,7 @@ class AccountBankStatementLine(models.Model):
                     })
 
                 if len(suspense_lines) > 1:
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         "%(move)s reached an invalid state regarding its related statement line.\n"
                         "To be consistent, the journal entry must always have exactly one suspense line.",
                         move=st_line.move_id.display_name,

@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from markupsafe import Markup
 
-from odoo import Command, _, api, models, modules, tools
+from odoo import Command, api, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -58,7 +58,7 @@ class AccountMoveSend(models.AbstractModel):
         if move._is_action_report_available(action_report):
             return action_report
 
-        raise UserError(_("There is no template that applies to this move type."))
+        raise UserError(self.env._("There is no template that applies to this move type."))
 
     @api.model
     def _get_default_mail_template_id(self, move):
@@ -133,10 +133,10 @@ class AccountMoveSend(models.AbstractModel):
             if partners_without_mail:
                 alerts['account_missing_email'] = {
                     'level': 'warning' if is_batch else 'danger',
-                    'message': _("Partner(s) should have an email address."),
-                    'action_text': _("View Partner(s)") if is_batch else False,
+                    'message': self.env._("Partner(s) should have an email address."),
+                    'action_text': self.env._("View Partner(s)") if is_batch else False,
                     'action': (
-                        partners_without_mail._get_records_action(name=_("Check Partner(s) Email(s)"))
+                        partners_without_mail._get_records_action(name=self.env._("Check Partner(s) Email(s)"))
                         if is_batch else False
                     ),
                 }
@@ -322,9 +322,9 @@ class AccountMoveSend(models.AbstractModel):
     def _get_move_constraints(self, move):
         constraints = {}
         if move.state != 'posted':
-            constraints['not_posted'] = _("You can't generate invoices that are not posted.")
+            constraints['not_posted'] = self.env._("You can't generate invoices that are not posted.")
         if not move.is_sale_document(include_receipts=True):
-            constraints['not_sale_document'] = _("You can only generate sales documents.")
+            constraints['not_sale_document'] = self.env._("You can only generate sales documents.")
         return constraints
 
     @api.model
@@ -335,7 +335,7 @@ class AccountMoveSend(models.AbstractModel):
             )
             or any(not self._get_default_pdf_report_id(move).is_invoice_report for move in moves)
         ):
-            raise UserError(_("The sending of invoices is not set up properly, make sure the report used is set for invoices."))
+            raise UserError(self.env._("The sending of invoices is not set up properly, make sure the report used is set for invoices."))
 
     @api.model
     def _format_error_text(self, error):
@@ -406,7 +406,7 @@ class AccountMoveSend(models.AbstractModel):
             content, report_type = self.env['ir.actions.report'].with_company(company_id)._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
             content_by_id = self.env['ir.actions.report']._get_splitted_report(pdf_report.report_name, content, report_type)
             if len(content_by_id) == 1 and False in content_by_id:
-                raise ValidationError(_("Cannot identify the invoices in the generated PDF: %s", ids))
+                raise ValidationError(self.env._("Cannot identify the invoices in the generated PDF: %s", ids))
 
             for invoice, invoice_data in group_invoices_data.items():
                 invoice_data['pdf_attachment_values'] = {

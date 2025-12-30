@@ -2,9 +2,9 @@ import base64
 import markupsafe
 import requests
 
-from odoo import fields, models, api, _
+from odoo import fields, models, api
 from odoo.exceptions import UserError
-from odoo.addons.l10n_ro_edi_stock.models.stock_picking import OPERATION_TYPES, OPERATION_SCOPES, OPERATION_TYPE_TO_ALLOWED_SCOPE_CODES, LOCATION_TYPES, LOCATION_TYPE_MAP, BORDER_CROSSING_POINTS, CUSTOMS_OFFICES, STATE_CODES
+from odoo.addons.l10n_ro_edi_stock.models.stock_picking import OPERATION_TYPES, OPERATION_SCOPES, OPERATION_TYPE_TO_ALLOWED_SCOPE_CODES, LOCATION_TYPES, BORDER_CROSSING_POINTS, CUSTOMS_OFFICES
 from odoo.addons.l10n_ro_edi_stock.models.l10n_ro_edi_stock_document import DOCUMENT_STATES
 from odoo.addons.l10n_ro_edi_stock.models.etransport_api import ETransportAPI
 
@@ -176,12 +176,12 @@ class StockPickingBatch(models.Model):
         # Carrier should be the same on all pickings
         first_carrier = self.picking_ids[0].carrier_id
         if any(picking.carrier_id != first_carrier for picking in self.picking_ids):
-            raise UserError(_("All Pickings in a Batch Transfer should have the same Carrier"))
+            raise UserError(self.env._("All Pickings in a Batch Transfer should have the same Carrier"))
 
         # Commercial partner should be the same on all pickings
         first_commercial_partner = self.picking_ids[0].partner_id.commercial_partner_id
         if any(picking.partner_id.commercial_partner_id != first_commercial_partner for picking in self.picking_ids):
-            raise UserError(_("All Pickings in a Batch Transfer should have the same Commercial Partner"))
+            raise UserError(self.env._("All Pickings in a Batch Transfer should have the same Commercial Partner"))
 
         return super().action_done()
 
@@ -191,17 +191,17 @@ class StockPickingBatch(models.Model):
         self.ensure_one()
 
         if not self.company_id.l10n_ro_edi_access_token:
-            errors.append(_('Romanian access token not found. Please generate or fill it in the settings.'))
+            errors.append(self.env._('Romanian access token not found. Please generate or fill it in the settings.'))
             return errors
 
         match self.l10n_ro_edi_stock_state:
             case 'stock_sending_failed':
                 if not self._l10n_ro_edi_stock_get_last_document('stock_validated'):
-                    errors.append(_("This document has not been successfully sent yet because it contains errors."))
+                    errors.append(self.env._("This document has not been successfully sent yet because it contains errors."))
                 else:
-                    errors.append(_("This document has not been corrected yet because it contains errors."))
+                    errors.append(self.env._("This document has not been corrected yet because it contains errors."))
             case 'stock_validated':
-                errors.append(_("This document has already been successfully sent to anaf."))
+                errors.append(self.env._("This document has already been successfully sent to anaf."))
 
         return errors
 
@@ -409,7 +409,7 @@ class StockPickingBatch(models.Model):
                         # Document is still being validated
                         batch._l10n_ro_edi_stock_create_document_stock_sent(new_document_data)
                     case 'XML cu erori nepreluat de sistem':
-                        new_document_data['message'] = _("XML contains errors.")
+                        new_document_data['message'] = self.env._("XML contains errors.")
                         batch._l10n_ro_edi_stock_create_document_stock_sending_failed(new_document_data)
                     case _:
                         batch._l10n_ro_edi_stock_report_unhandled_document_state(state)
@@ -422,4 +422,4 @@ class StockPickingBatch(models.Model):
 
     def _l10n_ro_edi_stock_report_unhandled_document_state(self, state: str):
         self.ensure_one()
-        self.message_post(body=_("Unhandled eTransport document state: %(state)s", state=state))
+        self.message_post(body=self.env._("Unhandled eTransport document state: %(state)s", state=state))

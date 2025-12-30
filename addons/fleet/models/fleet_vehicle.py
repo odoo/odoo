@@ -4,9 +4,8 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 from datetime import date, datetime
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.fields import Domain
 from odoo.addons.fleet.models.fleet_vehicle_model import FUEL_TYPES
 
 
@@ -241,7 +240,7 @@ class FleetVehicle(models.Model):
     @api.depends('model_id.brand_id.name', 'model_id.name', 'license_plate')
     def _compute_vehicle_name(self):
         for record in self:
-            record.name = (record.model_id.brand_id.name or '') + '/' + (record.model_id.name or '') + '/' + (record.license_plate or _('No Plate'))
+            record.name = (record.model_id.brand_id.name or '') + '/' + (record.model_id.name or '') + '/' + (record.license_plate or self.env._('No Plate'))
 
     @api.depends('range_unit')
     def _compute_co2_emission_unit(self):
@@ -336,7 +335,7 @@ class FleetVehicle(models.Model):
 
     def _get_analytic_name(self):
         # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
-        return self.license_plate or _('No plate')
+        return self.license_plate or self.env._('No plate')
 
     def _search_contract_renewal_due_soon(self, operator, value):
         if operator != 'in':
@@ -406,7 +405,7 @@ class FleetVehicle(models.Model):
 
     def write(self, vals):
         if 'odometer' in vals and any(vehicle.odometer > vals['odometer'] for vehicle in self):
-            raise UserError(_('The odometer value cannot be lower than the previous one.'))
+            raise UserError(self.env._('The odometer value cannot be lower than the previous one.'))
 
         if 'driver_id' in vals and vals['driver_id']:
             driver_id = vals['driver_id']
@@ -436,14 +435,14 @@ class FleetVehicle(models.Model):
             self.env['mail.activity'].sudo().search([
                 ('res_model_id', '=', self._name),
                 ('res_id', 'in', self.ids),
-                ('note', 'ilike', _('Review driver change')),
+                ('note', 'ilike', self.env._('Review driver change')),
                 ('user_id', 'in', self.manager_id.ids or [self.env.user.id])
             ]).action_cancel()
             for vehicle in self:
                 vehicle.activity_schedule(
                     'mail.mail_activity_data_todo',
                     date_deadline=date.today() + relativedelta(weeks=1),
-                    note=_('Review driver change of %s and specify End date', vehicle.display_name),
+                    note=self.env._('Review driver change of %s and specify End date', vehicle.display_name),
                     user_id=vehicle.manager_id.id or self.env.user.id,
                 )
 
@@ -531,7 +530,7 @@ class FleetVehicle(models.Model):
 
     def action_send_email(self):
         return {
-            'name': _('Send Email'),
+            'name': self.env._('Send Email'),
             'type': 'ir.actions.act_window',
             'target': 'new',
             'view_mode': 'form',

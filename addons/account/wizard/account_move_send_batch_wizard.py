@@ -1,6 +1,6 @@
 from collections import Counter
 
-from odoo import _, api, Command, fields, models
+from odoo import api, Command, fields, models
 from odoo.exceptions import RedirectWarning, UserError
 
 
@@ -35,7 +35,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
     def _compute_summary_data(self):
         extra_edis = self._get_all_extra_edis()
         sending_methods = dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
-        sending_methods['manual'] = _('Manually')  # in batch sending, everything is done asynchronously, we never "Download"
+        sending_methods['manual'] = self.env._('Manually')  # in batch sending, everything is done asynchronously, we never "Download"
 
         for wizard in self:
             edi_counter = Counter()
@@ -52,7 +52,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
 
             summary_data = dict()
             for edi, edi_count in edi_counter.items():
-                summary_data[edi] = {'count': edi_count, 'label': _("by %s", extra_edis[edi]['label'])}
+                summary_data[edi] = {'count': edi_count, 'label': self.env._("by %s", extra_edis[edi]['label'])}
             for sending_method, sending_method_count in sending_method_counter.items():
                 summary_data[sending_method] = {'count': sending_method_count, 'label': sending_methods[sending_method]}
 
@@ -90,7 +90,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
         if not account_move_send_cron.sudo().active:
             if self.env.user.has_group('base.group_system'):
                 raise RedirectWarning(
-                    _("Batch invoice sending is unavailable. Please, activate the cron to enable batch sending of invoices."),
+                    self.env._("Batch invoice sending is unavailable. Please, activate the cron to enable batch sending of invoices."),
                     {
                         'views': [(False, 'form')],
                         'res_model': 'ir.cron',
@@ -98,9 +98,9 @@ class AccountMoveSendBatchWizard(models.TransientModel):
                         'res_id': account_move_send_cron.id,
                         'target': 'current',
                     },
-                    _("Go to cron configuration"),
+                    self.env._("Go to cron configuration"),
                 )
-            raise UserError(_("Batch invoice sending is unavailable. Please, contact your system administrator to activate the cron to enable batch sending of invoices."))
+            raise UserError(self.env._("Batch invoice sending is unavailable. Please, contact your system administrator to activate the cron to enable batch sending of invoices."))
 
         self.move_ids.sending_data = {
             'author_user_id': self.env.user.id,
@@ -112,8 +112,8 @@ class AccountMoveSendBatchWizard(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'type': 'info',
-                'title': _('Sending invoices'),
-                'message': _('Invoices are being sent in the background.'),
+                'title': self.env._('Sending invoices'),
+                'message': self.env._('Invoices are being sent in the background.'),
                 'next': {'type': 'ir.actions.act_window_close'},
             },
         }

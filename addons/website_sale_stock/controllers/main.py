@@ -2,7 +2,6 @@
 
 from werkzeug.exceptions import BadRequest
 
-from odoo import _
 from odoo.http import Controller, request, route
 from odoo.tools.mail import email_re
 
@@ -13,7 +12,7 @@ class WebsiteSaleStock(Controller):
     def add_stock_email_notification(self, email, product_id):
         # TDE FIXME: seems a bit open
         if not email_re.match(email):
-            raise BadRequest(_("Invalid Email"))
+            raise BadRequest(self.env._("Invalid Email"))
 
         product = request.env['product.product'].browse(int(product_id))
         partner = request.env['mail.thread'].sudo()._partner_find_from_emails_single([email])

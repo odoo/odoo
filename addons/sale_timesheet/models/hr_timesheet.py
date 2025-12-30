@@ -2,7 +2,7 @@
 
 from odoo.exceptions import UserError, ValidationError
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools.misc import unquote
 
@@ -103,7 +103,7 @@ class AccountAnalyticLine(models.Model):
         # prevent to update invoiced timesheets if one line is of type delivery
         if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda t: t.timesheet_invoice_id and t.timesheet_invoice_id.state != 'cancel'):
             if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'date']):
-                raise UserError(_('You cannot modify timesheets that are already invoiced.'))
+                raise UserError(self.env._('You cannot modify timesheets that are already invoiced.'))
         return super()._check_can_write(values)
 
     def _timesheet_determine_sale_line(self):
@@ -168,7 +168,7 @@ class AccountAnalyticLine(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_invoiced(self):
         if any(line.timesheet_invoice_id and line.timesheet_invoice_id.state == 'posted' for line in self):
-            raise UserError(_('You cannot remove a timesheet that has already been invoiced.'))
+            raise UserError(self.env._('You cannot remove a timesheet that has already been invoiced.'))
 
     def _get_employee_mapping_entry(self):
         self.ensure_one()
@@ -185,7 +185,7 @@ class AccountAnalyticLine(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Sales Order'),
+            'name': self.env._('Sales Order'),
             'res_model': 'sale.order',
             'views': [[False, 'form']],
             'context': {'create': False, 'show_sale': True},
@@ -196,7 +196,7 @@ class AccountAnalyticLine(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Invoice'),
+            'name': self.env._('Invoice'),
             'res_model': 'account.move',
             'views': [[False, 'form']],
             'context': {'create': False},
@@ -228,7 +228,7 @@ class AccountAnalyticLine(models.Model):
         mandatory_plans = [plan for plan in self._get_mandatory_plans(company, business_domain='timesheet') if plan['column_name'] != 'account_id']
         missing_plan_names = [plan['name'] for plan in mandatory_plans if plan['column_name'] not in plan_column_names]
         if missing_plan_names:
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 "'%(missing_plan_names)s' analytic plan(s) required on the analytic distribution of the sale order item '%(so_line_name)s' linked to the timesheet.",
                 missing_plan_names=missing_plan_names,
                 so_line_name=so_line.name,

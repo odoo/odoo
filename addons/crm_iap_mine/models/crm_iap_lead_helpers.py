@@ -1,4 +1,4 @@
-from odoo import api, models, _
+from odoo import api, models
 
 
 class CrmIapLeadHelpers(models.Model):
@@ -40,7 +40,7 @@ class CrmIapLeadHelpers(models.Model):
             'user_id': user_id,
             'reveal_id': company_data['clearbit_id'],
             # Lead vals from data
-            'name': _("%s's opportunity", (company_data['name'] or company_data['domain'])),
+            'name': self.env._("%s's opportunity", (company_data['name'] or company_data['domain'])),
             'partner_name': company_data['legal_name'] or company_data['name'],
             'email_from': next(iter(company_data.get('email', [])), ''),
             'phone': company_data['phone'] or (company_data['phone_numbers'] and company_data['phone_numbers'][0]) or '',

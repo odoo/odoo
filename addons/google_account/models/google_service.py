@@ -8,7 +8,7 @@ import json
 import requests
 from werkzeug import urls
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -88,7 +88,7 @@ class GoogleService(models.AbstractModel):
             return response.get('access_token'), response.get('refresh_token'), response.get('expires_in')
         except requests.HTTPError as e:
             _logger.error(e)
-            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired")
+            error_msg = self.env._("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired")
             raise self.env['res.config.settings'].get_config_warning(error_msg)
 
     def _refresh_google_token(self, service, rtoken):
@@ -139,7 +139,7 @@ class GoogleService(models.AbstractModel):
             elif method.upper() in ('POST', 'PATCH', 'PUT'):
                 res = requests.request(method.lower(), preuri + uri, data=params, headers=headers, timeout=timeout)
             else:
-                raise Exception(_('Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!', method))
+                raise Exception(self.env._('Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!', method))
             res.raise_for_status()
             status = res.status_code
 

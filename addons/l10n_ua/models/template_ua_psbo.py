@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import _, models
+from odoo import models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -12,7 +12,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_receivable_id': 'ua_psbp_361',
             'property_account_payable_id': 'ua_psbp_631',
             'property_stock_valuation_account_id': 'ua_psbp_281',
-            'name': _('IFRS Chart of Accounts'),
+            'name': self.env._('IFRS Chart of Accounts'),
             'code_digits': '6',
             'use_storno_accounting': True,
             'display_invoice_amount_total_words': True,

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
 
@@ -16,9 +16,9 @@ class MrpBom(models.Model):
             if all(not bl.cost_share for bl in bom.bom_line_ids):
                 continue
             if any(bl.cost_share < 0 for bl in bom.bom_line_ids):
-                raise UserError(_("Components cost share have to be positive or equals to zero."))
+                raise UserError(self.env._("Components cost share have to be positive or equals to zero."))
             if float_compare(sum(bom.bom_line_ids.mapped('cost_share')), 100, precision_digits=2) != 0:
-                raise UserError(_("The total cost share for a BoM's component have to be 100"))
+                raise UserError(self.env._("The total cost share for a BoM's component have to be 100"))
         return res
 
 

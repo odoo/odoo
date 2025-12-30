@@ -3,9 +3,8 @@
 import logging
 import stdnum
 
-from odoo import models, fields, api, Command, _
+from odoo import models, fields, api, Command
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import index_exists
 
 
 _logger = logging.getLogger(__name__)
@@ -143,7 +142,7 @@ class L10n_LatamCheck(models.Model):
         self.ensure_one()
         operations = ((self.operation_ids + self.payment_id).filtered(lambda x: x.state not in ['draft', 'canceled']))
         action = {
-            'name': _("Check Operations"),
+            'name': self.env._("Check Operations"),
             'type': 'ir.actions.act_window',
             'res_model': 'account.payment',
             'views': [
@@ -172,7 +171,7 @@ class L10n_LatamCheck(models.Model):
     def _constrains_min_amount(self):
         min_amount_error = self.filtered(lambda x: x.amount <= 0)
         if min_amount_error:
-            raise ValidationError(_('The amount of the check must be greater than 0'))
+            raise ValidationError(self.env._('The amount of the check must be greater than 0'))
 
     @api.depends('payment_method_line_id.code', 'payment_id.partner_id')
     def _compute_issuer_vat(self):

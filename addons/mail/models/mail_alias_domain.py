@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, exceptions, fields, models
 from odoo.addons.mail.models.mail_alias import dot_atom_text
 from odoo.exceptions import UserError
 
@@ -85,14 +85,14 @@ class MailAliasDomain(models.Model):
             if any(similar.bounce_alias == tocheck.bounce_alias
                    for similar in similar_domains if similar != tocheck and similar.name == tocheck.name):
                 raise exceptions.ValidationError(
-                    _('Bounce alias %(bounce)s is already used for another domain with same name. '
+                    self.env._('Bounce alias %(bounce)s is already used for another domain with same name. '
                       'Use another bounce or simply use the other alias domain.',
                       bounce=tocheck.bounce_email)
                 )
             if any(similar.catchall_alias == tocheck.catchall_alias
                    for similar in similar_domains if similar != tocheck and similar.name == tocheck.name):
                 raise exceptions.ValidationError(
-                    _('Catchall alias %(catchall)s is already used for another domain with same name. '
+                    self.env._('Catchall alias %(catchall)s is already used for another domain with same name. '
                       'Use another catchall or simply use the other alias domain.',
                       catchall=tocheck.catchall_email)
                 )
@@ -116,12 +116,12 @@ class MailAliasDomain(models.Model):
                 document_name = self.env[existing.alias_model_id.model].sudo().browse(existing.alias_force_thread_id).display_name
             if document_name:
                 raise exceptions.ValidationError(
-                    _("Bounce/Catchall '%(matching_alias_name)s' is already used by %(document_name)s. Choose another alias or change it on the other document.",
+                    self.env._("Bounce/Catchall '%(matching_alias_name)s' is already used by %(document_name)s. Choose another alias or change it on the other document.",
                       matching_alias_name=existing.display_name,
                       document_name=document_name)
                         )
             raise exceptions.ValidationError(
-                _("Bounce/Catchall '%(matching_alias_name)s' is already used. Choose another alias or change it on the linked model.",
+                self.env._("Bounce/Catchall '%(matching_alias_name)s' is already used. Choose another alias or change it on the linked model.",
                   matching_alias_name=existing.display_name)
             )
 
@@ -132,7 +132,7 @@ class MailAliasDomain(models.Model):
         for domain in self:
             if not dot_atom_text.match(domain.name):
                 raise exceptions.ValidationError(
-                    _("You cannot use anything else than unaccented latin characters in the domain name %(domain_name)s.",
+                    self.env._("You cannot use anything else than unaccented latin characters in the domain name %(domain_name)s.",
                       domain_name=domain.name)
                 )
 
@@ -177,7 +177,7 @@ class MailAliasDomain(models.Model):
             for e in self.mapped("default_from_email")
             for server in personal_mail_servers
         ):
-            raise UserError(_("A personal mail server is using that address, you can not use it."))
+            raise UserError(self.env._("A personal mail server is using that address, you can not use it."))
 
     @api.model
     def _sanitize_configuration(self, config_values):

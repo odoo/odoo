@@ -1,6 +1,6 @@
 from lxml import etree
 
-from odoo import models, Command, _
+from odoo import models, Command
 from odoo.tools import html2plaintext
 from odoo.addons.account_edi_ubl_cii.tools import Order
 from odoo.addons.account.tools import dict_to_xml
@@ -360,7 +360,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
             line.pop('deferred_start_date', False)
             line.pop('deferred_end_date', False)
             if not line.get('product_id'):
-                line_logs.append(_("Could not retrieve the product named: %(name)s", name=line['name']))
+                line_logs.append(self.env._("Could not retrieve the product named: %(name)s", name=line['name']))
         lines_vals += allowance_charges_line_vals
 
         # Update order with lines excluding discounts

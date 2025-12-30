@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class StockScrap(models.Model):
@@ -62,7 +62,7 @@ class StockScrap(models.Model):
                 if message:
                     if recommended_location:
                         self.location_id = recommended_location
-                    return {'warning': {'title': _('Warning'), 'message': message}}
+                    return {'warning': {'title': self.env._('Warning'), 'message': message}}
             else:
                 return super()._onchange_serial_number()
 

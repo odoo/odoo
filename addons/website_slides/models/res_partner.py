@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -70,7 +70,7 @@ class ResPartner(models.Model):
         Otherwise simply set a domain on required partners. The courses to which
         the partner(s) is not enrolled (e.g. invited) are not shown. """
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_partner_action")
-        action['display_name'] = _('Courses')
+        action['display_name'] = self.env._('Courses')
         action['domain'] = [('member_status', '!=', 'invited')]
         if len(self) == 1 and self.is_company:
             action['domain'] = Domain.AND([action['domain'], [('partner_id', 'in', self.child_ids.ids)]])

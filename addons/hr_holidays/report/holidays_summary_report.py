@@ -6,8 +6,7 @@ import calendar
 
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 from odoo.tools.misc import format_date, get_lang
 
 COLORS_MAP = {
@@ -33,11 +32,11 @@ class ReportHr_HolidaysReport_Holidayssummary(models.AbstractModel):
     def _get_header_info(self, start_date, holiday_type):
         st_date = fields.Date.from_string(start_date)
         if holiday_type == 'Confirmed':
-            holiday_type = _('Confirmed')
+            holiday_type = self.env._('Confirmed')
         elif holiday_type == 'Approved':
-            holiday_type = _('Approved')
+            holiday_type = self.env._('Approved')
         else:
-            holiday_type = _('Confirmed and Approved')
+            holiday_type = self.env._('Confirmed and Approved')
         return {
             'start_date': format_date(self.env, st_date),
             'end_date': format_date(self.env, st_date + relativedelta(days=59)),

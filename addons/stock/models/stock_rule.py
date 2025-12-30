@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from typing import NamedTuple
 from functools import partial
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import float_is_zero
@@ -115,7 +115,7 @@ class StockRule(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for rule, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", rule.name)
+                vals['name'] = self.env._("%s (copy)", rule.name)
         return vals_list
 
     @api.constrains('company_id')
@@ -123,7 +123,7 @@ class StockRule(models.Model):
         for rule in self:
             route = rule.route_id
             if route.company_id and rule.company_id.id != route.company_id.id:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "Rule %(rule)s belongs to %(rule_company)s while the route belongs to %(route_company)s.",
                     rule=rule.display_name,
                     rule_company=rule.company_id.display_name,
@@ -152,10 +152,10 @@ class StockRule(models.Model):
         rule. The purpose of this function is to avoid code duplication in
         _get_message_dict functions since it often requires those data.
         """
-        source = self.location_src_id and self.location_src_id.display_name or _('Source Location')
-        destination = self.location_dest_id and self.location_dest_id.display_name or _('Destination Location')
+        source = self.location_src_id and self.location_src_id.display_name or self.env._('Source Location')
+        destination = self.location_dest_id and self.location_dest_id.display_name or self.env._('Destination Location')
         direct_destination = self.picking_type_id and self.picking_type_id.default_location_dest_id != self.location_dest_id and self.picking_type_id.default_location_dest_id.display_name
-        operation = self.picking_type_id and self.picking_type_id.name or _('Operation Type')
+        operation = self.picking_type_id and self.picking_type_id.name or self.env._('Operation Type')
         return source, destination, direct_destination, operation
 
     def _get_message_dict(self):
@@ -169,20 +169,20 @@ class StockRule(models.Model):
         if self.action in ('push', 'pull', 'pull_push'):
             suffix = ""
             if self.action in ('pull', 'pull_push') and direct_destination and not self.location_dest_from_rule:
-                suffix = _("<br>The products will be moved towards <b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination.", destination=direct_destination, operation=operation)
+                suffix = self.env._("<br>The products will be moved towards <b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination.", destination=direct_destination, operation=operation)
             if self.procure_method == 'make_to_order' and self.location_src_id:
-                suffix += _("<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill it.", source)
+                suffix += self.env._("<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill it.", source)
             if self.procure_method == 'mts_else_mto' and self.location_src_id:
-                suffix += _("<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring the missing quantity in this location.", source)
+                suffix += self.env._("<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring the missing quantity in this location.", source)
             message_dict = {
-                'pull': _(
+                'pull': self.env._(
                     'When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill the need. %(suffix)s',
                     destination=destination,
                     operation=operation,
                     source_location=source,
                     suffix=suffix,
                 ),
-                'push': _(
+                'push': self.env._(
                     'When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</b> are created to send them to <b>%(destination)s</b>.',
                     source_location=source,
                     operation=operation,
@@ -291,7 +291,7 @@ class StockRule(models.Model):
         # `location_src_id` field.
         for procurement, rule in procurements:
             if not rule.location_src_id:
-                msg = _('No source location defined on stock rule: %s!', rule.name)
+                msg = self.env._('No source location defined on stock rule: %s!', rule.name)
                 raise ProcurementException([(procurement, msg)])
 
         # Prepare the move values, adapt the `procure_method` if needed.
@@ -477,7 +477,7 @@ class StockRule(models.Model):
                 continue
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
             if not rule:
-                error = _('No rule has been found to replenish "%(product)s" in "%(location)s".\nVerify the routes configuration on the product.',
+                error = self.env._('No rule has been found to replenish "%(product)s" in "%(location)s".\nVerify the routes configuration on the product.',
                     product=procurement.product_id.display_name, location=procurement.location_id.display_name)
                 procurement_errors.append((procurement, error))
             else:

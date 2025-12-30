@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 TAX_SYSTEM = [
@@ -86,7 +86,7 @@ class ResCompany(models.Model):
     def _check_l10n_it_edi_purchase_journal_id(self):
         for company in self:
             if company.l10n_it_edi_purchase_journal_id and not company.l10n_it_edi_purchase_journal_id.default_account_id:
-                raise ValidationError(_("The Italian default purchase journal requires a default account."))
+                raise ValidationError(self.env._("The Italian default purchase journal requires a default account."))
 
     @api.constrains('l10n_it_has_eco_index',
                     'l10n_it_eco_index_office',
@@ -98,7 +98,7 @@ class ResCompany(models.Model):
                 and (not record.l10n_it_eco_index_office
                      or not record.l10n_it_eco_index_number
                      or not record.l10n_it_eco_index_liquidation_state)):
-                raise ValidationError(_("All fields about the Economic and Administrative Index must be completed."))
+                raise ValidationError(self.env._("All fields about the Economic and Administrative Index must be completed."))
 
     @api.constrains('l10n_it_has_eco_index',
                     'l10n_it_eco_index_share_capital',
@@ -111,7 +111,7 @@ class ResCompany(models.Model):
             if (record.l10n_it_has_eco_index
                 and (bool(record.l10n_it_eco_index_share_capital)
                     ^ (record.l10n_it_eco_index_sole_shareholder and record.l10n_it_eco_index_sole_shareholder != 'NO'))):
-                raise ValidationError(_("If one of Share Capital or Sole Shareholder is present, "
+                raise ValidationError(self.env._("If one of Share Capital or Sole Shareholder is present, "
                                         "then they must be both filled out."))
 
     @api.constrains('l10n_it_has_tax_representative',
@@ -121,11 +121,11 @@ class ResCompany(models.Model):
             if not record.l10n_it_has_tax_representative:
                 continue
             if not record.l10n_it_tax_representative_partner_id:
-                raise ValidationError(_("You must select a tax representative."))
+                raise ValidationError(self.env._("You must select a tax representative."))
             if not record.l10n_it_tax_representative_partner_id.vat:
-                raise ValidationError(_("Your tax representative partner must have a tax number."))
+                raise ValidationError(self.env._("Your tax representative partner must have a tax number."))
             if not record.l10n_it_tax_representative_partner_id.country_id:
-                raise ValidationError(_("Your tax representative partner must have a country."))
+                raise ValidationError(self.env._("Your tax representative partner must have a country."))
 
     @api.depends("account_edi_proxy_client_ids", "l10n_it_codice_fiscale")
     def _compute_l10n_it_edi_proxy_user_id(self):
@@ -158,15 +158,15 @@ class ResCompany(models.Model):
         checks = {
             'company_vat_codice_fiscale_missing': {
                 'fields': [('vat', 'l10n_it_codice_fiscale')],
-                'message': _("Company/ies should have a VAT number or Codice Fiscale."),
+                'message': self.env._("Company/ies should have a VAT number or Codice Fiscale."),
             },
             'company_address_missing': {
                 'fields': [('street', 'street2'), ('zip',), ('city',), ('country_id',)],
-                'message': _("Company/ies should have a complete address, verify their Street, City, Zipcode and Country."),
+                'message': self.env._("Company/ies should have a complete address, verify their Street, City, Zipcode and Country."),
             },
             'company_l10n_it_tax_system_missing': {
                 'fields': [('l10n_it_tax_system',)],
-                'message': _("Company/ies should have a Tax System"),
+                'message': self.env._("Company/ies should have a Tax System"),
             },
         }
         errors = {}
@@ -175,14 +175,14 @@ class ResCompany(models.Model):
                 if invalid_records := self.filtered(lambda record: not any(record[field] for field in fields_tuple)):
                     errors[f"l10n_it_edi_{key}"] = {
                         'message': check['message'],
-                        'action_text': _("View Company/ies"),
-                        'action': invalid_records._get_records_action(name=_("Check Company Data")),
+                        'action_text': self.env._("View Company/ies"),
+                        'action': invalid_records._get_records_action(name=self.env._("Check Company Data")),
                     }
         if self.filtered(lambda x: not x.l10n_it_edi_proxy_user_id):
             errors['l10n_it_edi_settings_l10n_it_edi_proxy_user_id'] = {
-                'message': _("You need to set the Codice Fiscale on your company."),
-                'action_text': _("View Company/ies"),
-                'action': self._get_records_action(name=_("Check Company Data")),
+                'message': self.env._("You need to set the Codice Fiscale on your company."),
+                'action_text': self.env._("View Company/ies"),
+                'action': self._get_records_action(name=self.env._("Check Company Data")),
             }
         return errors
 

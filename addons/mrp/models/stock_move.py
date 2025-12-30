@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from odoo import _, api, Command, fields, models
+from odoo import api, Command, fields, models
 from odoo.tools import OrderedSet, float_is_zero
 from odoo.exceptions import ValidationError
 
@@ -228,7 +228,7 @@ class StockMove(models.Model):
     def _check_negative_quantity(self):
         for move in self:
             if move.raw_material_production_id and move.product_uom.compare(move.quantity, 0) < 0:
-                raise ValidationError(_("Please enter a positive quantity."))
+                raise ValidationError(self.env._("Please enter a positive quantity."))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -400,13 +400,13 @@ class StockMove(models.Model):
         self.ensure_one()
         action = super().action_show_details()
         if self.raw_material_production_id:
-            action['name'] = _("Components")
+            action['name'] = self.env._("Components")
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_raw').id, 'form')]
             action['context']['show_destination_location'] = False
             action['context']['force_manual_consumption'] = True
             action['context']['active_mo_id'] = self.raw_material_production_id.id
         elif self.production_id:
-            action['name'] = _("Move Byproduct")
+            action['name'] = self.env._("Move Byproduct")
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_finished').id, 'form')]
             action['context']['show_source_location'] = False
             action['context']['show_reserved_quantity'] = False

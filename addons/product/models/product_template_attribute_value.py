@@ -2,7 +2,7 @@
 
 from random import randint
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 
@@ -80,7 +80,7 @@ class ProductTemplateAttributeValue(models.Model):
     def _check_valid_values(self):
         for ptav in self:
             if ptav.ptav_active and ptav.product_attribute_value_id not in ptav.attribute_line_id.value_ids:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "The value %(value)s is not defined for the attribute %(attribute)s"
                     " on the product %(product)s.",
                     value=ptav.product_attribute_value_id.display_name,
@@ -93,7 +93,7 @@ class ProductTemplateAttributeValue(models.Model):
         if any('ptav_product_variant_ids' in v for v in vals_list):
             # Force write on this relation from `product.product` to properly
             # trigger `_compute_combination_indices`.
-            raise UserError(_("You cannot update related variants from the values. Please update related values from the variants."))
+            raise UserError(self.env._("You cannot update related variants from the values. Please update related values from the variants."))
         return super().create(vals_list)
 
     def write(self, vals):
@@ -101,19 +101,19 @@ class ProductTemplateAttributeValue(models.Model):
         if 'ptav_product_variant_ids' in values:
             # Force write on this relation from `product.product` to properly
             # trigger `_compute_combination_indices`.
-            raise UserError(_("You cannot update related variants from the values. Please update related values from the variants."))
+            raise UserError(self.env._("You cannot update related variants from the values. Please update related values from the variants."))
         pav_in_values = 'product_attribute_value_id' in values
         product_in_values = 'product_tmpl_id' in values
         if pav_in_values or product_in_values:
             for ptav in self:
                 if pav_in_values and ptav.product_attribute_value_id.id != values['product_attribute_value_id']:
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         "You cannot change the value of the value %(value)s set on product %(product)s.",
                         value=ptav.display_name,
                         product=ptav.product_tmpl_id.display_name,
                     ))
                 if product_in_values and ptav.product_tmpl_id.id != values['product_tmpl_id']:
-                    raise UserError(_(
+                    raise UserError(self.env._(
                         "You cannot change the product of the value %(value)s set on product %(product)s.",
                         value=ptav.display_name,
                         product=ptav.product_tmpl_id.display_name,

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -30,7 +30,7 @@ class EventEvent(models.Model):
         goes through a CRON job that runs in batches. """
 
         if not self.env.user.has_group('event.group_event_manager'):
-            raise UserError(_("Only Event Managers are allowed to re-generate all leads."))
+            raise UserError(self.env._("Only Event Managers are allowed to re-generate all leads."))
 
         registrations_count = self.env['event.registration'].search_count([
             ('event_id', 'in', self.ids),
@@ -43,16 +43,16 @@ class EventEvent(models.Model):
                 ('state', 'not in', ['draft', 'cancel']),
             ])._apply_lead_generation_rules(event_lead_rules)
             if leads:
-                notification = _("Yee-ha, %(leads_count)s Leads have been created!", leads_count=len(leads))
+                notification = self.env._("Yee-ha, %(leads_count)s Leads have been created!", leads_count=len(leads))
             else:
-                notification = _("Aww! No Leads created, check your Lead Generation Rules and try again.")
+                notification = self.env._("Aww! No Leads created, check your Lead Generation Rules and try again.")
         else:
             self.env['event.lead.request'].sudo().create([{
                 'event_id': event.id,
                 'event_lead_rule_ids': event_lead_rules,
             } for event in self])
             self.env.ref('event_crm.ir_cron_generate_leads')._trigger()
-            notification = _("Got it! We've noted your request. Your leads will be created soon!")
+            notification = self.env._("Got it! We've noted your request. Your leads will be created soon!")
 
         return {
             'type': 'ir.actions.client',

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 
@@ -19,7 +19,7 @@ class AccountJournal(models.Model):
             lambda p: p.journal_id.id in self.ids and p.state != 'disabled'
         )
         if linked_providers:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "You must first deactivate a payment provider before deleting its journal.\n"
                 "Linked providers: %s", ', '.join(p.display_name for p in linked_providers)
             ))
