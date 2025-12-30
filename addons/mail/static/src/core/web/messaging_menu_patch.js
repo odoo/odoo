@@ -46,6 +46,9 @@ patch(MessagingMenu.prototype, {
         );
     },
     beforeOpen() {
+        if (!this.store.discuss) {
+            return;
+        }
         this.state.searchOpen = false;
         this.store.discuss.searchTerm = "";
         this.store.isReady.then(() => {
@@ -77,7 +80,7 @@ patch(MessagingMenu.prototype, {
             onClick: () => {
                 this.pwa.show();
             },
-            iconSrc: this.store.odoobot.avatarUrl,
+            iconSrc: this.store.odoobot?.avatarUrl,
             partner: this.store.odoobot,
             isShown: this.store.discuss.activeTab === "notification" && this.canPromptToInstall,
         };
@@ -86,7 +89,7 @@ patch(MessagingMenu.prototype, {
         return {
             body: _t("Stay tuned! Enable push notifications to never miss a message."),
             displayName: _t("Turn on notifications"),
-            iconSrc: this.store.odoobot.avatarUrl,
+            iconSrc: this.store.odoobot?.avatarUrl,
             partner: this.store.odoobot,
             isShown:
                 this.store.discuss.activeTab === "notification" && this.shouldAskPushPermission,

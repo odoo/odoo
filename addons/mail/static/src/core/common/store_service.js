@@ -132,7 +132,7 @@ export class Store extends BaseStore {
 
     standaloneInboxMessages = fields.Many("mail.message", {
         compute() {
-            const messages = this.store.inbox.messages.filter((m) => !m.thread);
+            const messages = (this.store.inbox?.messages ?? []).filter((m) => !m.thread);
             return messages.sort(
                 (m1, m2) => compareDatetime(m2.datetime, m1.datetime) || m2.id - m1.id
             );

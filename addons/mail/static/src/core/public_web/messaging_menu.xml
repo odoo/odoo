@@ -2,6 +2,10 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessagingMenu">
+    <t t-if="store.discuss?.exists()" t-call="mail.MessagingMenu.main"/>
+</t>
+
+<t t-name="mail.MessagingMenu.main">
     <t t-if="env.inDiscussApp" t-call="mail.MessagingMenu.content"/>
 </t>
 

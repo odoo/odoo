@@ -31,8 +31,15 @@ export class DiscussClientAction extends Component {
             // bracket to avoid blocking rendering with restore promise
             this.restoreDiscussThread(nextProps);
         });
-        onMounted(() => (this.store.discuss.isActive = true));
-        onWillUnmount(() => (this.store.discuss.isActive = false));
+        onMounted(() => this.setDiscussActive(true));
+        onWillUnmount(() => this.setDiscussActive(false));
+    }
+
+    setDiscussActive(isActive) {
+        if (!this.store.discuss) {
+            return;
+        }
+        this.store.discuss.isActive = isActive;
     }
 
     getActiveId(props) {

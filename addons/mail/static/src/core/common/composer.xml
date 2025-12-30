@@ -2,6 +2,10 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Composer">
+    <t t-if="props.composer?.exists()" t-call="mail.Composer.main"/>
+</t>
+
+<t t-name="mail.Composer.main">
     <t t-set="isChatterComposer" t-value="extended and !props.composer.message"/>
     <t t-set="partitionedActions" t-value="composerActions.partition"/>
     <t t-set="compact" t-value="props.mode === 'compact'"/>
@@ -167,6 +171,7 @@
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <t t-set="moreName">More Actions</t>
             <ActionList inline="true" actions="[{
+                'condition': true,
                 'disabledCondition': areAllActionsDisabled,
                 'icon': 'fa fa-plus-circle',
                 'id': 'more-actions',

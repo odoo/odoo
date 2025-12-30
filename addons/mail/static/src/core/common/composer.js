@@ -87,7 +87,7 @@ export class Composer extends Component {
         allowUpload: true,
     };
     static props = [
-        "composer",
+        "composer?",
         "autofocus?",
         "onCloseFullComposerCallback?",
         "onDiscardCallback?",
@@ -120,7 +120,7 @@ export class Composer extends Component {
             ),
         });
         this.attachmentUploader = useAttachmentUploader(
-            this.thread ?? this.props.composer.message.thread,
+            this.thread ?? this.props.composer?.message.thread,
             { composer: this.props.composer }
         );
         this.ui = useService("ui");
@@ -137,7 +137,7 @@ export class Composer extends Component {
         this.fullComposerBus = new EventBus();
         this.selection = useSelection({
             refName: "textarea",
-            model: this.props.composer.selection,
+            model: this.props.composer?.selection,
             preserveOnClickAwayPredicate: async (ev) => {
                 // Let event be handled by bubbling handlers first.
                 await new Promise(setTimeout);
@@ -200,15 +200,15 @@ export class Composer extends Component {
                     this.editor.shared.selection.focusEditable();
                 }
             },
-            () => [this.props.autofocus + this.props.composer.autofocus, this.props.placeholder]
+            () => [this.props.autofocus + this.props.composer?.autofocus, this.props.placeholder]
         );
         useEffect(
             () => {
-                if (this.props.composer.replyToMessage) {
+                if (this.props.composer?.replyToMessage) {
                     this.props.composer.autofocus++;
                 }
             },
-            () => [this.props.composer.replyToMessage]
+            () => [this.props.composer?.replyToMessage]
         );
         useEffect(
             () => {
@@ -225,43 +225,48 @@ export class Composer extends Component {
                 }
                 this.saveContentDebounced();
             },
-            () => [this.props.composer.composerText, this.ref.el]
+            () => [this.props.composer?.composerText, this.ref.el]
         );
         useEffect(
             () => {
-                if (!this.props.composer.forceCursorMove) {
+                if (!this.props.composer?.forceCursorMove) {
                     return;
                 }
                 this.selection.restore();
                 this.props.composer.forceCursorMove = false;
             },
-            () => [this.props.composer.forceCursorMove]
+            () => [this.props.composer?.forceCursorMove]
         );
         onMounted(() => {
             this.ref.el?.scrollTo({ top: 0, behavior: "instant" });
-            if (!this.props.composer.composerText) {
+            if (!this.props.composer?.composerText) {
                 this.restoreContent();
             }
         });
         onWillUnmount(() => {
+            if (!this.props.composer) {
+                return;
+            }
             this.props.composer.isFocused = false;
         });
-        const composerProxy = reactive(this.props.composer, () => {
-            if (this.status === 2 /* DESTROYED */) {
-                return;
-            }
-            const composerHtml = composerProxy.composerHtml;
-            if (this.updateFromEditor) {
-                return;
-            }
-            if (!this.editor?.editable) {
-                return;
-            }
-            setElementContent(this.editor.editable, composerHtml);
-            this.editor.shared.selection.setCursorEnd(lastLeaf(this.editor.editable));
-            this.editor.shared.history.addStep();
-        });
-        void composerProxy.composerHtml; // start observing
+        if (this.props.composer) {
+            const composerProxy = reactive(this.props.composer, () => {
+                if (this.status === 2 /* DESTROYED */) {
+                    return;
+                }
+                const composerHtml = composerProxy?.composerHtml;
+                if (this.updateFromEditor) {
+                    return;
+                }
+                if (!this.editor?.editable) {
+                    return;
+                }
+                setElementContent(this.editor.editable, composerHtml);
+                this.editor.shared.selection.setCursorEnd(lastLeaf(this.editor.editable));
+                this.editor.shared.history.addStep();
+            });
+            void composerProxy.composerHtml; // start observing
+        }
     }
 
     get areAllActionsDisabled() {
@@ -362,7 +367,7 @@ export class Composer extends Component {
     }
 
     get thread() {
-        return this.props.composer.targetThread;
+        return this.props.composer?.targetThread;
     }
 
     get allowUpload() {
@@ -941,6 +946,9 @@ export class Composer extends Component {
 
     saveContent() {
         const composer = toRaw(this.props.composer);
+        if (!composer?.exists()) {
+            return;
+        }
         const saveContentToLocalStorage = ({
             composerHtml,
             emailAddSignature,
