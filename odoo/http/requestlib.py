@@ -11,6 +11,7 @@ import typing
 import warnings
 from contextlib import contextmanager, nullcontext
 from datetime import datetime
+from urllib.parse import urlsplit
 
 import babel.core
 from werkzeug.datastructures import (
@@ -389,7 +390,8 @@ class Request:
         if isinstance(location, URL):
             location = location.to_url()
         if local:
-            location = '/' + url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/\\')
+            location = url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/\\')
+            location = '/' + urlsplit(location).geturl().lstrip('/\\')
         if self.db:
             return self.env['ir.http']._redirect(location, code)
         return redirect(location, code, Response=Response)
