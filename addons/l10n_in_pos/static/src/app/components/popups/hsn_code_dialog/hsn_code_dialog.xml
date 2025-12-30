@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_in_pos.hsnCodeDialog">
+        <Dialog size="'md'" title.translate="Missing HSN/SAC Codes">
+            <div>
+                <p>
+                    As POS sales are reported in GSTR-1, HSN/SAC codes must be set on all taxable products.<br/>
+                    Some products are missing this information, which prevents the session from being closed.
+                </p>
+                <p>
+                    If you know the HSN codes, you can go to Products and set the missing ones there.
+                </p>
+            </div>
+            <t t-set-slot="footer">
+                <div class="modal-footer-right d-flex gap-2">
+                    <button class="button icon btn btn-lg btn-primary" t-on-click="redirect">
+                        Go to Products
+                    </button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
