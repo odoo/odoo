@@ -4543,7 +4543,11 @@ describe("onDrop", () => {
                 offset: defTextNode.textContent.length,
             }),
         });
-
+        setSelection({
+            anchorNode: iconElement,
+            anchorOffset: 0,
+        });
+        await animationFrame();
         const dragdata = new DataTransfer();
         await dispatch(iconElement, "dragstart", { dataTransfer: dragdata });
 
