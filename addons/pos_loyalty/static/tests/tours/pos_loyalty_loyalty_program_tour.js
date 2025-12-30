@@ -29,9 +29,11 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "1"),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "2"),
             // At this point, AAA Test Partner has 4 points.
+            PosLoyalty.isMoreControlButtonActive(true),
             PosLoyalty.isRewardButtonHighlighted(true),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "3"),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1"),
+            PosLoyalty.isMoreControlButtonActive(false),
             PosLoyalty.isRewardButtonHighlighted(false),
             PosLoyalty.orderTotalIs("6.40"),
             PosLoyalty.finalizeOrder("Cash", "10"),

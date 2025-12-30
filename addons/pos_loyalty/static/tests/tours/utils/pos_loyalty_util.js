@@ -251,3 +251,12 @@ export function checkPartnerPoints(name, points) {
         },
     ];
 }
+
+export function isMoreControlButtonActive(active) {
+    return {
+        content: "More control button is " + (active ? "active" : "not active"),
+        trigger: active
+            ? ".control-buttons .more-btn.active"
+            : ".control-buttons:not(:has(.more-btn.active))",
+    };
+}
