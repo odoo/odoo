@@ -67,6 +67,33 @@ class TestUi(TestPointOfSaleHttpCommon):
                 })
             ]
         })
+        # Basic Ticket
+        cls.test_event_basic = cls.env['event.event'].create({
+            'name': 'Basic Event Ticket',
+            'user_id': cls.pos_admin.id,
+            'date_begin': datetime.datetime.now() + datetime.timedelta(days=1),
+            'date_end': datetime.datetime.now() + datetime.timedelta(days=4),
+            'seats_limited': True,
+            'seats_max': 2,
+            'event_ticket_ids': [(0, 0, {
+                'name': 'Ticket Basic',
+                'product_id': cls.product_event.id,
+                'seats_max': 1,
+                'price': 100,
+            })],
+            'question_ids': [
+                (0, 0, {
+                    'title': 'Question1',
+                    'question_type': 'name',
+                    'once_per_order': False,
+                }),
+                (0, 0, {
+                    'title': 'Question2',
+                    'question_type': 'email',
+                    'once_per_order': False,
+                })
+            ]
+        })
 
     def test_selling_event_in_pos(self):
         self.pos_user.write({
@@ -117,7 +144,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'SellingEventInPos2', login="pos_user")
 
         order = self.env['pos.order'].search([], order='id desc', limit=1)
-        event_registration = order.lines[0].event_registration_ids
+        basic_event_registration = order.lines[0].event_registration_ids
+        self.assertEqual(basic_event_registration.name, "DEMO")
+        event_registration = order.lines[1].event_registration_ids
         event_answer_name = event_registration.registration_answer_ids.value_answer_id.mapped('name')
         self.assertEqual(len(event_registration.registration_answer_ids), 3)
         self.assertEqual(event_answer_name, ['Q1-Answer1', 'Q2-Answer1', 'Q3-Answer1'])

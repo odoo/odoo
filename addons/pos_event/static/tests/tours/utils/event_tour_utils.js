@@ -29,22 +29,22 @@ export function answerTicketSelectQuestion(ticketNumber, question, answer) {
     ];
 }
 
-export function answerGlobalSelectQuestion(question, answer) {
-    return [
-        {
-            content: `Answer question ${question} with ${answer} for global`,
-            trigger: `.global_question:contains('${question}') select`,
-            run: `selectByLabel ${answer}`,
-        },
-    ];
-}
-
 export function answerTicketQuestion(ticketNumber, question, answer) {
     return [
         {
             content: `Answer question ${question} with ${answer} for ticket ${ticketNumber}`,
             trigger: `.ticket_question:contains('Ticket #${ticketNumber}') .input-group:contains('${question}') input`,
             run: `edit ${answer}`,
+        },
+    ];
+}
+
+export function answerGlobalSelectQuestion(question, answer) {
+    return [
+        {
+            content: `Answer question ${question} with ${answer} for global`,
+            trigger: `.global_question:contains('${question}') select`,
+            run: `selectByLabel ${answer}`,
         },
     ];
 }
