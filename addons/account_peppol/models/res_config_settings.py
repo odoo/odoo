@@ -62,6 +62,8 @@ class ResConfigSettings(models.TransientModel):
                 params=params,
             )
         except AccountEdiProxyError as e:
+            if e.code == 'no_such_user_found' and 'cancel_peppol_registration' in endpoint:
+                return {'error': _("There is no such user in proxy server")}
             raise UserError(e.message)
 
         if 'error' in response:
