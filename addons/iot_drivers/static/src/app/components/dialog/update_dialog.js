@@ -13,40 +13,11 @@ export class UpdateDialog extends Component {
     setup() {
         this.store = useStore();
         this.state = useState({
-            initialization: true,
-            loading: false,
             waitRestart: false,
-            odooIsUpToDate: false,
-            imageIsUpToDate: false,
-            currentCommitHash: "",
         });
     }
 
-    onClose() {
-        this.state.initialization = [];
-    }
-
-    async getVersionInfo() {
-        try {
-            const data = await this.store.rpc({
-                url: "/iot_drivers/version_info",
-            });
-
-            if (data.status === "error") {
-                console.error(data.message);
-                return;
-            }
-
-            this.state.odooIsUpToDate = data.odooIsUpToDate;
-            this.state.imageIsUpToDate = data.imageIsUpToDate;
-            this.state.currentCommitHash = data.currentCommitHash;
-            this.state.initialization = false;
-        } catch {
-            console.warn("Error while fetching version info");
-        }
-    }
-
-    async updateGitTree() {
+    async update() {
         this.state.waitRestart = true;
         try {
             const data = await this.store.rpc({
@@ -63,10 +34,6 @@ export class UpdateDialog extends Component {
         }
     }
 
-    get everythingIsUpToDate() {
-        return this.state.odooIsUpToDate && this.state.imageIsUpToDate;
-    }
-
     static template = xml`
     <t t-translation="off">
         <LoadingFullScreen t-if="this.state.waitRestart">
@@ -75,63 +42,19 @@ export class UpdateDialog extends Component {
             </t>
         </LoadingFullScreen>
 
-        <Dialog identifier="'update-configuration'" btnName="'Update'" onOpen.bind="getVersionInfo" onClose.bind="onClose">
-            <t t-set-slot="header">
-                <div>
-                    Update
-                    <a href="https://www.odoo.com/documentation/latest/applications/general/iot/iot_advanced/updating_iot.html" class="fa fa-question-circle text-decoration-none text-dark" target="_blank"></a>
-                </div>
-            </t>
+        <Dialog
+            name="'IoT Box update'"
+            help="'https://www.odoo.com/documentation/latest/applications/general/iot/iot_advanced/updating_iot.html'"
+            btnName="'Update'">
             <t t-set-slot="body">
-                <div t-if="this.state.initialization" class="position-absolute top-0 start-0 bg-white h-100 w-100 justify-content-center align-items-center d-flex flex-column gap-3 always-on-top">
-                    <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p>Currently fetching update data...</p>
+                <div class="alert alert-info" role="alert">
+                    The IoT Box is automatically updated <b>every Monday</b> at midnight. 
                 </div>
-
-                <div class="mb-3" t-if="this.store.isLinux">
-                    <h6>Operating System Update</h6>
-                    <div t-if="this.state.imageIsUpToDate" class="text-success px-2 small">
-                        Operating system is up to date
-                    </div>
-                    <div t-else="" class="alert alert-warning small mb-0">
-                        A new version of the operating system is available, see:
-                        <a href="https://www.odoo.com/documentation/latest/applications/general/iot/iot_advanced/updating_iot.html#iot-updating-iot-image-code" target="_blank" class="alert-link">
-                            Flashing the SD Card on IoT Box
-                        </a>
-                    </div>
-                    <div t-if="this.store.dev" class="alert alert-light small">
-                        <a href="https://nightly.odoo.com/master/iotbox/" target="_blank" class="alert-link">
-                            Current: <t t-esc="this.store.base.version"/>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <h6>IoT Box Update</h6>
-                    <div t-if="this.state.odooIsUpToDate" class="text-success px-2 small">
-                        IoT Box is up to date.
-                    </div>
-                    <div t-else="" class="d-flex justify-content-between align-items-center alert alert-warning small">
-                        A new version of the IoT Box is available
-                        <button class="btn btn-primary btn-sm" t-on-click="updateGitTree">Update</button>
-                    </div>
-                    <div t-if="this.store.dev" class="alert alert-light small">
-                        Current: 
-                        <a t-att-href="'https://github.com/odoo/odoo/commit/' + this.state.currentCommitHash" target="_blank" class="alert-link">
-                            <t t-esc="this.state.currentCommitHash"/>
-                        </a>
-                    </div>
-                </div>
+                If you are experiencing issues that may have been fixed since the last update, you can manually trigger an update here.
             </t>
             <t t-set-slot="footer">
-                <button 
-                    type="button"
-                    t-att-class="'btn btn-sm ' + (this.everythingIsUpToDate ? 'btn-primary' : 'btn-secondary')"
-                    data-bs-dismiss="modal">
-                    Close
-                </button>
+                <button type="button" class="btn btn-sm btn-primary" t-on-click="update">Update</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
             </t>
         </Dialog>
     </t>

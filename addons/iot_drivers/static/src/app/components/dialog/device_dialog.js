@@ -50,10 +50,11 @@ export class DeviceDialog extends Component {
 
     static template = xml`
     <t t-translation="off">
-        <Dialog identifier="'device-list'" btnName="'Show'" isLarge="true">
-            <t t-set-slot="header">
-                Devices list
-            </t>
+        <Dialog
+            name="'Devices list'"
+            help="'https://www.odoo.com/documentation/latest/applications/general/iot/devices.html'"
+            btnName="'Show'"
+            isLarge="true">
             <t t-set-slot="body">
                 <div t-if="Object.keys(devices).length === 0" class="alert alert-warning fs-6" role="alert">
                     No devices found.

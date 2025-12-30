@@ -56,10 +56,10 @@ export class DatabaseDialog extends Component {
             </t>
         </LoadingFullScreen>
 
-        <Dialog identifier="'server-configuration'" btnName="'Configure'">
-            <t t-set-slot="header">
-                Configure Odoo Database
-            </t>
+        <Dialog
+            name="'Configure Odoo Database'"
+            help="'https://www.odoo.com/documentation/latest/applications/general/iot/connect.html'"
+            btnName="'Configure'">
             <t t-set-slot="body">
                 <div class="alert alert-warning fs-6 pb-0" role="alert" t-if="!store.base.server_status">
                     <ol>

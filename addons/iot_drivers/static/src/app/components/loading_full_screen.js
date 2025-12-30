@@ -12,7 +12,7 @@ export class LoadingFullScreen extends Component {
     setup() {
         this.store = useStore();
 
-        // We delay the RPC verification for 10 seconds to be sure that the Odoo service
+        // We delay the RPC verification to be sure that the Odoo service
         // was already restarted
         onMounted(() => {
             setTimeout(() => {
@@ -26,7 +26,7 @@ export class LoadingFullScreen extends Component {
                         console.warn("Odoo service is probably rebooting.");
                     }
                 }, 750);
-            }, 10000);
+            }, 2000);
         });
     }
 

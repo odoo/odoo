@@ -48,10 +48,7 @@ export class TimeDialog extends Component {
     }
 
     static template = xml`
-        <Dialog identifier="'time-dialog'" btnName="'View Uptime'">
-            <t t-set-slot="header">
-                IoT Box Uptime
-            </t>
+        <Dialog name="'IoT Box Uptime'" btnName="'View Uptime'">
             <t t-set-slot="body">
                 <div class="d-flex flex-column gap-4">
                   <div>

@@ -58,10 +58,10 @@ export class SixTerminalDialog extends Component {
             </t>
         </LoadingFullScreen>
 
-        <Dialog identifier="'six-configuration'" btnName="'Configure'">
-            <t t-set-slot="header">
-                Configure a Six Terminal
-            </t>
+        <Dialog
+            name="'Configure a Six Terminal'"
+            help="'https://www.odoo.com/documentation/latest/applications/sales/point_of_sale/payment_methods/terminals/six.html'"
+            btnName="'Configure'">
             <t t-set-slot="body">
                 <div class="alert alert-info fs-6" role="alert">
                     Set the Terminal ID (TID) of the terminal you want to use.
