@@ -625,6 +625,9 @@ class Websocket:
 
     def _terminate(self):
         """ Close the underlying TCP socket. """
+        if self.state == ConnectionState.CLOSED:
+            return
+        self.state = ConnectionState.CLOSED
         with suppress(OSError, TimeoutError):
             self.__socket.shutdown(socket.SHUT_WR)
             # Call recv until obtaining a return value of 0 indicating
@@ -639,7 +642,6 @@ class Websocket:
         self.__selector.close()
         self.__socket.close()
         self.__cmd_queue.close()
-        self.state = ConnectionState.CLOSED
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
         with acquire_cursor(self._db) as cr:
