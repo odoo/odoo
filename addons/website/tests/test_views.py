@@ -1234,6 +1234,30 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.assertIn('to_translate', specific_view.with_context(lang='en_US', edit_translations=True).arch)
         self.assertIn('translated', specific_view.with_context(lang='fr_BE', edit_translations=True).arch)
 
+    def test_load_module_terms_preserve_delayed_translation(self):
+        self.env['res.lang']._activate_lang('fr_BE')
+        base_footer = self.env['ir.ui.view'].search([
+            ('key', '=', 'website.footer_custom'),
+            ('website_id', '=', False),
+        ], limit=1)
+        base_footer.with_context(website_id=1).write({'active': True})
+        specific_footer = base_footer._get_specific_views()
+        specific_footer.with_context(lang='en_US').arch_db = '<div>hello</div>'
+        specific_footer.update_field_translations('arch_db', {'fr_BE': {'hello': 'bonjour'}})
+
+        self.assertEqual(specific_footer.with_context(lang='en_US').arch, '<div>hello</div>')
+        self.assertEqual(specific_footer.with_context(lang='fr_BE').arch, '<div>bonjour</div>')
+
+        specific_footer.with_context(delay_translations=True, lang='en_US').arch_db = '<h1>hello</h1>'
+
+        self.assertEqual(specific_footer.with_context(lang='en_US').arch, '<h1>hello</h1>')
+        self.assertEqual(specific_footer.with_context(lang='fr_BE').arch, '<div>bonjour</div>')
+
+        self.env['ir.module.module']._load_module_terms(['website'], ['en_US', 'fr_BE'])
+
+        self.assertEqual(specific_footer.with_context(lang='en_US').arch, '<h1>hello</h1>')
+        self.assertEqual(specific_footer.with_context(lang='fr_BE').arch, '<div>bonjour</div>')
+
     def test_soc_complete_flow(self):
         """
         Check the creation of views from specific-website environments.

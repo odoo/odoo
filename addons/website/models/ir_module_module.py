@@ -522,10 +522,10 @@ class IrModuleModule(models.Model):
                 if not langs_update:
                     continue
                 # get dictionaries limited to the requested languages
-                generic_arch_db_en = generic_arch_db.get('en_US')
-                specific_arch_db_en = specific_arch_db.get('en_US')
-                generic_arch_db_update = {k: generic_arch_db[k] for k in langs_update}
-                specific_arch_db_update = {k: specific_arch_db.get(k, specific_arch_db_en) for k in langs_update}
+                generic_arch_db_en = generic_arch_db.get('_en_US', generic_arch_db.get('en_US'))
+                specific_arch_db_en = specific_arch_db.get('_en_US', specific_arch_db.get('en_US'))
+                generic_arch_db_update = {k: generic_arch_db.get('_' + k, generic_arch_db[k]) for k in langs_update}
+                specific_arch_db_update = {k: specific_arch_db.get('_' + k, specific_arch_db.get(k, specific_arch_db_en)) for k in langs_update}
                 generic_translation_dictionary = field.get_translation_dictionary(generic_arch_db_en, generic_arch_db_update)
                 specific_translation_dictionary = field.get_translation_dictionary(specific_arch_db_en, specific_arch_db_update)
                 # update specific_translation_dictionary
@@ -536,7 +536,9 @@ class IrModuleModule(models.Model):
                         if overwrite or term_en == specific_term_langs[lang]:
                             specific_term_langs[lang] = generic_term_lang
                 for lang in langs_update:
-                    specific_arch_db[lang] = field.translate(
+                    if specific_arch_db.get('_' + lang) == specific_arch_db.get(lang):
+                        specific_arch_db.pop('_' + lang, None)
+                    specific_arch_db[('_' + lang) if ('_' + lang) in specific_arch_db else lang] = field.translate(
                         lambda term: specific_translation_dictionary.get(term, {lang: None})[lang], specific_arch_db_en)
                 field._update_cache(View.with_context(prefetch_langs=True).browse(specific_id), specific_arch_db, dirty=True)
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
