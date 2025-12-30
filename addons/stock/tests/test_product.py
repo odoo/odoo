@@ -328,7 +328,7 @@ class TestVirtualAvailable(TestStockCommon):
         product_form = Form(product)
         product_form.type = 'service'
         product = product_form.save()
-        self.assertEqual(product.tracking, 'none')
+        self.assertEqual(product.tracking, False)
 
         product.is_storable = True
         product.tracking = 'serial'
@@ -337,7 +337,7 @@ class TestVirtualAvailable(TestStockCommon):
         product_form = Form(product.product_variant_id)
         product_form.type = 'service'
         product = product_form.save()
-        self.assertEqual(product.tracking, 'none')
+        self.assertEqual(product.tracking, False)
 
     def test_domain_locations_only_considers_selected_companies(self):
         product = self.env['product.product'].create({'name': 'Product', 'is_storable': True})

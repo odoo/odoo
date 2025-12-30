@@ -713,7 +713,7 @@ class StockPicking(models.Model):
 
     def _compute_has_tracking(self):
         for picking in self:
-            picking.has_tracking = any(m.has_tracking != 'none' for m in picking.move_ids)
+            picking.has_tracking = any(m.product_id.tracking in ['lot', 'serial'] for m in picking.move_ids)
 
     @api.depends('picking_type_id')
     def _compute_move_type(self):
@@ -1332,13 +1332,13 @@ class StockPicking(models.Model):
         def get_relevant_move_line_ids(none_done_picking_ids, picking):
             # Get all move_lines if picking has no quantity set, otherwise only get the move_lines with some quantity set.
             if picking.id in none_done_picking_ids:
-                return picking.move_line_ids.filtered(lambda ml: ml.product_id and ml.product_id.tracking != 'none').ids
+                return picking.move_line_ids.filtered(lambda ml: ml.product_id and ml.product_id.tracking in ['lot', 'serial']).ids
             else:
                 return get_line_with_done_qty_ids(picking.move_line_ids)
 
         def get_line_with_done_qty_ids(move_lines):
             # Get only move_lines that has some quantity set.
-            return move_lines.filtered(lambda ml: ml.product_id and ml.product_id.tracking != 'none' and ml.picked and ml.uom_id.compare(ml.quantity, 0)).ids
+            return move_lines.filtered(lambda ml: ml.product_id.tracking in ['lot', 'serial'] and ml.picked and ml.uom_id.compare(ml.quantity, 0)).ids
 
         if separate_pickings:
             # If pickings are checked independently, get full/partial move_lines depending if each picking has no quantity set.
@@ -1348,7 +1348,7 @@ class StockPicking(models.Model):
             if any(picking.id not in none_done_picking_ids for picking in self):
                 lines_to_check_ids = get_line_with_done_qty_ids(self.move_line_ids)
             else:
-                lines_to_check_ids = self.move_line_ids.filtered(lambda ml: ml.product_id and ml.product_id.tracking != 'none').ids
+                lines_to_check_ids = self.move_line_ids.filtered(lambda ml: ml.product_id and ml.product_id.tracking in ['lot', 'serial']).ids
 
         return self.env['stock.move.line'].browse(lines_to_check_ids)
 

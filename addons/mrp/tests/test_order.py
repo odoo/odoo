@@ -1277,10 +1277,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.qty_producing = 1
         mo2 = mo_form.save()
         move_byproduct = mo2.move_finished_ids.filtered(lambda m: m.product_id != mo.product_id)
-        details_operation_form = Form(move_byproduct, view=self.env.ref('stock.view_stock_move_operations'))
-        with details_operation_form.move_line_ids.new() as ml:
-            ml.lot_id = sn
-        details_operation_form.save()
+        move_byproduct.move_line_ids = [Command.create({'product_id': byproduct.id, 'lot_id': sn.id, 'quantity': 1})]
         with self.assertRaises(UserError):
             mo2.button_mark_done()
 

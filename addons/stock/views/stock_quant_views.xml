@@ -74,7 +74,7 @@
                             <field name="location_id" readonly="0" options="{'no_create': True}"/>
                             <field name="lot_id" groups="stock.group_production_lot"
                                 readonly="tracking not in ['serial', 'lot']"
-                                required="tracking != 'none'"
+                                required="tracking in ['serial', 'lot']"
                                 context="{'default_product_id': product_id}"/>
                             <field name="package_id" readonly="0" groups="stock.group_tracking_lot" context="{'show_src_package': 1}"/>
                             <field name="owner_id" readonly="0" groups="stock.group_tracking_owner" options="{'no_create': True}"/>

@@ -115,10 +115,10 @@ class StockMoveLine(models.Model):
     def _compute_lots_visible(self):
         for line in self:
             picking = line.picking_id
-            if picking.picking_type_id and line.product_id.tracking != 'none':  # TDE FIXME: not sure correctly migrated
+            if picking.picking_type_id and line.product_id.tracking in ['lot', 'serial']:
                 line.lots_visible = picking.picking_type_id.use_existing_lots or picking.picking_type_id.use_create_lots
             else:
-                line.lots_visible = line.product_id.tracking != 'none'
+                line.lots_visible = line.product_id.tracking in ['lot', 'serial']
 
     @api.depends('state')
     def _compute_picked(self):
@@ -187,7 +187,7 @@ class StockMoveLine(models.Model):
     @api.onchange('product_id', 'uom_id')
     def _onchange_product_id(self):
         if self.product_id:
-            self.lots_visible = self.product_id.tracking != 'none'
+            self.lots_visible = self.product_id.tracking in ['lot', 'serial']
 
     @api.onchange('lot_name', 'lot_id')
     def _onchange_serial_number(self):
@@ -618,7 +618,7 @@ class StockMoveLine(models.Model):
 
             qty_done_float_compared = ml.uom_id.compare(ml.quantity, 0)
             if qty_done_float_compared > 0:
-                if ml.product_id.tracking == 'none':
+                if ml.tracking not in ['lot', 'serial']:
                     continue
                 picking_type_id = ml.move_id.picking_type_id
                 if not ml._exclude_requiring_lot():

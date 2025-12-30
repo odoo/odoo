@@ -569,7 +569,7 @@ class RepairOrder(models.Model):
             if not repair.product_id:
                 continue
 
-            if repair.product_id.product_tmpl_id.tracking != 'none' and not repair.lot_id:
+            if repair.product_id.tracking in ['lot', 'serial'] and not repair.lot_id:
                 raise ValidationError(_(
                     "Serial number is required for product to repair : %s",
                     repair.product_id.display_name

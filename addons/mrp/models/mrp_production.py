@@ -548,7 +548,7 @@ class MrpProduction(models.Model):
     @api.depends('product_id.tracking')
     def _compute_show_lots(self):
         for production in self:
-            production.show_final_lots = production.product_id.tracking != 'none'
+            production.show_final_lots = production.product_id.tracking in ['lot', 'serial']
 
     def _inverse_lines(self):
         """ Little hack to make sure that when you change something on these objects, it gets saved"""
@@ -731,7 +731,7 @@ class MrpProduction(models.Model):
     @api.depends('state', 'move_raw_ids')
     def _compute_show_lot_ids(self):
         for order in self:
-            order.show_lot_ids = order.state != 'draft' and any(m.product_id.tracking != 'none' for m in order.move_raw_ids)
+            order.show_lot_ids = order.state != 'draft' and any(m.product_id.tracking in ['lot', 'serial'] for m in order.move_raw_ids)
 
     @api.depends('state', 'move_finished_ids')
     def _compute_show_allocation(self):
@@ -1392,7 +1392,7 @@ class MrpProduction(models.Model):
         is_waiting = self.warehouse_id.manufacture_steps != 'mrp_one_step' and self.picking_ids.filtered(lambda p: p.picking_type_id == self.warehouse_id.pbm_type_id and p.state not in ('done', 'cancel'))
 
         for move in (
-            self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none')
+            self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking not in ['lot', 'serial'])
             | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id or m.product_id.tracking == 'serial')
         ):
             is_byproduct = move in self.move_byproduct_ids
@@ -1906,7 +1906,7 @@ class MrpProduction(models.Model):
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
             # the finish move can already be completed by the workorder.
             for move in finish_moves:
-                if move.has_tracking != 'none' and not move.lot_ids:
+                if move.product_id.tracking in ['lot', 'serial'] and not move.lot_ids:
                     move.lot_ids = order.lot_producing_ids.ids
                 move.quantity = order.uom_id.round(order.qty_producing - order.qty_produced, rounding_method='HALF-UP')
                 extra_vals = order._prepare_finished_extra_vals()
@@ -2372,7 +2372,7 @@ class MrpProduction(models.Model):
 
     def _auto_production_checks(self):
         self.ensure_one()
-        return all(p.tracking == 'none' for p in self.move_raw_ids.product_id | self.move_finished_ids.product_id)\
+        return all(p.tracking not in ['lot', 'serial'] for p in self.move_raw_ids.product_id | self.move_finished_ids.product_id)\
             or self.product_uom_qty == 1 or (self.product_id.tracking != 'serial' and self.reservation_state in ('assigned', 'confirmed', 'waiting'))
 
     def _should_return_records(self):

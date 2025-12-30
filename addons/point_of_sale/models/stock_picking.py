@@ -214,7 +214,7 @@ class StockMove(models.Model):
     def _add_mls_related_to_order(self, related_order_lines, are_qties_done=True):
         lines_data = self._prepare_lines_data_dict(related_order_lines)
         # Moves with product_id not in related_order_lines. This can happend e.g. when product_id has a phantom-type bom.
-        moves_to_assign = self.filtered(lambda m: m.product_id.id not in lines_data or m.product_id.tracking == 'none'
+        moves_to_assign = self.filtered(lambda m: m.product_id.id not in lines_data or m.product_id.tracking not in ['lot', 'serial']
                                                   or (not m.picking_type_id.use_existing_lots and not m.picking_type_id.use_create_lots))
 
         # Check for any conversion issues in the moves before setting quantities

@@ -146,7 +146,7 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon, TestSaleCommon):
     def _cls_create_product(cls, name, uom_id, routes=()):
         p = Form(cls.env['product.product'])
         p.name = name
-        p.is_storable = True
+        p.tracking = 'none'
         p.uom_id = uom_id
         p.route_ids.clear()
         for r in routes:

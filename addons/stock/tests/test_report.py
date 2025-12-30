@@ -33,11 +33,11 @@ class TestReportsCommon(TransactionCase):
             'tracking': 'serial',
         })
 
-        product_form = Form(cls.env['product.product'])
-        product_form.is_storable = True
-        product_form.name = 'Product'
-        product_form.categ_id = cls.env.ref('product.product_category_goods')
-        cls.product = product_form.save()
+        cls.product = cls.env['product.product'].create({
+            'name': 'Product',
+            'categ_id': cls.env.ref('product.product_category_goods').id,
+            'tracking': 'none',
+        })
         cls.product_template = cls.product.product_tmpl_id
         cls.wh_2 = cls.env['stock.warehouse'].create({
             'name': 'Evil Twin Warehouse',

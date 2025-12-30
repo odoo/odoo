@@ -108,7 +108,17 @@ class TestStockMoveInvoice(TestSaleCommon):
         serial_numbers = self.env['stock.lot'].create([{
             'name': str(x),
             'product_id': self.product_cable_management_box.id,
-        } for x in range(5)])
+        } for x in range(2)])
+
+        # Add stock for the serial numbers
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        for lot in serial_numbers:
+            self.env['stock.quant']._update_available_quantity(
+                self.product_cable_management_box,
+                warehouse.lot_stock_id,
+                1,
+                lot_id=lot
+            )
 
         self.sale_prepaid = self.SaleOrder.create({
             'partner_id': self.partner_18.id,

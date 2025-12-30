@@ -145,7 +145,7 @@ patch(PosStore.prototype, {
 
             const converted_line = converted_lines.find((l) => l.id === line.id);
             if (
-                newLine.getProduct().tracking !== "none" &&
+                ["lot", "serial"].includes(newLine.getProduct().tracking) &&
                 (this.pickingType.use_create_lots || this.pickingType.use_existing_lots) &&
                 converted_line.lot_names.length > 0
             ) {

@@ -261,7 +261,7 @@ class StockMove(models.Model):
     def _compute_display_assign_serial(self):
         for move in self:
             move.display_import_lot = (
-                move.has_tracking != 'none' and
+                move.product_id.tracking in ['lot', 'serial'] and
                 move.product_id and
                 move.picking_type_id.use_create_lots and
                 not move.origin_returned_move_id.id and
@@ -347,7 +347,7 @@ class StockMove(models.Model):
             elif len(move.move_line_ids) > 1:
                 move.show_details_visible = True
             else:
-                move.show_details_visible = show_details_visible or move.has_tracking != 'none'
+                move.show_details_visible = show_details_visible or (move.product_id.tracking in ['lot', 'serial'])
 
     @api.depends('state', 'picking_id.is_locked')
     def _compute_is_initial_demand_editable(self):
@@ -685,14 +685,14 @@ Please change the quantity done or the rounding precision in your settings.""",
         for move in self:
             move.show_quant = move.picking_code != 'incoming'\
                            and move.product_id.is_storable
-            move.show_lots_text = move.has_tracking != 'none'\
+            move.show_lots_text = move.product_id.tracking in ['lot', 'serial']\
                 and move.picking_type_id.use_create_lots\
                 and not move.picking_type_id.use_existing_lots\
                 and move.state != 'done' \
                 and not move.origin_returned_move_id.id
             move.show_lots_m2o = not move.show_quant\
                 and not move.show_lots_text\
-                and move.has_tracking != 'none'\
+                and move.product_id.tracking in ['lot', 'serial']\
                 and (move.picking_type_id.use_existing_lots or move.state == 'done' or move.origin_returned_move_id.id)
 
     @api.model
@@ -2699,7 +2699,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         self.ensure_one()
         if self.uom_id.is_zero(self.quantity):
             raise UserError(_("You can only enter positive quantities."))
-        if self.has_tracking != 'none' and not self.lot_ids:
+        if self.product_id.tracking in ['lot', 'serial'] and not self.lot_ids:
             raise UserError(_("You must select a lot/serial number."))
         if self.check_available_qty():
             return self._action_scrap()

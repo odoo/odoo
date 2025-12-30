@@ -94,7 +94,7 @@ class TestTraceability(TestMrpCommon):
 
             # Start MO production
             mo_form = Form(mo)
-            if finished_product.tracking != 'none':
+            if finished_product.tracking in ['lot', 'serial']:
                 mo_form.lot_producing_ids.set(self.env['stock.lot'].create({'name': 'Serial or Lot finished', 'product_id': finished_product.id}))
             mo = mo_form.save()
 
@@ -134,7 +134,7 @@ class TestTraceability(TestMrpCommon):
                 self.assertEqual(
                     line['columns'][-1], "1.00 Units", 'Part with tracking type "%s", should have quantity = 1' % (tracking)
                 )
-                unfoldable = False if tracking == 'none' else True
+                unfoldable = tracking in ['lot', 'serial']
                 self.assertEqual(
                     line['unfoldable'],
                     unfoldable,

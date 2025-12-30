@@ -502,7 +502,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('tracking')
     def _onchange_tracking(self):
-        if any(product.tracking != 'none' and product.qty_available > 0 for product in self):
+        if any(product.tracking in ['lot', 'serial'] and product.qty_available > 0 for product in self):
             return {
                 'warning': {
                     'title': _('Warning!'),
@@ -613,7 +613,7 @@ class ProductProduct(models.Model):
     # Be aware that the exact same function exists in product.template
     def action_open_quants(self):
         hide_location = not self.env.user.has_group('stock.group_stock_multi_locations')
-        hide_lot = all(product.tracking == 'none' for product in self)
+        hide_lot = not any(product.tracking in ['lot', 'serial'] for product in self)
         self = self.with_context(
             hide_location=hide_location, hide_lot=hide_lot,
             no_at_date=True,
@@ -793,8 +793,8 @@ class ProductTemplate(models.Model):
         ('serial', 'By Unique Serial Number'),
         ('lot', 'By Lots'),
         ('none', 'By Quantity')],
-        string="Tracking", required=True, default='none', # Not having a default value here causes issues when migrating.
-        compute='_compute_tracking', store=True, readonly=False, precompute=True,
+        string="Tracking",
+        compute='_compute_tracking', inverse='_set_tracking', store=True, readonly=False, precompute=True,
         help="Ensure the traceability of a storable product in your warehouse.")
     lot_sequence_id = fields.Many2one(
         'ir.sequence', 'Serial/Lot Numbers Sequence', default=lambda self: self.env.ref('stock.sequence_production_lots', raise_if_not_found=False),
@@ -987,7 +987,16 @@ class ProductTemplate(models.Model):
 
     @api.depends('is_storable')
     def _compute_tracking(self):
-        self.filtered(lambda t: not t.is_storable and t.tracking != 'none').tracking = 'none'
+        for template in self:
+            if not template.is_storable:
+                template.tracking = False
+            elif not template.tracking:
+                # Default to 'none' for storable products if tracking is not set
+                template.tracking = 'none'
+
+    def _set_tracking(self):
+        for template in self:
+            template.write({'is_storable': bool(template.tracking)})
 
     @api.onchange('type')
     def _onchange_type(self):

@@ -183,7 +183,7 @@
                                             <span t-field="move_line.uom_id" groups="uom.group_uom">UOM id</span>
                                         </div>
                                     </div>
-                                    <t t-if="move_line.product_id.tracking != 'none' and (move_line.lot_name or move_line.lot_id)">
+                                    <t t-if="move_line.product_id.tracking in ['lot', 'serial'] and (move_line.lot_name or move_line.lot_id)">
                                         <div t-field="move_line.lot_name or move_line.lot_id.name" t-options="{'widget': 'barcode', 'img_style': 'width:100%;height:35%'}"/>
                                         <div class="o_label_4x12 text-center"><span t-out="move_line.lot_name or move_line.lot_id.name">Demo Barcode</span></div>
                                     </t>

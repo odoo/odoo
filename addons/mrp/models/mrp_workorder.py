@@ -578,9 +578,6 @@ class MrpWorkorder(models.Model):
         for production in self.mapped("production_id"):
             production._link_workorders_and_moves()
 
-    def _get_byproduct_move_to_update(self):
-        return self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
-
     def _plan_workorders(self, from_date=False, alternative=True):
         """Plan or replan a set of manufacturing workorders
 

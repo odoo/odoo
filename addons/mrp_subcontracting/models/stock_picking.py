@@ -36,7 +36,7 @@ class StockPicking(models.Model):
     def _compute_show_lots_text(self):
         super()._compute_show_lots_text()
         for picking in self:
-            if any(move.is_subcontract and move.has_tracking != 'none' for move in picking.move_ids):
+            if any(move.is_subcontract and move.product_id.tracking in ['lot', 'serial'] for move in picking.move_ids):
                 picking.show_lots_text = False
 
     # -------------------------------------------------------------------------

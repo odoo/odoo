@@ -504,8 +504,8 @@
                                         create="parent.use_create_components_lots"
                                         context="{'default_product_id': product_id}"
                                         domain="[('product_id','=',product_id)]"/>
-                                    <button name="action_show_details" type="object" title="Show Details" string="Details" context="{'default_product_uom_qty': 0}" invisible="not show_details_visible or has_tracking == 'none'"/>
-                                    <button class="o_optional_button btn" name="action_show_details" type="object" title="Show Details" string="Details" context="{'default_product_uom_qty': 0}" invisible="has_tracking != 'none' or not show_details_visible"/>
+                                    <button name="action_show_details" type="object" title="Show Details" string="Details" context="{'default_product_uom_qty': 0}" invisible="not show_details_visible or has_tracking not in ['lot', 'serial']"/>
+                                    <button class="o_optional_button btn" name="action_show_details" type="object" title="Show Details" string="Details" context="{'default_product_uom_qty': 0}" invisible="(has_tracking in ['lot', 'serial']) or not show_details_visible"/>
                                 </list>
                             </field>
                         </page>
@@ -544,7 +544,7 @@
                                     <field name="move_lines_count" column_invisible="True"/>
                                     <field name="state" column_invisible="True" force_save="1"/>
                                     <field name="product_uom_qty" string="To Produce" force_save="1" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or parent.is_locked)"/>
-                                    <field name="quantity" column_invisible="parent.state == 'draft'" readonly="has_tracking != 'none'"/>
+                                    <field name="quantity" column_invisible="parent.state == 'draft'" readonly="has_tracking in ['lot', 'serial']"/>
                                     <field name="picked" string="Produced" column_invisible="parent.state == 'draft'" optional="show"/>
                                     <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                                     <field name="cost_share" optional="hide"/>
@@ -560,8 +560,8 @@
                                         create="parent.use_create_components_lots"
                                         context="{'default_product_id': product_id}"
                                         domain="[('product_id','=',product_id)]"/>
-                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" invisible="has_tracking == 'none' or not show_details_visible"/>
-                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" invisible="has_tracking != 'none' or not show_details_visible"/>
+                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" invisible="has_tracking not in ['lot', 'serial'] or not show_details_visible"/>
+                                    <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="fa-list" invisible="has_tracking in ['lot', 'serial'] or not show_details_visible"/>
                                 </list>
                             </field>
                         </page>

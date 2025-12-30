@@ -1638,7 +1638,9 @@ export class PosStore extends WithLazyGetterTrap {
 
         if (
             currentOrder.lines.some(
-                (line) => line.getProduct().tracking !== "none" && !line.hasValidProductLot()
+                (line) =>
+                    ["lot", "serial"].includes(line.getProduct().tracking) &&
+                    !line.hasValidProductLot()
             ) &&
             (this.pickingType.use_create_lots || this.pickingType.use_existing_lots)
         ) {

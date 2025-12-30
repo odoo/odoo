@@ -154,7 +154,7 @@ class TestRepairCommon(common.TransactionCase):
                 'inventory_quantity': qty,
             }
 
-            if product.tracking != 'none':
+            if product.tracking in ['lot', 'serial']:
                 qDict['lot_id'] = cls.env['stock.lot'].create({
                     'name': name + str(offset + x),
                     'product_id': product.id,
