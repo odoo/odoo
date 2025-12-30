@@ -13,7 +13,7 @@ import selectors
 import threading
 import time
 from collections import defaultdict, deque
-from contextlib import closing, suppress
+from contextlib import contextmanager, suppress
 from enum import IntEnum
 from psycopg2.pool import PoolError
 from urllib.parse import urlparse
@@ -36,17 +36,29 @@ _logger = logging.getLogger(__name__)
 
 
 MAX_TRY_ON_POOL_ERROR = 10
-DELAY_ON_POOL_ERROR = 0.03
+DELAY_ON_POOL_ERROR = 0.15
+JITTER_ON_POOL_ERROR = 0.3
 
 
+@contextmanager
 def acquire_cursor(db):
     """ Try to acquire a cursor up to `MAX_TRY_ON_POOL_ERROR` """
-    for tryno in range(1, MAX_TRY_ON_POOL_ERROR + 1):
-        with suppress(PoolError):
-            return odoo.registry(db).cursor()
-        time.sleep(random.uniform(DELAY_ON_POOL_ERROR, DELAY_ON_POOL_ERROR * tryno))
-    raise PoolError('Failed to acquire cursor after %s retries' % MAX_TRY_ON_POOL_ERROR)
-
+    delay = DELAY_ON_POOL_ERROR
+    try:
+        for _ in range(MAX_TRY_ON_POOL_ERROR):
+            # Yield before trying to acquire the cursor to let other
+            # greenlets release their cursor.
+            time.sleep(0)
+            with suppress(PoolError), odoo.registry(db).cursor() as cr:
+                yield cr
+                return
+            time.sleep(delay + random.uniform(0, JITTER_ON_POOL_ERROR))
+            delay *= 1.5
+        raise PoolError('Failed to acquire cursor after %s retries' % MAX_TRY_ON_POOL_ERROR)
+    finally:
+        # Yield after releasing the cursor to let waiting greenlets
+        # immediately pick up the freed connection.
+        time.sleep(0)
 
 # ------------------------------------------------------
 # EXCEPTIONS
@@ -561,6 +573,9 @@ class Websocket:
 
     def _terminate(self):
         """ Close the underlying TCP socket. """
+        if self.state == ConnectionState.CLOSED:
+            return
+        self.state = ConnectionState.CLOSED
         with suppress(OSError, TimeoutError):
             self.__socket.shutdown(socket.SHUT_WR)
             # Call recv until obtaining a return value of 0 indicating
@@ -573,7 +588,8 @@ class Websocket:
         self.__selector.unregister(self.__socket)
         self.__selector.close()
         self.__socket.close()
-        self.state = ConnectionState.CLOSED
+        self.__notif_sock_r.close()
+        self.__notif_sock_w.close()
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
         with acquire_cursor(self._db) as cr:
@@ -653,7 +669,7 @@ class Websocket:
         """
         if not self.__event_callbacks[event_type]:
             return
-        with closing(acquire_cursor(self._db)) as cr:
+        with acquire_cursor(self._db) as cr:
             env = api.Environment(cr, self._session.uid, self._session.context)
             for callback in self.__event_callbacks[event_type]:
                 try:
@@ -823,7 +839,7 @@ class WebsocketRequest:
         ) as exc:
             raise InvalidDatabaseException() from exc
 
-        with closing(acquire_cursor(self.db)) as cr:
+        with acquire_cursor(self.db) as cr:
             self.env = api.Environment(cr, self.session.uid, self.session.context)
             threading.current_thread().uid = self.env.uid
             service_model.retrying(
