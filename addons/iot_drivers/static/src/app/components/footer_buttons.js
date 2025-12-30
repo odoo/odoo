@@ -1,19 +1,19 @@
 /* global owl */
 
-import useStore from "../hooks/useStore.js";
-import { CredentialDialog } from "./dialog/CredentialDialog.js";
-import { HandlerDialog } from "./dialog/HandlerDialog.js";
-import { RemoteDebugDialog } from "./dialog/RemoteDebugDialog.js";
-import { TimeDialog } from "./dialog/TimeDialog.js";
+import useStore from "../hooks/store_hook.js";
+import { CredentialsDialog } from "./dialog/credentials_dialog.js";
+import { HandlerDialog } from "./dialog/handlers_dialog.js";
+import { DebuggingToolsDialog } from "./dialog/debugging_tools_dialog.js";
+import { TimeDialog } from "./dialog/time_dialog.js";
 
 const { Component, xml } = owl;
 
 export class FooterButtons extends Component {
     static props = {};
     static components = {
-        RemoteDebugDialog,
+        DebuggingToolsDialog,
         HandlerDialog,
-        CredentialDialog,
+        CredentialsDialog,
         TimeDialog,
     };
 
@@ -29,8 +29,8 @@ export class FooterButtons extends Component {
         <a t-if="store.isLinux and !store.base.is_access_point_up" class="btn btn-primary btn-sm" t-att-href="'http://' + this.store.base.ip + ':631'" target="_blank">
             Printer Server
         </a>
-        <RemoteDebugDialog t-if="this.store.advanced and this.store.isLinux" />
-        <CredentialDialog t-if="this.store.advanced" />
+        <DebuggingToolsDialog t-if="this.store.advanced and this.store.isLinux" />
+        <CredentialsDialog t-if="this.store.advanced" />
         <HandlerDialog t-if="this.store.advanced" />
         <a t-if="this.store.advanced" class="btn btn-primary btn-sm" href="/logs" target="_blank">View Logs</a>
         <TimeDialog/>

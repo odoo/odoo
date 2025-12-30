@@ -1,32 +1,29 @@
 /* global owl */
 
-import useStore from "../../hooks/useStore.js";
-import { BootstrapDialog } from "./BootstrapDialog.js";
-import { LoadingFullScreen } from "../LoadingFullScreen.js";
+import useStore from "../../hooks/store_hook.js";
+import { Dialog } from "./dialog.js";
+import { LoadingFullScreen } from "../loading_full_screen.js";
 
 const { Component, xml, useState, toRaw } = owl;
 
-export class CredentialDialog extends Component {
+export class SixTerminalDialog extends Component {
     static props = {};
-    static components = { BootstrapDialog, LoadingFullScreen };
+    static components = { Dialog, LoadingFullScreen };
 
     setup() {
         this.store = toRaw(useStore());
         this.state = useState({ waitRestart: false });
-        this.form = useState({
-            db_uuid: this.store.base.db_uuid,
-            enterprise_code: "",
-        });
+        this.form = useState({ terminal_id: this.store.base.six_terminal });
     }
 
-    async connectToServer() {
+    async configureSix() {
         try {
-            if (!this.form.db_uuid || !this.form.enterprise_code) {
+            if (!this.form.terminal_id) {
                 return;
             }
 
             const data = await this.store.rpc({
-                url: "/iot_drivers/save_credential",
+                url: "/iot_drivers/six_payment_terminal_add",
                 method: "POST",
                 params: this.form,
             });
@@ -39,10 +36,10 @@ export class CredentialDialog extends Component {
         }
     }
 
-    async clearConfiguration() {
+    async disconnectSix() {
         try {
             const data = await this.store.rpc({
-                url: "/iot_drivers/clear_credential",
+                url: "/iot_drivers/six_payment_terminal_clear",
             });
 
             if (data.status === "success") {
@@ -61,25 +58,26 @@ export class CredentialDialog extends Component {
             </t>
         </LoadingFullScreen>
 
-        <BootstrapDialog identifier="'credential-configuration'" btnName="'Credentials'">
+        <Dialog identifier="'six-configuration'" btnName="'Configure'">
             <t t-set-slot="header">
-                Configure Credentials
+                Configure a Six Terminal
             </t>
             <t t-set-slot="body">
                 <div class="alert alert-info fs-6" role="alert">
-                    Set the Database UUID and your Contract Number you want to use to validate your subscription.
+                    Set the Terminal ID (TID) of the terminal you want to use.
                 </div>
-                <div class="d-flex flex-column gap-2 mt-3">
-                    <input type="text" class="form-control" placeholder="Database UUID" t-model="form.db_uuid"/>
-                    <input type="text" class="form-control" placeholder="Odoo contract number" t-model="form.enterprise_code"/>
+                <div class="mt-3">
+                    <div class="input-group-sm mb-3">
+                        <input type="text" class="form-control" placeholder="Six Terminal ID (digits only)" t-model="this.form.terminal_id" />
+                    </div>
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="!form.db_uuid" t-on-click="connectToServer">Connect</button>
-                <button class="btn btn-secondary btn-sm" t-on-click="clearConfiguration">Clear configuration</button>
+                <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="!form.terminal_id" t-on-click="configureSix">Configure</button>
+                <button class="btn btn-secondary btn-sm" t-on-click="disconnectSix">Disconnect current</button>
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
-        </BootstrapDialog>
+        </Dialog>
     </t>
     `;
 }

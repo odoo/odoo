@@ -1,7 +1,7 @@
 /* global owl */
 
-import useStore from "../../hooks/useStore.js";
-import { BootstrapDialog } from "./BootstrapDialog.js";
+import useStore from "../../hooks/store_hook.js";
+import { Dialog } from "./dialog.js";
 
 const { Component, xml } = owl;
 
@@ -28,7 +28,7 @@ export const CONNECTION_ICONS = {
 
 export class DeviceDialog extends Component {
     static props = {};
-    static components = { BootstrapDialog };
+    static components = { Dialog };
 
     setup() {
         this.store = useStore();
@@ -50,7 +50,7 @@ export class DeviceDialog extends Component {
 
     static template = xml`
     <t t-translation="off">
-        <BootstrapDialog identifier="'device-list'" btnName="'Show'" isLarge="true">
+        <Dialog identifier="'device-list'" btnName="'Show'" isLarge="true">
             <t t-set-slot="header">
                 Devices list
             </t>
@@ -84,7 +84,7 @@ export class DeviceDialog extends Component {
             <t t-set-slot="footer">
                 <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
-        </BootstrapDialog>
+        </Dialog>
     </t>
     `;
 }

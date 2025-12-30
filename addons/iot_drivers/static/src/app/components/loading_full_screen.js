@@ -1,6 +1,6 @@
 /* global owl */
 
-import useStore from "../hooks/useStore.js";
+import useStore from "../hooks/store_hook.js";
 
 const { Component, xml, onMounted } = owl;
 

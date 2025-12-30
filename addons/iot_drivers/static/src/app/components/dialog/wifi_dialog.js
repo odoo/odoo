@@ -1,14 +1,14 @@
 /* global owl */
 
-import useStore from "../../hooks/useStore.js";
-import { BootstrapDialog } from "./BootstrapDialog.js";
-import { LoadingFullScreen } from "../LoadingFullScreen.js";
+import useStore from "../../hooks/store_hook.js";
+import { Dialog } from "./dialog.js";
+import { LoadingFullScreen } from "../loading_full_screen.js";
 
 const { Component, xml, useState } = owl;
 
 export class WifiDialog extends Component {
     static props = {};
-    static components = { BootstrapDialog, LoadingFullScreen };
+    static components = { Dialog, LoadingFullScreen };
 
     setup() {
         this.store = useStore();
@@ -131,7 +131,7 @@ export class WifiDialog extends Component {
             </div>
         </div>
 
-        <BootstrapDialog identifier="'wifi-configuration'" btnName="'Configure'" onOpen.bind="getWiFiNetworks" onClose.bind="onClose">
+        <Dialog identifier="'wifi-configuration'" btnName="'Configure'" onOpen.bind="getWiFiNetworks" onClose.bind="onClose">
             <t t-set-slot="header">
                 Configure Wi-Fi
             </t>
@@ -172,7 +172,7 @@ export class WifiDialog extends Component {
                 </button>
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
-        </BootstrapDialog>
+        </Dialog>
     </t>
     `;
 }

@@ -1,14 +1,14 @@
 /* global owl */
 
-import useStore from "../../hooks/useStore.js";
-import { BootstrapDialog } from "./BootstrapDialog.js";
-import { LoadingFullScreen } from "../LoadingFullScreen.js";
+import useStore from "../../hooks/store_hook.js";
+import { Dialog } from "./dialog.js";
+import { LoadingFullScreen } from "../loading_full_screen.js";
 
 const { Component, xml, useState } = owl;
 
 export class HandlerDialog extends Component {
     static props = {};
-    static components = { BootstrapDialog, LoadingFullScreen };
+    static components = { Dialog, LoadingFullScreen };
 
     setup() {
         this.store = useStore();
@@ -80,7 +80,7 @@ export class HandlerDialog extends Component {
             </t>
         </LoadingFullScreen>
 
-        <BootstrapDialog identifier="'handler-configuration'" btnName="'Handlers Configuration'" onOpen.bind="getHandlerData" onClose.bind="onClose">
+        <Dialog identifier="'handler-configuration'" btnName="'Handlers Configuration'" onOpen.bind="getHandlerData" onClose.bind="onClose">
             <t t-set-slot="header">
                 Handlers Configuration
             </t>
@@ -166,7 +166,7 @@ export class HandlerDialog extends Component {
             <t t-set-slot="footer">
                 <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
-        </BootstrapDialog>
+        </Dialog>
     </t>
     `;
 }

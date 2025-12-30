@@ -2,7 +2,7 @@
 
 const { Component, xml, useEffect, useRef } = owl;
 
-export class BootstrapDialog extends Component {
+export class Dialog extends Component {
     static props = {
         identifier: String,
         slots: Object,
