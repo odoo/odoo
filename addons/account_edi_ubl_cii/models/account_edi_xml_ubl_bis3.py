@@ -302,6 +302,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         return constraints
 
+    def _check_tax_ids_len(self, line):
+        return len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type not in ('fixed', 'code'))) != 1
+
     def _invoice_constraints_cen_en16931_ubl(self, invoice, vals):
         """
         corresponds to the errors raised by ' schematron/openpeppol/3.13.0/xslt/CEN-EN16931-UBL.xslt' for invoices.
@@ -347,7 +350,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 break
 
         for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
-            if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type not in ('fixed', 'code'))) != 1:
+            if self._check_tax_ids_len(line):
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
                 # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
                 constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
