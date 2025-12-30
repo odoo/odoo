@@ -129,6 +129,7 @@ class IapAccount(models.Model):
             for account in self:
                 data = {
                     'account_token': account.sudo().account_token,
+                    'dbuuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
                     'auto_refill_threshold': account.auto_refill_threshold,
                     'auto_refill_pack_id': 0 if not account.auto_refill_pack_id else account.auto_refill_pack_id.iap_service_pack_identifier,
                 }
