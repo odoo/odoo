@@ -172,7 +172,6 @@ export class ClipboardPlugin extends Plugin {
         for (const processor of this.getResource("clipboard_text_processors")) {
             textContent = processor(textContent);
         }
-        ev[transferObjectProperty].setData("text/plain", textContent);
 
         // Prepare html content for clipboard.
         for (const processor of this.getResource("clipboard_content_processors")) {
@@ -183,6 +182,7 @@ export class ClipboardPlugin extends Plugin {
             setEditorTransferData:
                 isContentEditable(selection.commonAncestorContainer) ||
                 this.dependencies.selection.isNodeEditable(selection.commonAncestorContainer),
+            textContent,
         });
     }
 
