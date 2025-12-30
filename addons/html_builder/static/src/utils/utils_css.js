@@ -400,31 +400,25 @@ export function applyNeededCss(
         el.style.setProperty(cssProp, cssValue, allowImportant ? "important" : "");
         return true;
     }
-    el.style.removeProperty(cssProp);
-    if (
+
+    const isChangeNeeded = () =>
         !areCssValuesEqual(
             computedStyle.getPropertyValue(cssProp),
             cssValue,
             cssProp,
             computedStyle
-        )
-    ) {
-        el.style.setProperty(cssProp, cssValue);
-        // If change had no effect then make it important.
-        if (
-            allowImportant &&
-            !areCssValuesEqual(
-                computedStyle.getPropertyValue(cssProp),
-                cssValue,
-                cssProp,
-                computedStyle
-            )
-        ) {
-            el.style.setProperty(cssProp, cssValue, "important");
-        }
-        return true;
+        );
+    el.style.removeProperty(cssProp);
+    if (!isChangeNeeded()) {
+        return false;
     }
-    return false;
+
+    el.style.setProperty(cssProp, cssValue);
+    // If change had no effect then make it important.
+    if (allowImportant && isChangeNeeded()) {
+        el.style.setProperty(cssProp, cssValue, "important");
+    }
+    return true;
 }
 
 const builderStylesheet = new CSSStyleSheet();
