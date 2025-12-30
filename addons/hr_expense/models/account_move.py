@@ -78,7 +78,7 @@ class AccountMove(models.Model):
     def _prepare_product_base_line_for_taxes_computation(self, product_line):
         # EXTENDS 'account'
         results = super()._prepare_product_base_line_for_taxes_computation(product_line)
-        if product_line.expense_id:
+        if product_line.expense_id.payment_mode == 'own_account':
             results['special_mode'] = 'total_included'
         return results
 

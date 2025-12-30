@@ -183,3 +183,27 @@ class TestMultistepManufacturing(TestMrpCommon):
             'client_order_ref': 'Test Reference'
         })
         so.action_confirm()
+
+    def test_mto_cancel_3_steps_mo(self):
+        '''
+        In 3 step manufacturing, test that when the MO gets cancelled, the
+        delivery (to the client) can be made from stock.
+        '''
+        self.warehouse.manufacture_steps = 'pbm_sam'
+        self.sale_order.order_line.product_id.is_storable = True
+        self.env['stock.quant']._update_available_quantity(
+            self.sale_order.order_line.product_id,
+            self.sale_order.warehouse_id.lot_stock_id,
+            10
+        )
+        self.sale_order.action_confirm()
+        self.assertEqual(self.sale_order.picking_ids.state, 'waiting')
+        self.assertEqual(self.sale_order.picking_ids.move_ids.procure_method, 'make_to_order')
+        mo = self.sale_order.mrp_production_ids
+        self.assertTrue(mo)
+        self.assertEqual(self.sale_order.picking_ids.move_ids.move_orig_ids, mo.move_finished_ids)
+        mo.action_cancel()
+        self.assertEqual(self.sale_order.picking_ids.state, 'confirmed')
+        self.assertFalse(self.sale_order.picking_ids.move_ids.move_orig_ids)
+        self.sale_order.picking_ids.action_assign()
+        self.assertEqual(self.sale_order.picking_ids.move_ids.quantity, 1.0)

@@ -37,10 +37,9 @@ class TestMimeGuessing(BaseCase):
         )
 
     def test_xlsx_2025(self):
-        # only work when python-magic is not installed otherwise seen as a zip
         self.assertEqual(
             guess_mimetype(contents('2025.xlsx')),
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' if magic is None else 'application/zip',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         )
 
     def test_odt(self):
