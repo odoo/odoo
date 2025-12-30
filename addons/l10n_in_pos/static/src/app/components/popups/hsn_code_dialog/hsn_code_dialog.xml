@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_in_pos.hsnCodeDialog">
+        <Dialog size="'md'" title.translate="Product HSN/SAC code is missing">
+            <div>
+                <p>
+                    POS sales are reported in GSTR-1.<br/>
+                    Please ensure HSN is set on taxable products for Table 12 reporting.
+                </p>
+            </div>
+            <t t-set-slot="footer">
+                <div class="modal-footer-right d-flex gap-2">
+                    <button class="button icon btn btn-lg btn-primary" t-on-click="redirect">
+                            Go to Products
+                    </button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
