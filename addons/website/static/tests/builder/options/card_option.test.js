@@ -337,48 +337,64 @@ test("navigate between cards with keyboard", async () => {
     await simulateArrowKeyPress(editor, "ArrowLeft");
     await tick(); // await selectionchange
     expect(getContent(h2El)).toMatch(/^.+\[\]$/);
-    await splitBlock(editor);
+    splitBlock(editor);
     expect(":iframe p[data-selection-placeholder]").toHaveCount(0);
-
     await insertText(editor, "/table");
     await press("Enter");
     await waitFor(".o-we-tablepicker");
     await press("Enter");
-    await tick(); // await selectionchange
+    const tableEl = await waitFor(":iframe table");
     expect(":iframe p[data-selection-placeholder]").toHaveCount(0);
 
+    await insertText(editor, "1");
+    await animationFrame(); // await selectionchange
+    expect(getContent(tableEl)).toMatch(/>1\[\]<\/p>/);
     await simulateArrowKeyPress(editor, "ArrowDown");
-    await tick(); // await selectionchange
-    expect(":iframe p[data-selection-placeholder]").toHaveCount(0);
+    await animationFrame(); // await selectionchange
+    expect(getContent(tableEl)).toMatch(/>1<\/p>/);
+    await insertText(editor, "2");
+    await animationFrame(); // await selectionchange
+    expect(getContent(tableEl)).toMatch(/>2\[\]<\/p>/);
     await simulateArrowKeyPress(editor, "ArrowDown");
-    await tick(); // await selectionchange
+    await animationFrame(); // await selectionchange
+    expect(getContent(tableEl)).toMatch(/>2<\/p>/);
+    await insertText(editor, "3");
+    await animationFrame(); // await selectionchange
+    expect(getContent(tableEl)).toMatch(/>3\[\]<\/p>/);
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    await animationFrame(); // await selectionchange
+    expect(getContent(tableEl)).toMatch(/>3<\/p>/);
     expect(":iframe p[data-selection-placeholder]").toHaveCount(0);
     await simulateArrowKeyPress(editor, "ArrowDown"); // exit table
-    await tick(); // await selectionchange
+    await animationFrame(); // await selectionchange
     expect(":iframe p[data-selection-placeholder]").toHaveCount(0);
-    expect(getContent(rowEl)).toMatch(/>Q\[\]uality/);
+    expect(getContent(rowEl)).toMatch(/>Qu\[\]ality/);
 
     await simulateArrowKeyPress(editor, "ArrowDown");
-    await tick(); // await selectionchange
-    expect(getContent(rowEl)).toMatch(/>W\[\]e provide/);
+    await animationFrame(); // await selectionchange
+    expect(getContent(rowEl)).toMatch(/>We\[\] provide/);
 
     await simulateArrowKeyPress(editor, "ArrowDown");
-    await tick(); // await selectionchange
-    expect(getContent(rowEl)).toMatch(/>E\[\]xpertise/);
+    await animationFrame(); // await selectionchange
+    expect(getContent(rowEl)).toMatch(/>Ex\[\]pertise/);
 
     await simulateArrowKeyPress(editor, "ArrowUp");
-    await tick(); // await selectionchange
-    expect(getContent(rowEl)).toMatch(/>W\[\]e provide/);
+    await animationFrame(); // await selectionchange
+    expect(getContent(rowEl)).toMatch(/>We\[\] provide/);
 
     await simulateArrowKeyPress(editor, "ArrowDown");
-    await tick(); // await selectionchange
+    await animationFrame(); // await selectionchange
     await simulateArrowKeyPress(editor, "ArrowLeft");
-    await tick(); // await selectionchange
+    await animationFrame(); // await selectionchange
     await simulateArrowKeyPress(editor, "ArrowLeft");
-    await tick(); // await selectionchange
+    await animationFrame(); // await selectionchange
+    expect(getContent(rowEl)).toMatch(/>\[\]Expertise/);
+
+    await simulateArrowKeyPress(editor, "ArrowLeft");
+    await animationFrame(); // await selectionchange
     expect(getContent(rowEl)).toMatch(/finish.\[\]<\/p>/);
 
     await simulateArrowKeyPress(editor, "ArrowRight");
-    await tick(); // await selectionchange
+    await animationFrame(); // await selectionchange
     expect(getContent(rowEl)).toMatch(/>\[\]Expertise/);
 });
