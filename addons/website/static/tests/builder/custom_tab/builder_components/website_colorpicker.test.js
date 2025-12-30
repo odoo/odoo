@@ -7,6 +7,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
+import { waitForEndOfOperation } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 
@@ -54,4 +55,27 @@ test("should have the theme tab", async () => {
     await contains(".we-bg-options-container .o_we_color_preview").click();
     await contains("button.theme-tab").click();
     expect(".color-combination-button[data-color='o_cc1']").toHaveClass("selected");
+});
+
+test("should work with color transition", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker styleAction="'color'" enabledTabs="['custom']" />`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
+        // The CSS for the class "o_we_force_no_transition" is needed
+        loadIframeBundles: true,
+        styleContent:
+            ".test-options-target { color: #FF0000; transition: color 0.15s ease-in-out; }",
+        enableIframeTransitions: true,
+    });
+
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains(".o_colorpicker_widget .o_hex_input").edit("#0000FF");
+    await waitForEndOfOperation();
+    expect(":iframe .test-options-target").toHaveStyle("color: rgb(0, 0, 255)");
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await waitForEndOfOperation();
+    expect(":iframe .test-options-target").toHaveStyle("color: rgb(0, 0, 255)");
 });
