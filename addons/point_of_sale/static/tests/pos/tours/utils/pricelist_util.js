@@ -72,6 +72,7 @@ export function setUp() {
                 assertProductPrice(product_letter_tray, "Public Pricelist", 0, 4.8)()
                     .then(assertProductPrice(product_letter_tray, "Public Pricelist", 1, 4.8))
                     .then(assertProductPrice(product_letter_tray, "Fixed", 1, 1))
+                    .then(assertProductPrice(product_letter_tray, "Fixed", -1, 1))
                     .then(assertProductPrice(product_wall_shelf, "Fixed", 1, 2))
                     .then(assertProductPrice(product_small_shelf, "Fixed", 1, 13.95))
                     .then(assertProductPrice(product_wall_shelf, "Percentage", 1, 0))
