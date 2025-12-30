@@ -163,14 +163,13 @@ export class ClipboardPlugin extends Plugin {
         for (const processor of this.getResource("clipboard_text_processors")) {
             textContent = processor(textContent);
         }
-        ev.clipboardData.setData("text/plain", textContent);
 
         // Prepare html content for clipboard.
         for (const processor of this.getResource("clipboard_content_processors")) {
             clonedContents = processor(clonedContents, selection) || clonedContents;
         }
         this.removeSystemProperties(clonedContents);
-        fillClipboardData(ev, clonedContents);
+        fillClipboardData(ev, clonedContents, textContent);
     }
 
     /**
