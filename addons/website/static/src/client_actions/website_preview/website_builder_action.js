@@ -33,6 +33,7 @@ import { isBrowserChrome, isBrowserMicrosoftEdge } from "@web/core/browser/featu
 import { router } from "@web/core/browser/router";
 import { getScrollingElement } from "@web/core/utils/scrolling";
 import { CreatePageMessage } from "./create_page_message";
+import { post } from "@web/core/network/http_service";
 
 const websiteSystrayRegistry = registry.category("website_systray");
 
@@ -433,43 +434,58 @@ export class WebsiteBuilderClientAction extends Component {
     setupClickListener() {
         // The clicks on the iframe are listened, so that links with external
         // redirections can be opened in the top window.
-        this.websiteContent.el.contentDocument.addEventListener("click", (ev) => {
-            if (!this.state.isEditing) {
-                // Forward clicks to close backend client action's navbar
-                // dropdowns.
-                this.websiteContent.el.dispatchEvent(new MouseEvent("click", ev));
-            } else {
+        this.websiteContent.el.contentDocument.addEventListener("click", async (ev) => {
+            if (this.state.isEditing) {
                 // When in edit mode, prevent the default behaviours of clicks
                 // as to avoid DOM changes not handled by the editor.
                 // (Such as clicking on a link that triggers navigating to
                 // another page.)
                 ev.preventDefault();
-            }
-            const linkEl = ev.target.closest("[href]");
-            if (!linkEl) {
                 return;
             }
 
-            const { href, target } = linkEl;
-            if (href && target !== "_blank" && !this.state.isEditing) {
-                if (isTopWindowURL(linkEl)) {
-                    ev.preventDefault();
-                    try {
-                        browser.location.assign(href);
-                    } catch {
-                        this.notification.add(_t("%s is not a valid URL.", href), {
-                            title: _t("Invalid URL"),
-                            type: "danger",
-                        });
-                    }
-                } else if (
-                    this.websiteContent.el.contentWindow.location.pathname !==
-                    new URL(href).pathname
-                ) {
-                    // This scenario triggers a navigation inside the iframe.
-                    this.websiteService.websiteRootInstance = undefined;
+            // Forward clicks to close backend client action's navbar
+            // dropdowns.
+            this.websiteContent.el.dispatchEvent(new MouseEvent("click", ev));
 
-                    this.isNavigatingToAnotherPage = Promise.withResolvers();
+            const closestEl = ev.target.closest("[href], [action]");
+            let url;
+
+            if (closestEl?.action) {
+                const { action, method } = closestEl;
+                if (isTopWindowURL(new URL(action))) {
+                    if (method === "post") {
+                        const href = await post(action, { csrf_token: odoo.csrf_token }, "url");
+                        url = new URL(href);
+                    } else {
+                        url = new URL(action);
+                    }
+                }
+            } else if (closestEl?.href) {
+                const { href, target } = closestEl;
+                if (target !== "_blank") {
+                    if (isTopWindowURL(closestEl)) {
+                        url = new URL(href);
+                    } else if (
+                        this.websiteContent.el.contentWindow.location.pathname !==
+                        new URL(href).pathname
+                    ) {
+                        // This scenario triggers a navigation inside the iframe.
+                        this.websiteService.websiteRootInstance = undefined;
+                        this.isNavigatingToAnotherPage = Promise.withResolvers();
+                    }
+                }
+            }
+
+            if (url) {
+                ev.preventDefault();
+                try {
+                    browser.location.assign(url);
+                } catch {
+                    this.notification.add(_t("%s is not a valid URL.", url), {
+                        title: _t("Invalid URL"),
+                        type: "danger",
+                    });
                 }
             }
         });
