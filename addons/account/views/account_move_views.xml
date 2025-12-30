@@ -1812,5 +1812,17 @@ if records:
             </field>
         </record>
 
+        <record id="action_move_export_zip" model="ir.actions.server">
+            <field name="name">Export ZIP</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="sequence">7</field>
+            <field name="code">
+                if records:
+                    action = records.action_export_zip()
+            </field>
+        </record>
     </data>
 </odoo>

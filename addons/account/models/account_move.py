@@ -11,6 +11,7 @@ import math
 import psycopg2
 import re
 from textwrap import shorten
+from urllib.parse import urlencode
 
 from odoo import api, fields, models, _, Command, SUPERUSER_ID, modules, tools
 from odoo.addons.account.tools import format_structured_reference_iso
@@ -5058,6 +5059,41 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # HOOKS
     # -------------------------------------------------------------------------
+
+    def _get_move_zip_export_docs(self):
+        docs = set()
+        zip_filename = ''
+        move_types_dict = dict(self._fields['move_type'].selection)
+        for move in self.filtered(lambda m: m.state == 'posted'):
+            if not move.is_purchase_document(include_receipts=True):
+                try:
+                    legal_docs = move._get_invoice_legal_documents()
+                    docs.update(legal_docs.ids)
+                except Exception:  # noqa: BLE001
+                    # no legal docs for this move
+                    pass
+
+            # build the ZIP filename based on the move types included in the export
+            move_type = move_types_dict.get(move.move_type)
+            if move_type not in zip_filename.split(' - '):
+                zip_filename += f"{move_type} - "
+
+        filename = _('Exported %(zip_filename)s', zip_filename=zip_filename.strip(' - '))
+        filename += '.zip'
+
+        return docs, filename
+
+    def action_export_zip(self):
+        attachment_ids, filename = self._get_move_zip_export_docs()
+        if not attachment_ids:
+            msg = _('Nothing to export.')
+            raise UserError(msg)
+
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f"/account/export_zip_documents?{urlencode({'ids': list(attachment_ids), 'filename': filename}, doseq=True)}",
+            'close': True,
+        }
 
     def _action_invoice_ready_to_be_sent(self):
         """ Hook allowing custom code when an invoice becomes ready to be sent by mail to the customer.
