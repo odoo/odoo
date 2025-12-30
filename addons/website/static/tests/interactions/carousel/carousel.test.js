@@ -73,6 +73,8 @@ const imageGalleryCarouselStyleSnippet = (bsRide, bsInterval) => `
         </div>
     </section>`;
 
+//TODO: SHSA-look in last.
+
 // TODO : Fix this test
 // -> It seems like the first slide of the carousel happen after more than 3s
 test.skip("Carousel - Autoplay: Always - 3s - s_carousel", async () => {

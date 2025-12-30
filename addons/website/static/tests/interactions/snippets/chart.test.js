@@ -18,6 +18,8 @@ patch(Chart.prototype, {
     },
 });
 
+// TODO: SHSA - this one here will loadBundle again when test runs need to check this case.
+
 test("chart is started when there is an element .s_chart", async () => {
     const { core } = await startInteractions(
         markup`

@@ -9,6 +9,7 @@
  * - Communicate with the iframe's interaction service
  */
 
+import { queryOne } from "@odoo/hoot-dom";
 import { loadBundle } from "@web/core/assets";
 import { session } from "@web/session";
 
@@ -43,7 +44,8 @@ const IFRAME_BOOTSTRAP_CODE = `
             
             const { registry } = odoo.loader.modules.get('@web/core/registry');
             const interactionRegistry = registry.category('public.interactions');
-            
+            const interactionEditRegistry = window.__enableEditInteractions ?
+                registry.category('public.interactions.edit') : null;
             for (const [patchName, patchFn] of Object.entries(window.__iframeInteractionPatches)) {
                 if (window.__patchedInteractions.has(patchName)) {
                     // Already patched
@@ -53,7 +55,18 @@ const IFRAME_BOOTSTRAP_CODE = `
                 // Look for the interaction in registry
                 if (interactionRegistry.content && interactionRegistry.content[patchName]) {
                     try {
-                        const InteractionClass = interactionRegistry.content[patchName][1];
+                        let InteractionClass = interactionRegistry.content[patchName][1];
+
+                        // Apply edit mixin if available
+                        if (interactionEditRegistry?.content?.[patchName]) {
+                            const editEntry = interactionEditRegistry.content[patchName][1];
+                            if (editEntry.mixin && typeof editEntry.mixin === 'function') {
+                                // Create a new class with the mixin applied
+                                InteractionClass = editEntry.mixin(InteractionClass);
+                                // Update the registry with the mixed class
+                                interactionRegistry.content[patchName][1] = InteractionClass;
+                            }
+                        }
                         
                         // Call the patch function with the class
                         const patchObj = patchFn(InteractionClass);
@@ -126,13 +139,55 @@ const IFRAME_BOOTSTRAP_CODE = `
         };
     }
 
+    // Apply whitelist filter to interactions registry
+    window.__applyWhitelistFilter = function() {
+        if (!window.__interactionWhitelist || window.__interactionWhitelist.length === 0) {
+            return;
+        }
+
+        try {
+            if (!odoo?.loader?.modules?.has?.('@web/core/registry')) {
+                return;
+            }
+
+            const { registry } = odoo.loader.modules.get('@web/core/registry');
+            const interactionRegistry = registry.category('public.interactions');
+            const editRegistry = registry.category('public.interactions.edit');
+
+            // Store original content
+            const originalContent = { ...interactionRegistry.content };
+            const originalEditContent = editRegistry ? { ...editRegistry.content } : {};
+
+            // Clear registries
+            interactionRegistry.content = {};
+            if (editRegistry) {
+                editRegistry.content = {};
+            }
+
+            // Re-add only whitelisted interactions
+            for (const name of window.__interactionWhitelist) {
+                if (originalContent[name]) {
+                    interactionRegistry.content[name] = originalContent[name];
+                }
+                if (editRegistry && originalEditContent[name]) {
+                    editRegistry.content[name] = originalEditContent[name];
+                }
+            }
+        } catch (e) {
+            console.error('Failed to apply whitelist filter:', e);
+        }
+    };
+
     // Monitor for the public interaction service being created
     const checkForService = setInterval(() => {
         try {
             // Try to access the service
             if (typeof odoo !== 'undefined' && odoo.loader?.modules?.has?.('@web/public/interaction_service')) {
                 clearInterval(checkForService);
-                
+
+                // Apply whitelist BEFORE interactions start
+                window.__applyWhitelistFilter();
+
                 // Final attempt to apply all patches before marking ready
                 window.__applyInteractionPatches();
                 
@@ -163,11 +218,18 @@ const IFRAME_BOOTSTRAP_CODE = `
  * @param {string[]} options.whitelistInteractions - Array of interaction names to load
  * @param {Object.<string, Function>} options.patches - Patches to apply to interactions
  * @param {boolean} options.loadFrontendAssets - Whether to load web.assets_frontend (default: true)
+ * @param {boolean} options.enableEditInteractions - Whether to load and apply edit mixins (default: false)
  * @returns {Promise<Object>} API object for interacting with iframe's interaction service
  */
 export async function setupInteractionsInIframe(iframe, options = {}) {
     // eslint-disable-next-line no-unused-vars
-    const { whitelistInteractions = [], patches = {}, loadFrontendAssets = true } = options;
+    const {
+        // eslint-disable-next-line no-unused-vars
+        whitelistInteractions = [],
+        patches = {},
+        loadFrontendAssets = true,
+        enableEditInteractions = false,
+    } = options;
 
     const iframeDoc = iframe.contentDocument;
     const iframeWindow = iframe.contentWindow;
@@ -175,6 +237,7 @@ export async function setupInteractionsInIframe(iframe, options = {}) {
     // 1. Register patches FIRST - before any code runs
     // Store patch functions directly on iframe window so they're available when needed
     iframeWindow.__iframeInteractionPatches = iframeWindow.__iframeInteractionPatches || {};
+    iframeWindow.__enableEditInteractions = enableEditInteractions;
 
     // Store all patch functions on the iframe window
     for (const [interactionName, patchFn] of Object.entries(patches)) {
@@ -208,6 +271,51 @@ export async function setupInteractionsInIframe(iframe, options = {}) {
             targetDoc: iframeDoc,
             js: true, // Enable JS loading
         });
+
+        // 4b. If edit interactions are enabled, load the builder iframe bundle
+        // which contains all edit interactions
+        if (enableEditInteractions) {
+            await loadBundle("website.assets_inside_builder_iframe", {
+                targetDoc: queryOne("iframe[data-src^='/website/force/1']").contentDocument,
+                js: true,
+            });
+
+            // Wait for bundles to fully load
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            // Activate edit mode via website_edit service
+            // This properly applies mixins using buildEditableInteractions()
+            const activateEditScript = iframeDoc.createElement("script");
+            activateEditScript.type = "text/javascript";
+            activateEditScript.textContent = `
+                (function() {
+                    // Wait for website_edit service to be available
+                    const waitForService = setInterval(() => {
+                        try {
+                            const websiteEdit = odoo.loader.modules.get('@website/core/website_edit_service');
+                            if (websiteEdit && websiteEdit.websiteEditService) {
+                                clearInterval(waitForService);
+
+                                // Get the service instance
+                                const env = odoo.__WOWL_DEBUG__?.root?.env;
+                                if (env?.services?.website_edit) {
+                                    const target = document.querySelector('#wrapwrap') || document.body;
+                                    env.services.website_edit.update(target, 'edit');
+                                }
+                            }
+                        } catch (e) {
+                            // Service not ready yet
+                        }
+                    }, 50);
+
+                    // Timeout after 2 seconds
+                    setTimeout(() => clearInterval(waitForService), 2000);
+                })();
+            `;
+            iframeDoc.head.appendChild(activateEditScript);
+            // Wait for edit mode activation
+            await new Promise((resolve) => setTimeout(resolve, 200));
+        }
     }
 
     // 5. Give interactions a moment to initialize, then apply patches if not done yet
@@ -265,15 +373,19 @@ export async function setupInteractionsInIframe(iframe, options = {}) {
          * Stop all interactions in the iframe
          */
         stopInteractions: (el) => {
-            const interactionService = iframeWindow.odoo?.loader?.modules?.get?.(
-                "@web/public/interaction_service"
-            );
-            if (interactionService?.publicInteractionService) {
-                // The service is a singleton stored on the window
-                const service = iframeWindow.odoo.__publicInteractionService;
-                if (service?.stopInteractions) {
-                    return service.stopInteractions(el);
-                }
+            // Try multiple ways to get the service
+            let service = iframeWindow.odoo?.__websitePublicInteractionService;
+
+            // Fallback: try to get from env.services if available
+            if (!service) {
+                const env = iframeWindow.odoo?.__WOWL_DEBUG__?.root?.env;
+                service = env?.services?.["public.interactions"];
+            }
+
+            if (service?.stopInteractions) {
+                return service.stopInteractions(el);
+            } else {
+                console.warn("Cannot stop interactions: service not found or not ready");
             }
         },
 
@@ -281,14 +393,39 @@ export async function setupInteractionsInIframe(iframe, options = {}) {
          * Start interactions in the iframe
          */
         startInteractions: (el) => {
-            const interactionService = iframeWindow.odoo?.loader?.modules?.get?.(
-                "@web/public/interaction_service"
-            );
-            if (interactionService?.publicInteractionService) {
-                const service = iframeWindow.odoo.__publicInteractionService;
-                if (service?.startInteractions) {
-                    return service.startInteractions(el);
-                }
+            // Try multiple ways to get the service
+            let service = iframeWindow.odoo?.__websitePublicInteractionService;
+
+            // Fallback: try to get from env.services if available
+            if (!service) {
+                const env = iframeWindow.odoo?.__WOWL_DEBUG__?.root?.env;
+                service = env?.services?.["public.interactions"];
+            }
+
+            if (service?.startInteractions) {
+                return service.startInteractions(el);
+            } else {
+                console.warn("Cannot start interactions: service not found or not ready");
+            }
+        },
+
+        /**
+         * Restart a specific interaction (stop then start on same element)
+         * Useful when element attributes change and interaction needs to re-initialize
+         */
+        restartInteraction: (el) => {
+            let service = iframeWindow.odoo?.__websitePublicInteractionService;
+
+            if (!service) {
+                const env = iframeWindow.odoo?.__WOWL_DEBUG__?.root?.env;
+                service = env?.services?.["public.interactions"];
+            }
+
+            if (service?.stopInteractions && service?.startInteractions) {
+                service.stopInteractions(el);
+                return service.startInteractions(el);
+            } else {
+                console.warn("Cannot restart interaction: service not found or not ready");
             }
         },
     };
@@ -296,24 +433,6 @@ export async function setupInteractionsInIframe(iframe, options = {}) {
 
 /**
  * Creates a patching function that can be registered with setupInteractionsInIframe.
- * This is useful for creating patches with closure access to test variables.
- *
- * @param {Function} patchFactory - Function that receives the Interaction class and returns patch object
- * @returns {Function} - Patch function suitable for setupInteractionsInIframe
- * @example
- * const patch = createInteractionPatch((InteractionClass) => ({
- *     setup() {
- *         super.setup?.();
- *         expect.step("interaction-setup");
- *     }
- * }));
- */
-export function createInteractionPatch(patchFactory) {
-    return patchFactory;
-}
-
-/**
- * Helper to get the interaction service from an iframe after it's been initialized.
  *
  * @param {HTMLIFrameElement} iframe - The iframe element
  * @returns {Promise<Object>} The interaction service instance

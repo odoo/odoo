@@ -117,6 +117,7 @@ function patchDOMParser() {
  * @param {Function} options.onIframeLoaded - Callback when iframe loads
  * @param {Function} options.delayReload - Async function to delay reload
  * @param {boolean} options.enableInteractions - Whether to enable interactions in iframe (default: false)
+ * @param {boolean} options.enableEditInteractions - Whether to enable edit interactions mixins (default: auto-detected from openEditor)
  * @param {string[]} options.interactionWhitelist - List of interactions to enable (if enableInteractions is true)
  * @param {Object} options.interactionPatches - Patches to apply to interactions before load
  * @returns {Promise<Object>} Setup result with helper functions
@@ -136,6 +137,7 @@ export async function setupWebsiteBuilder(
         onIframeLoaded = () => {},
         delayReload = async () => {},
         enableInteractions = false,
+        enableEditInteractions = false,
         interactionWhitelist = [],
         interactionPatches = {},
     } = {}
@@ -146,7 +148,7 @@ export async function setupWebsiteBuilder(
         pyEnv["website"].create({});
     }
     mockImageRequests();
-    registry.category("services").remove("website_edit");
+    // registry.category("services").remove("website_edit");
     let editor;
     let editableContent;
     const comp = await mountWithCleanup(WebClient);
@@ -239,7 +241,7 @@ export async function setupWebsiteBuilder(
         tag: "website_preview",
         type: "ir.actions.client",
     });
-
+    // TODO: SHSA check is there any need now ?
     patchWithCleanup(EditInteractionPlugin.prototype, {
         setup() {
             super.setup();
@@ -322,18 +324,27 @@ export async function setupWebsiteBuilder(
     resolveIframeLoaded(iframe);
     await animationFrame();
 
-    // Setup interactions if requested
-    let iframeInteractionAPI = null;
-    if (enableInteractions) {
-        iframeInteractionAPI = await setupInteractionsInIframe(iframe, {
-            whitelistInteractions: interactionWhitelist,
-            patches: interactionPatches,
-            loadFrontendAssets: true,
-        });
-    }
-
     if (openEditor) {
         await openBuilderSidebar(editAssetsLoaded);
+    }
+
+    // Setup interactions if requested
+    let iframeInteractionAPI = null;
+    if (enableInteractions || enableEditInteractions) {
+        // Auto-enable interactions if edit interactions are requested
+        const shouldEnableInteractions = enableInteractions || enableEditInteractions;
+        // Auto-enable edit interactions if opening editor (unless explicitly disabled)
+        const shouldEnableEditInteractions =
+            enableEditInteractions !== null ? enableEditInteractions : openEditor;
+
+        if (shouldEnableInteractions) {
+            iframeInteractionAPI = await setupInteractionsInIframe(iframe, {
+                whitelistInteractions: interactionWhitelist,
+                patches: interactionPatches,
+                loadFrontendAssets: true,
+                enableEditInteractions: shouldEnableEditInteractions,
+            });
+        }
     }
     return {
         getEditor: () => editor,
@@ -342,6 +353,8 @@ export async function setupWebsiteBuilder(
         waitSidebarUpdated,
         getIframeCore: iframeInteractionAPI ? () => iframeInteractionAPI.getCore() : null,
         iframeInteractionAPI,
+        stopInteraction: iframeInteractionAPI?.stopInteractions || null,
+        restartInteraction: iframeInteractionAPI?.restartInteraction || null,
     };
 }
 
@@ -493,8 +506,8 @@ export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) 
         html += (await getStructureSnippet(name)).outerHTML;
     }
     return setupWebsiteBuilder(html, {
-        ...options,
         hasToCreateWebsite: false,
+        ...options,
     });
 }
 export const websiteServiceInTranslateMode = {
@@ -577,6 +590,7 @@ export async function insertStructureSnippet(editor, snippetName) {
  * @param {Object} options - Configuration options
  * @param {string[]} options.whitelistInteractions - Interactions to enable
  * @param {Object.<string, Function>} options.patches - Patches to apply to interactions
+ * @param {boolean} options.enableEditInteractions - Whether to enable edit interaction mixins
  * @returns {Promise<Object>} API for interacting with the iframe's interaction service
  *
  * @example
@@ -584,6 +598,7 @@ export async function insertStructureSnippet(editor, snippetName) {
  * // Or use the helper:
  * const iframeAPI = await enableIframeInteractions(iframe, {
  *     whitelistInteractions: ["website.animation"],
+ *     enableEditInteractions: true,
  *     patches: {
  *         "website.animation": (InteractionClass) => ({
  *             start() { expect.step("animation-started"); super.start?.(); }
