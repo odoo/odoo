@@ -3,47 +3,13 @@
 
 <template id="website_sale.search_items_product_view">
     <t t-foreach="bucket['data']" t-as="result">
-        <div t-attf-class="#{row_classes}">
-            <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
-                <t t-call="website.search_image_item_view"/>
-                <div class="o_search_result_item_content">
-                    <div class="o_search_result_item_content d-flex p-2">
-                        <div class="flex-grow-1">
-                            <div class="fs-6 fw-bold" t-out="result['name']"/>
-                            <div class="smaller">
-                                <t t-if="result.get('rating')" t-call="portal_rating.rating_widget_stars_static">
-                                    <t t-set="rating_avg" t-value="float(result['rating'])"/>
-                                    <t t-set="inline_mode" t-value="True"/>
-                                    <t t-set="hide_rating_count" t-value="True"/>
-                                </t>
-                                <div t-if="result.get('extra_link')" t-out="result['extra_link']"/>
-                            </div>
-                        </div>
-                        <div class="smaller">
-                            <span t-if="result.get('list_price')"
-                                  class="text-muted text-nowrap text-decoration-line-through d-block"
-                                  t-out="result['list_price']"/>
-                            <span t-if="result.get('price')" t-out="result['price']" class="fw-bold d-block"/>
-                        </div>
-                    </div>
-                    <div id="o_search_item_matching_content"></div>
-                </div>
-            </a>
-        </div>
+        <t t-call="website.search_result_item" search_item_metadata="result['list_price']"/>
     </t>
 </template>
 
 <template id="website_sale.search_items_product_category_view">
     <t t-foreach="bucket['data']" t-as="result">
-        <div class="col-12 col-md-6 col-lg-4">
-            <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none p-2 w-100 d-flex align-items-center">
-                <t t-call="website.search_image_item_view"/>
-                <div class="o_search_result_item_content p-2">
-                    <div class="h6 fw-bold mb-0" t-out="result['name']"/>
-                    <span class="small" t-out="result['breadcrumb']"/>
-                </div>
-            </a>
-        </div>
+        <t t-call="website.search_result_item" search_item_metadata="result['breadcrumb']"/>
     </t>
 </template>
 

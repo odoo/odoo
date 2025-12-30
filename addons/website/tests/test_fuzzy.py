@@ -163,7 +163,7 @@ class TestAutoComplete(TransactionCase):
 
     def _check_highlight(self, term, value):
         """ Verifies if a term is highlighted in a value """
-        self.assertTrue(f'<span class="text-primary-emphasis">{term}</span>' in value.lower(),
+        self.assertTrue(f'<span class="o_search_matching_text text-body-emphasis position-relative">{term}</span>' in value.lower(),
                         "Term must be highlighted")
 
     def test_shorten_around_match(self):

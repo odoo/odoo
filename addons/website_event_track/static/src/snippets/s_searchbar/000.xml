@@ -3,16 +3,9 @@
 <templates xml:space="preserve">
     <t t-name="website_event_track.search_items_event_track">
         <t t-foreach="bucket.data" t-as="result" t-key="result_index">
-            <div t-attf-class="#{row_classes}">
-                <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
-                    <t t-call="website.search_image_item"/>
-                    <div class="o_search_result_item_content p-2">
-                        <div class="h6 fw-bold mb-0" t-out="result['name']"/>
-                        <span t-out="result['description']"  class="o_line_clamp smaller"/>
-                        <span t-out="result['partner_name']" class="d-block smaller text-muted"/>
-                    </div>
-                </a>
-            </div>
+            <t t-call="website.search_result_item">
+                <t t-set="search_item_metadata" t-value="result['partner_name']"/>
+            </t>
         </t>
     </t>
 </templates>

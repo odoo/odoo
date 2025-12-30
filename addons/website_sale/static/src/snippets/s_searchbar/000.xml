@@ -3,46 +3,17 @@
 <templates xml:space="preserve">
     <t t-name="website_sale.search_items_product">
         <t t-foreach="bucket.data" t-as="result" t-key="result_index">
-            <div t-attf-class="#{row_classes}">
-                <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
-                    <t t-call="website.search_image_item"/>
-                    <div class="o_search_result_item_content">
-                        <div class="d-flex p-2">
-                            <div class="flex-grow-1">
-                                <div class="fs-6 fw-bold" t-out="result['name']"/>
-                                <div class="smaller">
-                                    <t t-if="result['rating']" t-call="portal_rating.rating_stars_static">
-                                        <t t-set="val" t-value="result['rating']"/>
-                                        <t t-set="inline_mode" t-value="True"/>
-                                    </t>
-                                    <div t-if="result['extra_link']" t-out="result['extra_link']"/>
-                                </div>
-                            </div>
-                            <div class="smaller">
-                                <span t-if="result['list_price']"
-                                      class="text-muted text-decoration-line-through d-block"
-                                      t-out="result['list_price']"/>
-                                <span t-if="result['price']" class="fw-bold d-block" t-out="result['price']"/>
-                            </div>
-                        </div>
-                        <div id="o_search_item_matching_content"></div>
-                    </div>
-                </a>
-            </div>
+            <t t-call="website.search_result_item">
+                <t t-set="search_item_metadata" t-value="result['list_price']"/>
+            </t>
         </t>
     </t>
 
     <t t-name="website_sale.search_items_product_category">
         <t t-foreach="bucket.data" t-as="result" t-key="result_index">
-            <div t-attf-class="#{row_classes}">
-                <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
-                    <t t-call="website.search_image_item"/>
-                    <div class="o_search_result_item_content p-2">
-                        <div class="fs-6 fw-bold" t-out="result['name']"/>
-                        <span class="small" t-out="result['breadcrumb']"/>
-                    </div>
-                </a>
-            </div>
+            <t t-call="website.search_result_item">
+                <t t-set="search_item_metadata" t-value="result['breadcrumb']"/>
+            </t>
         </t>
     </t>
 </templates>

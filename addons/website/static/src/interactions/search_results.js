@@ -28,7 +28,7 @@ export class SearchResults extends Interaction {
         const searchType = ev.target.dataset.searchType;
         const offset = parseInt(ev.target.dataset.offset || this.limit);
         // We need displayType = 'columns' by default.
-        const row_classes = "o_search_result_item col-12 col-md-6 col-lg-4";
+        const row_classes = "o_search_result_item rounded-4";
         const [html, hasMore] = await this.keepLast.add(
             rpc("/website/load_more_search", {
                 search: this.inputEl.value,
@@ -45,7 +45,8 @@ export class SearchResults extends Interaction {
         );
         ev.target.classList.add("d-none", !hasMore);
         const doc = parseHTML(document, html);
-        ev.target.parentNode.insertBefore(doc, ev.target);
+        const ulEl = ev.target.parentNode.previousElementSibling;
+        ulEl.appendChild(doc);
         // Set offset for next loadMore
         ev.target.dataset.offset = offset + this.limit;
     }

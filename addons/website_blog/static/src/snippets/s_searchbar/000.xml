@@ -3,38 +3,9 @@
 <templates xml:space="preserve">
     <t t-name="website_blog.search_items_blog_post">
         <t t-foreach="bucket.data" t-as="result" t-key="result_index">
-            <div t-attf-class="#{row_classes}">
-                <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
-                    <t t-call="website.search_image_item"/>
-                    <div class="o_search_result_item_content p-2">
-                        <div class="h6 fw-bold mb-0" t-out="result['name']"/>
-                        <div id="o_search_item_matching_content">
-                            <div t-if="result['tags']" t-out="result['tags']" class="my-1"/>
-                        </div>
-                        <div class="d-inline-flex align-items-center smaller w-100">
-                            <img t-att-src="result['author_avatar_url']" class="o_avatar me-1 rounded"/>
-                            <div class="d-flex justify-content-between">
-                                <div t-out="result['author_name']"/>
-                                <div t-out="result['published_date']"/>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </t>
-    </t>
-
-    <t t-name="website_blog.search_items_blog_blog">
-        <t t-foreach="bucket.data" t-as="result" t-key="result_index">
-            <div t-attf-class="#{row_classes}">
-                <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
-                    <t t-call="website.search_image_item"/>
-                    <div class="o_search_result_item_content p-2">
-                        <div class="fs-6 fw-bold" t-out="result['name']"/>
-                        <div class="small" t-out="result['description']"/>
-                    </div>
-                </a>
-            </div>
+            <t t-call="website.search_result_item">
+                <t t-set="search_item_metadata" t-value="result['author_name']"/>
+            </t>
         </t>
     </t>
 </templates>

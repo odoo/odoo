@@ -3105,28 +3105,29 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
 <template id="website_search_box" name="Website Searchbox">
     <div t-attf-class="input-group #{_classes}" role="search">
         <t t-set="search_placeholder">Search...</t>
-        <input type="search" name="search" t-att-class="'search-query form-control oe_search_box %s %s' % (_input_classes or '', '' if default_style else 'border-0 bg-light')" t-att-placeholder="placeholder if placeholder else search_placeholder" t-att-value="search"/>
+        <input type="search" name="search" t-att-class="'search-query form-control oe_search_box %s %s %s' % (_input_classes or '', '' if default_style else 'border-0', '' if _input_no_bg else 'bg-light')" t-att-placeholder="placeholder if placeholder else search_placeholder" t-att-value="search"/>
         <button type="submit" t-att-class="'btn oe_search_button %s' % (_submit_classes or ('btn-primary' if default_style else 'btn-light'))" aria-label="Search" title="Search">
-            <i class="oi oi-search"/>
-            <span t-if="search" class="oe_search_found">
-                <small>(<t t-out="search_count or 0"/> found)</small>
+            <small class="text-muted pe-2" t-if="hide_label_view_all_results"><t t-out="search_count or 0"/> result<t t-if="search_count &gt; 1">s</t></small>
+            <span t-if="search and not hide_label_view_all_results" class="oe_search_found">
+                <small>View all results (<t t-out="search_count or 0"/>)</small>
             </span>
+            <i t-else="" class="oi oi-search"/>
         </button>
     </div>
 </template>
 
 <template id="search_text_with_highlight" name="Website Searchbox item highlight">
-    <span t-foreach="enumerate(parts)" t-as="part" t-att-class="'text-primary-emphasis' if part[0] % 2 else None" t-out="part[1]"/>
+    <span t-foreach="enumerate(parts)" t-as="part" t-att-class="'o_search_matching_text text-body-emphasis position-relative' if part[0] % 2 else None" t-out="part[1]"/>
 </template>
 
 <template id="search_tags_highlight" name="Website Searchbar: Tag Highlight">
-    <div class="d-flex gap-1 smaller flex-wrap">
+    <div class="o_search_tags_highlight d-flex gap-1 flex-wrap">
         <span t-foreach="tags"
             t-as="tag"
             class="badge o_color_0">
             <span t-foreach="enumerate(tag['parts'])"
                t-as="part"
-               t-att-class="'fw-bold text-primary-emphasis' if part[0] % 2 else None"
+               t-att-class="'o_search_matching_text text-body-emphasis position-relative' if part[0] % 2 else None"
                t-out="part[1]" />
         </span>
     </div>
@@ -3171,23 +3172,45 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
 </template>
 
 <template id="website.search_image_item_view">
-    <img t-if="result.get('image_url')" t-att-src="result['image_url']" class="flex-shrink-0 o_image_64_cover"/>
-    <i t-else="" t-attf-class="o_image_64_contain text-center pt16 fa #{result['_fa']}" style="font-size: 34px;"/>
+    <img t-if="result.get('image_url')" t-att-src="result['image_url']" class="o_search_result_image flex-shrink-0 rounded-2"/>
+    <i t-else="" t-attf-class="o_search_result_image flex-shrink-0 align-content-center rounded-2 bg-100 fs-6 text-center text-muted fa #{result['_fa']}"/>
+</template>
+
+<template id="website.search_result_item">
+    <li class="o_search_result_item rounded mx-n2">
+        <a t-att-href="result['website_url']" class="o_search_result_link d-flex gap-2 p-2 text-decoration-none text-muted">
+            <t t-call="website.search_image_item_view"/>
+            <div class="o_search_result_content d-flex flex-grow-1">
+                <div>
+                    <h3 class="h6 mb-0 d-inline" t-out="result['name']"/>
+                    <span t-if="search_item_metadata" class="align-baseline text-nowrap smaller">
+                        <span> · </span>
+                        <t t-out="search_item_metadata"/>
+                    </span>
+                </div>
+                <div class="o_search_result_description d-empty-none">
+                    <t t-if="result.get('tags')" t-out="result['tags']"/>
+                    <p
+                        t-elif="result.get('description')"
+                        class="o_line_clamp mb-0 small"
+                        style="--lines-clamp: 1;"
+                        t-out="result['description']"
+                    />
+                    <p
+                        t-elif="result.get('body')"
+                        class="o_line_clamp mb-0 small"
+                        style="--lines-clamp: 1;"
+                        t-out="result['body']"
+                    />
+                </div>
+            </div>
+        </a>
+    </li>
 </template>
 
 <template id="website.search_items_page_view">
     <t t-foreach="bucket['data']" t-as="result">
-        <div t-attf-class="#{row_classes}">
-            <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
-                <div class="o_search_result_item_content p-2">
-                    <div class="fs-6 fw-bold" t-out="result['name']"/>
-                    <div id="o_search_item_matching_content">
-                        <p t-if="result.get('description')" class="small"
-                            t-out="result['description']"/>
-                    </div>
-                </div>
-            </a>
-        </div>
+        <t t-call="website.search_result_item"/>
     </t>
 </template>
 
@@ -3195,50 +3218,58 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
     <t t-call="website.layout">
         <div id="wrap">
             <div class="container pt24 pb24">
-                <t t-call="website.website_search_box_input"
-                    _classes.f="mt8"
-                    search_type.f="all"
-                    action.f="/website/search"/>
-                <t t-if="not results">
-                    <div class="text-center">
-                        <div class="mt-5 mb-3"><t t-call="website.empty_search_svg"/></div>
-                        <t t-if="search">
-                            Your search '<t t-out="search" />' did not match anything.
-                        </t>
-                        <t t-else="">
-                            Specify a search term.
-                        </t>
-                    </div>
-                </t>
-                <t t-elif="fuzzy_search">
-                    <div class="alert alert-warning mt8" role="alert">
-                        Your search '<t t-out="search" />' did not match anything.
-                        Results are displayed for '<t t-out="fuzzy_search"/>'.
-                    </div>
-                </t>
-                <div t-if="results" class="o_searchbar_result table-responsive mt24">
-                    <t t-foreach="results.items()" t-as="group_result">
-                        <t t-set="bucket" t-value="group_result[1]"/>
-                        <t t-set="template_key" t-value="bucket.get('templateKey') + '_view'"/>
-                        <div t-att-id="bucket['groupName'].replace(' ', '_').lower()">
-                            <!-- Group header -->
-                            <div class="fw-bold">
-                                <t t-out="bucket['groupName']"/>
+                <div class="row justify-content-center">
+                    <div class="col-12 col-xxl-10">
+                        <t t-call="website.website_search_box_input"
+                            _classes.f="mt8"
+                            search_type.f="all"
+                            action.f="/website/search"
+                            hide_label_view_all_results="True"/>
+                        <t t-if="not results">
+                            <div class="text-center">
+                                <div class="mt-5 mb-3"><t t-call="website.empty_search_svg"/></div>
+                                <t t-if="search">
+                                    Your search '<t t-out="search" />' did not match anything.
+                                </t>
+                                <t t-else="">
+                                    Specify a search term.
+                                </t>
                             </div>
+                        </t>
+                        <t t-elif="fuzzy_search">
+                            <div class="alert alert-warning mt8" role="alert">
+                                Your search '<t t-out="search" />' did not match anything.
+                                Results are displayed for '<t t-out="fuzzy_search"/>'.
+                            </div>
+                        </t>
+                        <div t-if="results" class="o_searchbar_result">
+                            <t t-foreach="results.items()" t-as="group_result">
+                                <t t-set="bucket" t-value="group_result[1]"/>
+                                <t t-set="template_key" t-value="bucket.get('templateKey') + '_view'"/>
 
-                            <t t-set="row_classes" t-value="'o_search_result_item col-12 col-md-6 col-lg-4'"/>
-                            <!-- Items -->
-                            <div class="row g-0 p-2">
-                                <t t-call="{{ template_key }}"/>
-                                <t t-set="has_more" t-value="(bucket.get('searchCount') &gt; limit)"/>
-                                <button
-                                    t-attf-class="btn btn-small btn-light o_load_more #{(not has_more and 'd-none')}"
-                                    t-att-data-search-type="group_result[0]">
-                                    Load More
-                                </button>
-                            </div>
+                                <section t-att-id="bucket['groupName'].replace(' ', '_').lower()" t-attf-class="mb-4 #{'mt-4' if group_result_first else ''}">
+                                    <!-- Group header -->
+                                    <h2 class="mb-2 fs-6 fw-normal text-muted">
+                                        <small t-out="bucket['groupName']"/>
+                                        <small>
+                                        - <t t-out="bucket['searchCount']"/> <t t-out="'results' if bucket['searchCount'] > 1 else 'result'"/>
+                                        </small>
+                                    </h2>
+                                    <!-- Items -->
+                                    <ul class="list-unstyled mb-0">
+                                        <t t-call="{{ template_key }}"/>
+                                    </ul>
+                                    <t t-set="has_more" t-value="(bucket.get('searchCount') &gt; limit)"/>
+                                    <div t-if="has_more" class="d-flex justify-content-center py-2">
+                                        <button class="o_load_more btn btn-light"
+                                            t-att-data-search-type="group_result[0]">
+                                            Load More
+                                        </button>
+                                    </div>
+                                </section>
+                            </t>
                         </div>
-                    </t>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3372,7 +3403,9 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                     <div class="modal-dialog modal-lg pt-5">
                         <div class="modal-content mt-5">
                             <t t-call="website.header_search_box_input"
-                                _classes.f="input-group-lg"/>
+                                _classes.f="input-group-lg"
+                                _submit_classes.f="border-start border-bottom-0 bg-o-color-4"
+                                _input_no_bg.f="True"/>
                         </div>
                     </div>
                 </div>

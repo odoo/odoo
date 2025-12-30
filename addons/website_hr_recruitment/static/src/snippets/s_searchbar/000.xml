@@ -3,32 +3,9 @@
 <templates xml:space="preserve">
     <t t-name="website_hr_recruitment.search_items_jobs">
         <t t-foreach="bucket.data" t-as="result" t-key="result_index">
-            <div t-attf-class="#{row_classes} p-2">
-                <a t-att-href="result['website_url']" class="h-100 text-decoration-none d-flex align-items-center">
-                    <div class="o_search_result_item_content">
-                         <div class="d-flex p-2">
-                             <div class="flex-grow-1">
-                                 <div class="fs-6 fw-bold" t-out="result['name']"/>
-                                 <div class="d-flex flex-column smaller">
-                                         <div t-if="result['address']">
-                                             <span class="fa fa-map-marker me-1"/>
-                                             <span t-out="result['address']"/>
-                                         </div>
-                                         <div t-if="result['department_name']">
-                                             <span class="fa fa-sitemap me-1"/>
-                                             <span t-out="result['department_name']"/>
-                                         </div>
-                                 </div>
-                             </div>
-                             <div t-if="result['no_of_recruitment']" class="text-center">
-                                 <h6 class="fs-6 fw-bold" t-out="result['no_of_recruitment']"/>
-                                 <span class="smaller"> open positions </span>
-                             </div>
-                         </div>
-                         <div id="o_search_item_matching_content"></div>
-                    </div>
-                </a>
-            </div>
+            <t t-call="website.search_result_item">
+                <t t-set="search_item_metadata" t-value="result['address']"/>
+            </t>
         </t>
     </t>
 </templates>

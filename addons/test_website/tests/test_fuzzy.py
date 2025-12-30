@@ -178,7 +178,7 @@ class TestAutoComplete(TransactionCase):
         self.assertFalse(skip, "Expected field to not be skipped")
         self.assertEqual(field_type, 'html', "Expected field_type to switch to 'html' after highlighting")
         self.assertIn(
-            '<span class="fw-bold text-primary-emphasis">Market</span><span>ing</span>',
+            '<span class="o_search_matching_text text-body-emphasis position-relative">Market</span><span>ing</span>',
             str(result),
             "Expected matching term to be highlighted in the output"
         )

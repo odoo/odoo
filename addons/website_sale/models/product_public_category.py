@@ -200,7 +200,7 @@ class ProductPublicCategory(models.Model):
             category_ids = data.get('parents_and_self', [])
             if category_ids and len(category_ids) > 1:
                 category_names = product_category_model.browse(category_ids).mapped('name')
-                data['breadcrumb'] = " > ".join(category_names)
+                data['breadcrumb'] = " / ".join(category_names[:-1])
 
         return results_data
 

@@ -4,33 +4,9 @@
 
     <t t-name="website_event.search_items_event">
         <t t-foreach="bucket.data" t-as="result" t-key="result_index">
-            <div t-attf-class="#{row_classes}">
-                <a t-att-href="result['website_url']" class="h-100 p-2 text-decoration-none d-flex align-items-center">
-                    <div class="d-flex align-items-center flex-column">
-                        <t t-call="website.search_image_item"/>
-                        <span t-if="result['date_begin'].length" t-out="result['date_begin']" class="smaller"/>
-                    </div>
-                    <div class="o_search_result_item_content">
-                        <div class="d-flex p-2">
-                            <div class="flex-grow-1">
-                                <div class="fs-6 fw-bold" t-out="result['name']"/>
-                                <span t-if="result['address_name'].length" class="smaller">
-                                    <span class="fa fa-map-marker me-1"/>
-                                    <t t-out="result['address_name']"/>
-                                </span>
-                            </div>
-                            <div t-if="result['lowest_ticket_price'].length"
-                                class="d-flex flex-column text-center smaller justify-content-center">
-                                <span class="fst-italic"> From </span>
-                                <h6 t-out="result['lowest_ticket_price']"/>
-                            </div>
-                        </div>
-                        <div id="o_search_item_matching_content">
-                            <t t-if="result['tags']" t-out="result['tags']"/>
-                        </div>
-                    </div>
-                </a>
-            </div>
+            <t t-call="website.search_result_item">
+                <t t-set="search_item_metadata" t-value="result['date_begin']"/>
+            </t>
         </t>
     </t>
 
