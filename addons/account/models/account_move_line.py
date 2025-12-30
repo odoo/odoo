@@ -3110,6 +3110,11 @@ class AccountMoveLine(models.Model):
             for aml in all_amls
         }
 
+        aml_residual_snapshot = {
+            aml.id: values['amount_residual_currency']
+            for aml, values in aml_values_map.items()
+        }
+
         # ==== Prepare the partials ====
         partials_values_list = []
         exchange_diff_values_list = []
@@ -3171,7 +3176,7 @@ class AccountMoveLine(models.Model):
                 if is_cash_basis_needed(plan['amls']):
                     plan['partials']\
                         .with_context(no_exchange_difference_no_recursive=False, exchange_account_per_move=exchange_account_per_move)\
-                        ._create_tax_cash_basis_moves()
+                        ._create_tax_cash_basis_moves(aml_residual_snapshot)
                     plan['partials']._set_draft_caba_move_vals()
 
         # ==== Prepare full reconcile creation ====
