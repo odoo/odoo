@@ -893,34 +893,43 @@ class MailTemplate(models.Model):
     # MAIL RENDER INTERNALS
     # ----------------------------------------
 
-    def _render_field(self, field, res_ids, **kwargs):
-        """Override to support body_view_id as fallback when body_html is empty."""
-        if field == 'body_html':
-            # Priority: body_html (user override) > body_view_id (default)
-            if not is_html_empty(self.body_html):
-                # User has customized - use body_html as normal
-                return super()._render_field(field, res_ids, **kwargs)
-            if self.body_view_id:
-                # No customization - render from view
-                rendered = self._render_template_qweb_view(
+    def _render_field(self, field, res_ids, engine='inline_template',
+                      compute_lang=False, res_ids_lang=False, set_lang=False,
+                      add_context=None, options=None):
+        """Override to support body_view_id as fallback when body_html is empty.
+
+        Priority: body_html (including translations) > body_view_id > empty
+        """
+        if field == 'body_html' and self.body_view_id:
+            # Try body_html first (super handles language/translations correctly)
+            result = super()._render_field(
+                field, res_ids, engine=engine,
+                compute_lang=compute_lang, res_ids_lang=res_ids_lang, set_lang=set_lang,
+                add_context=add_context, options=options,
+            )
+            # Fall back to body_view_id for res_ids with empty result
+            empty_res_ids = [res_id for res_id, body in result.items() if is_html_empty(body)]
+            if empty_res_ids:
+                view_rendered = self._render_template_qweb_view(
                     self.body_view_id.id,
                     self.render_model,
-                    res_ids,
+                    empty_res_ids,
                     options={'post_process': True},
                 )
-                # Apply email-specific sanitization
-                for res_id, body in rendered.items():
-                    rendered[res_id] = tools.html_sanitize(
-                        body,
+                for res_id in empty_res_ids:
+                    result[res_id] = tools.html_sanitize(
+                        view_rendered[res_id],
                         sanitize_tags=True,
                         sanitize_attributes=True,
                         sanitize_style=True,
                         sanitize_form=True,
                     )
-                return rendered
-            # Both empty - return empty
-            return {res_id: '' for res_id in res_ids}
-        return super()._render_field(field, res_ids, **kwargs)
+            return result
+        return super()._render_field(
+            field, res_ids, engine=engine,
+            compute_lang=compute_lang, res_ids_lang=res_ids_lang, set_lang=set_lang,
+            add_context=add_context, options=options,
+        )
 
     def _has_unsafe_expression_template_qweb(self, source, model, fname=None):
         if self._expression_is_default(source, model, fname):
