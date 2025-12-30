@@ -4132,6 +4132,7 @@ class AccountMove(models.Model):
             * total_residual:           sum(payment_term_lines.mapped('amount_residual').
             * total_amount_currency:    sum(payment_term_lines.mapped('amount_currency').
             * total_residual_currency:  sum(payment_term_lines.mapped('amount_residual_currency').
+            * payment_term:             An account.move.line record being the receviable/payable line of a move.
             * is_fully_paid:            A flag indicating the current move is now fully paid.
         '''
         self.ensure_one()
@@ -4143,6 +4144,7 @@ class AccountMove(models.Model):
             'total_residual': 0.0,
             'total_amount_currency': 0.0,
             'total_residual_currency': 0.0,
+            'payment_term': None,
         }
 
         currencies = set()
@@ -4157,6 +4159,7 @@ class AccountMove(models.Model):
                 values['total_residual'] += sign * line.amount_residual
                 values['total_amount_currency'] += sign * line.amount_currency
                 values['total_residual_currency'] += sign * line.amount_residual_currency
+                values['payment_term'] = line
 
             elif line.tax_line_id.tax_exigibility == 'on_payment':
                 values['to_process_lines'].append(('tax', line))

@@ -66,6 +66,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'account_type': 'income',
         })
 
+        cls.tax_account_3 = cls.env['account.account'].create({
+            'code': 'tax.account.3',
+            'name': 'tax_account_3',
+            'account_type': 'income',
+        })
+
         cls.fake_country = cls.env['res.country'].create({
             'name': "The Island of the Fly",
             'code': 'YY',
@@ -75,7 +81,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'name': 'tax_tag_%s' % str(i),
             'applicability': 'taxes',
             'country_id': cls.company_data['company'].account_fiscal_country_id.id,
-        } for i in range(10)])
+        } for i in range(14)])
 
         cls.cash_basis_tax_a_third_amount = cls.env['account.tax'].create({
             'name': 'tax_1',
@@ -160,6 +166,38 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ],
         })
 
+        cls.cash_basis_tax_b_tenth_amount = cls.env['account.tax'].create({
+            'name': 'tax_2',
+            'amount': 10.0000,
+            'company_id': cls.company_data['company'].id,
+            'cash_basis_transition_account_id': cls.cash_basis_transfer_account.id,
+            'tax_exigibility': 'on_payment',
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, cls.tax_tags[10].ids)],
+                }),
+
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': cls.tax_account_3.id,
+                    'tag_ids': [(6, 0, cls.tax_tags[11].ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, cls.tax_tags[12].ids)],
+                }),
+
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': cls.tax_account_3.id,
+                    'tag_ids': [(6, 0, cls.tax_tags[13].ids)],
+                }),
+            ],
+        })
+
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
@@ -221,6 +259,23 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 ])[0].id,
         })._create_payments()
         return payment
+
+    def _create_two_line_cash_basis_invoice(self, move_type='out_invoice', post=True):
+        return self._create_invoice(
+            move_type=move_type,
+            partner_id=self.partner_a,
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    price_unit=100,
+                    tax_ids=self.cash_basis_tax_a_third_amount,
+                ),
+                self._prepare_invoice_line(
+                    price_unit=100,
+                    tax_ids=self.cash_basis_tax_b_tenth_amount,
+                ),
+            ],
+            post=post,
+        )
 
     # -------------------------------------------------------------------------
     # Test creation of account.partial.reconcile/account.full.reconcile
@@ -6244,3 +6299,320 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'balance': 10.0},
             {'balance': -10.0},
         ])
+
+    def test_cash_basis_out_invoice_refund(self):
+        '''Refunding a product with a specific tax in a multi-tax invoice, should result in the CABA containing only the refunded tax.'''
+
+        self.env.company.tax_exigibility = True
+        invoice = self._create_two_line_cash_basis_invoice(post=True)
+
+        refund = self._reverse_invoice(invoice, post=False)
+        tax_to_keep = refund.invoice_line_ids.filtered(
+            lambda l: l.tax_ids == self.cash_basis_tax_a_third_amount,
+        )
+        (refund.invoice_line_ids - tax_to_keep).unlink()
+        refund.action_post()
+
+        invoice_caba_move = self._get_caba_moves(invoice)
+
+        self.assertEqual(len(invoice_caba_move), 1)
+        self.assertRecordValues(invoice_caba_move.line_ids.sorted('id'), [
+            # Base amount
+            {'debit': 100.00,   'credit': 0.0,      'tax_tag_ids': [],                      'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 100.00,   'tax_tag_ids': self.tax_tags[0].ids,    'account_id': self.cash_basis_base_account.id},
+            # Tax amount (only Tax A)
+            {'debit': 33.33,    'credit': 0.0,      'tax_tag_ids': [],                      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 33.33,    'tax_tag_ids': self.tax_tags[1].ids,    'account_id': self.tax_account_1.id},
+            ],
+        )
+
+    def test_cash_basis_out_invoice_refund_partial_payment_reversal(self):
+        '''If a partially paid invoice is refunded with a line whose amount exceeds the remaining amount of the corresponding invoice line
+        (while the invoice still remains partially paid),the existing payment CABA entry must first be reversed, the refund CABA entry must be
+        created, and a new payment CABA entry must then be generated for the remaining reconciled amount.'''
+
+        self.env.company.tax_exigibility = True
+        invoice = self._create_two_line_cash_basis_invoice()
+
+        self._register_payment(
+            invoice,
+            amount=50,
+        )
+        payment_caba_move = self._get_caba_moves(invoice)
+        self.assertEqual(len(payment_caba_move), 1)
+
+        refund = self._reverse_invoice(invoice, post=False)
+        tax_to_keep = refund.invoice_line_ids.filtered(
+            lambda l: l.tax_ids == self.cash_basis_tax_a_third_amount,
+        )
+        (refund.invoice_line_ids - tax_to_keep).unlink()
+        refund.action_post()
+
+        all_caba_moves = self._get_caba_moves(invoice)
+        self.assertEqual(len(all_caba_moves), 4)
+
+        refund_partial_record = refund.line_ids.matched_debit_ids | refund.line_ids.matched_credit_ids
+        refund_caba_move = all_caba_moves.filtered(lambda m: m.tax_cash_basis_rec_id in refund_partial_record)
+        self.assertRecordValues(refund_caba_move.line_ids.sorted('id'), [
+            # Base amount
+            {'debit': 100.0,    'credit': 0.0,      'tax_tag_ids': [],                      'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 100.0,    'tax_tag_ids': self.tax_tags[0].ids,    'account_id': self.cash_basis_base_account.id},
+            # Tax amount (only Tax A)
+            {'debit': 33.33,    'credit': 0.0,      'tax_tag_ids': [],                      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 33.33,    'tax_tag_ids': self.tax_tags[1].ids,    'account_id': self.tax_account_1.id},
+            ],
+        )
+
+        reversed_payment_caba_move = all_caba_moves.filtered(lambda m: m.reversed_entry_id.id == payment_caba_move.id)
+        self.assertEqual(len(reversed_payment_caba_move), 1)
+
+        new_payment_caba_move = all_caba_moves - refund_caba_move - reversed_payment_caba_move - payment_caba_move
+        self.assertRecordValues(new_payment_caba_move.line_ids.sorted('id'), [
+            # Base amount
+            {'debit': 45.45,    'credit': 0.0,      'tax_tag_ids': [],                       'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 45.45,    'tax_tag_ids': self.tax_tags[10].ids,    'account_id': self.cash_basis_base_account.id},
+            # Tax amount (only Tax B)
+            {'debit': 4.55,     'credit': 0.0,      'tax_tag_ids': [],                       'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 4.55,     'tax_tag_ids': self.tax_tags[11].ids,    'account_id': self.tax_account_3.id},
+            ],
+        )
+
+    def test_cash_basis_out_invoice_refund_fully_paid(self):
+        '''If a partially paid invoice is refunded with a line whose amount exceeds the remaining amount of the corresponding invoice line
+        and makes the invoice fully paid, the refund CABA entry should be created on the remaining amount left on the invoice'''
+
+        self.env.company.tax_exigibility = True
+        invoice = self._create_two_line_cash_basis_invoice()
+
+        self._register_payment(
+            invoice,
+            amount=150,
+        )
+        payment_caba_move = self._get_caba_moves(invoice)
+        self.assertEqual(len(payment_caba_move), 1)
+
+        refund = self._reverse_invoice(invoice, post=False)
+        tax_to_keep = refund.invoice_line_ids.filtered(
+            lambda l: l.tax_ids == self.cash_basis_tax_a_third_amount,
+        )
+        (refund.invoice_line_ids - tax_to_keep).unlink()
+        refund.action_post()
+
+        caba_moves = self._get_caba_moves(invoice)
+        self.assertEqual(len(caba_moves), 2)
+        refund_caba_move = caba_moves - payment_caba_move
+        self.assertRecordValues(refund_caba_move.line_ids.sorted('id'), [
+            # Base amount
+            {'debit': 38.36,    'credit': 0.0,      'tax_tag_ids': [],                       'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 38.36,    'tax_tag_ids': self.tax_tags[0].ids,     'account_id': self.cash_basis_base_account.id},
+            {'debit': 38.36,    'credit': 0.0,      'tax_tag_ids': [],                       'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 38.36,    'tax_tag_ids': self.tax_tags[10].ids,    'account_id': self.cash_basis_base_account.id},
+            # Tax amount
+            {'debit': 12.78,    'credit': 0.0,      'tax_tag_ids': [],                       'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 12.78,    'tax_tag_ids': self.tax_tags[1].ids,     'account_id': self.tax_account_1.id},
+            {'debit': 3.84,     'credit': 0.0,      'tax_tag_ids': [],                       'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 3.84,     'tax_tag_ids': self.tax_tags[11].ids,    'account_id': self.tax_account_3.id},
+            ],
+        )
+
+    def test_cash_basis_out_invoice_refund_excess_payment(self):
+        '''If a refunded line amount exceeds the corresponding invoice line amount and the invoice reamins partially paid, the refund CABA entry
+        must include an excess payment allocation on the other invoice lines. Any subsequent payments/refunds created should only include the lines
+        that have a remaining amount left.'''
+
+        self.env.company.tax_exigibility = True
+        invoice = self._create_two_line_cash_basis_invoice()
+
+        refund = self._reverse_invoice(invoice, post=False)
+        tax_to_keep = refund.invoice_line_ids.filtered(
+            lambda l: l.tax_ids == self.cash_basis_tax_a_third_amount,
+        )
+        tax_to_keep.price_unit = 150
+        (refund.invoice_line_ids - tax_to_keep).unlink()
+        refund.action_post()
+
+        refund_caba_move = self._get_caba_moves(invoice)
+        self.assertEqual(len(refund_caba_move), 1)
+        self.assertRecordValues(refund_caba_move.line_ids.sorted('id'), [
+            # Base amount
+            {'debit': 100.0,    'credit': 0.0,      'tax_tag_ids': [],                       'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 100.0,    'tax_tag_ids': self.tax_tags[0].ids,     'account_id': self.cash_basis_base_account.id},
+            {'debit': 60.61,    'credit': 0.0,      'tax_tag_ids': [],                       'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 60.61,    'tax_tag_ids': self.tax_tags[10].ids,    'account_id': self.cash_basis_base_account.id},
+            # Tax amount
+            {'debit': 33.33,    'credit': 0.0,      'tax_tag_ids': [],                       'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 33.33,    'tax_tag_ids': self.tax_tags[1].ids,     'account_id': self.tax_account_1.id},
+            {'debit': 6.06,     'credit': 0.0,      'tax_tag_ids': [],                       'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 6.06,     'tax_tag_ids': self.tax_tags[11].ids,    'account_id': self.tax_account_3.id},
+            ],
+        )
+
+        self._register_payment(
+            invoice,
+            amount=invoice.amount_residual,
+        )
+
+        caba_moves = self._get_caba_moves(invoice)
+        self.assertEqual(len(caba_moves), 2)
+        payment_caba_move = caba_moves - refund_caba_move
+        self.assertRecordValues(payment_caba_move.line_ids.sorted('id'), [
+            # Base amount
+            {'debit': 39.39,    'credit': 0.0,      'tax_tag_ids': [],                       'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 39.39,    'tax_tag_ids': self.tax_tags[10].ids,    'account_id': self.cash_basis_base_account.id},
+            # Tax amount (only Tax B)
+            {'debit': 3.94,     'credit': 0.0,      'tax_tag_ids': [],                       'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 3.94,     'tax_tag_ids': self.tax_tags[11].ids,    'account_id': self.tax_account_3.id},
+            ],
+        )
+
+    def test_cash_basis_in_invoice_refund(self):
+        self.env.company.tax_exigibility = True
+        invoice = self._create_two_line_cash_basis_invoice(move_type='in_invoice')
+
+        refund = self._reverse_invoice(invoice, post=False)
+        tax_to_keep = refund.invoice_line_ids.filtered(
+            lambda l: l.tax_ids == self.cash_basis_tax_a_third_amount,
+        )
+        (refund.invoice_line_ids - tax_to_keep).unlink()
+        refund.action_post()
+
+        invoice_caba_move = self._get_caba_moves(invoice)
+
+        self.assertEqual(len(invoice_caba_move), 1)
+        self.assertRecordValues(invoice_caba_move.line_ids.sorted('id'), [
+            # Base amount
+            {'debit': 0.0,      'credit': 100.0,    'tax_tag_ids': [],                      'account_id': self.cash_basis_base_account.id},
+            {'debit': 100.0,    'credit': 0.0,      'tax_tag_ids': self.tax_tags[0].ids,    'account_id': self.cash_basis_base_account.id},
+            # Tax amount (only Tax A)
+            {'debit': 0.0,      'credit': 33.33,    'tax_tag_ids': [],                      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 33.33,    'credit': 0.0,      'tax_tag_ids': self.tax_tags[1].ids,    'account_id': self.tax_account_1.id},
+            ],
+        )
+
+    def test_cash_basis_in_invoice_refund_partial_payment_reversal(self):
+        self.env.company.tax_exigibility = True
+        invoice = self._create_two_line_cash_basis_invoice(move_type='in_invoice')
+
+        self._register_payment(
+            invoice,
+            amount=50,
+        )
+        payment_caba_move = self._get_caba_moves(invoice)
+        self.assertEqual(len(payment_caba_move), 1)
+
+        refund = self._reverse_invoice(invoice, post=False)
+        tax_to_keep = refund.invoice_line_ids.filtered(
+            lambda l: l.tax_ids == self.cash_basis_tax_a_third_amount,
+        )
+        (refund.invoice_line_ids - tax_to_keep).unlink()
+        refund.action_post()
+
+        all_caba_moves = self._get_caba_moves(invoice)
+        self.assertEqual(len(all_caba_moves), 4)
+
+        refund_partial_record = refund.line_ids.matched_debit_ids | refund.line_ids.matched_credit_ids
+        refund_caba_move = all_caba_moves.filtered(lambda m: m.tax_cash_basis_rec_id in refund_partial_record)
+        self.assertRecordValues(refund_caba_move.line_ids.sorted('id'), [
+            # Base amount
+            {'debit': 0.0,      'credit': 100.0,    'tax_tag_ids': [],                      'account_id': self.cash_basis_base_account.id},
+            {'debit': 100.0,    'credit': 0.0,      'tax_tag_ids': self.tax_tags[0].ids,    'account_id': self.cash_basis_base_account.id},
+            # Tax amount (only Tax A)
+            {'debit': 0.0,      'credit': 33.33,    'tax_tag_ids': [],                      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 33.33,    'credit': 0.0,      'tax_tag_ids': self.tax_tags[1].ids,    'account_id': self.tax_account_1.id},
+            ],
+        )
+
+        reversed_payment_caba_move = all_caba_moves.filtered(lambda m: m.reversed_entry_id.id == payment_caba_move.id)
+        self.assertEqual(len(reversed_payment_caba_move), 1)
+
+        new_payment_caba_move = all_caba_moves - refund_caba_move - reversed_payment_caba_move - payment_caba_move
+        self.assertRecordValues(new_payment_caba_move.line_ids.sorted('id'), [
+            # Base amount
+            {'debit': 0.0,      'credit': 45.45,    'tax_tag_ids': [],                       'account_id': self.cash_basis_base_account.id},
+            {'debit': 45.45,    'credit': 0.0,      'tax_tag_ids': self.tax_tags[10].ids,    'account_id': self.cash_basis_base_account.id},
+            # Tax amount (only Tax B)
+            {'debit': 0.0,     'credit': 4.55,      'tax_tag_ids': [],                       'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 4.55,      'credit': 0.0,     'tax_tag_ids': self.tax_tags[11].ids,    'account_id': self.tax_account_3.id},
+            ],
+        )
+
+    def test_cash_basis_in_invoice_refund_fully_paid(self):
+        self.env.company.tax_exigibility = True
+        invoice = self._create_two_line_cash_basis_invoice(move_type='in_invoice')
+
+        self._register_payment(
+            invoice,
+            amount=150,
+        )
+        payment_caba_move = self._get_caba_moves(invoice)
+        self.assertEqual(len(payment_caba_move), 1)
+
+        refund = self._reverse_invoice(invoice, post=False)
+        tax_to_keep = refund.invoice_line_ids.filtered(
+            lambda l: l.tax_ids == self.cash_basis_tax_a_third_amount,
+        )
+        (refund.invoice_line_ids - tax_to_keep).unlink()
+        refund.action_post()
+
+        caba_moves = self._get_caba_moves(invoice)
+        self.assertEqual(len(caba_moves), 2)
+        refund_caba_move = caba_moves - payment_caba_move
+        self.assertRecordValues(refund_caba_move.line_ids.sorted('id'), [
+            # Base amount
+            {'debit': 0.0,      'credit': 38.36,    'tax_tag_ids': [],                       'account_id': self.cash_basis_base_account.id},
+            {'debit': 38.36,    'credit': 0.0,      'tax_tag_ids': self.tax_tags[0].ids,     'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 38.36,    'tax_tag_ids': [],                       'account_id': self.cash_basis_base_account.id},
+            {'debit': 38.36,    'credit': 0.0,      'tax_tag_ids': self.tax_tags[10].ids,    'account_id': self.cash_basis_base_account.id},
+            # Tax amount
+            {'debit': 0.0,      'credit': 12.78,    'tax_tag_ids': [],                       'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 12.78,    'credit': 0.0,      'tax_tag_ids': self.tax_tags[1].ids,     'account_id': self.tax_account_1.id},
+            {'debit': 0.0,      'credit': 3.84,     'tax_tag_ids': [],                       'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 3.84,     'credit': 0.0,      'tax_tag_ids': self.tax_tags[11].ids,    'account_id': self.tax_account_3.id},
+            ],
+        )
+
+    def test_cash_basis_in_invoice_refund_excess_payment(self):
+        self.env.company.tax_exigibility = True
+        invoice = self._create_two_line_cash_basis_invoice(move_type='in_invoice')
+
+        refund = self._reverse_invoice(invoice, post=False)
+        tax_to_keep = refund.invoice_line_ids.filtered(
+            lambda l: l.tax_ids == self.cash_basis_tax_a_third_amount,
+        )
+        tax_to_keep.price_unit = 150
+        (refund.invoice_line_ids - tax_to_keep).unlink()
+        refund.action_post()
+
+        refund_caba_move = self._get_caba_moves(invoice)
+        self.assertEqual(len(refund_caba_move), 1)
+        self.assertRecordValues(refund_caba_move.line_ids.sorted('id'), [
+            # Base amount
+            {'debit': 0.0,      'credit': 100.0,    'tax_tag_ids': [],                       'account_id': self.cash_basis_base_account.id},
+            {'debit': 100.0,    'credit': 0.0,      'tax_tag_ids': self.tax_tags[0].ids,     'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 60.61,    'tax_tag_ids': [],                       'account_id': self.cash_basis_base_account.id},
+            {'debit': 60.61,    'credit': 0.0,      'tax_tag_ids': self.tax_tags[10].ids,    'account_id': self.cash_basis_base_account.id},
+            # Tax amount
+            {'debit': 0.0,      'credit': 33.33,    'tax_tag_ids': [],                       'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 33.33,    'credit': 0.0,      'tax_tag_ids': self.tax_tags[1].ids,     'account_id': self.tax_account_1.id},
+            {'debit': 0.0,      'credit': 6.06,     'tax_tag_ids': [],                       'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 6.06,     'credit': 0.0,      'tax_tag_ids': self.tax_tags[11].ids,    'account_id': self.tax_account_3.id},
+            ],
+        )
+
+        self._register_payment(
+            invoice,
+            amount=invoice.amount_residual,
+        )
+
+        caba_moves = self._get_caba_moves(invoice)
+        self.assertEqual(len(caba_moves), 2)
+        payment_caba_move = caba_moves - refund_caba_move
+        self.assertRecordValues(payment_caba_move.line_ids.sorted('id'), [
+            # Base amount
+            {'debit': 0.0,      'credit': 39.39,    'tax_tag_ids': [],                       'account_id': self.cash_basis_base_account.id},
+            {'debit': 39.39,    'credit': 0.0,      'tax_tag_ids': self.tax_tags[10].ids,    'account_id': self.cash_basis_base_account.id},
+            # Tax amount (only Tax B)
+            {'debit': 0.0,      'credit': 3.94,     'tax_tag_ids': [],                       'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 3.94,     'credit': 0.0,      'tax_tag_ids': self.tax_tags[11].ids,    'account_id': self.tax_account_3.id},
+            ],
+        )
