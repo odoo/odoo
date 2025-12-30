@@ -214,12 +214,10 @@ export function makeActionManager(env, router = _router) {
                 }
                 if (actionState.model) {
                     controller.action.type = "ir.actions.act_window";
-                    controller.action.res_model = actionState.model;
                     controller.props.resModel = actionState.model;
                 }
                 if (actionState.resId) {
                     controller.action.type ||= "ir.actions.act_window";
-                    controller.action.res_model = actionState.model;
                     controller.props.resId = actionState.resId;
                     controller.currentState.resId = actionState.resId;
                     controller.props.type = "form";
@@ -338,9 +336,14 @@ export function makeActionManager(env, router = _router) {
         const currentController = _getCurrentController();
         let action = null;
         if (currentController) {
-            if (currentController.virtual && currentController.action.id) {
+            if (currentController.virtual) {
                 try {
-                    action = await _loadAction(currentController.action.id);
+                    // TODO: maybe do this more clean ?
+                    action = await _loadAction(
+                        currentController.action.id || {
+                            res_model: currentController.props.resModel,
+                        }
+                    );
                 } catch (error) {
                     if (
                         error.exceptionName ===
@@ -352,10 +355,7 @@ export function makeActionManager(env, router = _router) {
                     }
                 }
             } else {
-                action =
-                    (currentController.action._originalAction &&
-                        JSON.parse(currentController.action._originalAction)) ||
-                    Object.assign({}, currentController.action);
+                action = JSON.parse(currentController.action._originalAction);
             }
         }
         return action;
@@ -380,14 +380,19 @@ export function makeActionManager(env, router = _router) {
             };
         }
 
-        if (typeof actionRequest === "string" || typeof actionRequest === "number") {
-            // actionRequest is an id or an xmlid
+        const isOnlyModel =
+            typeof actionRequest === "object" &&
+            Object.keys(actionRequest).length === 1 &&
+            "res_model" in actionRequest;
+        if (typeof actionRequest === "string" || typeof actionRequest === "number" || isOnlyModel) {
+            // actionRequest is an id or an xmlid or juste the model name
             const ctx = makeContext([user.context, context]);
+            ctx.default_action_for_model = isOnlyModel;
             delete ctx.params;
             const action = await rpc(
                 "/web/action/load",
                 {
-                    action_id: actionRequest,
+                    action_id: isOnlyModel ? actionRequest.res_model : actionRequest,
                     context: ctx,
                 },
                 { cache: { type: "disk" } }
@@ -563,42 +568,30 @@ export function makeActionManager(env, router = _router) {
                     actionRequest = state.action;
                 }
             }
-            if ((state.resId && state.resId !== "new") || state.globalState) {
-                options.props = {};
-                if (state.resId && state.resId !== "new") {
-                    options.props.resId = state.resId;
-                }
-                if (state.globalState) {
-                    options.props.globalState = state.globalState;
-                }
-            }
         } else if (state.model) {
-            if (state.resId || state.view_type === "form") {
+            // This is a window action on a multi-record view => restores it from
+            // the session storage
+            if (!lastAction.res_id && lastAction.res_model === state.model) {
+                actionRequest = lastAction;
+                options.viewType = state.view_type;
+            } else {
                 actionRequest = {
                     res_model: state.model,
-                    res_id: state.resId === "new" ? undefined : state.resId,
-                    type: "ir.actions.act_window",
-                    views: [[state.view_id ? state.view_id : false, "form"]],
                 };
-            } else {
-                // This is a window action on a multi-record view => restores it from
-                // the session storage
-                if (!lastAction.res_id && lastAction.res_model === state.model) {
-                    actionRequest = lastAction;
-                    options.viewType = state.view_type;
-                } else {
-                    //Maybe retrive here the displayName of the Model ? (or after ?)
-                    actionRequest = {
-                        res_model: state.model,
-                        type: "ir.actions.act_window",
-                        views: [
-                            [false, "list"],
-                            [false, "form"],
-                        ], // why list ? ... because !! did we always add a form ?
-                        view_mode: "list,form",
-                    };
-                    options.view_type = "list";
-                }
+            }
+            //Maybe refactor to have the full context active_id also !
+            Object.assign(options, {
+                // additionalContext: context,
+                viewType: state.resId ? "form" : state.view_type,
+            });
+        }
+        if ((state.resId && state.resId !== "new") || state.globalState) {
+            options.props = {};
+            if (state.resId && state.resId !== "new") {
+                options.props.resId = state.resId;
+            }
+            if (state.globalState) {
+                options.props.globalState = state.globalState;
             }
         }
         if (!actionRequest) {
@@ -806,7 +799,7 @@ export function makeActionManager(env, router = _router) {
                 views: action.views,
                 viewSwitcherEntries,
             },
-            displayName: action.display_name || action.name || action.res_model || "",
+            displayName: action.display_name || action.name || "",
         };
     }
 

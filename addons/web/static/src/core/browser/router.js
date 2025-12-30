@@ -129,17 +129,31 @@ function stateToUrl(state) {
     const actionStack = (state.actionStack || [state]).map((a) => ({ ...a }));
     if (actionStack.at(-1)?.action !== "menu") {
         for (const [prevAct, currentAct] of slidingWindow(actionStack, 2).reverse()) {
-            const { action: prevAction, resId: prevResId, active_id: prevActiveId } = prevAct;
-            const { action: currentAction, active_id: currentActiveId } = currentAct;
+            const {
+                action: prevAction,
+                resId: prevResId,
+                active_id: prevActiveId,
+                model: prevModel,
+            } = prevAct;
+            const {
+                action: currentAction,
+                active_id: currentActiveId,
+                model: currentModel,
+            } = currentAct;
             // actions would typically map to a path like `active_id/action/res_id`
             if (currentActiveId === prevResId) {
                 // avoid doubling up when the active_id is the same as the previous action's res_id
                 delete currentAct.active_id;
             }
-            if (prevAction === currentAction && !prevResId && currentActiveId === prevActiveId) {
+            if (
+                (prevAction === currentAction || currentModel === prevModel) &&
+                !prevResId &&
+                currentActiveId === prevActiveId
+            ) {
                 //avoid doubling up the action and the active_id when a single-record action is preceded by a multi-record action
                 delete currentAct.action;
                 delete currentAct.active_id;
+                delete currentAct.model;
             }
         }
         const pathSegments = actionStack.map(pathFromActionState).filter(Boolean);
