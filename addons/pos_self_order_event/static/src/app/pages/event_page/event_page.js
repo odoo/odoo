@@ -6,6 +6,7 @@ import { isValidEmail } from "@point_of_sale/utils";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { range } from "@web/core/utils/numbers";
 import { useStickyTitleObserver } from "@pos_self_order/app/utils/sticky_title_observer";
 
 export class EventPage extends Component {
@@ -61,10 +62,10 @@ export class EventPage extends Component {
     get ticketForms() {
         return this.eventTickets.flatMap((ticket) => {
             const qty = this.state.ticketQuantities[ticket.id] || 0;
-            return Array.from({ length: qty }, (_, i) => ({
+            return range(1, qty + 1).map((index) => ({
                 ticketId: ticket.id,
                 ticketName: ticket.name,
-                index: i + 1,
+                index,
             }));
         });
     }

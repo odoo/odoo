@@ -1,6 +1,7 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, getFixture, test } from "@odoo/hoot";
 import { animationFrame, edit, press, queryAllTexts } from "@odoo/hoot-dom";
+import { range } from "@web/core/utils/numbers";
 import {
     clickSave,
     contains,
@@ -49,7 +50,7 @@ class Invoice extends models.Model {
     _records = [
         {
             id: 1,
-            invoice_line_ids: Array.from({ length: InvoiceLine._records.length }, (_, i) => i + 1),
+            invoice_line_ids: range(1, InvoiceLine._records.length + 1),
         },
     ];
 

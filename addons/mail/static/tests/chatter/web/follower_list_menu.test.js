@@ -7,9 +7,11 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
 import { mockService, serverState } from "@web/../tests/web_test_helpers";
+import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -114,10 +116,10 @@ test("click on remove follower", async () => {
 test("Load 100 followers at once", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
-        [...Array(210).keys()].map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
+        range(210).map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
     );
     pyEnv["mail.followers"].create(
-        [...Array(210).keys()].map((i) => ({
+        range(210).map((i) => ({
             is_active: true,
             partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
             res_id: partnerIds[0],
@@ -141,14 +143,14 @@ test("Load 100 followers at once", async () => {
 test("Load 100 recipients at once", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
-        [...Array(210).keys()].map((i) => ({
+        range(210).map((i) => ({
             display_name: `Partner${i}`,
             name: `Partner${i}`,
             email: `partner${i}@example.com`,
         }))
     );
     pyEnv["mail.followers"].create(
-        [...Array(210).keys()].map((i) => ({
+        range(210).map((i) => ({
             is_active: true,
             partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
             res_id: partnerIds[0],

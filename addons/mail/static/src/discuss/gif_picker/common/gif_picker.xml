@@ -38,7 +38,7 @@
                             </div>
                         </div>
                         <t t-if="state.categories.length === 0">
-                            <t t-foreach="Array(10).keys()" t-as="category" t-key="category_index">
+                            <t t-foreach="Array(10)" t-as="i" t-key="i_index">
                                 <div class="col">
                                     <div class="position-relative ratio ratio-16x9 cursor-pointer rounded overflow-hidden" aria-label="list-item">
                                         <div class="position-absolute w-100 h-100 top-0 start-0 text-center o-text-white align-middle fs-2 o-bg-black bg-opacity-50"/>

@@ -265,11 +265,11 @@
                             <button class="btn btn-primary btn-lg px-4 py-2 center-block" t-on-click="getMoreThemes" t-ref="extraThemesButton">View more themes</button>
                         </p>
                     </t>
-                    <t t-elif="state.extraThemes.length" t-foreach="[...Array(Math.ceil(state.extraThemes.length/3)).keys()]" t-as="nbrExtraRow" t-key="nbrExtraRow">
+                    <t t-elif="state.extraThemes.length" t-foreach="Array(Math.ceil(state.extraThemes.length/3))" t-as="nbrExtraRow" t-key="nbrExtraRow_index">
                         <div class="row pb-4 pt-5">
-                            <t t-foreach="[...Array(3).keys()]" t-as="nbrExtraCol" t-key="nbrExtraCol">
+                            <t t-foreach="Array(3)" t-as="nbrExtraCol" t-key="nbrExtraCol_index">
                                 <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
-                                    <t t-set="extraThemeId" t-value="nbrExtraRow * 3 + nbrExtraCol"/>
+                                    <t t-set="extraThemeId" t-value="nbrExtraRow_index * 3 + nbrExtraCol_index"/>
                                     <t t-set="extraThemeName" t-value="getExtraThemeName(extraThemeId)"/>
                                     <t t-if="extraThemeName">
                                         <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">

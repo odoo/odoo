@@ -4,6 +4,7 @@ import { status } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
+import { range } from "@web/core/utils/numbers";
 import { patch } from "@web/core/utils/patch";
 import { effect } from "@web/core/utils/reactive";
 
@@ -38,7 +39,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
         {
             trigger: ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(30)",
         },
-        ...Array.from({ length: 30 }, (_, index) => 99 - index).map((i) => ({
+        ...range(99, 69).map((i) => ({
             trigger: `.o-mail-SubChannelPreview:text(Sub Channel ${i})`,
         })),
         {
@@ -67,7 +68,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
         },
         // Already fetched sub channels are shown in addition to the one
         // that was fetched during the search.
-        ...Array.from({ length: 30 }, (_, index) => 99 - index).map((i) => ({
+        ...range(99, 69).map((i) => ({
             trigger: `.o-mail-SubChannelPreview:text(Sub Channel ${i})`,
         })),
         {
@@ -86,7 +87,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             trigger:
                 ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(61):contains(Sub Channel 40)",
         },
-        ...Array.from({ length: 60 }, (_, index) => 99 - index).map((i) => ({
+        ...range(99, 39).map((i) => ({
             trigger: `.o-mail-SubChannelPreview:text(Sub Channel ${i})`,
         })),
         {
@@ -104,7 +105,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             trigger:
                 ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(90):contains(Sub Channel 11)",
         },
-        ...Array.from({ length: 90 }, (_, index) => 99 - index).map((i) => ({
+        ...range(99, 9).map((i) => ({
             trigger: `.o-mail-SubChannelPreview:text(Sub Channel ${i})`,
         })),
         {
@@ -121,7 +122,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             trigger:
                 ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(100):contains(Sub Channel 0)",
         },
-        ...Array.from({ length: 99 }, (_, index) => 99 - index).map((i) => ({
+        ...range(99, 0).map((i) => ({
             trigger: `.o-mail-SubChannelPreview:text(Sub Channel ${i})`,
         })),
     ],

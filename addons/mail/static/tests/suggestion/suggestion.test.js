@@ -1329,7 +1329,7 @@ test("Mention with @-role trigger one RPC only", async () => {
 test("Mentioning @everyone with more than 50 members shows warning dialog", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
-        range(0, MENTION_AMOUNT_WARNING + 1).map(() => ({ name: "" }))
+        range(MENTION_AMOUNT_WARNING + 1).map(() => ({ name: "" }))
     );
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -1357,7 +1357,7 @@ test("Mentioning @-role with more than 50 users shows warning dialog", async () 
     const pyEnv = await startServer();
     const roleId = pyEnv["res.role"].create({ name: "VIPs" });
     pyEnv["res.users"].create(
-        range(0, MENTION_AMOUNT_WARNING + 1).map(() => ({ role_ids: [roleId] }))
+        range(MENTION_AMOUNT_WARNING + 1).map(() => ({ role_ids: [roleId] }))
     );
     const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
     pyEnv["res.role"]._applyComputesAndValidate();

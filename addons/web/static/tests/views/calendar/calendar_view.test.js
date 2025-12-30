@@ -71,6 +71,7 @@ import { calendarView } from "@web/views/calendar/calendar_view";
 import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
 import { WebClient } from "@web/webclient/webclient";
 import { serializeDateTime } from "@web/core/l10n/dates";
+import { range } from "@web/core/utils/numbers";
 
 class Event extends models.Model {
     name = fields.Char();
@@ -1605,9 +1606,9 @@ test(`render popover with modifiers`, async () => {
 test.tags("desktop");
 test(`render popover: inside fullcalendar popover`, async () => {
     // add 10 records the same day
-    Event._records = Array.from({ length: 10 }).map((_, i) => ({
-        id: i + 1,
-        name: `event ${i + 1}`,
+    Event._records = range(1, 11).map((id) => ({
+        id,
+        name: `event ${id}`,
         start: "2016-12-14 10:00:00",
         stop: "2016-12-14 15:00:00",
         user_id: serverState.userId,
@@ -2597,24 +2598,24 @@ test(`dynamic filters with selection fields`, async () => {
 });
 
 test(`Colors: cycling through available colors`, async () => {
-    FilterPartner._records = Array.from({ length: 56 }, (_, i) => ({
-        id: i + 1,
+    FilterPartner._records = range(1, 57).map((id) => ({
+        id,
         user_id: serverState.userId,
-        partner_id: i + 1,
+        partner_id: id,
         is_checked: true,
     }));
-    CalendarPartner._records = Array.from({ length: 56 }, (_, i) => ({
-        id: i + 1,
-        name: `partner ${i + 1}`,
+    CalendarPartner._records = range(1, 57).map((id) => ({
+        id,
+        name: `partner ${id}`,
     }));
-    Event._records = Array.from({ length: 56 }, (_, i) => ({
-        id: i + 1,
+    Event._records = range(1, 57).map((id) => ({
+        id,
         user_id: serverState.userId,
-        partner_id: i + 1,
-        name: `event ${i + 1}`,
-        start: `2016-12-12 0${i % 10}:00:00`,
-        stop: `2016-12-12 0${i % 10}:00:00`,
-        attendee_ids: [i + 1],
+        partner_id: id,
+        name: `event ${id}`,
+        start: `2016-12-12 0${(id - 1) % 10}:00:00`,
+        stop: `2016-12-12 0${(id - 1) % 10}:00:00`,
+        attendee_ids: [id],
     }));
     await mountView({
         resModel: "event",

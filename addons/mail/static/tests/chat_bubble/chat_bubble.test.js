@@ -341,11 +341,7 @@ test("More than 7 actually folded chat windows shows a 'hidden' chat bubble menu
 
 test("Can close all chat windows at once", async () => {
     const pyEnv = await startServer();
-    const channelIds = pyEnv["discuss.channel"].create(
-        Array(20)
-            .keys()
-            .map((i) => ({ name: String(i) }))
-    );
+    const channelIds = pyEnv["discuss.channel"].create(range(20).map((i) => ({ name: String(i) })));
     setupChatHub({ folded: channelIds.reverse() });
     await start();
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
@@ -359,9 +355,7 @@ test("Can close all chat windows at once", async () => {
 
 test("Don't show chat hub in discuss app", async () => {
     const pyEnv = await startServer();
-    const channelIds = pyEnv["discuss.channel"].create(
-        range(0, 20).map((i) => ({ name: String(i) }))
-    );
+    const channelIds = pyEnv["discuss.channel"].create(range(20).map((i) => ({ name: String(i) })));
     setupChatHub({ folded: channelIds.reverse() });
     await start();
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached

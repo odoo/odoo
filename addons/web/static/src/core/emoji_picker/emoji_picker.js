@@ -25,6 +25,7 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dialog } from "../dialog/dialog";
 import { getTemplate } from "@web/core/templates";
+import { range } from "@web/core/utils/numbers";
 
 /**
  * @typedef Emoji
@@ -247,8 +248,8 @@ export class EmojiPicker extends Component {
         if (panel.length > 0) {
             if (repr.length > 0) {
                 panel.push(
-                    ...[...Array(maxAvailableNavbarItemAmountAtOnce - panel.length)].map(
-                        (_, idx) => "empty_" + idx
+                    ...range(maxAvailableNavbarItemAmountAtOnce - panel.length).map(
+                        (idx) => `empty_${idx}`
                     )
                 );
             }

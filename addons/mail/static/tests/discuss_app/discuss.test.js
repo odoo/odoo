@@ -53,6 +53,7 @@ import {
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { Settings } from "@mail/core/common/settings_model";
 import { toRawValue } from "@mail/utils/common/local_storage";
+import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -2106,7 +2107,7 @@ test("failure on loading more messages should display error and prompt retry but
         name: "General",
     });
     const messageIds = pyEnv["mail.message"].create(
-        [...Array(60).keys()].map(() => ({
+        range(60).map(() => ({
             body: "coucou",
             model: "discuss.channel",
             res_id: channelId,
@@ -2145,7 +2146,7 @@ test("Retry loading more messages on failed load more messages should load more 
         name: "General",
     });
     const messageIds = pyEnv["mail.message"].create(
-        [...Array(90).keys()].map(() => ({
+        range(90).map(() => ({
             body: "coucou",
             model: "discuss.channel",
             res_id: channelId,

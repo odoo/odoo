@@ -9,6 +9,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
 import { Component } from "@odoo/owl";
+import { range } from "@web/core/utils/numbers";
 
 class PropertyTagsColorListPopover extends Component {
     static template = "web.PropertyTagsColorListPopover";
@@ -268,7 +269,7 @@ export class PropertyTags extends Component {
             return;
         }
         this.popover.open(event.currentTarget, {
-            colors: [...Array(ColorList.COLORS.length).keys()],
+            colors: range(ColorList.COLORS.length),
             tag: { id: tagId, colorIndex: tagColor },
             switchTagColor: this.onTagColorSwitch.bind(this),
         });

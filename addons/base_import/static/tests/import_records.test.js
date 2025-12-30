@@ -1,6 +1,7 @@
 import { importRecordsItem } from "@base_import/import_records/import_records";
 import { before, expect, test } from "@odoo/hoot";
 import { animationFrame, press } from "@odoo/hoot-dom";
+import { range } from "@web/core/utils/numbers";
 import {
     clearRegistry,
     contains,
@@ -200,9 +201,9 @@ test(`import should not be available in cog menu dropdown in dialog view`, async
     class Bar extends models.Model {
         name = fields.Char();
 
-        _records = Array.from({ length: 10 }, (_, i) => ({
-            id: i + 1,
-            name: `Bar ${i + 1}`,
+        _records = range(1, 11).map((id) => ({
+            id,
+            name: `Bar ${id}`,
         }));
         _views = {
             list: `<list><field name="display_name"/></list>`,

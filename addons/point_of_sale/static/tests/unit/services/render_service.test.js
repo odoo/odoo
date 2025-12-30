@@ -1,6 +1,7 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import { mockFetch } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
+import { range } from "@web/core/utils/numbers";
 import { allowTranslations, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { htmlToCanvas } from "@point_of_sale/app/services/render_service";
 import { definePosModels } from "../data/generate_model_definitions";
@@ -31,10 +32,7 @@ test("htmlToCanvas", async () => {
     const node = document.createElement("div");
     node.classList.add("render-container");
     target.appendChild(node);
-
-    const asciiChars = Array.from({ length: 256 }, (_, i) => String.fromCharCode(i)).join("");
-    node.textContent = asciiChars;
-
+    node.textContent = String.fromCharCode(...range(256));
     let canvas = null;
     try {
         canvas = await htmlToCanvas(node, { addClass: "pos-receipt-print" });

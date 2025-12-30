@@ -32,6 +32,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
+import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -194,14 +195,12 @@ test("scroll position is kept when navigating from one channel to another [CAN F
     // Fill both channels with random messages in order for the scrollbar to
     // appear.
     pyEnv["mail.message"].create(
-        Array(50)
-            .fill(0)
-            .map((_, index) => ({
-                body: "Non Empty Body ".repeat(25),
-                message_type: "comment",
-                model: "discuss.channel",
-                res_id: index < 20 ? channelId_1 : channelId_2,
-            }))
+        range(50).map((index) => ({
+            body: "Non Empty Body ".repeat(25),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: index < 20 ? channelId_1 : channelId_2,
+        }))
     );
     await start();
     await openDiscuss(channelId_1);
@@ -229,14 +228,12 @@ test("thread is still scrolling after scrolling up then to bottom", async () => 
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel-1" });
     pyEnv["mail.message"].create(
-        Array(20)
-            .fill(0)
-            .map(() => ({
-                body: "Non Empty Body ".repeat(25),
-                message_type: "comment",
-                model: "discuss.channel",
-                res_id: channelId,
-            }))
+        range(20).map(() => ({
+            body: "Non Empty Body ".repeat(25),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
     );
     await start();
     await openDiscuss(channelId);

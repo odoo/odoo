@@ -5,11 +5,11 @@
             <BuilderRow label.translate="Size">
                 <BuilderButtonGroup action="'setItemSize'">
                     <table t-ref="table" t-on-mouseenter="_onTableMouseEnter" t-on-mouseleave="_onTableMouseLeave">
-                        <t t-foreach="[0, 1, 2, 3]" t-as="i" t-key="i">
+                        <t t-foreach="Array(4)" t-as="i" t-key="i_index">
                             <tr>
-                                <t t-foreach="[...Array(this.maxWidth).keys()]" t-as="j" t-key="j">
-                                    <td t-on-mouseover="()=>this._onTableCellMouseOver(i, j)" t-on-click="()=>this._onTableCellMouseClick(i, j)">
-                                        <BuilderButton preview="false" actionValue="[i, j]" className="'border-0'" />
+                                <t t-foreach="Array(this.maxWidth)" t-as="j" t-key="j_index">
+                                    <td t-on-mouseover="()=>this._onTableCellMouseOver(i_index, j_index)" t-on-click="()=>this._onTableCellMouseClick(i_index, j_index)">
+                                        <BuilderButton preview="false" actionValue="[i_index, j_index]" className="'border-0'" />
                                     </td>
                                 </t>
                             </tr>

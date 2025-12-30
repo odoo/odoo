@@ -2,6 +2,7 @@ import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_s
 import { _t } from "@web/core/l10n/translation";
 import { GraphModel as ChartModel } from "@web/views/graph/graph_model";
 import { Domain } from "@web/core/domain";
+import { range } from "@web/core/utils/numbers";
 
 export class ChartDataSource extends OdooViewsDataSource {
     /**
@@ -69,7 +70,7 @@ export class ChartDataSource extends OdooViewsDataSource {
 
         const dataPoints = this._model.dataPoints;
         const groupBy = this._metaData.groupBy;
-        const datasets = new Array(groupBy.length).fill().map(() => ({ data: [], domains: [] }));
+        const datasets = range(groupBy.length).map(() => ({ data: [], domains: [] }));
         const labels = new Array();
         const domainMapping = {};
         for (const gb of groupBy) {

@@ -20,20 +20,20 @@
              t-att-data-bs-interval="interval" data-bs-ride="carousel">
             <!-- Content -->
             <t t-set="slideSize" t-value="rowSize * rowPerSlide" />
-            <t t-set="slideIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/slideSize)).keys())"/>
-            <t t-set="rowIndexGenerator" t-value="Array.from(Array(rowPerSlide).keys())"/>
-            <t t-set="colIndexGenerator" t-value="Array.from(Array(rowSize).keys())"/>
+            <t t-set="slideIndexGenerator" t-value="Array(Math.ceil(data.length/slideSize))"/>
+            <t t-set="rowIndexGenerator" t-value="Array(rowPerSlide)"/>
+            <t t-set="colIndexGenerator" t-value="Array(rowSize)"/>
             <div class="carousel-inner w-100 mx-auto" role="listbox"
                  aria-label="Carousel">
                 <t t-foreach="slideIndexGenerator" t-as="slideIndex" t-key="slideIndex_index">
-                    <t t-set="slideOffset" t-value="slideIndex * slideSize"/>
+                    <t t-set="slideOffset" t-value="slideIndex_index * slideSize"/>
                     <div t-attf-class="carousel-item #{extraClasses || ''} #{slideIndex_first ? 'active' : ''}" role="option">
                         <t t-foreach="rowIndexGenerator" t-as="rowIndex" t-key="rowIndex_index">
-                            <t t-set="rowOffset" t-value="slideOffset + (rowIndex * rowSize)"/>
+                            <t t-set="rowOffset" t-value="slideOffset + (rowIndex_index * rowSize)"/>
                             <t t-if="rowOffset &lt; data.length">
                                 <div t-attf-class="s_dynamic_snippet_row row g-3 #{extraRowClass || ''}">
                                     <t t-foreach="colIndexGenerator" t-as="colIndex" t-key="colIndex_index">
-                                        <t t-set="itemIndex" t-value="rowOffset + colIndex"/>
+                                        <t t-set="itemIndex" t-value="rowOffset + colIndex_index"/>
                                         <t t-if="itemIndex &lt; data.length">
                                             <div t-attf-class="#{colClass || ''}">
                                                 <t t-out="data[itemIndex]"/>

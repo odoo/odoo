@@ -1,6 +1,6 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
-import { floatIsZero } from "@web/core/utils/numbers";
+import { floatIsZero, range } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "@pos_loyalty/app/services/pos_store";
 const { DateTime } = luxon;
@@ -629,7 +629,7 @@ patch(PosOrder.prototype, {
                     // In this case we count the points per rule
                     if (rule.reward_point_mode === "unit") {
                         splitPoints.push(
-                            ...Array.apply(null, Array(totalProductQty)).map((_) => ({
+                            ...range(totalProductQty).map(() => ({
                                 points: rule.reward_point_amount,
                             }))
                         );
@@ -649,7 +649,7 @@ patch(PosOrder.prototype, {
                             );
                             if (pointsPerUnit > 0) {
                                 splitPoints.push(
-                                    ...Array.apply(null, Array(line.getQuantity())).map(() => {
+                                    ...range(line.getQuantity()).map(() => {
                                         if (line._gift_barcode && line.getQuantity() == 1) {
                                             return {
                                                 points: pointsPerUnit,

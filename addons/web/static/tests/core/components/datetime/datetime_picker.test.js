@@ -16,6 +16,7 @@ import {
     getPickerCell,
     editTime,
 } from "../../datetime/datetime_test_helpers";
+import { range } from "@web/core/utils/numbers";
 
 const { DateTime } = luxon;
 
@@ -32,15 +33,7 @@ const formatForStep = (value) =>
  */
 const pad2 = (value) => String(value).padStart(2, "0");
 
-/**
- * @template {any} [T=number]
- * @param {number} length
- * @param {(index: number) => T} mapping
- */
-const range = (length, mapping) => [...Array(length)].map((_, i) => mapping(i));
-
-const MINUTES = range(60, (i) => i).filter((i) => i % 15 === 0);
-const TIME_OPTIONS = range(24, String).flatMap((h) => MINUTES.map((m) => `${h}:${pad2(m)}`));
+const TIME_OPTIONS = range(24).flatMap((h) => [0, 15, 30, 45].map((m) => `${h}:${pad2(m)}`));
 
 defineParams({
     lang_parameters: {
