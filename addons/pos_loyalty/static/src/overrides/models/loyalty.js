@@ -657,7 +657,7 @@ patch(Order.prototype, {
         if (reward.reward_type !== "product") {
             return false;
         }
-        
+
         // Check if the rule's reward point mode is order then not valid for correction
         if (rule.reward_point_mode === 'order') {
             return false;
@@ -802,11 +802,19 @@ patch(Order.prototype, {
                 }
                 const linesForRule = linesPerRule[rule.id] ? linesPerRule[rule.id] : [];
                 const amountWithTax = linesForRule.reduce(
-                    (sum, line) => sum + (line.comboLines ? line.getComboTotalPrice() : line.get_price_with_tax()),
+                    (sum, line) =>
+                        sum +
+                        (line.comboLines?.length > 0
+                            ? line.getComboTotalPrice()
+                            : line.get_price_with_tax()),
                     0
                 );
                 const amountWithoutTax = linesForRule.reduce(
-                    (sum, line) => sum + (line.comboLines ? line.getComboTotalPriceWithoutTax() : line.get_price_without_tax()),
+                    (sum, line) =>
+                        sum +
+                        (line.comboLines?.length > 0
+                            ? line.getComboTotalPriceWithoutTax()
+                            : line.get_price_without_tax()),
                     0
                 );
                 const amountCheck =
@@ -845,7 +853,10 @@ patch(Order.prototype, {
                             qtyPerProduct[line.reward_product_id || line.get_product().id] =
                                 lineQty;
                         }
-                        orderedProductPaid += line.comboLines ? line.getComboTotalPrice() : line.get_price_with_tax();
+                        orderedProductPaid +=
+                            line.comboLines?.length > 0
+                                ? line.getComboTotalPrice()
+                                : line.get_price_with_tax();
                         if (!line.is_reward_line) {
                             totalProductQty += lineQty;
                         }
@@ -1147,7 +1158,7 @@ patch(Order.prototype, {
      */
     _getCheapestLine() {
         const filtered_lines = this.get_orderlines().filter((line) => !line.comboParent && !line.reward_id && line.get_quantity);
-        return filtered_lines.toSorted((lineA, lineB) => 
+        return filtered_lines.toSorted((lineA, lineB) =>
             lineA.getComboTotalPrice() - lineB.getComboTotalPrice()
        )[0]
     },
