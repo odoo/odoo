@@ -20,6 +20,8 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
         value: { type: String },
         languageId: { type: String },
         onTextareaFocus: { type: Function },
+        setCursorStart: { type: Function },
+        setCursorEnd: { type: Function },
         host: { type: Object },
     };
 
@@ -145,6 +147,25 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
             const newEnd = collapsed ? newStart : selectionEnd + insertedChars;
             this.textarea.setSelectionRange(newStart, newEnd, this.textarea.selectionDirection);
             this.embeddedState.value = this.textarea.value;
+        } else if (ev.key === "ArrowUp" || ev.key === "ArrowDown") {
+            const { value, selectionStart, selectionEnd } = this.textarea;
+            if (selectionStart !== selectionEnd) {
+                return;
+            }
+            const isArrowUp = ev.key === "ArrowUp";
+            const isCursorAtBoundary = isArrowUp
+                ? value.slice(0, selectionStart).lastIndexOf("\n") === -1
+                : value.indexOf("\n", selectionEnd) === -1;
+            if (!isCursorAtBoundary) {
+                return;
+            }
+            ev.preventDefault();
+            this.textarea.blur();
+            if (isArrowUp) {
+                this.props.setCursorEnd(this.props.host.previousElementSibling);
+            } else {
+                this.props.setCursorStart(this.props.host.nextElementSibling);
+            }
         }
     }
 
