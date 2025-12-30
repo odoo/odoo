@@ -18,12 +18,12 @@ test("displayableOptions", async () => {
     });
     // Default state: visibleOptions = 5
     // shows employees up to visibleOptions (extra ones go under "more..." button)
-    comp.state.visibleOptions = 1;
+    comp.initialLimit = 1;
     const limitedEmp = comp.displayableOptions;
     expect(limitedEmp.length).toBe(1);
 
     //To shows all employees set visibleOptions to 0
-    comp.state.visibleOptions = 0;
+    comp.state.showAll = true;
     const allEmp = comp.displayableOptions;
     expect(allEmp.length).toBe(2);
 });
