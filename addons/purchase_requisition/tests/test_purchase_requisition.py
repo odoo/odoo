@@ -634,7 +634,8 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
     def test_requisition_multiple_lines_same_product(self):
         """Creating a PO from a requisition with multiple lines of the same product
-           keeps the correct price and description on each PO line."""
+           keeps the correct price and description on each PO line and update
+           requisition line qty ordered"""
 
         requisition = self.env['purchase.requisition'].create({
             'vendor_id': self.res_partner_1.id,
@@ -663,4 +664,10 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             {'price_unit': 50.0, 'name': '[E-COM10] Pedal Bin\nFirst'},
             {'price_unit': 45.0, 'name': '[E-COM10] Pedal Bin\nSecond'}
         ])
-
+        po.order_line[0].product_qty = 10
+        po.order_line[1].product_qty = 20
+        po.button_confirm()
+        self.assertRecordValues(po.requisition_id.line_ids, [
+            {'qty_ordered': 10.0},
+            {'qty_ordered': 20.0}
+        ])
