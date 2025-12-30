@@ -78,11 +78,13 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             'subtype_id': self.ref('mail.mt_comment'),
         })
         portal_message = mail_message.portal_message_format()
-        response = self.url_open(portal_message[0]['author_avatar_url'])
+        response = self.url_open(
+            f"/web/image/res.partner/{self.user_public.partner_id.id}/avatar_128?access_token={portal_message[0]['author_id']['avatar_128_access_token']}",
+        )
         # Ensure that the avatar is visible
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers.get('Content-Type'), 'image/svg+xml; charset=utf-8')
-        self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.svg')
+        self.assertRegex(response.headers.get('Content-Disposition', ''), fr'{self.user_public.partner_id.name}.svg')
 
     def test_sidebar_with_date_and_tag(self):
         Blog = self.env['blog.blog']

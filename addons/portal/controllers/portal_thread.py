@@ -10,24 +10,6 @@ from odoo.addons.portal.utils import get_portal_partner
 
 class PortalChatter(ThreadController):
 
-    @http.route('/mail/avatar/mail.message/<int:res_id>/author_avatar/<int:width>x<int:height>', type='http', auth='public')
-    def portal_avatar(self, res_id=None, height=50, width=50, access_token=None, _hash=None, pid=None):
-        """Get the avatar image in the chatter of the portal"""
-        if access_token or (_hash and pid):
-            message_su = request.env["mail.message"].browse(int(res_id)).exists().sudo()
-            thread = self._get_thread_with_access(
-                message_su.model, message_su.res_id,
-                token=access_token, hash=_hash, pid=pid and int(pid)
-            )
-            message_su = message_su if thread else request.env["mail.message"]
-        else:
-            message_su = request.env.ref('web.image_placeholder').sudo()
-        # in case there is no message, it creates a stream with the placeholder image
-        stream = request.env['ir.binary']._get_image_stream_from(
-            message_su, field_name='author_avatar', width=int(width), height=int(height),
-        )
-        return stream.get_response()
-
     @http.route("/portal/chatter_init", type="jsonrpc", auth="public", website=True)
     def portal_chatter_init(self, thread_model, thread_id, **kwargs):
         store = Store().add_global_values(request.env.user.sudo(False)._store_init_global_fields)
