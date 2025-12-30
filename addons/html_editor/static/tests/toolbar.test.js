@@ -131,6 +131,7 @@ test("toolbar is also visible when selection is collapsed in mobile", async () =
     // set a non-collapsed selection to open toolbar
     await expectElementCount(".o-we-toolbar", 0);
     setContent(el, "<p>[test]</p>");
+    await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
 
     setContent(el, "<p>test[]</p>");
@@ -142,6 +143,7 @@ test("toolbar is also visible when selection is empty in mobile", async () => {
     const { el } = await setupEditor("<h1>test</h1><p>text</p>");
     await expectElementCount(".o-we-toolbar", 0);
     setContent(el, "<h1>tes[t</h1><p>]text</p>");
+    await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
     // Set an empty selection
     setContent(el, "<h1>test[</h1><p>]text</p>");
@@ -515,8 +517,10 @@ test("toolbar works: show the correct text alignment after undo/redo", async () 
     expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-center"> </i>`);
 });
 
+test.tags("desktop");
 test("should focus the editable area after selecting a font size item", async () => {
     const { editor, el } = await setupEditor("<p>[test]</p>");
+
     await expectElementCount(".o-we-toolbar", 1);
     const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
@@ -529,6 +533,25 @@ test("should focus the editable area after selecting a font size item", async ()
     expect(getContent(el)).toBe(`<p><span class="h2-fs">[test]</span></p>`);
 });
 
+test.tags("mobile");
+test("should focus the editable area after selecting a font size item on mobile", async () => {
+    const { editor, el } = await setupEditor("<p>[test]</p>");
+
+    await expectElementCount(".o-we-toolbar", 1);
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await contains(".o-we-toolbar [name='font_size_selector']").click();
+    // In mobile the toolbar is hidden while o_bottom_sheet is opened.
+    expect(getActiveElement()).toBe(editor.editable);
+    expect(getActiveElement()).not.toBe(inputEl);
+    await waitFor(".o_font_size_selector_menu .dropdown-item:contains('21')");
+    await contains(".o_font_size_selector_menu .dropdown-item:contains('21')").click();
+    expect(getActiveElement()).toBe(editor.editable);
+    expect(getActiveElement()).not.toBe(inputEl);
+    expect(getContent(el)).toBe(`<p><span class="h2-fs">[test]</span></p>`);
+});
+
+test.tags("desktop");
 test("should not create empty extra nodes while changing format of link", async () => {
     const { el } = await setupEditor(
         `<p>[\ufeff<a href="http://test.com">\ufefftest.com\ufeff</a>\ufeff]</p>`
@@ -538,6 +561,24 @@ test("should not create empty extra nodes while changing format of link", async 
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
     await contains(".o-we-toolbar [name='font_size_selector']").click();
     expect(getActiveElement()).toBe(inputEl);
+    await waitFor(".o_font_size_selector_menu .dropdown-item:contains('80')");
+    await contains(".o_font_size_selector_menu .dropdown-item:contains('80')").click();
+    expect(getContent(el)).toBe(
+        `<p><span class="display-1-fs">\ufeff<a href="http://test.com" class="o_link_in_selection">\ufeff[test.com]\ufeff</a>\ufeff</span></p>`
+    );
+});
+
+test.tags("mobile");
+test("should not create empty extra nodes while changing format of link on mobile", async () => {
+    const { el } = await setupEditor(
+        `<p>[\ufeff<a href="http://test.com">\ufefftest.com\ufeff</a>\ufeff]</p>`
+    );
+    await expectElementCount(".o-we-toolbar", 1);
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await contains(".o-we-toolbar [name='font_size_selector']").click();
+    // In mobile the toolbar is hidden while o_bottom_sheet is opened.
+    expect(getActiveElement()).not.toBe(inputEl);
     await waitFor(".o_font_size_selector_menu .dropdown-item:contains('80')");
     await contains(".o_font_size_selector_menu .dropdown-item:contains('80')").click();
     expect(getContent(el)).toBe(
@@ -619,6 +660,7 @@ test("toolbar works: font size dropdown closes on Enter and Tab key press", asyn
     expect(".o_font_size_selector_menu").toHaveCount(0);
 });
 
+test.tags("desktop");
 test("toolbar works: ArrowUp/Down moves focus to font size dropdown", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
@@ -638,6 +680,30 @@ test("toolbar works: ArrowUp/Down moves focus to font size dropdown", async () =
 
     await contains(inputEl).click();
     expect(".o_font_size_selector_menu").toHaveCount(1);
+    await press("ArrowUp");
+    await animationFrame();
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+    expect(getActiveElement()).toBe(fontSizeSelectorMenu.lastElementChild);
+});
+
+test.tags("mobile");
+test("toolbar works: ArrowUp/Down moves focus to font size dropdown on mobile", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
+    expect(iframeEl).toHaveCount(1);
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await contains(inputEl).click();
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+    expect(getActiveElement()).toBe(inputEl);
+
+    const fontSizeSelectorMenu = queryOne(".o_font_size_selector_menu div");
+    await press("ArrowDown");
+    await animationFrame();
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+    expect(getActiveElement()).toBe(fontSizeSelectorMenu.firstElementChild);
+
     await press("ArrowUp");
     await animationFrame();
     expect(".o_font_size_selector_menu").toHaveCount(1);
