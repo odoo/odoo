@@ -98,7 +98,7 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
         if not slots:
             if not self.env.context.get('work_entry_skip_validation'):
                 if not self.search_criteria_completed:
-                    raise ValidationError(_("In order to regenerate the work entries, you need to provide the wizard with an employee_id, a date_from and a date_to."))
+                    raise ValidationError(_("In order to regenerate the work entries, you need to provide an Employee and Period."))
 
                 if self.date_from < self.earliest_available_date or self.date_to > self.latest_available_date:
                     raise ValidationError(_("The from date must be >= '%(earliest_available_date)s' and the to date must be <= '%(latest_available_date)s', which correspond to the generated work entries time interval.", earliest_available_date=self._date_to_string(self.earliest_available_date), latest_available_date=self._date_to_string(self.latest_available_date)))
