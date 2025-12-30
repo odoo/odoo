@@ -5,6 +5,7 @@ import { localization } from "../l10n/localization";
 import { ensureArray } from "../utils/arrays";
 import { TimePicker } from "@web/core/time_picker/time_picker";
 import { Time } from "@web/core/l10n/time";
+import { range } from "@web/core/utils/numbers";
 
 const { DateTime, Info } = luxon;
 
@@ -91,12 +92,6 @@ const getStartOfWeek = (date) => {
     const { weekStart } = localization;
     return date.set({ weekday: date.weekday < weekStart ? weekStart - 7 : weekStart });
 };
-
-/**
- * @param {number} min
- * @param {number} max
- */
-const numberRange = (min, max) => [...Array(max - min)].map((_, i) => i + min);
 
 /**
  * @param {NullableDateTime | "today"} value
@@ -224,8 +219,8 @@ const PRECISION_LEVELS = new Map()
         getTitle: (date) => String(date.year),
         getItems: (date, { maxDate, minDate }) => {
             const startOfYear = date.startOf("year");
-            return numberRange(0, 12).map((i) => {
-                const startOfMonth = startOfYear.plus({ month: i });
+            return range(12).map((month) => {
+                const startOfMonth = startOfYear.plus({ month });
                 const range = [startOfMonth, startOfMonth.endOf("month")];
                 return toDateItem({
                     isValid: isInRange(range, [minDate, maxDate]),
@@ -243,7 +238,7 @@ const PRECISION_LEVELS = new Map()
         getTitle: (date) => `${getStartOfDecade(date) - 1} - ${getStartOfDecade(date) + 10}`,
         getItems: (date, { maxDate, minDate }) => {
             const startOfDecade = date.startOf("year").set({ year: getStartOfDecade(date) });
-            return numberRange(-GRID_MARGIN, GRID_COUNT + GRID_MARGIN).map((i) => {
+            return range(-GRID_MARGIN, GRID_COUNT + GRID_MARGIN).map((i) => {
                 const startOfYear = startOfDecade.plus({ year: i });
                 const range = [startOfYear, startOfYear.endOf("year")];
                 return toDateItem({
@@ -263,7 +258,7 @@ const PRECISION_LEVELS = new Map()
         getTitle: (date) => `${getStartOfCentury(date) - 10} - ${getStartOfCentury(date) + 100}`,
         getItems: (date, { maxDate, minDate }) => {
             const startOfCentury = date.startOf("year").set({ year: getStartOfCentury(date) });
-            return numberRange(-GRID_MARGIN, GRID_COUNT + GRID_MARGIN).map((i) => {
+            return range(-GRID_MARGIN, GRID_COUNT + GRID_MARGIN).map((i) => {
                 const startOfDecade = startOfCentury.plus({ year: i * 10 });
                 const range = [startOfDecade, startOfDecade.plus({ year: 10, millisecond: -1 })];
                 return toDateItem({

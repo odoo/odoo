@@ -24,6 +24,7 @@ import { selectDateRange } from "./calendar_test_helpers";
 
 import { Domain } from "@web/core/domain";
 import { notificationService } from "@web/core/notifications/notification_service";
+import { range } from "@web/core/utils/numbers";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -764,7 +765,7 @@ test("multi_create: test popover", async () => {
 test.tags("desktop");
 test("multi_create: avoid trigger add/del event on specific element", async () => {
     function makeEvents(numberOfEvent) {
-        return [...Array(numberOfEvent).keys()].map((i) => ({
+        return range(numberOfEvent).map((i) => ({
             id: i,
             name: `event ${i}`,
             date_start: "2019-03-13",

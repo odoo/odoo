@@ -28,6 +28,7 @@ import {
     pagerPrevious,
 } from "@web/../tests/web_test_helpers";
 import { EventBus } from "@odoo/owl";
+import { range } from "@web/core/utils/numbers";
 import { WebClient } from "@web/webclient/webclient";
 
 class Partner extends models.Model {
@@ -1199,10 +1200,7 @@ test("[adjust] statusbar with a lot of stages, click to change stage", async () 
     resize({ width: 800 });
     class Stage extends models.Model {
         name = fields.Char();
-        _records = Array.from(Array(6).keys()).map((i) => {
-            const id = i + 1;
-            return { id, name: `Stage with very long name ${id}` };
-        });
+        _records = range(1, 7).map((id) => ({ id, name: `Stage with very long name ${id}` }));
     }
     defineModels([Stage]);
     Partner._fields.stage_id = { type: "many2one", relation: "stage" };

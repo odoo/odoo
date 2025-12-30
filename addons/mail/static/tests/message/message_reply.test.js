@@ -13,6 +13,7 @@ import { disableAnimations } from "@odoo/hoot-mock";
 import { serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
+import { range } from "@web/core/utils/numbers";
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
@@ -47,14 +48,12 @@ test("click on message in reply to scroll to the parent message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const [oldestMessageId] = pyEnv["mail.message"].create(
-        Array(20)
-            .fill(0)
-            .map(() => ({
-                body: "Non Empty Body ".repeat(25),
-                message_type: "comment",
-                model: "discuss.channel",
-                res_id: channelId,
-            }))
+        range(20).map(() => ({
+            body: "Non Empty Body ".repeat(25),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
     );
     pyEnv["mail.message"].create({
         body: "Response to first message",

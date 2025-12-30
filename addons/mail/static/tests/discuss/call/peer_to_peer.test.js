@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { onRpc, mountWebClient } from "@web/../tests/web_test_helpers";
 import { defineMailModels, mockGetMedia, onlineTest } from "@mail/../tests/mail_test_helpers";
 import { PeerToPeer, STREAM_TYPE, UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
+import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -66,7 +67,7 @@ onlineTest("mesh peer to peer connections", async () => {
     const channelId = 2;
     const network = new Network();
     const userCount = 10;
-    const users = Array.from({ length: userCount }, (_, i) => network.register(i));
+    const users = range(userCount).map((i) => network.register(i));
     const promises = [];
     for (const user of users) {
         user.p2p.connect(user.id, channelId);

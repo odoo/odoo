@@ -610,13 +610,13 @@ describe("Quick search bar", () => {
 
         const children = queryAll(".o-dropdown-item.o_indent");
         expect(children.map((el) => el.innerText)).toEqual([
-            ...range(0, 9).map((i) => "name" + i),
+            ...range(9).map((i) => `name${i}`),
             "Load more",
         ]);
         await contains(children.at(-1)).click();
 
         expect(queryAllTexts(".o-dropdown-item.o_indent")).toEqual(
-            range(0, 15).map((i) => "name" + i)
+            range(15).map((i) => `name${i}`)
         );
     });
 

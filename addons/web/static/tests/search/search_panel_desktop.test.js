@@ -18,6 +18,7 @@ import {
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 
+import { range } from "@web/core/utils/numbers";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 import { WebClient } from "@web/webclient/webclient";
@@ -2182,9 +2183,9 @@ test("scroll position is kept when switching between controllers", async () => {
 });
 
 test("search panel is not instantiated in dialogs", async () => {
-    Company._records = Array.from(Array(8), (_, i) => ({
-        id: i + 1,
-        name: `Company${i + 1}`,
+    Company._records = range(1, 9).map((id) => ({
+        id: id,
+        name: `Company${id}`,
     }));
     Company._views = {
         [["list", false]]: /* xml */ `<list><field name="name"/></list>`,

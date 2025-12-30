@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { constructFullProductName, constructAttributeString } from "@point_of_sale/utils";
 import { parseFloat } from "@web/views/fields/parsers";
-import { formatFloat } from "@web/core/utils/numbers";
+import { formatFloat, range } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { PosOrderlineAccounting } from "./accounting/pos_order_line_accounting";
@@ -164,11 +164,7 @@ export class PosOrderline extends PosOrderlineAccounting {
                 id: lotLine.id,
                 text: lotLine.lot_name,
             }))
-            .concat(
-                Array.from(Array(nExtraLines)).map((_) => ({
-                    text: "",
-                }))
-            );
+            .concat(range(nExtraLines).map(() => ({ text: "" })));
         return isAllowOnlyOneLot ? [tempLines[0]] : tempLines;
     }
 

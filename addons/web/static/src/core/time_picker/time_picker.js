@@ -6,9 +6,7 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Time, parseTime } from "@web/core/l10n/time";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useChildRef } from "@web/core/utils/hooks";
-
-const HOURS = [...Array(24)].map((_, i) => i);
-const MINUTES = [...Array(60)].map((_, i) => i);
+import { range } from "@web/core/utils/numbers";
 
 /**
  * @typedef TimePickerProps
@@ -150,8 +148,8 @@ export class TimePicker extends Component {
     getSuggestions(props) {
         const suggestions = [];
         const rounding = props.minutesRounding <= 5 ? 15 : props.minutesRounding;
-        const minutes = MINUTES.filter((m) => !(m % rounding));
-        for (const hour of HOURS) {
+        const minutes = range(0, 60, rounding);
+        for (const hour of range(24)) {
             for (const minute of minutes) {
                 suggestions.push(new Time({ hour, minute }));
             }

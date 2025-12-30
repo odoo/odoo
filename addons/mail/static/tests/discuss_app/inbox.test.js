@@ -15,6 +15,7 @@ import { Deferred } from "@odoo/hoot-mock";
 import { mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
+import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -414,23 +415,19 @@ test("inbox: mark as read should not display jump to present", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const msgIds = pyEnv["mail.message"].create(
-        Array(30)
-            .keys()
-            .map((i) => ({
-                body: "not empty".repeat(100),
-                model: "discuss.channel",
-                needaction: true,
-                res_id: channelId,
-            }))
+        range(30).map(() => ({
+            body: "not empty".repeat(100),
+            model: "discuss.channel",
+            needaction: true,
+            res_id: channelId,
+        }))
     );
     pyEnv["mail.notification"].create(
-        Array(30)
-            .keys()
-            .map((i) => ({
-                mail_message_id: msgIds[i],
-                notification_type: "inbox",
-                res_partner_id: serverState.partnerId,
-            }))
+        range(30).map((i) => ({
+            mail_message_id: msgIds[i],
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        }))
     );
     await start();
     await openDiscuss("mail.box_inbox");

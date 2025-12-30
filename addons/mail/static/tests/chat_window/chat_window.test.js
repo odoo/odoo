@@ -36,6 +36,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 
 import { rpc } from "@web/core/network/rpc";
+import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -245,9 +246,7 @@ test("chat window: close on ESCAPE", async () => {
 test("chat window: close on ESCAPE (multi)", async () => {
     const pyEnv = await startServer();
     const channelIds = pyEnv["discuss.channel"].create(
-        Array(4)
-            .keys()
-            .map((i) => ({ name: `channel_${i}` }))
+        range(4).map((i) => ({ name: `channel_${i}` }))
     );
     patchUiSize({ width: 1920 });
     setupChatHub({ opened: channelIds.reverse() });

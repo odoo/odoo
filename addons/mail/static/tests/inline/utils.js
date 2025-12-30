@@ -2,6 +2,7 @@ import {
     TABLE_ATTRIBUTES,
     TABLE_STYLES,
 } from "@mail/views/web/fields/html_mail_field/convert_inline";
+import { range } from "@web/core/utils/numbers";
 
 const tableAttributesString = Object.keys(TABLE_ATTRIBUTES)
     .map((key) => `${key}="${TABLE_ATTRIBUTES[key]}"`)
@@ -113,9 +114,9 @@ export function getTableHtml(matrix, containerWidth) {
  * @returns {string}
  */
 export function getRegularGridHtml(nRows, nCols) {
-    const matrix = new Array(nRows)
-        .fill()
-        .map((_, iRow) => new Array(Array.isArray(nCols) ? nCols[iRow] : nCols).fill());
+    const matrix = range(nRows).map((iRow) =>
+        Array(Array.isArray(nCols) ? nCols[iRow] : nCols).fill()
+    );
     return getGridHtml(matrix);
 }
 /**
@@ -135,15 +136,11 @@ export function getRegularGridHtml(nRows, nCols) {
  * @returns {string}
  */
 export function getRegularTableHtml(nRows, nCols, colspan, width, containerWidth) {
-    const matrix = new Array(nRows)
-        .fill()
-        .map((_, iRow) =>
-            new Array(Array.isArray(nCols) ? nCols[iRow] : nCols)
-                .fill()
-                .map(() => [
-                    Array.isArray(colspan) ? colspan[iRow] : colspan,
-                    Array.isArray(width) ? width[iRow] : width,
-                ])
-        );
+    const matrix = range(nRows).map((iRow) =>
+        range(Array.isArray(nCols) ? nCols[iRow] : nCols).map(() => [
+            Array.isArray(colspan) ? colspan[iRow] : colspan,
+            Array.isArray(width) ? width[iRow] : width,
+        ])
+    );
     return getTableHtml(matrix, containerWidth);
 }

@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { range } from "@web/core/utils/numbers";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 import { Component, useRef } from "@odoo/owl";
@@ -11,7 +12,7 @@ class VerificationCodeWidget extends Component {
 
     setup() {
         super.setup();
-        this.inputs = [...Array(6)].map((_, i) => useRef(`input_${i}`));
+        this.inputs = range(6).map((i) => useRef(`input_${i}`));
     }
 
     /*

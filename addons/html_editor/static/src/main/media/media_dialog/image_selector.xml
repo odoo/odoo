@@ -73,7 +73,7 @@
                 </t>
             </t>
             <!-- 20 placeholders is just enough for a 5K screen, change this if ImageWidget.MIN_ROW_HEIGHT changes -->
-            <t t-foreach="[...Array(20).keys()]" t-as="i" t-key="i">
+            <t t-foreach="Array(20)" t-as="i" t-key="i_index">
                 <div class="o_we_attachment_placeholder"/>
             </t>
         </t>

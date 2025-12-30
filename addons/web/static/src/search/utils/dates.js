@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-import { clamp } from "@web/core/utils/numbers";
+import { clamp, range } from "@web/core/utils/numbers";
 import { pick } from "@web/core/utils/objects";
 
 export const QUARTERS = {
@@ -216,21 +216,20 @@ export function toGeneratorId(unit, offset) {
 
 function getMonthPeriodOptions(referenceMoment, optionsParams) {
     const { startYear, endYear, startMonth, endMonth } = optionsParams;
-    return [...Array(endMonth - startMonth + 1).keys()]
-        .map((i) => {
-            const monthOffset = startMonth + i;
+    return range(startMonth, endMonth + 1)
+        .map((months) => {
             const date = referenceMoment.plus({
-                months: monthOffset,
+                months,
                 years: clamp(0, startYear, endYear),
             });
             const yearOffset = date.year - referenceMoment.year;
             return {
-                id: toGeneratorId("month", monthOffset),
+                id: toGeneratorId("month", months),
                 defaultYearId: toGeneratorId("year", clamp(yearOffset, startYear, endYear)),
                 description: date.toFormat("MMMM"),
                 granularity: "month",
                 groupNumber: 1,
-                plusParam: { months: monthOffset },
+                plusParam: { months },
             };
         })
         .reverse();
@@ -247,16 +246,15 @@ function getQuarterPeriodOptions(optionsParams) {
 
 function getYearPeriodOptions(referenceMoment, optionsParams) {
     const { startYear, endYear } = optionsParams;
-    return [...Array(endYear - startYear + 1).keys()]
-        .map((i) => {
-            const offset = startYear + i;
-            const date = referenceMoment.plus({ years: offset });
+    return range(startYear, endYear + 1)
+        .map((years) => {
+            const date = referenceMoment.plus({ years });
             return {
-                id: toGeneratorId("year", offset),
+                id: toGeneratorId("year", years),
                 description: date.toFormat("yyyy"),
                 granularity: "year",
                 groupNumber: 2,
-                plusParam: { years: offset },
+                plusParam: { years },
             };
         })
         .reverse();

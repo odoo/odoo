@@ -37,6 +37,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { user } from "@web/core/user";
+import { range } from "@web/core/utils/numbers";
 import { Record } from "@web/model/record";
 import { Field } from "@web/views/fields/field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
@@ -3671,9 +3672,7 @@ test("focus when closing many2one modal in many2one modal", async () => {
 
 test("search more pager is reset when doing a new search", async () => {
     Partner._fields.datetime = fields.Datetime({ string: "Datetime Field", searchable: true });
-    Partner._records.push(
-        ...new Array(170).fill().map((_, i) => ({ id: i + 10, name: "Partner " + i }))
-    );
+    Partner._records.push(...range(170).map((i) => ({ id: i + 10, name: `Partner ${i}` })));
     Partner._views = {
         list: `
             <list>
@@ -4001,7 +4000,8 @@ test("many2one search with formatted name", async () => {
         {
             id: 1,
             display_name: "Paul Eric",
-            __formatted_display_name: "Research & Development Test: **Paul** --Eric-- `good guy`\n\tMore text",
+            __formatted_display_name:
+                "Research & Development Test: **Paul** --Eric-- `good guy`\n\tMore text",
         },
     ]);
     await mountView({

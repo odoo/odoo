@@ -51,6 +51,7 @@ import { expectElementCount } from "./_helpers/ui_expectations";
 import { ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
 import { Editor } from "@html_editor/editor";
+import { range } from "@web/core/utils/numbers";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -1074,7 +1075,7 @@ describe("compact toolbar", () => {
         icon: "fa-square",
         ...obj,
     });
-    const repeat = (count, fn) => Array.from({ length: count }, fn);
+    const repeat = (count, fn) => range(count).map(fn);
 
     test("toolbar should not open in compact mode if expanded toolbar has less than 7 items", async () => {
         class TestPlugin extends Plugin {

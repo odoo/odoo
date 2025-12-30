@@ -13,6 +13,7 @@ import { mockDate } from "@odoo/hoot-mock";
 import { mountWithCleanup, defineParams, getMockEnv } from "@web/../tests/web_test_helpers";
 import { TimePicker } from "@web/core/time_picker/time_picker";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { range } from "@web/core/utils/numbers";
 
 const { DateTime } = luxon;
 
@@ -21,20 +22,8 @@ const { DateTime } = luxon;
  */
 const pad2 = (value) => String(value).padStart(2, "0");
 
-/**
- * @template {any} [T=number]
- * @param {number} length
- * @param {(index: number) => T} mapping
- */
-const range = (length, mapping = (n) => n) => [...Array(length)].map((_, i) => mapping(i));
-
-const getTimeOptions = (rounding = 15) => {
-    const _hours = range(24, String);
-    const _minutes = range(60, (i) => i)
-        .filter((i) => i % rounding === 0)
-        .map((i) => pad2(i));
-    return _hours.flatMap((h) => _minutes.map((m) => `${h}:${m}`));
-};
+const getTimeOptions = (rounding) =>
+    range(24).flatMap((h) => range(0, 60, rounding).map((m) => `${h}:${pad2(m)}`));
 
 function assertTimePickerInput() {
     const expectedTimes = [...arguments];
@@ -69,7 +58,7 @@ test("default params, click on suggestion to select time", async () => {
     await animationFrame();
 
     expect(".o-dropdown--menu.o_time_picker_dropdown").toHaveCount(1);
-    expect(queryAllTexts(".o_time_picker_option")).toEqual(getTimeOptions());
+    expect(queryAllTexts(".o_time_picker_option")).toEqual(getTimeOptions(15));
 
     await click(".o_time_picker_option:contains(12:15)");
     await animationFrame();
@@ -91,7 +80,7 @@ test("when opening, select the suggestion equals to the props value", async () =
     await animationFrame();
 
     expect(".o-dropdown--menu.o_time_picker_dropdown").toHaveCount(1);
-    expect(queryAllTexts(".o_time_picker_option")).toEqual(getTimeOptions());
+    expect(queryAllTexts(".o_time_picker_option")).toEqual(getTimeOptions(15));
     expect(".o_time_picker_option:contains(12:30)").toHaveClass("focus");
 });
 
@@ -171,9 +160,7 @@ test("handle 12h (am/pm) time format", async () => {
     await click(".o_time_picker_input");
     await animationFrame();
 
-    const M = range(60, (i) => i)
-        .filter((i) => i % 15 === 0)
-        .map((i) => pad2(i));
+    const M = range(0, 60, 15).map(pad2);
     const H = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     const options = [];
     ["am", "pm"].forEach((a) => H.forEach((h) => M.forEach((m) => options.push(`${h}:${m}${a}`))));

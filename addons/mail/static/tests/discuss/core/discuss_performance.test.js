@@ -75,8 +75,8 @@ test("replying to message should only render relevant part", async () => {
     // For example, it should not render all messages when selecting message to reply
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    const messageIds = range(0, 10).map((i) =>
-        pyEnv["mail.message"].create({ body: `${i}`, model: "discuss.channel", res_id: channelId })
+    const messageIds = pyEnv["mail.message"].create(
+        range(10).map((i) => ({ body: `${i}`, model: "discuss.channel", res_id: channelId }))
     );
     messageIds.pop(); // remove last as this is the one to be replied to
     let replying = false;
@@ -114,8 +114,8 @@ test("right-click message selection should only render relevant part", async () 
     // For example, it should not render all messages when right-click selecting message from opening dropdown with actions
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    const messageIds = range(0, 10).map((i) =>
-        pyEnv["mail.message"].create({ body: `${i}`, model: "discuss.channel", res_id: channelId })
+    const messageIds = pyEnv["mail.message"].create(
+        range(10).map((i) => ({ body: `${i}`, model: "discuss.channel", res_id: channelId }))
     );
     messageIds.pop(); // remove last as this is the one to be right-clicking
     let rightClicking = false;

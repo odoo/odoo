@@ -60,7 +60,7 @@
         </div>
         <div id="o_website_loader_animations_steps" class="d-none d-lg-block position-relative flex-grow-1 overflow-hidden" role="presentation">
             <div id="o_website_loader_step_colors">
-                <t t-foreach="[...Array(64).keys()]" t-as="cell" t-key="cell">
+                <t t-foreach="Array(64)" t-as="cell" t-key="cell_index">
                     <span/>
                 </t>
             </div>

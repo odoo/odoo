@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { range } from "@web/core/utils/numbers";
 import { SampleServer } from "@web/model/sample_server";
 
 const {
@@ -389,7 +390,7 @@ describe("RPC calls", () => {
     test("'read': more than all available ids", async () => {
         const server = new DeterministicSampleServer("hobbit", fields.hobbit);
         const amount = MAIN_RECORDSET_SIZE + 3;
-        const ids = new Array(amount).fill().map((_, i) => i + 1);
+        const ids = range(1, amount + 1);
         const result = await server.mockRpc({
             method: "read",
             model: "hobbit",
@@ -408,7 +409,7 @@ describe("RPC calls", () => {
             groupBy: [],
         });
         expect(result).toHaveLength(1);
-        const ids = new Array(16).fill(0).map((_, index) => index + 1);
+        const ids = range(1, 17);
         expect(result[0]["id:array_agg"]).toEqual(ids);
     });
 });

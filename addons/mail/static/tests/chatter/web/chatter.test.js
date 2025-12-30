@@ -19,6 +19,8 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, advanceTime } from "@odoo/hoot-mock";
+
+import { range } from "@web/core/utils/numbers";
 import {
     defineActions,
     getService,
@@ -436,13 +438,11 @@ test("scroll position is kept when navigating from one record to another", async
     // Fill both channels with random messages in order for the scrollbar to
     // appear.
     pyEnv["mail.message"].create(
-        Array(50)
-            .fill(0)
-            .map((_, index) => ({
-                body: "Non Empty Body ".repeat(25),
-                model: "res.partner",
-                res_id: index < 20 ? partnerId_1 : partnerId_2,
-            }))
+        range(50).map((index) => ({
+            body: "Non Empty Body ".repeat(25),
+            model: "res.partner",
+            res_id: index < 20 ? partnerId_1 : partnerId_2,
+        }))
     );
     await start();
     await openFormView("res.partner", partnerId_1);

@@ -11,6 +11,8 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test, expect } from "@odoo/hoot";
 
+import { range } from "@web/core/utils/numbers";
+
 describe.current.tags("desktop");
 defineMailModels();
 
@@ -20,15 +22,15 @@ test.skip("Form view not scrolled when switching record", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         {
-            description: [...Array(60).keys()].join("\n"),
+            description: range(60).join("\n"),
             display_name: "Partner 1",
         },
         {
-            description: [...Array(60).keys()].join("\n"),
+            description: range(60).join("\n"),
             display_name: "Partner 2",
         },
     ]);
-    const messages = [...Array(60).keys()].map((id) => ({
+    const messages = range(60).map((id) => ({
         body: "not empty",
         model: "res.partner",
         res_id: id < 29 ? partnerId_1 : partnerId_2,
