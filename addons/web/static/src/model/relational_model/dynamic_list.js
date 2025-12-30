@@ -2,6 +2,7 @@
 
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { Mutex } from "@web/core/utils/concurrency";
 import { DataPoint } from "./datapoint";
 import { Record } from "./record";
 
@@ -21,6 +22,7 @@ export class DynamicList extends DataPoint {
         }
         this.isDomainSelected = false;
         this.evalContext = this.context;
+        this.mutex = new Mutex();
     }
 
     // -------------------------------------------------------------------------
@@ -116,6 +118,10 @@ export class DynamicList extends DataPoint {
     }
 
     async leaveEditMode({ discard } = {}) {
+        return this.mutex.exec(() => this._leaveEditMode({ discard }));
+    }
+
+    async _leaveEditMode({ discard } = {}) {
         let editedRecord = this.editedRecord;
         if (editedRecord) {
             let canProceed = true;
@@ -271,16 +277,16 @@ export class DynamicList extends DataPoint {
         if (!Object.keys(changes).length) {
             return;
         }
-        const validSelection = this.selection.filter((record) => {
-            return Object.keys(changes).every((fieldName) => {
+        const validSelection = this.selection.filter((record) =>
+            Object.keys(changes).every((fieldName) => {
                 if (record._isReadonly(fieldName)) {
                     return false;
                 } else if (record._isRequired(fieldName) && !changes[fieldName]) {
                     return false;
                 }
                 return true;
-            });
-        });
+            })
+        );
         const canProceed = await this.model.hooks.onWillSaveMulti(record, changes, validSelection);
         if (canProceed === false) {
             return false;
