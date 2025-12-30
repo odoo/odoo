@@ -301,6 +301,16 @@ class AccountMove(models.Model):
             'mimetype': 'application/json',
             'company_id': self.company_id.id,
         })
+        request_json_dump = json.dumps(generate_json, indent=4)
+        request_json_name = "%s_request.json" % (self.name.replace("/", "_"))
+        request_attachment = self.env["ir.attachment"].create({
+            'name': request_json_name,
+            'raw': request_json_dump.encode(),
+            'res_model': self._name,
+            'res_id': self.id,
+            'mimetype': 'application/json',
+            'company_id': self.company_id.id,
+        })
         self.l10n_in_edi_status = 'sent'
         message = []
         for partner in partners:
@@ -308,8 +318,10 @@ class AccountMove(models.Model):
                 message.append(
                     Markup("<strong><em>%s</em></strong><br>%s") % (partner.name, Markup("<br>").join(partner_validation))
                 )
+        message.append(self.env._("E-invoice submitted successfully."))
         if message:
             self.message_post(
+                attachment_ids=[request_attachment.id, attachment.id],
                 body=Markup("<strong>%s</strong><br>%s") % (_("Following:"), Markup("<br>").join(message))
             )
 
@@ -371,12 +383,21 @@ class AccountMove(models.Model):
                     'res_id': self.id,
                     'mimetype': 'application/json',
                 })
+            request_json_dump = json.dumps(cancel_json, indent=4)
+            request_json_name = "%s_cancel_request.json" % (self.name.replace("/", "_"))
+            request_attachment = self.env['ir.attachment'].create({
+                'name': request_json_name,
+                'raw': request_json_dump.encode(),
+                'res_model': self._name,
+                'res_id': self.id,
+                'mimetype': 'application/json',
+            })
             self.message_post(author_id=_get_odoobot_id(self), body=_(
                 "E-Invoice has been cancelled successfully. "
                 "Cancellation Reason: %(reason)s and Cancellation Remark: %(remark)s",
                 reason=EDI_CANCEL_REASON[self.l10n_in_edi_cancel_reason],
                 remark=self.l10n_in_edi_cancel_remarks
-            ))
+            ), attachment_ids=[request_attachment.id, attachment.id] if attachment else [request_attachment.id])
             self.l10n_in_edi_status = 'cancelled'
             self.button_cancel()
         if self._can_commit():

@@ -463,30 +463,42 @@ class L10nInEwaybill(models.Model):
         self._write_error(error_message, blocking_level)
 
     def _create_and_post_response_attachment(self, ewb_name, response, is_cancel=False):
-        if not is_cancel:
-            name = f'ewaybill_{ewb_name}.json'
-        else:
-            name = f'ewaybill_{ewb_name}_cancel.json'
-        attachment = self.env['ir.attachment'].create({
-            'name': name,
-            'mimetype': 'application/json',
-            'raw': json.dumps(response),
-            'res_model': self._name,
-            'res_id': self.id,
-            'res_field': 'attachment_file',
-            'company_id': self.company_id.id
-        })
+        def _create_attachment_vals(name, raw_data, res_field=False):
+            vals = {
+                'name': name,
+                'mimetype': 'application/json',
+                'raw': json.dumps(raw_data, indent=4),
+                'res_model': self._name,
+                'res_id': self.id,
+                'res_field': res_field,
+                'company_id': self.company_id.id,
+            }
+            return vals
+
+        attachment_vals_list = []
+        request_json = self._get_cancellation_request_vals() if is_cancel else self._ewaybill_generate_direct_json()
+        request_type = 'cancel_request' if is_cancel else 'request'
+        request_name = f'ewaybill_{ewb_name}_{request_type}.json'
+        attachment_vals_list.append(_create_attachment_vals(request_name, request_json))
+        name = f'ewaybill_{ewb_name}_cancel.json' if is_cancel else f'ewaybill_{ewb_name}.json'
+        attachment_vals_list.append(_create_attachment_vals(name, response, res_field='attachment_file'))
+        attachments = self.env['ir.attachment'].create(attachment_vals_list)
         self.message_post(
             author_id=self.env.ref('base.partner_root').id,
-            attachment_ids=attachment.ids
+            attachment_ids=attachments.ids,
+            body=self.env._("E-waybill has been successfully %s.", 'cancelled' if is_cancel else 'sent')
         )
 
-    def _ewaybill_cancel(self):
-        cancel_json = {
+    def _get_cancellation_request_vals(self):
+        cancel_json_vals = {
             'ewbNo': int(self.name),
             'cancelRsnCode': int(self.cancel_reason),
             'cancelRmrk': self.cancel_remarks,
         }
+        return cancel_json_vals
+
+    def _ewaybill_cancel(self):
+        cancel_json = self._get_cancellation_request_vals()
         ewb_api = EWayBillApi(self.company_id)
         if self.error_message and self.blocking_level == 'error':
             self.message_post(body=_(
