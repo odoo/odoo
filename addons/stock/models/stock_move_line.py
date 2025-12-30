@@ -431,6 +431,8 @@ class StockMoveLine(models.Model):
         if 'result_package_id' in vals:
             # Either changed the result package or removed it
             packages_to_check = self.env['stock.package'].browse(self.result_package_id._get_all_package_dest_ids())
+        # May need to know which source packages were originally set for entire_pack checks
+        prev_package_per_ml_id = {ml.id: ml.package_id.id for ml in self if ml.package_id}
         triggers = [
             ('location_id', 'stock.location'),
             ('location_dest_id', 'stock.location'),
@@ -535,10 +537,9 @@ class StockMoveLine(models.Model):
         if packages_to_check:
             # Clear the dest from packages if not linked to any active picking
             packages_to_check.filtered(lambda p: p.package_dest_id and not p.picking_ids).package_dest_id = False
-        if updates or 'quantity' in vals:
+        if not self.env.context.get('skip_entire_packs_check') and any(field in vals for field in ['package_id', 'result_package_id', 'quantity']):
             # Updated fields could imply that entire packs are no longer entire.
-            if mls_to_update := self._get_lines_not_entire_pack():
-                mls_to_update.write({'is_entire_pack': False})
+            self._adjust_entire_packs(prev_package_per_ml_id, bool(vals.get('result_package_id')))
 
         # As stock_account values according to a move's `product_uom_qty`, we consider that any
         # done stock move should have its `quantity_done` equals to its `product_uom_qty`, and
@@ -1071,6 +1072,7 @@ class StockMoveLine(models.Model):
     def _get_lines_not_entire_pack(self):
         """ Checks within self for move lines that should no longer be considered as entire packs.
         """
+        # To remove in master
         relevant_move_lines = self.filtered(lambda ml: ml.is_entire_pack)
         if not relevant_move_lines:
             return False
@@ -1083,6 +1085,57 @@ class StockMoveLine(models.Model):
                 ids_to_update.update(pickings.move_line_ids.filtered(lambda ml: ml.package_id == package).ids)
 
         return self.env['stock.move.line'].browse(ids_to_update)
+
+    def _adjust_entire_packs(self, previous_package_per_ml_id, has_result_package_id=False):
+        """ Update move lines `is_entire_pack` flag following an update on either `quantity`, `package_id` or `result_package_id`
+            If the pack is no longer entire, then the flag should be removed for all concerned lines.
+            If the source was updated while being the same as destination, then remove destination package.
+
+            :param previous_package_per_ml_id: A dict mapping of pre-write package id per move line id
+            :param has_result_package_id: A boolean, checking if the result package was updated. If true, no update is done on the destination.
+        """
+        previous_package_ids = set(previous_package_per_ml_id.values())
+        relevant_packages_ids = set(self.package_id.ids) | previous_package_ids
+        if not relevant_packages_ids:
+            # Nothing is nor was picked from a package, nothing to do.
+            return
+
+        relevant_pickings = self._get_related_pickings()
+        relevant_lines = self.env['stock.move.line'].search([
+            ('state', 'not in', ['done', 'cancel']),
+            '|',
+                ('picking_id', 'in', relevant_pickings.ids),
+                ('move_id.picking_id', 'in', relevant_pickings.ids),
+            ('package_id', 'in', relevant_packages_ids),
+        ])
+
+        ids_from_self = set(self.ids)
+        ids_to_unset_full = set()
+        ids_to_unset_partial = set()
+        for (_pickings, package), move_lines in relevant_lines.grouped(lambda ml: (ml._get_related_pickings(), ml.package_id)).items():
+            if not package:
+                continue
+            if not package._check_move_lines_map_quant(move_lines):
+                # Check which ones need to be fully unset and those who just need to unset the flag
+                for line in move_lines:
+                    if line.package_id != package:
+                        continue
+                    if not has_result_package_id and line.id in ids_from_self and previous_package_per_ml_id.get(line.id) and \
+                       previous_package_per_ml_id[line.id] != line.package_id.id and previous_package_per_ml_id[line.id] == line.result_package_id.id:
+                        # Only want to unset the result package if new source package is different than previous.
+                        ids_to_unset_full.add(line.id)
+                    else:
+                        ids_to_unset_partial.add(line.id)
+
+        if ids_to_unset_partial:
+            self.env['stock.move.line'].browse(ids_to_unset_partial).with_context(skip_entire_packs_check=True).write({
+                'is_entire_pack': False,
+            })
+        if ids_to_unset_full:
+            self.env['stock.move.line'].browse(ids_to_unset_full).with_context(skip_entire_packs_check=True).write({
+                'is_entire_pack': False,
+                'result_package_id': False,
+            })
 
     def _put_in_pack(self, package_id=False, package_type_id=False, package_name=False):
         if package_id:
@@ -1226,6 +1279,11 @@ class StockMoveLine(models.Model):
         self.ensure_one()
         moves = self.picking_id.move_ids.filtered(lambda x: x.product_id == self.product_id)
         return sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)
+
+    def _get_related_pickings(self):
+        """ Get all pickings directly linked to the move lines. Overriden in `stock.picking.batch`.
+        """
+        return self.picking_id | self.move_id.picking_id
 
     def _should_display_put_in_pack_wizard(self, package_id, package_type_id, package_name, from_package_wizard):
         define_package_type = self._should_set_package()
