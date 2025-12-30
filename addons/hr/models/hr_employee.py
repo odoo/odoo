@@ -477,7 +477,7 @@ class HrEmployee(models.Model):
         version_fields = self.env['hr.version']._fields
         copy_vals = {
             k: v
-            for k, v in version_to_copy.copy_data()[0].items()
+            for k, v in version_to_copy.sudo().copy_data()[0].items()
             if not (k in new_version_vals and version_fields[k].type in ['one2many', 'many2many'])
         } | copy_vals
         new_version = self.env['hr.version'].sudo().create(copy_vals).sudo(False)
@@ -1143,7 +1143,11 @@ We can redirect you to the public employee list."""
 
         employee = super().new(new_vals, origin, ref)
         version_vals['employee_id'] = employee
-        self.env['hr.version'].new(version_vals)
+        self.env['hr.version'].new({
+            f_name: value
+            for f_name, value in version_vals.items()
+            if self.env['hr.version']._has_field_access(self.env['hr.version']._fields[f_name], 'read')
+        })
         return employee
 
     @api.model_create_multi
