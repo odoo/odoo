@@ -3,6 +3,7 @@ import { closestElement, selectElements } from "@html_editor/utils/dom_traversal
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
 import { isElement, PROTECTED_QWEB_SELECTOR } from "@html_editor/utils/dom_info";
+import { normalizeCursorPosition } from "@html_editor/utils/selection";
 
 const isUnsplittableQWebElement = (node) =>
     isElement(node) &&
@@ -157,14 +158,20 @@ export class QWebPlugin extends Plugin {
                 closestElement(selection.anchorNode, PROTECTED_QWEB_SELECTOR);
             if (qwebNode && this.editable.contains(qwebNode)) {
                 // select the whole qweb node
-                const [anchorNode, anchorOffset] = leftPos(qwebNode);
-                const [focusNode, focusOffset] = rightPos(qwebNode);
-                this.dependencies.selection.setSelection({
-                    anchorNode,
-                    anchorOffset,
-                    focusNode,
-                    focusOffset,
-                });
+                const [anchorNode, anchorOffset] = normalizeCursorPosition(
+                    ...leftPos(qwebNode),
+                    "left"
+                );
+                const [focusNode, focusOffset] = normalizeCursorPosition(...rightPos(qwebNode));
+                this.dependencies.selection.setSelection(
+                    {
+                        anchorNode,
+                        anchorOffset,
+                        focusNode,
+                        focusOffset,
+                    },
+                    { normalize: false }
+                );
             }
         }
         const targetNode = ev.target;

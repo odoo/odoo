@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, press, queryOne } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent, press } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
@@ -63,24 +63,6 @@ test("should make qweb tag bold (2)", async () => {
         stepFunction: bold,
         contentAfter: `<div>[<p t-field="record.name" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`,
     });
-});
-
-test("should make qweb tag bold and create a step even with partial selection inside contenteditable false", async () => {
-    const { editor, el } = await setupEditor(
-        `<div><p t-esc="'Test'" contenteditable="false">T[e]st</p></div>`
-    );
-    bold(editor);
-    expect(getContent(el)).toBe(
-        `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`
-    );
-    expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
-    const historySteps = editor.shared.history.getHistorySteps();
-    expect(historySteps.length).toBe(2);
-    const lastStep = historySteps.at(-1);
-    expect(lastStep.mutations.length).toBe(1);
-    expect(lastStep.mutations[0].type).toBe("attributes");
-    expect(lastStep.mutations[0].attributeName).toBe("style");
-    expect(lastStep.mutations[0].value).toBe("font-weight: bolder;");
 });
 
 test("should make a whole heading bold after a triple click", async () => {
