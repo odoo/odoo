@@ -4,8 +4,9 @@ const { Component, xml, useEffect, useRef } = owl;
 
 export class Dialog extends Component {
     static props = {
-        identifier: String,
         slots: Object,
+        name: String,
+        help: { type: String, optional: true },
         btnName: { type: String, optional: true },
         isLarge: { type: Boolean, optional: true },
         onOpen: { type: Function, optional: true },
@@ -38,14 +39,19 @@ export class Dialog extends Component {
         );
     }
 
+    get identifier() {
+        return this.props.name.toLowerCase().replace(/\s+/g, "-");
+    }
+
     static template = xml`
     <t t-translation="off">
-        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" t-att-data-bs-target="'#'+this.props.identifier" t-esc="this.props.btnName" />
-        <div t-ref="dialog" t-att-id="this.props.identifier" class="modal modal-dialog-scrollable fade" t-att-class="{'modal-lg': props.isLarge}" tabindex="-1" aria-hidden="true">
+        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" t-att-data-bs-target="'#'+identifier" t-esc="this.props.btnName" />
+        <div t-ref="dialog" t-att-id="identifier" class="modal modal-dialog-scrollable fade" t-att-class="{'modal-lg': props.isLarge}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <t t-slot="header" />
+                    <div class="modal-header gap-1">
+                        <t t-out="props.name"/>
+                        <a t-if="props.help" t-att-href="props.help" class="fa fa-question-circle text-decoration-none text-dark" target="_blank"/>
                     </div>
                     <div class="modal-body position-relative dialog-body">
                         <t t-slot="body" />

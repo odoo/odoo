@@ -61,10 +61,7 @@ export class CredentialsDialog extends Component {
             </t>
         </LoadingFullScreen>
 
-        <Dialog identifier="'credential-configuration'" btnName="'Credentials'">
-            <t t-set-slot="header">
-                Configure Credentials
-            </t>
+        <Dialog name="'Configure Credentials'" btnName="'Credentials'">
             <t t-set-slot="body">
                 <div class="alert alert-info fs-6" role="alert">
                     Set the Database UUID and your Contract Number you want to use to validate your subscription.

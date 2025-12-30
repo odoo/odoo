@@ -4,7 +4,6 @@ import configparser
 import logging
 import netifaces
 import re
-import requests
 import secrets
 import socket
 import subprocess
@@ -107,48 +106,6 @@ def get_version(detailed_version=False):
             version += f'#{commit_hash or "unknown"}'
 
     return version
-
-
-def get_img_name():
-    major, minor = get_version()[1:].split('.')
-    return f'iotboxv{major}_{minor}.zip'
-
-
-def check_image():
-    """Check if the current image of IoT Box is up to date
-
-    :return: dict containing major and minor versions of the latest image available
-    :rtype: dict
-    """
-    try:
-        response = requests.get('https://nightly.odoo.com/master/iotbox/SHA1SUMS.txt', timeout=5)
-        response.raise_for_status()
-        data = response.text
-    except requests.exceptions.HTTPError:
-        _logger.exception('Could not reach the server to get the latest image version')
-        return False
-
-    current, latest = '', ''
-    hashes = {}
-    for line in data.splitlines():
-        if not line.strip():
-            continue
-        value, name = line.split('  ')
-        hashes[value] = name
-        if name == 'iotbox-latest.zip':
-            latest = value
-        elif name == get_img_name():
-            current = value
-    if current == latest:
-        return False
-
-    version = (
-        hashes.get(latest, 'Error')
-        .removeprefix('iotboxv')
-        .removesuffix('.zip')
-        .split('_')
-    )
-    return {'major': version[0], 'minor': version[1]}
 
 
 def update_conf(values, section='iot.box'):

@@ -80,10 +80,7 @@ export class HandlerDialog extends Component {
             </t>
         </LoadingFullScreen>
 
-        <Dialog identifier="'handler-configuration'" btnName="'Handlers Configuration'" onOpen.bind="getHandlerData" onClose.bind="onClose">
-            <t t-set-slot="header">
-                Handlers Configuration
-            </t>
+        <Dialog name="'Handlers Configuration'" btnName="'Handlers Configuration'" onOpen.bind="getHandlerData" onClose.bind="onClose">
             <t t-set-slot="body">
                 <div t-if="this.state.initialization" class="position-absolute top-0 start-0 bg-white h-100 w-100 justify-content-center align-items-center d-flex flex-column gap-3 always-on-top handler-loading">
                     <div class="spinner-border" role="status">

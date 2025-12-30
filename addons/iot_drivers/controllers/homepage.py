@@ -190,34 +190,6 @@ class IotBoxOwlHomePage(http.Controller):
             'availableWiFi': wifi.get_available_ssids(),
         })
 
-    @route.iot_route('/iot_drivers/version_info', type="http", cors='*', linux_only=True)
-    def get_version_info(self):
-        # Check branch name and last commit hash on IoT Box
-        current_commit = system.git("rev-parse", "HEAD")
-        current_branch = system.git("rev-parse", "--abbrev-ref", "HEAD")
-        if not current_commit or not current_branch:
-            return json.dumps({
-                'status': 'error',
-                'message': 'Failed to retrieve current commit or branch',
-            })
-
-        last_available_commit = system.git("ls-remote", "origin", current_branch)
-        if not last_available_commit:
-            _logger.error("Failed to retrieve last commit available for branch origin/%s", current_branch)
-            return json.dumps({
-                'status': 'error',
-                'message': 'Failed to retrieve last commit available for branch origin/' + current_branch,
-            })
-        last_available_commit = last_available_commit.split()[0].strip()
-
-        return json.dumps({
-            'status': 'success',
-            # Checkout requires db to align with its version (=branch)
-            'odooIsUpToDate': current_commit == last_available_commit or not bool(helpers.get_odoo_server_url()),
-            'imageIsUpToDate': IS_RPI and not bool(system.check_image()),
-            'currentCommitHash': current_commit,
-        })
-
     @route.iot_route('/iot_drivers/log_levels', type="http", cors='*')
     def log_levels(self):
         drivers_list = helpers.get_handlers_files_to_load(

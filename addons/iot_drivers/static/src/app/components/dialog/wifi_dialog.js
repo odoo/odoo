@@ -131,10 +131,12 @@ export class WifiDialog extends Component {
             </div>
         </div>
 
-        <Dialog identifier="'wifi-configuration'" btnName="'Configure'" onOpen.bind="getWiFiNetworks" onClose.bind="onClose">
-            <t t-set-slot="header">
-                Configure Wi-Fi
-            </t>
+        <Dialog
+            name="'Configure Wi-Fi'"
+            help="'https://www.odoo.com/documentation/latest/applications/general/iot/iot_box.html#iot-iot-box-network-wifi'"
+            btnName="'Configure'"
+            onOpen.bind="getWiFiNetworks"
+            onClose.bind="onClose">
             <t t-set-slot="body">
                 <div t-if="this.state.scanning" class="position-absolute top-0 start-0 bg-white h-100 w-100 justify-content-center align-items-center d-flex flex-column gap-3 always-on-top">
                     <div class="spinner-border" role="status">
