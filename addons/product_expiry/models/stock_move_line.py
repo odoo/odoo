@@ -14,7 +14,7 @@ class StockMoveLine(models.Model):
         string='Expiration Date', compute='_compute_expiration_date', store=True,
         help='This is the date on which the goods with this Serial Number may'
         ' become dangerous and must not be consumed.')
-    removal_date = fields.Datetime(string='Removal Date', compute='_compute_removal_date', store=True)
+    removal_date = fields.Datetime(string='Removal Date', compute='_compute_removal_date', inverse='_inverse_removal_date', store=True)
     is_expired = fields.Boolean(related='lot_id.product_expiry_alert')
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')
@@ -54,6 +54,9 @@ class StockMoveLine(models.Model):
                     move_line.removal_date = move_line.expiration_date - datetime.timedelta(days=move_line.product_id.removal_time)
                 else:
                     move_line.removal_date = False
+
+    def _inverse_removal_date(self):
+        pass
 
     def _prepare_new_lot_vals(self):
         vals = super()._prepare_new_lot_vals()
