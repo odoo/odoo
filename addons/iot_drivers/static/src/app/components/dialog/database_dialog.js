@@ -1,14 +1,14 @@
 /* global owl */
 
-import useStore from "../../hooks/useStore.js";
-import { BootstrapDialog } from "./BootstrapDialog.js";
-import { LoadingFullScreen } from "../LoadingFullScreen.js";
+import useStore from "../../hooks/store_hook.js";
+import { Dialog } from "./dialog.js";
+import { LoadingFullScreen } from "../loading_full_screen.js";
 
 const { Component, xml, useState } = owl;
 
-export class ServerDialog extends Component {
+export class DatabaseDialog extends Component {
     static props = {};
-    static components = { BootstrapDialog, LoadingFullScreen };
+    static components = { Dialog, LoadingFullScreen };
 
     setup() {
         this.store = useStore();
@@ -56,7 +56,7 @@ export class ServerDialog extends Component {
             </t>
         </LoadingFullScreen>
 
-        <BootstrapDialog identifier="'server-configuration'" btnName="'Configure'">
+        <Dialog identifier="'server-configuration'" btnName="'Configure'">
             <t t-set-slot="header">
                 Configure Odoo Database
             </t>
@@ -84,7 +84,7 @@ export class ServerDialog extends Component {
                 <button type="button" class="btn btn-danger btn-sm" t-if="store.base.server_status" t-on-click="clearConfiguration">Disconnect</button>
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
-        </BootstrapDialog>
+        </Dialog>
     </t>
     `;
 }

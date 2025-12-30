@@ -1,14 +1,14 @@
 /* global owl */
 
-import useStore from "../../hooks/useStore.js";
-import { BootstrapDialog } from "./BootstrapDialog.js";
-import { LoadingFullScreen } from "../LoadingFullScreen.js";
+import useStore from "../../hooks/store_hook.js";
+import { Dialog } from "./dialog.js";
+import { LoadingFullScreen } from "../loading_full_screen.js";
 
 const { Component, xml, useState } = owl;
 
 export class UpdateDialog extends Component {
     static props = {};
-    static components = { BootstrapDialog, LoadingFullScreen };
+    static components = { Dialog, LoadingFullScreen };
 
     setup() {
         this.store = useStore();
@@ -75,7 +75,7 @@ export class UpdateDialog extends Component {
             </t>
         </LoadingFullScreen>
 
-        <BootstrapDialog identifier="'update-configuration'" btnName="'Update'" onOpen.bind="getVersionInfo" onClose.bind="onClose">
+        <Dialog identifier="'update-configuration'" btnName="'Update'" onOpen.bind="getVersionInfo" onClose.bind="onClose">
             <t t-set-slot="header">
                 <div>
                     Update
@@ -133,7 +133,7 @@ export class UpdateDialog extends Component {
                     Close
                 </button>
             </t>
-        </BootstrapDialog>
+        </Dialog>
     </t>
     `;
 }

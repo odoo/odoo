@@ -1,13 +1,13 @@
 /* global owl */
 
-import useStore from "../../hooks/useStore.js";
-import { BootstrapDialog } from "./BootstrapDialog.js";
+import useStore from "../../hooks/store_hook.js";
+import { Dialog } from "./dialog.js";
 
 const { Component, useState, xml } = owl;
 
 export class TimeDialog extends Component {
     static props = {};
-    static components = { BootstrapDialog };
+    static components = { Dialog };
 
     setup() {
         this.store = useStore();
@@ -48,7 +48,7 @@ export class TimeDialog extends Component {
     }
 
     static template = xml`
-        <BootstrapDialog identifier="'time-dialog'" btnName="'View Uptime'">
+        <Dialog identifier="'time-dialog'" btnName="'View Uptime'">
             <t t-set-slot="header">
                 IoT Box Uptime
             </t>
@@ -69,6 +69,6 @@ export class TimeDialog extends Component {
             <t t-set-slot="footer">
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
-        </BootstrapDialog>
+        </Dialog>
     `;
 }

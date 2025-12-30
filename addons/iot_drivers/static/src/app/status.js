@@ -1,5 +1,5 @@
 /* global owl */
-import { DEVICE_ICONS } from "./components/dialog/DeviceDialog.js";
+import { DEVICE_ICONS } from "./components/dialog/device_dialog.js";
 
 const { Component, mount, xml, useState } = owl;
 

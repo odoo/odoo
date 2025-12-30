@@ -1,6 +1,6 @@
 /* global owl */
 
-import { Homepage } from "./Homepage.js";
+import { Homepage } from "./homepage.js";
 import Store from "./store.js";
 
 const { mount, reactive } = owl;

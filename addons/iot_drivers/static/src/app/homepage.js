@@ -1,15 +1,15 @@
 /* global owl */
 
-import { SingleData } from "./components/SingleData.js";
-import { FooterButtons } from "./components/FooterButtons.js";
-import { ServerDialog } from "./components/dialog/ServerDialog.js";
-import { WifiDialog } from "./components/dialog/WifiDialog.js";
-import useStore from "./hooks/useStore.js";
-import { UpdateDialog } from "./components/dialog/UpdateDialog.js";
-import { DeviceDialog } from "./components/dialog/DeviceDialog.js";
-import { SixDialog } from "./components/dialog/SixDialog.js";
-import { LoadingFullScreen } from "./components/LoadingFullScreen.js";
-import { IconButton } from "./components/IconButton.js";
+import { SingleData } from "./components/single_data.js";
+import { FooterButtons } from "./components/footer_buttons.js";
+import { DatabaseDialog } from "./components/dialog/database_dialog.js";
+import { WifiDialog } from "./components/dialog/wifi_dialog.js";
+import useStore from "./hooks/store_hook.js";
+import { UpdateDialog } from "./components/dialog/update_dialog.js";
+import { DeviceDialog } from "./components/dialog/device_dialog.js";
+import { SixTerminalDialog } from "./components/dialog/six_terminal_dialog.js";
+import { LoadingFullScreen } from "./components/loading_full_screen.js";
+import { IconButton } from "./components/icon_button.js";
 
 const { Component, xml, useState, onWillStart } = owl;
 
@@ -18,11 +18,11 @@ export class Homepage extends Component {
     static components = {
         SingleData,
         FooterButtons,
-        ServerDialog,
+        DatabaseDialog,
         WifiDialog,
         UpdateDialog,
         DeviceDialog,
-        SixDialog,
+        SixTerminalDialog,
         LoadingFullScreen,
         IconButton,
     };
@@ -153,14 +153,14 @@ export class Homepage extends Component {
                 </SingleData>
                 <SingleData t-if="!store.base.is_access_point_up" name="'Odoo database connected'" value="state.data.server_status" icon="'fa-link'">
                     <t t-set-slot="button">
-                        <ServerDialog />
+                        <DatabaseDialog />
                     </t>
                 </SingleData>
                 <SingleData t-if="state.data.pairing_code and !this.store.base.is_access_point_up and !state.data.pairing_code_expired" name="'Pairing Code'" value="state.data.pairing_code + ' - Enter this code in the IoT app in your Odoo database'" icon="'fa-code'"/>
                 <SingleData t-if="state.data.pairing_code_expired" name="'Pairing Code'" value="'Code has expired - restart the IoT Box to generate a new one'" icon="'fa-code'"/>
                 <SingleData  t-if="store.advanced and !store.base.is_access_point_up" name="'Six terminal'" value="state.data.six_terminal" icon="'fa-money'">
                     <t t-set-slot="button">
-                        <SixDialog />
+                        <SixTerminalDialog />
                     </t>
                 </SingleData>
                 <SingleData t-if="!this.store.base.is_access_point_up" name="'Devices'" value="numDevices + ' devices'" icon="'fa-plug'">

@@ -1,14 +1,14 @@
 /* global owl */
 
-import useStore from "../../hooks/useStore.js";
-import { LoadingFullScreen } from "../LoadingFullScreen.js";
-import { BootstrapDialog } from "./BootstrapDialog.js";
+import useStore from "../../hooks/store_hook.js";
+import { LoadingFullScreen } from "../loading_full_screen.js";
+import { Dialog } from "./dialog.js";
 
 const { Component, xml, onWillStart, useState } = owl;
 
-export class RemoteDebugDialog extends Component {
+export class DebuggingToolsDialog extends Component {
     static props = {};
-    static components = { BootstrapDialog, LoadingFullScreen };
+    static components = { Dialog, LoadingFullScreen };
 
     setup() {
         this.store = useStore();
@@ -93,7 +93,7 @@ export class RemoteDebugDialog extends Component {
 
     static template = xml`
     <t t-translation="off">
-        <BootstrapDialog identifier="'remote-debug-configuration'" btnName="'Debugging Tools'">
+        <Dialog identifier="'remote-debug-configuration'" btnName="'Debugging Tools'">
             <t t-set-slot="header">
                 Debugging Tools
             </t>
@@ -136,7 +136,7 @@ export class RemoteDebugDialog extends Component {
             <t t-set-slot="footer">
                 <button type="button" t-att-class="'btn btn-sm btn-' + (state.remoteDebug ? 'secondary' : 'primary')" data-bs-dismiss="modal">Close</button>
             </t>
-        </BootstrapDialog>
+        </Dialog>
     </t>
     `;
 }
