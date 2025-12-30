@@ -2065,3 +2065,20 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.env.clear()
         data = current_session.with_company(self.env.company).filter_local_data({'product.product': [product.id]})
         self.assertIn(product.id, data['product.product'])
+
+    def test_product_price_conversion(self):
+        self.env['res.currency.rate'].create({
+            'name': '2010-01-01',
+            'rate': 2.0,
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+        self.pos_config_eur.open_ui()
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'is_storable': True,
+            'available_in_pos': True,
+            'lst_price': 200.0,
+        })
+        loaded_data = self.pos_config_eur.current_session_id.load_data([])
+        product_a_vals = next(p for p in loaded_data['product.product'] if p['id'] == product_a.id)
+        self.assertEqual(product_a_vals['lst_price'], 400.0)
