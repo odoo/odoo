@@ -6,7 +6,7 @@ from freezegun import freeze_time
 
 from odoo.exceptions import ValidationError
 from odoo.addons.hr_contract.tests.common import TestContractCommon
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 @tagged('test_contracts')
 class TestHrContracts(TestContractCommon):
@@ -337,3 +337,17 @@ class TestHrContracts(TestContractCommon):
         contract_1.state = 'open'
         result = self.employee._get_unusual_days('2024-11-06 01:00:00', '2024-11-18 22:00:00')
         self.assertEqual(result, get_expected_days('multiple_contracts'), 'Calender of Both contract should be selected')
+
+    def test_employee_resource_contract_without_and_with_date_from(self):
+        """
+        Test setting the resource with an employee contract on resource leave without and with start date.
+        """
+        contract = self.create_contract('open', 'normal', date(2018, 1, 1), date(2018, 1, 2))
+        leave_form = Form(self.env['resource.calendar.leaves'])
+        leave_form.date_from = False
+
+        leave_form.resource_id = self.employee.resource_id
+        self.assertFalse(leave_form.calendar_id)
+
+        leave_form.date_from = datetime(2018, 1, 1, 0, 0, 0)
+        self.assertEqual(leave_form.calendar_id, contract.resource_calendar_id)
