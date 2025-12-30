@@ -17,7 +17,7 @@ import {
     toggleBlockEmbedding,
 } from "@html_editor/others/embedded_components/core/toggle_block/toggle_block";
 import { onMounted } from "@odoo/owl";
-import { animationFrame, queryOne, tick } from "@odoo/hoot-dom";
+import { animationFrame, press, queryOne, tick } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
@@ -210,6 +210,29 @@ describe("deleteBackward applied to toggle", () => {
         expect(queryOne("[data-embedded='toggleBlock']").nextElementSibling).toHaveOuterHTML(`
             <p>Riddance</p>
         `);
+    });
+    test("press 'ctrl+a' with leading toggle block should select and delete all content", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
+                    <div data-embedded-editable="title">
+                        <p>HelloWorld</p>
+                    </div>
+                    <div data-embedded-editable="content">
+                        <p>Good</p>
+                        <p>Riddance</p>
+                    </div>
+                </div>
+                <div class="o-paragraph">hello[]</div>
+            `),
+            { config: getConfig([toggleBlockEmbedding]) }
+        );
+        await embeddedToggleMountedPromise;
+        await press(["CTRL", "A"]); // select all
+        deleteBackward(editor);
+        expect(getContent(el)).toBe(
+            `<div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>`
+        );
     });
 });
 describe("deleteForward applied to toggle", () => {
