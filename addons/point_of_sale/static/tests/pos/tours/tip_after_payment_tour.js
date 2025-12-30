@@ -28,6 +28,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.clickPercentTip("15%"),
             TipScreen.inputAmountIs("0.30"),
             TipScreen.clickSettle(),
+            FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "2.30",
                 payment_lines: [{ name: "Bank", amount: "2.00" }],
@@ -51,6 +52,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.clickPercentTip("20%"),
             TipScreen.inputAmountIs("0.80"),
             TipScreen.clickSettle(),
+            FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "4.80",
                 payment_lines: [{ name: "Bank", amount: "4.00" }],
@@ -74,6 +76,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.clickPercentTip("25%"),
             TipScreen.inputAmountIs("1.50"),
             TipScreen.clickSettle(),
+            FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "7.50",
                 payment_lines: [{ name: "Bank", amount: "6.00" }],
@@ -97,6 +100,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.clickPercentTip("25%"),
             TipScreen.inputAmountIs("2.00"),
             TipScreen.clickSettle(),
+            FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "10.00",
                 payment_lines: [{ name: "Bank", amount: "8.00" }],
@@ -120,6 +124,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.clickNoTip(),
             TipScreen.inputAmountIs("0"),
             TipScreen.clickSettle(),
+            FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "10.00",
                 payment_lines: [{ name: "Bank", amount: "10.00" }],
@@ -142,6 +147,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.setCustomTip("1.00"),
             TipScreen.inputAmountIs("1.00"),
             TipScreen.clickSettle(),
+            FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "13.00",
                 payment_lines: [{ name: "Bank", amount: "12.00" }],
@@ -164,6 +170,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.percentAmountIs("25%", "3.50"),
             TipScreen.inputAmountIs(""),
             TipScreen.clickSettle(),
+            FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "14.00",
                 payment_lines: [{ name: "Bank", amount: "14.00" }],
