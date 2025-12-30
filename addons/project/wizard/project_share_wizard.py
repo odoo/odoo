@@ -174,10 +174,8 @@ class ProjectShareWizard(models.TransientModel):
                 partner_ids_in_edit_mode.append(collaborator.partner_id.id)
         if partner_ids_in_edit_mode:
             new_collaborators = self.env['res.partner'].browse(partner_ids_in_edit_mode)
-            portal_partners = new_collaborators.filtered('user_ids')
             # send mail to users
-            self._send_public_link(portal_partners)
-            self._send_signup_link(partners=new_collaborators.with_context({'signup_valid': True}) - portal_partners)
+            self._send_signup_link(partners=new_collaborators.with_context({'signup_valid': True}))
         if partner_ids_in_readonly_mode:
             self.partner_ids = self.env['res.partner'].browse(partner_ids_in_readonly_mode)
             super().action_send_mail()
