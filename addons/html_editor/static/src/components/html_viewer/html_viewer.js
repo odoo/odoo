@@ -160,7 +160,9 @@ export class HtmlViewer extends Component {
         range.setStart(deepAnchorNode, deepAnchorOffset);
         range.setEnd(deepFocusNode, deepFocusOffset);
         const clonedContents = range.cloneContents();
-        fillHtmlTransferData(ev, "clipboardData", clonedContents);
+        fillHtmlTransferData(ev, "clipboardData", clonedContents, {
+            textContent: selection.toString(),
+        });
     }
 
     /**
