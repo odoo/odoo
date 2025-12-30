@@ -927,6 +927,8 @@ class SaleOrder(models.Model):
     @api.onchange('order_line')
     def _onchange_order_line(self):
         for index, line in enumerate(self.order_line):
+            if line.display_type == 'line_subsection' and not line.parent_id:
+                line.display_type = 'line_section'
             combo_item_lines = line._get_linked_lines().filtered('combo_item_id')
             if line.product_template_id.type != 'combo':
                 if combo_item_lines:
