@@ -1,7 +1,7 @@
 <templates xml:space="preserve">
     <t t-name="website.ImageTransformOption">
         <div class="btn-group o-hb-button-group">
-            <BuilderButton title.translate="Transform the picture" id="'transform_image'" action="'transformImage'" actionParam="{ isImageTransformationOpen: transform.isImageTransformationOpen, closeImageTransformation: closeImageTransformation.bind(this) }" icon="'fa-object-ungroup'" />
+            <BuilderButton title.translate="Transform the picture" id="'transform_image'" action="'transformImage'" actionParam="{ isImageTransformationOpen: transform.isImageTransformationOpen, closeImageTransformation: closeImageTransformation.bind(this) }" icon="'fa-repeat'" />
             <BuilderButton title.translate="Reset transformation" action="'resetTransformImage'" t-if="isActiveItem('transform_image')" actionParam="closeImageTransformation.bind(this)" icon="'oi-close'" className="'btn-danger-color-hover rounded-start-0 m-0 py-0 flex-grow-0'" />
         </div>
     </t>
