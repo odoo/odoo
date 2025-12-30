@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
+import { normalize } from "@web/core/l10n/utils";
 
 // When adding a method to this class, please pay attention to naming.
 // As in the backend, when trying to access taxes_id on product.product,
@@ -20,10 +21,11 @@ export class ProductProduct extends Base {
 
     get searchString() {
         const fields = ["display_name", "barcode", "default_code"];
-        return fields
+        const raw = fields
             .map((field) => this[field] || "")
             .filter(Boolean)
             .join(" ");
+        return normalize(raw);
     }
 }
 
