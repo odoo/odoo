@@ -105,6 +105,18 @@ patch(PosStore.prototype, {
                 }
                 continue;
             }
+            const converted_line = converted_lines.find((l) => l.id === line.id);
+            if (converted_line?.coupon_id) {
+                const couponRecord = this.models['loyalty.card'].get(converted_line.coupon_id);
+                if (couponRecord?.program_id.trigger === "with_code") {
+                    debugger;
+                    const programRule = this.models["loyalty.rule"].find(
+                        rule => rule.program_id?.id === couponRecord.program_id.id && rule.mode === "with_code"
+                    );
+                    await this.activateCode(programRule.code);
+                        continue;
+                }
+            }
 
             if (line.is_downpayment) {
                 line.product_id = this.config.down_payment_product_id;
@@ -129,7 +141,6 @@ patch(PosStore.prototype, {
             const newLine = await this.addLineToCurrentOrder(newLineValues, {}, false);
             previousProductLine = newLine;
 
-            const converted_line = converted_lines.find((l) => l.id === line.id);
             if (
                 newLine.get_product().tracking !== "none" &&
                 (this.pickingType.use_create_lots || this.pickingType.use_existing_lots) &&
