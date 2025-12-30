@@ -149,10 +149,10 @@
                 <field name="display_name"/>
                 <field name="unit_of_measure" optional="hide"/>
                 <field name="request_unit" optional="hide"/>
-                <field name="leave_validation_type" optional="hide" string="Time Off Approval"/>
+                <field name="leave_validation_type" string="Time Off Approval"/>
                 <field name="responsible_ids" widget="many2many_tags" invisible="leave_validation_type in ['no_validation', 'manager'] and (not requires_allocation or allocation_validation_type != 'hr')" optional="hide"/>
                 <field name="requires_allocation" optional="hide"/>
-                <field name="allocation_validation_type" string="Allocation Approval"/>
+                <field name="allocation_validation_type" string="Allocation Approval" optional="hide"/>
                 <field name="employee_requests" optional="hide"/>
                 <field name="color" widget="color_picker" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show" readonly="is_used"/>
