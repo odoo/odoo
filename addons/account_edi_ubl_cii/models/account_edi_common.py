@@ -515,6 +515,38 @@ class AccountEdiCommon(models.AbstractModel):
             _("A rounding amount of %s was detected.", formatted_amount),
         ]
 
+    def _process_allowance_charge_nodes(self, tree, xpath_dict, invoice_line, billed_qty):
+        """
+        Process AllowanceCharge nodes of a UBL invoice line and build dictionaries
+        with the relevant details for each allowance/charge.
+
+        For `allowance_charge_taxes_list`, see the implementation in
+        `account_edi_ubl_cii_allowance_charge_extension`.
+        """
+        allow_charge_amount = 0  # if positive: it's a discount, if negative: it's a charge
+        fixed_taxes_list = []
+        allowance_charge_taxes_list = []
+        allow_charge_nodes = tree.findall(xpath_dict['allowance_charge'])
+        for allow_charge_el in allow_charge_nodes:
+            charge_indicator = allow_charge_el.find(xpath_dict['allowance_charge_indicator'])
+            if charge_indicator.text and charge_indicator.text.lower() == 'false':
+                discount_factor = 1  # it's a discount
+            else:
+                discount_factor = -1  # it's a charge
+            amount = allow_charge_el.find(xpath_dict['allowance_charge_amount'])
+            reason_code = allow_charge_el.find(xpath_dict['allowance_charge_reason_code'])
+            reason = allow_charge_el.find(xpath_dict['allowance_charge_reason'])
+            if amount is not None:
+                if reason_code is not None and reason_code.text == 'AEO' and reason is not None:
+                    # Handle Fixed Taxes: when exporting from Odoo, we use the allowance_charge node
+                    fixed_taxes_list.append({
+                        'tax_name': reason.text,
+                        'tax_amount': float(amount.text) / billed_qty,
+                    })
+                else:
+                    allow_charge_amount += float(amount.text) * discount_factor
+        return allow_charge_amount, fixed_taxes_list, allowance_charge_taxes_list
+
     def _import_fill_invoice_line_values(self, tree, xpath_dict, invoice_line, qty_factor):
         """
         Read the xml invoice, extract the invoice line values, compute the odoo values
@@ -620,27 +652,7 @@ class AccountEdiCommon(models.AbstractModel):
                     product_uom_id = self.env.ref(uom_infered_xmlid[0], raise_if_not_found=False)
 
         # allow_charge_amount
-        fixed_taxes_list = []
-        allow_charge_amount = 0  # if positive: it's a discount, if negative: it's a charge
-        allow_charge_nodes = tree.findall(xpath_dict['allowance_charge'])
-        for allow_charge_el in allow_charge_nodes:
-            charge_indicator = allow_charge_el.find(xpath_dict['allowance_charge_indicator'])
-            if charge_indicator.text and charge_indicator.text.lower() == 'false':
-                discount_factor = 1  # it's a discount
-            else:
-                discount_factor = -1  # it's a charge
-            amount = allow_charge_el.find(xpath_dict['allowance_charge_amount'])
-            reason_code = allow_charge_el.find(xpath_dict['allowance_charge_reason_code'])
-            reason = allow_charge_el.find(xpath_dict['allowance_charge_reason'])
-            if amount is not None:
-                if reason_code is not None and reason_code.text == 'AEO' and reason is not None:
-                    # Handle Fixed Taxes: when exporting from Odoo, we use the allowance_charge node
-                    fixed_taxes_list.append({
-                        'tax_name': reason.text,
-                        'tax_amount': float(amount.text) / billed_qty,
-                    })
-                else:
-                    allow_charge_amount += float(amount.text) * discount_factor
+        allow_charge_amount, fixed_taxes_list, allowance_charge_taxes_list = self._process_allowance_charge_nodes(tree, xpath_dict, invoice_line, billed_qty)
 
         # line_net_subtotal (mandatory)
         price_subtotal = None
@@ -671,9 +683,13 @@ class AccountEdiCommon(models.AbstractModel):
         # discount
         discount = 0
         amount_fixed_taxes = sum(d['tax_amount'] * billed_qty for d in fixed_taxes_list)
+        # Check `account_edi_ubl_cii_allowance_charge_extension` for more details.
+        # These are used to manage differences arising out of allowance/charge taxes.
+        amount_allowance_taxes = sum(d['tax_amount'] * billed_qty for d in allowance_charge_taxes_list if d.get('charge_indicator') == 'false')
+        amount_charge_taxes = sum(d['tax_amount'] * billed_qty for d in allowance_charge_taxes_list if d.get('charge_indicator') == 'true')
         if billed_qty * price_unit != 0 and price_subtotal is not None:
             currency = invoice_line.currency_id or self.env.company.currency_id
-            inferred_discount = 100 * (1 - (price_subtotal - amount_fixed_taxes) / currency.round(billed_qty * price_unit))
+            inferred_discount = 100 * (1 - (price_subtotal - amount_fixed_taxes + amount_allowance_taxes - amount_charge_taxes) / currency.round(billed_qty * price_unit))
             discount = inferred_discount if not float_is_zero(inferred_discount, currency.decimal_places) else 0.0
 
         # Sometimes, the xml received is very bad; e.g.:
@@ -697,7 +713,15 @@ class AccountEdiCommon(models.AbstractModel):
             'discount': discount,
             'product_uom_id': product_uom_id,
             'fixed_taxes_list': fixed_taxes_list,
+            'allowance_charge_taxes_list': allowance_charge_taxes_list,
         }
+
+    def _get_fixed_tax_base_domain(self, invoice_line, fixed_tax_vals):
+        return [
+            *self.env['account.journal']._check_company_domain(invoice_line.company_id),
+            ('amount_type', '=', 'fixed'),
+            ('amount', '=', fixed_tax_vals['tax_amount']),
+        ]
 
     def _import_retrieve_fixed_tax(self, invoice_line, fixed_tax_vals):
         """ Retrieve the fixed tax at import, iteratively search for a tax:
@@ -706,11 +730,7 @@ class AccountEdiCommon(models.AbstractModel):
         3. price_include matching the name and the amount
         4. price_include matching the amount
         """
-        base_domain = [
-            *self.env['account.journal']._check_company_domain(invoice_line.company_id),
-            ('amount_type', '=', 'fixed'),
-            ('amount', '=', fixed_tax_vals['tax_amount']),
-        ]
+        base_domain = self._get_fixed_tax_base_domain(invoice_line, fixed_tax_vals)
         for price_include in (False, True):
             for name in (fixed_tax_vals['tax_name'], False):
                 domain = base_domain + [('price_include', '=', price_include)]
@@ -720,6 +740,23 @@ class AccountEdiCommon(models.AbstractModel):
                 if tax:
                     return tax
         return self.env['account.tax']
+
+    def _handle_allowance_charge_taxes(self, invoice_line, inv_line_vals):
+        """
+        Apply fixed taxes to the invoice line.
+        Fixed taxes may be represented as AllowanceCharge in the source document.
+        """
+        for fixed_tax_vals in inv_line_vals['fixed_taxes_list']:
+            tax = self._import_retrieve_fixed_tax(invoice_line, fixed_tax_vals)
+            if not tax:
+                # Nothing found: fix the price_unit s.t. line subtotal is matching the original invoice
+                inv_line_vals['price_unit'] += fixed_tax_vals['tax_amount']
+            elif tax.price_include:
+                inv_line_vals['taxes'].append(tax.id)
+                inv_line_vals['price_unit'] += tax.amount
+            else:
+                inv_line_vals['taxes'].append(tax.id)
+        return inv_line_vals
 
     def _import_fill_invoice_line_taxes(self, tax_nodes, invoice_line, inv_line_vals, logs):
         # Taxes: all amounts are tax excluded, so first try to fetch price_include=False taxes,
@@ -752,17 +789,8 @@ class AccountEdiCommon(models.AbstractModel):
                 if tax.price_include:
                     inv_line_vals['price_unit'] *= (1 + tax.amount / 100)
 
-        # Handle Fixed Taxes
-        for fixed_tax_vals in inv_line_vals['fixed_taxes_list']:
-            tax = self._import_retrieve_fixed_tax(invoice_line, fixed_tax_vals)
-            if not tax:
-                # Nothing found: fix the price_unit s.t. line subtotal is matching the original invoice
-                inv_line_vals['price_unit'] += fixed_tax_vals['tax_amount']
-            elif tax.price_include:
-                inv_line_vals['taxes'].append(tax.id)
-                inv_line_vals['price_unit'] += tax.amount
-            else:
-                inv_line_vals['taxes'].append(tax.id)
+        # Handle Allowance/Charge taxes
+        inv_line_vals = self._handle_allowance_charge_taxes(invoice_line, inv_line_vals)
 
         # Set the values on the line_form
         invoice_line.quantity = inv_line_vals['quantity']

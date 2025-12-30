@@ -113,6 +113,55 @@ class AccountEdiXmlCII(models.AbstractModel):
             'included_note': html2plaintext(invoice.narration) if invoice.narration else "",
         }
 
+    def _get_grouping_key_dict(self, invoice, tax):
+        return {
+            **self._get_tax_unece_codes(invoice, tax),
+            'amount': tax.amount,
+            'amount_type': tax.amount_type,
+        }
+
+    def _remove_allowance_charge_tax_effect(self, tax_details):
+        """
+        Fixed Taxes: filter them on the document level, and adapt the totals
+        Fixed taxes are not supposed to be taxes in real live. However, this is the way in Odoo to manage recupel
+        taxes in Belgium. Since only one tax is allowed, the fixed tax is removed from totals of lines but added
+        as an extra charge/allowance.
+        """
+        fixed_taxes_keys = [k for k in tax_details['tax_details'] if k['amount_type'] == 'fixed']
+        for key in fixed_taxes_keys:
+            fixed_tax_details = tax_details['tax_details'].pop(key)
+            tax_details['tax_amount_currency'] -= fixed_tax_details['tax_amount_currency']
+            tax_details['tax_amount'] -= fixed_tax_details['tax_amount']
+            tax_details['base_amount_currency'] += fixed_tax_details['tax_amount_currency']
+            tax_details['base_amount'] += fixed_tax_details['tax_amount']
+        return tax_details
+
+    def _add_invoice_line_allowance_charge_vals(self, template_values):
+        """Method to fill Allowance/Charge vals at the line level"""
+        for line_vals in template_values['invoice_line_vals_list']:
+            line_vals['allowance_charge_vals_list'] = []
+            tax_details = template_values['tax_details']
+            for grouping_key, tax_detail in tax_details['tax_details_per_record'][line_vals['line']]['tax_details'].items():
+                if grouping_key['amount_type'] == 'fixed':
+                    line_vals['allowance_charge_vals_list'].append({
+                        'indicator': 'true',
+                        'reason': tax_detail['tax_name'],
+                        'reason_code': 'AEO',
+                        'amount': tax_detail['tax_amount_currency'],
+                    })
+            sum_fixed_taxes = sum(x['amount'] for x in line_vals['allowance_charge_vals_list'])
+            line_vals['line_total_amount'] = line_vals['line'].price_subtotal + sum_fixed_taxes
+
+            line_vals['quantity'] = line_vals['line'].quantity  # /!\ The quantity is the line.quantity since we keep the unece_uom_code!
+
+            # Invert the quantity and the gross_price_total_unit if a line has a negative price total
+            if line_vals['line'].currency_id.compare_amounts(line_vals['gross_price_total_unit'], 0) == -1:
+                line_vals['quantity'] *= -1
+                line_vals['gross_price_total_unit'] *= -1
+                line_vals['price_subtotal_unit'] *= -1
+
+        return template_values
+
     def _export_invoice_vals(self, invoice):
 
         def format_date(dt):
@@ -126,11 +175,7 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         def grouping_key_generator(base_line, tax_values):
             tax = tax_values['tax_repartition_line'].tax_id
-            grouping_key = {
-                **self._get_tax_unece_codes(invoice, tax),
-                'amount': tax.amount,
-                'amount_type': tax.amount_type,
-            }
+            grouping_key = self._get_grouping_key_dict(invoice, tax)
             # If the tax is fixed, we want to have one group per tax
             # s.t. when the invoice is imported, we can try to guess the fixed taxes
             if tax.amount_type == 'fixed':
@@ -143,17 +188,8 @@ class AccountEdiXmlCII(models.AbstractModel):
         # Create file content.
         tax_details = invoice._prepare_invoice_aggregated_taxes(grouping_key_generator=grouping_key_generator)
 
-        # Fixed Taxes: filter them on the document level, and adapt the totals
-        # Fixed taxes are not supposed to be taxes in real live. However, this is the way in Odoo to manage recupel
-        # taxes in Belgium. Since only one tax is allowed, the fixed tax is removed from totals of lines but added
-        # as an extra charge/allowance.
-        fixed_taxes_keys = [k for k in tax_details['tax_details'] if k['amount_type'] == 'fixed']
-        for key in fixed_taxes_keys:
-            fixed_tax_details = tax_details['tax_details'].pop(key)
-            tax_details['tax_amount_currency'] -= fixed_tax_details['tax_amount_currency']
-            tax_details['tax_amount'] -= fixed_tax_details['tax_amount']
-            tax_details['base_amount_currency'] += fixed_tax_details['tax_amount_currency']
-            tax_details['base_amount'] += fixed_tax_details['tax_amount']
+        # remove allowance/charge effect
+        tax_details = self._remove_allowance_charge_tax_effect(tax_details)
 
         if 'siret' in invoice.company_id._fields and invoice.company_id.siret:
             seller_siret = invoice.company_id.siret
@@ -215,29 +251,10 @@ class AccountEdiXmlCII(models.AbstractModel):
             if tax_detail_vals.get('tax_category_code') == 'K':
                 template_values['intracom_delivery'] = True
 
-        # Fixed taxes: add them as charges on the invoice lines
-        for line_vals in template_values['invoice_line_vals_list']:
-            line_vals['allowance_charge_vals_list'] = []
-            for grouping_key, tax_detail in tax_details['tax_details_per_record'][line_vals['line']]['tax_details'].items():
-                if grouping_key['amount_type'] == 'fixed':
-                    line_vals['allowance_charge_vals_list'].append({
-                        'indicator': 'true',
-                        'reason': tax_detail['tax_name'],
-                        'reason_code': 'AEO',
-                        'amount': tax_detail['tax_amount_currency'],
-                    })
-            sum_fixed_taxes = sum(x['amount'] for x in line_vals['allowance_charge_vals_list'])
-            line_vals['line_total_amount'] = line_vals['line'].price_subtotal + sum_fixed_taxes
+        # add them as allowance/charges on the invoice lines
+        template_values = self._add_invoice_line_allowance_charge_vals(template_values)
 
-            line_vals['quantity'] = line_vals['line'].quantity #/!\ The quantity is the line.quantity since we keep the unece_uom_code!
-
-            # Invert the quantity and the gross_price_total_unit if a line has a negative price total
-            if line_vals['line'].currency_id.compare_amounts(line_vals['gross_price_total_unit'], 0) == -1:
-                line_vals['quantity'] *= -1
-                line_vals['gross_price_total_unit'] *= -1
-                line_vals['price_subtotal_unit'] *= -1
-
-        # Fixed taxes: set the total adjusted amounts on the document level
+        # Allowance/Charge: set the total adjusted amounts on the document level
         template_values['tax_basis_total_amount'] = tax_details['base_amount_currency']
         template_values['tax_total_amount'] = tax_details['tax_amount_currency']
 
@@ -420,6 +437,8 @@ class AccountEdiXmlCII(models.AbstractModel):
             'allowance_charge_amount': './{*}ActualAmount',
             'allowance_charge_reason': './{*}Reason',
             'allowance_charge_reason_code': './{*}ReasonCode',
+            'allowance_charge_percent': './{*}CalculationPercent',
+            'allowance_charge_base_amount': './{*}BasisAmount',
             'line_total_amount': './{*}SpecifiedLineTradeSettlement/{*}SpecifiedTradeSettlementLineMonetarySummation/{*}LineTotalAmount',
         }
         inv_line_vals = self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor)

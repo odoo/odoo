@@ -87,6 +87,12 @@
                                 <ram:ChargeIndicator>
                                     <udt:Indicator t-esc="allowance_charge_vals['indicator']"/>
                                 </ram:ChargeIndicator>
+                                <t t-if="allowance_charge_vals.get('calculation_percent')">
+                                    <ram:CalculationPercent t-esc="allowance_charge_vals.get('calculation_percent')"/>
+                                </t>
+                                <t t-if="allowance_charge_vals.get('basis_amount')">
+                                    <ram:BasisAmount t-esc="format_monetary(allowance_charge_vals.get('basis_amount'), 2)"/>
+                                </t>
                                 <ram:ActualAmount t-esc="format_monetary(allowance_charge_vals['amount'], 2)"/>
                                 <ram:ReasonCode t-esc="allowance_charge_vals['reason_code']"/>
                                 <ram:Reason t-esc="allowance_charge_vals['reason']"/>

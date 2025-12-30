@@ -319,6 +319,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             })
         return [tax_totals_vals]
 
+    def _get_invoice_line_item_taxes(self, line):
+        return line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')
+
     def _get_invoice_line_item_vals(self, line, taxes_vals):
         """ Method used to fill the cac:InvoiceLine/cac:Item node.
         It provides information about what the product you are selling.
@@ -328,7 +331,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         :return:            A python dictionary.
         """
         product = line.product_id
-        taxes = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')
+        taxes = self._get_invoice_line_item_taxes(line)
         tax_category_vals_list = self._get_tax_category_list(line.move_id, taxes)
         description = line.name and line.name.replace('\n', ', ')
         return {
@@ -427,8 +430,13 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'amount': tax_details['tax_amount_currency'],
             })
 
+        return self._get_line_discount_allowance_vals(line) + fixed_tax_charge_vals_list
+
+    def _get_line_discount_allowance_vals(self, line):
+        """Converts line discount to allowance"""
+
         if not line.discount:
-            return fixed_tax_charge_vals_list
+            return []
 
         # Price subtotal with discount subtracted:
         net_price_subtotal = line.price_subtotal
@@ -457,7 +465,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'base_amount': gross_price_subtotal,
         }
 
-        return [allowance_vals] + fixed_tax_charge_vals_list
+        return [allowance_vals]
 
     def _get_invoice_line_price_vals(self, line):
         """ Method used to fill the cac:InvoiceLine/cac:Price node.
@@ -498,6 +506,20 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         """
         return self._get_invoice_tax_totals_vals_list(line.move_id, taxes_vals)
 
+    def _get_total_allowance_charge_tax_amount(self, line, allowance_charge_vals_list):
+        """
+        Calculate the total tax-related allowance/charge amount for a line.
+
+        The returned value is added to `price_subtotal` to compute the
+        `line_extension_amount`. Only charge amounts (e.g. fixed taxes) are
+        included, as line discounts are already reflected in `price_subtotal`.
+        """
+        return sum(
+            vals['amount']
+            for vals in allowance_charge_vals_list
+            if vals.get('charge_indicator') == 'true'
+        )
+
     def _get_invoice_line_vals(self, line, line_id, taxes_vals):
         """ Method used to fill the cac:{Invoice,CreditNote,DebitNote}Line node.
         It provides information about the document line.
@@ -508,11 +530,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         allowance_charge_vals_list = self._get_invoice_line_allowance_vals_list(line, tax_values_list=taxes_vals)
 
         uom = super()._get_uom_unece_code(line)
-        total_fixed_tax_amount = sum(
-            vals['amount']
-            for vals in allowance_charge_vals_list
-            if vals.get('charge_indicator') == 'true'
-        )
         period_vals = {}
         # deferred_start_date & deferred_end_date are enterprise-only fields
         if line._fields.get('deferred_start_date') and (line.deferred_start_date or line.deferred_end_date):
@@ -524,7 +541,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'id': line_id + 1,
             'line_quantity': line.quantity,
             'line_quantity_attrs': {'unitCode': uom},
-            'line_extension_amount': line.price_subtotal + total_fixed_tax_amount,
+            'line_extension_amount': line.price_subtotal + self._get_total_allowance_charge_tax_amount(line, allowance_charge_vals_list),
             'allowance_charge_vals': allowance_charge_vals_list,
             'tax_total_vals': self._get_invoice_line_tax_totals_vals_list(line, taxes_vals),
             'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
@@ -582,6 +599,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 tax_to_discount[tax.amount] += line.amount_currency * sign
         return tax_to_discount
 
+    def _get_eligible_tax_keys(self, taxes_vals):
+        """To be overriden in `account_edi_ubl_cii_allowance_charge_extension`"""
+        return list(taxes_vals['tax_details'])
+
     def _split_fixed_taxes(self, taxes_vals):
         # Fixed Taxes: filter them on the document level, and adapt the totals
         # Fixed taxes are not supposed to be taxes in real life. However, this is the way in Odoo to manage recupel
@@ -592,7 +613,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # taxes that are FIXED but don't affect the base, will be considered as emptying taxes and added as extra invoice lines
         emptying_taxes_lines_list = []
 
-        for key in list(taxes_vals['tax_details']):
+        tax_keys = self._get_eligible_tax_keys(taxes_vals)
+        for key in tax_keys:
             if key['tax_amount_type'] == 'fixed' and key['include_base_amount']:
                 fixed_tax = taxes_vals['tax_details'].pop(key)
                 taxes_vals['tax_amount_currency'] -= fixed_tax['tax_amount_currency']
@@ -609,17 +631,24 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         return fixed_taxes_charge_list, emptying_taxes_lines_list
 
+    def _get_grouping_key_dict(self, tax, tax_category_vals):
+        return {
+            'tax_category_id': tax_category_vals['id'],
+            'tax_category_percent': tax_category_vals['percent'],
+            '_tax_category_vals_': tax_category_vals,
+            'tax_amount_type': tax.amount_type,
+            'include_base_amount': tax.include_base_amount,
+        }
+
+    def _remove_allowance_charge_tax_effect(self, taxes_vals):
+        """To be overriden in `account_edi_ubl_cii_allowance_charge_extension`."""
+        return taxes_vals
+
     def _export_invoice_vals(self, invoice):
         def grouping_key_generator(base_line, tax_values):
             tax = tax_values['tax_repartition_line'].tax_id
             tax_category_vals = self._get_tax_category_list(invoice, tax)[0]
-            grouping_key = {
-                'tax_category_id': tax_category_vals['id'],
-                'tax_category_percent': tax_category_vals['percent'],
-                '_tax_category_vals_': tax_category_vals,
-                'tax_amount_type': tax.amount_type,
-                'include_base_amount': tax.include_base_amount,
-            }
+            grouping_key = self._get_grouping_key_dict(tax, tax_category_vals)
             # If the tax is fixed, we want to have one group per tax
             # s.t. when the invoice is imported, we can try to guess the fixed taxes
             if tax.amount_type == 'fixed':
@@ -637,6 +666,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         )
 
         _fixed_taxes, emptying_taxes = self._split_fixed_taxes(taxes_vals)
+
+        taxes_vals = self._remove_allowance_charge_tax_effect(taxes_vals)
 
         # Compute values for invoice lines.
         line_extension_amount = 0.0
@@ -999,6 +1030,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'allowance_charge_amount': './{*}Amount',
             'allowance_charge_reason': './{*}AllowanceChargeReason',
             'allowance_charge_reason_code': './{*}AllowanceChargeReasonCode',
+            'allowance_charge_percent': './{*}MultiplierFactorNumeric',
+            'allowance_charge_base_amount': './{*}BaseAmount',
             'line_total_amount': './{*}LineExtensionAmount',
         }
 
