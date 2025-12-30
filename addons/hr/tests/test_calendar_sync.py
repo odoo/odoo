@@ -2,6 +2,7 @@ from odoo.fields import Datetime, Date
 from odoo.tests import tagged
 
 from odoo.addons.hr.tests.common import TestHrCommon
+from odoo.tests import Form
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -93,3 +94,16 @@ class TestContractCalendars(TestHrCommon):
         self.employee.resource_calendar_id = calendar_38h
         self.assertEqual(self.employee.version_id.resource_calendar_id, calendar_38h)
         self.assertEqual(self.employee.version_ids[0].resource_calendar_id, self.calendar_richard)
+
+    def test_employee_resource_contract_without_and_with_date_from(self):
+        """
+        Test setting the resource with an employee contract on resource leave without and with start date.
+        """
+        leave_form = Form(self.env['resource.calendar.leaves'])
+        leave_form.date_from = False
+
+        leave_form.resource_id = self.employee.resource_id
+        self.assertFalse(leave_form.calendar_id)
+
+        leave_form.date_from = Datetime.to_datetime('2018-01-01 07:00:00')
+        self.assertEqual(leave_form.calendar_id, self.employee.version_id.resource_calendar_id)
