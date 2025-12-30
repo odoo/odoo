@@ -22,19 +22,23 @@ function prependOriginToImages(doc, origin) {
  * @param {DocumentFragment} clonedContents
  * @param {Object} [options]
  * @param {boolean} [options.setEditorTransferData=true]
+ * @param {string} [options.textContent]
  */
 
 export function fillHtmlTransferData(
     ev,
     transferObjectProperty,
     clonedContents,
-    { setEditorTransferData = true } = {}
+    { setEditorTransferData = true, textContent } = {}
 ) {
     const doc = ev.target.ownerDocument;
     const dataHtmlElement = doc.createElement("data");
     dataHtmlElement.append(clonedContents);
     prependOriginToImages(dataHtmlElement, doc.defaultView.location.origin);
     const htmlContent = dataHtmlElement.innerHTML;
+    if (textContent) {
+        ev[transferObjectProperty].setData("text/plain", textContent);
+    }
     ev[transferObjectProperty].setData("text/html", htmlContent);
     if (setEditorTransferData) {
         ev[transferObjectProperty].setData("application/vnd.odoo.odoo-editor", htmlContent);
