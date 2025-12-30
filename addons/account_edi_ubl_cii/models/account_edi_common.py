@@ -541,7 +541,7 @@ class AccountEdiCommon(models.AbstractModel):
             limit=1,
         ) if state_code and country else self.env['res.country.state']
         if not partner and name and vat:
-            partner_vals = {'name': name, 'email': email, 'phone': phone, 'is_company': True}
+            partner_vals = self._prepare_partner_values_to_create(name, email, phone)
             if peppol_eas and peppol_endpoint:
                 partner_vals.update({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
             partner = self.env['res.partner'].create(partner_vals)
@@ -552,15 +552,28 @@ class AccountEdiCommon(models.AbstractModel):
             logs.append(_("Could not retrieve partner with details: Name: %(name)s, Vat: %(vat)s, Phone: %(phone)s, Email: %(email)s",
                   name=name, vat=vat, phone=phone, email=email))
         if not partner.country_id and not partner.street and not partner.street2 and not partner.city and not partner.zip and not partner.state_id:
-            partner.write({
-                'country_id': country.id,
-                'street': postal_address.get('street'),
-                'street2': postal_address.get('additional_street'),
-                'city': postal_address.get('city'),
-                'zip': postal_address.get('zip'),
-                'state_id': state.id,
-            })
+            partner.write(self._prepare_partner_values_to_update(country, postal_address, state))
         return partner, logs
+
+    def _prepare_partner_values_to_create(self, name, email, phone):
+        """ Prepares the values for creating a new contact from the incoming Peppol bills or EDI flows (including manual uploading of vendor bills) """
+        return {
+            'name': name,
+            'email': email,
+            'phone': phone,
+            'is_company': True
+        }
+
+    def _prepare_partner_values_to_update(self, country, postal_address, state):
+        """ Prepares the values for updating an existing contact from the incoming Peppol bills or EDI flows (including manual uploading of vendor bills) """
+        return {
+            'country_id': country.id,
+            'street': postal_address.get('street'),
+            'street2': postal_address.get('additional_street'),
+            'city': postal_address.get('city'),
+            'zip': postal_address.get('zip'),
+            'state_id': state.id,
+        }
 
     def _import_partner_bank(self, invoice, bank_details):
         """ Retrieve the bank account, if no matching bank account is found, create it """
