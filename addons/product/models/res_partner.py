@@ -36,12 +36,9 @@ class ResPartner(models.Model):
             partner.property_product_pricelist = res.get(partner.id)
 
     def _inverse_product_pricelist(self):
+        defaults = self.env['product.pricelist']._get_country_pricelist_multi(self.country_id.ids)
         for partner in self:
-            pls = self.env['product.pricelist'].search(
-                [('country_group_ids.country_ids.code', '=', partner.country_id and partner.country_id.code or False)],
-                limit=1
-            )
-            default_for_country = pls
+            default_for_country = defaults.get(partner.country_id.id)
             actual = partner.specific_property_product_pricelist
             # update at each change country, and so erase old pricelist
             if partner.property_product_pricelist or (actual and default_for_country and default_for_country.id != actual.id):
