@@ -225,11 +225,8 @@ class HrEmployee(models.Model):
             "type": "ir.actions.act_window",
             "name": _("Attendances This Month"),
             "res_model": "hr.attendance",
-            "views": [[self.env.ref('hr_attendance.hr_attendance_employee_simple_tree_view').id, "list"]],
+            "views": [[self.env.ref('hr_attendance.hr_attendance_employee_calendar_view').id, "calendar"]],
             "context": {
-                "create": 0,
-                "search_default_check_in_filter": 1,
-                "employee_id": self.id,
                 "display_extra_hours": self.display_extra_hours,
             },
             "domain": [('employee_id', '=', self.id)]
@@ -330,3 +327,26 @@ class HrEmployee(models.Model):
                 full_schedule_by_employee['schedule'][employee] |= employee_attendances & interval
 
         return full_schedule_by_employee
+
+    def get_attendace_data_by_employee(self, date_start, date_stop):
+        attendance_data = {
+            employee_id: {
+                'worked_hours': 0,
+                'overtime_hours': 0,
+            }
+            for employee_id in self.ids
+        }
+        all_attendances = self.env['hr.attendance']._read_group(
+            domain=[
+                ('employee_id', 'in', self.ids),
+                ('check_in', '<', date_stop),
+                ('check_out', '>', date_start),
+            ],
+            groupby=['employee_id'],
+            aggregates=['worked_hours:sum', 'overtime_hours:sum'],
+        )
+        for employee, worked_hours, overtime_hours in all_attendances:
+            attendance_data[employee.id]['worked_hours'] += worked_hours
+            attendance_data[employee.id]['overtime_hours'] += overtime_hours
+
+        return attendance_data
