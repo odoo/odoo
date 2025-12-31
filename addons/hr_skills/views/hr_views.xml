@@ -8,13 +8,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="after">
                 <field name="employee_skill_ids"/>
-                <field name="resume_line_ids" string="Resume" filter_domain="
-                    ['|',
-                        ('version_ids.job_title', 'ilike', self),
-                        '|',
-                            ('resume_line_ids.name', 'ilike', self),
-                            ('resume_line_ids.description', 'ilike', self),
-                    ]"/>
             </xpath>
         </field>
     </record>
@@ -26,13 +19,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="after">
                 <field name="employee_skill_ids"/>
-                <field name="resume_line_ids" string="Resume" filter_domain="
-                    ['|',
-                        ('version_ids.job_title', 'ilike', self),
-                        '|',
-                            ('resume_line_ids.name', 'ilike', self),
-                            ('resume_line_ids.description', 'ilike', self),
-                    ]"/>
             </xpath>
         </field>
     </record>

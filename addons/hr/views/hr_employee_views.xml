@@ -7,8 +7,12 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <search string="Employees">
-                    <field name="name" string="Employee" filter_domain="['|', ('work_email', 'ilike', self), ('name', 'ilike', self)]"/>
-                    <field name="department_id"/>
+                    <field name="name" string="Employee"
+                           filter_domain="[
+                           '|',
+                                ('registration_number', 'ilike', self),
+                                    '|',
+                                        ('work_email', 'ilike', self), ('name', 'ilike', self)]"/>
                     <searchpanel view_types="kanban,list,graph,pivot,hierarchy">
                         <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
                         <field name="department_id" icon="fa-users" enable_counters="1"/>
@@ -16,11 +20,7 @@
                     <field name="parent_id" string="Manager" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="contract_date_start" groups="hr.group_hr_manager"/>
                     <field name="job_id"/>
-                    <field name="coach_id" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
-                    <field name="private_car_plate" groups="hr.group_hr_user"/>
-                    <field name="resource_calendar_id" domain="[('company_id', 'in', allowed_company_ids)]"/>
-                    <field name="company_id"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
@@ -33,11 +33,6 @@
                         domain="[('my_activity_date_deadline', '=', 'today')]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
-                    <separator/>
-                    <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
-                    <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>
-                    <separator/>
-                    <filter name="newly_hired" string="Newly Hired" domain="[('newly_hired', '=', True)]"/>
                     <separator/>
                     <filter string="In Contract" name="in_contract"
                             domain="[
@@ -72,7 +67,7 @@
                         <filter name="group_employee_type" string="Employee Type" domain="[]" context="{'group_by': 'employee_type'}"/>
                         <separator name="main_groupby_separator"/>
                         <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday_month'}" invisible="1"/>
-                        <filter name="group_start" string="Start Date" domain="[]" context="{'group_by': 'contract_date_start'}" groups="hr.group_hr_manager"/>
+                        <filter name="group_start" string="Contract Start" domain="[]" context="{'group_by': 'contract_date_start'}" groups="hr.group_hr_manager"/>
                         <separator name="secondary_groupby_separator"/>
                         <separator name="managers_groupby_separator"/>
                         <filter string="Properties" name="group_by_employee_properties" context="{'group_by': 'employee_properties'}"/>
@@ -501,30 +496,24 @@
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
                     </header>
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
-                    <field name="name" readonly="1"/>
+                    <field name="name" string="Name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1" optional="show"/>
                     <field name="work_email" optional="hide"/>
-                    <field name="hr_presence_state" string="Presence" optional="hide"/>
                     <field name="contract_date_start" optional="hide"/>
                     <field name="contract_date_end" optional="hide"/>
                     <field name="currency_id" column_invisible="1"/>
                     <field name="wage" widget="monetary" optional="hide"/>
                     <field name="employee_type" optional="hide"/>
                     <field name="contract_type_id" optional="hide"/>
-                    <field name="structure_type_id" optional="hide"/>
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
-                    <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
-                    <field name="activity_date_deadline" widget="remaining_days" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="department_id" optional="show"/>
-                    <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="show"/>
+                    <field name="job_title" string="Job" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="show"/>
                     <field name="parent_id" widget="many2one_avatar_employee" optional="show"/>
                     <field name="address_id" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="birthday" optional="hide"/>
                     <field name="work_location_id" optional="hide"/>
-                    <field name="coach_id" widget="many2one_avatar_employee" optional="hide"/>
-                    <field name="user_id" string="Related User" widget="many2one_avatar_user" optional="hide"/>
                     <field name="active" column_invisible="True"/>
                     <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                     <field name="country_id" optional="hide"/>
@@ -537,10 +526,10 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <list string="Employees" multi_edit="1" editable="bottom" duplicate="false" sample="1" js_class="hr_employee_list">
-                    <field name="name" readonly="1"/>
+                    <field name="name" string="Name" readonly="1"/>
                     <field name="company_id" optional="hide"/>
                     <field name="department_id" optional="hide"/>
-                    <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="hide"/>
+                    <field name="job_title" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="hide"/>
                     <field name="parent_id" widget="many2one_avatar_employee" optional="hide"/>
                     <field name="contract_date_start" optional="hide"/>
                     <field name="resource_calendar_id" optional="show"/>
