@@ -83,7 +83,7 @@ class HrLeave(models.Model):
 
                 overlappping |= self.env['hr.work.entry']._from_intervals(outside_intervals)
                 included |= previous_employee_work_entries - overlappping
-            overlappping.filtered(lambda entry: entry.state != 'validated').write({'leave_id': False})
+            overlappping.filtered(lambda entry: entry.state != 'validated').write({'leave_ids': False})
             included.filtered(lambda entry: entry.state != 'validated').write({'active': False})
 
     def write(self, vals):
@@ -152,7 +152,7 @@ class HrLeave(models.Model):
         """
         Called when the leave is refused or cancelled to regenerate the work entries properly for that period.
         """
-        work_entries = self.env['hr.work.entry'].sudo().search([('leave_id', 'in', self.ids)])
+        work_entries = self.env['hr.work.entry'].sudo().search([('leave_ids', 'in', self.ids)])
 
         work_entries.write({'active': False})
         # Re-create attendance work entries
@@ -168,8 +168,8 @@ class HrLeave(models.Model):
         super()._compute_can_cancel()
 
         cancellable_leaves = self.filtered('can_cancel')
-        work_entries = self.env['hr.work.entry'].sudo().search([('state', '=', 'validated'), ('leave_id', 'in', cancellable_leaves.ids)])
-        leave_ids = work_entries.mapped('leave_id').ids
+        work_entries = self.env['hr.work.entry'].sudo().search([('state', '=', 'validated'), ('leave_ids', 'in', cancellable_leaves.ids)])
+        leave_ids = work_entries.leave_ids.ids
 
         for leave in cancellable_leaves:
             leave.can_cancel = leave.id not in leave_ids

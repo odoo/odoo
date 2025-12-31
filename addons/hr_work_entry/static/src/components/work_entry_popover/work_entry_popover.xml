@@ -5,21 +5,25 @@
             <Record t-props="currentRecordProps" t-slot-scope="currentRecord">
                 <div class="popover-header d-flex justify-content-between py-0 pe-2"
                      t-attf-class="o_gantt_color_#{currentRecord.record.data.color}">
-                    <h4 class="py-1 m-0">
+                    <h4 class="py-1 m-0" name="work_entry_popover_header">
                         <t t-esc="getDurationStr(currentRecord.record.data.duration)"/>
                         -
                         <t t-esc="currentRecord.record.data.work_entry_type_id.display_name"/>
-                        <button class="btn btn-sm btn-link py-0 my-0 border-0"
-                                tabindex="-1"
-                                t-att-data-tooltip="getSource(currentRecord.record)?.data.display_name"
-                                t-if="getSource(currentRecord.record)?.onOpen"
-                                t-on-click.prevent.stop="onOpenSource.bind(this,currentRecord.record)">
-                            <i class="fa fa-link"/>
-                        </button>
-                        <sup t-else=""
+                        <sup t-if="getSource(currentRecord.record)"
                              tabindex="-1"
                              class="text-info p-1 cursor-default"
                              t-att-data-tooltip="getSource(currentRecord.record)?.data.display_name">?</sup>
+                        <span t-else="">
+                            <ViewButton className="'btn btn-sm btn-link py-0 my-0 border-0'"
+                                    tabindex="-1"
+                                    clickParams="{type: 'object', name: 'action_view_source'}"
+                                    record="currentRecord.record"
+                                    title="currentRecord.record.work_entry_source">
+                                <t t-set-slot="contents">
+                                    <i class="fa fa-link"/>
+                                </t>
+                            </ViewButton>
+                        </span>
                     </h4>
                     <span class="ms-4 mt-1 me-2 cursor-pointer" t-on-click.stop="props.close">
                         <i class="fa fa-close" />
