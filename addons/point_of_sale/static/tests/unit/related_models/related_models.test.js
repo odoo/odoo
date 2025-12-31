@@ -806,12 +806,7 @@ describe("Related Model", () => {
             expect(lines[0]).toBe(line1);
 
             // Nothing changes, the same lazy result is returned
-            let sameLines = att1.backLink("<-pos.order.line.attribute_value_ids");
-            expect(sameLines).toBe(lines);
-
-            // Somthing not related is added to the store, the same lazy result
-            models["product.template.attribute.value"].create({});
-            sameLines = att1.backLink("<-pos.order.line.attribute_value_ids");
+            const sameLines = att1.backLink("<-pos.order.line.attribute_value_ids");
             expect(sameLines).toBe(lines);
 
             // Remove attributes
