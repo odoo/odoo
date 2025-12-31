@@ -3,7 +3,7 @@
 import json
 from datetime import timedelta
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import urls
 
@@ -86,7 +86,7 @@ class PaymentProvider(models.Model):
         base_url = self.get_base_url()
         if 'localhost' in base_url:
             raise UserError(
-                "PayPal: " + _("You must have an HTTPS connection to generate a webhook.")
+                "PayPal: " + self.env._("You must have an HTTPS connection to generate a webhook.")
             )
         data = {
             'url': urls.urljoin(base_url, PaypalController._webhook_url),
@@ -175,7 +175,7 @@ class PaymentProvider(models.Model):
             )
             access_token = response_content['access_token']
             if not access_token:
-                raise ValidationError(_("Could not generate a new access token."))
+                raise ValidationError(self.env._("Could not generate a new access token."))
             self.write({
                 'paypal_access_token': access_token,
                 'paypal_access_token_expiry': fields.Datetime.now() + timedelta(

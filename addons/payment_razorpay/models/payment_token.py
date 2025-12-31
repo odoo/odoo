@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 from odoo.tools import float_round
 
 from odoo.addons.payment_razorpay import const
@@ -41,7 +41,7 @@ class PaymentToken(models.Model):
 
         # Return the warning message if the amount exceeds the maximum amount; else an empty string.
         if amount > mandate_max_amount:
-            return _(
+            return self.env._(
                 "You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with this"
                 " payment method",
                 currency_symbol=currency_id.symbol,

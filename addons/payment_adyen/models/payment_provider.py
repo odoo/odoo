@@ -3,7 +3,7 @@
 import json
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.tools.urls import urljoin
 
 from odoo.addons.payment import utils as payment_utils

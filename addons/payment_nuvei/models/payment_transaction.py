@@ -3,7 +3,7 @@
 from urllib.parse import urlencode
 from uuid import uuid4
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.tools import float_round
 
@@ -35,7 +35,7 @@ class PaymentTransaction(models.Model):
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         if self.payment_method_code in const.FULL_NAME_METHODS and not (first_name and last_name):
             raise UserError(
-                "Nuvei: " + _(
+                "Nuvei: " + self.env._(
                     "%(payment_method)s requires both a first and last name.",
                     payment_method=self.payment_method_id.name,
                 )
@@ -140,7 +140,7 @@ class PaymentTransaction(models.Model):
             return super()._apply_updates(payment_data)
 
         if not payment_data:
-            self._set_canceled(state_message=_("The customer left the payment page."))
+            self._set_canceled(state_message=self.env._("The customer left the payment page."))
             return
 
         # Update the provider reference.
@@ -156,7 +156,7 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         status = payment_data.get('Status') or payment_data.get('ppp_status')
         if not status:
-            self._set_error(_("Received data with missing payment state."))
+            self._set_error(self.env._("Received data with missing payment state."))
             return
         status = status.lower()
         if status in const.PAYMENT_STATUS_MAPPING['pending']:
@@ -165,7 +165,7 @@ class PaymentTransaction(models.Model):
             self._set_done()
         elif status in const.PAYMENT_STATUS_MAPPING['error']:
             failure_reason = payment_data.get('Reason') or payment_data.get('message')
-            self._set_error(_(
+            self._set_error(self.env._(
                 "An error occurred during the processing of your payment (%(reason)s). Please try"
                 " again.", reason=failure_reason,
             ))
@@ -176,7 +176,7 @@ class PaymentTransaction(models.Model):
                 "for transaction %(ref)s.",
                 {'status': status, 'reason': status_description, 'ref': self.reference},
             )
-            self._set_error(_(
+            self._set_error(self.env._(
                 "Received invalid transaction status %(status)s and reason '%(reason)s'.",
                 status=status, reason=status_description
             ))

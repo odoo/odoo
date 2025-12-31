@@ -1,14 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import psycopg2
 import re
 import unicodedata
 from datetime import datetime
-
-import psycopg2
 from dateutil import relativedelta
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import email_normalize_all, float_round
@@ -161,7 +160,7 @@ class PaymentTransaction(models.Model):
             lambda tx: tx.state == 'authorized' and not tx.provider_id.support_manual_capture
         )
         if illegal_authorize_state_txs:
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 "Transaction authorization is not supported by the following payment providers: %s",
                 ', '.join(set(illegal_authorize_state_txs.mapped('provider_id.name')))
             ))
@@ -170,7 +169,7 @@ class PaymentTransaction(models.Model):
     def _check_token_is_active(self):
         """ Check that the token used to create the transaction is active. """
         if self.token_id and not self.token_id.active:
-            raise ValidationError(_("Creating a transaction from an archived token is forbidden."))
+            raise ValidationError(self.env._("Creating a transaction from an archived token is forbidden."))
 
     # === CRUD METHODS === #
 
@@ -247,7 +246,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         action = {
-            'name': _("Refund"),
+            'name': self.env._("Refund"),
             'res_model': 'payment.transaction',
             'type': 'ir.actions.act_window',
         }
@@ -273,7 +272,7 @@ class PaymentTransaction(models.Model):
 
         if any(tx.provider_id.sudo().support_manual_capture == 'partial' for tx in self):
             return {
-                'name': _("Capture"),
+                'name': self.env._("Capture"),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'payment.capture.wizard',
@@ -297,7 +296,7 @@ class PaymentTransaction(models.Model):
         payment_utils.check_rights_on_recordset(self)
 
         if any(tx.state != 'authorized' for tx in self):
-            raise ValidationError(_("Only authorized transactions can be voided."))
+            raise ValidationError(self.env._("Only authorized transactions can be voided."))
 
         voided_txs_sudo = self.env['payment.transaction'].sudo()
         for tx in self:
@@ -318,7 +317,7 @@ class PaymentTransaction(models.Model):
         payment_utils.check_rights_on_recordset(self)
 
         if any(tx.state != 'done' for tx in self):
-            raise ValidationError(_("Only confirmed transactions can be refunded."))
+            raise ValidationError(self.env._("Only confirmed transactions can be refunded."))
 
         refunded_txs_sudo = self.env['payment.transaction'].sudo()
         for tx in self:
@@ -691,7 +690,7 @@ class PaymentTransaction(models.Model):
         :raise UserError: If the provider's state is `disabled`.
         """
         if self.provider_id.state == 'disabled':
-            raise UserError(_(
+            raise UserError(self.env._(
                 "Making a request to the provider is not possible because the provider is disabled."
             ))
 
@@ -813,7 +812,7 @@ class PaymentTransaction(models.Model):
         precision_digits = amount_data.get('precision_digits')
 
         if not amount or not currency_code:
-            error_message = _("The amount or currency is missing from the payment data.")
+            error_message = self.env._("The amount or currency is missing from the payment data.")
             self._set_error(error_message)
             return
 
@@ -825,14 +824,14 @@ class PaymentTransaction(models.Model):
             self.amount, precision_digits=precision_digits, rounding_method='DOWN'
         )
         if self.currency_id.compare_amounts(amount, tx_amount) != 0:
-            error_message = _(
+            error_message = self.env._(
                 "The amount from the payment data doesn't match the one from the transaction."
             )
             self._set_error(error_message)
             return
 
         if currency_code != self.currency_id.name:
-            error_message = _(
+            error_message = self.env._(
                 "The currency from the payment data doesn't match the one from the transaction."
             )
             self._set_error(error_message)
@@ -1197,12 +1196,12 @@ class PaymentTransaction(models.Model):
 
         # Choose the message based on the payment flow.
         if self.operation in {'online_redirect', 'online_direct', 'online_token', 'offline'}:
-            sent_message = _(
+            sent_message = self.env._(
                 "The transaction %(ref)s of %(formatted_amount)s has been initiated.",
                 ref=self._get_html_link(), formatted_amount=self.currency_id.format(self.amount)
             )
         elif self.operation == 'refund':
-            sent_message = _(
+            sent_message = self.env._(
                 "The refund %(ref)s of %(formatted_amount)s has been initiated.",
                 ref=self._get_html_link(), formatted_amount=self.currency_id.format(-self.amount)
             )
@@ -1231,27 +1230,27 @@ class PaymentTransaction(models.Model):
         }
         match self.state:
             case 'pending':
-                received_message = _(
+                received_message = self.env._(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s is pending.",
                     **msg_values,
                 )
             case 'authorized':
-                received_message = _(
+                received_message = self.env._(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s has been authorized.",
                     **msg_values,
                 )
             case 'done':
-                received_message = _(
+                received_message = self.env._(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s has been confirmed.",
                     **msg_values,
                 )
             case 'cancel':
-                received_message = _(
+                received_message = self.env._(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s has been canceled.",
                     **msg_values,
                 )
             case 'error':
-                received_message = _(
+                received_message = self.env._(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s encountered an error.",
                     **msg_values,
                 )

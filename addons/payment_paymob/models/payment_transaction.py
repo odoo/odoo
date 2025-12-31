@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
@@ -152,7 +152,7 @@ class PaymentTransaction(models.Model):
                 self.reference
             )
             message = payment_data.get('data.message')
-            self._set_error(_(
+            self._set_error(self.env._(
                 "An error occurred during the processing of your payment (%(msg)s). Please try"
                 " again.", msg=message
             ))

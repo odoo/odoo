@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-
 from werkzeug.urls import url_encode, url_parse
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.urls import urljoin as url_join
 
@@ -75,7 +74,7 @@ class PaymentProvider(models.Model):
         """
         for provider in self:
             if provider.state == 'test' and provider._stripe_has_connected_account():
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "You cannot set the provider to Test Mode while it is linked with your Stripe "
                     "account."
                 ))
@@ -106,7 +105,7 @@ class PaymentProvider(models.Model):
         """
         for provider in self:
             if provider.state == 'enabled' and provider._stripe_onboarding_is_ongoing():
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "You cannot set the provider state to Enabled until your onboarding to Stripe "
                     "is completed."
                 ))
@@ -158,12 +157,12 @@ class PaymentProvider(models.Model):
 
         if self.env.company.country_id.code not in const.SUPPORTED_COUNTRIES:
             raise RedirectWarning(
-                _(
+                self.env._(
                     "Stripe Connect is not available in your country, please use another payment"
                     " provider."
                 ),
                 self.env.ref('payment.action_payment_provider').id,
-                _("Other Payment Providers"),
+                self.env._("Other Payment Providers"),
             )
 
         if self.state == 'enabled':
@@ -206,10 +205,10 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         if self.stripe_webhook_secret:
-            message = _("Your Stripe Webhook is already set up.")
+            message = self.env._("Your Stripe Webhook is already set up.")
             notification_type = 'warning'
         elif not self.stripe_secret_key:
-            message = _("You cannot create a Stripe Webhook if your Stripe Secret Key is not set.")
+            message = self.env._("You cannot create a Stripe Webhook if your Stripe Secret Key is not set.")
             notification_type = 'danger'
         else:
             webhook = self._send_api_request(
@@ -220,7 +219,7 @@ class PaymentProvider(models.Model):
                 }
             )
             self.stripe_webhook_secret = webhook.get('secret')
-            message = _("You Stripe Webhook was successfully set up!")
+            message = self.env._("You Stripe Webhook was successfully set up!")
             notification_type = 'info'
 
         return {
@@ -255,13 +254,13 @@ class PaymentProvider(models.Model):
         if not response_content['livemode']:
             # If test keys are used to send the request, Stripe will respond with an HTTP 200 but
             # will not register the domain. Ask the user to use live credentials.
-            raise UserError(_("Please use live credentials to enable Apple Pay."))
+            raise UserError(self.env._("Please use live credentials to enable Apple Pay."))
 
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'message': _("Your web domain was successfully verified."),
+                'message': self.env._("Your web domain was successfully verified."),
                 'type': 'success',
             },
         }

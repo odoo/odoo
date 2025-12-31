@@ -2,7 +2,7 @@
 
 from werkzeug.urls import url_encode
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
@@ -260,7 +260,7 @@ class PaymentTransaction(models.Model):
         status = payment_data.get('status')
         has_token_data = 'token' in payment_method_data
         if not status:
-            self._set_error(_("Received data with missing payment state."))
+            self._set_error(self.env._("Received data with missing payment state."))
         elif status in const.PAYMENT_STATUS_MAPPING['pending']:
             if status == 'AUTHORIZATION_REQUESTED' and self.operation in ('online_token', 'offline'):
                 self._set_error(status)
@@ -277,12 +277,12 @@ class PaymentTransaction(models.Model):
             if errors := payment_data.get('statusOutput', {}).get('errors'):
                 error_code = errors[0].get('errorCode')
             if status in const.PAYMENT_STATUS_MAPPING['cancel']:
-                self._set_canceled(_(
+                self._set_canceled(self.env._(
                     "Transaction cancelled with error code %(error_code)s.",
                     error_code=error_code,
                 ))
             elif status in const.PAYMENT_STATUS_MAPPING['declined']:
-                self._set_error(_(
+                self._set_error(self.env._(
                     "Transaction declined with error code %(error_code)s.",
                     error_code=error_code,
                 ))
@@ -292,7 +292,7 @@ class PaymentTransaction(models.Model):
                     "reference %(ref)s.",
                     {'status': status, 'ref': self.reference},
                 )
-                self._set_error(_(
+                self._set_error(self.env._(
                     "Received invalid transaction status %(status)s with error code "
                     "%(error_code)s.",
                     status=status,
