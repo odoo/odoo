@@ -1,3 +1,13 @@
+/**
+ * @typedef DependencyInManifest
+ * ⚠️ Each dependency of this file in `mail` must be explicitly added in
+ * `web.assets_frontend` in the manifest. This error is not caught by the
+ * standard runbot, only during staging or nightly. The missing dependency might
+ * added by livechat so it only happens when frontend modules are installed and
+ * tested while livechat is not installed.
+ */
+import { getInnerHtml, getOuterHtml } from "@mail/utils/common/html";
+
 import { htmlEscape, markup } from "@odoo/owl";
 
 import { router } from "@web/core/browser/router";
@@ -141,8 +151,7 @@ function linkify(text) {
             });
             link.classList.add("o_message_redirect");
         }
-        // markup: outerHTML is safe when used as a node
-        result = htmlJoin([result, markup(link.outerHTML)]);
+        result = htmlJoin([result, getOuterHtml(link)]);
         curIndex = match.index + match[0].length;
     }
     return htmlJoin([result, text.slice(curIndex)]);
@@ -168,10 +177,10 @@ export function addLink(node, transformChildren) {
         return node.textContent;
     }
     if (node.tagName === "A") {
-        return markup(node.outerHTML);
+        return getOuterHtml(node);
     }
     transformChildren();
-    return markup(node.outerHTML);
+    return getOuterHtml(node);
 }
 
 function generateMentionElement({ className, id, model, text }) {
@@ -289,8 +298,7 @@ function generateMentionsLinks(
     }
     for (const mention of mentions) {
         const link = mention.link;
-        // markup: outerHTML is safe when used as a node
-        body = htmlReplace(body, mention.placeholder, markup(link.outerHTML));
+        body = htmlReplace(body, mention.placeholder, getOuterHtml(link));
     }
     return htmlEscape(body);
 }
@@ -336,7 +344,7 @@ export function getNonEditableMentions(body) {
     for (const mention of doc.body.querySelectorAll(".o-discuss-mention")) {
         mention.setAttribute("contenteditable", false);
     }
-    return markup(doc.body.innerHTML);
+    return getInnerHtml(doc.body);
 }
 
 /**
@@ -425,7 +433,7 @@ export function decorateEmojis(content) {
         );
         node.replaceWith(...span.childNodes);
     }
-    return markup(doc.body.innerHTML);
+    return getInnerHtml(doc.body);
 }
 
 /**
