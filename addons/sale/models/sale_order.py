@@ -406,7 +406,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.partner_shipping_id = order.partner_id.address_get(['delivery'])['delivery'] if order.partner_id else False
 
-    @api.depends('partner_shipping_id', 'partner_id', 'company_id')
+    @api.depends('partner_shipping_id', 'partner_invoice_id', 'partner_id', 'company_id')
     def _compute_fiscal_position_id(self):
         """
         Trigger the change of fiscal position when the shipping address is modified.
@@ -417,11 +417,17 @@ class SaleOrder(models.Model):
                 order.fiscal_position_id = False
                 continue
             fpos_id_before = order.fiscal_position_id.id
-            key = (order.company_id.id, order.partner_id.id, order.partner_shipping_id.id)
+            if order.partner_invoice_id.property_account_position_id:
+                partner_to_consider = order.partner_invoice_id
+            elif order.partner_id.property_account_position_id:
+                partner_to_consider = order.partner_id
+            else:
+                partner_to_consider = order.partner_invoice_id or order.partner_id
+            key = (order.company_id.id, partner_to_consider.id, order.partner_shipping_id.id)
             if key not in cache:
                 cache[key] = self.env['account.fiscal.position'].with_company(
                     order.company_id
-                )._get_fiscal_position(order.partner_id, order.partner_shipping_id).id
+                )._get_fiscal_position(partner_to_consider, order.partner_shipping_id).id
             if fpos_id_before != cache[key] and order.order_line:
                 order.show_update_fpos = True
             order.fiscal_position_id = cache[key]
