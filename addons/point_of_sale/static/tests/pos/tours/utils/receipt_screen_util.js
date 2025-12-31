@@ -215,3 +215,11 @@ export function containsOrderLine(name, quantity, price_unit, line_price) {
         },
     ];
 }
+export function comboOrderLineDoesntShowPricePerUnit(name, quantity, price_unit) {
+    return [
+        {
+            content: `Combo child order line with name: ${name}, quantity: ${quantity}, doesn't show price per unit`,
+            trigger: `.pos-receipt .orderline:has(.product-name:contains('${name}')):has(.qty:contains('${quantity}')):not(:has(.price-per-unit:contains('${price_unit}')))`,
+        },
+    ];
+}

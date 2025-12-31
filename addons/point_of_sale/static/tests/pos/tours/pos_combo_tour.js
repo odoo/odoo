@@ -114,6 +114,10 @@ registry.category("web_tour.tours").add("ProductComboPriceCheckTour", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
+            ReceiptScreen.comboOrderLineDoesntShowPricePerUnit("Desk Combo", "1", "0.00"),
+            ReceiptScreen.comboOrderLineDoesntShowPricePerUnit("Desk Organizer", "1", "4.45"),
+            ReceiptScreen.comboOrderLineDoesntShowPricePerUnit("Desk Pad", "1", "1.59"),
+            ReceiptScreen.comboOrderLineDoesntShowPricePerUnit("Whiteboard Pen", "1", "0.96"),
         ].flat(),
 });
 

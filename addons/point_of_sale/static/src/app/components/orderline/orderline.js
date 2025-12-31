@@ -120,8 +120,10 @@ export class Orderline extends Component {
         ].join(" ");
         const showPrice =
             !basic &&
-            line.getQuantityStr() != 1 &&
-            (mode === "receipt" || (line.price_type !== "original" && !line.combo_parent_id));
+            line.getQuantityStr().qtyStr != 1 &&
+            !line.combo_parent_id &&
+            line.currencyDisplayPriceUnit != 0.0 &&
+            (mode === "receipt" || line.price_type !== "original");
         const priceUnit = `${line.currencyDisplayPriceUnit} / ${
             line.product_id?.uom_id?.name || ""
         }`;
