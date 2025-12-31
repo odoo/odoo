@@ -105,6 +105,13 @@ class DynamicSnippetOptionPlugin extends Plugin {
         if (snippetEl.matches(DynamicSnippetOption.selector)) {
             await this.setOptionsDefaultValues(snippetEl, this.modelNameFilter);
         }
+        // TODO (adapt for master): Dynamic snippets should display the
+        // placeholder by default. Their visibility should then be controlled
+        // by the interaction behavior.
+        if (snippetEl.classList.contains("s_dynamic")) {
+            snippetEl.classList.remove("o_dynamic_snippet_empty");
+            snippetEl.classList.add("o_dynamic_snippet_loading");
+        }
     }
     async setOptionsDefaultValues(snippetEl, modelNameFilter, contextualFilterDomain = []) {
         await this.fetchDynamicFilters({
