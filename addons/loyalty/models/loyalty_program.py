@@ -529,12 +529,12 @@ class LoyaltyProgram(models.Model):
             return {
                 'gift_card': {
                     'title': _("Gift Card"),
-                    'description': _("Sell Gift Cards, that allows to purchase products"),
+                    'description': _("Sell gift cards that people can use to buy products."),
                     'icon': 'gift_card',
                 },
                 'ewallet': {
                     'title': _("eWallet"),
-                    'description': _("Fill in your eWallet, to pay future orders"),
+                    'description': _("Add money to your eWallet to pay for future orders."),
                     'icon': 'ewallet',
                 },
             }
