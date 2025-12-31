@@ -376,7 +376,9 @@ class Websocket:
         }
         if self.__notif_sock_r not in readables:
             # Send a random bit to mark the socket as readable.
-            self.__notif_sock_w.send(b'x')
+            # Ignore if the socket was closed in the meantime.
+            with suppress(OSError):
+                self.__notif_sock_w.send(b'x')
 
     # ------------------------------------------------------
     # PRIVATE METHODS
