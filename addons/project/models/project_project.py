@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import uuid
 
 from collections import defaultdict
 
@@ -1038,6 +1039,10 @@ class ProjectProject(models.Model):
             'view_mode': 'form',
             'res_id': self.id,
         }
+
+    def action_regenerate_access_token(self):
+        self.ensure_one()
+        self.write({'access_token': str(uuid.uuid4())})
 
     # ---------------------------------------------
     #  PROJECT UPDATES

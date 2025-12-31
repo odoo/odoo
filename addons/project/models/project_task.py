@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import uuid
 from collections import defaultdict
 from datetime import timedelta, datetime, time, UTC
 from random import shuffle
@@ -2031,6 +2032,10 @@ class ProjectTask(models.Model):
                 "target": "self",
             }
         return super()._get_access_action(access_uid, force_website)
+
+    def action_regenerate_access_token(self):
+        self.ensure_one()
+        self.write({'access_token': str(uuid.uuid4())})
 
     # ---------------------------------------------------
     # Rating business

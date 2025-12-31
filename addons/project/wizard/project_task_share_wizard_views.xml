@@ -7,6 +7,9 @@
         <field name="inherit_id" ref="portal.portal_share_wizard"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='share_link']" position="attributes">
+                <attribute name="widget">ProjectCopyClipboardRefreshLink</attribute>
+            </xpath>
             <xpath expr="//button[hasclass('btn-secondary')]" position="replace">
                 <button class="btn-secondary" special="cancel" data-hotkey="x" />
             </xpath>

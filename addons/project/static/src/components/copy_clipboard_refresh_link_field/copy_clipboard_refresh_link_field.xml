@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project.ProjectCopyClipboardRefreshLinkField" t-inherit="web.CopyClipboardField" t-inherit-mode="primary">
+        <xpath expr="//CopyButton" position="after">
+            <button t-if="this.props.record.data[this.props.name]" type="button" class="btn btn-link btn-link-inline"
+                    t-on-click.stop="onRefreshClick" title="Refresh link">
+                <span class="mx-1 fa fa-refresh"/>
+            </button>
+        </xpath>
+    </t>
+
+</templates>

@@ -9,6 +9,7 @@ from . import test_project_flow
 from . import test_project_mail_features
 from . import test_project_milestone
 from . import test_project_recurrence
+from . import test_project_share_link_refresh
 from . import test_project_sharing
 from . import test_project_sharing_portal_access
 from . import test_project_sharing_ui
