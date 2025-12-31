@@ -21,6 +21,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'remaining_hours',
     'subtask_effective_hours',
     'subtask_allocated_hours',
+    'show_portal_timesheets',
     'timesheet_ids',
     'total_hours_spent',
 }
@@ -53,6 +54,7 @@ class ProjectTask(models.Model):
         !!! Set the task a urgent priority\n
         Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !""",
     )
+    show_portal_timesheets = fields.Boolean(default=lambda self: self.env['account.analytic.line']._show_portal_timesheets(), store=False)
     @property
     def TASK_PORTAL_READABLE_FIELDS(self):
         return super().TASK_PORTAL_READABLE_FIELDS | PROJECT_TASK_READABLE_FIELDS
