@@ -20,17 +20,6 @@
         </field>
     </record>
 
-    <record id="view_employee_filter" model="ir.ui.view">
-        <field name="name">hr.employee.filter.inherit.hr.fleet</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_filter"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='private_car_plate']" position="replace">
-                <field name="license_plate"/>
-            </xpath>
-        </field>
-    </record>
-
     <!-- Employee Public -->
     <record id="hr_employee_public_view_form" model="ir.ui.view">
         <field name="name">hr.employee.public.form.inherit.hr.fleet</field>
