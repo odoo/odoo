@@ -6,8 +6,8 @@ import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { useSelection } from "@mail/utils/common/hooks";
+import { getOuterHtml } from "@mail/utils/common/html";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
-
 import { Wysiwyg } from "@html_editor/wysiwyg";
 
 import { rpc } from "@web/core/network/rpc";
@@ -612,7 +612,7 @@ export class Composer extends Component {
                 document.createElement("br"),
                 ...createElementWithContent("div", signature).childNodes
             );
-            signature = markup(divElement.outerHTML);
+            signature = getOuterHtml(divElement);
         }
         default_body = this.formatDefaultBodyForFullComposer(
             default_body,

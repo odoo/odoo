@@ -177,6 +177,7 @@ For more specific needs, you may also assign custom-defined actions
         ],
         "web.assets_frontend": [
             "mail/static/src/utils/common/format.js",
+            "mail/static/src/utils/common/html.js",
         ],
         'mail.assets_discuss_public_test_tours': [
             'web/static/lib/hoot-dom/**/*',
