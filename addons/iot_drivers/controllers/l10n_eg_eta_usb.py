@@ -2,7 +2,7 @@
 import base64
 import json
 import logging
-import PyKCS11
+import warnings
 
 from passlib.context import CryptContext
 
@@ -10,6 +10,13 @@ from odoo import http
 from odoo.tools.config import config
 from odoo.addons.iot_drivers.tools import route
 from odoo.addons.iot_drivers.tools.system import IOT_SYSTEM, IS_RPI, IS_WINDOWS
+
+warnings.filterwarnings(
+    "ignore",
+    message=".*SwigPy(Object|Packed).*",
+    category=DeprecationWarning,
+)
+import PyKCS11  # noqa: E402
 
 _logger = logging.getLogger(__name__)
 
