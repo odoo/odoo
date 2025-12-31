@@ -1,0 +1,27 @@
+<templates>
+
+    <div t-name="mail.ActivityTypeBadgeIconsField" t-inherit="mail.BadgeSelectionIconsField" t-inherit-mode="primary">
+        <xpath expr="//t[@t-foreach='options']" position="attributes">
+            <attribute name="t-foreach">visibleOptions</attribute>
+        </xpath>
+
+        <xpath expr="//div[@class='d-flex flex-wrap gap-1 mb-3']" position="inside">
+            <div class="dropdown" t-if="overflowOptions.length">
+                <button class="btn btn-secondary dropdown-toggle"
+                        data-bs-toggle="dropdown">
+                    Other
+                </button>
+                <div class="dropdown-menu">
+                    <t t-foreach="overflowOptions" t-as="option" t-key="option[0]">
+                        <button class="dropdown-item"
+                                t-on-click="() => this.onChange(option[0])">
+                            <span t-att-class="`fa ${option[2]} pe-1`"/>
+                            <span t-out="option[1]"/>
+                        </button>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </div>
+
+</templates>
