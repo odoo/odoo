@@ -43,9 +43,8 @@ class ImageToolOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(REPLACE_MEDIA, ReplaceMediaOption),
-            withSequence(IMAGE_TOOL, ImageToolOption),
+            ...withSequence(IMAGE_TOOL, ImageToolOption, VideoSizeOption),
             withSequence(ALIGNMENT_STYLE_PADDING, ImageAndFaOption),
-            withSequence(IMAGE_TOOL, VideoSizeOption),
         ],
         builder_actions: {
             CropImageAction,

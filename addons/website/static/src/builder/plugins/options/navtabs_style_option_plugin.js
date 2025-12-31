@@ -32,8 +32,7 @@ class NavTabsStyleOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
-            withSequence(SNIPPET_SPECIFIC_END, NavTabsStyleOption),
-            withSequence(SNIPPET_SPECIFIC_END, NavTabsImagesStyleOption),
+            ...withSequence(SNIPPET_SPECIFIC_END, NavTabsStyleOption, NavTabsImagesStyleOption),
         ],
         builder_actions: {
             SetStyleAction,

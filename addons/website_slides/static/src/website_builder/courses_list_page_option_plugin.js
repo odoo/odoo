@@ -1,5 +1,5 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import { after, DEFAULT } from "@html_builder/utils/option_sequence";
+import { DEFAULT } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
@@ -26,8 +26,7 @@ export class CoursesListPageOptionPlugin extends Plugin {
     static id = "coursesListPageOption";
     resources = {
         builder_options: [
-            withSequence(COURSES_LIST_PAGE, CoursesListPageOption),
-            withSequence(after(COURSES_LIST_PAGE), CoursesListAsidePageOption),
+            ...withSequence(COURSES_LIST_PAGE, CoursesListPageOption, CoursesListAsidePageOption),
         ],
     };
 }

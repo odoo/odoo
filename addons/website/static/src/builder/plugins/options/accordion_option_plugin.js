@@ -19,10 +19,7 @@ class accordionOptionPlugin extends Plugin {
     static id = "accordionOptionPlugin";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [
-            withSequence(SNIPPET_SPECIFIC, AccordionOption),
-            withSequence(SNIPPET_SPECIFIC, AccordionItemOption),
-        ],
+        builder_options: [...withSequence(SNIPPET_SPECIFIC, AccordionOption, AccordionItemOption)],
         so_content_addition_selector: [".s_accordion"],
         builder_actions: {
             DefineCustomIconAction,
