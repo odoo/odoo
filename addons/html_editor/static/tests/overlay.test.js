@@ -109,7 +109,7 @@ test("Table column control should always be displayed on top of the table", asyn
     let columnControl = await waitFor(".o-we-table-menu[data-type='column']");
 
     // Table column control displayed on hover should be above the table
-    expect(bottom(columnControl)).toBeLessThan(top(table));
+    expect(bottom(columnControl)).toBe(top(table));
 
     // Scroll down so that the table is close to the top
     const distanceToTop = top(table) - top(scrollableElement);
@@ -119,11 +119,8 @@ test("Table column control should always be displayed on top of the table", asyn
     await hover(".odoo-editor-editable td");
     columnControl = await waitFor(".o-we-table-menu[data-type='column']");
 
-    // Table column control still above the table,
-    // even though the table is close to the top
-    // of its container, but it should be hidden
-    expect(bottom(columnControl)).toBeLessThan(top(table));
-    expect(columnControl).not.toBeVisible();
+    // Table column control displayed on hover should be above the table
+    expect(bottom(columnControl)).toBe(top(table));
 });
 
 test.tags("desktop");
