@@ -133,7 +133,7 @@ export class ProfileDialog extends Component {
             }
             this.props.close();
         } catch (e) {
-            const msg = e?.message || _t("Update failed.");
+            const msg = e?.data?.message || e?.message || _t("Update failed.");
             this.env.services.notification.add(msg, { type: "danger" });
         } finally {
             this.state.isProcessing = false;
