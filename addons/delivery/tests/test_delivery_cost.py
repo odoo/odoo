@@ -597,4 +597,5 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
         # check delivery price was properly converted
         delivery_sol = so.order_line[-1]
         self.assertEqual(delivery_sol.product_id, delivery.product_id)
-        self.assertEqual(delivery_sol.price_subtotal, 12.5)
+        # Price is delivery cost (7.5) + margin (10) converted to SO currency (divide by 2)
+        self.assertEqual(delivery_sol.price_subtotal, 8.75)

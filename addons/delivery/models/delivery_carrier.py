@@ -242,8 +242,9 @@ class DeliveryCarrier(models.Model):
         if self.delivery_type == 'fixed':
             return float(price)
         order = self.env.context.get('order', self.env['sale.order'])
+        price_in_sale_currency = self._compute_currency(order, price, 'company_to_pricelist')
         fixed_margin_in_sale_currency = self._compute_currency(order, self.fixed_margin, 'company_to_pricelist') if order else self.fixed_margin
-        return float(price) * (1.0 + self.margin) + fixed_margin_in_sale_currency
+        return float(price_in_sale_currency) * (1.0 + self.margin) + fixed_margin_in_sale_currency
 
     # -------------------------- #
     # API for external providers #
