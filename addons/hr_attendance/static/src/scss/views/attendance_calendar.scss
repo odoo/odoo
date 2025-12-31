@@ -1,0 +1,93 @@
+.o_attendance_calendar {
+    background-color: $o-view-background-color;
+    flex-grow: 1;
+}
+
+.o_attendance_calendar .o_attendance_info_bar {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: $o-webclient-background-color;
+    border-bottom: 1px solid $border-color;
+
+    .o_attendance_info_card {
+        flex: 1;
+        padding: 10px 0;
+        text-align: center;
+        border-right: 1px solid $border-color;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .o_attendance_info_label {
+        font-size: 15px;
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+    .o_attendance_info_value {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .o_attendance_info_number {
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .o_attendance_info_unit {
+        font-size: 16px;
+    }
+
+    .o_attendance_info_link {
+        cursor: pointer;
+    }
+}
+
+@media (max-width: map-get($grid-breakpoints, "md")) {
+    .o_attendance_calendar .o_attendance_info_bar {
+        .o_attendance_info_card {
+            padding: 8px 0;
+        }
+
+        .o_attendance_info_label {
+            font-size: 14px;
+        }
+
+        .o_attendance_info_number {
+            font-size: 20px;
+        }
+
+        .o_attendance_info_unit {
+            font-size: 12px;
+        }
+
+        .o_attendance_info_link {
+            font-size: 12px;
+        }
+    }
+}
+
+@media (max-width: map-get($grid-breakpoints, "sm")) {
+    .o_attendance_calendar .o_attendance_info_bar {
+        .o_attendance_info_label {
+            font-size: 12px;
+        }
+
+        .o_attendance_info_number {
+            font-size: 16px;
+        }
+
+        .o_attendance_info_unit {
+            font-size: 10px;
+        }
+
+        .o_attendance_info_link {
+            font-size: 8px;
+        }
+    }
+}

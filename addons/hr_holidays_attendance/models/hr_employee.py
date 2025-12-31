@@ -42,41 +42,11 @@ class HrEmployee(models.Model):
             diff_by_employee[employee] -= hours
         return diff_by_employee
 
-    def get_overtime_data_by_employee(self):
-        """
-        Provide a summary of an employee's overtime.
-        A compensable overtime is an overtime that can be cumulated to be used
-        as time off.
-        Extra hours and overtime is used interchangably.
-        """
-        # Make so that at least all employees are present in return value
-        overtime_data = {}
+    def get_attendace_data_by_employee(self, date_start, date_stop):
+        attendance_data = super().get_attendace_data_by_employee(date_start, date_stop)
         for employee_id in self.ids:
-            overtime_data[employee_id] = {
-                "compensable_overtime": 0,
-                "not_compensable_overtime": 0,
-                "unspent_compensable_overtime": 0,
-            }
-
+            attendance_data[employee_id]["unspent_compensable_overtime"] = 0
         unspent_overtime = self._get_deductible_employee_overtime()
         for employee in unspent_overtime:
-            overtime_data[employee.id]['unspent_compensable_overtime'] += max(
-                0, unspent_overtime[employee]
-            )
-
-        all_overtimes = self.env['hr.attendance.overtime.line']._read_group(
-            domain=[
-                ('employee_id', 'in', self.ids),
-            ],
-            groupby=["employee_id", "compensable_as_leave"],
-            aggregates=["duration:sum"],
-        )
-        for employee, is_compensable, amount in all_overtimes:
-            overtime_type = (
-                'compensable_overtime'
-                if is_compensable
-                else 'not_compensable_overtime'
-            )
-            overtime_data[employee.id][overtime_type] += amount
-
-        return overtime_data
+            attendance_data[employee.id]["unspent_compensable_overtime"] += max(0, unspent_overtime[employee])
+        return attendance_data

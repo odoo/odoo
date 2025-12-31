@@ -4,7 +4,7 @@ from datetime import datetime
 
 from odoo import Command
 from odoo.tests import new_test_user
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import HttpCase, TransactionCase, tagged
 
 from odoo.exceptions import ValidationError
 
@@ -12,7 +12,7 @@ from freezegun import freeze_time
 import time
 
 @tagged('post_install', '-at_install', 'holidays_attendance')
-class TestHolidaysOvertime(TransactionCase):
+class TestHolidaysOvertime(HttpCase, TransactionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -55,6 +55,7 @@ class TestHolidaysOvertime(TransactionCase):
             'overtime_deductible': True,
             'request_unit': 'day',
             'unit_of_measure': 'day',
+            'country_id': False,
         })
         cls.work_entry_type_employee_allocation = cls.env['hr.work.entry.type'].create({
             'name': 'Overtime Compensation Employee Allocation',
@@ -316,19 +317,21 @@ class TestHolidaysOvertime(TransactionCase):
         leave.with_user(self.user_manager).action_approve(check_state=False)
         self._check_deductible(8)
 
-    def test_get_overtime_data_by_employee(self):
+    def test_get_attendance_data_by_employee(self):
         # Even if employee has not overtime, it should still appear in return
         # value
-        expected_overtime_data = {
-            'compensable_overtime': 0,
-            'not_compensable_overtime': 0,
+        expected_initial_data = {
+            'worked_hours': 0,
+            'overtime_hours': 0,
             'unspent_compensable_overtime': 0,
         }
-        overtime_data = self.employee.get_overtime_data_by_employee()
+        initial_data = self.employee.get_attendace_data_by_employee(
+            datetime(2021, 1, 1, 0, 0), datetime(2021, 1, 31, 23, 59)
+        )
         self.assertEqual(
-            overtime_data[self.employee.id],
-            expected_overtime_data,
-            "get_overtime_data_by_employee() did not return an empty overtime_data",
+            initial_data[self.employee.id],
+            expected_initial_data,
+            "get_attendace_data_by_employee() did not return an empty overtime_data",
         )
 
         # These attendances will create some extra hours that is deductible as
@@ -372,7 +375,7 @@ class TestHolidaysOvertime(TransactionCase):
         self.employee.ruleset_id = not_compensable_ruleset
 
         # Creates extra hours, but won't be usable as time off
-        # Affects not_compensable_overtime's value.
+        # do not affect unspent_compensable_overtime's value.
         self.new_attendance(
             check_in=datetime(2021, 3, 3, 5), check_out=datetime(2021, 3, 3, 12)
         )
@@ -392,15 +395,47 @@ class TestHolidaysOvertime(TransactionCase):
             }
         )
         leave.with_user(self.user_manager).action_approve()
-
-        expected_overtime_data = {
-            'compensable_overtime': 24.0,
-            'not_compensable_overtime': 6.0,
-            'unspent_compensable_overtime': 16.0,
+        expected_final_data = {
+            'worked_hours': 27.0,  # 11 + 16 hours from Jan attendances
+            'overtime_hours': 19.0,  # 3 + 16 hours from Jan attendances
+            'unspent_compensable_overtime': 16.0,  # 3 + 16 + 5 - 8 hours from all attendances and leave
         }
-        overtime_data = self.employee.get_overtime_data_by_employee()
+        final_data = self.employee.get_attendace_data_by_employee(
+            datetime(2021, 1, 1, 0, 0), datetime(2021, 1, 31, 23, 59)
+        )
         self.assertEqual(
-            overtime_data[self.employee.id],
-            expected_overtime_data,
-            "get_overtime_data_by_employee() did not return the expected values",
+            final_data[self.employee.id],
+            expected_final_data,
+            "get_attendace_data_by_employee() did not return the expected values",
+        )
+
+    def test_request_extra_hours_leave_from_attendance(self):
+        # These attendances will create some extra hours that is deductible as time off
+        self.new_attendance(
+            check_in=datetime(2021, 1, 1, 8), check_out=datetime(2021, 1, 1, 12)
+        )
+        self.new_attendance(
+            check_in=datetime(2021, 1, 1, 13), check_out=datetime(2021, 1, 1, 20)
+        )
+        self.new_attendance(
+            check_in=datetime(2021, 1, 2, 4), check_out=datetime(2021, 1, 2, 20)
+        )
+        overtime_by_employee = self.employee._get_deductible_employee_overtime()
+        self.assertEqual(
+            overtime_by_employee[self.employee],
+            19.0,
+            "Employee should have 19 hours of deductible overtime before requesting leave",
+        )
+        # Enable overtime display
+        self.company.hr_attendance_display_overtime = True
+        self.start_tour(
+            "/odoo",
+            "request_overtime_leave_from_attendance_calendar",
+            login="user",
+        )
+        overtime_by_employee = self.employee._get_deductible_employee_overtime()
+        self.assertEqual(
+            overtime_by_employee[self.employee],
+            11.0,
+            "Employee should have 11 hours of deductible overtime after requesting leave",
         )

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays_attendance.A" t-inherit="hr_attendance.AttendanceCalendarOverview"
+        t-inherit-mode="extension">
+        <xpath expr="//div[@class='o_attendance_info_bar']" position="inside">
+            <div t-if="displayExtraHours" class="o_attendance_info_card">
+                <strong class="o_attendance_info_label">Left</strong>
+                <div class="o_attendance_info_value text-primary">
+                    <span class="o_attendance_info_number text-primary">
+                        <t t-out="floatTime(state.remainingExtraHours)"/>
+                    </span>
+                    <span class="o_attendance_info_unit">Hours</span>
+                </div>
+                <div t-if="state.remainingExtraHours > 0">
+                    <a class="o_attendance_info_link"
+                       t-on-click="newTimeOffRequest">
+                        NEW TIMEOFF REQUEST
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
