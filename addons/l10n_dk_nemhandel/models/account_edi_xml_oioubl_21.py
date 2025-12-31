@@ -198,8 +198,9 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
             ),
             'currencyID': vals['currency_name'],
         }
-        # PrepaidAmount must not be present if equal to 0 and is only filled with 0 in the parent method
-        document_node[monetary_total_tag]['cbc:PrepaidAmount'] = None
+        # PrepaidAmount must not be present if equal to 0
+        if document_node[monetary_total_tag].get('cbc:PrepaidAmount') and document_node[monetary_total_tag]['cbc:PrepaidAmount'].get('_text') == '0.00':
+            document_node[monetary_total_tag]['cbc:PrepaidAmount'] = None
 
     def _get_tax_category_node(self, vals):
         # EXTENDS account_edi_xml_ubl_20
