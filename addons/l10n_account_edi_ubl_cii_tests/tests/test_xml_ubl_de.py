@@ -309,6 +309,8 @@ class TestUBLDE(TestUBLCommon):
         self.assertTrue(created_bill)
 
     def test_leitweg_id(self):
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+
         partner = self.partner_2
         partner.write({
             'peppol_eas': '0204',

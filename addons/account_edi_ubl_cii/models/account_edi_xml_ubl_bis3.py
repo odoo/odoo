@@ -564,6 +564,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 }
             }
 
+        # For B2G transactions in Germany: set the buyer_reference to the Leitweg-ID (code 0204)
+        if vals['customer'].peppol_eas == "0204":
+            document_node.update({
+                'cbc:BuyerReference': {'_text': vals['customer'].peppol_endpoint},
+            })
+
     def _add_invoice_delivery_nodes(self, document_node, vals):
         """ [BR-IC-12]-In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
         "Intra-community supply" the Deliver to country code (BT-80) shall not be blank.
