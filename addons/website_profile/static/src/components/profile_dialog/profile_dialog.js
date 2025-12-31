@@ -127,11 +127,18 @@ export class ProfileDialog extends Component {
         if (this.profileImgData != null) {
             data.image_1920 = this.profileImgData;
         }
-        await rpc("/profile/user/save", data);
-        if (this.props.confirm) {
-            await this.props.confirm();
+        try {
+            await rpc("/profile/user/save", data);
+            if (this.props.confirm) {
+                await this.props.confirm();
+            }
+            this.props.close();
+        } catch (e) {
+            const msg = e?.data?.message || e?.message || _t("Update failed.");
+            this.env.services.notification.add(msg, { type: "danger" });
+        } finally {
+            this.state.isProcessing = false;
         }
-        this.props.close();
     }
 
     onUploadProfileImg(file) {
