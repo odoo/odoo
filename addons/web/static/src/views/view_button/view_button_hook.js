@@ -104,7 +104,10 @@ export function useViewButtons(ref, options = {}) {
                 }
                 await options.afterExecuteAction?.(clickParams);
                 if (closeDialog) {
-                    closeDialog();
+                    const closeParams = clickParams.special
+                        ? { special: clickParams.special }
+                        : undefined;
+                    closeDialog(closeParams);
                 }
                 if (error) {
                     return Promise.reject(error);
