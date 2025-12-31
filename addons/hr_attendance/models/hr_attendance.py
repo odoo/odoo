@@ -527,8 +527,11 @@ class HrAttendance(models.Model):
     def _read_group_employee_id(self, resources, domain):
         user_domain = Domain(self.env.context.get('user_domain') or Domain.TRUE)
         employee_domain = Domain('company_id', 'in', self.env.context.get('allowed_company_ids', []))
-        if not self.env.user.has_group('hr_attendance.group_hr_attendance_user'):
+        if self.env.user.has_group('hr_attendance.group_hr_attendance_officer') \
+            and not self.env.user.has_group('hr_attendance.group_hr_attendance_user'):
             employee_domain &= Domain('attendance_manager_id', '=', self.env.user.id)
+        elif not self.env.user.has_group('hr_attendance.group_hr_attendance_officer'):
+            employee_domain &= Domain('user_id', '=', self.env.user.id)  # user can only see his own attendances
         if user_domain.is_true():
             # Workaround to make it work only for list view.
             if 'gantt_start_date' in self.env.context:
