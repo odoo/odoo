@@ -414,11 +414,9 @@ class HrEmployee(models.Model):
         Return the version that should be used for the given date.
         If no valid version is found, we return the very first version of the employee.
         """
-        version = self.env['hr.version'].search([
-            ('employee_id', '=', self.id),
-            ('date_version', '<=', date)],
-            order='date_version desc', limit=1)
-        return version or self.version_ids[0]
+        self.ensure_one()
+        versions = self.version_ids.filtered_domain([('date_version', '<=', date)])
+        return max(versions, key=lambda v: v.date_version) if versions else self.version_ids[0]
 
     def create_version(self, values):
         self.ensure_one()
