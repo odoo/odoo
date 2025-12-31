@@ -30,13 +30,11 @@ test.skip("Form view not scrolled when switching record", async () => {
             display_name: "Partner 2",
         },
     ]);
-    const messages = [...Array(60).keys()].map((id) => {
-        return {
-            body: "not empty",
-            model: "res.partner",
-            res_id: id < 29 ? partnerId_1 : partnerId_2,
-        };
-    });
+    const messages = [...Array(60).keys()].map((id) => ({
+        body: "not empty",
+        model: "res.partner",
+        res_id: id < 29 ? partnerId_1 : partnerId_2,
+    }));
     pyEnv["mail.message"].create(messages);
     patchUiSize({ size: SIZES.LG });
     await start();
@@ -182,7 +180,7 @@ test("[TECHNICAL] unfolded ellipsis button should not fold on message click besi
     });
     expect(".o-mail-Message-body span").toHaveCount(0);
     await click(".o-mail-ellipsis");
-    expect(".o-mail-Message-body span").toHaveText('--\nSystem')
+    expect(".o-mail-Message-body span").toHaveText("--\nSystem");
     await click(".o-mail-Message");
     expect(".o-mail-Message-body span").toHaveCount(1);
 });
@@ -261,7 +259,7 @@ test("read more/less should appear only once for the signature", async () => {
     await contains(".o-mail-Chatter");
     await click(".o-mail-Chatter-sendMessage");
     await insertText(".o-mail-Composer-input", "Example Body");
-    await click(".o-mail-Composer-fullComposer");
+    await click("button[title='Open Full Composer']");
     await contains(".o-mail-Message-body", { text: "Example Body", count: 1 });
     expect(".o-mail-Message a:contains(Read More)").toHaveCount(1);
 });
