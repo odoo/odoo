@@ -796,7 +796,17 @@ class MailComposeMessage(models.TransientModel):
     def action_send_mail(self):
         """ Used for action button that do not accept arguments. """
         self._action_send_mail(auto_commit=False)
-        return {'type': 'ir.actions.act_window_close'}
+        res_ids = self._evaluate_res_ids()
+        record_name = False
+        if self.model and len(res_ids) == 1 and self.composition_mode == 'comment':
+            record_name = self.env[self.model].browse(res_ids[0]).display_name
+        return {
+            "type": "ir.actions.client",
+            "tag": "action_send_mail_callback",
+            "params": {
+                "record_name": record_name,
+            },
+        }
 
     def _action_send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related
