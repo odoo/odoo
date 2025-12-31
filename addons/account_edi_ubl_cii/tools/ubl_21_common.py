@@ -146,6 +146,7 @@ SupplierParty = {
     'cbc:AdditionalAccountID': {},
     'cac:Party': Party,
     'cac:AccountingContact': Contact,
+    'cac:SellerContact': Contact,
 }
 
 CustomerParty = {
