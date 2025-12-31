@@ -10,7 +10,7 @@ class AccountMove(models.Model):
         if (
             file_data['xml_tree'] is not None
             and (customization_id := file_data['xml_tree'].findtext('{*}CustomizationID'))
-            and 'OIOUBL-2' in customization_id
+            and customization_id == 'OIOUBL-2.01'
         ):
             return 'account.edi.xml.oioubl_201'
 
