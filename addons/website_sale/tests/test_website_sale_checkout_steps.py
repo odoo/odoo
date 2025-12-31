@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
@@ -84,3 +84,35 @@ class TestWebsiteSaleCheckoutSteps(WebsiteSaleCommon):
             if field.translate:
                 self.assertEqual(website_1_step_FR[fname], default_payment_step_FR[fname])
                 self.assertEqual(website_2_step_FR[fname], default_payment_step_FR[fname])
+
+
+@tagged('post_install', '-at_install')
+class TestWebsiteSaleCheckoutChangeAddress(HttpCase, WebsiteSaleCommon):
+
+    def setUp(cls):
+        super().setUp()
+        cls.user_admin = cls.env.ref('base.user_admin')
+        cls.partner_admin = cls.user_admin.partner_id
+        cls.partner_admin.write(cls.dummy_partner_address_values)
+        cls.au_country = cls.env.ref('base.au')
+
+    def test_checkout_change_address_then_select_delivery(self):
+        """Ensure checkout remains stable when switching addresses and selecting delivery method."""
+        self.free_delivery.country_ids = self.au_country
+        self.env['res.partner'].create({
+            'parent_id': self.partner_admin.id,
+            'type': 'delivery',
+            'name': 'Secondary Delivery Address',
+            'email': 'test@odoo.com',
+            'phone': 1234567890,
+            'street': 'MG Road',
+            'city': 'Bangalore',
+            'zip': '560001',
+            'country_id': self.au_country.id,
+            'state_id': self.env.ref('base.state_au_7').id,
+        })
+        self.start_tour(
+            "/shop",
+            "checkout_change_address_then_select_delivery",
+            login=self.user_admin.login,
+        )

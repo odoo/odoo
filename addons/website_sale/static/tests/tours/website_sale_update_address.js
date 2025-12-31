@@ -36,3 +36,45 @@ registry.category("web_tour.tours").add('update_billing_shipping_address', {
         },
     ],
 });
+
+registry.category("web_tour.tours").add("checkout_change_address_then_select_delivery", {
+    url: "/shop",
+    steps: () => [
+        ...tourUtils.addToCart({ productName: "Test Product", expectUnloadPage: true }),
+        tourUtils.goToCart({quantity: 1}),
+        tourUtils.goToCheckout(),
+        {
+            content: "Select the US address (no delivery available)",
+            trigger: '.o_address_kanban_card address:contains("United State")',
+            run: "click",
+        },
+        {
+            content: "Confirm address selection",
+            trigger: 'a[name="website_sale_main_button"]',
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            content: "Go back to address step",
+            trigger: 'a:has(span:contains("Back to address"))',
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            content: "Select the Australian delivery address",
+            trigger: '.o_address_kanban_card address:contains("Australia")',
+            run: "click",
+        },
+        {
+            content: "Select an available delivery method",
+            trigger: "li label:contains(Test carrier)",
+            run: "click",
+        },
+        {
+            content: "Click on Confirm button",
+            trigger: 'a[name="website_sale_main_button"]',
+            run: "click",
+            expectUnloadPage: true,
+        },
+    ],
+});
