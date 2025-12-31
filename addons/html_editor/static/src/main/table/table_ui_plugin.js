@@ -7,6 +7,7 @@ import { TableMenu } from "./table_menu";
 import { TablePicker } from "./table_picker";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { TableDragDrop } from "./table_drag_drop";
+import { registry } from "@web/core/registry";
 import { getRowIndex } from "@html_editor/utils/table";
 
 /**
@@ -68,6 +69,8 @@ export class TableUIPlugin extends Plugin {
         });
 
         this.activeTd = null;
+        this.columnMenuOverlayKey = "table-column-menu";
+        this.rowMenuOverlayKey = "table-row-menu";
 
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.colMenu = this.dependencies.overlay.createOverlay(TableMenu, {
@@ -88,8 +91,8 @@ export class TableUIPlugin extends Plugin {
         const closeMenus = () => {
             if (this.isMenuOpened) {
                 this.isMenuOpened = false;
-                this.colMenu.close();
-                this.rowMenu.close();
+                this.closeColumnMenu();
+                this.closeRowMenu();
             }
         };
         this.addDomListener(this.document, "scroll", closeMenus, true);
@@ -150,7 +153,7 @@ export class TableUIPlugin extends Plugin {
                 this.setActiveTd(target);
             }
         } else if (this.activeTd) {
-            const isOverlay = target.closest(".o-overlay-container");
+            const isOverlay = target.closest(".o-we-table-menu");
             if (isOverlay) {
                 return;
             }
@@ -161,12 +164,12 @@ export class TableUIPlugin extends Plugin {
         }
     }
 
-    createDropdownState(menuToClose) {
+    createDropdownState(closeMenu) {
         const dropdownState = reactive({
             isOpen: false,
             open: () => {
                 dropdownState.isOpen = true;
-                menuToClose.close();
+                closeMenu();
                 this.isMenuOpened = true;
             },
             close: () => {
@@ -177,10 +180,18 @@ export class TableUIPlugin extends Plugin {
         return dropdownState;
     }
 
+    closeColumnMenu() {
+        registry.category(this.config.localOverlayContainers.key).remove(this.columnMenuOverlayKey);
+    }
+
+    closeRowMenu() {
+        registry.category(this.config.localOverlayContainers.key).remove(this.rowMenuOverlayKey);
+    }
+
     setActiveTd(td) {
         this.activeTd = td;
-        this.colMenu.close();
-        this.rowMenu.close();
+        this.closeColumnMenu();
+        this.closeRowMenu();
         if (!td) {
             return;
         }
@@ -212,14 +223,15 @@ export class TableUIPlugin extends Plugin {
         const grid = this.dependencies.table.buildTableGrid(closestElement(td, "table"));
         const rowIndex = getRowIndex(td.parentElement);
         if (grid[rowIndex][0] === td) {
-            this.rowMenu.open({
-                target: td,
+            registry.category(this.config.localOverlayContainers.key).add(this.rowMenuOverlayKey, {
+                Component: TableMenu,
                 props: {
                     type: "row",
-                    overlay: this.rowMenu,
                     tableDragDropOverlay: this.tableDragDropOverlay,
                     target: td,
-                    dropdownState: this.createDropdownState(this.colMenu),
+                    dropdownState: this.createDropdownState(this.closeColumnMenu.bind(this)),
+                    direction: this.config.direction || "ltr",
+                    close: () => this.closeRowMenu(),
                     document: this.document,
                     editable: this.editable,
                     ...tableMethods,
@@ -227,20 +239,22 @@ export class TableUIPlugin extends Plugin {
             });
         }
         if (td.parentElement.rowIndex === 0) {
-            this.colMenu.open({
-                target: td,
-                props: {
-                    type: "column",
-                    overlay: this.colMenu,
-                    target: td,
-                    tableDragDropOverlay: this.tableDragDropOverlay,
-                    dropdownState: this.createDropdownState(this.rowMenu),
-                    direction: this.config.direction || "ltr",
-                    document: this.document,
-                    editable: this.editable,
-                    ...tableMethods,
-                },
-            });
+            registry
+                .category(this.config.localOverlayContainers.key)
+                .add(this.columnMenuOverlayKey, {
+                    Component: TableMenu,
+                    props: {
+                        type: "column",
+                        target: td,
+                        tableDragDropOverlay: this.tableDragDropOverlay,
+                        dropdownState: this.createDropdownState(this.closeRowMenu.bind(this)),
+                        direction: this.config.direction || "ltr",
+                        document: this.document,
+                        editable: this.editable,
+                        close: () => this.closeColumnMenu(),
+                        ...tableMethods,
+                    },
+                });
         }
     }
 }
