@@ -681,10 +681,6 @@ export class Composer extends Component {
                 // args === { special: true } : click on 'discard'
                 const accidentalDiscard = args?.dismiss;
                 const isDiscard = accidentalDiscard || args?.special;
-                // otherwise message is posted (args === [undefined])
-                if (!isDiscard && this.props.composer.thread.model === "mail.box") {
-                    this.notifySendFromMailbox();
-                }
                 if (accidentalDiscard) {
                     this.fullComposerBus.trigger("ACCIDENTAL_DISCARD", {
                         onAccidentalDiscard: async (isEmpty) => {
@@ -737,9 +733,7 @@ export class Composer extends Component {
     }
 
     notifySendFromMailbox() {
-        this.env.services.notification.add(_t('Message posted on "%s"', this.thread.displayName), {
-            type: "info",
-        });
+        this.store.notifySendFromMailbox(this.thread.displayName);
     }
 
     isEventTrusted(ev) {

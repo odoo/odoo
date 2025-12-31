@@ -340,6 +340,51 @@ test("Can edit message comment in chatter (MacOS)", async () => {
     await canEditMessageCommentInChatter({ isMacOS: true });
 });
 
+test("Reply to inbox message with full composer shows a notification", async () => {
+    const pyEnv = await startServer();
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello World!",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: serverState.partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_type: "inbox",
+        is_read: true,
+        res_partner_id: serverState.partnerId,
+    });
+    mockService("action", {
+        doAction(action) {
+            if (action.res_model === "mail.compose.message") {
+                action.context.default_res_ids = JSON.stringify(action.context.default_res_ids);
+            }
+            return super.doAction(...arguments);
+        },
+    });
+    mockService("notification", {
+        add() {
+            expect.step("notification");
+            return super.add(...arguments);
+        },
+    });
+    await start();
+    await openDiscuss("mail.box_history");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:contains('Reply')");
+    await click(".o-mail-Composer button[title='More Actions']");
+    await click(".dropdown-item:contains('Open Full Composer')");
+    await click(".modal button:contains('Discard')"); // test no notification from discard (see waitForSteps)
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:contains('Reply')");
+    await click(".o-mail-Composer button[title='More Actions']");
+    await click(".dropdown-item:contains('Open Full Composer')");
+    await contains(".o_notification", { count: 0 }); // none from 'Discard'
+    await click(".modal button:contains('Send')");
+    await contains(`.o_notification:has(:text('Message posted on "Mitchell Admin"'))`); // one from 'Send'
+    await expect.waitForSteps(["notification"]); // only notif from 'Send', not 'Discard'
+});
+
 test("Basic list of edit message actions in chatter", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
