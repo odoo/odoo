@@ -177,9 +177,5 @@ class AccountMove(models.Model):
         self.ensure_one()
         payment_link_wizard = self.env['payment.link.wizard'].with_context(
             active_id=self.id, active_model=self._name
-        ).create({
-            'amount': self.amount_residual,
-            'res_model': self._name,
-            'res_id': self.id,
-        })
+        ).create({})
         return payment_link_wizard.link
