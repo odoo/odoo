@@ -121,7 +121,7 @@ export function searchCustomerValue(val, pressEnter = false) {
         {
             isActive: ["mobile"],
             content: `Click search field`,
-            trigger: `.fa-search.undefined`,
+            trigger: `.modal-dialog .fa-search.undefined`,
             run: `click`,
         },
         {
