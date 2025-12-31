@@ -326,3 +326,21 @@ class HrWorkEntry(models.Model):
         if len(self.env.companies.country_id.ids) > 1:
             return [('country_id', '=', False)]
         return ['|', ('country_id', '=', False), ('country_id', 'in', self.env.companies.country_id.ids)]
+
+    def _get_source_action_values(self):
+        return {
+            'name': self.env._('Calendar'),
+            'res_model': 'resource.calendar',
+            'res_id': self.resource_calendar_id.id,
+            'views': [(False, 'form')],
+        }
+
+    def action_view_source(self):
+        action = {
+            'type': 'ir.actions.act_window',
+            'target': 'current',
+        }
+        if self.is_manual:
+            raise UserError(self.env._("This work entry was created manually and has no source attendance."))
+        action.update(self._get_source_action_values())
+        return action

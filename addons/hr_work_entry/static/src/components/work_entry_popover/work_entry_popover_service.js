@@ -7,14 +7,6 @@ import { onPatched } from "@odoo/owl";
 
 export class WorkEntryPopoverService {
     static availableWorkEntrySources = {
-        resource_calendar_id: {
-            field: {
-                name: "resource_calendar_id",
-                type: "many2one",
-                relation: "resource.calendar",
-            },
-            hasLink: true,
-        },
         category: {
             field: {
                 name: "category",

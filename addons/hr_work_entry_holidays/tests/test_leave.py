@@ -39,7 +39,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         leave.action_approve()
         self.assertFalse(work_entry[:1].active, "It should have been archived")
 
-        leave_work_entry = self.env['hr.work.entry'].search([('leave_id', '=', leave.id)])
+        leave_work_entry = self.env['hr.work.entry'].search([('leave_ids', 'in', leave.id)])
         self.assertEqual(leave_work_entry.work_entry_type_id.category, 'absence', "It should have created an absence work entry")
         self.assertNotEqual(leave_work_entry[:1].state, 'conflict', "The leave work entry should not conflict")
 
@@ -55,10 +55,10 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         leave.action_approve()
         work_entries = self.env['hr.work.entry'].search([('employee_id', '=', self.richard_emp.id), ('date', '<=', end), ('date', '>=', start)])
         leave_work_entry = self.richard_emp.version_id.generate_work_entries(start.date(), end.date())
-        self.assertEqual(leave_work_entry[:1].leave_id, leave)
+        self.assertEqual(leave_work_entry[:1].leave_ids[0], leave)
         leave.action_refuse()
         work_entries = self.env['hr.work.entry'].search([('employee_id', '=', self.richard_emp.id), ('date', '>=', start), ('date', '<=', end)])
-        self.assertFalse(leave_work_entry[:1].filtered('leave_id').active)
+        self.assertFalse(leave_work_entry[:1].filtered('leave_ids').active)
         self.assertEqual(len(work_entries), 1, "Attendance work entry should have been re-created")
         self.assertTrue(all(work_entries.mapped(lambda w: w.state != 'conflict')), "Attendance work entries should not conflict")
 

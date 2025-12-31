@@ -61,7 +61,7 @@ class HrVersion(models.Model):
                     'company_id': contract.company_id.id,
                     'state': 'draft',
                     'version_id': contract.id,
-                    'leave_id': leave.id,
+                    'leave_ids': [leave.id],
                 } for interval in company_attendances if interval[0].date() not in employee_dates]
 
         return result

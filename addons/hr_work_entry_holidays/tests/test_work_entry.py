@@ -166,10 +166,10 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             ('date', '<=', date_to),
             ('state', '!=', 'validated')])
         leave_work_entry = work_entries.filtered(lambda we: we.work_entry_type_id in self.work_entry_type_leave)
-        self.assertEqual(leave_work_entry.leave_id.id, leave.id, "Leave work entry should have leave_id value")
+        self.assertEqual(leave_work_entry.leave_ids[0].id, leave.id, "Leave work entry should have leave_ids value")
 
         public_holiday_work_entry = work_entries.filtered(lambda we: we.work_entry_type_id == work_entry_type_holiday)
-        self.assertEqual(len(public_holiday_work_entry.leave_id), 0, "Public holiday work entry should not have leave_id")
+        self.assertEqual(len(public_holiday_work_entry.leave_ids), 0, "Public holiday work entry should not have leave_ids")
 
     def test_work_entries_overlap_work_leaves(self):
         remote = self.env['hr.leave'].create({

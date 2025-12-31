@@ -486,6 +486,20 @@ class HrVersion(models.Model):
         return self.env['hr.work.entry'].create(vals_list)
 
     @api.model
+    def _get_work_entry_source_fields(self):
+        """
+        Returns the list of work entry fields that should be merged/aggregated
+        when combining multiple work entries of the same type.
+
+        This is used in _generate_work_entries_postprocess to properly handle
+        source-specific fields (e.g., leave_ids, attendance_ids, planning_slot_ids)
+        when merging work entries.
+
+        :return: list of field names to aggregate
+        """
+        return []
+
+    @api.model
     def _generate_work_entries_postprocess_adapt_to_calendar(self, vals):
         if 'work_entry_type_id' not in vals:
             return False
@@ -609,6 +623,10 @@ class HrVersion(models.Model):
             )
             if key in merged_vals:
                 merged_vals[key]['duration'] += vals.get('duration', 0.0)
+                source_fields = self._get_work_entry_source_fields()
+                for field in source_fields:
+                    if field in merged_vals[key] and field in vals:
+                        merged_vals[key][field] += vals[field]
             else:
                 merged_vals[key] = vals.copy()
         return list(merged_vals.values())
