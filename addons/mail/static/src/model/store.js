@@ -229,6 +229,7 @@ export class Store extends Record {
                     const record = RHD_QUEUE.keys().next().value;
                     RHD_QUEUE.delete(record);
                     deletingRecordsByLocalId.delete(record.localId);
+                    record._.recycleRecordLists(record);
                 }
             }
             this._.UPDATE--;

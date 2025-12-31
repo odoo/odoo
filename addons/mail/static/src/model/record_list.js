@@ -269,6 +269,7 @@ export class RecordList extends Array {
 
     constructor() {
         super();
+        // console.count("record-list");
         const recordList = this;
         recordList._raw = recordList;
         const recordListProxyInternal = new Proxy(recordList, {
