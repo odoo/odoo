@@ -210,7 +210,8 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             store.add(discuss_channel, "_store_channel_fields")
             channel_data_join = store.get_result()
             channel_data_join["discuss.channel"][0]["livechat_outcome"] = "no_agent"
-            channel_data_join["discuss.channel"][0]["chatbot"]["currentStep"]["message"] = messages[1].id
+            channel_data_join["discuss.channel"][0]["chatbot_current_mail_message"] = messages[1].id
+            channel_data_join["discuss.channel"][0]["chatbot_current_step_id"] = self.step_dispatch.id
             channel_data_join["discuss.channel"][0]["chatbot"]["steps"][0]["message"] = messages[1].id
             channel_data_join["discuss.channel"][0]["livechat_operator_id"] = self.chatbot_script.operator_partner_id.id
             channel_data_join["discuss.channel"][0]["member_count"] = 3

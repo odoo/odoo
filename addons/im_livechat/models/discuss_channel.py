@@ -490,9 +490,15 @@ class DiscussChannel(models.Model):
             chatbot_data = {
                 "script": chatbot_script.id,
                 "steps": [current_step],
-                "currentStep": current_step,
             }
-            store.add(channel, {"chatbot": chatbot_data})
+            store.add(
+                channel,
+                lambda res: (
+                    res.attr("chatbot_current_mail_message", step_message.mail_message_id.id),
+                    res.attr("chatbot_current_step_id"),
+                    res.attr("chatbot", chatbot_data),
+                ),
+            )
 
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):

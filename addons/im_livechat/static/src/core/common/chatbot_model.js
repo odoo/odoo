@@ -17,6 +17,15 @@ export class Chatbot extends Record {
     isProcessingAnswer = false;
     script = fields.One("chatbot.script");
     currentStep = fields.One("ChatbotStep", {
+        compute() {
+            return this.channel_id?.chatbot_current_mail_message &&
+                this.channel_id.chatbot_current_step_id
+                ? {
+                      message: this.channel_id.chatbot_current_mail_message,
+                      scriptStep: this.channel_id.chatbot_current_step_id,
+                  }
+                : undefined;
+        },
         onUpdate() {
             if (this.currentStep?.operatorFound) {
                 this.forwarded = true;
@@ -116,16 +125,6 @@ export class Chatbot extends Record {
         if (!this.currentStep || this.currentStep.completed || !this.channel_id) {
             return;
         }
-        if (this.channel_id.isTransient) {
-            // Channel is not persisted thus messages do not exist on the server,
-            // create them now on the client side.
-            this.currentStep.message = this.store["mail.message"].insert({
-                id: this.store.getNextTemporaryId(),
-                author_id: this.script.operator_partner_id,
-                body: this.currentStep.scriptStep.message,
-                thread: this.channel_id.thread,
-            });
-        }
         if (this.currentStep.message) {
             this.channel_id.messages.add(this.currentStep.message);
         }
@@ -166,7 +165,21 @@ export class Chatbot extends Record {
             this.steps.push(dataRequest.chatbot_step);
         } else {
             const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
-            this.currentStep = this.steps[nextStepIndex];
+            const chatbotStep = this.steps[nextStepIndex];
+            if (this.channel_id.isTransient) {
+                // Channel is not persisted thus messages do not exist on the server,
+                // create them now on the client side.
+                chatbotStep.message = this.store["mail.message"].insert({
+                    id: this.store.getNextTemporaryId(),
+                    author_id: this.script.operator_partner_id,
+                    body: chatbotStep.scriptStep.message,
+                    thread: this.channel_id.thread,
+                });
+            }
+            this.channel_id.update({
+                chatbot_current_mail_message: chatbotStep.message,
+                chatbot_current_step_id: chatbotStep.scriptStep,
+            });
             this.currentStep.selectedAnswer = null;
         }
     }

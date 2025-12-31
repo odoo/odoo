@@ -31,6 +31,8 @@ declare module "models" {
     }
     export interface DiscussChannel {
         chatbot: Chatbot;
+        chatbot_current_mail_message: Message;
+        chatbot_current_step_id: ChatbotScriptStep;
         livechat_agent_history_ids: LivechatChannelMemberHistory[];
         livechat_channel_id: LivechatChannel;
         livechat_channel_member_history_ids: LivechatChannelMemberHistory[];
