@@ -442,7 +442,7 @@ class Base(models.AbstractModel):
             all_records = self.browse().union(*recordset_groups)
             record_mapped = dict(zip(
                 all_records._ids,
-                all_records.web_read(unfold_read_specification),
+                all_records.web_read(unfold_read_specification or {}),
                 strict=True,
             ))
 
