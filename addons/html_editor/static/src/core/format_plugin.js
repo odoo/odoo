@@ -29,7 +29,7 @@ import {
     findFurthest,
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
-import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../utils/position";
+import { boundariesIn, leftPos, rightPos } from "../utils/position";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
@@ -283,6 +283,7 @@ export class FormatPlugin extends Plugin {
             }
         }
 
+        const cursor = this.dependencies.selection.preserveSelection();
         const selectedTextNodes = /** @type { Text[] } **/ (
             this.dependencies.selection
                 .getTargetedNodes()
@@ -349,6 +350,7 @@ export class FormatPlugin extends Plugin {
                     parentNode.getAttributeNames().length === 1;
 
                 if (isUselessZws) {
+                    cursor.update(callbacksForCursorUpdate.unwrap(parentNode));
                     unwrapContents(parentNode);
                 } else {
                     const cursors = this.dependencies.selection.preserveSelection();
@@ -361,7 +363,7 @@ export class FormatPlugin extends Plugin {
                         currentNode,
                         parentNode
                     );
-                    removeFormat(newLastAncestorInlineFormat, formatSpec);
+                    removeFormat(newLastAncestorInlineFormat, formatSpec, cursor);
                     if (newLastAncestorInlineFormat.isConnected) {
                         inlineAncestors.push(newLastAncestorInlineFormat);
                         currentNode = newLastAncestorInlineFormat;
@@ -374,23 +376,32 @@ export class FormatPlugin extends Plugin {
             const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
             if (firstBlockOrClassHasFormat && !applyStyle) {
                 formatSpec.addNeutralStyle &&
-                    formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors));
+                    formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors, cursor));
             } else if (
                 (!firstBlockOrClassHasFormat || parentNode.nodeName === "LI") &&
                 applyStyle
             ) {
                 const tag = formatSpec.tagName && this.document.createElement(formatSpec.tagName);
                 if (tag) {
+                    cursor.update(callbacksForCursorUpdate.after(node, tag));
                     node.after(tag);
+                    cursor.update(callbacksForCursorUpdate.append(tag, node));
                     tag.append(node);
 
                     if (!formatSpec.isFormatted(tag, formatProps)) {
+                        cursor.remapNode(tag, node);
                         tag.after(node);
                         tag.remove();
-                        formatSpec.addStyle(getOrCreateSpan(node, inlineAncestors), formatProps);
+                        formatSpec.addStyle(
+                            getOrCreateSpan(node, inlineAncestors, cursor),
+                            formatProps
+                        );
                     }
                 } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
-                    formatSpec.addStyle(getOrCreateSpan(node, inlineAncestors), formatProps);
+                    formatSpec.addStyle(
+                        getOrCreateSpan(node, inlineAncestors, cursor),
+                        formatProps
+                    );
                 }
             }
         }
@@ -414,42 +425,22 @@ export class FormatPlugin extends Plugin {
             } else {
                 const span = this.document.createElement("span");
                 span.setAttribute("data-oe-zws-empty-inline", "");
+                cursor.update(callbacksForCursorUpdate.before(zws, span));
                 zws.before(span);
+                cursor.update(callbacksForCursorUpdate.append(span, zws));
                 span.append(zws);
             }
         }
-
+        cursor.restore();
         if (
             unformattedTextNodes.length === 1 &&
             unformattedTextNodes[0] &&
             unformattedTextNodes[0].textContent === "\u200B"
         ) {
             this.dependencies.selection.setCursorEnd(unformattedTextNodes[0]);
-        } else if (selectedTextNodes.length) {
-            const firstNode = selectedTextNodes[0];
-            const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
-            let newSelection;
-            if (selection.direction === DIRECTIONS.RIGHT) {
-                newSelection = {
-                    anchorNode: firstNode,
-                    anchorOffset: 0,
-                    focusNode: lastNode,
-                    focusOffset: lastNode.length,
-                };
-            } else {
-                newSelection = {
-                    anchorNode: lastNode,
-                    anchorOffset: lastNode.length,
-                    focusNode: firstNode,
-                    focusOffset: 0,
-                };
-            }
-            this.dependencies.selection.setSelection(newSelection, { normalize: false });
-            return true;
+            return !!tagetedFieldNodes.size;
         }
-        if (tagetedFieldNodes.size > 0) {
-            return true;
-        }
+        return true;
     }
 
     normalize(root) {
@@ -566,7 +557,7 @@ export class FormatPlugin extends Plugin {
             selection.anchorNode.childNodes[selection.anchorOffset]
         );
         restore();
-        const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(txt);
+        const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesIn(txt);
         this.dependencies.selection.setSelection(
             { anchorNode, anchorOffset, focusNode, focusOffset },
             { normalize: false }
@@ -642,7 +633,7 @@ export class FormatPlugin extends Plugin {
     }
 }
 
-function getOrCreateSpan(node, ancestors) {
+function getOrCreateSpan(node, ancestors, cursor) {
     const document = node.ownerDocument;
     const span = ancestors.find((element) => element.tagName === "SPAN" && element.isConnected);
     const lastInlineAncestor = ancestors.findLast(
@@ -655,21 +646,26 @@ function getOrCreateSpan(node, ancestors) {
         // Apply font span above current inline top ancestor so that
         // the font style applies to the other style tags as well.
         if (lastInlineAncestor) {
+            cursor?.update(callbacksForCursorUpdate.after(lastInlineAncestor, span));
             lastInlineAncestor.after(span);
+            cursor?.update(callbacksForCursorUpdate.append(span, lastInlineAncestor));
             span.append(lastInlineAncestor);
         } else {
+            cursor?.update(callbacksForCursorUpdate.after(node, span));
             node.after(span);
+            cursor?.update(callbacksForCursorUpdate.append(span, node));
             span.append(node);
         }
         return span;
     }
 }
-function removeFormat(node, formatSpec) {
+function removeFormat(node, formatSpec, cursor) {
     const document = node.ownerDocument;
     node = closestElement(node);
     if (formatSpec.hasStyle(node)) {
         formatSpec.removeStyle(node);
         if (["SPAN", "FONT"].includes(node.tagName) && !node.getAttributeNames().length) {
+            cursor?.update(callbacksForCursorUpdate.unwrap(node));
             return unwrapContents(node);
         }
     }
@@ -682,13 +678,16 @@ function removeFormat(node, formatSpec) {
             // Change tag name
             const newNode = document.createElement("span");
             while (node.firstChild) {
+                cursor?.update(callbacksForCursorUpdate.append(newNode, node.firstChild));
                 newNode.appendChild(node.firstChild);
             }
             for (let index = node.attributes.length - 1; index >= 0; --index) {
                 newNode.attributes.setNamedItem(node.attributes[index].cloneNode());
             }
+            cursor?.remapNode(node, newNode);
             node.parentNode.replaceChild(newNode, node);
         } else {
+            cursor?.update(callbacksForCursorUpdate.unwrap(node));
             unwrapContents(node);
         }
     }
