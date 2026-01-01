@@ -1,4 +1,5 @@
 import {
+    changeOption,
     changeOptionInPopover,
     clickOnSnippet,
     insertSnippet,
@@ -28,6 +29,20 @@ registerWebsitePreviewTour(
         {
             content: "Check if the cover image option is visible",
             trigger: "[data-container-title='Blog Post'] [data-label='Cover Image']",
+        },
+        // Check that the content width classes resets when the template is changed.
+        {
+            content: "Set Full-Width on the snippet",
+            ...changeOption("Blog Post", "[data-action-param='container-fluid']"),
+        },
+        ...changeOptionInPopover(
+            "Blog Post",
+            "Template",
+            "[data-action-param*='blog_post_single_circle']"
+        ),
+        {
+            content: "Check if the content width is not set as 'Full-width'",
+            trigger: ":iframe .s_dynamic_snippet_container.o_container_small:not(.container-fluid)",
         },
     ]
 );
