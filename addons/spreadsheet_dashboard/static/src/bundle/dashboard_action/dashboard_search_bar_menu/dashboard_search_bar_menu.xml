@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="spreadsheet_dashboard.FilterValuesList">
+    <t t-name="spreadsheet_dashboard.DashboardSearchBarMenu">
         <div class="d-flex flex-column o-filter-values">
             <div t-foreach="state.filtersAndValues"
                     t-as="item"
@@ -34,11 +34,6 @@
         </div>
         <div class="o-filter-values-footer d-flex mt-3 pt-3 border-top gap-1">
             <button class="btn btn-primary" t-on-click="onConfirm">Filter</button>
-            <button t-if="props.openFiltersEditor"
-                    class="btn btn-secondary o-edit-global-filters"
-                    t-on-click="props.openFiltersEditor">
-                Edit
-            </button>
             <button class="btn btn-secondary" t-on-click="onDiscard">Discard</button>
         </div>
     </t>
