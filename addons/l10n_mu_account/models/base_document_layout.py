@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import api, fields, models
+from odoo import api, models
 
 
 class BaseDocumentLayout(models.TransientModel):
@@ -13,5 +13,3 @@ class BaseDocumentLayout(models.TransientModel):
         if company.company_registry and company.country_code == 'MU':
             return company_details + Markup('<br/> %s') % company.company_registry
         return company_details
-
-    company_details = fields.Html(default=_default_company_details)
