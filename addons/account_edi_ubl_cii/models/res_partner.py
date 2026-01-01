@@ -243,6 +243,13 @@ class ResPartner(models.Model):
             value = self.vat
             if value.isalnum():
                 value = value.removeprefix(country_code)
+        elif (
+            country_code == 'LU'
+            and field == 'vat'
+            and value
+            and not value.startswith('LU')
+        ):
+            value = 'LU' + value
 
         return sanitize_peppol_endpoint(value, eas)
 
@@ -296,6 +303,8 @@ class ResPartner(models.Model):
             return _("The Peppol endpoint is not valid. "
                      "It should contain exactly 10 digits (Company Registry number)."
                      "The expected format is: 1234567890")
+        if eas == '9938' and not re.match(r"^LU\d{8}$", endpoint):
+            return self.env._("The Peppol endpoint is not valid. The expected format is: LU15027442")
         if PEPPOL_ENDPOINT_INVALIDCHARS_RE.search(endpoint) or not 1 <= len(endpoint) <= 50:
             return _("The Peppol endpoint (%s) is not valid. It should contain only letters and digit.", endpoint)
 
