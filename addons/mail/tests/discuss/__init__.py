@@ -9,6 +9,7 @@ from . import test_discuss_action
 from . import test_discuss_channel
 from . import test_discuss_channel_access
 from . import test_discuss_channel_as_guest
+from . import test_discuss_channel_auto_subscribe
 from . import test_discuss_channel_member
 from . import test_discuss_channel_readonly
 from . import test_discuss_mail_presence

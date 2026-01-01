@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 
 class DiscussChannel(models.Model):
@@ -10,7 +11,7 @@ class DiscussChannel(models.Model):
 
     subscription_department_ids = fields.Many2many(
         'hr.department', string='HR Departments',
-        help='Automatically subscribe members of those departments to the channel.')
+        help="Restrict auto-subscribe users based on their related employees' departments.")
 
     @api.constrains('subscription_department_ids')
     def _constraint_subscription_department_ids_channel(self):
@@ -18,15 +19,19 @@ class DiscussChannel(models.Model):
         if failing_channels:
             raise ValidationError(_("For %(channels)s, channel_type should be 'channel' to have the department auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
 
-    def _subscribe_users_automatically_get_members(self):
-        """ Auto-subscribe members of a department to a channel """
-        new_members = super()._subscribe_users_automatically_get_members()
-        for channel in self:
-            new_members[channel.id] = list(
-                set(new_members[channel.id]) |
-                set((channel.subscription_department_ids.member_ids.user_id.partner_id.filtered(lambda p: p.active) - channel.channel_partner_ids).ids)
+    def _get_extra_domain(self):
+        domain = super()._get_extra_domain()
+        # sudo: hr.department - ensure all departments and their members are accessible
+        departments_sudo = self.sudo().subscription_department_ids
+        if departments_sudo:
+            department_domain = Domain(
+                'id', 'in', departments_sudo.member_ids.user_id.ids,
             )
-        return new_members
+            if self.group_ids:
+                domain |= department_domain
+            else:
+                domain &= department_domain
+        return domain
 
     def write(self, vals):
         res = super().write(vals)

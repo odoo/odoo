@@ -5,10 +5,17 @@
         <field name="model">discuss.channel</field>
         <field name="inherit_id" ref="mail.discuss_channel_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='group_ids']" position="after">
+            <xpath expr="//field[@name='auto_subscribe_company_ids']" position="after">
                 <field name="subscription_department_ids" widget="many2many_tags"
-                    invisible="channel_type != 'channel'"
-                    string="Auto Subscribe Departments"/>
+                    placeholder="All departments" string="Departments" invisible="not auto_subscribe"/>
+            </xpath>
+            <xpath expr="//page[@name='privacy']" position="inside">
+                <div invisible="not auto_subscribe">
+                    <i class="fa fa-lightbulb-o"/>
+                    <span class="text-muted">
+                        Users and related employees in the selected groups or departments will be auto-subscribed to the channel.
+                    </span>
+                </div>
             </xpath>
         </field>
     </record>
