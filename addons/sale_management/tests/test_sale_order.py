@@ -562,3 +562,22 @@ class TestSaleOrder(SaleManagementCommon):
         sale_order.action_update_prices()
 
         self.assertEqual(sale_order.order_line[1].price_unit, pricelist_2.item_ids.fixed_price)
+
+    def test_show_update_pricelist_false_on_sale_order_open(self):
+        """Ensure the update pricelist button is disabled when opening a sale order
+        with a default quotation template applied.
+        """
+        quotation_template = self.env['sale.order.template'].create({
+            'name': 'Test Quotation Template',
+            'sale_order_template_line_ids': [
+                Command.create({
+                    'product_id': self.product.id,
+                }),
+            ],
+        })
+        self.env['ir.default'].set('sale.order', 'sale_order_template_id', quotation_template.id)
+        with Form(self.env['sale.order']) as sale_order_form:
+            self.assertTrue(sale_order_form.sale_order_template_id)
+            self.assertTrue(sale_order_form.order_line)
+            self.assertFalse(sale_order_form.show_update_pricelist)
+            sale_order_form.partner_id = self.partner
