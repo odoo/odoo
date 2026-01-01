@@ -110,7 +110,7 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
             valid_employees = self.employee_ids - self.validated_work_entry_employee_ids
             date_from = max(self.date_from, self.earliest_available_date) if self.earliest_available_date else self.date_from
             date_to = min(self.date_to, self.latest_available_date) if self.latest_available_date else self.date_to
-            valid_employees.generate_work_entries(date_from, date_to, True)
+            valid_employees.with_context(bulk=True).generate_work_entries(date_from, date_to, True)
         else:
             range_by_employee = defaultdict(list)
             slots.sort(key=lambda d: (d['employee_id'], d['date']))

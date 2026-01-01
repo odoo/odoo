@@ -463,6 +463,17 @@ class HrVersion(models.Model):
                         ('date', '<=', date_stop_work_entries.astimezone(tz).date()),
                         ('state', '!=', 'validated'),
                     ])
+                    if self.env.context.get('bulk'):
+                        local_start = date_start_work_entries.astimezone(tz)
+                        local_stop = date_stop_work_entries.astimezone(tz)
+                        current_date = local_start.date()
+                        end_date = local_stop.date()
+                        while current_date <= end_date:
+                            day_start = datetime.combine(current_date, datetime.min.time())
+                            day_end = datetime.combine(current_date, datetime.max.time())
+                            intervals_to_generate[day_start, day_end] |= version
+                            current_date += timedelta(days=1)
+                        continue
                     intervals_to_generate[date_start_work_entries, date_stop_work_entries] |= version
                     continue
 
