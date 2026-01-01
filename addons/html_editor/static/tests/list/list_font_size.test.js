@@ -77,7 +77,7 @@ test("should apply font-size to completely selected list items and paragraph tag
         contentBefore: "<ul><li>[abc</li><li>def</li></ul><p>ghi]</p>",
         stepFunction: (editor) =>
             execCommand(editor, "formatFontSizeClassName", { className: "h2-fs" }),
-        contentAfter: `<ul><li class="h2-fs">[abc</li><li class="h2-fs">def</li></ul><p><span class="h2-fs">ghi]</span></p>`,
+        contentAfter: `<ul><li class="h2-fs">[abc</li><li class="h2-fs">def</li></ul><p class="h2-fs">ghi]</p>`,
     });
 });
 
@@ -129,7 +129,7 @@ test("should carry font-size of list item to paragraph", async () => {
     await testEditor({
         contentBefore: '<ol><li style="font-size: 18px;">[]abc</li><li>def</li></ol>',
         stepFunction: toggleOrderedList,
-        contentAfter: '<p><span style="font-size: 18px;">[]abc</span></p><ol><li>def</li></ol>',
+        contentAfter: '<p style="font-size: 18px;">[]abc</p><ol><li>def</li></ol>',
     });
 });
 
@@ -138,7 +138,7 @@ test("should carry font-size of list item to paragraph (2)", async () => {
         contentBefore:
             '<ul><li class="h2-fs">abc</li><li class="h2-fs">[]def</li><li>ghi</li></ul>',
         stepFunction: toggleUnorderedList,
-        contentAfter: `<ul><li class="h2-fs">abc</li></ul><p><span class="h2-fs">[]def</span></p><ul><li>ghi</li></ul>`,
+        contentAfter: `<ul><li class="h2-fs">abc</li></ul><p class="h2-fs">[]def</p><ul><li>ghi</li></ul>`,
     });
 });
 
@@ -157,7 +157,7 @@ test("should carry font-size of list item to paragraph (4)", async () => {
             '<ol><li style="font-size: 18px;">abc<span style="font-size: 32px;">def</span>ghi[]</li></ol>',
         stepFunction: toggleOrderedList,
         contentAfter:
-            '<p><span style="font-size: 18px;">abc<span style="font-size: 32px;">def</span>ghi[]</span></p>',
+            '<p style="font-size: 18px;">abc<span style="font-size: 32px;">def</span>ghi[]</p>',
     });
 });
 
@@ -285,7 +285,7 @@ test("should remove font-size and its classes from partially selected list item 
         styleContent: "ol { font: 14px Roboto }",
         contentBefore: `<ol><li>a</li><li style="font-size: 56px;">b[c]d</li><li>e</li></ol>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
-        contentAfter: `<ol style="padding-inline-start: 60px;"><li>a</li><li style="font-size: 56px;">b<span class="o_default_font_size">[c]</span>d</li><li>e</li></ol>`,
+        contentAfter: `<ol><li>a</li><li style="font-size: 56px;">b<span class="o_default_font_size">[c]</span>d</li><li>e</li></ol>`,
     });
 });
 

@@ -120,8 +120,7 @@ test("should carry color of list item to paragraph", async () => {
     await testEditor({
         contentBefore: '<ol><li style="color: rgb(255, 0, 0);">[]abc</li><li>def</li></ol>',
         stepFunction: toggleOrderedList,
-        contentAfter:
-            '<p><font style="color: rgb(255, 0, 0);">[]abc</font></p><ol><li>def</li></ol>',
+        contentAfter: '<p style="color: rgb(255, 0, 0);">[]abc</p><ol><li>def</li></ol>',
     });
 });
 
@@ -131,7 +130,7 @@ test("should carry color of list item to paragraph (2)", async () => {
             '<ul><li style="color: rgb(255, 0, 0);">abc</li><li style="color: rgb(0, 0, 255);">[]def</li><li>ghi</li></ul>',
         stepFunction: toggleUnorderedList,
         contentAfter:
-            '<ul><li style="color: rgb(255, 0, 0);">abc</li></ul><p><font style="color: rgb(0, 0, 255);">[]def</font></p><ul><li>ghi</li></ul>',
+            '<ul><li style="color: rgb(255, 0, 0);">abc</li></ul><p style="color: rgb(0, 0, 255);">[]def</p><ul><li>ghi</li></ul>',
     });
 });
 
@@ -151,7 +150,7 @@ test("should carry color of list item to paragraph (4)", async () => {
             '<ol><li style="color: rgb(255, 0, 0);">abc<font style="color: rgb(0, 255, 0)">def</font>ghi[]</li></ol>',
         stepFunction: toggleOrderedList,
         contentAfter:
-            '<p><font style="color: rgb(255, 0, 0);">abc<font style="color: rgb(0, 255, 0)">def</font>ghi[]</font></p>',
+            '<p style="color: rgb(255, 0, 0);">abc<font style="color: rgb(0, 255, 0)">def</font>ghi[]</p>',
     });
 });
 
@@ -159,7 +158,7 @@ test("should carry class-defined color of list item to paragraph", async () => {
     await testEditor({
         contentBefore: '<ol><li class="text-o-color-1">[]abc</li><li>def</li></ol>',
         stepFunction: toggleOrderedList,
-        contentAfter: '<p><font class="text-o-color-1">[]abc</font></p><ol><li>def</li></ol>',
+        contentAfter: '<p class="text-o-color-1">[]abc</p><ol><li>def</li></ol>',
     });
 });
 

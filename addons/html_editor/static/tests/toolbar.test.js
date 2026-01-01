@@ -178,7 +178,7 @@ test("toolbar works: can format bold", async () => {
 
     // click on toggle bold
     await contains(".btn[name='bold']").click();
-    expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
+    expect(getContent(el)).toBe('<p style="font-weight: bolder;">[test]</p>');
 });
 
 test.tags("iframe");
@@ -194,7 +194,7 @@ test("toolbar in an iframe works: can format bold", async () => {
 
     // click on toggle bold
     await contains(".btn[name='bold']").click();
-    expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
+    expect(getContent(el)).toBe('<p style="font-weight: bolder;">[test]</p>');
 });
 
 test("toolbar buttons react to selection change", async () => {
@@ -454,12 +454,12 @@ test("toolbar works: can select font size", async () => {
     expect(queryAllTexts(".o_font_size_selector_menu .dropdown-item")).toEqual([...sizes]);
     const h1Size = getFontSizeFromVar("h1-font-size").toString();
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
-    expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
+    expect(getContent(el)).toBe(`<p class="h1-fs">[test]</p>`);
     expect(inputEl).toHaveValue(h1Size);
     await contains(".o-we-toolbar [name='font_size'].dropdown-toggle").click();
     const oSmallSize = getFontSizeFromVar("small-font-size").toString();
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${oSmallSize}')`).click();
-    expect(getContent(el)).toBe(`<p><span class="o_small-fs">[test]</span></p>`);
+    expect(getContent(el)).toBe(`<p class="o_small-fs">[test]</p>`);
     expect(inputEl).toHaveValue(oSmallSize);
 });
 
@@ -536,7 +536,7 @@ test("should focus the editable area after selecting a font size item", async ()
     await contains(".o_font_size_selector_menu .dropdown-item:contains('21')").click();
     expect(editor.editable).toBeFocused();
     expect(inputEl).not.toBeFocused();
-    expect(getContent(el)).toBe(`<p><span class="h2-fs">[test]</span></p>`);
+    expect(getContent(el)).toBe(`<p class="h2-fs">[test]</p>`);
 });
 
 test.tags("mobile");
@@ -554,7 +554,7 @@ test("should focus the editable area after selecting a font size item on mobile"
     await contains(".o_font_size_selector_menu .dropdown-item:contains('21')").click();
     expect(editor.editable).toBeFocused();
     expect(inputEl).not.toBeFocused();
-    expect(getContent(el)).toBe(`<p><span class="h2-fs">[test]</span></p>`);
+    expect(getContent(el)).toBe(`<p class="h2-fs">[test]</p>`);
 });
 
 test.tags("desktop");
@@ -570,7 +570,7 @@ test("should not create empty extra nodes while changing format of link", async 
     await waitFor(".o_font_size_selector_menu .dropdown-item:contains('80')");
     await contains(".o_font_size_selector_menu .dropdown-item:contains('80')").click();
     expect(getContent(el)).toBe(
-        `<p><span class="display-1-fs">\ufeff<a href="http://test.com" class="o_link_in_selection">\ufeff[test.com]\ufeff</a>\ufeff</span></p>`
+        `<p class="display-1-fs">\ufeff<a href="http://test.com" class="o_link_in_selection">\ufeff[test.com]\ufeff</a>\ufeff</p>`
     );
 });
 
@@ -588,7 +588,7 @@ test("should not create empty extra nodes while changing format of link on mobil
     await waitFor(".o_font_size_selector_menu .dropdown-item:contains('80')");
     await contains(".o_font_size_selector_menu .dropdown-item:contains('80')").click();
     expect(getContent(el)).toBe(
-        `<p><span class="display-1-fs">\ufeff<a href="http://test.com" class="o_link_in_selection">\ufeff[test.com]\ufeff</a>\ufeff</span></p>`
+        `<p class="display-1-fs">\ufeff<a href="http://test.com" class="o_link_in_selection">\ufeff[test.com]\ufeff</a>\ufeff</p>`
     );
 });
 
@@ -614,8 +614,8 @@ test("toolbar works: display correct font size on select all", async () => {
     await animationFrame();
     const h1Size = getFontSizeFromVar("h1-font-size").toString();
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
-    expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
-    setContent(el, `<p><span class="h1-fs">te[]st</span></p>`);
+    expect(getContent(el)).toBe(`<p class="h1-fs">[test]</p>`);
+    setContent(el, `<p class="h1-fs">te[]st</p>`);
     await waitForNone(".o-we-toolbar");
     await press(["ctrl", "a"]); // Select all
     await waitFor(".o-we-toolbar");
@@ -646,7 +646,7 @@ test("toolbar works: displays correct font size on input", async () => {
     inputEl.blur();
     await animationFrame();
     // Responsive font-size: check for o_rfs class and clamp() value
-    const rfsSpan = el.querySelector("span.o_rfs");
+    const rfsSpan = el.querySelector("p.o_rfs");
     expect(rfsSpan !== null).toBe(true);
     expect(rfsSpan.style.fontSize.startsWith("clamp(")).toBe(true);
     await expectElementCount(".o-we-toolbar", 1);
@@ -1947,7 +1947,7 @@ test("toolbar update should be run only once", async () => {
     counter = 0;
     click(".o-we-toolbar .btn[name='bold']");
     await waitFor(".btn[name='bold'].active");
-    expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
+    expect(getContent(el)).toBe('<p style="font-weight: bolder;">[test]</p>');
     expect(counter).toBe(1);
 });
 

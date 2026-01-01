@@ -49,7 +49,7 @@ test("typing '1. ' should keep cursor inside formatting element when creating a 
         unformat(
             `<ol>
                 <li o-we-hint-text="List" class="o-we-hint">
-                    <strong><u data-oe-zws-empty-inline="">[]\u200b</u></strong>
+                    <strong><u data-oe-zws-empty-inline="">[]\u200b</u></strong><br>
                 </li>
             </ol>`
         )

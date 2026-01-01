@@ -532,7 +532,7 @@ describe("with selection collapsed", () => {
                     <li>[]<br></li>
                 </ul>`),
             stepFunction: (editor) => {
-                bold(editor); // produces a <strong> tag with zws inside
+                bold(editor);
                 deleteBackward(editor); // removes the marker
                 deleteBackward(editor); // outdents the list item
             },
@@ -540,7 +540,7 @@ describe("with selection collapsed", () => {
                 <ul>
                     <li>a</li>
                 </ul>
-                <p>[]<br></p>`),
+                <p style="font-weight: bolder;">[]<br></p>`),
         });
     });
     test("should correctly merge list items when outdenting nested list", async () => {

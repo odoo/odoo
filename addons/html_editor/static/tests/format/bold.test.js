@@ -39,7 +39,7 @@ test("should make two paragraphs bold", async () => {
     await testEditor({
         contentBefore: "<p>[abc</p><p>def]</p>",
         stepFunction: bold,
-        contentAfter: `<p><strong>[abc</strong></p><p><strong>def]</strong></p>`,
+        contentAfter: `<p style="font-weight: bolder;">[abc</p><p style="font-weight: bolder;">def]</p>`,
     });
 });
 
@@ -110,14 +110,14 @@ test("should make a whole heading not bold after a triple click (heading is cons
     });
     await tripleClick(el.querySelector("h1"));
     bold(editor);
-    expect(getContent(el)).toBe(`<h1><span style="font-weight: normal;">[ab]</span></h1><p>cd</p>`);
+    expect(getContent(el)).toBe(`<h1 style="font-weight: normal;">[ab]</h1><p>cd</p>`);
 });
 
 test("should make a selection starting with bold text fully bold", async () => {
     await testEditor({
         contentBefore: `<p><strong>[ab</strong></p><p>c]d</p>`,
         stepFunction: bold,
-        contentAfter: `<p><strong>[ab</strong></p><p><strong>c]</strong>d</p>`,
+        contentAfter: `<p style="font-weight: bolder;">[ab</p><p><strong>c]</strong>d</p>`,
     });
 });
 
@@ -125,7 +125,7 @@ test("should make a selection with bold text in the middle fully bold", async ()
     await testEditor({
         contentBefore: `<p>[a<strong>b</strong></p><p><strong>c</strong>d]e</p>`,
         stepFunction: bold,
-        contentAfter: `<p><strong>[ab</strong></p><p><strong>cd]</strong>e</p>`,
+        contentAfter: `<p style="font-weight: bolder;">[ab</p><p><strong>cd]</strong>e</p>`,
     });
 });
 
@@ -208,7 +208,7 @@ test("should not format non-editable text (bold)", async () => {
     await testEditor({
         contentBefore: '<p>[a</p><p contenteditable="false">b</p><p>c]</p>',
         stepFunction: bold,
-        contentAfter: `<p><strong>[a</strong></p><p contenteditable="false">b</p><p><strong>c]</strong></p>`,
+        contentAfter: `<p style="font-weight: bolder;">[a</p><p contenteditable="false">b</p><p style="font-weight: bolder;">c]</p>`,
     });
 });
 
@@ -240,9 +240,9 @@ test("should make a few characters bold inside table (bold)", async () => {
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
-                        <td class="o_selected_td"><p><strong>[abc</strong></p></td>
-                        <td class="o_selected_td"><p><strong>def</strong></p></td>
-                        <td class="o_selected_td"><p><strong>]<br></strong></p></td>
+                        <td class="o_selected_td"><p style="font-weight: bolder;">[abc</p></td>
+                        <td class="o_selected_td"><p style="font-weight: bolder;">def</p></td>
+                        <td class="o_selected_td"><p style="font-weight: bolder;">]<br></p></td>
                     </tr>
                     <tr>
                         <td><p><br></p></td>
@@ -268,8 +268,8 @@ test("should make two paragraphs (separated with whitespace) bold", async () => 
         `,
         stepFunction: bold,
         contentAfter: `
-            <p><strong>[abc</strong></p>
-            <p><strong>def]</strong></p>
+            <p style="font-weight: bolder;">[abc</p>
+            <p style="font-weight: bolder;">def]</p>
         `,
     });
 });
@@ -297,8 +297,8 @@ test("should make two paragraphs (separated with whitespace) bold, then not bold
         stepFunction: async (editor, { assertContentEquals }) => {
             bold(editor);
             assertContentEquals(`
-            <p><strong>[abc</strong></p>
-            <p><strong>def]</strong></p>
+            <p style="font-weight: bolder;">[abc</p>
+            <p style="font-weight: bolder;">def]</p>
         `);
             bold(editor);
         },
@@ -309,17 +309,14 @@ test("should make two paragraphs (separated with whitespace) bold, then not bold
     });
 });
 
-test("should insert a span zws when toggling a formatting command twice", () =>
+test("should remove bold format on formatting bold twice", () =>
     testEditor({
         contentBefore: `<p>[]<br></p>`,
         stepFunction: async (editor) => {
             bold(editor);
             bold(editor);
         },
-        // todo: It would be better to remove the zws entirely so that
-        // the P could have the "/" hint but that behavior might be
-        // complex with the current implementation.
-        contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><span data-oe-zws-empty-inline="">\u200B[]</span></p>`,
+        contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
     }));
 
 // This test uses execCommand to reproduce as closely as possible the browser's
@@ -469,20 +466,18 @@ test("should remove multiple formatted empty bold tag when changing selection", 
     expect(getContent(el)).toBe(`<p>a[]bcd</p>`);
 });
 
-test("should not remove empty bold tag in an empty block when changing selection", async () => {
+test("should not remove bold from an empty block when changing selection", async () => {
     const { editor, el } = await setupEditor("<p>abcd</p><p>[]<br></p>");
 
     bold(editor);
     await tick();
     expect(getContent(el)).toBe(
-        `<p>abcd</p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">\u200B[]</strong></p>`
+        `<p>abcd</p><p style="font-weight: bolder;" o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 
     await simulateArrowKeyPress(editor, "ArrowUp");
     await tick(); // await selectionchange
-    expect(getContent(el)).toBe(
-        `<p>[]abcd</p><p><strong data-oe-zws-empty-inline="">\u200B</strong></p>`
-    );
+    expect(getContent(el)).toBe(`<p>[]abcd</p><p style="font-weight: bolder;"><br></p>`);
 });
 
 test("should not add history step for bold on collapsed selection", async () => {
@@ -603,7 +598,7 @@ test("should toggle bold around non editable", async () => {
     const { el, editor } = await setupEditor(`<p>[a</p><p contenteditable="false">b</p><p>c]</p>`);
     bold(editor);
     expect(getContent(el)).toBe(
-        `<p><strong>[a</strong></p><p contenteditable="false">b</p><p><strong>c]</strong></p>`
+        `<p style="font-weight: bolder;">[a</p><p contenteditable="false">b</p><p style="font-weight: bolder;">c]</p>`
     );
     bold(editor);
     expect(getContent(el)).toBe(`<p>[a</p><p contenteditable="false">b</p><p>c]</p>`);
@@ -630,7 +625,7 @@ test("should toggle bold across nested spans", async () => {
     const { el, editor } = await setupEditor(`<p><span><span>[A</span> </span></p><p>B]</p>`);
     bold(editor);
     expect(getContent(el)).toBe(
-        `<p><span><span><strong>[A</strong></span> </span></p><p><strong>B]</strong></p>`
+        `<p style="font-weight: bolder;"><span><span>[A</span> </span></p><p style="font-weight: bolder;">B]</p>`
     );
     bold(editor);
     expect(getContent(el)).toBe(`<p><span><span>[A</span> </span></p><p>B]</p>`);

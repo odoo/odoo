@@ -35,7 +35,7 @@ test("should give two paragraphs a fontFamily", async () => {
     await testEditor({
         contentBefore: "<p>[abc</p><p>def]</p>",
         stepFunction: setFontFamily("testFont"),
-        contentAfter: `<p><span style="font-family: testFont;">[abc</span></p><p><span style="font-family: testFont;">def]</span></p>`,
+        contentAfter: `<p style="font-family: testFont;">[abc</p><p style="font-family: testFont;">def]</p>`,
     });
 });
 
