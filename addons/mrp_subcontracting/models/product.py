@@ -24,3 +24,9 @@ class ProductProduct(models.Model):
         if params and params.get('subcontractor_ids'):
             return super()._prepare_sellers(params=params).filtered(lambda s: s.partner_id in params.get('subcontractor_ids'))
         return super()._prepare_sellers(params=params)
+
+    def _get_domain_locations_new(self, location_ids):
+        if not self.env.context.get('location') and not self.env.context.get('warehouse'):
+            subcontracting_locations = self.env['stock.location'].search([('is_subcontracting_location', '=', True)])
+            set(location_ids).update(subcontracting_locations.ids)
+        return super()._get_domain_locations_new(location_ids)
