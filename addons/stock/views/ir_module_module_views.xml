@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock.module_tree" model="ir.ui.view">
+        <field name="name">ir.module.module.view.list.stock</field>
+        <field name="model">ir.module.module</field>
+        <field name="inherit_id" ref="base.module_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </field>
+            <field name="author" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </field>
+            <field name="website" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </field>
+            <field name="installed_version" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="stock.module_view_kanban" model="ir.ui.view">
+        <field name="name">ir.module.module.view.kanban.stock</field>
+        <field name="model">ir.module.module</field>
+        <field name="inherit_id" ref="base.module_view_kanban"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <a id="module_info" position="replace"/>
+        </field>
+    </record>
+
+    <record id="stock.view_module_filter" model="ir.ui.view">
+        <field name="name">ir.module.module.view.search.stock</field>
+        <field name="model">ir.module.module</field>
+        <field name="inherit_id" ref="base.view_module_filter"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//searchpanel" position="replace"/>
+        </field>
+    </record>
+
+</odoo>

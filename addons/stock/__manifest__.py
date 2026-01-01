@@ -88,6 +88,7 @@
         'views/stock_reference_views.xml',
         'views/uom_uom_views.xml',
         'views/digest_digest_views.xml',
+        'views/ir_module_module_views.xml',
     ],
     'application': True,
     'pre_init_hook': 'pre_init_hook',
