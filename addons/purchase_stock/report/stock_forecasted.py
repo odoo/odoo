@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
@@ -6,6 +5,11 @@ from odoo import models
 
 class StockForecasted_Product_Product(models.AbstractModel):
     _inherit = 'stock.forecasted_product_product'
+
+    def _get_report_data(self, product_template_ids=False, product_ids=False):
+        res = super()._get_report_data(product_template_ids, product_ids)
+        res['user_can_edit_pickings'] = res.get('user_can_edit_pickings') or self.env.user.has_group('purchase.group_purchase_user')
+        return res
 
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)

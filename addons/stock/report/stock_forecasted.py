@@ -168,7 +168,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
         res.update(self._get_report_header(product_template_ids, product_ids, wh_location_ids))
 
         res['lines'] = self._get_report_lines(product_template_ids, product_ids, wh_location_ids, wh_stock_location)
-        res['user_can_edit_pickings'] = self.env.user.has_group('stock.group_stock_user')
+        res['user_can_edit_pickings'] = self.env.user.has_group('stock.group_stock_manager')
         return res
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
