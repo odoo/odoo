@@ -13,24 +13,45 @@ class ResUsers(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         users = super().create(vals_list)
-        self.env["discuss.channel"].search([("group_ids", "in", users.all_group_ids.ids)])._subscribe_users_automatically()
+        users._auto_subscribe_channels()
         return users
 
     def write(self, vals):
         res = super().write(vals)
         if "active" in vals and not vals["active"]:
             self._unsubscribe_from_non_public_channels()
-        if vals.get("group_ids"):
-            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
-            user_group_ids = [command[1] for command in vals["group_ids"] if command[0] == 4]
-            user_group_ids += [id for command in vals["group_ids"] if command[0] == 6 for id in command[2]]
-            user_group_ids = self.env['res.groups'].browse(user_group_ids).all_implied_ids._ids
-            self.env["discuss.channel"].search([("group_ids", "in", user_group_ids)])._subscribe_users_automatically()
+        if vals.get("group_ids") or vals.get("company_id"):
+            self._auto_subscribe_channels()
         return res
 
     def unlink(self):
         self._unsubscribe_from_non_public_channels()
         return super().unlink()
+
+    def _auto_subscribe_channels(self):
+        users = self.filtered(lambda u: u.partner_id.active)
+        if not users:
+            return
+        channels = self.env["discuss.channel"].search([
+                ("auto_join", "=", True),
+                *users._get_auto_subscribe_domain(),
+            ])
+        for user in users:
+            filtered_channels = channels.filtered_domain([
+                *user._get_auto_subscribe_domain(),
+                ("id", "not in", user.partner_id.channel_ids.ids),
+                ("auto_joined_partner_ids", "not in", user.partner_id.id),
+            ])
+            members_to_create = dict.fromkeys(filtered_channels.ids, user.partner_id.ids)
+            if members_to_create:
+                filtered_channels._subscribe_users_automatically(members_to_create)
+
+    def _get_auto_subscribe_domain(self):
+        return [
+            ("group_public_id", "in", [False] + self.group_ids.all_implied_ids.ids),
+            ("company_ids", "in", [False] + self.sudo().company_ids.ids),
+            ("group_ids", "in", [False] + self.group_ids.all_implied_ids.ids),
+        ]
 
     def _unsubscribe_from_non_public_channels(self):
         """This method un-subscribes users from group restricted channels. Main purpose

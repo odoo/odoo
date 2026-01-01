@@ -34,6 +34,7 @@
 
         <!-- link group after creating the members to avoid autosubscribe too early -->
         <record model="discuss.channel" id="mail.channel_all_employees">
+            <field name="auto_join">True</field>
             <field name="group_ids" eval="[Command.link(ref('base.group_user'))]"/>
         </record>
 
@@ -45,6 +46,7 @@
 
         <!-- link group after creating the members to avoid autosubscribe too early -->
         <record model="discuss.channel" id="mail.channel_admin">
+            <field name="auto_join">True</field>
             <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
         </record>
     </data>
