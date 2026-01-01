@@ -66,7 +66,7 @@ EAS_MAPPING = {
     'SG': {'0195': 'l10n_sg_unique_entity_number'},
     'GB': {'9932': 'vat'},
     'GR': {'9933': 'vat'},
-    'HR': {'9934': 'vat'},
+    'HR': {'9934': 'vat', '0088': 'company_registry'},
     'HU': {'9910': 'l10n_hu_eu_vat'},
     'IE': {'9935': 'vat'},
     'IS': {'0196': 'vat'},
@@ -839,7 +839,7 @@ class AccountEdiCommon(models.AbstractModel):
                     return tax
         return self.env['account.tax']
 
-    def _retrieve_taxes(self, record, line_values, tax_type):
+    def _retrieve_taxes(self, record, line_values, tax_type, tax_exigibility=False):
         """
         Retrieve the taxes on the document line at import.
 
@@ -861,6 +861,17 @@ class AccountEdiCommon(models.AbstractModel):
             tax = self.env['account.tax']
             if hasattr(record, '_get_specific_tax'):
                 tax = record._get_specific_tax(line_values['name'], 'percent', amount, tax_type)
+            if tax_exigibility:
+                if not tax and tax_exigibility:
+                    tax = self.env['account.tax'].search(domain + [('price_include', '=', False), ('tax_exigibility', '=', tax_exigibility)], limit=1)
+                if not tax and tax_exigibility:
+                    tax = self.env['account.tax'].search(domain + [('price_include', '=', True), ('tax_exigibility', '=', tax_exigibility)], limit=1)
+                if not tax:
+                    logs.append(
+                        _("Tax with matching exigibility could not be retrieved: '%(exigibility)s' for line '%(line)s'.",
+                        exigibility=tax_exigibility,
+                        line=line_values['name']),
+                    )
             if not tax:
                 tax = self.env['account.tax'].search(domain + [('price_include', '=', False)], limit=1)
             if not tax:
