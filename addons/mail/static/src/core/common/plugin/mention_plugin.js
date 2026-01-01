@@ -93,7 +93,7 @@ export class MentionPlugin extends Plugin {
             // This will lead to issues where the mention cannot be deleted or edited properly.
             // In this case, we wrap the mention with a base container.
             if (el.parentElement === this.editable) {
-                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer("DIV");
                 baseContainer.appendChild(el.cloneNode(true));
                 this.editable.replaceChild(baseContainer, el);
                 this.dependencies.history.addStep();

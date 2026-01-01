@@ -1,7 +1,12 @@
 import {
+    insertText as htmlInsertText,
+    pasteHtml,
+} from "@html_editor/../tests/_helpers/user_actions";
+import {
     click,
     contains,
     defineMailModels,
+    focus,
     openDiscuss,
     start,
     startServer,
@@ -10,7 +15,7 @@ import {
 import { describe, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { getService, serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
 import { getOrigin } from "@web/core/utils/urls";
@@ -235,4 +240,71 @@ test("replying to a note restores focus on an already open composer", async () =
     await contains(".o-mail-Composer.o-focused", { count: 0 });
     await click(".o-mail-Message-actions [title='Reply']");
     await contains(".o-mail-Composer.o-focused");
+});
+
+test.tags("html composer");
+test("replying to a note preserves formatting", async () => {
+    const pyEnv = await startServer();
+    pyEnv["mail.message"].create([
+        {
+            author_id: pyEnv["res.partner"].create({ name: "Batman" }),
+            body: "I am Justice",
+            model: "res.partner",
+            res_id: serverState.partnerId,
+            subtype_id: pyEnv["mail.message.subtype"].search([
+                ["subtype_xmlid", "=", "mail.mt_note"],
+            ])[0],
+        },
+    ]);
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button.o-mail-Chatter-logNote");
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    pasteHtml(editor, "<strong>Strong Text</strong>");
+    await contains("strong:text(Strong Text)");
+    await click(".o-mail-Message:contains(I am Justice) [title='Reply']");
+    await contains(editor.editable, {
+        text: "@Batman\u00A0Strong Text",
+        contains: [
+            ["a.o_mail_redirect[contenteditable=false]:text(@Batman)"],
+            ["strong:text(Strong Text)"],
+        ],
+    });
+});
+
+test.tags("focus required", "html composer");
+test("replying to a note autofocus composer and adds space after mention", async () => {
+    const pyEnv = await startServer();
+    pyEnv["mail.message"].create([
+        {
+            author_id: pyEnv["res.partner"].create({ name: "Batman" }),
+            body: "I am Justice",
+            model: "res.partner",
+            res_id: serverState.partnerId,
+            subtype_id: pyEnv["mail.message.subtype"].search([
+                ["subtype_xmlid", "=", "mail.mt_note"],
+            ])[0],
+        },
+    ]);
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openFormView("res.partner", serverState.partnerId);
+    await click(".o-mail-Message:contains(I am Justice) [title='Reply']");
+    await contains(".o-mail-Composer.o-focused");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "Hello"); // Inserting text after mention as trailing spaces cannot be tested using contains
+    await contains(editor.editable, {
+        text: "@Batman\u00A0Hello",
+        contains: ["a.o_mail_redirect[contenteditable=false]:text(@Batman)"],
+    });
 });
