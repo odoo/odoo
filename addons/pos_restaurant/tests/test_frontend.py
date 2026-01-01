@@ -344,6 +344,10 @@ class TestFrontend(TestFrontendCommon):
     def test_pos_restaurant_course(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_pos_restaurant_course')
+        order = self.pos_config.current_session_id.order_ids
+        self.assertEqual(len(order), 1)
+        # Verify whether the two courses have different timestamps
+        self.assertNotEqual(order.course_ids[0].fired_date, order.course_ids[1].fired_date)
 
     def test_preparation_printer_content(self):
         self.preset_eat_in = self.env['pos.preset'].create({
