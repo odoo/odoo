@@ -91,7 +91,7 @@ test("should make two paragraphs strikeThrough", async () => {
     await testEditor({
         contentBefore: "<p>[abc</p><p>def]</p>",
         stepFunction: strikeThrough,
-        contentAfter: `<p><s>[abc</s></p><p><s>def]</s></p>`,
+        contentAfter: `<p style="text-decoration-line: line-through;">[abc</p><p style="text-decoration-line: line-through;">def]</p>`,
     });
 });
 
@@ -119,7 +119,7 @@ test("should make a whole heading strikeThrough after a triple click", async () 
             await tripleClick(editor.editable.querySelector("h1"));
             strikeThrough(editor);
         },
-        contentAfter: `<h1><s>[ab]</s></h1><p>cd</p>`,
+        contentAfter: `<h1 style="text-decoration-line: line-through;">[ab]</h1><p>cd</p>`,
     });
 });
 
@@ -135,7 +135,7 @@ test("should make a selection starting with strikeThrough text fully strikeThrou
     await testEditor({
         contentBefore: `<p><s>[ab</s></p><p>c]d</p>`,
         stepFunction: strikeThrough,
-        contentAfter: `<p><s>[ab</s></p><p><s>c]</s>d</p>`,
+        contentAfter: `<p style="text-decoration-line: line-through;">[ab</p><p><s>c]</s>d</p>`,
     });
 });
 
@@ -143,7 +143,7 @@ test("should make a selection with strikeThrough text in the middle fully strike
     await testEditor({
         contentBefore: `<p>[a<s>b</s></p><p><s>c</s>d]e</p>`,
         stepFunction: strikeThrough,
-        contentAfter: `<p><s>[ab</s></p><p><s>cd]</s>e</p>`,
+        contentAfter: `<p style="text-decoration-line: line-through;">[ab</p><p><s>cd]</s>e</p>`,
     });
 });
 
@@ -152,7 +152,7 @@ test("should make a selection ending with strikeThrough text fully strikeThrough
         // @phoenix content adapted to make it valid html
         contentBefore: `<p>[ab</p><p><s>c]d</s></p>`,
         stepFunction: strikeThrough,
-        contentAfter: `<p><s>[ab</s></p><p><s>c]d</s></p>`,
+        contentAfter: `<p style="text-decoration-line: line-through;">[ab</p><p><s>c]d</s></p>`,
     });
 });
 
@@ -205,7 +205,7 @@ test("should not format non-editable text (strikeThrough)", async () => {
     await testEditor({
         contentBefore: '<p>[a</p><p contenteditable="false">b</p><p>c]</p>',
         stepFunction: strikeThrough,
-        contentAfter: `<p><s>[a</s></p><p contenteditable="false">b</p><p><s>c]</s></p>`,
+        contentAfter: `<p style="text-decoration-line: line-through;">[a</p><p contenteditable="false">b</p><p style="text-decoration-line: line-through;">c]</p>`,
     });
 });
 
@@ -237,17 +237,17 @@ test("should make a few characters strikeThrough inside table (strikeThrough)", 
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
-                        <td class="o_selected_td"><p><s>[abc</s></p></td>
+                        <td class="o_selected_td"><p style="text-decoration-line: line-through;">[abc</p></td>
                         <td><p><br></p></td>
                         <td><p><br></p></td>
                     </tr>
                     <tr>
-                        <td class="o_selected_td"><p><s>def</s></p></td>
+                        <td class="o_selected_td"><p style="text-decoration-line: line-through;">def</p></td>
                         <td><p><br></p></td>
                         <td><p><br></p></td>
                     </tr>
                     <tr>
-                        <td class="o_selected_td"><p><s>]<br></s></p></td>
+                        <td class="o_selected_td"><p style="text-decoration-line: line-through;">]<br></p></td>
                         <td><p><br></p></td>
                         <td><p><br></p></td>
                     </tr>

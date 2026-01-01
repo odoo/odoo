@@ -218,7 +218,7 @@ describe("toolbar dropdowns", () => {
         click(".o-we-toolbar .btn[name='font_size_selector']");
         await focusAndClick(".dropdown-menu .dropdown-item");
         await animationFrame();
-        expect(p.firstChild).toHaveClass("test-font-size");
+        expect(p).toHaveClass("test-font-size");
     });
 
     test("font selector dropdown should not have normal as an option", async () => {

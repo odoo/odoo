@@ -131,9 +131,12 @@ test("edit a message styling", async () => {
     await press("Control+i");
     await click(".o-mail-Message button:text('save')");
     await contains(".o-mail-Message[data-persistent] strong:contains(Hello world)", { count: 0 });
-    await contains(".o-mail-Message[data-persistent] em:contains(Hello world)", {
-        count: 1,
-    });
+    await contains(
+        ".o-mail-Message[data-persistent] div.o-paragraph[style='font-style: italic;']:contains(Hello world)",
+        {
+            count: 1,
+        }
+    );
     await contains(".o-mail-Message-content:text('Hello world (edited)')");
 });
 

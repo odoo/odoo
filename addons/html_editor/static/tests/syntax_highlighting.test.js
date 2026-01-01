@@ -157,32 +157,32 @@ test("inserting an empty code block activates syntax highlighting plugin with an
     });
 });
 
-test("inserting a code block in an empty paragraph with a style placeholder activates syntax highlighting plugin with an empty textarea", async () => {
+test("inserting a code block in an empty styled paragraph activates syntax highlighting plugin with an empty textarea", async () => {
     await testEditorWithHighlightedContent({
         contentBefore: "<p><br>[]</p>",
         stepFunction: async (editor) => {
             await pressAndWait(["ctrl", "b"]);
             expect(getContent(editor.editable)).toBe(
-                `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`,
+                `<p style="font-weight: bolder;" o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 { message: "The style placeholder was inserted." }
             );
             splitBlock(editor);
             expect(getContent(editor.editable)).toBe(
-                `<p><strong data-oe-zws-empty-inline="">\u200B</strong></p>` +
-                    `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`,
+                `<p style="font-weight: bolder;"><br></p>` +
+                    `<p style="font-weight: bolder;" o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 { message: "The paragraph was split." }
             );
             await insertPre(editor);
         },
         contentAfterEdit: unformat(
-            `<p><strong data-oe-zws-empty-inline="">\u200B</strong></p>
+            `<p style="font-weight: bolder;"><br></p>
             ${highlightedPre({
                 value: "", // There should be no content (the zws is stripped)
                 textareaRange: 0,
             })}
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
-        contentAfter: `<p><br></p><pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
+        contentAfter: `<p style="font-weight: bolder;"><br></p><pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
     });
 });
 

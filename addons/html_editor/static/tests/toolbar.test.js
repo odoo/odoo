@@ -173,7 +173,7 @@ test("toolbar works: can format bold", async () => {
 
     // click on toggle bold
     await contains(".btn[name='bold']").click();
-    expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
+    expect(getContent(el)).toBe('<p style="font-weight: bolder;">[test]</p>');
 });
 
 test.tags("iframe");
@@ -189,7 +189,7 @@ test("toolbar in an iframe works: can format bold", async () => {
 
     // click on toggle bold
     await contains(".btn[name='bold']").click();
-    expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
+    expect(getContent(el)).toBe('<p style="font-weight: bolder;">[test]</p>');
 });
 
 test("toolbar buttons react to selection change", async () => {
@@ -449,12 +449,12 @@ test("toolbar works: can select font size", async () => {
     expect(queryAllTexts(".o_font_size_selector_menu .dropdown-item")).toEqual([...sizes]);
     const h1Size = getFontSizeFromVar("h1-font-size").toString();
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
-    expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
+    expect(getContent(el)).toBe(`<p class="h1-fs">[test]</p>`);
     expect(inputEl).toHaveValue(h1Size);
     await contains(".o-we-toolbar [name='font_size_selector'].dropdown-toggle").click();
     const oSmallSize = getFontSizeFromVar("small-font-size").toString();
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${oSmallSize}')`).click();
-    expect(getContent(el)).toBe(`<p><span class="o_small-fs">[test]</span></p>`);
+    expect(getContent(el)).toBe(`<p class="o_small-fs">[test]</p>`);
     expect(inputEl).toHaveValue(oSmallSize);
 });
 
@@ -531,7 +531,7 @@ test("should focus the editable area after selecting a font size item", async ()
     await contains(".o_font_size_selector_menu .dropdown-item:contains('21')").click();
     expect(getActiveElement()).toBe(editor.editable);
     expect(getActiveElement()).not.toBe(inputEl);
-    expect(getContent(el)).toBe(`<p><span class="h2-fs">[test]</span></p>`);
+    expect(getContent(el)).toBe(`<p class="h2-fs">[test]</p>`);
 });
 
 test.tags("mobile");
@@ -565,7 +565,7 @@ test("should not create empty extra nodes while changing format of link", async 
     await waitFor(".o_font_size_selector_menu .dropdown-item:contains('80')");
     await contains(".o_font_size_selector_menu .dropdown-item:contains('80')").click();
     expect(getContent(el)).toBe(
-        `<p><span class="display-1-fs">\ufeff<a href="http://test.com" class="o_link_in_selection">\ufeff[test.com]\ufeff</a>\ufeff</span></p>`
+        `<p class="display-1-fs">\ufeff<a href="http://test.com" class="o_link_in_selection">\ufeff[test.com]\ufeff</a>\ufeff</p>`
     );
 });
 
@@ -609,8 +609,8 @@ test("toolbar works: display correct font size on select all", async () => {
     await animationFrame();
     const h1Size = getFontSizeFromVar("h1-font-size").toString();
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
-    expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
-    setContent(el, `<p><span class="h1-fs">te[]st</span></p>`);
+    expect(getContent(el)).toBe(`<p class="h1-fs">[test]</p>`);
+    setContent(el, `<p class="h1-fs">te[]st</p>`);
     await waitForNone(".o-we-toolbar");
     await press(["ctrl", "a"]); // Select all
     await waitFor(".o-we-toolbar");
@@ -636,7 +636,7 @@ test("toolbar works: displays correct font size on input", async () => {
     expect(inputEl).toHaveValue("8");
     await advanceTime(200);
     expect(".o_font_size_selector_menu").toHaveCount(1);
-    expect(getContent(el)).toBe(`<p><span style="font-size: 8px;">[test]</span></p>`);
+    expect(getContent(el)).toBe(`<p style="font-size: 8px;">[test]</p>`);
     await expectElementCount(".o-we-toolbar", 1);
 });
 
@@ -1879,7 +1879,7 @@ test("toolbar update should be run only once", async () => {
     counter = 0;
     click(".o-we-toolbar .btn[name='bold']");
     await waitFor(".btn[name='bold'].active");
-    expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
+    expect(getContent(el)).toBe('<p style="font-weight: bolder;">[test]</p>');
     expect(counter).toBe(1);
 });
 
@@ -1893,7 +1893,7 @@ test("toolbar strikethrough buttons should not be active when checked list is st
     await contains(".o-we-toolbar .btn[name='strikethrough']").click();
     await waitFor(".btn[name='strikethrough'].active");
     expect(getContent(el)).toBe(
-        '<ul class="o_checklist"><li class="o_checked"><s>[test]</s></li></ul>'
+        '<ul class="o_checklist"><li class="o_checked" style="text-decoration-line: line-through;">[test]</li></ul>'
     );
     expect(".o-we-toolbar .btn[name='strikethrough']").toHaveClass("active");
     await contains(".o-we-toolbar .btn[name='strikethrough']").click();

@@ -149,6 +149,7 @@ export class HighlightPlugin extends Plugin {
         this.dependencies.format.formatSelection("highlight", {
             formatProps: { highlightId, colorToRestore, thicknessToRestore },
             applyStyle: true,
+            applyToBlock: false,
         });
 
         this.updateSelectedHighlight();
