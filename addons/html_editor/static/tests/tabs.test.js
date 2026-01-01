@@ -406,6 +406,32 @@ describe("insert tabulation", () => {
                 `<blockquote>${oeTab(tabInBlockquote)}f${oeTab(tabAfterFinBlockquote)}]g</blockquote>`,
         });
     });
+
+    test("should indent only contenteditable paragraph-related blocks", async () => {
+        const tabInBlockquote = TAB_WIDTH - getIndentWidth("blockquote");
+
+        await testTabulation({
+            contentBefore:
+                `<p>[xxx</p>` +
+                `<div class="o-paragraph">ab</div>` +
+                `<div contenteditable="false">cd</div>` +
+                `<h1>ef</h1>` +
+                `<blockquote>gh]</blockquote>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>${oeTab(TAB_WIDTH, false)}[xxx</p>` +
+                `<div class="o-paragraph">${oeTab(TAB_WIDTH, false)}ab</div>` +
+                `<div contenteditable="false">cd</div>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}ef</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote, false)}gh]</blockquote>`,
+            contentAfter:
+                `<p>${oeTab(TAB_WIDTH)}[xxx</p>` +
+                `<div>${oeTab(TAB_WIDTH)}ab</div>` +
+                `<div contenteditable="false">cd</div>` +
+                `<h1>${oeTab(TAB_WIDTH)}ef</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote)}gh]</blockquote>`,
+        });
+    });
 });
 
 describe("delete backward tabulation", () => {
