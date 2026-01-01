@@ -1,5 +1,6 @@
 from odoo import _, models, tools
 from odoo.tools import html2plaintext
+from odoo.tools.float_utils import float_round
 
 DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID = '320'
 
@@ -245,3 +246,30 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
                 for line in
                 invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term').sorted('date_maturity')
             ]
+
+    def _add_document_line_price_nodes(self, line_node, vals):
+        # Override 'account.edi.xml.ubl_20' to accomodate to oioubl_21 specific rules
+        currency_suffix = vals['currency_suffix']
+        base_line = vals['base_line']
+        product_price_dp = self.env['decimal.precision'].precision_get('Product Price')
+
+        line_node['cac:Price'] = {
+            # Rule F-INV348 enforces that lineExtensionAmount equals directly PriceAmount * Quantity, while other
+            # rules enforce that lineExtensionAmount should not change compared to what we do in ubl_20
+            'cbc:PriceAmount': {
+                '_text': float_round(
+                    vals[f'gross_price_unit{currency_suffix}'] * (1 - base_line['discount'] / 100),
+                    precision_digits=product_price_dp,
+                ),
+                'currencyID': vals['currency_name'],
+            },
+        }
+
+    def _retrieve_rebate_val(self, tree, xpath_dict, quantity):
+        # Override 'account.edi.xml.ubl_20' to include AllowanceCharge in it, as PriceAmount is different in OIOUBL
+        rebate = super()._retrieve_rebate_val(tree, xpath_dict, quantity)
+
+        discount_amount, charges = self._retrieve_charge_allowance_vals(tree, xpath_dict, quantity)
+        charge_amount = sum(d['amount'] for d in charges)
+
+        return rebate + (discount_amount - charge_amount) / quantity

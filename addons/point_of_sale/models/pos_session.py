@@ -1852,7 +1852,7 @@ class PosSession(models.Model):
             ('sale_ok', '=', True),
             ('available_in_pos', '=', True),
         ])
-        if product:
+        if product and product[0].barcode == barcode:
             return {'product.product': product.with_context(product_context).read(product_fields, load=False)}
 
         domain = [('barcode', 'not in', ['', False])]
