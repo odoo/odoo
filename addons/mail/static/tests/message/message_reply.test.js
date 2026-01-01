@@ -1,14 +1,17 @@
-import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
+import {
+    insertText as htmlInsertText,
+    pasteHtml,
+} from "@html_editor/../tests/_helpers/user_actions";
 import {
     click,
     contains,
     defineMailModels,
     openDiscuss,
+    openFormView,
     start,
     startServer,
-    openFormView,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
 import { getService, serverState } from "@web/../tests/web_test_helpers";
@@ -318,4 +321,44 @@ test("click on message in reply in inbox navigates to the parent message", async
     await contains(
         ".o-mail-DiscussContent:has(.o-mail-DiscussContent-threadName[title='General']) .o-mail-Message.o-highlighted .o-mail-Message-content:has(:text('Parent message'))"
     );
+});
+
+test.tags("focus required", "html composer");
+test("Click reply to note again preserves composer content", async () => {
+    const pyEnv = await startServer();
+    pyEnv["mail.message"].create([
+        {
+            author_id: pyEnv["res.partner"].create({ name: "Batman" }),
+            body: "I am Justice",
+            model: "res.partner",
+            res_id: serverState.partnerId,
+            subtype_id: pyEnv["mail.message.subtype"].search([
+                ["subtype_xmlid", "=", "mail.mt_note"],
+            ])[0],
+        },
+    ]);
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openFormView("res.partner", serverState.partnerId);
+    await click(".o-mail-Message:contains(I am Justice) [title='Reply']");
+    await contains(".o-mail-Composer.o-focused");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    pasteHtml(editor, "<strong>Strong Text</strong>");
+    await contains(
+        ".o-mail-Composer-html.odoo-editor-editable:text('@Batman Strong Text'):has(a.o_mail_redirect:text('@Batman')):has(strong:text('Strong Text'))"
+    );
+    // check the exact textContent because :text() validates the rendered text, not the NBSP separator.
+    expect(editor.editable.textContent).toBe("\uFEFF@Batman\uFEFF\u00A0Strong Text");
+    await click("button.active:text('Log note')");
+    await contains(".o-mail-Composer", { count: 0 });
+    await click(".o-mail-Message:contains(I am Justice) [title='Reply']");
+    await contains(".o-mail-Composer.o-focused");
+    await contains(
+        ".o-mail-Composer-html.odoo-editor-editable:text('@Batman Strong Text'):has(a.o_mail_redirect:text('@Batman')):has(strong:text('Strong Text'))"
+    );
+    expect(editor.editable.textContent).toBe("\uFEFF@Batman\uFEFF\u00A0Strong Text");
 });
