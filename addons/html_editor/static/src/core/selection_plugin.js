@@ -701,18 +701,32 @@ export class SelectionPlugin extends Plugin {
      */
     areNodeContentsFullySelected(node, _useLeaves = true) {
         const selection = this.getEditableSelection();
+        // In empty blocks (e.g. <p><br></p>), Ctrl+A produces a collapsed
+        // DOM selection, so no actual range is selected.
+        if (selection.isCollapsed) {
+            return false;
+        }
         const range = new Range();
         range.setStart(selection.startContainer, selection.startOffset);
-        range.setEnd(selection.endContainer, selection.endOffset);
+        // Adjust the range end if it ends with a <br>.
+        const { endContainer, endOffset } = this.getEditableSelection();
+        if (endContainer.childNodes?.[endOffset]?.nodeName === "BR") {
+            range.setEnd(endContainer, endOffset + 1);
+        } else {
+            range.setEnd(endContainer, endOffset);
+        }
+
+        // Custom rules.
+        if (this.getResource("fully_selected_node_predicates")?.some((cb) => cb(node, selection))) {
+            return true;
+        }
 
         const firstLeafNode = _useLeaves ? firstLeaf(node) : node;
         const lastLeafNode = _useLeaves ? lastLeaf(node) : node;
+        // Default rule: range must cover the full node.
         return (
-            // Custom rules
-            this.getResource("fully_selected_node_predicates").some((cb) => cb(node, selection)) ||
-            // Default rule
-            (range.isPointInRange(firstLeafNode, 0) &&
-                range.isPointInRange(lastLeafNode, nodeSize(lastLeafNode)))
+            range.isPointInRange(firstLeafNode, 0) &&
+            range.isPointInRange(lastLeafNode, nodeSize(lastLeafNode))
         );
     }
 
@@ -731,9 +745,21 @@ export class SelectionPlugin extends Plugin {
 
     isNodeContentsFullySelected(node) {
         const selection = this.getEditableSelection();
+        // In empty blocks (e.g. <p><br></p>), Ctrl+A produces a collapsed
+        // DOM selection, so no actual range is selected.
+        if (selection.isCollapsed) {
+            return false;
+        }
+
         const range = new Range();
         range.setStart(selection.startContainer, selection.startOffset);
-        range.setEnd(selection.endContainer, selection.endOffset);
+        // Adjust the range end if it ends with a <br>.
+        const { endContainer, endOffset } = this.getEditableSelection();
+        if (endContainer.childNodes?.[endOffset]?.nodeName === "BR") {
+            range.setEnd(endContainer, endOffset + 1);
+        } else {
+            range.setEnd(endContainer, endOffset);
+        }
 
         const firstLeafNode = firstLeaf(node);
         const lastLeafNode = lastLeaf(node);

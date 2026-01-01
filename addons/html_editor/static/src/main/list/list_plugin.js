@@ -1002,16 +1002,16 @@ export class ListPlugin extends Plugin {
     }
 
     applyColorToListItem(color, mode) {
-        const selectedNodes = new Set(
+        const targetedNodes = new Set(
             this.dependencies.selection
-                .getSelectedNodes()
+                .getTargetedNodes()
                 .map((n) => closestElement(n, "li"))
                 .filter(Boolean)
         );
-        if (!selectedNodes.size || mode !== "color" || isColorGradient(color)) {
+        if (!targetedNodes.size || mode !== "color" || isColorGradient(color)) {
             return;
         }
-        for (const list of selectedNodes) {
+        for (const list of targetedNodes) {
             if (this.dependencies.selection.isNodeContentsFullySelected(list)) {
                 for (const node of descendants(list)) {
                     if (node.nodeType === Node.ELEMENT_NODE && node.style.color) {
