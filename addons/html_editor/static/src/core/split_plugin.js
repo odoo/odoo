@@ -1,3 +1,4 @@
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { fillEmpty, splitTextNode } from "../utils/dom";
@@ -52,15 +53,12 @@ export class SplitPlugin extends Plugin {
             // unmergeable.
             (node) => node.classList?.contains("oe_unbreakable"),
             (node) => {
-                const isExplicitlyNotContentEditable = (node) => {
+                const isExplicitlyNotContentEditable = (node) =>
                     // In the `contenteditable` attribute consideration,
                     // disconnected nodes can be unsplittable only if they are
                     // explicitly set under a contenteditable="false" element.
-                    return (
-                        !isContentEditable(node) &&
-                        (node.isConnected || closestElement(node, "[contenteditable]"))
-                    );
-                };
+                    !isContentEditable(node) &&
+                    (node.isConnected || closestElement(node, "[contenteditable]"));
                 return (
                     isExplicitlyNotContentEditable(node) ||
                     // If node sets contenteditable='true' and is inside a non-editable
@@ -182,11 +180,17 @@ export class SplitPlugin extends Plugin {
      * @returns {[HTMLElement, HTMLElement]}
      */
     splitElement(element, offset) {
+        const cursor = this.dependencies.selection.preserveSelection();
         /** @type {HTMLElement} **/
         const after = element.cloneNode();
+        cursor.update(callbacksForCursorUpdate.after(element, after));
         element.after(after);
-        const children = childNodes(element);
-        after.append(...children.slice(offset));
+        const children = childNodes(element).slice(offset);
+        for (const node of children) {
+            cursor.update(callbacksForCursorUpdate.append(after, node));
+            after.appendChild(node);
+        }
+        cursor.restore();
         return [element, after];
     }
 
