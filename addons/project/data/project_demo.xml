@@ -154,6 +154,84 @@
             <field name="fold" eval="True"/>
         </record>
 
+        <!-- Personal Stages: Mitchell Admin-->
+        <record id="project_personal_stage_admin_0" model="project.task.type">
+            <field name="sequence">1</field>
+            <field name="name">Inbox</field>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="project_personal_stage_admin_1" model="project.task.type">
+            <field name="sequence">2</field>
+            <field name="name">Today</field>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="project_personal_stage_admin_2" model="project.task.type">
+            <field name="sequence">3</field>
+            <field name="name">This Week</field>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="project_personal_stage_admin_3" model="project.task.type">
+            <field name="sequence">4</field>
+            <field name="name">This Month</field>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="project_personal_stage_admin_4" model="project.task.type">
+            <field name="sequence">5</field>
+            <field name="name">Later</field>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="project_personal_stage_admin_5" model="project.task.type">
+            <field name="sequence">6</field>
+            <field name="name">Done</field>
+            <field name="fold" eval="True"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="project_personal_stage_admin_6" model="project.task.type">
+            <field name="sequence">7</field>
+            <field name="name">Cancelled</field>
+            <field name="fold" eval="True"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+        <!-- Personal Stages: Marc Demo -->
+        <record id="project_personal_stage_demo_0" model="project.task.type">
+            <field name="sequence">1</field>
+            <field name="name">Inbox</field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="project_personal_stage_demo_1" model="project.task.type">
+            <field name="sequence">2</field>
+            <field name="name">Today</field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="project_personal_stage_demo_2" model="project.task.type">
+            <field name="sequence">3</field>
+            <field name="name">This Week</field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="project_personal_stage_demo_3" model="project.task.type">
+            <field name="sequence">4</field>
+            <field name="name">This Month</field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="project_personal_stage_demo_4" model="project.task.type">
+            <field name="sequence">5</field>
+            <field name="name">Later</field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="project_personal_stage_demo_5" model="project.task.type">
+            <field name="sequence">6</field>
+            <field name="name">Done</field>
+            <field name="fold" eval="True"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="project_personal_stage_demo_6" model="project.task.type">
+            <field name="sequence">7</field>
+            <field name="name">Cancelled</field>
+            <field name="fold" eval="True"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+
         <!-- Projects -->
         <record id="project_project_1" model="project.project">
             <field name="date_start" eval="DateTime.today() - relativedelta(weeks=9)"/>
@@ -594,84 +672,6 @@
             <field name="description">Collect and organize customer feedback to identify insights for improving your [Kitchen Assembly Project].</field>
             <field name="project_id" ref="project.project_template_2"/>
             <field name="sequence">45</field>
-        </record>
-
-        <!-- Personal Stages: Mitchell Admin-->
-        <record id="project_personal_stage_admin_0" model="project.task.type">
-            <field name="sequence">1</field>
-            <field name="name">Inbox</field>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-        <record id="project_personal_stage_admin_1" model="project.task.type">
-            <field name="sequence">2</field>
-            <field name="name">Today</field>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-        <record id="project_personal_stage_admin_2" model="project.task.type">
-            <field name="sequence">3</field>
-            <field name="name">This Week</field>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-        <record id="project_personal_stage_admin_3" model="project.task.type">
-            <field name="sequence">4</field>
-            <field name="name">This Month</field>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-        <record id="project_personal_stage_admin_4" model="project.task.type">
-            <field name="sequence">5</field>
-            <field name="name">Later</field>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-        <record id="project_personal_stage_admin_5" model="project.task.type">
-            <field name="sequence">6</field>
-            <field name="name">Done</field>
-            <field name="fold" eval="True"/>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-        <record id="project_personal_stage_admin_6" model="project.task.type">
-            <field name="sequence">7</field>
-            <field name="name">Cancelled</field>
-            <field name="fold" eval="True"/>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-
-        <!-- Personal Stages: Marc Demo -->
-        <record id="project_personal_stage_demo_0" model="project.task.type">
-            <field name="sequence">1</field>
-            <field name="name">Inbox</field>
-            <field name="user_id" ref="base.user_demo"/>
-        </record>
-        <record id="project_personal_stage_demo_1" model="project.task.type">
-            <field name="sequence">2</field>
-            <field name="name">Today</field>
-            <field name="user_id" ref="base.user_demo"/>
-        </record>
-        <record id="project_personal_stage_demo_2" model="project.task.type">
-            <field name="sequence">3</field>
-            <field name="name">This Week</field>
-            <field name="user_id" ref="base.user_demo"/>
-        </record>
-        <record id="project_personal_stage_demo_3" model="project.task.type">
-            <field name="sequence">4</field>
-            <field name="name">This Month</field>
-            <field name="user_id" ref="base.user_demo"/>
-        </record>
-        <record id="project_personal_stage_demo_4" model="project.task.type">
-            <field name="sequence">5</field>
-            <field name="name">Later</field>
-            <field name="user_id" ref="base.user_demo"/>
-        </record>
-        <record id="project_personal_stage_demo_5" model="project.task.type">
-            <field name="sequence">6</field>
-            <field name="name">Done</field>
-            <field name="fold" eval="True"/>
-            <field name="user_id" ref="base.user_demo"/>
-        </record>
-        <record id="project_personal_stage_demo_6" model="project.task.type">
-            <field name="sequence">7</field>
-            <field name="name">Cancelled</field>
-            <field name="fold" eval="True"/>
-            <field name="user_id" ref="base.user_demo"/>
         </record>
 
         <!-- Project 1 Milestones -->
