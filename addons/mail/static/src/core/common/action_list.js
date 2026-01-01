@@ -83,7 +83,7 @@ export class ActionList extends Component {
                     return [actualPropName, this.props[actualPropName]];
                 })
             ),
-            style: `z-index: ${group.length - index}`,
+            style: `z-index: ${group.length - index + (action.hotkey ? 1 : 0)}`,
         };
     }
 
