@@ -1,9 +1,9 @@
 import { Component, onWillUpdateProps, onWillStart, useState, status } from "@odoo/owl";
 import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
+import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
+import { DashboardSearchBarMenu } from "../dashboard_search_bar_menu/dashboard_search_bar_menu";
 import { useService, useChildRef, useAutofocus } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
-import { FilterValuesList } from "@spreadsheet/global_filters/components/filter_values_list/filter_values_list";
 import { getFacetInfo } from "@spreadsheet/global_filters/helpers";
 import { _t } from "@web/core/l10n/translation";
 import { fuzzyTest, fuzzyLookup } from "@web/core/utils/search";
@@ -19,7 +19,7 @@ export class DashboardSearchBar extends Component {
     static components = {
         DashboardFacet,
         DashboardDateFilter,
-        FilterValuesList,
+        DashboardSearchBarMenu,
         Dropdown,
         DropdownItem,
     };

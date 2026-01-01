@@ -8,16 +8,16 @@ import { addGlobalFilter } from "@spreadsheet/../tests/helpers/commands";
 
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { Component, onWillUnmount, xml } from "@odoo/owl";
-import { FilterValuesList } from "@spreadsheet/global_filters/components/filter_values_list/filter_values_list";
+import { DashboardSearchBarMenu } from "@spreadsheet_dashboard/bundle/dashboard_action/dashboard_search_bar_menu/dashboard_search_bar_menu";
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
 
-class FilterValuesListWrapper extends Component {
-    static template = xml`<FilterValuesList t-props="props" />`;
-    static components = { FilterValuesList };
+class DashboardSearchBarMenuWrapper extends Component {
+    static template = xml`<DashboardSearchBarMenu t-props="props" />`;
+    static components = { DashboardSearchBarMenu };
     static props = {
-        ...FilterValuesList.props,
+        ...DashboardSearchBarMenu.props,
         close: { type: Function, optional: true },
     };
     static defaultProps = {
@@ -31,17 +31,10 @@ class FilterValuesListWrapper extends Component {
 }
 
 /**
- *
- * @param {object} env
  * @param {{ model: Model }} props
  */
-async function mountFilterValuesList(env, props) {
-    //@ts-ignore
-    env.dialogData = {
-        isActive: true,
-        close: () => {},
-    };
-    await mountWithCleanup(FilterValuesListWrapper, { props });
+async function mountDashboardSearchBarMenu(props) {
+    await mountWithCleanup(DashboardSearchBarMenuWrapper, { props });
 }
 
 test("basic text filter", async function () {
@@ -52,22 +45,12 @@ test("basic text filter", async function () {
         type: "text",
         label: "Text Filter",
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     expect(".o-filter-values").toHaveCount(1);
     expect(".fa-pencil").toHaveCount(0);
 });
 
-test("Edit filter is displayed when the props openFiltersEditor is set", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
-    await mountFilterValuesList(env, {
-        model,
-        openFiltersEditor: () => {},
-    });
-    expect(queryAllTexts(".o-filter-values-footer button")).toEqual(["Filter", "Edit", "Discard"]);
-});
-
-test("filter search dialog with no active filters", async function () {
+test("dashboard search bar menu with no active filters", async function () {
     const env = await makeMockEnv();
     const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
@@ -75,12 +58,12 @@ test("filter search dialog with no active filters", async function () {
         type: "text",
         label: "Text Filter",
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     expect(".o-filter-values .o-filter-item").toHaveCount(1);
     expect(".o-filter-values .o-global-filter-text-value").toHaveText("");
 });
 
-test("filter search dialog with active filters", async function () {
+test("dashboard search bar menu with active filters", async function () {
     const env = await makeMockEnv();
     const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
@@ -89,7 +72,7 @@ test("filter search dialog with active filters", async function () {
         label: "Text Filter",
         defaultValue: { operator: "ilike", strings: ["foo"] },
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     expect(".o-filter-values .o-filter-item").toHaveCount(1);
     expect(".o-filter-values .o-global-filter-text-value").toHaveText("foo");
 });
@@ -102,7 +85,7 @@ test("Can set a text filter value", async function () {
         type: "text",
         label: "Text Filter",
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     await contains(".o-filter-values select").select("not ilike");
     await contains(".o-filter-values .o-filter-item .o-autocomplete input").edit("foo");
     await contains(".o-filter-values .o-filter-item .o-autocomplete input").press("Enter");
@@ -124,7 +107,7 @@ test("Can set a numeric filter value with basic operator", async function () {
         type: "numeric",
         label: "Numeric Filter",
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     await contains(".o-filter-values select").select(">");
     await contains("input").edit(1998);
     await contains("input").press("Enter");
@@ -146,7 +129,7 @@ test("Can set a numeric filter value with between operator", async function () {
         type: "numeric",
         label: "Numeric Filter",
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     await contains(".o-filter-values select").select("between");
     const inputs = document.querySelectorAll(".o-global-filter-numeric-value");
     expect(inputs).toHaveLength(2);
@@ -170,7 +153,7 @@ test("Can set a relation filter value", async function () {
         modelName: "product",
         label: "Relation Filter",
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     await contains(".o-filter-values select").select("not in");
     await contains("input.o-autocomplete--input").click();
     await contains(".o-autocomplete--dropdown-item:first").click();
@@ -197,7 +180,7 @@ test("Can remove a default relation filter value", async function () {
         label: "Relation Filter",
         defaultValue: { operator: "in", ids: [37] },
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     expect(".o_tag").toHaveCount(1);
     await contains(".o_tag .o_delete").click();
     expect(".o_tag").toHaveCount(0);
@@ -215,7 +198,7 @@ test("Default value for relation filter is correctly displayed", async function 
         label: "Relation Filter",
         defaultValue: { operator: "in", ids: [37] },
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     expect(".o_tag").toHaveCount(1);
     expect(queryAllTexts(".o_tag")).toEqual(["xphone"]);
 });
@@ -228,7 +211,7 @@ test("Can change a boolean filter value", async function () {
         type: "boolean",
         label: "Boolean Filter",
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     expect(".o-filter-values select").toHaveValue("");
     await contains(".o-filter-values select").select("not set");
     await contains(".btn-primary").click();
@@ -248,7 +231,7 @@ test("Can set a date filter value", async function () {
         type: "date",
         label,
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     await contains(".o-date-filter-input").click();
     await contains(".o-dropdown-item[data-id='last_7_days']").click();
     expect(".o-date-filter-input").toHaveValue("Last 7 Days");
@@ -268,7 +251,7 @@ test("Readonly user can update a filter value", async function () {
         label: "Text Filter",
     });
     model.updateMode("readonly");
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     await contains(".o-filter-values .o-filter-item .o-autocomplete input").edit("foo");
     await contains(".o-filter-values .o-filter-item .o-autocomplete input").press("Enter");
     await contains(".btn-primary").click();
@@ -286,7 +269,7 @@ test("Can clear a filter value removing the values manually", async function () 
         label: "Text Filter",
         defaultValue: { operator: "ilike", strings: ["foo"] },
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     expect(".o-filter-values .o-filter-item .o_tag").toHaveCount(1);
     await contains(".o-filter-values .o-filter-item .o_tag .o_delete").click();
     expect(".o-filter-values .o-filter-item .o_tag").toHaveCount(0);
@@ -305,7 +288,7 @@ test("Can clear a filter value with the clear button", async function () {
         label: "Text Filter",
         defaultValue: { operator: "ilike", strings: ["foo"] },
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     expect(".o-filter-values .o-filter-item .o_tag").toHaveCount(1);
     await contains(".o-filter-values .o-filter-item .o-filter-clear button").click();
     expect(".o-filter-values .o-filter-item .o_tag").toHaveCount(0);
@@ -322,7 +305,7 @@ test("clearing a filter value preserves the operator", async function () {
         label: "Text Filter",
         defaultValue: { operator: "ilike", strings: ["foo"] },
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     await contains(".o-filter-values select").select("starts with");
 
     // remove the only value
@@ -351,7 +334,7 @@ test("Relational global filter with no parent/child model do not have the child 
         modelName: "partner",
         defaultValue: { operator: "in", ids: [37] },
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     expect('option[value="child_of"]').toHaveCount(0);
 });
 
@@ -366,7 +349,7 @@ test("Relational global filter with a parent/child model adds the child of opera
         modelName: "partner",
         defaultValue: { operator: "in", ids: [38] },
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     expect('option[value="child_of"]').toHaveCount(1);
 });
 
@@ -380,7 +363,7 @@ test(`Relational global filter with "set" operator doesn't have a record selecto
         modelName: "partner",
         defaultValue: { operator: "set" },
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     expect(".o-filter-value input").toHaveCount(0);
 });
 
@@ -395,7 +378,7 @@ test("relational global filter operator options", async function () {
         modelName: "partner",
         defaultValue: { operator: "in", ids: [38] },
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     expect(queryAllTexts("option")).toEqual([
         "is in",
         "is not in",
@@ -416,7 +399,7 @@ test("text global filter operator options", async function () {
         label: "Filter",
         defaultValue: { operator: "in", strings: ["hello"] },
     });
-    await mountFilterValuesList(env, { model });
+    await mountDashboardSearchBarMenu({ model });
     expect(queryAllTexts("option")).toEqual([
         "contains",
         "does not contain",

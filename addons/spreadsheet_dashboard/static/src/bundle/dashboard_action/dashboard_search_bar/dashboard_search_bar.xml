@@ -55,7 +55,7 @@
                         t-on-click="toggleFilterValueDropdown" />
                     <t t-set-slot="content">
                         <div class="p-2">
-                            <FilterValuesList model="props.model" close.bind="closeFilterValueDropdown" />
+                            <DashboardSearchBarMenu model="props.model" close.bind="closeFilterValueDropdown" />
                         </div>
                     </t>
                 </Dropdown>
