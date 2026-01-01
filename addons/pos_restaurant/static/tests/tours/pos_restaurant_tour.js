@@ -238,6 +238,11 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
             // Check empty course gets remove after fire course.
             ProductScreen.clickCourseButton(),
             ProductScreen.selectCourseLine("Course 2"),
+            {
+                content: "Wait atleast 1 sec so that courses have different fired_date timestamps",
+                trigger: "body",
+                run: async () => await delay(1000),
+            },
             ProductScreen.fireCourseButton(),
             FloorScreen.clickTable("5"),
             {
