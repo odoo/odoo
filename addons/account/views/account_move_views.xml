@@ -1039,9 +1039,9 @@
                             <div class="text-warning" invisible="not show_name_warning">The current highest number is <field class="oe_inline" name="highest_name"/>. You might want to put a higher number here.</div>
 
                             <h1>
-                                <field name="name" invisible="not (name or name_placeholder or quick_edit_mode)" readonly="state != 'draft'" options="{'placeholder_field': 'name_placeholder'}"/>
+                                <field name="name" invisible="not (name or name_placeholder or document_sequence_editable)" readonly="state != 'draft'" options="{'placeholder_field': 'name_placeholder'}"/>
 
-                                <span invisible="name or name_placeholder or quick_edit_mode">Draft</span>
+                                <span invisible="name or name_placeholder or document_sequence_editable">Draft</span>
                             </h1>
                         </div>
                         <group>

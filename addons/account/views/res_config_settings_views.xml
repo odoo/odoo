@@ -373,14 +373,16 @@
                                 <field name="account_storno"/>
                             </setting>
                         </block>
-                        <block title="Accounting Firms mode" id="quick_edit_mode">
-                            <div class="text-muted">
-                                <p style="margin-bottom: 0">Accounting firm mode will change invoice/bill encoding:</p>
-                                <p style="margin-bottom: 0"> - The document's sequence becomes editable on all documents.</p>
-                                <p style="margin-bottom: 0"> - A new field « Total (tax inc.) » to speed up and control the encoding by automating line creation with the right account &amp; tax.</p>
-                            </div>
-                            <setting company_dependent="1">
-                                <field name="quick_edit_mode" placeholder="Disabled"/>
+                        <block title="Accounting Firms mode">
+                            <setting  id="quick_edit_mode_enabled" company_dependent="1" title="A new field 'Total (tax inc.)' to speed up and control the encoding by automating line creation with the right account and tax.">
+                                <field name="quick_edit_mode_enabled"/>
+                                <field name="quick_edit_mode" required="quick_edit_mode_enabled" invisible="not quick_edit_mode_enabled"/>
+                            </setting>
+                            <setting  id="document_sequence_editable" company_dependent="1" title="The document's sequence becomes editable on all documents.">
+                                <field name="document_sequence_editable"/>
+                            </setting>
+                            <setting  id="set_to_review_documents" company_dependent="1" title="Review all the modification done by the user with right under bookkeeper.">
+                                <field name="set_to_review_documents"/>
                             </setting>
                         </block>
                     </app>

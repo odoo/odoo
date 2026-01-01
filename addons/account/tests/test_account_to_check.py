@@ -16,6 +16,8 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
         super().setUpClass()
         cls.simple_accountman.group_ids = cls.env.ref('account.group_account_invoice')
         cls.bank_journal = cls.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', cls.company.id)], limit=1)
+        # As the user has only invoicing right, the move shouldn't be checked if review documents is activated in Accounting Firms mode
+        cls.company.set_to_review_documents = True
 
     def test_try_check_move_with_invoicing_user(self):
         invoice = self._create_invoice(review_state='todo')
@@ -49,10 +51,16 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
         # As the user has admin right, the move doesn't need to be checked
         self.assertFalse(invoice_admin.review_state)
 
+        # As the user has only invoicing right and review documents setting enabled from Accounting Firms mode, the move needs to review
         invoice_invoicing = self._create_invoice(user_id=self.simple_accountman.id)
         invoice_invoicing.with_user(self.simple_accountman).action_post()
-        # As the user has only invoicing right, the move shouldn't be checked
         self.assertEqual(invoice_invoicing.review_state, 'todo')
+
+        # Disable the review documents from Accounting Firms mode, the move doesn't need to review
+        self.company.set_to_review_documents = False
+        invoice_invoicing_1 = self._create_invoice(user_id=self.simple_accountman.id)
+        invoice_invoicing_1.with_user(self.simple_accountman).action_post()
+        self.assertFalse(invoice_invoicing_1.review_state)
 
     def test_post_move_auto_check_with_auto_post_at_date_accountant(self):
         invoice = self._create_invoice(date=fields.Date.today())
