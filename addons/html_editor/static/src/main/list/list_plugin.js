@@ -1040,16 +1040,16 @@ export class ListPlugin extends Plugin {
     }
 
     applyColorToListItem(color, mode) {
-        const selectedNodes = new Set(
+        const targetedNodes = new Set(
             this.dependencies.selection
-                .getSelectedNodes()
+                .getTargetedNodes()
                 .map((n) => closestElement(n, "li"))
                 .filter(Boolean)
         );
-        if (!selectedNodes.size || mode !== "color" || isColorGradient(color)) {
+        if (!targetedNodes.size || mode !== "color" || isColorGradient(color)) {
             return;
         }
-        for (const list of selectedNodes) {
+        for (const list of targetedNodes) {
             if (this.dependencies.selection.isNodeContentsFullySelected(list)) {
                 for (const node of descendants(list)) {
                     if (node.nodeType === Node.ELEMENT_NODE && node.style.color) {
@@ -1062,17 +1062,17 @@ export class ListPlugin extends Plugin {
     }
 
     applyFormatToListItem(formatName, { formatProps } = {}) {
-        const selectedNodes = new Set(
+        const targetedNodes = new Set(
             this.dependencies.selection
-                .getSelectedNodes()
+                .getTargetedNodes()
                 .map((n) => closestElement(n, "li"))
                 .filter(Boolean)
         );
-        if (!selectedNodes.size || !["setFontSizeClassName", "fontSize"].includes(formatName)) {
+        if (!targetedNodes.size || !["setFontSizeClassName", "fontSize"].includes(formatName)) {
             return false;
         }
         const listsSet = new Set();
-        for (const listItem of selectedNodes) {
+        for (const listItem of targetedNodes) {
             // Skip list items with block descendants
             if ([...descendants(listItem)].some(isBlock)) {
                 continue;
