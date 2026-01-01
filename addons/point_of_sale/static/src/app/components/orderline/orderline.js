@@ -122,7 +122,10 @@ export class Orderline extends Component {
             !basic &&
             line.getQuantityStr() != 1 &&
             (mode === "receipt" || (line.price_type !== "original" && !line.combo_parent_id));
-        const priceUnit = `${line.currencyDisplayPriceUnit} / ${
+        const { total_included, total_excluded } = line.unitPrices;
+        const config = (this.env.services.pos ?? this.env.services.self_order).config;
+        const price = config.iface_tax_included === "total" ? total_included : total_excluded;
+        const priceUnit = `${formatCurrency(price, line.currency.id)} / ${
             line.product_id?.uom_id?.name || ""
         }`;
         return {
