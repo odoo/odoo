@@ -6,7 +6,7 @@
             <t t-set="otherNotifications" t-value="this.props.message.notification_ids.filter((notif) => !notif._proxy.isFollowerNotification)"/>
             <t t-set="followerNotifications" t-value="this.props.message.notification_ids.filter((notif) => notif._proxy.isFollowerNotification)"/>
             <div t-foreach="otherNotifications" t-as="notification" t-key="notification.id">
-                <t t-set="email_to" t-value="notification.mail_email_address or notification.res_partner_id.email"/>
+                <t t-set="email_to" t-value="notification.mail_email_address or notification.res_partner_id?.email"/>
                 <i class="me-2 fa-fw" t-att-class="notification.statusIcon" t-att-title="notification.statusTitle" role="img"/>
                 <span t-if="notification.res_partner_id">
                     <t t-esc="props.message.getPersonaName(notification.res_partner_id)"/>
@@ -21,7 +21,7 @@
                 <span t-if="incomingEmail[1]" t-out="incomingEmail[1]" class="ps-1"/>
             </div>
             <div t-foreach="followerNotifications" t-as="notification" t-key="notification.id">
-                <t t-set="email_to" t-value="notification.mail_email_address or notification.res_partner_id.email"/>
+                <t t-set="email_to" t-value="notification.mail_email_address or notification.res_partner_id?.email"/>
                 <i class="me-2 fa-fw" t-att-class="notification.statusIcon" t-att-title="notification.statusTitle" role="img"/>
                 <span t-if="notification.res_partner_id">
                     <t t-esc="props.message.getPersonaName(notification.res_partner_id)"/>

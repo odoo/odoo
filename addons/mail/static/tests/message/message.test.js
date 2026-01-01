@@ -1221,6 +1221,26 @@ test("Notification Error", async () => {
     expect(".o-mail-MessageNotificationPopover i.fa-times.text-danger").toHaveCount(1);
 });
 
+test("click on notification icon opens recipients list when no recipient", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Someone", partner_share: true });
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        message_type: "email",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "exception",
+        notification_type: "email",
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Message-notification");
+    await contains(".o-mail-MessageNotificationPopover:text('(Exception)')");
+});
+
 test('Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") messages.', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
