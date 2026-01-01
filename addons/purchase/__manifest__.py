@@ -25,6 +25,7 @@
         'report/purchase_bill_views.xml',
         'report/purchase_report_views.xml',
         'data/mail_templates.xml',
+        'data/email_body_views.xml',
         'data/mail_template_data.xml',
         'views/portal_templates.xml',
         'report/purchase_order_templates.xml',
@@ -38,6 +39,7 @@
     ],
     'installable': True,
     'application': True,
+    'post_init_hook': '_post_init_hook',
     'assets': {
         'web.assets_backend': [
             'purchase/static/src/components/**/*',

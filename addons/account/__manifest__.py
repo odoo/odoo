@@ -21,6 +21,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/account_data.xml',
         'data/digest_data.xml',
         'views/account_report.xml',
+        'data/email_body_views.xml',
         'data/mail_template_data.xml',
         'data/onboarding_data.xml',
         'data/account_tour.xml',

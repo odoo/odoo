@@ -4,6 +4,7 @@
 import base64
 import logging
 from ast import literal_eval
+from lxml import etree
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError, UserError
@@ -70,6 +71,14 @@ class MailTemplate(models.Model):
         'Body', render_engine='qweb', render_options={'post_process': True},
         prefetch=True, translate=True, sanitize='email_outgoing',
     )
+    body_view_id = fields.Many2one(
+        'ir.ui.view',
+        string='Body Template View',
+        domain="[('type', '=', 'qweb'), ('mode', '=', 'primary')]",
+        ondelete='set null',
+        help="QWeb view used as default email body. Supports view inheritance. "
+             "When Body HTML is empty, this view is rendered instead.",
+    )
     attachment_ids = fields.Many2many(
         'ir.attachment', 'email_template_attachment_rel',
         'email_template_id', 'attachment_id',
@@ -100,6 +109,10 @@ class MailTemplate(models.Model):
     can_write = fields.Boolean(compute='_compute_can_write',
                                help='The current user can edit the template.')
     is_template_editor = fields.Boolean(compute="_compute_is_template_editor")
+    is_body_customized = fields.Boolean(
+        compute='_compute_is_body_customized',
+        help="True if body_html has custom content (overriding body_view_id)",
+    )
 
     # view display
     has_dynamic_reports = fields.Boolean(compute='_compute_has_dynamic_reports')
@@ -136,6 +149,30 @@ class MailTemplate(models.Model):
     @api.depends_context('uid')
     def _compute_is_template_editor(self):
         self.is_template_editor = self.env.user.has_group('mail.group_mail_template_editor')
+
+    @api.depends('body_html', 'body_view_id')
+    def _compute_is_body_customized(self):
+        for template in self:
+            template.is_body_customized = (
+                template.body_view_id and not is_html_empty(template.body_html)
+            )
+
+    @api.constrains('body_view_id')
+    def _check_body_view_id(self):
+        """Ensure body_view_id points to a valid QWeb primary view."""
+        for template in self.filtered('body_view_id'):
+            view = template.body_view_id
+            if view.type != 'qweb':
+                raise ValidationError(_(
+                    "Body Template View must be a QWeb view (got: %(type)s)",
+                    type=view.type,
+                ))
+            if view.mode != 'primary':
+                raise ValidationError(_(
+                    "Body Template View must be a primary view, not an extension. "
+                    "Select the base view instead of '%(name)s'.",
+                    name=view.name,
+                ))
 
     @api.depends('active', 'description')
     def _compute_template_category(self):
@@ -321,6 +358,55 @@ class MailTemplate(models.Model):
         action = self.env.ref('mail.mail_template_preview_action')._get_action_dict()
         action.update({'name': _('Template Preview: "%(template_name)s"', template_name=self.name)})
         return action
+
+    def action_copy_view_to_body(self):
+        """Copy the view content to body_html for manual editing."""
+        self.ensure_one()
+        if not self.body_view_id:
+            raise UserError(_("No Body Template View is set."))
+
+        # Get the combined arch (with all inheritance applied)
+        # _get_combined_arch() returns an lxml Element
+        tree = self.body_view_id._get_combined_arch()
+
+        # Get inner HTML - the view content without the t-name wrapper
+        if tree.tag == 't' and tree.get('t-name'):
+            inner_html = (tree.text or '') + ''.join(
+                etree.tostring(child, encoding='unicode')
+                for child in tree
+            )
+        else:
+            inner_html = etree.tostring(tree, encoding='unicode')
+
+        self.body_html = inner_html
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _("Template Copied"),
+                'message': _("View content copied to Body HTML. You can now edit it freely."),
+                'type': 'success',
+            }
+        }
+
+    def action_reset_body_to_view(self):
+        """Clear body_html to fall back to view-based content."""
+        self.ensure_one()
+        if not self.body_view_id:
+            raise UserError(_("No Body Template View is set to reset to."))
+
+        self.body_html = False
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _("Template Reset"),
+                'message': _("Body HTML cleared. Template now uses the view-based content."),
+                'type': 'success',
+            }
+        }
 
     # ------------------------------------------------------------
     # MESSAGE/EMAIL VALUES GENERATION
@@ -806,6 +892,44 @@ class MailTemplate(models.Model):
     # ----------------------------------------
     # MAIL RENDER INTERNALS
     # ----------------------------------------
+
+    def _render_field(self, field, res_ids, engine='inline_template',
+                      compute_lang=False, res_ids_lang=False, set_lang=False,
+                      add_context=None, options=None):
+        """Override to support body_view_id as fallback when body_html is empty.
+
+        Priority: body_html (including translations) > body_view_id > empty
+        """
+        if field == 'body_html' and self.body_view_id:
+            # Try body_html first (super handles language/translations correctly)
+            result = super()._render_field(
+                field, res_ids, engine=engine,
+                compute_lang=compute_lang, res_ids_lang=res_ids_lang, set_lang=set_lang,
+                add_context=add_context, options=options,
+            )
+            # Fall back to body_view_id for res_ids with empty result
+            empty_res_ids = [res_id for res_id, body in result.items() if is_html_empty(body)]
+            if empty_res_ids:
+                view_rendered = self._render_template_qweb_view(
+                    self.body_view_id.id,
+                    self.render_model,
+                    empty_res_ids,
+                    options={'post_process': True},
+                )
+                for res_id in empty_res_ids:
+                    result[res_id] = tools.html_sanitize(
+                        view_rendered[res_id],
+                        sanitize_tags=True,
+                        sanitize_attributes=True,
+                        sanitize_style=True,
+                        sanitize_form=True,
+                    )
+            return result
+        return super()._render_field(
+            field, res_ids, engine=engine,
+            compute_lang=compute_lang, res_ids_lang=res_ids_lang, set_lang=set_lang,
+            add_context=add_context, options=options,
+        )
 
     def _has_unsafe_expression_template_qweb(self, source, model, fname=None):
         if self._expression_is_default(source, model, fname):

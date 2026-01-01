@@ -27,6 +27,7 @@ sent mails with personal token for the invitation of the survey.
         'report/survey_reports.xml',
         'data/ir_actions_server_data.xml',
         'data/mail_message_subtype_data.xml',
+        'data/email_body_views.xml',
         'data/mail_template_data.xml',
         'data/survey_tour.xml',
         'security/survey_security.xml',
@@ -109,6 +110,7 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/js/tours/survey_tour.js',
         ],
     },
+    'post_init_hook': '_post_init_hook',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

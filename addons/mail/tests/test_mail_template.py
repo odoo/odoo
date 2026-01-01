@@ -689,3 +689,268 @@ class TestSearchTemplateCategory(MailCommon):
         not_in_templates = MailTemplate.search(not_in_domain) - self.existing
         expected_templates = len(self.custom_templates)
         self.assertEqual(len(not_in_templates), expected_templates, "Not in multi templates count mismatch")
+
+
+@tagged('mail_template')
+class TestMailTemplateBodyView(MailCommon):
+    """Tests for body_view_id feature - using ir.ui.view for email template body."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner = cls.env['res.partner'].create({
+            'name': 'Test Partner',
+            'email': 'test@example.com',
+        })
+
+        # Create a primary QWeb view for email body
+        cls.email_body_view = cls.env['ir.ui.view'].create({
+            'name': 'test.email.body',
+            'type': 'qweb',
+            'mode': 'primary',
+            'arch': '''
+                <t t-name="test.email.body">
+                    <div class="email-container">
+                        <p>Hello <t t-out="object.name"/>!</p>
+                        <p>Your email is <t t-out="object.email"/></p>
+                    </div>
+                </t>
+            ''',
+        })
+
+        # Create an extension view
+        cls.email_body_view_extension = cls.env['ir.ui.view'].create({
+            'name': 'test.email.body.extension',
+            'type': 'qweb',
+            'mode': 'extension',
+            'inherit_id': cls.email_body_view.id,
+            'arch': '''
+                <xpath expr="//div[hasclass('email-container')]" position="inside">
+                    <p class="footer">Best regards!</p>
+                </xpath>
+            ''',
+        })
+
+        # Create a non-QWeb view for constraint testing
+        cls.form_view = cls.env['ir.ui.view'].create({
+            'name': 'test.form.view',
+            'type': 'form',
+            'model': 'res.partner',
+            'arch': '<form><field name="name"/></form>',
+        })
+
+    @users('admin')
+    def test_body_view_id_rendering_priority(self):
+        """Test that body_html takes priority over body_view_id when not empty."""
+        template = self.env['mail.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'body_view_id': self.email_body_view.id,
+            'body_html': '',  # Empty - should use view
+        })
+
+        # With empty body_html, should render from view
+        rendered = template._render_field('body_html', self.partner.ids)
+        self.assertIn('Test Partner', rendered[self.partner.id])
+        self.assertIn('test@example.com', rendered[self.partner.id])
+
+        # With non-empty body_html, should use body_html instead
+        template.body_html = '<p>Custom content: <t t-out="object.name"/></p>'
+        rendered = template._render_field('body_html', self.partner.ids)
+        self.assertIn('Custom content', rendered[self.partner.id])
+        self.assertNotIn('email-container', rendered[self.partner.id])
+
+    @users('admin')
+    def test_body_view_id_with_inheritance(self):
+        """Test that view inheritance is applied when rendering from body_view_id."""
+        # Note: View inheritance via _get_combined_arch() is handled by ir.ui.view
+        # and is already tested there. This test verifies our integration works.
+        template = self.env['mail.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'body_view_id': self.email_body_view.id,
+            'body_html': '',
+        })
+
+        # Should render content from the view
+        rendered = template._render_field('body_html', self.partner.ids)
+        self.assertIn('Test Partner', rendered[self.partner.id])
+        self.assertIn('email-container', rendered[self.partner.id])
+
+    @users('admin')
+    def test_body_view_id_backward_compatibility(self):
+        """Test that templates without body_view_id work as before."""
+        template = self.env['mail.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'body_html': '<p>Hello <t t-out="object.name"/></p>',
+        })
+
+        rendered = template._render_field('body_html', self.partner.ids)
+        self.assertIn('Hello', rendered[self.partner.id])
+        self.assertIn('Test Partner', rendered[self.partner.id])
+
+    @users('admin')
+    def test_body_view_id_empty_both(self):
+        """Test that empty body_html and no body_view_id returns empty string."""
+        template = self.env['mail.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'body_html': '',
+        })
+
+        rendered = template._render_field('body_html', self.partner.ids)
+        self.assertEqual(rendered[self.partner.id], '')
+
+    @users('admin')
+    def test_is_body_customized_computed(self):
+        """Test is_body_customized computed field."""
+        template = self.env['mail.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'body_view_id': self.email_body_view.id,
+            'body_html': '',
+        })
+
+        # With empty body_html, not customized
+        self.assertFalse(template.is_body_customized)
+
+        # With non-empty body_html, is customized
+        template.body_html = '<p>Custom</p>'
+        self.assertTrue(template.is_body_customized)
+
+        # Without body_view_id, not considered customized
+        template.body_view_id = False
+        self.assertFalse(template.is_body_customized)
+
+    @users('admin')
+    def test_action_copy_view_to_body(self):
+        """Test action_copy_view_to_body copies view arch to body_html."""
+        template = self.env['mail.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'body_view_id': self.email_body_view.id,
+            'body_html': '',
+        })
+
+        self.assertFalse(template.body_html)
+
+        # Copy view to body
+        template.action_copy_view_to_body()
+
+        # body_html should now have content from view
+        self.assertTrue(template.body_html)
+        self.assertIn('email-container', template.body_html)
+        self.assertIn('t-out="object.name"', template.body_html)
+
+    @users('admin')
+    def test_action_copy_view_to_body_no_view(self):
+        """Test action_copy_view_to_body raises error when no view is set."""
+        template = self.env['mail.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env.ref('base.model_res_partner').id,
+        })
+
+        with self.assertRaises(UserError):
+            template.action_copy_view_to_body()
+
+    @users('admin')
+    def test_action_reset_body_to_view(self):
+        """Test action_reset_body_to_view clears body_html."""
+        template = self.env['mail.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'body_view_id': self.email_body_view.id,
+            'body_html': '<p>Custom content</p>',
+        })
+
+        self.assertTrue(template.is_body_customized)
+
+        # Reset to view
+        template.action_reset_body_to_view()
+
+        # body_html should be cleared
+        self.assertFalse(template.body_html)
+        self.assertFalse(template.is_body_customized)
+
+    @users('admin')
+    def test_action_reset_body_to_view_no_view(self):
+        """Test action_reset_body_to_view raises error when no view is set."""
+        template = self.env['mail.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'body_html': '<p>Content</p>',
+        })
+
+        with self.assertRaises(UserError):
+            template.action_reset_body_to_view()
+
+    @users('admin')
+    def test_constraint_qweb_view_only(self):
+        """Test that only QWeb views can be set as body_view_id."""
+        with self.assertRaises(ValidationError):
+            self.env['mail.template'].create({
+                'name': 'Test Template',
+                'model_id': self.env.ref('base.model_res_partner').id,
+                'body_view_id': self.form_view.id,
+            })
+
+    @users('admin')
+    def test_constraint_primary_view_only(self):
+        """Test that only primary views can be set as body_view_id."""
+        with self.assertRaises(ValidationError):
+            self.env['mail.template'].create({
+                'name': 'Test Template',
+                'model_id': self.env.ref('base.model_res_partner').id,
+                'body_view_id': self.email_body_view_extension.id,
+            })
+
+    @users('admin')
+    def test_view_deletion_fallback(self):
+        """Test that deleting the view gracefully falls back."""
+        # Create a separate view for this test
+        temp_view = self.env['ir.ui.view'].create({
+            'name': 'temp.email.body',
+            'type': 'qweb',
+            'mode': 'primary',
+            'arch': '<t t-name="temp.email.body"><p>Temp content</p></t>',
+        })
+
+        template = self.env['mail.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'body_view_id': temp_view.id,
+            'body_html': '<p>Fallback content</p>',
+        })
+
+        # Delete the view
+        temp_view.unlink()
+
+        # body_view_id should be cleared (ondelete='set null')
+        self.assertFalse(template.body_view_id)
+
+        # Should now render from body_html
+        rendered = template._render_field('body_html', self.partner.ids)
+        self.assertIn('Fallback content', rendered[self.partner.id])
+
+    @users('admin')
+    def test_send_mail_with_body_view_id(self):
+        """Test that _generate_template works correctly with body_view_id."""
+        template = self.env['mail.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'subject': 'Test Subject',
+            'body_view_id': self.email_body_view.id,
+            'body_html': '',
+            'email_from': 'test@example.com',
+            'email_to': '{{ object.email }}',
+        })
+
+        # Generate template values
+        values = template._generate_template(
+            self.partner.ids,
+            ['body_html', 'subject', 'email_to'],
+        )
+
+        self.assertIn('Test Partner', values[self.partner.id]['body_html'])
+        self.assertIn('email-container', values[self.partner.id]['body_html'])

@@ -21,6 +21,7 @@
         'security/ir.model.access.csv',
         'data/digest_data.xml',
         'data/mail_message_subtype_data.xml',
+        'data/email_body_views.xml',
         'data/mail_template_data.xml',
         'data/mail_templates.xml',
         'data/hr_recruitment_data.xml',
@@ -61,6 +62,7 @@
             'hr_recruitment/static/tests/**/*',
         ],
     },
+    'post_init_hook': '_post_init_hook',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

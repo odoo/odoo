@@ -33,6 +33,7 @@ Key Features
         'report/event_event_reports.xml',
         'report/event_registration_report.xml',
         'data/ir_cron_data.xml',
+        'data/email_body_views.xml',
         'data/mail_template_data.xml',
         'data/event_data.xml',
         'data/event_tour.xml',
@@ -75,6 +76,7 @@ Key Features
             '/event/static/src/scss/event_full_page_ticket_report_pdf.scss',
         ],
     },
+    'post_init_hook': '_post_init_hook',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
