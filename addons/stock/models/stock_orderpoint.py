@@ -676,7 +676,7 @@ class StockWarehouseOrderpoint(models.Model):
         return dict(self.mapped(lambda x: (x.id, 0.0)))
 
     @api.model
-    def _run_scheduler_orderpoints(self):
+    def _refill_orderpoints(self):
         """ Computes the quantity to order, calculates the deadline date,
             and creates procurements as needed.
         """

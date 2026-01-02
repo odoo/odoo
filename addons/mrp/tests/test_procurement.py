@@ -803,7 +803,7 @@ class TestProcurement(TestMrpCommon):
             'product_max_qty': 2,
         }])
 
-        self.env['stock.warehouse.orderpoint']._run_scheduler_orderpoints()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
 
         mos = self.env['mrp.production'].search([('product_id', '=', finished.id)], order='origin')
         self.assertRecordValues(mos, [

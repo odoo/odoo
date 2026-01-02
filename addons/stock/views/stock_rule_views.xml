@@ -118,10 +118,10 @@
 
         <menuitem id="stock.menu_odrerpoint_compute"
         parent="menu_stock_warehouse_mgmt" sequence="135" groups="base.group_no_one"
-        action="ir_cron_scheduler_orderpoints_action_ir_actions_server"/>
+        action="ir_actions_server_refill_orderpoints"/>
 
         <menuitem id="stock.menu_reservations_compute"
         parent="menu_stock_warehouse_mgmt" sequence="145" groups="base.group_no_one"
-        action="ir_cron_scheduler_reservations_action_ir_actions_server"/>
+        action="ir_actions_server_assign_reservations"/>
     </data>
 </odoo>

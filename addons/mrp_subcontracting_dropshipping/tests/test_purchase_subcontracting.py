@@ -493,7 +493,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
             'product_min_qty': 2,
             'product_max_qty': 2,
         })
-        self.env['stock.warehouse.orderpoint']._run_scheduler_orderpoints()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
         delivery = self.env["stock.move"].search([("product_id", "=", self.comp1.id)]).picking_id
         self.assertEqual(delivery.partner_id, p1)
 

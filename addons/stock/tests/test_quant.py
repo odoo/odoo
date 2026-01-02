@@ -1669,7 +1669,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(self.productD, self.stock_location, 1.0)
 
         with self.enter_registry_test_mode():
-            self.env.ref('stock.ir_cron_scheduler_unlink_zero_quants_action').method_direct_trigger()
+            self.env.ref('stock.ir_cron_unlink_zero_quants').method_direct_trigger()
 
         self.assertFalse(self.env['stock.quant'].search([('product_id', '=', self.productA.id)]))
         self.assertTrue(self.env['stock.quant'].search([('product_id', '=', self.productB.id)]))
@@ -1705,7 +1705,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
         self.assertEqual(self.env.cr.fetchone()[0], 2)  # The 2 duplicated quants
 
         with self.enter_registry_test_mode():
-            self.env.ref('stock.ir_cron_scheduler_merge_quants_action').method_direct_trigger()
+            self.env.ref('stock.ir_cron_merge_stock_quants').method_direct_trigger()
         self.env.cr.execute("SELECT COUNT(*) FROM stock_quant")
         self.assertEqual(self.env.cr.fetchone()[0], 1)  # Duplicated quants merged
         self.env.cr.execute("SELECT quantity FROM stock_quant")

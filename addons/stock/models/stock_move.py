@@ -2460,7 +2460,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         moves_to_reserve._action_assign()
 
     @api.model
-    def _run_scheduler_reservations(self):
+    def _assign_reservations(self):
         """ Assign stock reservations to confirmed or partially available moves,
             processing them in order of reservation date and priority.
         """

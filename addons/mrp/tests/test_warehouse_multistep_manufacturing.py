@@ -406,7 +406,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'product_max_qty': 2,
         })
 
-        self.env['stock.warehouse.orderpoint']._run_scheduler_orderpoints()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
         mo = self.env['mrp.production'].search([('product_id', '=', finished_product.id)])
         pickings = mo.picking_ids
         self.assertEqual(len(pickings), 1)
@@ -473,7 +473,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         rr_raw = rr_form.save()
 
         # Will 'order' finished product, which should trigger raw_stick and wood procurement
-        self.env['stock.warehouse.orderpoint']._run_scheduler_orderpoints()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
 
         # Mute logger warning no valid route for wood product which has no buy route
         pickings_component = self.env['stock.picking'].search(
@@ -522,7 +522,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         rr_form.product_max_qty = 40
         rr_form.save()
 
-        self.env['stock.warehouse.orderpoint']._run_scheduler_orderpoints()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
 
         mo = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
         mo_form = Form(mo)
@@ -612,7 +612,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'route_id': manufacturing_route.id,
             'bom_id': bom_2.id,
         })
-        self.env['stock.warehouse.orderpoint']._run_scheduler_orderpoints()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
         mo = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
         self.assertEqual(len(mo), 1)
         self.assertEqual(mo.product_qty, 1.0)
@@ -798,7 +798,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'product_max_qty': 2,
         })
 
-        self.env['stock.warehouse.orderpoint']._run_scheduler_orderpoints()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
         mo = self.env['mrp.production'].search([('product_id', '=', demo.id)])
         mo.action_confirm()
 

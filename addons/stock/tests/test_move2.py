@@ -376,7 +376,7 @@ class TestPickShip(TestStockCommon):
         picking_ship.action_cancel()
         picking_ship.move_ids.procure_method = 'make_to_order'
 
-        self.env['stock.warehouse.orderpoint']._run_scheduler_orderpoints()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
         next_activity = self.env['mail.activity'].search([('res_model', '=', 'product.template'), ('res_id', '=', self.productA.product_tmpl_id.id)])
         self.assertEqual(picking_ship.state, 'cancel')
         self.assertFalse(next_activity, 'If a next activity has been created if means that scheduler failed\
@@ -2425,11 +2425,11 @@ class TestSinglePicking(TestStockCommon):
         picking.action_confirm()
         self.assertFalse(picking.move_line_ids)
         self.env['stock.quant']._update_available_quantity(product, self.stock_location, 5)
-        self.env['stock.move']._run_scheduler_reservations()
+        self.env['stock.move']._assign_reservations()
         self.assertRecordValues(picking.move_line_ids, [{'state': 'partially_available', 'quantity': 5.0}])
         self.env['stock.quant']._update_available_quantity(product, self.stock_location, 10)
-        with self.enter_registry_test_mode():  # Run scheduler again, this time from the cron
-            self.env.ref('stock.ir_cron_scheduler_reservations_action').method_direct_trigger()
+        with self.enter_registry_test_mode():  # Check that the cron also works for reservations
+            self.env.ref('stock.ir_cron_assign_reservations').method_direct_trigger()
         self.assertRecordValues(picking.move_line_ids, [{'state': 'assigned', 'quantity': 10.0}])
 
     def test_create_picked_move_line(self):

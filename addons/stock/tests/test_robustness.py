@@ -311,7 +311,7 @@ class TestRobustness(TransactionCase):
         self.env['stock.quant']._update_reserved_quantity(product_reservation_too_high, self.stock_location, -2)
         self.assertEqual(quant.reserved_quantity, 3)
         with self.enter_registry_test_mode():  # Triggering from cron
-            self.env.ref('stock.ir_cron_scheduler_clean_reservations_action').method_direct_trigger()
+            self.env.ref('stock.ir_cron_clean_stock_reservations').method_direct_trigger()
         self.assertEqual(quant.reserved_quantity, 5)
 
         self.env['stock.quant']._update_reserved_quantity(product_reservation_too_high, self.stock_location, -2)

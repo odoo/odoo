@@ -124,7 +124,7 @@ class TestProcRule(TransactionCase):
         # method won't be an attribute of stock.procurement at this moment. For that reason
         # we mute the logger when running the scheduler.
         with mute_logger('odoo.addons.stock.models.procurement'):
-            self.env['stock.warehouse.orderpoint']._run_scheduler_orderpoints()
+            self.env['stock.warehouse.orderpoint']._refill_orderpoints()
 
         # Check that a picking was created from stock to output.
         moves = self.env['stock.move'].search([
@@ -246,7 +246,7 @@ class TestProcRule(TransactionCase):
         })
         delivery_move._action_confirm()
         orderpoint._compute_qty()
-        self.env['stock.warehouse.orderpoint']._run_scheduler_orderpoints()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
 
         receipt_move = self.env['stock.move'].search([
             ('product_id', '=', self.product.id),
@@ -995,7 +995,7 @@ class TestProcRuleLoad(TransactionCase):
         (products[50] | products[99] | products[150] | products[199]).write({
             'route_ids': [(4, wrong_route.id)]
         })
-        self.env['stock.warehouse.orderpoint']._run_scheduler_orderpoints()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
         self.assertTrue(self.env['stock.move'].search([('product_id', 'in', products.ids)]))
         for index in [50, 99, 150, 199]:
             self.assertTrue(self.env['mail.activity'].search([
