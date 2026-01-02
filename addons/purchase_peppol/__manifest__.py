@@ -8,6 +8,7 @@ Allows BIS advanced ordering for purchase module.
     'depends': ['purchase', 'purchase_edi_ubl_bis3'],
     'data': [
         'views/purchase_view.xml',
+        'security/ir.model.access.csv',
     ],
     'installable': True,
     'auto_install': True,
