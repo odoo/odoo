@@ -690,8 +690,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         Self-billed invoices are vendor bills that can be sent via Peppol when
         the company has self-billing sending activated.
         """
-        # Enable self-billing sending for the company
-        self.env.company.peppol_activate_self_billing_sending = True
         self.valid_partner.invoice_edi_format = 'ubl_bis3'
 
         self_billing_journal = self.env['account.journal'].create({
@@ -790,12 +788,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         # Set up the 21% VAT sale tax which should be put on the invoice line
         tax_21 = self.percent_tax(21.0, type_tax_use='sale')
 
-        # Set up the self-billing reception journal
-        sale_journal = self.env['account.journal'].search([
-            ('company_id', '=', self.env.company.id),
-            ('type', '=', 'sale'),
-        ], limit=1)
-        self.env.company.peppol_self_billing_reception_journal_id = sale_journal
         cls = self.__class__
         cls.mocked_incoming_invoice_fname = 'incoming_self_billed_invoice'
 
@@ -812,7 +804,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertRecordValues(move, [{
             'peppol_move_state': 'done',
             'move_type': 'out_invoice',
-            'journal_id': self.env.company.peppol_self_billing_reception_journal_id.id,
         }])
 
         self.assertRecordValues(move.line_ids, [

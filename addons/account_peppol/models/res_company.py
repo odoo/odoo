@@ -98,23 +98,6 @@ class ResCompany(models.Model):
     peppol_metadata = fields.Json(string='Peppol Metadata')
     peppol_metadata_updated_at = fields.Datetime(string='Peppol meta updated at')
 
-    # Deprecated
-    peppol_activate_self_billing_sending = fields.Boolean(
-        string="Activate self-billing sending",
-        help="If activated, you will be able to send vendor bills as self-billed invoices via Peppol.",
-    )
-    # Deprecated
-    peppol_self_billing_reception_journal_id = fields.Many2one(
-        comodel_name='account.journal',
-        string='Self-Billing reception journal',
-        help="Any self-billed invoices / credit notes received via Peppol will be created in draft in this journal. Defaults to the first sale journal.",
-        domain=[('type', '=', 'sale')],
-        compute='_compute_peppol_self_billing_reception_journal_id',
-        store=True,
-        readonly=False,
-        inverse='_inverse_peppol_self_billing_reception_journal_id',
-    )
-
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
@@ -274,28 +257,6 @@ class ResCompany(models.Model):
             ])
             journals_to_reset.is_peppol_journal = False
             company.peppol_purchase_journal_id.is_peppol_journal = True
-
-    @api.depends('account_peppol_proxy_state')
-    def _compute_peppol_self_billing_reception_journal_id(self):
-        for company in self:
-            if not company.peppol_self_billing_reception_journal_id and company.peppol_can_send:
-                company.peppol_self_billing_reception_journal_id = self.env['account.journal'].search([
-                    *self.env['account.journal']._check_company_domain(company),
-                    ('type', '=', 'sale'),
-                ], limit=1)
-                company.peppol_self_billing_reception_journal_id.is_peppol_journal = True
-
-    def _inverse_peppol_self_billing_reception_journal_id(self):
-        for company in self:
-            # This avoid having 2 or more sale journals from the same company with
-            # `is_peppol_journal` set to True (which could occur after changes).
-            journals_to_reset = self.env['account.journal'].search([
-                ('company_id', '=', company.id),
-                ('type', '=', 'sale'),
-                ('is_peppol_journal', '=', True),
-            ])
-            journals_to_reset.is_peppol_journal = False
-            company.peppol_self_billing_reception_journal_id.is_peppol_journal = True
 
     @api.depends('email')
     def _compute_account_peppol_contact_email(self):
