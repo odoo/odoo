@@ -4,6 +4,7 @@ from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import format_date
+from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 import uuid
 
@@ -2156,3 +2157,47 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             ]
         })
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_changed_price_with_lots', login="accountman")
+
+
+@tagged('post_install', '-at_install')
+class TestPoSSalePayment(TestPointOfSaleHttpCommon, PaymentCommon):
+
+    def test_pos_settle_so_with_downpayment(self):
+        """Ensure that the POS correctly handles Sale Orders where a down payment was processed
+        via a payment transaction with the automatic invoicing setting enabled.
+        """
+        self.product_a.available_in_pos = True
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+        self.partner_a.email = "test.customer@example.com"
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': self.product_a.lst_price,
+            })],
+            'require_payment': True,
+            'prepayment_percent': 0.3,
+        })
+        # Manual downpayment invoice
+        down_payment = self.env['sale.advance.payment.inv'].sudo().create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 50,
+            'sale_order_ids': sale_order.ids,
+        })
+        down_payment.create_invoices()
+        down_payment_invoices = sale_order.invoice_ids
+        down_payment_invoices.action_post()
+        # Online payment transaction for 30% downpayment
+        tx = self._create_transaction(
+                flow='direct',
+                amount=sale_order.amount_total * sale_order.prepayment_percent,
+                sale_order_ids=[sale_order.id],
+                state='done',
+                reference='Test Transaction',
+            )
+        tx._set_done()
+        tx._post_process()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_pos_settle_so_with_downpayment', login="accountman")

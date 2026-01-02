@@ -43,14 +43,6 @@ patch(PosStore.prototype, {
             fiscal_position_id: orderFiscalPos,
         });
 
-        //Add a down payment for transactions that were already done online
-        if (sale_order.amount_paid > 0) {
-            await this.addDownPaymentProductOrderlineToOrder(
-                sale_order,
-                -sale_order.amount_paid,
-                false
-            );
-        }
         const selectedOption = await makeAwaitable(this.dialog, SelectionPopup, {
             title: _t("What do you want to do?"),
             list: [
@@ -237,6 +229,15 @@ patch(PosStore.prototype, {
                     splitted_line.setDiscount(line.discount);
                 }
             }
+        }
+        // Add a down payment for transactions when automatic invoice is disabled
+        const paidDiff = this.getOrder().amount_total - sale_order.amount_unpaid;
+        const currency = sale_order.currency_id || this.currency;
+        if (currency.isPositive(sale_order.amount_paid) && !currency.isZero(paidDiff)) {
+            if (!(await this.loadDownPaymentProduct())) {
+                return;
+            }
+            this.addDownPaymentProductOrderlineToOrder(sale_order, -paidDiff, false);
         }
     },
 
