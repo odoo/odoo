@@ -6,6 +6,7 @@
     // To be improved by removing the unwanted classes and share relevant
     // rules across the BuilderSelect AND SelectMany2X components.
 
+    display: grid;
     border: 0 !important; // Override backend's `border`class
     width: 100% !important; // Override backend's `w-auto`class
 
@@ -18,6 +19,7 @@
     }
 
     .o_select_menu_toggler {
+        min-width: 0; // allow shrinking
         &, &.btn-light.bg-light {
             --border-color: #{$o-we-bg-light};
             --btn-padding-x: #{map-get($spacers , 2)};
