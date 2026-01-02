@@ -89,7 +89,7 @@ class ReportPosOrder(models.Model):
                 s.pricelist_id,
                 s.session_id,
                 s.account_move IS NOT NULL AS invoiced,
-                l.price_subtotal - COALESCE(l.total_cost,0) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS margin,
+                (l.price_subtotal * CASE WHEN s.is_refund THEN -1 ELSE 1 END) - COALESCE(l.total_cost,0) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS margin,
                 pm.payment_method_id AS payment_method_id,
                 fpc.id AS pos_categ_id
 
