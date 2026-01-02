@@ -196,3 +196,17 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             group_chat.invite_by_email(["alfred@test.com"])
         last_message = group_chat._get_last_messages()
         self.assertEqual(last_message.message_type, "user_notification")
+
+    def test_07_invite_link_rotation_revokes_old_access(self):
+        public_channel = self.env["discuss.channel"].create(
+            {"name": "Rotation Test Channel", "group_public_id": False},
+        )
+        old_url = public_channel.invitation_url
+        response = self.url_open(old_url)
+        self.assertEqual(response.status_code, 200)
+        public_channel.action_reset_invitation_uuid()
+        new_url = public_channel.invitation_url
+        response = self.url_open(old_url)
+        self.assertEqual(response.status_code, 404)
+        response = self.url_open(new_url)
+        self.assertEqual(response.status_code, 200)

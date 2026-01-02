@@ -63,6 +63,14 @@
                     <button class="btn btn-primary px-2 o-py-0_5" t-on-click="onClickCopy">
                         <i class="fa fa-copy"/>
                     </button>
+                    <button
+                        t-if= "['owner', 'admin'].includes(props.channel.self_member_id?.channel_role)"
+                        class="btn btn-secondary px-2 o-py-0_5"
+                        t-on-click="onClickGenerateNewLink"
+                        title="Generate new invite link"
+                    >
+                        <i class="fa fa-refresh"/>
+                    </button>
                 </div>
                 <div t-if="props.channel?.accessRestrictedToGroupText" class="mt-2 text-muted smaller mx-1" t-esc="props.channel.accessRestrictedToGroupText"/>
             </div>
