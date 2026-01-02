@@ -2194,18 +2194,17 @@ class PatchRequestsMixin(TestCase):
     external_mode = False
 
     @contextmanager
-    def assert_requests(self, expected_requests_and_responses: list[tuple[dict, requests.Response]]):
+    def assertRequests(self, expected_requests_and_responses: list[tuple[dict, requests.Response]]):
         """ Assert expected requests and provide mocked responses in a record/replay fashion.
 
-        Patches `requests.Session.request`, which is the main method internally used by the 
-        `requests` library to perform HTTP requests.
+        Patches `requests.Session.request`, which is the main method internally used by the
+        `requests` library to perform HTTP requests, asserts the request contents and serves
+        the provided mocked responses.
 
-        This allows simulating external APIs during tests.
-
-        The `external_mode` attribute can be set to:
+        To transform the mocked test into a live test, set the `external_mode` attribute to:
         - True to let the requests through;
-        - False to mock the requests;
-        - 'warn' to let the requests through but issue a warning if the requests / responses differ from the expected requests / mocked responses.
+        - 'warn' to let the requests through but issue a warning if the requests / responses
+          differ from the expected requests / mocked responses.
 
         :param expected_requests_and_responses: A list of tuples, each containing
                                                 an expected request and a mocked response.
@@ -2220,36 +2219,54 @@ class PatchRequestsMixin(TestCase):
         mocked_response.status_code = 200
         mocked_response._content = json.dumps({'message': 'Success'})
 
-        with self.assert_requests([
+        with self.assertRequestsMade([
             (
                 {'method': 'POST', 'url': 'https://example.com/send', 'json': {'message': 'Hello World!'}},
                 mocked_response,
             ),
         ]):
             response = requests.post('https://example.com/send', json={'message': 'Hello World!'})
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.json(), {'message': 'Success'})
         ```
         """
         if self.external_mode is True:
             yield  # Full external mode: don't patch `requests.Session.request` at all
         elif self.external_mode == 'warn':
             # External mode with warnings
-            yield from self._assert_requests_warn(expected_requests_and_responses)
+            yield from self.patch_requests_warn(expected_requests_and_responses)
         else:
             # Mocked mode
-            yield from self._assert_requests_mock(expected_requests_and_responses)
+            yield from self.assertMockRequests(expected_requests_and_responses)
 
-    def _assert_requests_warn(self, expected_requests_and_responses):
+    def assertMockRequests(self, expected_requests_and_responses):
+        """ Mock requests, assert that the requests are as expected and serve a mocked response. """
+        expected_requests_and_responses_iter = iter(expected_requests_and_responses)
+
+        def mock_request(session, method, url, **kwargs):
+            actual_request = {
+                'method': method,
+                'url': url,
+                **kwargs,
+            }
+
+            try:
+                expected_request, mocked_response = next(expected_requests_and_responses_iter)
+            except StopIteration:
+                self.fail("Unexpected request: %s" % actual_request)
+
+            self.assertRequestsEqual(actual_request, expected_request)
+            return mocked_response
+
+        with patch.object(requests.Session, 'request', new=mock_request):
+            yield
+
+        next_expected_request, _ = next(expected_requests_and_responses_iter, (None, None))
+        if next_expected_request is not None:
+            self.fail("Expected request not made: %s" % next_expected_request)
+
+    def patch_requests_warn(self, expected_requests_and_responses):
         """ Let requests pass through but warn if the request or the response differ from
         what is expected.
         """
-        def generate_diff(d1, d2):
-            return '\n'.join(difflib.ndiff(
-                pprint.pformat(d1).splitlines(),
-                pprint.pformat(d2).splitlines())
-            )
-
         expected_requests_and_responses_iter = iter(expected_requests_and_responses)
         original_request_method = requests.Session.request
 
@@ -2266,30 +2283,17 @@ class PatchRequestsMixin(TestCase):
                 _logger.warning("Unexpected request: %s", actual_request)
                 return original_request_method(session, method, url, **kwargs)
 
-            if actual_request != expected_request:
-                diff = generate_diff(actual_request, expected_request)
-                _logger.warning("Request differs from expected request: \n%s", diff)
+            try:
+                self.assertRequestsEqual(actual_request, expected_request)
+            except AssertionError as e:
+                _logger.warning("Request differs from expected request: \n%s", e.args[0])
 
-            response = original_request_method(session, method, url, **kwargs)
+            actual_response = original_request_method(session, method, url, **kwargs)
 
-            if (
-                response.status_code != expected_response.status_code
-                or response.content != expected_response.content
-            ):
-                warning_msg = 'Response differs from expected response:\n'
-                warning_msg += 'Status code: %s != %s\n' % (response.status_code, expected_response.status_code)
-                try:
-                    diff = generate_diff(response.json(), expected_response.json())
-                    warning_msg += 'Content: \n%s' % diff
-                except Exception:
-                    try:
-                        diff = generate_diff(response.text, expected_response.text)
-                        warning_msg += 'Content: \n%s' % diff
-                    except Exception:
-                        warning_msg += 'Content: \n%s\n != \n%s' % (response.content, expected_response.content)
-                _logger.warning(warning_msg)
+            if diff_msg := self.difference_between_responses(actual_response, expected_response):
+                _logger.warning('Response differs from expected response:\n%s', diff_msg)
 
-            return response
+            return actual_response
 
         with patch.object(requests.Session, 'request', request_and_warn):
             yield
@@ -2297,28 +2301,41 @@ class PatchRequestsMixin(TestCase):
         for expected_request, _ in expected_requests_and_responses_iter:
             _logger.warning("Expected request not made: %s", expected_request)
 
-    def _assert_requests_mock(self, expected_requests_and_responses):
-        """ Mock requests, assert that the request is as expected and serve a mocked response. """
-        expected_requests_and_responses_iter = iter(expected_requests_and_responses)
+    def assertRequestsEqual(self, actual_request, expected_request):
+        """ Method used to validate that the actual request is identical to the expected one.
+            Can be overridden to customize the validation. """
+        return self.assertEqual(actual_request, expected_request)
 
-        def mock_request(session, method, url, **kwargs):
-            actual_request = {
-                'method': method,
-                'url': url,
-                **kwargs,
-            }
+    def difference_between_responses(self, actual_response, expected_response):
+        """ Method used by the `patch_requests_warn` method to know whether
+            the actual response is identical to the mocked response when live-testing.
+            Can be overridden to customize this behaviour. """
 
+        def generate_diff(d1, d2):
+            return '\n'.join(difflib.ndiff(
+                pprint.pformat(d1).splitlines(),
+                pprint.pformat(d2).splitlines())
+            )
+
+        if (
+            actual_response.status_code == expected_response.status_code
+            and actual_response.content == expected_response.content
+        ):
+            return None
+
+        diff_msg = ""
+        if actual_response.status_code != expected_response.status_code:
+            diff_msg += 'Status code: %s != %s\n' % (actual_response.status_code, expected_response.status_code)
+
+        if actual_response.content != expected_response.content:
             try:
-                expected_request, mocked_response = next(expected_requests_and_responses_iter)
-            except StopIteration:
-                self.fail("Unexpected request: %s" % actual_request)
+                diff = generate_diff(actual_response.json(), expected_response.json())
+                diff_msg += 'Content: \n%s' % diff
+            except (TypeError, requests.exceptions.InvalidJSONError):
+                try:
+                    diff = generate_diff(actual_response.text, expected_response.text)
+                    diff_msg += 'Content: \n%s' % diff
+                except (TypeError, requests.exceptions.InvalidJSONError):
+                    diff_msg += 'Content: \n%s\n != \n%s' % (actual_response.content, expected_response.content)
 
-            self.assertEqual(actual_request, expected_request)
-            return mocked_response
-
-        with patch.object(requests.Session, 'request', new=mock_request):
-            yield
-
-        next_expected_request, _ = next(expected_requests_and_responses_iter, (None, None))
-        if next_expected_request is not None:
-            self.fail("Expected request not made: %s" % next_expected_request)
+        return diff_msg
