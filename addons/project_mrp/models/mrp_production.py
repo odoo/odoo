@@ -18,3 +18,12 @@ class MrpProduction(models.Model):
         action = super().action_generate_bom()
         action['context']['default_project_id'] = self.project_id.id
         return action
+
+    def action_open_project(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'view_mode': 'form',
+            'res_id': self.project_id.id,
+        }
