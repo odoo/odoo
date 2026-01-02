@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_hr_kpd_category_view_tree" model="ir.ui.view">
+        <field name="name">l10n_hr.kpd.category.list</field>
+        <field name="model">l10n_hr.kpd.category</field>
+        <field name="arch" type="xml">
+            <list string="KPD Category">
+                <field name="name"/>
+                <field name="sector"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+    <record id="l10n_hr_kpd_category_view_search" model="ir.ui.view">
+        <field name="name">l10n_hr.kpd.category.search</field>
+        <field name="model">l10n_hr.kpd.category</field>
+        <field name="arch" type="xml">
+            <search string="KPD Category">
+                <field name="name"/>
+                <field name="sector"/>
+                <field name="description"/>
+                <group>
+                    <filter string="Industry" name="group_by_sector" domain="[]" context="{'group_by': 'sector'}"/>
+                </group> 
+            </search>
+        </field>
+    </record>
+</odoo>
