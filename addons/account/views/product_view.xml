@@ -75,6 +75,9 @@
                                 <field name="property_account_expense_id" placeholder="From Category"
                                     groups="account.group_account_readonly" decoration-muted="not property_account_expense_active"/>
                             </group>
+                            <group string="Reporting" name="reporting" invisible="1">
+                                <field name="account_tag_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            </group>
                         </group>
                     </page>
                 </page>
