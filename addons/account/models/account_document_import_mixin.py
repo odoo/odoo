@@ -151,6 +151,9 @@ class AccountDocumentImportMixin(models.AbstractModel):
         # Extract embedded attachments
         files_data.extend(self._unwrap_attachments(files_data))
 
+        # Filter attachments
+        files_data = self._filter_files_data(files_data)
+
         # Perform a grouping to determine how many invoices to create
         file_data_groups = grouping_method(files_data)
 
@@ -460,6 +463,11 @@ class AccountDocumentImportMixin(models.AbstractModel):
             for file_data in files_data
             if file_data.get('attachment')
         ))
+
+    @api.model
+    def _filter_files_data(self, files_data):
+        """ Method to be overridden to filter out files data. """
+        return files_data
 
     @api.model
     def _get_import_file_type(self, file_data):
