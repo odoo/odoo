@@ -369,6 +369,64 @@ test("open/close table menu", async () => {
     expect(".dropdown-menu").toHaveCount(0);
 });
 
+test("clear content is hidden in row menu when row has no content", async () => {
+    const { el } = await setupEditor(`
+        <table>
+            <tbody>
+                <tr>
+                    <td class="a"><p>[]<br></p></td>
+                    <td class="b"><p><br></p></td>
+                </tr>
+                <tr>
+                    <td class="c"><p><br></p></td>
+                    <td class="d"><p><br></p></td>
+                </tr>
+            </tbody>
+        </table>`);
+
+    await hover(el.querySelector("td.a"));
+    await expectElementCount("[data-type='row'].o-we-table-menu", 1);
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    expect(availableCommands(queryOne(".dropdown-menu"))).toEqual([
+        "make_header",
+        "move_down",
+        "insert_above",
+        "insert_below",
+        "toggle_alternating_rows",
+        "delete",
+        // no clear content
+    ]);
+});
+
+test("clear content is hidden in column menu when column has no content", async () => {
+    const { el } = await setupEditor(`
+        <table>
+            <tbody>
+                <tr>
+                    <td class="a"><p>[]<br></p></td>
+                    <td class="b"><p><br></p></td>
+                </tr>
+                <tr>
+                    <td class="c"><p><br></p></td>
+                    <td class="d"><p><br></p></td>
+                </tr>
+            </tbody>
+        </table>`);
+
+    await hover(el.querySelector("td.a"));
+    await expectElementCount("[data-type='row'].o-we-table-menu", 1);
+    await click("[data-type='column'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    expect(availableCommands(queryOne(".dropdown-menu"))).toEqual([
+        "move_right",
+        "insert_left",
+        "insert_right",
+        "delete",
+        // no clear content
+    ]);
+});
+
 test("basic delete column operation", async () => {
     const { el, editor } = await setupEditor(
         unformat(`
