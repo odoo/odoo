@@ -34,10 +34,11 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route(table_id=floor.table_ids[0].id)
+        self_route_table = self.pos_config._get_self_order_route(table_id=floor.table_ids[0].id)
+        self_route = self.pos_config._get_self_order_route()
 
         # Test selection of different presets
-        self.start_tour(self_route, "self_mobile_each_table_takeaway_in")
+        self.start_tour(self_route_table, "self_mobile_each_table_takeaway_in")
         self.start_tour(self_route, "self_mobile_each_table_takeaway_out")
         orders = self.env['pos.order'].search([], order="id desc", limit=2)
         self.assertEqual(orders[0].preset_id, self.out_preset)
@@ -48,7 +49,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         })
 
         # Mobile, each, counter
-        self.start_tour(self_route, "self_mobile_each_counter_takeaway_in")
+        self.start_tour(self_route_table, "self_mobile_each_counter_takeaway_in")
         self.start_tour(self_route, "self_mobile_each_counter_takeaway_out")
 
         self.env['pos.order'].search([('state', '=', 'draft')]).write({'state': 'cancel'})
@@ -58,16 +59,15 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         })
 
         # Mobile, meal, table
-        self.start_tour(self_route, "self_mobile_meal_table_takeaway_in")
+        self.start_tour(self_route_table, "self_mobile_meal_table_takeaway_in")
         self.start_tour(self_route, "self_mobile_meal_table_takeaway_out")
-
         self.env['pos.order'].search([('state', '=', 'draft')]).write({'state': 'cancel'})
         self.pos_config.write({
             'self_ordering_service_mode': 'counter',
         })
 
         # Mobile, meal, counter
-        self.start_tour(self_route, "self_mobile_meal_counter_takeaway_in")
+        self.start_tour(self_route_table, "self_mobile_meal_counter_takeaway_in")
         self.start_tour(self_route, "self_mobile_meal_counter_takeaway_out")
 
         # Cancel in meal

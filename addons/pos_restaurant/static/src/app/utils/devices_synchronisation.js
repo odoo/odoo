@@ -8,11 +8,16 @@ patch(DevicesSynchronisation.prototype, {
             return result;
         }
         // Verify if there is only 1 order by table.
+        // Group orders by table_id or self_ordering_table_id (prefer table_id if both exist)
+        // This allows self-orders to merge with regular orders on the same table
         const orderByTableId = this.models["pos.order"].reduce((acc, order) => {
             // Floating order doesn't need to be verified.
-            if (!order.finalized && order.table_id?.id) {
-                acc[order.table_id.id] = acc[order.table_id.id] || [];
-                acc[order.table_id.id].push(order);
+            if (!order.finalized) {
+                const tableId = order.table_id?.id || order.self_ordering_table_id?.id;
+                if (tableId) {
+                    acc[tableId] = acc[tableId] || [];
+                    acc[tableId].push(order);
+                }
             }
             return acc;
         }, {});
@@ -34,7 +39,12 @@ patch(DevicesSynchronisation.prototype, {
                     continue;
                 }
 
-                const uniqOrder = syncedOrder.pop();
+                // const uniqOrder = syncedOrder.pop();
+                const uniqOrder = syncedOrder.shift();
+                if (!uniqOrder) {
+                    continue;
+                }
+                // debugger;
                 for (const order of [...localOrders, ...syncedOrder]) {
                     const linesIds = order.lines.map((line) => line.id);
                     for (const id of linesIds) {
@@ -48,6 +58,7 @@ patch(DevicesSynchronisation.prototype, {
                     ...localOrders.map((order) => order.uuid),
                     ...syncedOrder.map((order) => order.uuid),
                 ];
+                debugger;
                 if (localIds.includes(this.pos.selectedOrderUuid)) {
                     this.pos.setOrder(uniqOrder);
                     this.pos.addPendingOrder([uniqOrder.id]);

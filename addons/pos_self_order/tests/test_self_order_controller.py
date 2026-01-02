@@ -3,6 +3,7 @@
 import json
 import odoo.tests
 from datetime import timedelta
+from odoo import Command
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
 
@@ -176,3 +177,47 @@ class TestSelfOrderController(SelfOrderCommonTest):
         data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
         self.assertEqual(len(data['pos.order']), 1)
         self.assertEqual(data['pos.order'][0]['id'], pos_order.id)
+
+    def test_process_order_sets_self_ordering_table_id(self):
+        """Test that process_order sets self_ordering_table_id on self-orders"""
+        # Write service_mode first to avoid the write method resetting pay_after
+        self.pos_config.write({
+            'self_ordering_service_mode': 'table',
+        })
+        # Now write the rest - pay_after must be written after service_mode to avoid being reset
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'meal',
+            'use_presets': True,
+            'default_preset_id': self.in_preset.id,
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        params = {
+            'access_token': self.pos_config.access_token,
+            'table_identifier': self.pos_table_1.identifier,
+            'order': {
+                'company_id': self.env.company.id,
+                'uuid': 'test-uuid-123',
+                'state': 'draft',
+                'preset_id': self.in_preset.id,
+                'session_id': self.pos_config.current_session_id.id,
+                'amount_total': 0,
+                'amount_paid': 0,
+                'amount_tax': 0,
+                'amount_return': 0,
+                'lines': [Command.create({
+                    'product_id': self.cola.id,
+                    'qty': 1,
+                    'price_unit': self.cola.lst_price,
+                    'price_subtotal': self.cola.lst_price,
+                    'tax_ids': [Command.set(self.cola.taxes_id.ids)],
+                    'price_subtotal_incl': 0,
+                })]
+            },
+        }
+        data = self.make_request_to_controller('/pos-self-order/process-order/mobile', params)
+        pos_order = self.env['pos.order'].browse(data['pos.order'][0]['id'])
+        # Verify self_ordering_table_id is set after process_order
+        self.assertEqual(pos_order.self_ordering_table_id.id, self.pos_table_1.id)
