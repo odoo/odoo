@@ -213,7 +213,7 @@ class SaleOrderLine(models.Model):
         compute='_compute_price_reduce_taxinc',
         store=True, precompute=True)
 
-    customer_lead = fields.Float(
+    customer_lead = fields.Integer(
         string="Lead Time",
         compute='_compute_customer_lead',
         store=True, readonly=False, required=True, precompute=True,

@@ -45,7 +45,7 @@ class ResCompany(models.Model):
         string='Day of the month', default=31,
         help="""Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.
         If greater than the last day of a month, then the last day of the month will be selected instead.""")
-    horizon_days = fields.Float(string="Replenishment Horizon", required=True, default=365,
+    horizon_days = fields.Integer(string="Replenishment Horizon", required=True, default=365,
                                 help="""Configure your horizon to trigger reordering rules earlier to get
                                 a head start on replenishment and avoid delays, or trigger it just-in-time
                                 ('0 days') to avoid overstocking.""")

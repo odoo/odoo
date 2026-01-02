@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    security_lead = fields.Float(related='company_id.security_lead', string="Security Lead Time", readonly=False)
+    security_lead = fields.Integer(related='company_id.security_lead', string="Security Lead Time", readonly=False)
     use_security_lead = fields.Boolean(
         string="Security Lead Time for Sales",
         config_parameter='sale_stock.use_security_lead',
