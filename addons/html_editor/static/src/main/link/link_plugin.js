@@ -292,6 +292,7 @@ export class LinkPlugin extends Plugin {
             ".o_prevent_link_editor a",
         ],
         legit_empty_link_predicates: (linkEl) => linkEl.hasAttribute("data-mimetype"),
+        unsplittable_node_predicates: (node) => node.nodeName === "A",
 
         /** Handlers */
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
