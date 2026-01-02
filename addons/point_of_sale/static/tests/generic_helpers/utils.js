@@ -41,6 +41,8 @@ export function refresh() {
                 };
 
                 // Wait indexedDB debouncer
+                // Wait indexedDB debouncer
+                // Wait indexedDB debouncer
                 setTimeout(() => {
                     checkTransaction();
                 }, 305);
