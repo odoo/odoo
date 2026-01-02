@@ -83,7 +83,8 @@ class ResPartner(models.Model):
                 continue
             country_code = partner._deduce_country_code()
             if country_code == 'DK' and partner.nemhandel_identifier_type == '0184':
-                partner.nemhandel_identifier_value = partner.company_registry
+                vat_country, vat_number = partner._split_vat(partner.company_registry or '')
+                partner.nemhandel_identifier_value = vat_number if vat_country == 'DK' else partner.company_registry
             elif country_code == 'DK':
                 partner.nemhandel_identifier_value = partner.nemhandel_identifier_value
             else:
