@@ -14,7 +14,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "../_helpers/format";
 import { contains } from "../../../../web/static/tests/_framework/dom_test_helpers";
 import { getContent, setSelection } from "../_helpers/selection";
-import { insertText } from "../_helpers/user_actions";
+import { deleteBackward, insertText } from "../_helpers/user_actions";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
 describe("button style", () => {
@@ -404,5 +404,16 @@ describe("button edit", () => {
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="http://test.test/" class="invisible btn btn-primary">ab[]</a></p>'
         );
+    });
+});
+
+test.tags("firefox");
+describe("firefox", () => {
+    test("text should be inserted inside link after backspace", async () => {
+        const { el, editor } = await setupEditor('<p><a href="#">link</a>t[]est</p>');
+        deleteBackward(editor);
+        deleteBackward(editor);
+        await insertText(editor, "X");
+        expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="#">linX[]</a>est</p>');
     });
 });
