@@ -180,7 +180,7 @@
                         </tbody>
                     </table>
                     <div class="oe_structure"></div>
-                    <t t-set="backorders" t-value="o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))"/>
+                    <t t-set="backorders" t-value="o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.picking_type_code == 'outgoing')"/>
                     <div t-if="not (o.backorder_ids and backorders)" class="oe_structure"></div>
                     <div t-else="">
                         <p class="mt-5">
