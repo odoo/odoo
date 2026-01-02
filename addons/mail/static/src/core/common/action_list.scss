@@ -14,6 +14,10 @@
         &:not(.o-hasBtnBg) {
             background-color: inherit;
         }
+    
+        &.o-simulateDarkTheme.o-hasBtnBg:hover {
+            filter: brightness(1.3);
+        }
 
         &.o-inline {
             &:where(:has(i:first-child:last-child)) {

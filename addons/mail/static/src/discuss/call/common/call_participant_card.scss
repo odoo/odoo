@@ -58,8 +58,8 @@
 }
 
 .o-discuss-CallParticipantCard-avatar img {
-    max-height: #{"min(100%, 100px)"}; // interpolated as not supported by Sass
-    max-width: #{"min(100%, 100px)"};
+    max-height: #{"min(100%, 80px)"}; // interpolated as not supported by Sass
+    max-width: #{"min(100%, 80px)"};
     aspect-ratio: 1;
     border: none;
 
@@ -109,7 +109,8 @@
 }
 
 .o-discuss-CallParticipantCard-overlayBottomName {
-    background-color: rgba(0, 0, 0, 0.75);
+    opacity: .85;
+    text-shadow: 4px 4px 4px black, 0px 0px 4px black, 0px 0px 4px black;
 }
 
 .o-discuss-CallParticipantCard-overlay-replayButton {

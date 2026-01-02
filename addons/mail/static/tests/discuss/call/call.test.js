@@ -635,7 +635,7 @@ test("start call when accepting from push notification", async () => {
         })
     );
     await contains(".o-mail-DiscussContent-threadName[title=General]");
-    await contains(`.o-discuss-CallParticipantCard[title='${serverState.partnerName}']`);
+    await contains(`.o-discuss-CallParticipantCard[aria-label='${serverState.partnerName}']`);
 });
 
 test("Clicking sidebar call participant opens avatar card", async () => {
@@ -673,9 +673,9 @@ test("Use saved volume settings", async () => {
     await click("[title='Join the Call']");
     await contains(".o-discuss-Call");
     await contains(
-        `.o-discuss-CallParticipantCard[title='${partnerName}'][data-is-context-menu-available]`
+        `.o-discuss-CallParticipantCard[aria-label='${partnerName}'][data-is-context-menu-available]`
     );
-    await hover(`.o-discuss-CallParticipantCard[title='${partnerName}']`);
+    await hover(`.o-discuss-CallParticipantCard[aria-label='${partnerName}']`);
     await click("button[title='Participant options']");
     await contains(".o-discuss-CallContextMenu");
     const rangeInput = queryFirst(".o-discuss-CallContextMenu input[type='range']");
@@ -893,7 +893,7 @@ test("single 'join' (with camera) button when last call had camera on", async ()
     await start();
     await openDiscuss(channelId);
     await click("button[title='Join Video Call']");
-    await contains(".o-discuss-CallParticipantCard[title='Mitchell Admin'] video");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin'] video");
     await click("button[title='Disconnect']");
     await click("button[title='Join Video Call']:text('Join')", {
         contains: [".fa-video-camera"],
@@ -922,20 +922,20 @@ test("dynamic focus switches to talking participant", async () => {
     const rtc = env.services["discuss.rtc"];
     await openDiscuss(channelId);
     await click("[title='Join Call']");
-    await click(".o-discuss-CallParticipantCard[title='Alice']");
-    await contains(".o-discuss-CallParticipantCard[title='Alice']");
-    await contains(".o-discuss-CallParticipantCard[title='Bob']", {
+    await click(".o-discuss-CallParticipantCard[aria-label='Alice']");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Alice']");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Bob']", {
         count: 0,
     });
     rtc.updateSessionInfo({ [bobSessionId]: { isTalking: true } });
-    await contains(".o-discuss-CallParticipantCard[title='Bob']");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Bob']");
     rtc.updateSessionInfo({ [aliceSessionId]: { isTalking: true } });
-    await contains(".o-discuss-CallParticipantCard[title='Bob']", {
+    await contains(".o-discuss-CallParticipantCard[aria-label='Bob']", {
         count: 0,
     });
-    await contains(".o-discuss-CallParticipantCard[title='Alice']");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Alice']");
     rtc.updateSessionInfo({ [aliceSessionId]: { isTalking: false } });
-    await contains(".o-discuss-CallParticipantCard[title='Bob']");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Bob']");
     await click("button[aria-label='Video Settings']");
     await click(".o-discuss-QuickVideoSettings button:has(:text('Advanced Settings'))");
     await click("input[title='Auto-focus speaker']:checked");
@@ -958,18 +958,18 @@ test("should not show context menu on participant card when not in a call", asyn
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains(".o-discuss-CallParticipantCard[title='Awesome Partner']");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Awesome Partner']");
     await contains(
-        ".o-discuss-CallParticipantCard[title='Awesome Partner'][data-is-context-menu-available]",
+        ".o-discuss-CallParticipantCard[aria-label='Awesome Partner'][data-is-context-menu-available]",
         { count: 0 }
     );
     await click("[title='Join Call']");
     await contains(
-        ".o-discuss-CallParticipantCard[title='Awesome Partner'][data-is-context-menu-available]"
+        ".o-discuss-CallParticipantCard[aria-label='Awesome Partner'][data-is-context-menu-available]"
     );
-    await hover(".o-discuss-CallParticipantCard[title='Awesome Partner']");
+    await hover(".o-discuss-CallParticipantCard[aria-label='Awesome Partner']");
     await click(
-        ".o-discuss-CallParticipantCard[title='Awesome Partner'] .o-discuss-CallParticipantCard-contextButton"
+        ".o-discuss-CallParticipantCard[aria-label='Awesome Partner'] .o-discuss-CallParticipantCard-contextButton"
     );
     await contains(".o-discuss-CallContextMenu");
 });
@@ -1067,9 +1067,9 @@ test("Show connecting state on cards", async () => {
     const bobRemote = network.makeMockRemote(channelMemberId);
     await openDiscuss(channelId);
     await click("[title='Join Call']");
-    await contains(".o-discuss-CallParticipantCard[title='Bob']");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Bob']");
     await bobRemote.updateConnectionState("connecting");
-    await contains(".o-discuss-CallParticipantCard[title='Bob'] .fa-exclamation-triangle");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] .fa-exclamation-triangle");
     await bobRemote.updateConnectionState("connected");
     await contains("span[data-connection-state='connected']");
 });
@@ -1086,10 +1086,10 @@ test("Can see raised hands from other call participants", async () => {
     const bobRemote = network.makeMockRemote(channelMemberId);
     await openDiscuss(channelId);
     await click("[title='Join Call']");
-    await contains(".o-discuss-CallParticipantCard[title='Bob']");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Bob']");
     await bobRemote.updateConnectionState("connected");
     await bobRemote.updateInfo({ isRaisingHand: true });
-    await contains(".o-discuss-CallParticipantCard[title='Bob'] .fa-hand-paper-o");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] .fa-hand-paper-o");
     await contains(".o-discuss-Call-notification:contains('Bob raised their hand')");
 });
 
@@ -1105,10 +1105,10 @@ test("Can see videos from other call participants", async () => {
     const bobRemote = network.makeMockRemote(channelMemberId);
     await openDiscuss(channelId);
     await click("[title='Join Call']");
-    await contains(".o-discuss-CallParticipantCard[title='Bob']");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Bob']");
     await bobRemote.updateConnectionState("connected");
     await bobRemote.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[title='Bob'] video");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video");
 });
 
 test("show all participants on other user stops screen share", async () => {
@@ -1128,7 +1128,7 @@ test("show all participants on other user stops screen share", async () => {
     await streamerRemote.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
     await contains(".o-discuss-CallParticipantCard-avatar", { count: 2 });
     await contains(".o-discuss-CallParticipantCard video");
-    await click(".o-discuss-CallParticipantCard[title='Streamer'] video");
+    await click(".o-discuss-CallParticipantCard[aria-label='Streamer'] video");
     await contains(".o-discuss-CallParticipantCard-avatar");
     await contains(".o-discuss-CallParticipantCard video");
     await streamerRemote.updateUpload("screen", null);
@@ -1190,14 +1190,14 @@ test("auto-focus participant video in one-to-one call in chat window", async () 
     await contains(".o-discuss-CallParticipantCard", { count: 2 });
     await mockedRemote.updateConnectionState("connected");
     await mockedRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[title='Batman'] video");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Batman'] video");
     await contains(".o-discuss-CallParticipantCard");
     await mockedRemote.updateUpload("camera", null);
-    await click(".o-discuss-CallParticipantCard[title='Batman']");
+    await click(".o-discuss-CallParticipantCard[aria-label='Batman']");
     await click("[title='Fullscreen']");
     await contains(".o-mail-Meeting");
     await mockedRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[title='Batman'] video");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Batman'] video");
     await contains(".o-discuss-CallParticipantCard", { count: 2 }); // card does not get focused in meeting view
 });
 

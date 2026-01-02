@@ -11,7 +11,7 @@ import { ACTION_TAGS } from "@mail/core/common/action";
 
 export class CallActionList extends Component {
     static components = { ActionList };
-    static props = ["channel", "compact?"];
+    static props = ["channel", "className?", "compact?"];
     static template = "discuss.CallActionList";
 
     setup() {
