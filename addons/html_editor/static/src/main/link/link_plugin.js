@@ -854,6 +854,19 @@ export class LinkPlugin extends Plugin {
                 ev.preventDefault();
             }
         }
+        // Firefox: avoid corrupted selection inside link.
+        const selection = this.document.getSelection();
+        if (
+            ev.inputType === "insertText" &&
+            selection.isCollapsed &&
+            selection.anchorNode.nodeType === Node.TEXT_NODE &&
+            selection.anchorNode.parentElement.tagName === "A"
+        ) {
+            // Reset hidden internal selection state.
+            const offset = selection.anchorOffset;
+            selection.collapse(selection.anchorNode, 0);
+            selection.collapse(selection.anchorNode, offset);
+        }
         this.updateCurrentLinkSyncState();
     }
 
