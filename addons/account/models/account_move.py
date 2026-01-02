@@ -5269,6 +5269,15 @@ class AccountMove(models.Model):
             if move.line_ids.account_id.filtered(lambda account: not account.active) and not self._context.get('skip_account_deprecation_check'):
                 validation_msgs.add(_("A line of this move is using a archived account, you cannot post it."))
 
+            account_companies = move.line_ids.account_id.company_ids
+            move_journal_company = move.journal_id.company_id.sudo()
+
+            if not ((move_journal_company.child_ids | move_journal_company.parent_ids) & account_companies == account_companies):
+                raise UserError(self.env._(
+                    "The entry '%(move_name)s (id %(move_id)s) is using accounts from a different company.",
+                    move_name=move.name, move_id=move.id
+                ))
+
         if validation_msgs:
             msg = "\n".join([line for line in validation_msgs])
             raise UserError(msg)
