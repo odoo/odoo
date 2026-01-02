@@ -2285,6 +2285,8 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (preset) {
+            order.setPreset(preset);
+
             if (preset.needsPartner) {
                 const partner = order.partner_id || (await this.selectPartner(order));
                 if (!partner) {
@@ -2298,7 +2300,7 @@ export class PosStore extends WithLazyGetterTrap {
                     }
                 }
             }
-            order.setPreset(preset);
+
             if (preset.identification === "name") {
                 await this.handleSelectNamePreset(order);
             }

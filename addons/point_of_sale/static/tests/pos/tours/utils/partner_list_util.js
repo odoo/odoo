@@ -165,3 +165,12 @@ export function scrollBottom() {
         },
     };
 }
+
+export function isShown() {
+    return [
+        {
+            content: "partner list screen is shown",
+            trigger: ".modal .partner-list",
+        },
+    ];
+}

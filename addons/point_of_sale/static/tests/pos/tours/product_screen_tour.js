@@ -1042,15 +1042,21 @@ registry
             [
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
+                PartnerList.searchCustomerValue("Partner Full", true),
+                PartnerList.clickPartner("Partner Full"),
                 ProductScreen.clickDisplayedProduct("Desk Organizer"),
                 ProductScreen.clickFastPaymentButton("Bank"),
                 ReceiptScreen.isShown(),
+                PartnerList.isShown().map(negateStep),
                 ReceiptScreen.clickNextOrder(),
+                PartnerList.searchCustomerValue("Partner Full", true),
+                PartnerList.clickPartner("Partner Full"),
                 ProductScreen.clickDisplayedProduct("Desk Organizer"),
                 ProductScreen.clickPayButton(),
                 PaymentScreen.clickPaymentMethod("Bank"),
                 PaymentScreen.clickValidate(),
                 ReceiptScreen.isShown(),
+                PartnerList.isShown().map(negateStep),
             ].flat(),
     });
 
