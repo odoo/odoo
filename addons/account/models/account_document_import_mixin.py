@@ -92,7 +92,7 @@ def split_etree_on_tag(tree, tag):
     </A>
     """
     tree = deepcopy(tree)
-    nodes_to_split = tree.findall(f'.//{tag}')
+    nodes_to_split = tree.xpath(f'//*[local-name()="{tag}"]')
 
     # Remove all nodes with the tag
     parent_node = nodes_to_split[0].getparent()
@@ -540,7 +540,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
         :return: a `files_data` list of files, for each business document beyond the first.
     """
         new_files_data = []
-        if len(file_data['xml_tree'].findall(f'.//{tag}')) > 1:
+        if len(file_data['xml_tree'].xpath(f'//*[local-name()="{tag}"]')) > 1:
             # Create a new xml tree for each invoice beyond the first
             trees = split_etree_on_tag(file_data['xml_tree'], tag)
             filename_without_extension, _dummy, extension = file_data['name'].rpartition('.')
