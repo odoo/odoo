@@ -1373,6 +1373,53 @@ class TestPurchase(AccountTestInvoicingCommon):
             po.action_receive()
         self.assertEqual(po.order_line.qty_received, 0)
 
+    def test_variant_level_pricelist_with_different_characteristics(self):
+        """Check that confirming a PO with product variants creates vendor pricelist lines
+        at the template level when all variants share the same characteristics, and at the
+        variant level when price or lead time differs between variants.
+        """
+        color_attributes = self.env['product.attribute'].create({
+            'name': 'Color',
+            'value_ids': [Command.create({'name': name}) for name in ['Red', 'Green']],
+        })
+        product_sofa = self.env['product.template'].create({
+            'name': 'Sofa',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': color_attributes.id,
+                'value_ids': [Command.set(color_attributes.value_ids.ids)],
+            })],
+        })
+        variants = product_sofa.product_variant_ids
+
+        # PO with same price for both variants → template-level pricelist should be created.
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        for variant in variants:
+            with po_form.order_line.new() as line:
+                line.product_id = variant
+                line.price_unit = 200
+        po = po_form.save()
+        po.button_confirm()
+        self.assertRecordValues(product_sofa.seller_ids, [
+            {'product_id': False, 'partner_id': self.partner_a.id, 'price': 200, 'delay': 0},
+        ])
+
+        # PO with different prices/delays → variant-level pricelist should be created.
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_b
+        for i, variant in enumerate(variants):
+            with po_form.order_line.new() as line:
+                line.product_id = variant
+                line.price_unit = 100 + i * 10
+                line.date_planned = fields.Datetime.now() + timedelta(days=i + 1)
+        po = po_form.save()
+        po.button_confirm()
+        self.assertRecordValues(product_sofa.seller_ids, [
+            {'product_id': False, 'partner_id': self.partner_a.id, 'price': 200, 'delay': 0},
+            {'product_id': variants[0].id, 'partner_id': self.partner_b.id, 'price': 100, 'delay': 1},
+            {'product_id': variants[1].id, 'partner_id': self.partner_b.id, 'price': 110, 'delay': 2},
+        ])
+
 
 @tagged('at_install', '-post_install')
 class TestPurchaseWithoutStock(AccountTestInvoicingCommon):
