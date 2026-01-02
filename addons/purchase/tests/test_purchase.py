@@ -1221,3 +1221,61 @@ class TestPurchase(AccountTestInvoicingCommon):
         po.button_unlock()
         po.button_cancel()
         self.assertEqual(po.state, 'cancel', "The purchase order should be cancelled.")
+
+    def test_variant_level_pricelist_created_when_prices_differ(self):
+        """Test that, when confirming a purchase order with product variants,
+        a vendor price list is created at the variant level if the variants
+        have different prices, UoMs, or expected arrival dates.
+        Otherwise, the vendor price list is created at the product template level.
+        """
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'value_ids': [
+                Command.create({'name': 'red', 'sequence': 1}),
+                Command.create({'name': 'green', 'sequence': 3}),
+            ],
+        })
+        color_attribute_red, color_attribute_green = color_attribute.value_ids
+        product_template_sofa = self.env['product.template'].create({
+            'name': 'Sofa',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': color_attribute.id,
+                'value_ids': [Command.set([color_attribute_red.id, color_attribute_green.id])],
+            })],
+        })
+        variant_red, variant_green = product_template_sofa.product_variant_ids
+
+        # PO with same price for both variants → template-level vendor
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        for variant in (variant_red, variant_green):
+            with po_form.order_line.new() as line:
+                line.product_id = variant
+                line.product_qty = 1
+                line.price_unit = 200
+        po = po_form.save()
+        po.button_confirm()
+        self.assertRecordValues(product_template_sofa.seller_ids, [
+            {'product_id': False, 'partner_id': self.partner_a.id, 'price': 200, 'min_qty': 1, 'delay': 0}
+        ])
+
+        # PO with different prices/delays → variant-level vendors
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_b
+        with po_form.order_line.new() as line:
+            line.product_id = variant_red
+            line.product_qty = 1
+            line.price_unit = 180
+            line.date_planned = fields.Datetime.now() + timedelta(days=7)
+        with po_form.order_line.new() as line:
+            line.product_id = variant_green
+            line.product_qty = 1
+            line.price_unit = 190
+            line.date_planned = fields.Datetime.now() + timedelta(days=3)
+        po = po_form.save()
+        po.button_confirm()
+        self.assertRecordValues(product_template_sofa.seller_ids, [
+            {'product_id': False, 'partner_id': self.partner_a.id, 'price': 200, 'min_qty': 1, 'delay': 0},
+            {'product_id': variant_red.id, 'partner_id': self.partner_b.id, 'price': 180, 'min_qty': 1, 'delay': 7},
+            {'product_id': variant_green.id, 'partner_id': self.partner_b.id, 'price': 190, 'min_qty': 1, 'delay': 3},
+        ])
