@@ -116,6 +116,7 @@
                         <field name="version_id" widget="versions_timeline" invisible="not id" options="{'clickable': True}" readonly="False"/>
                     </header>
                     <sheet>
+                        <field name="issues" class="w-100" invisible="not issues" widget="employee_warnings"/>
                         <div name="button_box" class="oe_button_box">
                             <button name="action_open_versions"
                                 class="oe_stat_button"
