@@ -47,10 +47,11 @@ class SaleOrder(models.Model):
     @api.depends('transaction_ids.state', 'transaction_ids.amount', 'order_line', 'amount_total', 'order_line.invoice_lines.parent_state', 'order_line.invoice_lines.price_total', 'order_line.pos_order_line_ids')
     def _compute_amount_unpaid(self):
         for sale_order in self:
+            online_payments_invoices = sale_order.transaction_ids.filtered(lambda tx_move: tx_move.state in ('authorized', 'done')).mapped('invoice_ids')
             total_invoice_paid = sum(
                 sale_order.order_line.filtered(lambda l: not l.display_type)
                 .mapped('invoice_lines')
-                .filtered(lambda l: l.parent_state != 'cancel')
+                .filtered(lambda l: l.parent_state != 'cancel' and l.move_id not in online_payments_invoices)
                 .mapped(lambda l: math.copysign(l.price_total, -l.balance))
             )
             total_pos_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('pos_order_line_ids.price_subtotal_incl'))
