@@ -1,7 +1,9 @@
 import json
+import werkzeug.http
 
 from odoo import Command, _, api, fields, models
 from odoo.tools import file_open
+from odoo.addons.spreadsheet.utils.json import extend_serialized_json
 
 
 class SpreadsheetDashboard(models.Model):
@@ -44,17 +46,34 @@ class SpreadsheetDashboard(models.Model):
         else:
             self.sudo().favorite_user_ids = [Command.link(current_user_id)]
 
+    def _get_dashboard_etag(self):
+        serialized_metadata = self._get_serialized_dashboard_metadata()
+        user_locale_code = self.env.user.lang or "en_US"
+        etag_data = "%s-%s-%s" % (serialized_metadata,
+                                  self.env.uid, user_locale_code)
+        return '"%s"' % werkzeug.http.generate_etag(etag_data.encode("utf-8"))
+
+    def _get_serialized_dashboard_metadata(self):
+        default_currency = self.env['res.currency'].get_company_currency_for_spreadsheet()
+        return json.dumps(
+            dict(
+                default_currency=default_currency,
+                translation_namespace=self._get_dashboard_translation_namespace(),
+            ),
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+
     def _get_serialized_readonly_dashboard(self):
         snapshot = json.loads(self.spreadsheet_data)
         user_locale = self.env['res.lang']._get_user_spreadsheet_locale()
         snapshot.setdefault('settings', {})['locale'] = user_locale
-        default_currency = self.env['res.currency'].get_company_currency_for_spreadsheet()
-        return json.dumps({
-            'snapshot': snapshot,
-            'revisions': [],
-            'default_currency': default_currency,
-            'translation_namespace': self._get_dashboard_translation_namespace(),
-        })
+        serialized_metadata = self._get_serialized_dashboard_metadata()
+        return extend_serialized_json(
+            serialized_metadata,
+            [('snapshot', json.dumps(snapshot, ensure_ascii=False)),
+             ('revisions', '[]')],
+        )
 
     def _get_sample_dashboard(self):
         try:
