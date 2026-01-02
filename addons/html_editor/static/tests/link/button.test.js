@@ -3,7 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "../_helpers/format";
 import { animationFrame, click, select, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { getContent, simulateDoubleClickSelect } from "../_helpers/selection";
-import { insertText } from "../_helpers/user_actions";
+import { deleteBackward, insertText } from "../_helpers/user_actions";
 import { contains } from "@web/../tests/web_test_helpers";
 
 describe("button style", () => {
@@ -103,5 +103,16 @@ describe("button edit", () => {
         expect(cleanLinkArtifacts(getContent(el))).toBe('<p>this is a <a href="#">[link]</a></p>');
         await insertText(editor, "X");
         expect(cleanLinkArtifacts(getContent(el))).toBe('<p>this is a <a href="#">X[]</a></p>');
+    });
+});
+
+test.tags("firefox");
+describe("firefox", () => {
+    test("text should be inserted inside link after backspace", async () => {
+        const { el, editor } = await setupEditor('<p><a href="#">link</a>t[]est</p>');
+        deleteBackward(editor);
+        deleteBackward(editor);
+        await insertText(editor, "X");
+        expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="#">linX[]</a>est</p>');
     });
 });
