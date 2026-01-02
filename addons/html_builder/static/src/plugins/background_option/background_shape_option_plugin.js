@@ -45,6 +45,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         ),
         content_not_editable_selectors: ".o_we_shape",
         system_node_selectors: ".o_we_shape",
+        on_website_color_updated_handlers: this.syncShapeColorsWithTheme.bind(this),
     };
     static shared = [
         "getShapeStyleUrl",
@@ -77,6 +78,31 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         const flipEls = [...this.editable.querySelectorAll(".o_we_flip_x, .o_we_flip_y")];
         for (const flipEl of flipEls) {
             this.applyShape(flipEl, () => ({ flip: this.getShapeData(flipEl).flip }));
+        }
+    }
+    /**
+     * Update the shape color (when a theme color is selected) whenever the
+     * theme preset color changes.
+     *
+     * @param {String} updatedColorVariable - Updated theme color variable
+     * like 'o-color-*'.
+     */
+    syncShapeColorsWithTheme(updatedColorVariable) {
+        if (!updatedColorVariable.startsWith("o-color-")) {
+            return;
+        }
+        const selector = `[data-oe-shape-data*='"${updatedColorVariable}"'] .o_we_shape[style*="background-image"]`;
+        this.refreshBgShapes([...this.document.querySelectorAll(selector)]);
+        this.config.snippetModel.updateContent("snippet_custom", (snippetContent) => {
+            this.refreshBgShapes([...snippetContent.querySelectorAll(selector)]);
+        });
+    }
+    refreshBgShapes(shapeEls) {
+        for (const shapeEl of shapeEls) {
+            shapeEl.style.setProperty(
+                "background-image",
+                `url("${this.getShapeSrc(shapeEl.parentElement)}")`
+            );
         }
     }
     /**
@@ -121,19 +147,14 @@ export class BackgroundShapeOptionPlugin extends Plugin {
 
         shapeContainerEl.classList.toggle("o_we_animated", animated === "true");
 
-        // We need to check if the colors are the default ones because since we
-        // do not apply a shape by default anymore, "getDefaultColors" might
-        // return an empty object if its the first time a shape is added.
-        const defaultColors = getDefaultColors(editingElement);
-        const areCustomColors =
-            Boolean(colors) &&
-            !Object.entries(colors).every(
-                ([colorName, colorValue]) =>
-                    colorValue.toLowerCase() === defaultColors[colorName]?.toLowerCase()
-            );
+        const areDefaultColors = Object.entries(colors || {}).every(
+            ([colorName, colorValue]) => colorValue === `o-color-${colorName.slice(1)}`
+        );
 
         const shouldCustomize =
-            areCustomColors || flip.length > 0 || parseFloat(shapeAnimationSpeed) !== 0;
+            (Boolean(colors) && !areDefaultColors) ||
+            flip.length > 0 ||
+            parseFloat(shapeAnimationSpeed) !== 0;
 
         if (shouldCustomize) {
             // Apply custom image, flip, speed
@@ -209,11 +230,16 @@ export class BackgroundShapeOptionPlugin extends Plugin {
      * Returns the default colors for the a shape in the selector.
      *
      * @param {String} selectedBackgroundUrl
+     * @returns {Object} A mapping of color keys (e.g., c1, c2) to their
+     * corresponding `o-color-*` values.
      */
     getShapeDefaultColors(selectedBackgroundUrl) {
         const shapeSrc = selectedBackgroundUrl && getBgImageURLFromURL(selectedBackgroundUrl);
         const url = new URL(shapeSrc, window.location.origin);
-        return Object.fromEntries(url.searchParams.entries());
+        const params = Object.fromEntries(url.searchParams.entries());
+        return Object.fromEntries(
+            Object.keys(params).map((key) => [key, `o-color-${key.slice(1)}`])
+        );
     }
     /**
      * Retrieves current shape data from the target's dataset.
@@ -248,6 +274,8 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             return "";
         }
         const searchParams = Object.entries(colors).map(([colorName, colorValue]) => {
+            // To convert 'o-color-*' colorValue to respective hex code.
+            colorValue = normalizeColor(colorValue, getHtmlStyle(this.document));
             const encodedCol = encodeURIComponent(colorValue);
             return `${colorName}=${encodedCol}`;
         });

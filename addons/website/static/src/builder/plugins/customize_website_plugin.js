@@ -32,6 +32,10 @@ import { CompositeAction } from "@html_builder/core/composite_action_plugin";
  * @property { CustomizeWebsitePlugin['setViewsOnSave'] } setViewsOnSave
  */
 
+/**
+ * @typedef {((color: string) => void)[]} on_website_color_updated_handlers
+ */
+
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
@@ -944,6 +948,7 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
             );
         }
         setBuilderCSSVariables(getHtmlStyle(this.document));
+        this.dispatchTo("on_website_color_updated_handlers", color);
     }
 }
 
