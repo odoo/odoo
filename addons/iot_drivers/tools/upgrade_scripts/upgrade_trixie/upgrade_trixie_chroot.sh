@@ -9,6 +9,10 @@ set -x  # display commands before execution
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get full-upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew"
 
+# add Tailscale apt repository
+curl -fsSL https://pkgs.tailscale.com/stable/raspbian/bullseye.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg > /dev/null
+curl -fsSL https://pkgs.tailscale.com/stable/raspbian/bullseye.tailscale-keyring.list | tee /etc/apt/sources.list.d/tailscale.list
+
 # Switch to Trixie packages
 sed -i 's|bookworm|trixie|g' /etc/apt/sources.list
 sed -i 's|bookworm|trixie|g' /etc/apt/sources.list.d/raspi.list
@@ -18,8 +22,8 @@ apt-get autoremove -y
 # Upgrade all packages to Trixie versions
 DEBIAN_FRONTEND=noninteractive apt-get full-upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" --purge --auto-remove
 
-# Reinstall packages that got removed in the upgrade
-apt-get install -y chromium python3-lxml-html-clean
+# Reinstall packages needed in saas-19.1
+apt-get install -y chromium python3-lxml-html-clean apt-transport-https tailscale
 
 # Disable read-only on boot
 sed -i 's|,ro|   |g' /etc/fstab
