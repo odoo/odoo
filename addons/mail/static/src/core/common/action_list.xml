@@ -92,6 +92,11 @@
         'px-3 py-2':     props.dropdown and   ui.isSmall,
         'px-2 py-1':     props.dropdown and  !ui.isSmall,
     })"/>
+    <!-- opacity -->
+    <t t-set="btnClass" t-value="attClassObjectToString({
+        [btnClass]: true,
+        'opacity-75 opacity-100-hover': action.tags.includes('CALL_LAYOUT'),
+    })"/>
     <!-- simulated dark theme -->
     <t t-set="btnClass" t-value="attClassObjectToString({
         [btnClass]: true,
