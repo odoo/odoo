@@ -8,6 +8,7 @@ from unittest.mock import patch
 from markupsafe import Markup
 
 from odoo import Command, fields
+from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
 from odoo.addons.bus.models.bus import json_dump
 from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, group_avatar
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -633,15 +634,13 @@ class TestChannelInternals(MailCommon, HttpCase):
 
     def test_channel_should_generate_correct_default_avatar(self):
         test_channel = self.env['discuss.channel']._create_channel(name='Channel', group_id=self.env.ref('base.group_user').id)
-        test_channel.uuid = 'channel-uuid'
         private_group = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids)
-        private_group.uuid = 'group-uuid'
-        bgcolor_channel = html_escape('#F48935')  # depends on uuid
-        bgcolor_group = html_escape('#EA6175')  # depends on uuid
-        expceted_avatar_channel = (channel_avatar.replace('fill="#875a7b"', f'fill="{bgcolor_channel}"')).encode()
+        bgcolor_channel = html_escape(get_random_ui_color_from_seed(str(test_channel.id)))
+        bgcolor_group = html_escape(get_random_ui_color_from_seed(str(private_group.id)))
+        expected_avatar_channel = (channel_avatar.replace('fill="#875a7b"', f'fill="{bgcolor_channel}"')).encode()
         expected_avatar_group = (group_avatar.replace('fill="#875a7b"', f'fill="{bgcolor_group}"')).encode()
 
-        self.assertEqual(base64.b64decode(test_channel.avatar_128), expceted_avatar_channel)
+        self.assertEqual(base64.b64decode(test_channel.avatar_128), expected_avatar_channel)
         self.assertEqual(base64.b64decode(private_group.avatar_128), expected_avatar_group)
 
         test_channel.image_128 = base64.b64encode(("<svg/>").encode())

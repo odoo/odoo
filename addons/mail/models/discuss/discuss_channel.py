@@ -265,7 +265,7 @@ class DiscussChannel(models.Model):
         if self.channel_type not in ('channel', 'group'):
             return False
         avatar = group_avatar if self.channel_type == 'group' else channel_avatar
-        bgcolor = get_random_ui_color_from_seed(self.uuid)
+        bgcolor = get_random_ui_color_from_seed(str(self.id))
         avatar = avatar.replace('fill="#875a7b"', f'fill="{bgcolor}"')
         return base64.b64encode(avatar.encode())
 
@@ -456,6 +456,12 @@ class DiscussChannel(models.Model):
         if not self.env.context.get("install_mode") and not self.env.user._is_public():
             Store(bus_channel=self.env.user).add(channels, "_store_channel_fields").bus_send()
         return channels
+
+    def action_reset_invitation_uuid(self):
+        self.ensure_one()
+        if self.self_member_id.channel_role not in ("admin", "owner"):
+            raise AccessError(self.env._("Only channel owners or administrators can reset the invite link."))
+        self.uuid = self._generate_random_token()
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_all_employee_channel(self):
