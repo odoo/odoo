@@ -151,6 +151,73 @@ class TestEdiEwaybillJson(TestEdiJson):
         })
         self.assertDictEqual(json_value, expected, "Indian EDI with 0(zero) quantity sent json value is not matched")
 
+    def test_edi_export_overseas(self):
+        (self.invoice_with_export_lut + self.invoice_with_export_without_lut).write({
+            "l10n_in_state_id": self.env.ref("l10n_in.state_in_oc").id,
+            "l10n_in_type_id": self.env.ref("l10n_in_edi_ewaybill.type_tax_invoice_sub_type_supply").id,
+            "l10n_in_distance": 20,
+            "l10n_in_mode": "1",
+            "l10n_in_vehicle_no": "GJ11AA1234",
+            "l10n_in_vehicle_type": "R",
+        })
+
+        # ================================== Ewaybill JSON for Export without LUT ===========================================
+        json_value = self.env["account.edi.format"]._l10n_in_edi_ewaybill_generate_json(self.invoice_with_export_without_lut)
+        expected = {
+            "supplyType": "O",
+            "subSupplyType": "1",
+            "docType": "INV",
+            "transactionType": 1,
+            "transDistance": "20",
+            "docNo": False,
+            "docDate": "01/01/2019",
+            "fromGstin": "24AAGCC7144L6ZE",
+            "fromTrdName": "Default Company",
+            "fromAddr1": "Khodiyar Chowk",
+            "fromAddr2": "Sala Number 3",
+            "fromPlace": "Amreli",
+            "fromPincode": 365220,
+            "fromStateCode": 24,
+            "actFromStateCode": 24,
+            "toGstin": "URP",
+            "toTrdName": "Foreign Partner",
+            "toAddr1": "351 Horner Chapel Rd",
+            "toAddr2": "",
+            "toPlace": "Peebles",
+            "toPincode": 999999,
+            "actToStateCode": 99,
+            "toStateCode": 99,
+            "itemList": [{
+                "productName": "product_a",
+                "hsnCode": "111111",
+                "productDesc": "product_a",
+                "quantity": 1.0,
+                "qtyUnit": "UNT",
+                "taxableAmount": 1000.0,
+                "igstRate": 18.0,
+            }],
+            "totalValue": 1000.0,
+            "cgstValue": 0.0,
+            "sgstValue": 0.0,
+            "igstValue": 180.0,
+            "cessValue": 0.0,
+            "cessNonAdvolValue": 0.0,
+            "otherValue": 0.0,
+            "totInvValue": 1180.0,
+            "transMode": "1",
+            "vehicleNo": "GJ11AA1234",
+            "vehicleType": "R"
+        }
+        self.assertDictEqual(json_value, expected, "Indian EDI Export without LUT json value does not match")
+
+        # ================================== Ewaybill JSON for Export with LUT ===========================================
+        json_value = self.env["account.edi.format"]._l10n_in_edi_ewaybill_generate_json(self.invoice_with_export_lut)
+        expected.update({
+            "igstValue": 0.0,
+            "totInvValue": 1000.0,
+        })
+        self.assertDictEqual(json_value, expected, "Indian EDI Export with LUT json value does not match")
+
     def test_edi_ewaybill_transporter_gst(self):
         self.partner_b.write({
             "vat": False,
