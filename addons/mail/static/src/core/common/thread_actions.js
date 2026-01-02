@@ -82,7 +82,7 @@ registerThreadAction("meeting-chat", {
     actionPanelComponent: MeetingChat,
     actionPanelOuterClass: "bg-100 border border-secondary",
     badge: ({ thread }) => thread.isUnread,
-    badgeIcon: ({ thread }) => !thread.importantCounter && "fa fa-circle text-700",
+    badgeIcon: ({ thread }) => !thread.importantCounter && "fa fa-circle o-text-white opacity-75",
     badgeText: ({ thread }) => thread.importantCounter || undefined,
     condition: ({ owner }) => owner.env.inMeetingView,
     icon: "fa fa-fw fa-comments",
