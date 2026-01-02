@@ -12,7 +12,6 @@
                 'o-active': isActiveRtcSession and !props.inset and props.compact,
                 'p-1 rounded-1': !isActiveRtcSession,
             }"
-            t-att-title="name"
             t-att-aria-label="name"
             t-att-data-is-context-menu-available="isContextMenuAvailable"
             t-attf-class="{{ props.className }}"
@@ -30,7 +29,7 @@
                 </div>
             </t>
             <CallParticipantVideo t-elif="hasVideo" session="rtcSession" type="props.cardData.type" inset="props.inset"/>
-            <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-minimized': props.minimized, 'o-isRemoteVideo': isRemoteVideo }" draggable="false">
+            <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-3" t-att-class="{ 'o-minimized': props.minimized, 'o-isRemoteVideo': isRemoteVideo }" draggable="false">
                 <img t-if="!showRemoteWarning" alt="Avatar" class="h-100 rounded-circle border-5 object-fit-cover" t-att-src="channelMember?.avatarUrl" draggable="false" t-att-class="{
                     'o-isTalking': isTalking and props.minimized,
                     'o-isInvitation': !rtcSession,
@@ -38,14 +37,14 @@
             </div>
             <t t-if="rtcSession">
                 <!-- overlay -->
-                <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden rounded-1" t-att-class="{ 'o-proportional-container w-50': isSmall }" t-att-data-connection-state="rtcSession.connectionState">
-                    <span t-if="!props.minimized and !props.inset" class="rounded-1 text-truncate opacity-75 o-proportional-text o-discuss-CallParticipantCard-overlayBottomName" t-att-class="{'o-minimized px-1': isSmall, 'p-0': !isSmall }" t-esc="name"/>
+                <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden rounded-3" t-att-class="{ 'o-proportional-container w-50': isSmall }" t-att-data-connection-state="rtcSession.connectionState">
+                    <span t-if="!props.minimized and !props.inset" class="rounded-3 text-truncate o-proportional-text o-discuss-CallParticipantCard-overlayBottomName" t-att-class="{'o-minimized px-1 small': isSmall, 'o-px-1_5 py-1': !isSmall }" t-esc="name"/>
                     <small t-if="rtcSession.is_screen_sharing_on and props.minimized and !isOfActiveCall" class="user-select-none o-proportional-text o-minimized rounded text-bg-danger d-flex align-items-center fw-bolder p-1" title="live" aria-label="live">
                         LIVE
                     </small>
                 </span>
                 <span t-if="showRemoteWarning" class="o-discuss-CallParticipantCard-overlay o-proportional-container z-1 w-50 position-absolute d-flex align-items-center justify-content-center overflow-hidden">
-                    <span class="fw-bolder p-1 rounded-1 o-video-text o-proportional-text">Video visible in the call tab</span>
+                    <span class="fw-bolder p-1 rounded-3 o-video-text o-proportional-text">Video visible in the call tab</span>
                 </span>
                 <CallDropdown t-if="isContextMenuAvailable and ((!isMobileOS and rootHover.isHover) or (isMobileOS and !props.minimized))" class="'position-absolute top-0 end-0'" menuClass="'d-flex o-discuss-CallParticipantCard-contextMenu'">
                     <button class="o-discuss-CallParticipantCard-contextButton btn btn-secondary btn-sm rounded-circle border-0 smaller p-1" title="Participant options">

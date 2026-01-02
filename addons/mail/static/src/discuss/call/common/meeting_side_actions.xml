@@ -2,8 +2,11 @@
 <templates xml:space="preserve">
     <t t-name="mail.MeetingSideActions">
         <t t-set="dummy" t-value="computeActions()"/>
-        <div class="o-mail-MeetingSideActions d-flex">
-            <ActionList actions="actions" inline="true" hasBtnBg="true" odooControlPanelSwitchStyle="true"/>
+        <div class="o-mail-MeetingSideActions d-flex ms-auto">
+            <div class="o-discuss-Call-layoutActions ms-auto">
+                <ActionList actions="layoutActions" inline="true"/>
+            </div>
+            <ActionList actions="actions" inline="true"/>
         </div>
     </t>
 </templates>
