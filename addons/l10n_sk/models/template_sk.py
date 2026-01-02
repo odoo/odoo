@@ -29,6 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'chart_sk_568000',
                 'account_sale_tax_id': 'vy_tuz_23',
                 'account_purchase_tax_id': 'vs_tuz_23',
+                'account_purchase_receipt_fiscal_position_id': 'fiscal_position_template_4',
                 'expense_account_id': 'chart_sk_504000',
                 'income_account_id': 'chart_sk_604000',
                 'receivable_account_id': 'chart_sk_311000',
