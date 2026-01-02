@@ -189,6 +189,8 @@ class HrVersion(models.Model):
                                        groups="hr.group_hr_manager")
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=1)
 
+    issues = fields.Json(compute='_compute_issues', compute_sudo=True)
+
     hr_responsible_id = fields.Many2one(
         'res.users', 'HR Responsible', tracking=1,
         help='Person responsible for validating the employee\'s contracts.', domain=_get_hr_responsible_domain,
@@ -208,6 +210,47 @@ class HrVersion(models.Model):
         'CHECK(wage >= 0)',
         'The wage must be a positive value.',
     )
+
+    @api.depends('is_in_contract', 'employee_id.bank_account_ids')
+    def _compute_issues(self):
+        for version in self:
+            issues = {}
+            cnt = 0
+
+            if not version.is_in_contract:
+                issues[str(cnt)] = {
+                    'message': self.env._("Employee does not have running contract."),
+                    'level': 'warning',
+                }
+                cnt += 1
+
+            employee = version.employee_id
+            if employee:
+                if not employee.bank_account_ids:
+                    issues[str(cnt)] = {
+                        'message': self.env._("Employee does not have a bank account."),
+                        'level': 'warning',
+                    }
+                    cnt += 1
+                elif any(not b.allow_out_payment for b in employee.bank_account_ids):
+                    untrusted_banks = employee.bank_account_ids.filtered(lambda b: not b.allow_out_payment)
+                    issues[str(cnt)] = {
+                        'message': self.env._("Untrusted bank accounts"),
+                        'level': 'warning',
+                        'action_text': self.env._("Bank Accounts"),
+                        'action': {
+                            'type': 'ir.actions.act_window',
+                            'name': self.env._('Bank Accounts'),
+                            'res_model': 'res.partner.bank',
+                            'view_mode': 'list,form',
+                            'views': [[False, 'list'], [False, 'form']],
+                            'domain': [('id', 'in', untrusted_banks.ids)],
+                            'context': {'create': False},
+                        },
+                    }
+                    cnt += 1
+
+            version.issues = issues
 
     @api.depends('employee_id.company_id')
     def _compute_company_id(self):
