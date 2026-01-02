@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="hr_work_entry_enterprise.WorkEntryWarnings">
+        <div t-if="issues.length > 0" class="alert alert-warning mb-2 px-3 py-2" role="alert">
+            <div t-foreach="issues" t-as="issue" t-key="issue_index" class="d-flex align-items-center">
+                <span class="me-2"><t t-esc="issue.message"/></span>
+
+                <t t-if="issue.action">
+                    <a href="#" class="alert-link fw-bold" t-on-click.prevent="() => this.onActionClick(issue.action)">
+                        <i class="oi oi-arrow-right me-1"/>
+                        <t t-esc="issue.action_text"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
