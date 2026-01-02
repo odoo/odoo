@@ -1686,6 +1686,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         current_session.post_closing_cash_details(total_cash_payment)
         current_session.close_session_from_ui()
         self.assertEqual(current_session.state, 'closed')
+        report_refund_order, report_order = self.env['report.pos.order'].sudo().search([('order_id', 'in', current_session.order_ids.ids)])
+        self.assertEqual(report_order.margin, 20.0)
+        self.assertEqual(report_refund_order.margin, -20.0)
 
     def test_product_combo_price(self):
         """ Check that the combo has the expected price """
