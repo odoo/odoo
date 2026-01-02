@@ -79,7 +79,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             self._mock_register_sender_as_receiver(),
             self._mock_participant_status('receiver'),
         ]):
-            settings.button_peppol_register_sender_as_receiver()
+            settings.peppol_participation_role = 'sending_and_receiving'
         self.assertRecordValues(self.env.company, [{'account_peppol_proxy_state': 'receiver'}])
 
         # receiver -> not_registered.
@@ -88,8 +88,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             self._mock_get_all_documents(),
             self._mock_cancel_peppol_registration(),
         ]):
-            config_wizard = self.env['peppol.config.wizard'].create({})
-            config_wizard.button_peppol_unregister()
+            settings.button_peppol_deregister()
         self.assertRecordValues(self.env.company, [{'account_peppol_proxy_state': 'not_registered'}])
 
     def test_register_participant_already_exists_on_peppol_as_sender(self):
@@ -141,9 +140,9 @@ class TestPeppolParticipant(PeppolConnectorCommon):
         }])
 
         # Change the email.
-        config_wizard = self.env['peppol.config.wizard'].create({'account_peppol_contact_email': 'another@email.be'})
+        settings = self.env['res.config.settings'].create({})
         with self._mock_requests([self._mock_update_user()]) as mocks_results:
-            config_wizard.button_sync_form_with_peppol_proxy()
+            settings.account_peppol_contact_email = 'another@email.be'
             self.assertEqual(
                 mocks_results['called']['https://peppol.test.odoo.com/api/peppol/1/update_user']['kwargs']['json']['params']['update_data']['peppol_contact_email'],
                 'another@email.be',
@@ -205,8 +204,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             self._mock_participant_status('sender'),
             self._mock_cancel_peppol_registration(),
         ]):
-            config_wizard = self.env['peppol.config.wizard'].with_context(allowed_company_ids=branch.ids).create({})
-            config_wizard.button_peppol_unregister()
+            settings.button_peppol_deregister()
         self.assertRecordValues(settings, [{
             'account_peppol_proxy_state': 'not_registered',
             'peppol_use_parent_company': False,
@@ -303,8 +301,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             self._mock_cancel_peppol_registration(),
             self._mock_participant_status('sender'),
         ]):
-            config_wizard = self.env['peppol.config.wizard'].with_context(allowed_company_ids=branch.ids).create({})
-            config_wizard.button_peppol_unregister()
+            settings.button_peppol_deregister()
         self.assertRecordValues(settings, [{
             'account_peppol_proxy_state': 'not_registered',
             'peppol_use_parent_company': False,
@@ -336,11 +333,11 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             wizard.button_register_peppol_participant()
         self.assertEqual(self.env.company.account_peppol_proxy_state, 'smp_registration')
 
-        config_wizard = self.env['peppol.config.wizard'].create({})
+        settings = self.env['res.config.settings'].create({})
         with self._mock_requests([
             self._mock_participant_status('smp_registration', exists=False)
         ]):
-            config_wizard.button_peppol_unregister()
+            settings.button_peppol_deregister()
 
         # Should successfully deregister despite Exception
         self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_registered')

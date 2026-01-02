@@ -56,13 +56,6 @@
 
                         <div class="d-flex gap-1 action_buttons mt-2"
                              invisible="peppol_use_parent_company or account_peppol_proxy_state not in ('sender', 'smp_registration', 'receiver')">
-                            <!-- Deprecated button for advanced configuration -->
-                            <button string="Advanced Configuration"
-                                icon="oi-arrow-right"
-                                name="button_open_peppol_config_wizard"
-                                type="object"
-                                class="btn-link"
-                                invisible="True"/>
                             <button string="Disconnect Peppol"
                                     name="button_peppol_deregister"
                                     type="object"
@@ -78,14 +71,6 @@
                                         type="object"
                                         string="Activate Electronic Invoicing"
                                         class="oe_highlight mt-2"/>
-                            </div>
-                            <!-- deprecated Registered on Peppol -->
-                            <div invisible="True" class="mt-3">
-                                <button string="Register with Odoo"
-                                        name="button_peppol_register_sender_as_receiver"
-                                        type="object"
-                                        class="btn-primary me-1"
-                                        invisible="account_peppol_proxy_state != 'sender'"/>
                             </div>
                             <!--Branch company connected to parent's active peppol connection.-->
                             <div invisible="not peppol_use_parent_company" class="mt-2">
