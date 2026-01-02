@@ -35,7 +35,7 @@ class RazorpayController(Controller):
         csrf_token = data['csrf_token']
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id).exists()
         if not provider_sudo or provider_sudo.code != 'razorpay':
-            raise ValidationError(self.env._("Could not find Razorpay provider with id %s", provider_sudo))
+            raise ValidationError(request.env._("Could not find Razorpay provider with id %s", provider_sudo))
 
         # Verify the CSRF token.
         if not request.validate_csrf(csrf_token):

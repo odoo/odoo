@@ -96,7 +96,7 @@ class PaypalController(http.Controller):
                     'txn_type': 'CAPTURE',
                 })
             else:
-                _logger.warning(self.env._("Invalid response format, can't normalize."))
+                _logger.warning(request.env._("Invalid response format, can't normalize."))
         return result
 
     def _verify_notification_origin(self, payment_data, tx_sudo):
@@ -124,7 +124,7 @@ class PaypalController(http.Controller):
                 'POST', '/v1/notifications/verify-webhook-signature', json=data
             )
         except ValidationError:
-            tx_sudo._set_error(self.env._("Unable to verify the payment data"))
+            tx_sudo._set_error(request.env._("Unable to verify the payment data"))
             return
 
         if verification.get('verification_status') != 'SUCCESS':

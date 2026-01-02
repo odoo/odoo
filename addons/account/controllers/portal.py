@@ -67,18 +67,18 @@ class PortalAccount(CustomerPortal):
 
     def _get_account_searchbar_sortings(self):
         return {
-            'date': {'label': self.env._('Date'), 'order': 'invoice_date desc'},
-            'duedate': {'label': self.env._('Due Date'), 'order': 'invoice_date_due desc'},
-            'name': {'label': self.env._('Reference'), 'order': 'name desc'},
-            'state': {'label': self.env._('Status'), 'order': 'state'},
+            'date': {'label': request.env._('Date'), 'order': 'invoice_date desc'},
+            'duedate': {'label': request.env._('Due Date'), 'order': 'invoice_date_due desc'},
+            'name': {'label': request.env._('Reference'), 'order': 'name desc'},
+            'state': {'label': request.env._('Status'), 'order': 'state'},
         }
 
     def _get_account_searchbar_filters(self):
         return {
-            'all': {'label': self.env._('All'), 'domain': []},
-            'overdue_invoices': {'label': self.env._('Overdue invoices'), 'domain': self._get_overdue_invoices_domain()},
-            'invoices': {'label': self.env._('Invoices'), 'domain': [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]},
-            'bills': {'label': self.env._('Bills'), 'domain': [('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]},
+            'all': {'label': request.env._('All'), 'domain': []},
+            'overdue_invoices': {'label': request.env._('Overdue invoices'), 'domain': self._get_overdue_invoices_domain()},
+            'invoices': {'label': request.env._('Invoices'), 'domain': [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]},
+            'bills': {'label': request.env._('Bills'), 'domain': [('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]},
         }
 
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
@@ -189,9 +189,9 @@ class PortalAccount(CustomerPortal):
             try:
                 token_data = verify_hash_signed(request.env(su=True), request.env['account.journal']._get_journal_notification_unsubscribe_scope(), access_token)
             except ValueError:
-                return _render({'error': self.env._('Invalid token')}, 403)
+                return _render({'error': request.env._('Invalid token')}, 403)
             if not token_data or token_data.get('journal_id') != journal_id:
-                return _render({'error': self.env._('Invalid token')}, 403)
+                return _render({'error': request.env._('Invalid token')}, 403)
             journal = request.env['account.journal'].sudo().browse(journal_id)
         else:
             # Legacy link for authenticated user trying to unsubscribe (needs access rights on journal)
@@ -202,14 +202,14 @@ class PortalAccount(CustomerPortal):
         else:
             emails = email_normalize_all(journal.incoming_einvoice_notification_email or '')
             if len(emails) != 1:
-                return _render({'error': self.env._('Deprecated link')}, 410)
+                return _render({'error': request.env._('Deprecated link')}, 410)
             email_to_unsubscribe = emails[0]
 
         if not journal.exists() or not email_to_unsubscribe:
-            return _render({'error': self.env._('Already unsubscribed')}, 404)
+            return _render({'error': request.env._('Already unsubscribed')}, 404)
 
         if not journal.has_access('write'):
-            return _render({'error': self.env._('Invalid token')}, 403)
+            return _render({'error': request.env._('Invalid token')}, 403)
 
         journal = journal.with_company(journal.sudo().company_id.id)
 
@@ -217,7 +217,7 @@ class PortalAccount(CustomerPortal):
         email_found = any(r == email_to_unsubscribe for r in all_recipients)
 
         if not email_found:
-            return _render({'error': self.env._('Already unsubscribed')}, 404)
+            return _render({'error': request.env._('Already unsubscribed')}, 404)
 
         if request.httprequest.method == 'POST':
             journal._unsubscribe_invoice_notification_email(email_to_unsubscribe)
@@ -231,7 +231,7 @@ class PortalAccount(CustomerPortal):
     def _prepare_my_account_rendering_values(self, *args, **kwargs):
         rendering_values = super()._prepare_my_account_rendering_values(*args, **kwargs)
         rendering_values.update({
-            'invoice_sending_methods': {'email': self.env._("by Email")},
+            'invoice_sending_methods': {'email': request.env._("by Email")},
             'invoice_edi_formats': dict(request.env['res.partner']._fields['invoice_edi_format'].selection),
         })
         return rendering_values

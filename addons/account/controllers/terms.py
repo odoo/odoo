@@ -20,8 +20,8 @@ class TermsController(http.Controller):
         use_invoice_terms = request.env['ir.config_parameter'].sudo().get_bool('account.use_invoice_terms')
         if not (use_invoice_terms and request.env.company.terms_type == 'html'):
             return request.render('http_routing.http_error', {
-                'status_code': self.env._('Oops'),
-                'status_message': self.env._("""The requested page is invalid, or doesn't exist anymore.""")})
+                'status_code': request.env._('Oops'),
+                'status_message': request.env._("""The requested page is invalid, or doesn't exist anymore.""")})
         values = {
             'use_invoice_terms': use_invoice_terms,
             'company': request.env.company

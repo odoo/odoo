@@ -328,7 +328,7 @@ class PaymentPortal(portal.CustomerPortal):
             # is being made).
             partner_sudo = request.env['res.partner'].sudo().browse(partner_id)
             if partner_sudo.commercial_partner_id != token_sudo.partner_id.commercial_partner_id:
-                raise AccessError(self.env._("You do not have access to this payment token."))
+                raise AccessError(request.env._("You do not have access to this payment token."))
 
             payment_method_id = token_sudo.payment_method_id.id
 

@@ -20,7 +20,7 @@ class L10nRoEdiController(http.Controller):
         """ Generate Authorization Token to acquire access_key for requesting Access Token """
         company = http.request.env['res.company'].browse(company_id)
         if not company.l10n_ro_edi_client_id or not company.l10n_ro_edi_client_secret:
-            raise UserError(self.env._("Client ID and Client Secret field must be filled."))
+            raise UserError(request.env._("Client ID and Client Secret field must be filled."))
 
         auth_url_params = url_encode({
             'response_type': 'code',
@@ -38,13 +38,13 @@ class L10nRoEdiController(http.Controller):
         access_key = kw.get('code')
 
         def log_and_raise_error(message: str):
-            message += '\n' + self.env._("Received access key: %s", access_key)
+            message += '\n' + request.env._("Received access key: %s", access_key)
             company._l10n_ro_edi_log_message(message, 'callback')
             raise UserError(message)
 
         # Without certificate, ANAF won't give any access key in the callback URL's "code" parameter
         if not access_key:
-            log_and_raise_error(self.env._("Access key not found. Please try again.\nResponse: %s", kw))
+            log_and_raise_error(request.env._("Access key not found. Please try again.\nResponse: %s", kw))
 
         try:
             response = requests.post(
@@ -68,14 +68,14 @@ class L10nRoEdiController(http.Controller):
         except requests.exceptions.RequestException as e:
             log_and_raise_error(f"Request to {URL_ANAF_TOKEN} failed: {e}")
 
-        response_to_log = self.env._("Response (code=%(status_code)s) to %(url)s failed:\n%(text)s",
+        response_to_log = request.env._("Response (code=%(status_code)s) to %(url)s failed:\n%(text)s",
                             status_code=response.status_code,
                             url=response.url,
                             text=response.text)
         try:
             response_json = response.json()
         except requests.exceptions.RequestException as e:
-            error_cause = self.env._("Error when converting response to json: %s", e)
+            error_cause = request.env._("Error when converting response to json: %s", e)
             log_and_raise_error(f"{error_cause}\n{response_to_log}")
 
         try:
@@ -83,10 +83,10 @@ class L10nRoEdiController(http.Controller):
         except ValidationError as e:
             log_and_raise_error(f"{e}\n{response_to_log}")
         except binascii.Error as e:
-            error_cause = self.env._("Error when decoding the access token payload: %s", e)
+            error_cause = request.env._("Error when decoding the access token payload: %s", e)
             log_and_raise_error(f"{error_cause}\n{response_to_log}")
         except Exception as e:
-            error_cause = self.env._("Error when processing the response: %s", e)
+            error_cause = request.env._("Error when processing the response: %s", e)
             log_and_raise_error(f"{error_cause}\n{response_to_log}")
 
         return request.redirect(url_join(request.httprequest.url_root, 'web'))

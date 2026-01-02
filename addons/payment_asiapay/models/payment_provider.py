@@ -51,7 +51,7 @@ class PaymentProvider(models.Model):
         allowed_codes = set(const.CURRENCY_MAPPING.keys())
         for provider in self.filtered(lambda p: p.code == 'asiapay'):
             if len(provider.available_currency_ids) > 1 and provider.state != 'disabled':
-                raise ValidationError(self.env._("Only one currency can be selected by AsiaPay account."))
+                raise ValidationError(provider.env._("Only one currency can be selected by AsiaPay account."))
 
             unsupported_currency_codes = [
                 currency.name
@@ -59,7 +59,7 @@ class PaymentProvider(models.Model):
                 if currency.name not in allowed_codes
             ]
             if provider.available_currency_ids.filtered(lambda c: c.name not in allowed_codes):
-                raise ValidationError(self.env._(
+                raise ValidationError(provider.env._(
                     "AsiaPay does not support the following currencies: %(currencies)s.",
                     currencies=", ".join(unsupported_currency_codes),
                 ))

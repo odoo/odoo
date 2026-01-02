@@ -27,7 +27,7 @@ class AuthorizeController(http.Controller):
         """
         # Check that the transaction details have not been altered
         if not payment_utils.check_access_token(access_token, reference, partner_id):
-            raise ValidationError(self.env._("Received tampered payment request data."))
+            raise ValidationError(request.env._("Received tampered payment request data."))
 
         # Send the payment request to Authorize.Net.
         tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])

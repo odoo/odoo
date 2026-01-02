@@ -81,7 +81,7 @@ class AdyenController(http.Controller):
         if not payment_utils.check_access_token(
             access_token, reference, converted_amount, currency_id, partner_id
         ):
-            raise ValidationError(self.env._("Received tampered payment request data."))
+            raise ValidationError(request.env._("Received tampered payment request data."))
 
         # Prepare the payment request to Adyen
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id).exists()
