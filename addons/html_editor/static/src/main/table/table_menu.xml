@@ -7,6 +7,7 @@
                 class="o-we-table-menu oi"
                 t-attf-class="oi-ellipsis-{{ props.type === 'column' ? 'h w-100' : 'v h-100 px-0' }}"
                 title="Click to open options&#10;Drag to move"
+                t-on-pointerdown.prevent="() => {}"
             />
             <t t-set-slot="content">
                 <div t-on-pointerdown.stop="() => {}">

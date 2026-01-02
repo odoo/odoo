@@ -74,15 +74,10 @@ export class TableMenu extends Component {
         return rowHasHeight || cellHasWidth;
     }
 
-    get hasCustomRowHeight() {
-        return !!this.props.target.closest("tr").style.height;
-    }
-
-    get hasCustomColumnWidth() {
-        return (
-            !!this.props.target.closest("td")?.style?.width ||
-            !!this.props.target.closest("th")?.style?.width
-        );
+    get hasCustomSize() {
+        return this.props.type === "row"
+            ? !!this.props.target.parentElement.style?.height
+            : !!this.props.target.style?.width;
     }
 
     get hasContent() {
@@ -167,7 +162,7 @@ export class TableMenu extends Component {
                 text: _t("Delete"),
                 action: this.props.removeColumn.bind(this),
             },
-            this.hasCustomColumnWidth && {
+            this.hasCustomSize && {
                 name: "reset_column_size",
                 icon: "fa-table",
                 text: _t("Reset column size"),
@@ -246,7 +241,7 @@ export class TableMenu extends Component {
                 text: _t("Delete"),
                 action: (target) => this.props.removeRow(target.parentElement),
             },
-            this.hasCustomRowHeight && {
+            this.hasCustomSize && {
                 name: "reset_row_size",
                 icon: "fa-table",
                 text: _t("Reset row size"),
