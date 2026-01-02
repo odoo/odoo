@@ -84,13 +84,6 @@ patch(PosStore.prototype, {
         let userWasAskedAboutLoadedLots = false;
         let previousProductLine = null;
 
-        // Add a down payment for transactions that were already done online
-        if (sale_order.amount_paid > 0) {
-            if (!(await this.loadDownPaymentProduct())) {
-                return;
-            }
-            this.addDownPaymentProductOrderlineToOrder(sale_order, -sale_order.amount_paid, false);
-        }
         const converted_lines = await this.data.call("sale.order.line", "read_converted", [
             sale_order.order_line.map((l) => l.id),
         ]);
@@ -221,6 +214,19 @@ patch(PosStore.prototype, {
                     splitted_line.setDiscount(line.discount);
                 }
             }
+        }
+        // Add a down payment for transactions when automatic invoice is disabled
+        const paidDiff = this.getOrder().amount_total - sale_order.amount_unpaid;
+
+        if (
+            sale_order.amount_paid > 0 &&
+            !this.env.utils.floatIsZero(sale_order.amount_paid) &&
+            !this.env.utils.floatIsZero(paidDiff)
+        ) {
+            if (!(await this.loadDownPaymentProduct())) {
+                return;
+            }
+            this.addDownPaymentProductOrderlineToOrder(sale_order, -paidDiff, false);
         }
     },
     prepareSoBaseLineForTaxesComputationExtraValues(so, soLine) {
