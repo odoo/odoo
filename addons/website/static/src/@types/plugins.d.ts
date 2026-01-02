@@ -1,6 +1,6 @@
 declare module "plugins" {
     import { CarouselOptionShared } from "@website/builder/plugins/carousel_option_plugin";
-    import { CustomizeWebsiteShared } from "@website/builder/plugins/customize_website_plugin";
+    import { CustomizeWebsiteShared, on_website_color_updated_handlers } from "@website/builder/plugins/customize_website_plugin";
     import { content_manually_updated_handlers, EditInteractionShared } from "@website/builder/plugins/edit_interaction_plugin";
     import { WebsiteFontShared } from "@website/builder/plugins/font/font_plugin";
     import { FormOptionShared } from "@website/builder/plugins/form/form_option_plugin";
@@ -81,6 +81,7 @@ declare module "plugins" {
         remove_hover_effect_handlers: remove_hover_effect_handlers;
         reorder_items_handlers: reorder_items_handlers;
         set_hover_effect_handlers: set_hover_effect_handlers;
+        on_website_color_updated_handlers: on_website_color_updated_handlers;
 
         // Overrides
 
