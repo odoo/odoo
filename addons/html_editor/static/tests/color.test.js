@@ -871,6 +871,13 @@ test("should not split unsplittable element when applying color (2)", async () =
             '<div style="color: rgb(255, 0, 0);"><p>t<font style="color: rgb(0, 0, 255);">[es]</font>t</p></div>',
     });
 });
+test("should not split unsplittable element when applying color (3)", async () => {
+    await testEditor({
+        contentBefore: '<p><a href="#">[a]bc</a></p>',
+        stepFunction: setColor("rgb(0, 0, 255)", "color"),
+        contentAfter: '<p><a href="#"><font style="color: rgb(0, 0, 255);">[a]</font>bc</a></p>',
+    });
+});
 
 test("should be able to apply color on icon along with text", async () => {
     await testEditor({

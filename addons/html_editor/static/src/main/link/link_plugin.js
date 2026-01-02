@@ -296,6 +296,11 @@ export class LinkPlugin extends Plugin {
                 return true;
             }
         },
+        is_node_splittable_predicates: (node) => {
+            if (node.nodeName === "A") {
+                return false;
+            }
+        },
 
         /** Handlers */
         on_beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
