@@ -500,9 +500,9 @@
           </p>
         </field>
     </record>
-    <menuitem name="Services" parent="fleet_configuration" id="fleet_services_configuration" sequence="20" groups="base.group_no_one"/>
+    <menuitem name="Services" parent="fleet_configuration" id="fleet_services_configuration" sequence="20" groups="fleet.fleet_group_manager"/>
     <menuitem action="fleet_vehicle_service_types_action" parent="fleet_services_configuration" name="Types"
-        id="fleet_vehicle_service_types_menu" sequence="1" groups="base.group_no_one"/>
+        id="fleet_vehicle_service_types_menu" sequence="1" groups="fleet.fleet_group_manager"/>
 
     <record id='fleet_vehicle_state_view_tree' model='ir.ui.view'>
         <field name="name">fleet.vehicle.state.list</field>
@@ -546,8 +546,8 @@
         </field>
     </record>
 
-    <menuitem name="Vehicle" parent="fleet_configuration" id="fleet_vehicles_configuration" sequence="30" groups="base.group_no_one"/>
-    <menuitem action="fleet_vehicle_state_action" parent="fleet_vehicles_configuration" id="fleet_vehicle_state_menu" sequence="10" groups="base.group_no_one"/>
+    <menuitem name="Vehicle" parent="fleet_configuration" id="fleet_vehicles_configuration" sequence="30" groups="fleet.fleet_group_manager"/>
+    <menuitem action="fleet_vehicle_state_action" parent="fleet_vehicles_configuration" id="fleet_vehicle_state_menu" sequence="10" groups="fleet.fleet_group_manager"/>
 
     <record id="fleet_vehicle_tag_view_view_form" model="ir.ui.view">
         <field name="name">fleet.vehicle.tag.form</field>
@@ -584,7 +584,7 @@
         </field>
     </record>
 
-    <menuitem id="fleet_vehicle_tag_menu" parent="fleet_vehicles_configuration" action="fleet_vehicle_tag_action" sequence="20" groups="base.group_no_one"/>
+    <menuitem id="fleet_vehicle_tag_menu" parent="fleet_vehicles_configuration" action="fleet_vehicle_tag_action" sequence="20" groups="fleet.fleet_group_manager"/>
 
     <record id="fleet_vehicle_assignation_log_view_list" model="ir.ui.view">
         <field name="name">fleet.vehicle.assignation.log.view.list</field>
