@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"POT-Creation-Date: 2025-12-30 18:37+0000\n"
 "PO-Revision-Date: 2025-12-02 14:56+0000\n"
 "Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
@@ -17,8 +17,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : "
-"(n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: mail_group
@@ -131,12 +131,12 @@ msgid ""
 "        "
 msgstr ""
 "<div>\n"
-"                <p>Bună ziua, <t t-out=\"object.partner_id.name or ''\""
-"/>,</p>\n"
+"                <p>Bună ziua, <t t-out=\"object.partner_id.name or ''\"/>,</"
+"p>\n"
 "                <p>Vă rugăm să găsiți mai jos instrucțiunile privind lista "
 "de distribuție <t t-out=\"object.mail_group_id.name\"/>.</p>\n"
-"                <p><t t-out="
-"\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p> \n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p> \n"
 "           </div>\n"
 "        "
 
@@ -154,8 +154,8 @@ msgid ""
 "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
 "title=\"Alias\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" title="
-"\"Alias\"/>"
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
@@ -170,8 +170,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
 "title=\"Traffic\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Trafic\" title="
-"\"Trafic\"/>"
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Trafic\" "
+"title=\"Trafic\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -180,8 +180,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
 "title=\"Recipients\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Destinatari\" title="
-"\"Destinatari\"/>"
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Destinatari\" "
+"title=\"Destinatari\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -210,8 +210,8 @@ msgid ""
 "<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\" "
 "title=\"Show attachments\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label="
-"\"Afișează atașamente\" title=\"Afișează atașamente\"/>"
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Afișează "
+"atașamente\" title=\"Afișează atașamente\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -712,8 +712,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
 msgstr ""
-"ID-ul înregistrării părinte care conține aliasul "
-"(exemplu: proiectul care conține aliasul de creare a sarcinii)"
+"ID-ul înregistrării părinte care conține aliasul (exemplu: proiectul care "
+"conține aliasul de creare a sarcinii)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
@@ -1147,8 +1147,8 @@ msgid ""
 "(parent_model) and task (model))"
 msgstr ""
 "Model părinte care deține aliasul. Modelul care deține referința aliasului "
-"nu este neapărat modelul dat de alias_model_id "
-"(exemplu: proiect (model părinte) și sarcină (model))"
+"nu este neapărat modelul dat de alias_model_id (exemplu: proiect (model "
+"părinte) și sarcină (model))"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
@@ -1442,8 +1442,8 @@ msgid ""
 msgstr ""
 "Modelul (tipul de document Odoo) căruia îi corespunde acest alias. Orice e-"
 "mail primit care nu răspunde la o înregistrare existentă va determina "
-"crearea unei noi înregistrări a acestui model "
-"(de exemplu, o sarcină de proiect)."
+"crearea unei noi înregistrări a acestui model (de exemplu, o sarcină de "
+"proiect)."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
