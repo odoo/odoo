@@ -345,6 +345,8 @@ class MrpWorkcenter(models.Model):
         :rtype: tuple
         """
         self.ensure_one()
+        ICP = self.env['ir.config_parameter'].sudo()
+        max_planning_iterations = max(int(ICP.get_param('mrp.workcenter_max_planning_iterations', '50')), 1)
         resource = self.resource_id
         start_datetime, revert = make_aware(start_datetime)
         get_available_intervals = partial(self.resource_calendar_id._work_intervals_batch, resources=resource, tz=timezone(self.resource_calendar_id.tz))
@@ -358,7 +360,7 @@ class MrpWorkcenter(models.Model):
         now = make_aware(datetime.now())[0]
         delta = timedelta(days=14)
         start_interval, stop_interval = None, None
-        for n in range(50):  # 50 * 14 = 700 days in advance (hardcoded)
+        for n in range(max_planning_iterations):  # 50 * 14 = 700 days in advance
             if forward:
                 date_start = start_datetime + delta * n
                 date_stop = date_start + delta
