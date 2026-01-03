@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-03 08:43+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-11-21 06:40+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
@@ -39,6 +39,16 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "A new order has been created."
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
+msgid "Amount To Pay In POS"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
+msgid "Amount left to pay in POS to avoid double payment or double invoicing."
 msgstr ""
 
 #. module: pos_sale
@@ -180,6 +190,11 @@ msgid "Optional Products:"
 msgstr ""
 
 #. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__order_reference
+msgid "Order"
+msgstr "Nalog"
+
+#. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
 msgid "Order lines Transfered to Point of Sale"
@@ -239,11 +254,6 @@ msgstr "Varijante proizvoda"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/components/control_buttons/control_buttons.xml:0
 msgid "Quotation/Order"
-msgstr ""
-
-#. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_sale_report__order_reference
-msgid "Related Order"
 msgstr ""
 
 #. module: pos_sale
@@ -340,11 +350,6 @@ msgid "Status"
 msgstr "Status"
 
 #. module: pos_sale
-#: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
-msgid "The amount due from the sale order."
-msgstr ""
-
-#. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
@@ -377,20 +382,15 @@ msgstr "Prenos"
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
 msgid ""
-"Transfered<br/>\n"
+"Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
 msgid ""
-"Transfered<br/>\n"
+"Transferred<br/>\n"
 "                                to POS"
-msgstr ""
-
-#. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
-msgid "Unpaid Amount"
 msgstr ""
 
 #. module: pos_sale
@@ -433,9 +433,6 @@ msgstr ""
 
 #~ msgid "No"
 #~ msgstr "Ne"
-
-#~ msgid "Order"
-#~ msgstr "Nalog"
 
 #~ msgid "Quotation"
 #~ msgstr "Ponuda"

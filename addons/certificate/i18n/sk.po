@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
-"PO-Revision-Date: 2025-11-25 09:49+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-12-31 16:36+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-18/"
 "certificate/sk/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
 ">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: certificate
 #. odoo-python
@@ -174,7 +174,7 @@ msgstr "ID"
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
 msgid "Invalid"
-msgstr ""
+msgstr "Neplatné"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_list
@@ -354,7 +354,19 @@ msgstr ""
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
+msgid "The key size should be at least 512 bytes."
+msgstr ""
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
 msgid "The private key could not be loaded."
+msgstr ""
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The public exponent should be 65537 (or 3 for legacy purposes)."
 msgstr ""
 
 #. module: certificate
@@ -416,15 +428,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid ""
-"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
-" RSA."
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC, "
+"RSA."
 msgstr ""
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
 msgid ""
-"Used to set a public key in case the one self-contained in the certificate is erroneus.\n"
-"                When a public key is set this way, it will be used instead of the one in the certificate.\n"
+"Used to set a public key in case the one self-contained in the certificate "
+"is erroneus.\n"
+"                When a public key is set this way, it will be used instead "
+"of the one in the certificate.\n"
 "             "
 msgstr ""
 

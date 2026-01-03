@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_expiry
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Junko Augias, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: product_expiry
@@ -26,8 +26,8 @@ msgid ""
 "<span class=\"badge text-bg-danger\" invisible=\"not "
 "product_expiry_alert\">Expiration Alert</span>"
 msgstr ""
-"<span class=\"badge text-bg-danger\" invisible=\"not "
-"product_expiry_alert\">使用期限切れアラート</span>"
+"<span class=\"badge text-bg-danger\" invisible=\"not product_expiry_alert\">"
+"使用期限切れアラート</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
@@ -115,7 +115,9 @@ msgstr "作成日"
 msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
-msgstr "\"有効期限アラート\" フィルタを使用して、期限切れのロットとシリアル番号を決定するための日付。"
+msgstr ""
+"\"有効期限アラート\" フィルタを使用して、期限切れのロットとシリアル番号を決定"
+"するための日付。"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -228,7 +230,8 @@ msgid ""
 "stock after production) after which the goods may become dangerous and must "
 "not be consumed. It will be computed on the lot/serial number."
 msgstr ""
-"プロダクトの受領後（仕入先から、または製造後の在庫）、その商品が危険となる可能性があり、消費してはならない日数。ロット/シリアル番号で計算されます。"
+"プロダクトの受領後（仕入先から、または製造後の在庫）、その商品が危険となる可"
+"能性があり、消費してはならない日数。ロット/シリアル番号で計算されます。"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -237,7 +240,9 @@ msgid ""
 "Number of days before the Expiration Date after which an alert should be "
 "raised on the lot/serial number. It will be computed on the lot/serial "
 "number."
-msgstr "そのロット/シリアル番号のアラートが発せられるべき使用期限までの日数。ロット/シリアル番号で計算されます。"
+msgstr ""
+"そのロット/シリアル番号のアラートが発せられるべき使用期限までの日数。ロット/"
+"シリアル番号で計算されます。"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -245,16 +250,20 @@ msgstr "そのロット/シリアル番号のアラートが発せられるべ�
 msgid ""
 "Number of days before the Expiration Date after which the goods should be "
 "removed from the stock. It will be computed on the lot/serial number."
-msgstr "商品を在庫から払出するべき使用期限までの日数。ロット/シリアル番号で計算されます。"
+msgstr ""
+"商品を在庫から払出するべき使用期限までの日数。ロット/シリアル番号で計算されま"
+"す。"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_time
 msgid ""
 "Number of days before the Expiration Date after which the goods starts "
-"deteriorating, without being dangerous yet. It will be computed on the "
-"lot/serial number."
-msgstr "使用期限までの日数のうち、商品が劣化し始めるまでの日数。ロット/シリアル番号で計算されます。"
+"deteriorating, without being dangerous yet. It will be computed on the lot/"
+"serial number."
+msgstr ""
+"使用期限までの日数のうち、商品が劣化し始めるまでの日数。ロット/シリアル番号で"
+"計算されます。"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
@@ -339,7 +348,9 @@ msgstr "このロット/シリアル番号のアラート日に達しました"
 msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
-msgstr "これは、このシリアルナンバーの製品が危険になる可能性があり、消費してはならない日付です。"
+msgstr ""
+"これは、このシリアルナンバーの製品が危険になる可能性があり、消費してはならな"
+"い日付です。"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__removal_date
@@ -347,14 +358,18 @@ msgstr "これは、このシリアルナンバーの製品が危険になる可
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock. This date will be used in FEFO removal strategy."
-msgstr "このシリアル番号の商品が在庫から払出されるべき日付です。この日付は先消費先出(FEFO)方式で使用されます。"
+msgstr ""
+"このシリアル番号の商品が在庫から払出されるべき日付です。この日付は先消費先出"
+"(FEFO)方式で使用されます。"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date
 msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
-msgstr "これは、このシリアルナンバーの製品が危険にさらされることなく悪化し始める日付です。"
+msgstr ""
+"これは、このシリアルナンバーの製品が危険にさらされることなく悪化し始める日付"
+"です。"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking
@@ -379,11 +394,12 @@ msgstr "使用期限日を使用"
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
 msgid ""
-"When this box is ticked, you have the possibility to specify dates to manage"
-" product expiration, on the product and on the corresponding lot/serial "
+"When this box is ticked, you have the possibility to specify dates to manage "
+"product expiration, on the product and on the corresponding lot/serial "
 "numbers"
 msgstr ""
-"このボックスにチェックを入れると、プロダクトおよび対応するロット/シリアル番号に、プロダクトの使用期限を管理する日付を指定することができます。"
+"このボックスにチェックを入れると、プロダクトおよび対応するロット/シリアル番号"
+"に、プロダクトの使用期限を管理する日付を指定することができます。"
 
 #. module: product_expiry
 #. odoo-python
@@ -399,10 +415,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
 msgid ""
-"You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is "
+"expired.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
-"配送しようとしているプロダクト %(product_name)s, %(lot_name)s は使用期限が切れています。\n"
+"配送しようとしているプロダクト %(product_name)s, %(lot_name)s は使用期限が切"
+"れています。\n"
 "本当にこのまま進めますか？"
 
 #. module: product_expiry

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_slides_survey
-# 
+#
 # Translators:
 # Netta Waizer, 2024
 # דודי מלכה <Dudimalka6@gmail.com>, 2024
@@ -14,20 +14,21 @@
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2025
 # or balmas, 2025
 # yael terner, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:41+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: yael terner, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: he\n"
-"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
+"1 == 0) ? 1: 2;\n"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__members_certified_count
@@ -54,11 +55,16 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t><br/><br/>\n"
-"        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basics of Gardening</t>.<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant' or "
+"''\">participant</t><br/><br/>\n"
+"        Unfortunately, you have failed the certification and are no longer a "
+"member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or "
+"''\">Basics of Gardening</t>.<br/><br/>\n"
 "        Don't hesitate to enroll again!\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)"
+"\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                Enroll now\n"
 "            </a>\n"
 "        </div>\n"
@@ -94,10 +100,12 @@ msgstr ""
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
 msgid ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" title=\"Share certification\"/>\n"
+"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" "
+"title=\"Share certification\"/>\n"
 "                        Share your certification"
 msgstr ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" title=\"Share certification\"/>\n"
+"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" "
+"title=\"Share certification\"/>\n"
 "                        שיתוף התעודה"
 
 #. module: website_slides_survey
@@ -147,7 +155,8 @@ msgstr "<span class=\"text-muted\">תעודות</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
-msgid "<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
+msgid ""
+"<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
 msgstr ""
 
 #. module: website_slides_survey
@@ -187,7 +196,8 @@ msgstr "אפשר תצוגה מקדימה"
 #. odoo-python
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 msgid ""
-"Any Survey listed below is currently used as a Course Certification and cannot be deleted:\n"
+"Any Survey listed below is currently used as a Course Certification and "
+"cannot be deleted:\n"
 "%s"
 msgstr ""
 
@@ -540,8 +550,8 @@ msgstr "מידע על מנוי"
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
 msgid ""
-"Subtype of the slide category, allows more precision on the actual file type"
-" / source type."
+"Subtype of the slide category, allows more precision on the actual file "
+"type / source type."
 msgstr ""
 
 #. module: website_slides_survey
@@ -597,8 +607,7 @@ msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_channel_ids
-msgid ""
-"The courses this survey is linked to through the e-learning application"
+msgid "The courses this survey is linked to through the e-learning application"
 msgstr ""
 
 #. module: website_slides_survey
@@ -641,8 +650,10 @@ msgstr "אין לך הרשאה לקשר תעודה."
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
 msgid ""
-"You can gain badges by passing certifications. Here is a list of all available certification badges.\n"
-"                            <br/>Follow the links to reach new heights and skill up!"
+"You can gain badges by passing certifications. Here is a list of all "
+"available certification badges.\n"
+"                            <br/>Follow the links to reach new heights and "
+"skill up!"
 msgstr ""
 
 #. module: website_slides_survey

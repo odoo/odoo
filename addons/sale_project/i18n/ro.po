@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_project
-# 
+#
 # Translators:
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2025
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:38+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: sale_project
 #. odoo-python
@@ -29,7 +30,8 @@ msgid ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    No milestones found. Let's create one!\n"
 "                </p><p>\n"
-"                    Track major progress points that must be reached to achieve success.\n"
+"                    Track major progress points that must be reached to "
+"achieve success.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -37,7 +39,8 @@ msgstr ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Nu au fost găsite etape. Hai să creăm una!\n"
 "                </p><p>\n"
-"                    Monitorizați punctele de progres major care trebuie atinse pentru a obține succes.\n"
+"                    Monitorizați punctele de progres major care trebuie "
+"atinse pentru a obține succes.\n"
 "                </p>\n"
 
 #. module: sale_project
@@ -64,8 +67,8 @@ msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Comanda de "
 "vânzare asociată acestui proiect a fost anulată. Vă recomandăm fie să "
 "actualizați articolul comenzii de vânzare, fie să anulați acest proiect în "
-"concordanță cu anularea comenzii de vânzare.\" invisible=\"sale_order_state "
-"!= 'cancel'\"/>"
+"concordanță cu anularea comenzii de vânzare.\" invisible=\"sale_order_state !"
+"= 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -78,22 +81,24 @@ msgid ""
 msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Comanda de "
 "vânzare asociată acestei sarcini a fost anulată. Vă recomandăm fie să "
-"actualizați articolul comenzii de vânzare, fie să anulați această sarcină în"
-" concordanță cu anularea comenzii de vânzare.\" invisible=\"sale_order_state"
-" != 'cancel'\"/>"
+"actualizați articolul comenzii de vânzare, fie să anulați această sarcină în "
+"concordanță cu anularea comenzii de vânzare.\" invisible=\"sale_order_state !"
+"= 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span> Sales Order\n"
+"                            <span class=\"o_stat_value\">0</span> Sales "
+"Order\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span> Comandă de vânzare\n"
+"                            <span class=\"o_stat_value\">0</span> Comandă de "
+"vânzare\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            Faceți facturabil\n"
@@ -140,11 +145,15 @@ msgstr "<span>)</span>"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid ""
-"A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
-"The following product need a project in which to put its task: %(product_name)s"
+"A project must be defined on the quotation %(order)s or on the form of "
+"products creating a task on order.\n"
+"The following product need a project in which to put its task: %"
+"(product_name)s"
 msgstr ""
-"Un proiect trebuie definit pe oferta %(order)s sau pe formularul produselor care creează o sarcină la comandă.\n"
-"Următorul produs are nevoie de un proiect în care să adauge sarcina: %(product_name)s"
+"Un proiect trebuie definit pe oferta %(order)s sau pe formularul produselor "
+"care creează o sarcină la comandă.\n"
+"Următorul produs are nevoie de un proiect în care să adauge sarcina: %"
+"(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -160,16 +169,22 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Conform configurării produsului, cantitatea livrată poate fi calculată automat prin mecanism:\n"
+"Conform configurării produsului, cantitatea livrată poate fi calculată "
+"automat prin mecanism:\n"
 "  - Manual: cantitatea este setată manual pe linie\n"
-"  - Analitic din cheltuieli: cantitatea este suma din cheltuielile înregistrate\n"
-"  - Foaie de pontaj: cantitatea este suma orelor înregistrate pe sarcinile legate de această linie de vânzare\n"
+"  - Analitic din cheltuieli: cantitatea este suma din cheltuielile "
+"înregistrate\n"
+"  - Foaie de pontaj: cantitatea este suma orelor înregistrate pe sarcinile "
+"legate de această linie de vânzare\n"
 "  - Mișcări de stoc: cantitatea provine din recepții confirmate\n"
 
 #. module: sale_project
@@ -257,8 +272,7 @@ msgstr "Creează o factură de furnizor"
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create an empty project for the order to track the time spent."
-msgstr ""
-"Creează un proiect gol pentru comandă pentru a urmări timpul petrecut."
+msgstr "Creează un proiect gol pentru comandă pentru a urmări timpul petrecut."
 
 #. module: sale_project
 #. odoo-python
@@ -267,8 +281,7 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
-"Creează facturi, înregistrează plăți și urmărește discuțiile cu clienții "
-"tăi."
+"Creează facturi, înregistrează plăți și urmărește discuțiile cu clienții tăi."
 
 #. module: sale_project
 #. odoo-python
@@ -408,13 +421,18 @@ msgstr "Încarcă mai mult"
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
 #: model:ir.model.fields,help:sale_project.field_product_template__service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
 msgstr ""
-"Setați manual cantitățile pe comandă: Facturați pe baza cantității introduse manual, fără a crea un cont analitic.\n"
+"Setați manual cantitățile pe comandă: Facturați pe baza cantității introduse "
+"manual, fără a crea un cont analitic.\n"
 "Pontaje pe contract: Facturați pe baza orelor urmărite pe pontajul aferent.\n"
-"Creați o sarcină și urmăriți orele: Creați o sarcină la validarea comenzii de vânzare și urmăriți orele de lucru."
+"Creați o sarcină și urmăriți orele: Creați o sarcină la validarea comenzii "
+"de vânzare și urmăriți orele de lucru."
 
 #. module: sale_project
 #. odoo-python
@@ -479,8 +497,8 @@ msgstr "Pictură"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
 msgid ""
-"Percentage of the ordered quantity that will automatically be delivered once"
-" the milestone is reached."
+"Percentage of the ordered quantity that will automatically be delivered once "
+"the milestone is reached."
 msgstr ""
 "Procent din cantitatea comandată care va fi livrat automat odată ce etapa "
 "este atinsă."
@@ -516,8 +534,8 @@ msgstr "Variantă de produs"
 #: model:ir.model.fields,help:sale_project.field_project_project__reinvoiced_sale_order_id
 msgid ""
 "Products added to stock pickings, whose operation type is configured to "
-"generate analytic costs, will be re-invoiced in this sales order if they are"
-" set up for it."
+"generate analytic costs, will be re-invoiced in this sales order if they are "
+"set up for it."
 msgstr ""
 "Produsele adăugate la recepții de stoc, al căror tip de operațiune este "
 "configurat să genereze costuri analitice, vor fi refacturate în această "
@@ -631,13 +649,23 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
 msgid ""
-"Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
-"By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
-"Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
+"Sales Order Item to which the time spent on this task will be added in order "
+"to be invoiced to your customer.\n"
+"By default the sales order item set on the project will be selected. In the "
+"absence of one, the last prepaid sales order item that has time remaining "
+"will be used.\n"
+"Remove the sales order item in order to make this task non billable. You can "
+"also change or remove the sales order item of each timesheet entry "
+"individually."
 msgstr ""
-"Articolul comenzii de vânzare la care va fi adăugat timpul petrecut pe această sarcină pentru a fi facturat clientului.\n"
-"Implicit, va fi selectat articolul de comandă de vânzare setat pe proiect. În lipsa acestuia, se va folosi ultimul articol de comandă de vânzare preplătit care are timp rămas.\n"
-"Eliminați articolul de comandă de vânzare pentru ca această sarcină să nu fie facturabilă. Puteți schimba sau elimina articolul de comandă de vânzare pentru fiecare pontaj în parte."
+"Articolul comenzii de vânzare la care va fi adăugat timpul petrecut pe "
+"această sarcină pentru a fi facturat clientului.\n"
+"Implicit, va fi selectat articolul de comandă de vânzare setat pe proiect. "
+"În lipsa acestuia, se va folosi ultimul articol de comandă de vânzare "
+"preplătit care are timp rămas.\n"
+"Eliminați articolul de comandă de vânzare pentru ca această sarcină să nu "
+"fie facturabilă. Puteți schimba sau elimina articolul de comandă de vânzare "
+"pentru fiecare pontaj în parte."
 
 #. module: sale_project
 #. odoo-javascript
@@ -663,11 +691,18 @@ msgstr "Comenzi de vânzare"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
 msgid ""
-"Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
-"It can be modified on each task and timesheet entry individually if necessary."
+"Sales order item that will be selected by default on the tasks and "
+"timesheets of this project, except if the employee set on the timesheets is "
+"explicitely linked to another sales order item on the project.\n"
+"It can be modified on each task and timesheet entry individually if "
+"necessary."
 msgstr ""
-"Articolul comenzii de vânzare care va fi selectat în mod implicit pe sarcinile și fișele de pontaj ale acestui proiect, cu excepția cazului în care angajatul stabilit pe fișele de pontaj este legat în mod explicit de un alt articol al comenzii de vânzare din cadrul proiectului.\n"
-"Dacă este necesar, acesta poate fi modificat individual pentru fiecare sarcină și fișă de pontaj."
+"Articolul comenzii de vânzare care va fi selectat în mod implicit pe "
+"sarcinile și fișele de pontaj ale acestui proiect, cu excepția cazului în "
+"care angajatul stabilit pe fișele de pontaj este legat în mod explicit de un "
+"alt articol al comenzii de vânzare din cadrul proiectului.\n"
+"Dacă este necesar, acesta poate fi modificat individual pentru fiecare "
+"sarcină și fișă de pontaj."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
@@ -745,8 +780,7 @@ msgstr "Analiza Sarcinilor"
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "The Sale Order Item should contain a service product."
 msgstr ""
-"Articolul comenzii de vânzare ar trebui să conțină un produs de tip "
-"serviciu."
+"Articolul comenzii de vânzare ar trebui să conțină un produs de tip serviciu."
 
 #. module: sale_project
 #. odoo-python
@@ -755,8 +789,8 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
-"Produsul %s nu ar trebui să aibă un proiect global, dacă oricum va genera un"
-" proiect."
+"Produsul %s nu ar trebui să aibă un proiect global, dacă oricum va genera un "
+"proiect."
 
 #. module: sale_project
 #. odoo-python
@@ -848,8 +882,8 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
-"Nu puteți lega elementul de comandă %(order_id)s - %(product_id)s la această"
-" sarcină deoarece este o cheltuială refacturată."
+"Nu puteți lega elementul de comandă %(order_id)s - %(product_id)s la această "
+"sarcină deoarece este o cheltuială refacturată."
 
 #. module: sale_project
 #. odoo-python

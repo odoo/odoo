@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-12-26 13:59+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/payment/"
@@ -46,42 +46,49 @@ msgstr "7Eleven"
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %(bank)s</li><li>Account "
-"Number: %(account_number)s</li><li>Account Holder: "
-"%(account_holder)s</li></ul>"
+"Number: %(account_number)s</li><li>Account Holder: %(account_holder)s</li></"
+"ul>"
 msgstr ""
-"<h3>お支払先: </h3><ul><li>銀行: %(bank)s</li><li>口座番号: "
-"%(account_number)s</li><li>口座名義人: %(account_holder)s</li></ul>"
+"<h3>お支払先: </h3><ul><li>銀行: %(bank)s</li><li>口座番号: %"
+"(account_number)s</li><li>口座名義人: %(account_holder)s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
-"                                match the behavior of providers and that of their integration with\n"
-"                                Odoo regarding this payment method. Any change may result in errors\n"
-"                                and should be tested on a test database first."
+"                                match the behavior of providers and that of "
+"their integration with\n"
+"                                Odoo regarding this payment method. Any "
+"change may result in errors\n"
+"                                and should be tested on a test database "
+"first."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/> これらのプロパティは\n"
-"                                この支払に関してプロバイダとOdooとの統一のビヘイビアと\n"
+"                                この支払に関してプロバイダとOdooとの統一のビ"
+"ヘイビアと\n"
 "一致するよう定義されます。 変更によりエラーが発生する可能性があり、\n"
-"                                まずはテストデータベースでテストされる必要があります。"
+"                                まずはテストデータベースでテストされる必要が"
+"あります。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
-msgid "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgid ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgstr ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
-" != 'full_only'\" title=\"Some of the transactions you intend to capture can"
-" only be captured in full. Handle the transactions individually to capture a"
-" partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
-" != 'full_only'\" title=\"Some of the transactions you intend to capture can"
-" only be captured in full. Handle the transactions individually to capture a"
-" partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -156,7 +163,8 @@ msgstr "<span><i class=\"fa fa-lock\"/> 次により保護:</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
+msgid ""
+"<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
 msgstr "<strong><i class=\"fa fa-file-text\"/> 利用可能レポートを表示</strong>"
 
 #. module: payment
@@ -178,11 +186,13 @@ msgstr "<strong>利用可能な支払方法がありません</strong>"
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a partial capture pending. Please wait a\n"
-"                    moment for it to be processed. Check your payment provider configuration if\n"
+"                    moment for it to be processed. Check your payment "
+"provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
 "<strong>警告！</strong>部分的なキャプチャは保留中です。処理されるまで\n"
-"                    しばらくお待ち下さい。数分経ってもキャプチャが保留中の場合は、\n"
+"                    しばらくお待ち下さい。数分経ってもキャプチャが保留中の場"
+"合は、\n"
 "                    決済プロバイダ設定を確認して下さい。"
 
 #. module: payment
@@ -197,18 +207,23 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid ""
-"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
+"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</"
+"em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>警告</strong> <em>作成</em> ボタンからの決済プロバイダの作成はサポートされていません。\n"
+"<strong>警告</strong> <em>作成</em> ボタンからの決済プロバイダの作成はサポー"
+"トされていません。\n"
 "                        代わりに <em>複製</em>アクションを使用して下さい。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid ""
 "<strong>Warning</strong> Make sure you are logged in as the\n"
-"                                    correct partner before making this payment."
-msgstr "<strong>警告</strong> この支払を行う前に正しいパートナーでログインしていることを確認してください。"
+"                                    correct partner before making this "
+"payment."
+msgstr ""
+"<strong>警告</strong> この支払を行う前に正しいパートナーでログインしているこ"
+"とを確認してください。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -227,7 +242,8 @@ msgid ""
 "A refund request of %(amount)s has been sent. The payment will be created "
 "soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
 msgstr ""
-" %(amount)sの返金要求が送信されました。まもなく支払が作成されます。返金取引参照: %(ref)s (%(provider_name)s)."
+" %(amount)sの返金要求が送信されました。まもなく支払が作成されます。返金取引参"
+"照: %(ref)s (%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -242,7 +258,8 @@ msgstr "参照%(ref)sの取引が開始されました (%(provider_name)s)"
 msgid ""
 "A transaction with reference %(ref)s has been initiated to save a new "
 "payment method (%(provider_name)s)"
-msgstr "参照 %(ref)sの取引が開始され、新規決済方法(%(provider_name)s)が保存されます。"
+msgstr ""
+"参照 %(ref)sの取引が開始され、新規決済方法(%(provider_name)s)が保存されます。"
 
 #. module: payment
 #. odoo-python
@@ -250,7 +267,9 @@ msgstr "参照 %(ref)sの取引が開始され、新規決済方法(%(provider_n
 msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
-msgstr "参照 %(ref)sの取引が開始され、決済方法%(token)s (%(provider_name)s)を使用しています。"
+msgstr ""
+"参照 %(ref)sの取引が開始され、決済方法%(token)s (%(provider_name)s)を使用して"
+"います。"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ach_direct_debit
@@ -431,7 +450,8 @@ msgstr "この決済方法を本当に削除しますか？"
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
-msgstr "承認されたトランザクションを無効にしますか?このアクションは元に戻せません。"
+msgstr ""
+"承認されたトランザクションを無効にしますか?このアクションは元に戻せません。"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_argencard
@@ -737,7 +757,8 @@ msgid ""
 "you are sure you can ship the goods to them."
 msgstr ""
 "配達完了時にOdooから金額をキャプチャします。\n"
-"商品の発送ができると確信している時のみ、顧客カードに請求したい場合に使用します。"
+"商品の発送ができると確信している時のみ、顧客カードに請求したい場合に使用しま"
+"す。"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_card
@@ -1117,7 +1138,9 @@ msgid ""
 "that provides all required billing and shipping information, thus allowing "
 "to skip the checkout process."
 msgstr ""
-"エクスプレス支払では、必要な請求先情報と配送先情報を全て提供する支払方法を利用することで、支払のプロセスを省略し、より迅速に支払いを済ませることができます。"
+"エクスプレス支払では、必要な請求先情報と配送先情報を全て提供する支払方法を利"
+"用することで、支払のプロセスを省略し、より迅速に支払いを済ませることができま"
+"す。"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_fps
@@ -1278,8 +1301,7 @@ msgstr "ID"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid ""
-"If you believe that it is an error, please contact the website "
-"administrator."
+"If you believe that it is an error, please contact the website administrator."
 msgstr "エラーと思われる場合は、サイト管理者までご連絡下さい。"
 
 #. module: payment
@@ -1294,7 +1316,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"テストモードでは、偽の支払いがテスト支払インターフェイスを通じて処理されます。\n"
+"テストモードでは、偽の支払いがテスト支払インターフェイスを通じて処理されま"
+"す。\n"
 "このモードは、プロバイダを設定する際に推奨されます。"
 
 #. module: payment
@@ -1665,7 +1688,9 @@ msgstr "プロバイダーが設定されていません"
 msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Provider menu."
-msgstr "この会社の手動支払方法は見つかりませんでした。決済プロバイダーメニューから作成して下さい。"
+msgstr ""
+"この会社の手動支払方法は見つかりませんでした。決済プロバイダーメニューから作"
+"成して下さい。"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
@@ -2125,7 +2150,8 @@ msgstr "Pix"
 #. odoo-python
 #: code:addons/payment/models/payment_method.py:0
 msgid "Please make sure that %(payment_method)s is supported by %(provider)s."
-msgstr " %(payment_method)sが%(provider)sにサポートされていることを確認して下さい。"
+msgstr ""
+" %(payment_method)sが%(provider)sにサポートされていることを確認して下さい。"
 
 #. module: payment
 #. odoo-python
@@ -2404,9 +2430,11 @@ msgstr "Sofort"
 #. odoo-python
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 msgid ""
-"Some of the transactions you intend to capture can only be captured in full."
-" Handle the transactions individually to capture a partial amount."
-msgstr "キャプチャしようとしている取引の中には、全額しかキャプチャできないものがあります。取引を個別に処理し、一部の金額をキャプチャして下さい。"
+"Some of the transactions you intend to capture can only be captured in full. "
+"Handle the transactions individually to capture a partial amount."
+msgstr ""
+"キャプチャしようとしている取引の中には、全額しかキャプチャできないものがあり"
+"ます。取引を個別に処理し、一部の金額をキャプチャして下さい。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -2525,8 +2553,7 @@ msgstr "この支払方法で使用されるベース画像。64x64 pxフォー�
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
 msgid ""
-"The brands of the payment methods that will be displayed on the payment "
-"form."
+"The brands of the payment methods that will be displayed on the payment form."
 msgstr "支払フォームに表示される支払方法のブランド。"
 
 #. module: payment
@@ -2554,14 +2581,17 @@ msgstr "ステータスに関する追加の情報メッセージ"
 msgid ""
 "The countries in which this payment provider is available. Leave blank to "
 "make it available in all countries."
-msgstr "この支払プロバイダーが利用可能な国。全ての国で利用できるようにするには、空白のままにします。"
+msgstr ""
+"この支払プロバイダーが利用可能な国。全ての国で利用できるようにするには、空白"
+"のままにします。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__available_currency_ids
 msgid ""
 "The currencies available with this payment provider. Leave empty not to "
 "restrict any."
-msgstr "この決済プロバイダーで利用可能な通貨。制限しない場合は空のままにします。"
+msgstr ""
+"この決済プロバイダーで利用可能な通貨。制限しない場合は空のままにします。"
 
 #. module: payment
 #. odoo-python
@@ -2586,15 +2616,19 @@ msgid ""
 "The list of countries in which this payment method can be used (if the "
 "provider allows it). In other countries, this payment method is not "
 "available to customers."
-msgstr "この支払方法を使用できる国のリスト(プロバイダーが許可している場合)。その他の国では、この支払い方法はご利用いただけません。"
+msgstr ""
+"この支払方法を使用できる国のリスト(プロバイダーが許可している場合)。その他の"
+"国では、この支払い方法はご利用いただけません。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
 msgid ""
-"The list of currencies for that are supported by this payment method (if the"
-" provider allows it). When paying with another currency, this payment method"
-" is not available to customers."
-msgstr "この支払方法でサポートされている通貨のリスト(プロバイダが許可している場合)。他の通貨で支払う場合、この支払方法は利用できません。"
+"The list of currencies for that are supported by this payment method (if the "
+"provider allows it). When paying with another currency, this payment method "
+"is not available to customers."
+msgstr ""
+"この支払方法でサポートされている通貨のリスト(プロバイダが許可している場合)。"
+"他の通貨で支払う場合、この支払方法は利用できません。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
@@ -2611,7 +2645,9 @@ msgstr "会社の主要通貨で、通貨フィールドの表示に使用され
 msgid ""
 "The maximum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
-msgstr "この支払プロバイダーが利用できる最大支払額。どの支払額でも利用できるようにするには、空白のままにします。"
+msgstr ""
+"この支払プロバイダーが利用できる最大支払額。どの支払額でも利用できるようにす"
+"るには、空白のままにします。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
@@ -2646,13 +2682,16 @@ msgstr "支払処理を説明しサポートするために表示されるメッ
 #: code:addons/payment/controllers/portal.py:0
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
-msgstr "支払いは直接か、リダイレクトか、トークンによるものである必要があります。"
+msgstr ""
+"支払いは直接か、リダイレクトか、トークンによるものである必要があります。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
 msgid ""
-"The primary payment method of the current payment method, if the latter is a brand.\n"
-"For example, \"Card\" is the primary payment method of the card brand \"VISA\"."
+"The primary payment method of the current payment method, if the latter is a "
+"brand.\n"
+"For example, \"Card\" is the primary payment method of the card brand "
+"\"VISA\"."
 msgstr ""
 "後者がブランドである場合、現在の支払方法の主な支払方法。\n"
 "例えば、\"カード\"はカードブランド \"VISA \"の主な支払方法です。"
@@ -2706,7 +2745,9 @@ msgstr "この決済プロバイダーのテクニカルコード。"
 msgid ""
 "The template rendering a form submitted to redirect the user when making a "
 "payment"
-msgstr "支払時にユーザをリダイレクトするために送信されたフォームをレンダリングするテンプレート"
+msgstr ""
+"支払時にユーザをリダイレクトするために送信されたフォームをレンダリングするテ"
+"ンプレート"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__express_checkout_form_view_id
@@ -2724,30 +2765,32 @@ msgstr "直接支払時にインライン決済フォームをレンダリング
 msgid ""
 "The template rendering the inline payment form when making a payment by "
 "token."
-msgstr "トークンによる決済時にインライン支払いフォームをレンダリングするテンプレート"
+msgstr ""
+"トークンによる決済時にインライン支払いフォームをレンダリングするテンプレート"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s encountered an error "
-"(%(provider_name)s)."
-msgstr "参照%(ref)sの取引( %(amount)s用)にエラー (%(provider_name)s)が発生しました。"
+"The transaction with reference %(ref)s for %(amount)s encountered an error (%"
+"(provider_name)s)."
+msgstr ""
+"参照%(ref)sの取引( %(amount)s用)にエラー (%(provider_name)s)が発生しました。"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been authorized "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s has been authorized (%"
+"(provider_name)s)."
 msgstr "参照 %(ref)s の取引( %(amount)s)用が許可されました(%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been confirmed "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s has been confirmed (%"
+"(provider_name)s)."
 msgstr "参照%(ref)sの取引( %(amount)s用)が確定されました (%(provider_name)s)"
 
 #. module: payment
@@ -2777,7 +2820,8 @@ msgstr "支払うものはありません。"
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "payment method."
-msgstr "このアクションは、この支払方法に登録されている%sトークンもアーカイブします。"
+msgstr ""
+"このアクションは、この支払方法に登録されている%sトークンもアーカイブします。"
 
 #. module: payment
 #. odoo-python
@@ -2785,17 +2829,22 @@ msgstr "このアクションは、この支払方法に登録されている%s�
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. "
-msgstr "このアクションは、このプロバイダーに登録されている%sトークンもアーカイブします。"
+msgstr ""
+"このアクションは、このプロバイダーに登録されている%sトークンもアーカイブしま"
+"す。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
 msgid ""
-"This controls whether customers can save their payment methods as payment tokens.\n"
-"A payment token is an anonymous link to the payment method details saved in the\n"
+"This controls whether customers can save their payment methods as payment "
+"tokens.\n"
+"A payment token is an anonymous link to the payment method details saved in "
+"the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
 "これは、顧客が決済方法を支払トークンとして保存できるかどうかを制御します。\n"
-"支払トークンとは、プロバイダのデータベースに保存された支払い方法の詳細への匿名リンクで、顧客は次回の購入時にそれを再利用することができます。"
+"支払トークンとは、プロバイダのデータベースに保存された支払い方法の詳細への匿"
+"名リンクで、顧客は次回の購入時にそれを再利用することができます。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2804,16 +2853,19 @@ msgid ""
 "checkout enables customers to pay with Google Pay and Apple Pay from which "
 "address information is collected at payment."
 msgstr ""
-"これは、顧客がエクスプレス支払方法を使用できるかどうかを制御します。エクスプレスチェックアウトは、Google PayやApple "
-"Payでの支払を可能にし、支払時に住所情報が収集されます。"
+"これは、顧客がエクスプレス支払方法を使用できるかどうかを制御します。エクスプ"
+"レスチェックアウトは、Google PayやApple Payでの支払を可能にし、支払時に住所情"
+"報が収集されます。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid ""
-"This partner has no email, which may cause issues with some payment providers.\n"
+"This partner has no email, which may cause issues with some payment "
+"providers.\n"
 "                     Setting an email for this partner is advised."
 msgstr ""
-"この取引先にはEメールがないため、一部の支払プロバイダで問題が発生する可能性があります。\n"
+"この取引先にはEメールがないため、一部の支払プロバイダで問題が発生する可能性が"
+"あります。\n"
 "　　　　この取引先にEメールを設定することをお勧めします。"
 
 #. module: payment
@@ -2822,7 +2874,9 @@ msgstr ""
 msgid ""
 "This payment method needs a partner in crime; you should enable a payment "
 "provider supporting this method first."
-msgstr "この支払方法に関連する協力会社に問題があります。まず、その方法をサポートする決済プロバイダーを有効にして下さい。"
+msgstr ""
+"この支払方法に関連する協力会社に問題があります。まず、その方法をサポートする"
+"決済プロバイダーを有効にして下さい。"
 
 #. module: payment
 #. odoo-python
@@ -2830,7 +2884,9 @@ msgstr "この支払方法に関連する協力会社に問題があります。
 msgid ""
 "This transaction has been confirmed following the processing of its partial "
 "capture and partial void transactions (%(provider)s)."
-msgstr "この取引は、部分キャプチャおよび部分ボイド取引(%(provider)s)後に確認されました。"
+msgstr ""
+"この取引は、部分キャプチャおよび部分ボイド取引(%(provider)s)後に確認されまし"
+"た。"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tienphong
@@ -2858,7 +2914,9 @@ msgstr "トークン化"
 msgid ""
 "Tokenization is the process of saving the payment details as a token that "
 "can later be reused without having to enter the payment details again."
-msgstr "トークン化とは、支払詳細をトークンとして保存し、後で再度支払詳細を入力することなく再利用できるようにするプロセスです。"
+msgstr ""
+"トークン化とは、支払詳細をトークンとして保存し、後で再度支払詳細を入力するこ"
+"となく再利用できるようにするプロセスです。"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_toss_pay
@@ -3041,7 +3099,9 @@ msgstr "各取引のプロバイダが部分キャプチャをサポートして
 msgid ""
 "Whether the provider is visible on the website or not. Tokens remain "
 "functional but are only visible on manage forms."
-msgstr "プロバイダがウェブサイトに表示されるかどうか。トークンの機能は維持されますが、管理フォームでのみ表示されます。"
+msgstr ""
+"プロバイダがウェブサイトに表示されるかどうか。トークンの機能は維持されます"
+"が、管理フォームでのみ表示されます。"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -3064,7 +3124,9 @@ msgstr "Xendit"
 msgid ""
 "You can't unarchive tokens linked to inactive payment methods or disabled "
 "providers."
-msgstr "非アクティブな支払方法または無効なプロバイダーにリンクされたトークンをアーカイブ解除することはできません。"
+msgstr ""
+"非アクティブな支払方法または無効なプロバイダーにリンクされたトークンをアーカ"
+"イブ解除することはできません。"
 
 #. module: payment
 #. odoo-python
@@ -3072,7 +3134,9 @@ msgstr "非アクティブな支払方法または無効なプロバイダーに
 msgid ""
 "You cannot change the company of a payment provider with existing "
 "transactions."
-msgstr "Safariを開き、プリンタのIPアドレスに移動します。そうすると警告ページが表示されます; "
+msgstr ""
+"Safariを開き、プリンタのIPアドレスに移動します。そうすると警告ページが表示さ"
+"れます; "
 
 #. module: payment
 #. odoo-python
@@ -3086,7 +3150,9 @@ msgstr "デフォルトの支払方法は削除できません。"
 msgid ""
 "You cannot delete the payment provider %s; disable it or uninstall it "
 "instead."
-msgstr "決済プロバイダを削除することはできません%s;代わりに無効にするか、アンインストールして下さい。"
+msgstr ""
+"決済プロバイダを削除することはできません%s;代わりに無効にするか、アンインス"
+"トールして下さい。"
 
 #. module: payment
 #. odoo-python

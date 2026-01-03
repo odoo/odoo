@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_delivery
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Malaz Abuidris <msea@odoo.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -105,8 +106,7 @@ msgstr "إلغاء"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
 "قد لا تتمكن من التراجع عن إلغاء التوصيل. هل أنت متأكد من أنك ترغب في "
 "الاستمرار؟ "
@@ -199,11 +199,14 @@ msgstr "عرض روابط التتبع"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "التكلفة التقديرية: سوف يتم إرسال فاتورة للعميل بالتكلفة التقديرية للشحن.\n"
-"التكلفة الفعلية: سوف يتم إرسال فاتورة للعميل بالتكلفة الفعلية للشحن، وسوف يتم تحديث تكلفة الشحن في أمر المبيعات بعد التوصيل. "
+"التكلفة الفعلية: سوف يتم إرسال فاتورة للعميل بالتكلفة الفعلية للشحن، وسوف "
+"يتم تحديث تكلفة الشحن في أمر المبيعات بعد التوصيل. "
 
 #. module: stock_delivery
 #. odoo-python
@@ -355,10 +358,13 @@ msgstr "المسارات "
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
-"تحدد قواعد الأصل مكان إنشاء البضائع، أي ليس المكان الذي قد تم شحنها منه، بل مكان تصنيعها وإنتاجها. \n"
+"تحدد قواعد الأصل مكان إنشاء البضائع، أي ليس المكان الذي قد تم شحنها منه، بل "
+"مكان تصنيعها وإنتاجها. \n"
 "\"الأصل\" هو \"الجنسية الاقتصادية\" للبضائع المتاجر بها. "
 
 #. module: stock_delivery
@@ -390,11 +396,11 @@ msgstr "أرسل الى الشاحن"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
+"(ref)s"
 msgstr ""
-"تم إرسال الشحنة إلى شركة الشحن %(carrier_name)s ليتم شحنها مع رقم التتبع "
-"%(ref)s "
+"تم إرسال الشحنة إلى شركة الشحن %(carrier_name)s ليتم شحنها مع رقم التتبع %"
+"(ref)s "
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -565,8 +571,8 @@ msgstr "الوزن:"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
 "لا يمكنك حزم المنتجات في نفس الطرد إذا كانت لديها شركات شحن مختلفة (تحقق من "
 "أن كافة شحناتها لها شركة شحن معينة وأنها تستخدم نفس شركة الشحن). "

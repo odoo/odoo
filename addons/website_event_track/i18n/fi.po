@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_track
-# 
+#
 # Translators:
 # Tiffany Chang, 2024
 # Erno Iipponen <erno.iipponen@web-veistamo.fi>, 2024
@@ -30,31 +30,38 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Jessica Jakara, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:40+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_track
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
-"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br/>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name "
+"or ''\">What This Event Is All About</t> has been accepted and confirmed for "
+"the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online "
+"Reveal</t>.\n"
 "    <br/>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
@@ -62,16 +69,24 @@ msgid ""
 "    Thank you,\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-"
+"o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "    </t>\n"
 msgstr ""
 "\n"
-"    Hyvä <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
-"    Meillä on ilo ilmoittaa, että ehdotuksesi <t t-out=\"object.name or ''\">What This Event Is All About</t> on hyväksytty ja vahvistettu <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>-tapahtumaan.\n"
+"    Hyvä <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br/>\n"
+"    Meillä on ilo ilmoittaa, että ehdotuksesi <t t-out=\"object.name or "
+"''\">What This Event Is All About</t> on hyväksytty ja vahvistettu <t t-"
+"out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>-"
+"tapahtumaan.\n"
 "   <br/>\n"
 "    Löydät lisätietoja täältä:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            Katso esityksen tiedot\n"
 "        </a>\n"
 "    </div>\n"
@@ -79,7 +94,8 @@ msgstr ""
 "    Kiitos,\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell admin</t>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-"
+"o-mail-quote=\"1\"/>Mitchell admin</t>\n"
 "    </t>\n"
 
 #. module: website_event_track
@@ -193,13 +209,17 @@ msgstr "<span class=\"fa fa-plus me-1\"/> Aikatauluta esitykset"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                    <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                    <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                    <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                    <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                </span>"
 msgstr ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                    <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                    <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                    <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                    <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                </span>"
 
 #. module: website_event_track
@@ -275,7 +295,8 @@ msgstr ""
 "Raidan kanban-tila osoittaa siihen vaikuttavat erityistilanteet:\n"
 "  * Harmaa on oletustilanne\n"
 "  * Punainen osoittaa, että jokin estää tämän esityksen etenemisen\n"
-"  * Vihreä osoittaa, että esitys on valmis siirrettäväksi seuraavaan vaiheeseen"
+"  * Vihreä osoittaa, että esitys on valmis siirrettäväksi seuraavaan "
+"vaiheeseen"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
@@ -417,14 +438,20 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
 msgid ""
-"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
-"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
-"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"As you may have heard before, making your own furniture is actually not as "
+"difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete "
+"them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee "
+"table you can easily put one together using\n"
 "    wood crates."
 msgstr ""
-"Olet ehkä kuullut ennenkin, omien huonekalujen valmistaminen ei itse asiassa ole niin vaikeaa tai monimutkaista kuin luulet.\n"
-"     Itse asiassa jotkut hankkeet ovat niin helppoja, että kuka tahansa voi rakentaa ne onnistuneesti. Esimerkiksi söpön jakkaran tekeminen\n"
-"     vanha rengas on todella helppoa ja jos tarvitset sohvapöydän, voit koota sen helposti käyttämällä\n"
+"Olet ehkä kuullut ennenkin, omien huonekalujen valmistaminen ei itse asiassa "
+"ole niin vaikeaa tai monimutkaista kuin luulet.\n"
+"     Itse asiassa jotkut hankkeet ovat niin helppoja, että kuka tahansa voi "
+"rakentaa ne onnistuneesti. Esimerkiksi söpön jakkaran tekeminen\n"
+"     vanha rengas on todella helppoa ja jos tarvitset sohvapöydän, voit "
+"koota sen helposti käyttämällä\n"
 "     puisia laatikoita."
 
 #. module: website_event_track
@@ -784,8 +811,7 @@ msgstr "Näyttönimi"
 msgid ""
 "Display a Call to Action button to your Attendees while they watch your "
 "Track."
-msgstr ""
-"Näytä toimintakehotuspainike osallistujille, kun he katsovat esitystä."
+msgstr "Näytä toimintakehotuspainike osallistujille, kun he katsovat esitystä."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
@@ -1139,8 +1165,8 @@ msgid ""
 "If checked, automatically publish tracks so that access links to customers "
 "are provided."
 msgstr ""
-"Jos tämä on valittuna, julkaise esitykset automaattisesti, jotta asiakkaille"
-" tarjotaan pääsyyn linkki."
+"Jos tämä on valittuna, julkaise esitykset automaattisesti, jotta asiakkaille "
+"tarjotaan pääsyyn linkki."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
@@ -1170,8 +1196,8 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
 msgid ""
-"If set, the talk will be set as favorite for each attendee registered to the"
-" event."
+"If set, the talk will be set as favorite for each attendee registered to the "
+"event."
 msgstr ""
 "Jos asetettu, esitys asetetaan suosikiksi jokaiselle tapahtumaan "
 "ilmoittautuneelle osallistujalle."
@@ -1449,8 +1475,7 @@ msgid ""
 "Manage from here the places where you organize your tracks (e.g. Rooms, "
 "Channels, ...)."
 msgstr ""
-"Hallinnoi paikkoja, joissa järjestät esityksiä (esim. huoneet, kanavat, "
-"...)."
+"Hallinnoi paikkoja, joissa järjestät esityksiä (esim. huoneet, kanavat, ...)."
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
@@ -2008,8 +2033,7 @@ msgstr "Esitysten tyypit"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Task in progress. Click to block or set as done."
 msgstr ""
-"Tehtävä on käynnissä. Napsauta estääksesi tai asettaaksesi tehtävän "
-"tehdyksi."
+"Tehtävä on käynnissä. Napsauta estääksesi tai asettaaksesi tehtävän tehdyksi."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
@@ -2051,11 +2075,14 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"There are several variants of wood is available in the world but we are talking about most expensive\n"
-"    ones in the world and keeping to the point we have arranged ten most expensive wood."
+"There are several variants of wood is available in the world but we are "
+"talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most "
+"expensive wood."
 msgstr ""
 "Maailmassa on saatavilla useita puutyyppejä, mutta puhumme kalleimmista\n"
-"     puutyypeistä. Muista tämän olemme järjestäneet kymmenen kalleinta puuta esitykseemme."
+"     puutyypeistä. Muista tämän olemme järjestäneet kymmenen kalleinta puuta "
+"esitykseemme."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2076,10 +2103,8 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid ""
-"They will be created automatically once attendees start browsing your "
-"events."
-msgstr ""
-"Luodaan automaattisesti, kun osallistujat alkavat selata tapahtumiasi."
+"They will be created automatically once attendees start browsing your events."
+msgstr "Luodaan automaattisesti, kun osallistujat alkavat selata tapahtumiasi."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_website__app_icon
@@ -2157,11 +2182,15 @@ msgstr "Kymmenen maailman kalleinta puulaatua"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
-"    that there are hundreds of wood types exist around the globe following different properties and use."
+"Top most expensive wood in the world is quite interesting topic and several "
+"people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following "
+"different properties and use."
 msgstr ""
-"Maailman kallein puu on varsin mielenkiintoinen aihe. Monet saattavat yllättyä\n"
-"     että ympäri maailmaa on olemassa satoja puulajeja, joilla on erilaisia ominaisuuksia ja käyttötarkoituksia."
+"Maailman kallein puu on varsin mielenkiintoinen aihe. Monet saattavat "
+"yllättyä\n"
+"     että ympäri maailmaa on olemassa satoja puulajeja, joilla on erilaisia "
+"ominaisuuksia ja käyttötarkoituksia."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
@@ -2273,8 +2302,8 @@ msgid ""
 "Track Visitors store statistics on your events, including how many times "
 "tracks have been wishlisted."
 msgstr ""
-"Vierailijoiden seuraaminen tallentaa tilastoja tapahtumistasi, mukaan lukien"
-" kuinka monta kertaa esitykset on lisätty toivelistalle."
+"Vierailijoiden seuraaminen tallentaa tilastoja tapahtumistasi, mukaan lukien "
+"kuinka monta kertaa esitykset on lisätty toivelistalle."
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
@@ -2349,22 +2378,32 @@ msgstr "Ei tuettu 'Not In' -operaatio toivelistan vierailijoiden seurannassa"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Use these simple steps to easily haul LONG lumber in a short box pickup truck.  A dose of carpenter's\n"
-"    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
-"    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
+"Use these simple steps to easily haul LONG lumber in a short box pickup "
+"truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws "
+"are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or "
+"jobsite."
 msgstr ""
-"Näiden yksinkertaisten ohjeiden avulla voit helposti kuljettaa PITKÄÄ puutavaraa lyhyessä laatikkolava-autossa. Annos puusepän\n"
-"     kekseliäisyyttä, pari lautaa, tukeva hihna ja muutama ruuvi ovat kaikki, joita käytän helposti kuljettamiseen\n"
-"     pitkät laudat puutavaralta seuraan tason puusepänliikkeeseen tai työmaalle."
+"Näiden yksinkertaisten ohjeiden avulla voit helposti kuljettaa PITKÄÄ "
+"puutavaraa lyhyessä laatikkolava-autossa. Annos puusepän\n"
+"     kekseliäisyyttä, pari lautaa, tukeva hihna ja muutama ruuvi ovat "
+"kaikki, joita käytän helposti kuljettamiseen\n"
+"     pitkät laudat puutavaralta seuraan tason puusepänliikkeeseen tai "
+"työmaalle."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
-"    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) "
+"allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated "
+"knots."
 msgstr ""
-"Ainutlaatuisen sidontahihnan käärimismenetelmän (EI kuminauhojen!!!) käyttö mahdollistaa puutavaran\n"
-"     kiinnittämisen turvallisesti ILMAN tarvetta solmia ja irrottaa hankalia tai monimutkaisia solmuja."
+"Ainutlaatuisen sidontahihnan käärimismenetelmän (EI kuminauhojen!!!) käyttö "
+"mahdollistaa puutavaran\n"
+"     kiinnittämisen turvallisesti ILMAN tarvetta solmia ja irrottaa hankalia "
+"tai monimutkaisia solmuja."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -2437,7 +2476,8 @@ msgid ""
 msgstr ""
 "Otamme vastaan laajan valikoiman\n"
 "                                esityksiä, akateemisista raporteista ja\n"
-"                                kaupallisista projekteista opetusohjelmiin ja tapaus\n"
+"                                kaupallisista projekteista opetusohjelmiin "
+"ja tapaus\n"
 "                                tutkimuksiin. Jos esitys on\n"
 "                                kiinnostava ja mahdollisesti hyödyllinen \n"
 "                                yleisölle, sen sisällyttämistä\n"

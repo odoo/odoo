@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_pdf_quote_builder
-# 
+#
 # Translators:
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
 # Maitê Dietze, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Maitê Dietze, 2024\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
+"41243/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -44,21 +46,21 @@ msgstr "<span>Tipo de documento:</span>"
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in product documents can't be linked to a quotation"
-" document."
+"A form field set as used in product documents can't be linked to a quotation "
+"document."
 msgstr ""
-"Um campo de formulário definido conforme usado em documentos de produtos não"
-" pode ser vinculado a um documento de cotação."
+"Um campo de formulário definido conforme usado em documentos de produtos não "
+"pode ser vinculado a um documento de cotação."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in quotation documents can't be linked to a product"
-" document."
+"A form field set as used in quotation documents can't be linked to a product "
+"document."
 msgstr ""
-"Um campo de formulário definido como usado em documentos de cotação não pode"
-" ser vinculado a um documento de produto."
+"Um campo de formulário definido como usado em documentos de cotação não pode "
+"ser vinculado a um documento de produto."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__access_token
@@ -85,20 +87,32 @@ msgstr "Todos os arquivos carregados"
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
-"Leave it empty if you don't want to share this document with sales customer.\n"
-"On quote: the document will be sent to and accessible by customers at any time.\n"
+"Leave it empty if you don't want to share this document with sales "
+"customer.\n"
+"On quote: the document will be sent to and accessible by customers at any "
+"time.\n"
 "e.g. this option can be useful to share Product description files.\n"
-"On order confirmation: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
+"On order confirmation: the document will be sent to and accessible by "
+"customers.\n"
+"e.g. this option can be useful to share User Manual or digital content "
+"bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation and "
+"sale order between the header pages and the quote table. "
 msgstr ""
-"Permite que você compartilhe o documento com seus clientes dentro de uma venda.\n"
-"Deixe em branco se não quiser compartilhar esse documento com o cliente da venda.\n"
-"Na cotação: o documento será enviado e poderá ser acessado pelos clientes a qualquer momento.\n"
-"por exemplo, essa opção pode ser útil para compartilhar arquivos de descrição do produto.\n"
-"Na confirmação do pedido: o documento será enviado e poderá ser acessado pelos clientes.\n"
-"por exemplo, essa opção pode ser útil para compartilhar o Manual do Usuário ou o conteúdo digital comprado no e-Commerce. \n"
-"Dentro da cotação: O documento será incluído no PDF da cotação e do pedido de venda entre as páginas de cabeçalho e a tabela de cotação."
+"Permite que você compartilhe o documento com seus clientes dentro de uma "
+"venda.\n"
+"Deixe em branco se não quiser compartilhar esse documento com o cliente da "
+"venda.\n"
+"Na cotação: o documento será enviado e poderá ser acessado pelos clientes a "
+"qualquer momento.\n"
+"por exemplo, essa opção pode ser útil para compartilhar arquivos de "
+"descrição do produto.\n"
+"Na confirmação do pedido: o documento será enviado e poderá ser acessado "
+"pelos clientes.\n"
+"por exemplo, essa opção pode ser útil para compartilhar o Manual do Usuário "
+"ou o conteúdo digital comprado no e-Commerce. \n"
+"Dentro da cotação: O documento será incluído no PDF da cotação e do pedido "
+"de venda entre as páginas de cabeçalho e a tabela de cotação."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -267,8 +281,8 @@ msgstr "Campos de formulário incluídos"
 #: model:ir.model.constraint,message:sale_pdf_quote_builder.constraint_sale_pdf_form_field_unique_name_per_doc_type
 msgid "Form field name must be unique for a given document type."
 msgstr ""
-"O nome do campo do formulário deve ser exclusivo para um determinado tipo de"
-" documento."
+"O nome do campo do formulário deve ser exclusivo para um determinado tipo de "
+"documento."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_form_field
@@ -498,17 +512,26 @@ msgstr "Documentos do produto"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid ""
-"Provide header pages and footer pages to compose an attractive quotation with more information\n"
-"                        about your company, your products and you services. <br/>\n"
-"                        The pdf of your quotes will be built by putting together header pages, product descriptions,\n"
-"                        details of the quote and then the footer pages. <br/>\n"
-"                        If empty, it will use those define in the company settings. <br/>"
+"Provide header pages and footer pages to compose an attractive quotation "
+"with more information\n"
+"                        about your company, your products and you services. "
+"<br/>\n"
+"                        The pdf of your quotes will be built by putting "
+"together header pages, product descriptions,\n"
+"                        details of the quote and then the footer pages. <br/"
+">\n"
+"                        If empty, it will use those define in the company "
+"settings. <br/>"
 msgstr ""
 "Forneça páginas de cabeçalho e de rodapé para compor cotações atrativas\n"
-"                            com mais informações sobre a sua empresa, produtos e serviços.<br/>\n"
-"                            O PDF das cotações será construído juntando as páginas de cabeçalho,\n"
-"                            as descrições de produto, os detalhes da cotação e, enfim, as páginas de rodapé.<br/>\n"
-"Se em em branco, serão utilizadas as configuradas nas definições da empresa.<br/>"
+"                            com mais informações sobre a sua empresa, "
+"produtos e serviços.<br/>\n"
+"                            O PDF das cotações será construído juntando as "
+"páginas de cabeçalho,\n"
+"                            as descrições de produto, os detalhes da cotação "
+"e, enfim, as páginas de rodapé.<br/>\n"
+"Se em em branco, serão utilizadas as configuradas nas definições da empresa."
+"<br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw

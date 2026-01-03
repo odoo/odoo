@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:41+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2025-09-05 22:20+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/"
@@ -20,8 +20,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_slides_survey
@@ -49,11 +49,16 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t><br/><br/>\n"
-"        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basics of Gardening</t>.<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant' or "
+"''\">participant</t><br/><br/>\n"
+"        Unfortunately, you have failed the certification and are no longer a "
+"member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or "
+"''\">Basics of Gardening</t>.<br/><br/>\n"
 "        Don't hesitate to enroll again!\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)"
+"\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                Enroll now\n"
 "            </a>\n"
 "        </div>\n"
@@ -64,17 +69,16 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Estimado/a <t t-out=\"object.partner_id.name or 'participant' or ''\""
-">participante</t>:<br/><br/>\n"
+"        Estimado/a <t t-out=\"object.partner_id.name or 'participant' or "
+"''\">participante</t>:<br/><br/>\n"
 "        Desafortunadamente, no aprobó la certificación y ya no es miembro "
-"del curso: <t t-out=\"object.slide_partner_id.channel_id.name or ''\""
-">Fundamentos de jardinería</t>.<br/><br/>\n"
+"del curso: <t t-out=\"object.slide_partner_id.channel_id.name or "
+"''\">Fundamentos de jardinería</t>.<br/><br/>\n"
 "        ¡No dude en inscribirse de nuevo!\n"
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href="
-"\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-"
-"color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"#fff; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)"
+"\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                Inscribirse ahora\n"
 "            </a>\n"
 "        </div>\n"
@@ -109,10 +113,12 @@ msgstr ""
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
 msgid ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" title=\"Share certification\"/>\n"
+"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" "
+"title=\"Share certification\"/>\n"
 "                        Share your certification"
 msgstr ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" title=\"Share certification\"/>\n"
+"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" "
+"title=\"Share certification\"/>\n"
 "                        Comparta su certificación"
 
 #. module: website_slides_survey
@@ -162,10 +168,11 @@ msgstr "<span class=\"text-muted\">Certificaciones</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
-msgid "<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
+msgid ""
+"<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
 msgstr ""
-"<span>Iniciar ahora</span><i class=\"oi oi-chevron-right ms-2 align-"
-"middle\"/>"
+"<span>Iniciar ahora</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/"
+">"
 
 #. module: website_slides_survey
 #: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id
@@ -204,10 +211,12 @@ msgstr "Permitir vista previa"
 #. odoo-python
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 msgid ""
-"Any Survey listed below is currently used as a Course Certification and cannot be deleted:\n"
+"Any Survey listed below is currently used as a Course Certification and "
+"cannot be deleted:\n"
 "%s"
 msgstr ""
-"Cualquier encuesta incluida en la siguiente lista se utiliza actualmente como una certificación de curso y no se puede eliminar:\n"
+"Cualquier encuesta incluida en la siguiente lista se utiliza actualmente "
+"como una certificación de curso y no se puede eliminar:\n"
 "%s"
 
 #. module: website_slides_survey
@@ -321,8 +330,7 @@ msgstr "Icono de certificación"
 #: code:addons/website_slides_survey/controllers/slides.py:0
 msgid "Certification slides are completed when the survey is succeeded."
 msgstr ""
-"Las diapositivas de certificación se completan cuando se aprueba la "
-"encuesta."
+"Las diapositivas de certificación se completan cuando se aprueba la encuesta."
 
 #. module: website_slides_survey
 #: model:ir.actions.act_window,name:website_slides_survey.slide_slide_action_certification
@@ -530,8 +538,8 @@ msgid ""
 "Select an existing certification from the list. Creating or editing a "
 "certification can be done from the backend."
 msgstr ""
-"Seleccione una certificación existente de la lista. Puede crear o editar una"
-" certificación desde el backend."
+"Seleccione una certificación existente de la lista. Puede crear o editar una "
+"certificación desde el backend."
 
 #. module: website_slides_survey
 #: model:mail.template,description:website_slides_survey.mail_template_user_input_certification_failed
@@ -571,8 +579,8 @@ msgstr "Información del suscritor"
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
 msgid ""
-"Subtype of the slide category, allows more precision on the actual file type"
-" / source type."
+"Subtype of the slide category, allows more precision on the actual file "
+"type / source type."
 msgstr ""
 "Subtipo de la categoría de diapositivas, permite una mayor precisión en el "
 "tipo de archivo/tipo de fuente real."
@@ -631,8 +639,7 @@ msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_channel_ids
-msgid ""
-"The courses this survey is linked to through the e-learning application"
+msgid "The courses this survey is linked to through the e-learning application"
 msgstr ""
 "Los cursos a los que está vinculada esta encuesta a través de la aplicación "
 "eLearning"
@@ -680,18 +687,20 @@ msgstr "No tiene permisos para enlazar una certificación."
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
 msgid ""
-"You can gain badges by passing certifications. Here is a list of all available certification badges.\n"
-"                            <br/>Follow the links to reach new heights and skill up!"
+"You can gain badges by passing certifications. Here is a list of all "
+"available certification badges.\n"
+"                            <br/>Follow the links to reach new heights and "
+"skill up!"
 msgstr ""
-"Puede obtener insignias aprobando certificaciones. Aquí tiene una lista de todas las insignias de certificación disponibles.\n"
+"Puede obtener insignias aprobando certificaciones. Aquí tiene una lista de "
+"todas las insignias de certificación disponibles.\n"
 "<br/>¡Sigua los enlaces para alcanzar nuevas metas y mejorar sus habilidades!"
 
 #. module: website_slides_survey
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
 msgid ""
 "You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
-msgstr ""
-"No ha aprobado el curso: {{ object.slide_partner_id.channel_id.name }}"
+msgstr "No ha aprobado el curso: {{ object.slide_partner_id.channel_id.name }}"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 18:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-08-12 22:21+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -72,14 +72,14 @@ msgstr "管理員需要先設定 Outlook 同步,然後才能使用它!"
 #. odoo-python
 #: code:addons/microsoft_calendar/models/res_users.py:0
 msgid ""
-"An error occurred while generating the token. Your authorization code may be"
-" invalid or has already expired [%s]. You should check your Client ID and "
+"An error occurred while generating the token. Your authorization code may be "
+"invalid or has already expired [%s]. You should check your Client ID and "
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
 "產生代碼時發生錯誤。你的授權碼可能無效，或已經過期 [%s]。你應該前往 "
-"Microsoft Azure "
-"門戶網站，檢查你的用戶端識別碼及秘密密鑰，或嘗試停止日曆同步功能再重新啟用。"
+"Microsoft Azure 門戶網站，檢查你的用戶端識別碼及秘密密鑰，或嘗試停止日曆同步"
+"功能再重新啟用。"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_attendee
@@ -176,11 +176,14 @@ msgstr "由於 Outlook 日曆的限制，重複事項更新必須直接在 Outlo
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
-"Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
-"If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar."
+"Due to an Outlook Calendar limitation, recurrence updates must be done "
+"directly in Outlook Calendar.\n"
+"If this recurrence is not shown in Outlook Calendar, you must delete it in "
+"Odoo Calendar and recreate it in Outlook Calendar."
 msgstr ""
 "由於 Outlook 日曆的限制，重複事項更新必須直接在 Outlook 日曆中完成。\n"
-"如果在 Outlook 日曆中未顯示該重複事項，則必須在 Odoo 日曆中刪除，然後在 Outlook 日曆中重新建立。"
+"如果在 Outlook 日曆中未顯示該重複事項，則必須在 Odoo 日曆中刪除，然後在 "
+"Outlook 日曆中重新建立。"
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -204,11 +207,15 @@ msgstr "活動循環規則"
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
-"For a correct synchronization between Odoo and Outlook Calendar, all attendees must have an email address. However, some events do not respect this condition. As long as the events are incorrect, the calendars will not be synchronized.\n"
+"For a correct synchronization between Odoo and Outlook Calendar, all "
+"attendees must have an email address. However, some events do not respect "
+"this condition. As long as the events are incorrect, the calendars will not "
+"be synchronized.\n"
 "Either update the events/attendees or archive these events %(details)s:\n"
 "%(invalid_events)s"
 msgstr ""
-"要在 Odoo 及 Outlook 日曆之間正確同步，所有參加者都必須有電郵地址。但是，某些事件不遵守此條件。只要事件不正確，日曆就不會同步。\n"
+"要在 Odoo 及 Outlook 日曆之間正確同步，所有參加者都必須有電郵地址。但是，某些"
+"事件不遵守此條件。只要事件不正確，日曆就不會同步。\n"
 "你可更新事件/參加者，或封存這些事件 %(details)s：\n"
 "%(invalid_events)s"
 
@@ -218,7 +225,8 @@ msgstr ""
 msgid ""
 "For having a different organizer in your event, it is necessary that the "
 "organizer have its Odoo Calendar synced with Outlook Calendar."
-msgstr "若要為活動設定不同的舉辦者，舉辦者必須將 Odoo 日曆與 Outlook 日曆同步。"
+msgstr ""
+"若要為活動設定不同的舉辦者，舉辦者必須將 Odoo 日曆與 Outlook 日曆同步。"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -363,7 +371,9 @@ msgid ""
 "Outlook limitation: in a recurrence, an event cannot be moved to or before "
 "the day of the previous event, and cannot be moved to or after the day of "
 "the following event."
-msgstr "Outlook 限制：在重複事項中，活動不能移動到上次活動的當天或之前，也不能移動到下次活動的當天或之後。"
+msgstr ""
+"Outlook 限制：在重複事項中，活動不能移動到上次活動的當天或之前，也不能移動到"
+"下次活動的當天或之後。"
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -409,8 +419,8 @@ msgstr "僅同步新事件"
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 msgid ""
-"The Outlook Synchronization needs to be configured before you can use it, do"
-" you want to do it now?"
+"The Outlook Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
 msgstr "Outlook 同步需要先配置後才能使用，現在要配置嗎？"
 
 #. module: microsoft_calendar

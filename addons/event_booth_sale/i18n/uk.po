@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_booth_sale
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
@@ -338,17 +341,16 @@ msgstr "Оберати стенд події"
 #. odoo-python
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
 msgid ""
-"The following booths are unavailable, please remove them to continue : "
-"%(booth_names)s"
+"The following booths are unavailable, please remove them to continue : %"
+"(booth_names)s"
 msgstr ""
-"Наведені нижче стенди недоступні. Видаліть їх, щоб продовжити : "
-"%(booth_names)s"
+"Наведені нижче стенди недоступні. Видаліть їх, щоб продовжити : %"
+"(booth_names)s"
 
 #. module: event_booth_sale
 #: model:ir.model.constraint,message:event_booth_sale.constraint_event_booth_registration_unique_registration
 msgid "There can be only one registration for a booth by sale order line"
-msgstr ""
-"У рядку замовлення на продаж може бути тільки одна реєстрація на стенд"
+msgstr "У рядку замовлення на продаж може бути тільки одна реєстрація на стенд"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_tree_from_event
@@ -366,8 +368,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/event_booth_sale/models/event_booth.py:0
 msgid ""
-"You can't delete the following booths as they are linked to sales orders: "
-"%(booths)s"
+"You can't delete the following booths as they are linked to sales orders: %"
+"(booths)s"
 msgstr ""
 "Ви не можете видалити наведені нижче стенди, оскільки вони пов’язані із "
 "замовленнями на продаж: %(booths)s"
@@ -382,6 +384,5 @@ msgstr "Потрібна обрати принаймні один стенд."
 #. odoo-python
 #: code:addons/event_booth_sale/models/event_booth_registration.py:0
 msgid ""
-"Your order has been cancelled because the following booths have been "
-"reserved"
+"Your order has been cancelled because the following booths have been reserved"
 msgstr "Ваше замовлення скасовано, оскільки зарезервовано наступні стенди"

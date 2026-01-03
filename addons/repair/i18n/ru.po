@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-10-20 06:23+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-18/repair/"
@@ -23,8 +23,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
-"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: repair
@@ -57,17 +57,21 @@ msgstr "(<i>Удаление</i>)"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__state
 msgid ""
-"* The 'New' status is used when a user is encoding a new and unconfirmed repair order.\n"
+"* The 'New' status is used when a user is encoding a new and unconfirmed "
+"repair order.\n"
 "* The 'Confirmed' status is used when a user confirms the repair order.\n"
 "* The 'Under Repair' status is used when the repair is ongoing.\n"
 "* The 'Repaired' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
-"* Статус \"Новый\" используется, когда пользователь создает новый неподтвержденный заказ на ремонт.\n"
-"* Статус \"Подтвержден\" используется, когда пользователь подтверждает заказ на ремонт.\n"
+"* Статус \"Новый\" используется, когда пользователь создает новый "
+"неподтвержденный заказ на ремонт.\n"
+"* Статус \"Подтвержден\" используется, когда пользователь подтверждает заказ "
+"на ремонт.\n"
 "* Статус \"В ремонте\" применяется, когда ремонт выполняется.\n"
 "* Статус \"Отремонтирован\" устанавливается после завершения ремонта.\n"
-"* Статус \"Отменен\" используется, когда пользователь отменяет заказ на ремонт."
+"* Статус \"Отменен\" используется, когда пользователь отменяет заказ на "
+"ремонт."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -302,9 +306,9 @@ msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"Выберите партнера, для которого будет выставлен счет и выполнена доставка по"
-" заказу. Партнера можно найти по имени, ИНН, электронной почте или "
-"внутренней ссылке."
+"Выберите партнера, для которого будет выставлен счет и выполнена доставка по "
+"заказу. Партнера можно найти по имени, ИНН, электронной почте или внутренней "
+"ссылке."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
@@ -494,8 +498,8 @@ msgid ""
 "the actual quantity that was used. Are you sure you want to confirm ?"
 msgstr ""
 "Для некоторых деталей наблюдается расхождение между первоначальной "
-"потребностью и фактически использованным количеством. Вы уверены, что хотите"
-" подтвердить?"
+"потребностью и фактически использованным количеством. Вы уверены, что хотите "
+"подтвердить?"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -575,11 +579,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
 "В заказе на ремонт вы можете указать детали, которые удаляете,\n"
-"                добавляете или заменяете, а также зафиксировать время, затраченное на различные\n"
+"                добавляете или заменяете, а также зафиксировать время, "
+"затраченное на различные\n"
 "                операции."
 
 #. module: repair
@@ -815,8 +821,7 @@ msgstr "Тип операции"
 
 #. module: repair
 #. odoo-python
-#: code:addons/repair/models/product.py:0
-#: code:addons/repair/models/repair.py:0
+#: code:addons/repair/models/product.py:0 code:addons/repair/models/repair.py:0
 msgid "Operation not supported"
 msgstr "Операция не поддерживается"
 
@@ -1325,8 +1330,7 @@ msgstr "Теги"
 #: model:ir.model.fields,help:repair.field_repair_order__reserve_visible
 msgid "Technical field to check when we can reserve quantities"
 msgstr ""
-"Техническое поле, чтобы проверить, когда мы сможем зарезервировать "
-"количество"
+"Техническое поле, чтобы проверить, когда мы сможем зарезервировать количество"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__unreserve_visible
@@ -1360,8 +1364,8 @@ msgid ""
 "This is the default destination location for the product to be repaired in "
 "repair orders with this operation type."
 msgstr ""
-"Это местоположение назначения по умолчанию для продукта, подлежащего ремонту"
-" в заказах на ремонт с этим типом операции."
+"Это местоположение назначения по умолчанию для продукта, подлежащего ремонту "
+"в заказах на ремонт с этим типом операции."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
@@ -1384,11 +1388,11 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_src_id
 msgid ""
-"This is the default source location for the product to be repaired in repair"
-" orders with this operation type."
+"This is the default source location for the product to be repaired in repair "
+"orders with this operation type."
 msgstr ""
-"Это исходное местоположение по умолчанию для продукта, подлежащего ремонту в"
-" заказах на ремонт с этим типом операции."
+"Это исходное местоположение по умолчанию для продукта, подлежащего ремонту в "
+"заказах на ремонт с этим типом операции."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
@@ -1556,11 +1560,13 @@ msgstr "Вы не можете отменить заказ на ремонт, к
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid ""
-"You cannot create a quotation for a repair order that is already linked to an existing sale order.\n"
+"You cannot create a quotation for a repair order that is already linked to "
+"an existing sale order.\n"
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
-"Вы не можете создать коммерческое предложение для заказа на ремонт, который уже связан с существующим заказом на продажу.\n"
+"Вы не можете создать коммерческое предложение для заказа на ремонт, который "
+"уже связан с существующим заказом на продажу.\n"
 "Затронутый заказ(ы) на ремонт:\n"
 "%(ref_str)s"
 
@@ -1568,11 +1574,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid ""
-"You need to define a customer for a repair order in order to create an associated quotation.\n"
+"You need to define a customer for a repair order in order to create an "
+"associated quotation.\n"
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
-"Вам нужно указать клиента для заказа на ремонт, чтобы создать связанное коммерческое предложение.\n"
+"Вам нужно указать клиента для заказа на ремонт, чтобы создать связанное "
+"коммерческое предложение.\n"
 "Затронутый заказ(ы) на ремонт:\n"
 "%(ref_str)s"
 

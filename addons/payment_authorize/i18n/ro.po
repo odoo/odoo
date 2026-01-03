@@ -1,40 +1,48 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_authorize
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Lyall Kindmurr, 2024
 # Maria Muntean, 2024
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
-"                        <option value=\"checking\">Personal Checking</option>\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
+"select\">\n"
+"                        <option value=\"checking\">Personal Checking</"
+"option>\n"
 "                        <option value=\"savings\">Personal Savings</option>\n"
-"                        <option value=\"businessChecking\">Business Checking</option>\n"
+"                        <option value=\"businessChecking\">Business "
+"Checking</option>\n"
 "                    </select>"
 msgstr ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
-"                        <option value=\"checking\">Cont curent personal</option>\n"
-"                        <option value=\"savings\">Cont de economii personal</option>\n"
-"                        <option value=\"businessChecking\">Cont curent business</option>\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
+"select\">\n"
+"                        <option value=\"checking\">Cont curent personal</"
+"option>\n"
+"                        <option value=\"savings\">Cont de economii personal</"
+"option>\n"
+"                        <option value=\"businessChecking\">Cont curent "
+"business</option>\n"
 "                    </select>"
 
 #. module: payment_authorize
@@ -193,8 +201,10 @@ msgstr "Procesarea plății a eșuat"
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
-msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
-msgstr "Date primite cu cod de stare \"%(status)s\" și cod de eroare \"%(error)s\""
+msgid ""
+"Received data with status code \"%(status)s\" and error code \"%(error)s\""
+msgstr ""
+"Date primite cu cod de stare \"%(status)s\" și cod de eroare \"%(error)s\""
 
 #. module: payment_authorize
 #. odoo-python
@@ -233,8 +243,8 @@ msgid ""
 "The transaction is not in a status to be refunded. (status: %(status)s, "
 "details: %(message)s)"
 msgstr ""
-"Tranzacția nu este într-un status care să permită rambursarea. (status: "
-"%(status)s, detalii: %(message)s)"
+"Tranzacția nu este într-un status care să permită rambursarea. (status: %"
+"(status)s, detalii: %(message)s)"
 
 #. module: payment_authorize
 #. odoo-python
@@ -248,8 +258,7 @@ msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
 msgstr ""
-"Referința unică pentru combinația partener/token în backend-ul "
-"Authorize.Net."
+"Referința unică pentru combinația partener/token în backend-ul Authorize.Net."
 
 #. module: payment_authorize
 #. odoo-python

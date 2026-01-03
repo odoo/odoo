@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-08-22 22:20+0000\n"
 "Last-Translator: Tamás Dombos <tdombos@gmail.com>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-18/"
@@ -79,8 +79,8 @@ msgstr "%(name)sidőkimutatásai"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"'%(missing_plan_names)s' analytic plan(s) required on the project "
-"'%(project_name)s' linked to the timesheet."
+"'%(missing_plan_names)s' analytic plan(s) required on the project '%"
+"(project_name)s' linked to the timesheet."
 msgstr ""
 "'%(missing_plan_names)s' analitikus terv(ek) szükséges(ek) az "
 "időkimutatáshoz kapcsolt projektnél: '%(project_name)s'."
@@ -121,12 +121,17 @@ msgstr "2021-09-01"
 #. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
-msgstr "<b class=\"tip_title\">Tipp: Rögzítsd gyorsabban az időkimutatásaidat</b>"
+msgstr ""
+"<b class=\"tip_title\">Tipp: Rögzítsd gyorsabban az időkimutatásaidat</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
-msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -150,9 +155,11 @@ msgid ""
 "<span invisible=\"not has_timesheet\">\n"
 "                        You cannot delete employees who have timesheets.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            You can either archive these employees or first delete all of their timesheets.\n"
+"                            You can either archive these employees or first "
+"delete all of their timesheets.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Please first delete all of their timesheets.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -161,12 +168,16 @@ msgid ""
 "                    </span>"
 msgstr ""
 "<span invisible=\"not has_timesheet\">\n"
-"                        Nem lehet törölni időkimutatással rendelkező munkavállalókat.\n"
+"                        Nem lehet törölni időkimutatással rendelkező "
+"munkavállalókat.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            Vagy archiválja a munkavállalókat, vagy előbb törölje az összes hozzájuk kapcsolt időkimutatást.\n"
+"                            Vagy archiválja a munkavállalókat, vagy előbb "
+"törölje az összes hozzájuk kapcsolt időkimutatást.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
-"                            Kérjük előbb törölje az összes hozzájuk kapcsolt időkimutatást.\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Kérjük előbb törölje az összes hozzájuk kapcsolt "
+"időkimutatást.\n"
 "                        </span>\n"
 "                    </span>\n"
 "                    <span invisible=\"has_timesheet\">\n"
@@ -288,11 +299,14 @@ msgstr "Analitikus terv alkalmazhatóságai"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid ""
-"Analyze the projects and tasks on which your employees spend their time.<br>\n"
+"Analyze the projects and tasks on which your employees spend their time."
+"<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
-"Elemezze a projekteket és feladatokat, melyekkel a munkavállók az idejüket töltik.<br>\n"
-"                Értékelje ki, hogy ennek mely része számlázható és milyen költséget jelent."
+"Elemezze a projekteket és feladatokat, melyekkel a munkavállók az idejüket "
+"töltik.<br>\n"
+"                Értékelje ki, hogy ennek mely része számlázható és milyen "
+"költséget jelent."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_allow
@@ -531,8 +545,7 @@ msgstr "Extra idő"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid ""
-"Generate timesheets for validated time off requests and public holidays"
+msgid "Generate timesheets for validated time off requests and public holidays"
 msgstr ""
 "Generáljon időkimutatásokat jóváhagyott szabadság kérésekre és munkaszüneti "
 "napokra"
@@ -933,8 +946,8 @@ msgstr "A belső projektnek a vállalathoz kell tartoznia."
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"The project, the task and the analytic accounts of the timesheet must belong"
-" to the same company."
+"The project, the task and the analytic accounts of the timesheet must belong "
+"to the same company."
 msgstr ""
 "A projektnek, a feladatnak és az időkimutatások analitikus számláinak "
 "ugyanazon vállalathoz kell tartozniuk."
@@ -948,8 +961,8 @@ msgstr "Nincsenek időkimutatások."
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"These projects have some timesheet entries referencing them. Before removing"
-" these projects, you have to remove these timesheet entries."
+"These projects have some timesheet entries referencing them. Before removing "
+"these projects, you have to remove these timesheet entries."
 msgstr ""
 "Időkimutatás bejegyzések hivatkoznak ezekre a projektekre. Távolítsa el az "
 "időkimutatás bejegyzéseket mielőtt eltávolítaná a projekteket."
@@ -999,8 +1012,8 @@ msgstr "A(z) %s operátor nem támogatott ennél a keresési módszernél."
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"This project has some timesheet entries referencing it. Before removing this"
-" project, you have to remove these timesheet entries."
+"This project has some timesheet entries referencing it. Before removing this "
+"project, you have to remove these timesheet entries."
 msgstr ""
 "Időkimutatás bejegyzések hivatkoznak erre a projektre. Távolítsa el az "
 "időkimutatás bejegyzéseket mielőtt eltávolítaná a projektet."
@@ -1029,10 +1042,12 @@ msgstr ""
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects, don't forget to setup the right "
+"unit of measure in your employees."
 msgstr ""
 "Beállítja a projektekben és feladatokban használt mértékegységet. \n"
-"Ha használja a projektekhez kapcsolt időkimutatást, akkor ne felejtse el beállítani a helyes mértékegységet a munkavállalóknál."
+"Ha használja a projektekhez kapcsolt időkimutatást, akkor ne felejtse el "
+"beállítani a helyes mértékegységet a munkavállalóknál."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -1261,8 +1276,7 @@ msgstr "Privát feladatra nem rögzíthető időkimutatás."
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"Timesheets must be created with an active employee in the selected "
-"companies."
+"Timesheets must be created with an active employee in the selected companies."
 msgstr "A vállalat aktív munkavállalóira lehet létrehozni időkimutatásokat."
 
 #. module: hr_timesheet
@@ -1295,8 +1309,8 @@ msgid ""
 "timesheets feature."
 msgstr ""
 "Az időkimutatások használatához szükséges egy analitikus számla a "
-"projekthez. Kérjük, állítson be egyet ebben a tervben: '%(plan_name)s', vagy"
-" kapcsolja ki az időkimutatás funkciót."
+"projekthez. Kérjük, állítson be egyet ebben a tervben: '%(plan_name)s', vagy "
+"kapcsolja ki az időkimutatás funkciót."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1341,8 +1355,8 @@ msgstr "Összesen:"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
-"Track your working hours by projects every day and invoice this time to your"
-" customers."
+"Track your working hours by projects every day and invoice this time to your "
+"customers."
 msgstr ""
 "Kövesse nyomon a projektek kapcsán eltöltött munkaidejét és számlázza ki a "
 "vevőknek."
@@ -1363,7 +1377,8 @@ msgid ""
 "        @user Assign the task to a user\n"
 "        ! Set the task a high priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
 "Használja ezeket a kulcsszavakat a címben új feladatok megadásához:\n"
 "\n"
@@ -1372,7 +1387,9 @@ msgstr ""
 "        @felhasználó : feladat hozzárendelése felhasználóhoz\n"
 "        ! : magas prioritás megadása\n"
 "\n"
-"        MFigyeljen arra, hogy a helyes formátumot és sorrendet használjah pl.: Képernyő konfiguráció fejlesztése 5h #feature #v16 @Mitchell !"
+"        MFigyeljen arra, hogy a helyes formátumot és sorrendet "
+"használjah pl.: Képernyő konfiguráció fejlesztése 5h #feature #v16 "
+"@Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1399,11 +1416,13 @@ msgstr "Részletek megtekintése"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_from_employee
 msgid ""
 "You can register and track your workings hours by project every\n"
-"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    day. Every time spent on a project will become a cost "
+"and can be re-invoiced to\n"
 "                    customers if required."
 msgstr ""
 "Regisztrálhatja és nyomonkövetheti a munkaórákat projektenként minden \n"
-"                    nap. Minden projektre fordított idő költséggé válik és továbbszámlázható\n"
+"                    nap. Minden projektre fordított idő költséggé válik és "
+"továbbszámlázható\n"
 "                    a vevőknek, ha szükséges."
 
 #. module: hr_timesheet
@@ -1421,22 +1440,26 @@ msgstr "Nem lehet törlöni időkimutatásokkal rendelkező munkavállalót."
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid ""
-"You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/>\n"
-"                            Please switch to another account, or reactivate the current one to timesheet on the project."
+"You cannot log timesheets on this project since it is linked to an inactive "
+"analytic account.<br/>\n"
+"                            Please switch to another account, or reactivate "
+"the current one to timesheet on the project."
 msgstr ""
-"Nem lehet időkimutatást rögzíteni ehhez a projekthez, mivel a projekt egy inaktív analitikus számlához van kapcsolva.<br/>\n"
-"                            Időkimutatások rögzítéséhez cserélje le az analitikus számlát, vagy aktiválja újra a jelenlegit."
+"Nem lehet időkimutatást rögzíteni ehhez a projekthez, mivel a projekt egy "
+"inaktív analitikus számlához van kapcsolva.<br/>\n"
+"                            Időkimutatások rögzítéséhez cserélje le az "
+"analitikus számlát, vagy aktiválja újra a jelenlegit."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive "
-"analytic account.<br/> Please change this account, or reactivate the current"
-" one to timesheet on the project."
+"analytic account.<br/> Please change this account, or reactivate the current "
+"one to timesheet on the project."
 msgstr ""
 "Nem lehet időkimutatást rögzíteni ehhez a projekthez, mivel a projekt egy "
-"inaktív analitikus számlához van kapcsolva.<br/> Időkimutatások rögzítéséhez"
-" cserélje le az analitikus számlát, vagy aktiválja újra a jelenlegit."
+"inaktív analitikus számlához van kapcsolva.<br/> Időkimutatások rögzítéséhez "
+"cserélje le az analitikus számlát, vagy aktiválja újra a jelenlegit."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1458,10 +1481,12 @@ msgstr "ehhez: "
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "on\n"
-"                            <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
+"                            <span class=\"fw-bold text-dark\"> Sub-tasks</"
+"span>)"
 msgstr ""
 "itt:\n"
-"                            <span class=\"fw-bold text-dark\"> Alfeladatok</span>)"
+"                            <span class=\"fw-bold text-dark\"> Alfeladatok</"
+"span>)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1470,4 +1495,5 @@ msgid ""
 "                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
 "itt:\n"
-"                        <span class=\"fw-bold text-dark\"> Alfeladatok</span>)"
+"                        <span class=\"fw-bold text-dark\"> Alfeladatok</"
+"span>)"

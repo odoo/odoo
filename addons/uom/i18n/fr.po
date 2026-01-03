@@ -1,45 +1,50 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* uom
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Manon Rondou, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
+"                                    e.g: 1*(reference unit)=ratio*(this "
+"unit)\n"
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    par ex. : 1*(reference unit)=ratio*(this unit)\n"
+"                                    par ex. : 1*(reference unit)=ratio*(this "
+"unit)\n"
 "                                </span>"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
+"                                    e.g: 1*(this unit)=ratio*(reference "
+"unit)\n"
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    par ex. : 1*(this unit)=ratio*(reference unit)\n"
+"                                    par ex. : 1*(this unit)=ratio*(reference "
+"unit)\n"
 "                                </span>"
 
 #. module: uom
@@ -94,8 +99,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Il est possible de convertir deux unités de mesures si elles appartiennent à"
-" la même catégorie. Cette conversion utilise les facteurs définis pour ces "
+"Il est possible de convertir deux unités de mesures si elles appartiennent à "
+"la même catégorie. Cette conversion utilise les facteurs définis pour ces "
 "unités."
 
 #. module: uom
@@ -237,18 +242,24 @@ msgid ""
 "Some critical fields have been modified on %s.\n"
 "Note that existing data WON'T be updated by this change.\n"
 "\n"
-"As units of measure impact the whole system, this may cause critical issues.\n"
+"As units of measure impact the whole system, this may cause critical "
+"issues.\n"
 "E.g. modifying the rounding could disturb your inventory balance.\n"
 "\n"
-"Therefore, changing core units of measure in a running database is not recommended."
+"Therefore, changing core units of measure in a running database is not "
+"recommended."
 msgstr ""
 "Certains champs critiques ont été modifiés sur %s.\n"
-"Notez que les données existantes NE SERONT PAS mises à jour par ce changement.\n"
+"Notez que les données existantes NE SERONT PAS mises à jour par ce "
+"changement.\n"
 "\n"
-"Comme les unités de mesure ont un impact sur l'ensemble du système, cela peut entraîner des problèmes critiques.\n"
-"Par ex. modifier l'arrondi pourrait perturber l'équilibre de votre inventaire.\n"
+"Comme les unités de mesure ont un impact sur l'ensemble du système, cela "
+"peut entraîner des problèmes critiques.\n"
+"Par ex. modifier l'arrondi pourrait perturber l'équilibre de votre "
+"inventaire.\n"
 "\n"
-"Par conséquent, il n'est pas recommandé de modifier les unités de mesure de base dans une base de données en cours d'exécution."
+"Par conséquent, il n'est pas recommandé de modifier les unités de mesure de "
+"base dans une base de données en cours d'exécution."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
@@ -261,8 +272,8 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
-"La quantité calculée sera un multiple de cette valeur. Utilisez 1,0 pour une"
-" unité de mesure indivisible telle que la pièce."
+"La quantité calculée sera un multiple de cette valeur. Utilisez 1,0 pour une "
+"unité de mesure indivisible telle que la pièce."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
@@ -273,10 +284,12 @@ msgstr "Le facteur de conversion d'une unité de mesure ne peut pas être 0 !"
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid ""
-"The following units of measure are used by the system and cannot be deleted: %s\n"
+"The following units of measure are used by the system and cannot be deleted: "
+"%s\n"
 "You can archive them instead."
 msgstr ""
-"Les unités de mesure suivantes sont utilisées par le système et ne peuvent pas être supprimées : %s\n"
+"Les unités de mesure suivantes sont utilisées par le système et ne peuvent "
+"pas être supprimées : %s\n"
 "Vous pouvez les archiver à la place."
 
 #. module: uom
@@ -293,13 +306,13 @@ msgstr "L'arrondissement doit être strictement positif."
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid ""
-"The unit of measure %(unit)s defined on the order line doesn't belong to the"
-" same category as the unit of measure %(product_unit)s defined on the "
+"The unit of measure %(unit)s defined on the order line doesn't belong to the "
+"same category as the unit of measure %(product_unit)s defined on the "
 "product. Please correct the unit of measure defined on the order line or on "
 "the product. They should belong to the same category."
 msgstr ""
-"L'unité de mesure %(unit)s définie sur la ligne de commande n'appartient pas"
-" à la même catégorie que l'unité de mesure %(product_unit)s définie sur le "
+"L'unité de mesure %(unit)s définie sur la ligne de commande n'appartient pas "
+"à la même catégorie que l'unité de mesure %(product_unit)s définie sur le "
 "produit. Veuillez corriger l'unité de mesure définie sur la ligne de "
 "commande ou sur le produit, elles doivent appartenir à la même catégorie."
 

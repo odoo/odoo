@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* microsoft_calendar
-# 
+#
 # Translators:
 # Anastasiia Koroleva, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 18:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -71,8 +73,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/microsoft_calendar/models/res_users.py:0
 msgid ""
-"An error occurred while generating the token. Your authorization code may be"
-" invalid or has already expired [%s]. You should check your Client ID and "
+"An error occurred while generating the token. Your authorization code may be "
+"invalid or has already expired [%s]. You should check your Client ID and "
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
@@ -178,11 +180,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
-"Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
-"If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar."
+"Due to an Outlook Calendar limitation, recurrence updates must be done "
+"directly in Outlook Calendar.\n"
+"If this recurrence is not shown in Outlook Calendar, you must delete it in "
+"Odoo Calendar and recreate it in Outlook Calendar."
 msgstr ""
-"В связи с ограничением Outlook Calendar, обновление повторов должно производиться непосредственно в Outlook Calendar.\n"
-"Если это повторение не отображается в Outlook Calendar, вы должны удалить его в Odoo Calendar и заново создать в Outlook Calendar."
+"В связи с ограничением Outlook Calendar, обновление повторов должно "
+"производиться непосредственно в Outlook Calendar.\n"
+"Если это повторение не отображается в Outlook Calendar, вы должны удалить "
+"его в Odoo Calendar и заново создать в Outlook Calendar."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -208,12 +214,19 @@ msgstr "Правило повторения событий"
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
-"For a correct synchronization between Odoo and Outlook Calendar, all attendees must have an email address. However, some events do not respect this condition. As long as the events are incorrect, the calendars will not be synchronized.\n"
+"For a correct synchronization between Odoo and Outlook Calendar, all "
+"attendees must have an email address. However, some events do not respect "
+"this condition. As long as the events are incorrect, the calendars will not "
+"be synchronized.\n"
 "Either update the events/attendees or archive these events %(details)s:\n"
 "%(invalid_events)s"
 msgstr ""
-"Для корректной синхронизации между Odoo и календарем Outlook у всех участников должен быть адрес электронной почты. Однако некоторые события не соблюдают это условие. До тех пор, пока события не будут корректны, календари не будут синхронизированы.\n"
-"Либо обновите события/посетителей, либо архивируйте эти события %(details)s:\n"
+"Для корректной синхронизации между Odoo и календарем Outlook у всех "
+"участников должен быть адрес электронной почты. Однако некоторые события не "
+"соблюдают это условие. До тех пор, пока события не будут корректны, "
+"календари не будут синхронизированы.\n"
+"Либо обновите события/посетителей, либо архивируйте эти события %"
+"(details)s:\n"
 "%(invalid_events)s"
 
 #. module: microsoft_calendar
@@ -244,8 +257,7 @@ msgstr ""
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_res_config_settings__cal_microsoft_sync_paused
 msgid "Indicates if synchronization with Outlook Calendar is paused or not."
-msgstr ""
-"Указывает, приостановлена ли синхронизация с Outlook Calendar или нет."
+msgstr "Указывает, приостановлена ли синхронизация с Outlook Calendar или нет."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -254,8 +266,8 @@ msgid ""
 "It is necessary adding the proposed organizer as attendee before saving the "
 "event."
 msgstr ""
-"Перед сохранением события необходимо добавить предполагаемого организатора в"
-" качестве участника."
+"Перед сохранением события необходимо добавить предполагаемого организатора в "
+"качестве участника."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_last_sync_date
@@ -424,8 +436,8 @@ msgstr "Синхронизируйте только новые события"
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 msgid ""
-"The Outlook Synchronization needs to be configured before you can use it, do"
-" you want to do it now?"
+"The Outlook Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
 msgstr ""
 "Синхронизация Outlook должна быть настроена, прежде чем вы сможете "
 "использовать ее, хотите ли вы сделать это сейчас?"

@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_pdf_quote_builder
-# 
+#
 # Translators:
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
 # Fernanda Alvarez, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
-"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/"
+"41243/es_419/)\n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_419\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -27,8 +29,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state in ('draft', 'sent') and 'Cotización - %s' % (object.name)) or"
-" 'Orden - %s' % (object.name)"
+"(object.state in ('draft', 'sent') and 'Cotización - %s' % (object.name)) or "
+"'Orden - %s' % (object.name)"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -44,8 +46,8 @@ msgstr "<span>Tipo de documento:</span>"
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in product documents can't be linked to a quotation"
-" document."
+"A form field set as used in product documents can't be linked to a quotation "
+"document."
 msgstr ""
 "Un campo de formulario configurado como usado en documentos de producto no "
 "puede estar vinculado a un documento de cotización."
@@ -54,11 +56,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in quotation documents can't be linked to a product"
-" document."
+"A form field set as used in quotation documents can't be linked to a product "
+"document."
 msgstr ""
-"Un campo de formulario configurado como usado en documentos de cotización no"
-" puede estar vinculado a un documento de producto."
+"Un campo de formulario configurado como usado en documentos de cotización no "
+"puede estar vinculado a un documento de producto."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__access_token
@@ -85,20 +87,31 @@ msgstr "Todos los archivos subidos"
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
-"Leave it empty if you don't want to share this document with sales customer.\n"
-"On quote: the document will be sent to and accessible by customers at any time.\n"
+"Leave it empty if you don't want to share this document with sales "
+"customer.\n"
+"On quote: the document will be sent to and accessible by customers at any "
+"time.\n"
 "e.g. this option can be useful to share Product description files.\n"
-"On order confirmation: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
+"On order confirmation: the document will be sent to and accessible by "
+"customers.\n"
+"e.g. this option can be useful to share User Manual or digital content "
+"bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation and "
+"sale order between the header pages and the quote table. "
 msgstr ""
 "Le permite compartir el documento con sus clientes dentro de una venta.\n"
 "Déjelo vacío si no desea compartir este documento con su cliente.\n"
-"En la cotización: los clientes recibirán el documento y podrán consultarlo en cualquier momento.\n"
-"Esta opción puede ser útil, por ejemplo, para compartir archivos de descripción de productos.\n"
-"En la confirmación de la orden: los clientes recibirán el documento y podrán consultarlo.\n"
-"Esta opción puede ser útil, por ejemplo, para compartir el manual de usuario o algún contenido digital que se haya comprado mediante comercio electrónico.\n"
-"Dentro de la cotización: el documento se incluirá en el PDF de la cotización y la orden de venta entre el encabezado y la tabla de la cotización."
+"En la cotización: los clientes recibirán el documento y podrán consultarlo "
+"en cualquier momento.\n"
+"Esta opción puede ser útil, por ejemplo, para compartir archivos de "
+"descripción de productos.\n"
+"En la confirmación de la orden: los clientes recibirán el documento y podrán "
+"consultarlo.\n"
+"Esta opción puede ser útil, por ejemplo, para compartir el manual de usuario "
+"o algún contenido digital que se haya comprado mediante comercio "
+"electrónico.\n"
+"Dentro de la cotización: el documento se incluirá en el PDF de la cotización "
+"y la orden de venta entre el encabezado y la tabla de la cotización."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -358,8 +371,8 @@ msgid ""
 "footer can not start with \"sol_id_\"."
 msgstr ""
 "El nombre del campo del formulario %(field_name)s no es válido, estos "
-"nombres no pueden iniciar con \"sol_id_\" si están en el encabezado o el pie"
-" de página."
+"nombres no pueden iniciar con \"sol_id_\" si están en el encabezado o el pie "
+"de página."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -398,8 +411,8 @@ msgid ""
 "It seems that we're not able to process this pdf inside a quotation. It is "
 "either encrypted, or encoded in a format we do not support."
 msgstr ""
-"No fue posible procesar este PDF dentro de una cotización. Está encriptado o"
-" codificado en un formato incompatible."
+"No fue posible procesar este PDF dentro de una cotización. Está encriptado o "
+"codificado en un formato incompatible."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__key
@@ -499,17 +512,26 @@ msgstr "Documentos del producto"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid ""
-"Provide header pages and footer pages to compose an attractive quotation with more information\n"
-"                        about your company, your products and you services. <br/>\n"
-"                        The pdf of your quotes will be built by putting together header pages, product descriptions,\n"
-"                        details of the quote and then the footer pages. <br/>\n"
-"                        If empty, it will use those define in the company settings. <br/>"
+"Provide header pages and footer pages to compose an attractive quotation "
+"with more information\n"
+"                        about your company, your products and you services. "
+"<br/>\n"
+"                        The pdf of your quotes will be built by putting "
+"together header pages, product descriptions,\n"
+"                        details of the quote and then the footer pages. <br/"
+">\n"
+"                        If empty, it will use those define in the company "
+"settings. <br/>"
 msgstr ""
 "Cree encabezados y pies de páginas para crear una cotización llamativa\n"
-"                        que incluya información sobre su empresa y los productos o servicios que ofrece. <br/>\n"
-"                         Para crear el archivo PDF de sus cotizaciones se tomarán el encabezado,\n"
-"                         las descripciones de los productos, los detalles de la cotización, los pies de página y se juntarán. <br/>\n"
-"                         Si está vacío, usará lo que esté definido en los ajustes de la empresa. <br/>"
+"                        que incluya información sobre su empresa y los "
+"productos o servicios que ofrece. <br/>\n"
+"                         Para crear el archivo PDF de sus cotizaciones se "
+"tomarán el encabezado,\n"
+"                         las descripciones de los productos, los detalles de "
+"la cotización, los pies de página y se juntarán. <br/>\n"
+"                         Si está vacío, usará lo que esté definido en los "
+"ajustes de la empresa. <br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* phone_validation
-# 
+#
 # Translators:
 # Lars Petter Lilleng, 2024
 # Thor Arne Hvidsten <thor.arne.hvidsten@gmail.com>, 2024
@@ -11,19 +11,20 @@
 # Jorunn D. Newth, 2024
 # Martin Trigaux, 2024
 # Rune Restad, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:57+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Rune Restad, 2025\n"
-"Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
+"Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/"
+"nb/)\n"
+"Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: phone_validation
@@ -53,6 +54,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_search
 msgid "Archived"
 msgstr "Arkivert"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+msgid "Are you sure you want to unblacklist this Phone Number?"
+msgstr ""
 
 #. module: phone_validation
 #. odoo-python
@@ -108,8 +115,8 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
-"Blokkert ved sletting av portalkonto%(portal_user_name)s by %(user_name)s "
-"(#%(user_id)s)"
+"Blokkert ved sletting av portalkonto%(portal_user_name)s by %(user_name)s (#%"
+"(user_id)s)"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_partner
@@ -185,8 +192,8 @@ msgstr "Hvis haket av, har enkelte meldinger leveringsfeil."
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
 msgid ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
+"If the sanitized phone number is on the blacklist, the contact won't receive "
+"mass mailing sms anymore, from any list"
 msgstr ""
 
 #. module: phone_validation
@@ -391,6 +398,14 @@ msgstr "Fjern blokkeringsårsak: %(reason)s"
 #: model:ir.model,name:phone_validation.model_res_users
 msgid "User"
 msgstr "Bruker"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+msgid ""
+"You do not have the access right to unblacklist phone numbers. Please "
+"contact your administrator."
+msgstr ""
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form

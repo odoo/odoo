@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_pdf_quote_builder
-# 
+#
 # Translators:
 # Jussi Lehto <jussi@gulfeo.com>, 2024
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2024
@@ -15,19 +15,19 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_pdf_quote_builder
@@ -53,8 +53,8 @@ msgstr "<span>Asiakirjan tyyppi:</span>"
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in product documents can't be linked to a quotation"
-" document."
+"A form field set as used in product documents can't be linked to a quotation "
+"document."
 msgstr ""
 "Lomakekenttää, jota käytetään tuoteasiakirjoissa, ei voi linkittää "
 "tarjousasiakirjaan."
@@ -63,8 +63,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in quotation documents can't be linked to a product"
-" document."
+"A form field set as used in quotation documents can't be linked to a product "
+"document."
 msgstr ""
 "Lomakekenttää, jota käytetään tarjousasiakirjoissa, ei voi yhdistää "
 "tuoteasiakirjaan."
@@ -94,20 +94,30 @@ msgstr "Kaikki tiedostot lähetetty"
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
-"Leave it empty if you don't want to share this document with sales customer.\n"
-"On quote: the document will be sent to and accessible by customers at any time.\n"
+"Leave it empty if you don't want to share this document with sales "
+"customer.\n"
+"On quote: the document will be sent to and accessible by customers at any "
+"time.\n"
 "e.g. this option can be useful to share Product description files.\n"
-"On order confirmation: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
+"On order confirmation: the document will be sent to and accessible by "
+"customers.\n"
+"e.g. this option can be useful to share User Manual or digital content "
+"bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation and "
+"sale order between the header pages and the quote table. "
 msgstr ""
 "Voit jakaa asiakirjan asiakkaillesi myynnin yhteydessä.\n"
 "Jätä se tyhjäksi, jos et halua jakaa asiakirjaa myyntiasiakkaan kanssa.\n"
-"Tarjouspyynnössä: Asiakirja lähetetään asiakkaalle ja se on asiakkaan saatavilla milloin tahansa.\n"
-"tämä vaihtoehto voi olla hyödyllinen esimerkiksi tuotekuvaustiedostojen jakamisessa.\n"
-"Tilauksen vahvistuksen yhteydessä: Asiakirja lähetetään asiakkaalle, joka voi tutustua siihen.\n"
-"tämä vaihtoehto voi olla hyödyllinen esimerkiksi käyttöohjeiden tai verkkokaupasta ostetun digitaalisen sisällön jakamisessa.\n"
-"Tarjouksen sisällä: Asiakirja sisällytetään tarjouksen ja myyntitilauksen pdf-tiedostoon otsikkosivujen ja tarjoustaulukon väliin. "
+"Tarjouspyynnössä: Asiakirja lähetetään asiakkaalle ja se on asiakkaan "
+"saatavilla milloin tahansa.\n"
+"tämä vaihtoehto voi olla hyödyllinen esimerkiksi tuotekuvaustiedostojen "
+"jakamisessa.\n"
+"Tilauksen vahvistuksen yhteydessä: Asiakirja lähetetään asiakkaalle, joka "
+"voi tutustua siihen.\n"
+"tämä vaihtoehto voi olla hyödyllinen esimerkiksi käyttöohjeiden tai "
+"verkkokaupasta ostetun digitaalisen sisällön jakamisessa.\n"
+"Tarjouksen sisällä: Asiakirja sisällytetään tarjouksen ja myyntitilauksen "
+"pdf-tiedostoon otsikkosivujen ja tarjoustaulukon väliin. "
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -329,8 +339,8 @@ msgid ""
 "If unchecked, it will allow you to hide the header or footer without "
 "removing it."
 msgstr ""
-"Jos valintamerkki poistetaan, voit piilottaa ylätunnisteen tai alatunnisteen"
-" poistamatta sitä."
+"Jos valintamerkki poistetaan, voit piilottaa ylätunnisteen tai alatunnisteen "
+"poistamatta sitä."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_height
@@ -506,17 +516,26 @@ msgstr "Tuoteasiakirjat"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid ""
-"Provide header pages and footer pages to compose an attractive quotation with more information\n"
-"                        about your company, your products and you services. <br/>\n"
-"                        The pdf of your quotes will be built by putting together header pages, product descriptions,\n"
-"                        details of the quote and then the footer pages. <br/>\n"
-"                        If empty, it will use those define in the company settings. <br/>"
+"Provide header pages and footer pages to compose an attractive quotation "
+"with more information\n"
+"                        about your company, your products and you services. "
+"<br/>\n"
+"                        The pdf of your quotes will be built by putting "
+"together header pages, product descriptions,\n"
+"                        details of the quote and then the footer pages. <br/"
+">\n"
+"                        If empty, it will use those define in the company "
+"settings. <br/>"
 msgstr ""
-"Tarjoa ylätunnisteen sivuja ja alatunnisteen sivuja, jotta voit laatia houkuttelevan tarjouksen, jossa on enemmän tietoa\n"
+"Tarjoa ylätunnisteen sivuja ja alatunnisteen sivuja, jotta voit laatia "
+"houkuttelevan tarjouksen, jossa on enemmän tietoa\n"
 "                        yrityksestäsi, tuotteistasi ja palveluistasi. <br/>\n"
-"                        Tarjouksien PDF-tiedosto rakennetaan kokoamalla yhteen ylätunnistesivut, tuotekuvaukset,\n"
-"                        tarjouksen yksityiskohdat ja sitten alatunnisteen sivut. <br/>\n"
-"                        Jos dokumentti tyhjä, Odoo käyttää yrityksen asetuksissa määriteltyjä sivuja. <br/>"
+"                        Tarjouksien PDF-tiedosto rakennetaan kokoamalla "
+"yhteen ylätunnistesivut, tuotekuvaukset,\n"
+"                        tarjouksen yksityiskohdat ja sitten alatunnisteen "
+"sivut. <br/>\n"
+"                        Jos dokumentti tyhjä, Odoo käyttää yrityksen "
+"asetuksissa määriteltyjä sivuja. <br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw

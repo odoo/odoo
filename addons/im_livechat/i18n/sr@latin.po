@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-03 08:43+0000\n"
-"PO-Revision-Date: 2025-11-12 12:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-12-31 16:35+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
 "odoo-18/im_livechat/sr_Latn/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: im_livechat
 #. odoo-python
@@ -62,25 +62,9 @@ msgstr "% sreće"
 
 #. module: im_livechat
 #. odoo-python
-#: code:addons/im_livechat/models/discuss_channel.py:0
-msgid ""
-"%(new_line)sType %(bold_start)s:shortcut%(bold_end)s to insert a canned "
-"response in your message."
-msgstr ""
-"%(new_line)sOtkucaj %(bold_start)s:prečicu%(bold_end)s da ubacite gotovo "
-"odgovor u svoju poruku."
-
-#. module: im_livechat
-#. odoo-python
 #: code:addons/im_livechat/models/chatbot_script.py:0
 msgid "%s (copy)"
 msgstr "%s (kopija)"
-
-#. module: im_livechat
-#. odoo-python
-#: code:addons/im_livechat/models/chatbot_script_step.py:0
-msgid "%s has joined"
-msgstr "%s se pridružio/la"
 
 #. module: im_livechat
 #. odoo-python
@@ -120,11 +104,6 @@ msgid "1 is Monday, 7 is Sunday"
 msgstr "1 je Ponedeljak, 7 je Nedelja"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
-msgid "<i class=\"fa fa-mail-reply me-2\" title=\"Reply\"/>"
-msgstr "<i class=\"fa fa-mail-reply me-2\" title=\"Odgovori\"/>"
-
-#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid ""
 "<i class=\"fa fa-smile-o text-success\" title=\"Percentage of happy "
@@ -142,6 +121,11 @@ msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Nazad na uređivački mod"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<i title=\"Remove operator\" class=\"fa fa-fw fa-lg fa-close\"/>"
 msgstr "<i title=\"Ukloni operatera\" class=\"fa fa-fw fa-lg fa-close\"/>"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "<span class=\"fw-bold\">Country: </span>"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -234,9 +218,20 @@ msgid "Active"
 msgstr "Aktivno"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Add the following code to the &lt;head&gt; section of your website:"
+msgstr ""
+
+#. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_manager
 msgid "Administrator"
 msgstr "Administrator"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Alternatively, share this URL with your customers or suppliers via email:"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
@@ -248,11 +243,6 @@ msgstr "Dogodila se greška. Molimo pokušajte ponovo."
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_redirect
 msgid "And tadaaaa here you go! 🌟"
 msgstr "I tadaaaa izvolite! 🌟"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
-msgid "Anonymous"
-msgstr "Anoniman"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__anonymous_name
@@ -289,11 +279,6 @@ msgstr "Brojač priloga"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__available_operator_ids
 msgid "Available Operator"
 msgstr "Dostupni operater"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
-msgid "Avatar"
-msgstr "Avatar"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_avg
@@ -483,6 +468,11 @@ msgid "Chatbots"
 msgstr "Chatbot-ovi"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Choose the live chat channel you want to display on your website."
+msgstr ""
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
 msgid "Close"
 msgstr "Zatvori"
@@ -539,15 +529,9 @@ msgid "Conversations handled"
 msgstr "Obrađene konverzacije"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid ""
-"Copy and paste this code into your website, within the &lt;head&gt; tag:"
-msgstr ""
-"Kopirajte i nalepite ovaj kod u svoj website, između &lt;head&gt; oznaka:"
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__country_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__country_ids
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
 msgid "Country"
 msgstr "Zemlja"
 
@@ -608,6 +592,11 @@ msgstr "Datum kreiranja (sat)"
 #: model:ir.ui.menu,name:im_livechat.rating_rating_menu_livechat
 msgid "Customer Ratings"
 msgstr "Ocene korisnika"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "Date:"
+msgstr "Datum:"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__day_number
@@ -686,7 +675,7 @@ msgstr "Pregled"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/views/discuss_channel_list/discuss_channel_list_view_controller.js:0
+#: code:addons/im_livechat/static/src/views/livechat_view_controller_mixin.js:0
 msgid "Discuss"
 msgstr "Diskusija"
 
@@ -737,6 +726,11 @@ msgid "Duration of the session in hours"
 msgstr "Trajanje sesije u satima"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
+msgid "Duration:"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_email
 msgid "Email"
 msgstr "E-mail"
@@ -759,9 +753,14 @@ msgid "Explain your note"
 msgstr "Objasnite svoju belešku"
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_ir_binary
-msgid "File streaming helper model for controllers"
-msgstr "Model pomoćnika za strimovanje datoteka za kontrolere"
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "FOR OTHER WEBSITES"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "FOR WEBSITES BUILT WITH ODOO"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script__first_step_warning__first_step_invalid
@@ -789,17 +788,6 @@ msgid "Followers (Partners)"
 msgstr "Pratioci (Partneri)"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid ""
-"For websites built with the Odoo CMS, go to Website &gt; Configuration &gt; "
-"Settings and select the Website Live Chat Channel you want to add to your "
-"website."
-msgstr ""
-"Za website-ove napravljene pomoću Odoo CMS-a, idite na Website &gt; "
-"Konfiguracija &gt; Podešavanja i izaberite Website Live Chat kanal koji "
-"želite da dodate na svoj website."
-
-#. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__forward_operator
 msgid "Forward to Operator"
 msgstr "Prosledi operateru"
@@ -822,6 +810,14 @@ msgid ""
 msgstr ""
 "Dat je redosled za pronalaženje odgovarajućeg pravila. Ako se 2 pravila "
 "poklapaju za dati url/zemlju, biće izabrano ono sa najnižim rednim brojem."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
+"<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
+"<strong>Marketing.</strong>"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -869,7 +865,6 @@ msgstr "Sakrij"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.discuss_channel_action
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
 msgid "History"
 msgstr "Istorija"
@@ -892,11 +887,6 @@ msgstr "Sat početka Datum sesije"
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 msgid "How may I help you?"
 msgstr "Kako mogu da vam pomognem?"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "How to use the Website Live Chat widget?"
-msgstr "Kako da koristite website Live Chat vidžet?"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available
@@ -999,7 +989,7 @@ msgstr "Pridruži se"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/livechat_channel_model.js:0
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
 msgid "Join %s"
 msgstr "Priključi se %s"
 
@@ -1057,13 +1047,20 @@ msgid "Last Updated on"
 msgstr "Poslednje ažuriranje dana"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Learn how to display a live chat bubble on your website and start chatting "
+"with visitors in a few easy steps."
+msgstr ""
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Leave"
 msgstr "Napusti"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/livechat_channel_model.js:0
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
 msgid "Leave %s"
 msgstr "Napusti %s"
 
@@ -1091,9 +1088,9 @@ msgstr "Pretraga LiveChat kanala"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/discuss_app_model_patch.js:0
-#: code:addons/im_livechat/static/src/core/web/messaging_menu_patch.js:0
-#: code:addons/im_livechat/static/src/core/web/thread_icon_patch.xml:0
+#: code:addons/im_livechat/static/src/core/public_web/discuss_app_model_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_patch.js:0
+#: code:addons/im_livechat/static/src/core/web/thread_icon_patch.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 msgid "Livechat"
 msgstr "Livechat"
@@ -1256,7 +1253,7 @@ msgstr "Još uvek nema podataka!"
 
 #. module: im_livechat
 #. odoo-python
-#: code:addons/im_livechat/models/discuss_channel.py:0
+#: code:addons/im_livechat/models/res_partner.py:0
 msgid "No history found"
 msgstr "Nije pronađena istorija"
 
@@ -1448,6 +1445,7 @@ msgstr "Pitanje"
 #: code:addons/im_livechat/controllers/main.py:0
 #: model:ir.model,name:im_livechat.model_rating_rating
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating
+#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
 msgid "Rating"
 msgstr "Ocene"
@@ -1522,11 +1520,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__mail_message_id
 msgid "Related Mail Message"
 msgstr "Povezana mail poruka"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
-msgid "Replied to"
-msgstr "Odgovoreno na"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -1718,7 +1711,14 @@ msgid "Step Type"
 msgstr "Vrsta koraka"
 
 #. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/chatbot_script.py:0
+msgid "Step of type 'Question' must have answers."
+msgstr ""
+
+#. module: im_livechat
 #. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/composer_patch.js:0
 #: code:addons/im_livechat/static/src/core/web/composer_patch.xml:0
 msgid "Tab to next livechat"
 msgstr "Tab na naredni livechat"
@@ -1865,6 +1865,11 @@ msgid "Treated sessions"
 msgstr "Tretirane sesije"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Turn on the <strong>Live Chat</strong> feature."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid "URL Regex"
 msgstr "URL Regex"
@@ -2000,6 +2005,17 @@ msgstr ""
 "kontaktiramo?"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/close_confirmation.xml:0
+msgid "Yes, leave conversation"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "You"
+msgstr "Ti"
+
+#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/controllers/attachment.py:0
 msgid "You are not allowed to upload attachments on this channel."
@@ -2030,15 +2046,21 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/livechat_channel_model.js:0
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
 msgid "You joined %s."
 msgstr "Priključili ste se %s."
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/livechat_channel_model.js:0
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
 msgid "You left %s."
 msgstr "Napustili ste %s."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/close_confirmation.xml:0
+msgid "You're about to leave the conversation, proceed?"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
@@ -2083,13 +2105,6 @@ msgid "mail@example.com"
 msgstr "mail@example.com"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "or copy this url and send it by email to your customers or suppliers:"
-msgstr ""
-"ili kopirajte ovaj url i pošaljite ga mail-om svojim korisnicima i "
-"dobavljačima:"
-
-#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "seconds"
 msgstr "sekunde"
@@ -2098,6 +2113,54 @@ msgstr "sekunde"
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "{{author_name}}"
 msgstr "{{author_name}}"
+
+#~ msgid ""
+#~ "%(new_line)sType %(bold_start)s:shortcut%(bold_end)s to insert a canned "
+#~ "response in your message."
+#~ msgstr ""
+#~ "%(new_line)sOtkucaj %(bold_start)s:prečicu%(bold_end)s da ubacite gotovo "
+#~ "odgovor u svoju poruku."
+
+#~ msgid "%s has joined"
+#~ msgstr "%s se pridružio/la"
+
+#~ msgid "<i class=\"fa fa-mail-reply me-2\" title=\"Reply\"/>"
+#~ msgstr "<i class=\"fa fa-mail-reply me-2\" title=\"Odgovori\"/>"
+
+#~ msgid "Anonymous"
+#~ msgstr "Anoniman"
+
+#~ msgid "Avatar"
+#~ msgstr "Avatar"
+
+#~ msgid ""
+#~ "Copy and paste this code into your website, within the &lt;head&gt; tag:"
+#~ msgstr ""
+#~ "Kopirajte i nalepite ovaj kod u svoj website, između &lt;head&gt; oznaka:"
+
+#~ msgid "File streaming helper model for controllers"
+#~ msgstr "Model pomoćnika za strimovanje datoteka za kontrolere"
+
+#~ msgid ""
+#~ "For websites built with the Odoo CMS, go to Website &gt; Configuration "
+#~ "&gt; Settings and select the Website Live Chat Channel you want to add to "
+#~ "your website."
+#~ msgstr ""
+#~ "Za website-ove napravljene pomoću Odoo CMS-a, idite na Website &gt; "
+#~ "Konfiguracija &gt; Podešavanja i izaberite Website Live Chat kanal koji "
+#~ "želite da dodate na svoj website."
+
+#~ msgid "How to use the Website Live Chat widget?"
+#~ msgstr "Kako da koristite website Live Chat vidžet?"
+
+#~ msgid "Replied to"
+#~ msgstr "Odgovoreno na"
+
+#~ msgid ""
+#~ "or copy this url and send it by email to your customers or suppliers:"
+#~ msgstr ""
+#~ "ili kopirajte ovaj url i pošaljite ga mail-om svojim korisnicima i "
+#~ "dobavljačima:"
 
 #~ msgid " (copy)"
 #~ msgstr " (kopija)"

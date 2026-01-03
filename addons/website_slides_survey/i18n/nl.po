@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_slides_survey
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Manon Rondou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:41+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_slides_survey
@@ -46,11 +46,16 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t><br/><br/>\n"
-"        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basics of Gardening</t>.<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant' or "
+"''\">participant</t><br/><br/>\n"
+"        Unfortunately, you have failed the certification and are no longer a "
+"member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or "
+"''\">Basics of Gardening</t>.<br/><br/>\n"
 "        Don't hesitate to enroll again!\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)"
+"\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                Enroll now\n"
 "            </a>\n"
 "        </div>\n"
@@ -61,11 +66,16 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Beste <t t-out=\"object.partner_id.name or 'participant' or ''\">deelnemer</t><br/><br/>\n"
-"        Helaas ben je niet geslaagd voor de certificering en ben je geen lid meer van de cursus: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basisprincipes van tuinieren</t>.<br/><br/>\n"
+"        Beste <t t-out=\"object.partner_id.name or 'participant' or "
+"''\">deelnemer</t><br/><br/>\n"
+"        Helaas ben je niet geslaagd voor de certificering en ben je geen lid "
+"meer van de cursus: <t t-out=\"object.slide_partner_id.channel_id.name or "
+"''\">Basisprincipes van tuinieren</t>.<br/><br/>\n"
 "        Aarzel niet om je opnieuw in te schrijven!\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)"
+"\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                Schrijf je nu in\n"
 "            </a>\n"
 "        </div>\n"
@@ -100,10 +110,12 @@ msgstr ""
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
 msgid ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" title=\"Share certification\"/>\n"
+"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" "
+"title=\"Share certification\"/>\n"
 "                        Share your certification"
 msgstr ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" title=\"Share certification\"/>\n"
+"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" "
+"title=\"Share certification\"/>\n"
 "                        Deel je certificaat"
 
 #. module: website_slides_survey
@@ -153,7 +165,8 @@ msgstr "<span class=\"text-muted\">Certificeringen</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
-msgid "<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
+msgid ""
+"<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
 msgstr ""
 "<span>Nu beginnen</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
 
@@ -194,10 +207,12 @@ msgstr "Sta voorbeeld toe"
 #. odoo-python
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 msgid ""
-"Any Survey listed below is currently used as a Course Certification and cannot be deleted:\n"
+"Any Survey listed below is currently used as a Course Certification and "
+"cannot be deleted:\n"
 "%s"
 msgstr ""
-"Elke onderstaande enquête wordt momenteel gebruikt als cursuscertificering en kan niet worden verwijderd:\n"
+"Elke onderstaande enquête wordt momenteel gebruikt als cursuscertificering "
+"en kan niet worden verwijderd:\n"
 "%s"
 
 #. module: website_slides_survey
@@ -514,8 +529,8 @@ msgid ""
 "Select an existing certification from the list. Creating or editing a "
 "certification can be done from the backend."
 msgstr ""
-"Selecteer een bestaande certificering in de lijst. Je kunt een certificering"
-" maken of bewerken vanuit de back-end."
+"Selecteer een bestaande certificering in de lijst. Je kunt een certificering "
+"maken of bewerken vanuit de back-end."
 
 #. module: website_slides_survey
 #: model:mail.template,description:website_slides_survey.mail_template_user_input_certification_failed
@@ -555,8 +570,8 @@ msgstr "Informatie abonnees"
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
 msgid ""
-"Subtype of the slide category, allows more precision on the actual file type"
-" / source type."
+"Subtype of the slide category, allows more precision on the actual file "
+"type / source type."
 msgstr ""
 "Subtype van de diacategorie, maakt meer precisie mogelijk op het werkelijke "
 "bestandstype / brontype."
@@ -615,8 +630,7 @@ msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_channel_ids
-msgid ""
-"The courses this survey is linked to through the e-learning application"
+msgid "The courses this survey is linked to through the e-learning application"
 msgstr ""
 "De cursussen waaraan deze enquête is gekoppeld gaan via de e-learning "
 "toepassing"
@@ -663,10 +677,13 @@ msgstr "Je hebt geen rechten om een certificering te koppelen."
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
 msgid ""
-"You can gain badges by passing certifications. Here is a list of all available certification badges.\n"
-"                            <br/>Follow the links to reach new heights and skill up!"
+"You can gain badges by passing certifications. Here is a list of all "
+"available certification badges.\n"
+"                            <br/>Follow the links to reach new heights and "
+"skill up!"
 msgstr ""
-"Je kunt badges behalen door certificeringen te behalen. Hier is een lijst met alle beschikbare certificering badges.\n"
+"Je kunt badges behalen door certificeringen te behalen. Hier is een lijst "
+"met alle beschikbare certificering badges.\n"
 "                             <br/>Volg de links om nog beter te worden!"
 
 #. module: website_slides_survey
@@ -674,8 +691,8 @@ msgstr ""
 msgid ""
 "You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
 msgstr ""
-"Je bent niet geslaagd voor de cursus: {{ "
-"object.slide_partner_id.channel_id.name }}"
+"Je bent niet geslaagd voor de cursus: "
+"{{ object.slide_partner_id.channel_id.name }}"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content

@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_pdf_quote_builder
-# 
+#
 # Translators:
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
 # Chloe Wang, 2024
 # Raymond Yu <cl_yu@hotmail.com>, 2024
 # 何彬 <vnsoft.he@gmail.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_pdf_quote_builder
@@ -46,16 +47,16 @@ msgstr "<span>文件类型：</span>"
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in product documents can't be linked to a quotation"
-" document."
+"A form field set as used in product documents can't be linked to a quotation "
+"document."
 msgstr "产品文档中使用的表单字段集不能链接到报价文档。"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in quotation documents can't be linked to a product"
-" document."
+"A form field set as used in quotation documents can't be linked to a product "
+"document."
 msgstr "报价单文档中使用的表单字段集不能链接到产品文档。"
 
 #. module: sale_pdf_quote_builder
@@ -83,12 +84,17 @@ msgstr "全部已上传文件"
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
-"Leave it empty if you don't want to share this document with sales customer.\n"
-"On quote: the document will be sent to and accessible by customers at any time.\n"
+"Leave it empty if you don't want to share this document with sales "
+"customer.\n"
+"On quote: the document will be sent to and accessible by customers at any "
+"time.\n"
 "e.g. this option can be useful to share Product description files.\n"
-"On order confirmation: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
+"On order confirmation: the document will be sent to and accessible by "
+"customers.\n"
+"e.g. this option can be useful to share User Manual or digital content "
+"bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation and "
+"sale order between the header pages and the quote table. "
 msgstr ""
 "允许您在销售中与客户共享文档。\n"
 "如果不想与销售客户共享此文档，请将其留空。\n"
@@ -350,7 +356,9 @@ msgstr "报价单 PDF 内"
 msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
-msgstr "表单字段名称 %(field_name)s 无效。页首或页尾中的表单字段名称，不能以 sol_id_ 开头。"
+msgstr ""
+"表单字段名称 %(field_name)s 无效。页首或页尾中的表单字段名称，不能以 sol_id_ "
+"开头。"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -384,7 +392,9 @@ msgstr "公共文件"
 msgid ""
 "It seems that we're not able to process this pdf inside a quotation. It is "
 "either encrypted, or encoded in a format we do not support."
-msgstr "我们似乎无法处理引文中的 PDF 文件。可能档案已加密，或使用了我们不支持的格式进行编码。"
+msgstr ""
+"我们似乎无法处理引文中的 PDF 文件。可能档案已加密，或使用了我们不支持的格式进"
+"行编码。"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__key
@@ -484,15 +494,22 @@ msgstr "产品文件"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid ""
-"Provide header pages and footer pages to compose an attractive quotation with more information\n"
-"                        about your company, your products and you services. <br/>\n"
-"                        The pdf of your quotes will be built by putting together header pages, product descriptions,\n"
-"                        details of the quote and then the footer pages. <br/>\n"
-"                        If empty, it will use those define in the company settings. <br/>"
+"Provide header pages and footer pages to compose an attractive quotation "
+"with more information\n"
+"                        about your company, your products and you services. "
+"<br/>\n"
+"                        The pdf of your quotes will be built by putting "
+"together header pages, product descriptions,\n"
+"                        details of the quote and then the footer pages. <br/"
+">\n"
+"                        If empty, it will use those define in the company "
+"settings. <br/>"
 msgstr ""
-"提供页眉和页脚以组成一份具有吸引力的报价单，并提供更多关于您公司、产品和服务的信息。\n"
+"提供页眉和页脚以组成一份具有吸引力的报价单，并提供更多关于您公司、产品和服务"
+"的信息。\n"
 "                         <br/>\n"
-"                        您的报价单PDF将通过组合页眉、产品描述、报价详情以及页脚来生成。\n"
+"                        您的报价单PDF将通过组合页眉、产品描述、报价详情以及页"
+"脚来生成。\n"
 "                         <br/>\n"
 "                       如果未填写，则会使用公司设置中定义的内容。 <br/>"
 

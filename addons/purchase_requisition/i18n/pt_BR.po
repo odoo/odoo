@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_requisition
-# 
+#
 # Translators:
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
 # Maitê Dietze, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Maitê Dietze, 2024\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
+"41243/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -324,13 +326,19 @@ msgstr "Criar alternativo"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid ""
-"Create a call for tender by adding alternative requests for quotation to different vendors.\n"
-"                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
-"                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
+"Create a call for tender by adding alternative requests for quotation to "
+"different vendors.\n"
+"                            Make your choice by selecting the best "
+"combination of lead time, OTD and/or total amount.\n"
+"                            By comparing product lines you can also decide "
+"to order some products from one vendor and others from another vendor."
 msgstr ""
-"Crie um edital de licitação adicionando solicitações de cotação alternativas para diferentes fornecedores.\n"
-"                            Faça a sua escolha selecionando a melhor combinação de prazo de entrega, entrega a tempo e/ou valor total.\n"
-"                            Ao comparar linhas de produtos, você também pode decidir pedir produtos de vários fornecedores diferentes."
+"Crie um edital de licitação adicionando solicitações de cotação alternativas "
+"para diferentes fornecedores.\n"
+"                            Faça a sua escolha selecionando a melhor "
+"combinação de prazo de entrega, entrega a tempo e/ou valor total.\n"
+"                            Ao comparar linhas de produtos, você também pode "
+"decidir pedir produtos de vários fornecedores diferentes."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -424,8 +432,8 @@ msgid ""
 "End date cannot be earlier than start date. Please check dates for "
 "agreements: %s"
 msgstr ""
-"A data de término não pode ser anterior à data de início. Verifique as datas"
-" dos contratos: %s"
+"A data de término não pode ser anterior à data de início. Verifique as datas "
+"dos contratos: %s"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -451,11 +459,14 @@ msgstr "Ícone do Font Awesome. Ex.: fa-tasks"
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specific period\n"
-"            (e.g. a year) and you order products within this agreement to benefit\n"
+"            (e.g. a year) and you order products within this agreement to "
+"benefit\n"
 "            from the negotiated prices."
 msgstr ""
-"Para um acordo de fornecimento, você pode registrar um acordo para um período específico\n"
-"            (ex., um ano) e você encomenda produtos dentro deste acordo, beneficiando-se\n"
+"Para um acordo de fornecimento, você pode registrar um acordo para um "
+"período específico\n"
+"            (ex., um ano) e você encomenda produtos dentro deste acordo, "
+"beneficiando-se\n"
 "            dos preços negociados."
 
 #. module: purchase_requisition
@@ -514,9 +525,9 @@ msgstr "Se marcado, algumas mensagens têm um erro de entrega."
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
 msgid ""
 "If the chosen vendor or if any of the products in the original PO have a "
-"blocking warning then we prevent creation of alternative PO. This is because"
-" normally these fields are cleared w/warning message within form view, but "
-"we cannot recreate that in this case."
+"blocking warning then we prevent creation of alternative PO. This is because "
+"normally these fields are cleared w/warning message within form view, but we "
+"cannot recreate that in this case."
 msgstr ""
 "Se o fornecedor escolhido ou se algum dos produtos no pedido de compra "
 "original tiver um aviso de bloqueio, impediremos a criação de pedidos de "
@@ -974,12 +985,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 msgid ""
-"The vendor you have selected or at least one of the products you are copying"
-" from the original order has a blocking warning on it and cannot be selected"
-" to create an alternative."
+"The vendor you have selected or at least one of the products you are copying "
+"from the original order has a blocking warning on it and cannot be selected "
+"to create an alternative."
 msgstr ""
-"O fornecedor que você selecionou ou pelo menos um dos produtos que você está"
-" copiando do pedido original tem um aviso de bloqueio e não pode ser "
+"O fornecedor que você selecionou ou pelo menos um dos produtos que você está "
+"copiando do pedido original tem um aviso de bloqueio e não pode ser "
 "selecionado para criar uma alternativa."
 
 #. module: purchase_requisition
@@ -1010,11 +1021,14 @@ msgstr "Esta é uma mensagem de bloqueio!\n"
 msgid ""
 "To close this purchase requisition, cancel related Requests for Quotation.\n"
 "\n"
-"Imagine the mess if someone confirms these duplicates: double the order, double the trouble :)"
+"Imagine the mess if someone confirms these duplicates: double the order, "
+"double the trouble :)"
 msgstr ""
-"Para fechar essa solicitação de compra, cancele as solicitações de cotação relacionadas.\n"
+"Para fechar essa solicitação de compra, cancele as solicitações de cotação "
+"relacionadas.\n"
 "\n"
-"Imagine a confusão se alguém confirmasse essas duplicatas: pedido em dobro, problema em dobro."
+"Imagine a confusão se alguém confirmasse essas duplicatas: pedido em dobro, "
+"problema em dobro."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -1105,11 +1119,11 @@ msgstr "E as solicitações de cotação alternativas?"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
 msgid ""
-"Whether or not this purchase order is linked to another purchase order as an"
-" alternative."
+"Whether or not this purchase order is linked to another purchase order as an "
+"alternative."
 msgstr ""
-"Se este pedido de compra está vinculado ou não a outro pedido de compra como"
-" uma alternativa."
+"Se este pedido de compra está vinculado ou não a outro pedido de compra como "
+"uma alternativa."
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_alternative_warning
@@ -1149,15 +1163,14 @@ msgstr "Não é possível confirmar um pedido genérico com linhas sem preço."
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You cannot confirm a blanket order with lines missing a quantity."
-msgstr ""
-"Não é possível confirmar um pedido genérico com linhas sem quantidade."
+msgstr "Não é possível confirmar um pedido genérico com linhas sem quantidade."
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid ""
-"You cannot confirm agreement '%(agreement)s' because it does not contain any"
-" product lines."
+"You cannot confirm agreement '%(agreement)s' because it does not contain any "
+"product lines."
 msgstr ""
 "Você não pode confirmar o contrato '%(agreement)s' porque ele não contém "
 "nenhuma linha de produto."

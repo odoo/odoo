@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:03+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-11-21 02:26+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-18/delivery/"
@@ -78,7 +78,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Entorn</span>\n"
 "                                <span class=\"o_stat_text\">de prova</span>"
@@ -97,11 +98,12 @@ msgstr "<span class=\"text-success\">Sol·licituds de depuració</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">Entorn</span>\n"
-"                                <span class=\"o_stat_text\">de "
-"producció</span>"
+"                                <span class=\"o_stat_text\">de producció</"
+"span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
@@ -203,8 +205,7 @@ msgstr "Transportista"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid ""
-"Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
-"Tags."
+"Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
 msgstr ""
 
 #. module: delivery
@@ -436,8 +437,10 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "Cost estimat: es facturarà al client el cost estimat de l'enviament.\n"
 "Cost real: es facturarà al client el cost real de l'enviament i, un cop "
@@ -461,8 +464,8 @@ msgstr "Empleni aquest camp si facturarà l'enviament basat en la recol·lecció
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
-"Filling this form allows you to make the shipping method available according"
-" to the content of the order or its destination."
+"Filling this form allows you to make the shipping method available according "
+"to the content of the order or its destination."
 msgstr ""
 
 #. module: delivery
@@ -722,9 +725,9 @@ msgid ""
 msgstr ""
 "Prefixos de codis zip als quals s'aplica aquest operador. Tingueu en compte "
 "que les expressions regulars es poden utilitzar per donar suport a països "
-"amb diferents longituds de codi postal, és a dir, es pot afegir «$» al final"
-" del prefix per a coincidir amb el zip exacte (p. ex. «100$» només "
-"coincidirà amb «100» i no amb «1000»)"
+"amb diferents longituds de codi postal, és a dir, es pot afegir «$» al final "
+"del prefix per a coincidir amb el zip exacte (p. ex. «100$» només coincidirà "
+"amb «100» i no amb «1000»)"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -852,8 +855,8 @@ msgid ""
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
 "Detalls del mètode d'enviament que s'inclouran a les comandes de venda "
-"inferiors i els seus correus electrònics de confirmació. P. ex. Instruccions"
-" perquè els clients les segueixin."
+"inferiors i els seus correus electrònics de confirmació. P. ex. Instruccions "
+"perquè els clients les segueixin."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -887,8 +890,8 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
 msgid ""
-"The method is available only if at least one product of the order has one of"
-" these tags."
+"The method is available only if at least one product of the order has one of "
+"these tags."
 msgstr ""
 
 #. module: delivery
@@ -912,8 +915,7 @@ msgstr "L'assegurança de navegació ha de ser un percentatge entre 0 i 100."
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "The shipping is free since the order amount exceeds %.2f."
-msgstr ""
-"L'enviament és gratuït ja que l'import de la comanda és superior %.2f."
+msgstr "L'enviament és gratuït ja que l'import de la comanda és superior %.2f."
 
 #. module: delivery
 #. odoo-javascript
@@ -1015,14 +1017,18 @@ msgstr "Unitat de pes de l'etiqueta de mesura"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
-"No podeu actualitzar els costos d'enviament en una comanda on ja estava facturat!\n"
+"No podeu actualitzar els costos d'enviament en una comanda on ja estava "
+"facturat!\n"
 "\n"
-"Les següents línies de lliurament (producte, quantitat facturada i preu) ja s'han processat:\n"
+"Les següents línies de lliurament (producte, quantitat facturada i preu) ja "
+"s'han processat:\n"
 "\n"
 
 #. module: delivery

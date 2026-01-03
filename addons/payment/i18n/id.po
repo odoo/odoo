@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment
-# 
+#
 # Translators:
 # Martin Trigaux, 2024
 # PAS IRVANUS <ipankbiz@gmail.com>, 2024
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
 # Abe Manyo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment
@@ -43,8 +43,8 @@ msgstr "7Eleven"
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %(bank)s</li><li>Account "
-"Number: %(account_number)s</li><li>Account Holder: "
-"%(account_holder)s</li></ul>"
+"Number: %(account_number)s</li><li>Account Holder: %(account_holder)s</li></"
+"ul>"
 msgstr ""
 "<h3>Mohon buat pembayaran ke: </h3><ul><li>Bank: %(bank)s</li><li>Nomor "
 "Akun: %(account_number)s</li><li>Pemilik Akun: %(account_holder)s</li></ul>"
@@ -53,32 +53,40 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
-"                                match the behavior of providers and that of their integration with\n"
-"                                Odoo regarding this payment method. Any change may result in errors\n"
-"                                and should be tested on a test database first."
+"                                match the behavior of providers and that of "
+"their integration with\n"
+"                                Odoo regarding this payment method. Any "
+"change may result in errors\n"
+"                                and should be tested on a test database "
+"first."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/>Properti-properti ditetapkan agar\n"
-"                                cocok dengan perilaku penyedia dan integrasi mereka dengan\n"
-"                                Odoo mengenai metode pembayaran ini. Perubahan apapun dapat menghasilkan error\n"
-"                                dan harus diperiksa pada database testing terlebih dahulu."
+"                                cocok dengan perilaku penyedia dan integrasi "
+"mereka dengan\n"
+"                                Odoo mengenai metode pembayaran ini. "
+"Perubahan apapun dapat menghasilkan error\n"
+"                                dan harus diperiksa pada database testing "
+"terlebih dahulu."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
-msgid "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgid ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgstr ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
-" != 'full_only'\" title=\"Some of the transactions you intend to capture can"
-" only be captured in full. Handle the transactions individually to capture a"
-" partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
-" != 'full_only'\" title=\"Beberapa transaksi yang Anda ingin ambil hanya "
-"dapat diambil secara penuh. Kelola transaksi secara individu untuk mengambil"
-" hanya jumlah parsial.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Beberapa "
+"transaksi yang Anda ingin ambil hanya dapat diambil secara penuh. Kelola "
+"transaksi secara individu untuk mengambil hanya jumlah parsial.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -154,10 +162,11 @@ msgstr "<span><i class=\"fa fa-lock\"/> Diamankan oleh</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
+msgid ""
+"<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
 msgstr ""
-"<strong><i class=\"fa fa-file-text\"/> Tunjukkan laporan "
-"ketersediaan</strong>"
+"<strong><i class=\"fa fa-file-text\"/> Tunjukkan laporan ketersediaan</"
+"strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -178,11 +187,14 @@ msgstr "<strong>Tidak ada metode pembayaran yang tersedia</strong>"
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a partial capture pending. Please wait a\n"
-"                    moment for it to be processed. Check your payment provider configuration if\n"
+"                    moment for it to be processed. Check your payment "
+"provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
-"<strong>Peringatan!</strong> Terdapat capture parsial yang pending. Mohon tunggu sebentar\n"
-"                    untuk memproses capture tersebut. Periksa konfigurasi penyedia pembayaran Anda bila\n"
+"<strong>Peringatan!</strong> Terdapat capture parsial yang pending. Mohon "
+"tunggu sebentar\n"
+"                    untuk memproses capture tersebut. Periksa konfigurasi "
+"penyedia pembayaran Anda bila\n"
 "                    capture masih pending setelah beberapa menit."
 
 #. module: payment
@@ -191,26 +203,31 @@ msgid ""
 "<strong>Warning!</strong> You can not capture a negative amount nor more\n"
 "                    than"
 msgstr ""
-"<strong>Peringatan!</strong> Anda tidak dapat capture jumlah yang negatif atau yang lebih\n"
+"<strong>Peringatan!</strong> Anda tidak dapat capture jumlah yang negatif "
+"atau yang lebih\n"
 "                    dari"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid ""
-"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
+"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</"
+"em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Peringatan</strong> Membuat penyedia pembayaran dari tombol <em>BUAT</em> tidak dapat dilakukan.\n"
+"<strong>Peringatan</strong> Membuat penyedia pembayaran dari tombol "
+"<em>BUAT</em> tidak dapat dilakukan.\n"
 "                        Mohon alih-alih gunakan action <em>Duplikat</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid ""
 "<strong>Warning</strong> Make sure you are logged in as the\n"
-"                                    correct partner before making this payment."
+"                                    correct partner before making this "
+"payment."
 msgstr ""
 "<strong>Peringatan</strong> Pastikan Anda sudah login sebagai\n"
-"                                    partner yang benar sebelum melakukan pembayaran ini."
+"                                    partner yang benar sebelum melakukan "
+"pembayaran ini."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1291,8 +1308,7 @@ msgstr "ID"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid ""
-"If you believe that it is an error, please contact the website "
-"administrator."
+"If you believe that it is an error, please contact the website administrator."
 msgstr "Jika Anda merasa ini error, silakan hubungi administrator website."
 
 #. module: payment
@@ -1307,7 +1323,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"Pada mode testing, pembayaran palsu akan diproses melalui antarmuka pembayaran testing.\n"
+"Pada mode testing, pembayaran palsu akan diproses melalui antarmuka "
+"pembayaran testing.\n"
 "Mode ini disarankan saat sedang set up provider."
 
 #. module: payment
@@ -2368,8 +2385,7 @@ msgstr "Pilih negara. Biarkan kosong untuk mengizinkan semua negara."
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select countries. Leave empty to make available everywhere."
 msgstr ""
-"Pilih negara. Biarkan kosong untuk membuatnya tersedia untuk diseluruh "
-"dunia."
+"Pilih negara. Biarkan kosong untuk membuatnya tersedia untuk diseluruh dunia."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -2427,8 +2443,8 @@ msgstr "Sofort"
 #. odoo-python
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 msgid ""
-"Some of the transactions you intend to capture can only be captured in full."
-" Handle the transactions individually to capture a partial amount."
+"Some of the transactions you intend to capture can only be captured in full. "
+"Handle the transactions individually to capture a partial amount."
 msgstr ""
 "Beberapa transaksi yang Anda ingin capture hanya dapat di-capture secara "
 "penuh. Kelola transaksi secara individu untuk melakukan capture pada jumlah "
@@ -2530,9 +2546,12 @@ msgstr "Mode Testing"
 msgid "Thank you!"
 msgstr ""
 "<p>Dear ${object.partner_name atau 'pelamar'},</p>\n"
-"        <p>Kami terima kasih atas minat Anda pada perusahaan kami dan untuk aplikasi Anda.\n"
-"        Sayangnya, profil Anda tidak cocok dengan kebutuhan kita atau kampanye rekrutmen kami telah mencapai istilah.</p>\n"
-"        <p>Jika Anda ingin informasi lebih lanjut, jangan ragu untuk menghubungi kami melalui telepon.</p>\n"
+"        <p>Kami terima kasih atas minat Anda pada perusahaan kami dan untuk "
+"aplikasi Anda.\n"
+"        Sayangnya, profil Anda tidak cocok dengan kebutuhan kita atau "
+"kampanye rekrutmen kami telah mencapai istilah.</p>\n"
+"        <p>Jika Anda ingin informasi lebih lanjut, jangan ragu untuk "
+"menghubungi kami melalui telepon.</p>\n"
 "        <p>Salam</p>\n"
 "        <br>${object.user_id dan object.user_id.signature | aman atau ''}"
 
@@ -2560,8 +2579,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
 msgid ""
-"The brands of the payment methods that will be displayed on the payment "
-"form."
+"The brands of the payment methods that will be displayed on the payment form."
 msgstr ""
 "Brand metode pembayaran yang akan ditampilkan pada formulir pembayaran."
 
@@ -2591,8 +2609,8 @@ msgid ""
 "The countries in which this payment provider is available. Leave blank to "
 "make it available in all countries."
 msgstr ""
-"Negara-negara di mana penyedia pembayaran ini tersedia. Biarkan kosong untuk"
-" membuatnya tersedia di semua negara."
+"Negara-negara di mana penyedia pembayaran ini tersedia. Biarkan kosong untuk "
+"membuatnya tersedia di semua negara."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__available_currency_ids
@@ -2628,15 +2646,15 @@ msgid ""
 "available to customers."
 msgstr ""
 "Daftar negara-negara di mana metode pembayaran ini dapat digunakan (bila "
-"penyedia mengizinkannya). Di negara-negara lain, metode pembayaran ini tidak"
-" tersedia untuk pelanggan."
+"penyedia mengizinkannya). Di negara-negara lain, metode pembayaran ini tidak "
+"tersedia untuk pelanggan."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
 msgid ""
-"The list of currencies for that are supported by this payment method (if the"
-" provider allows it). When paying with another currency, this payment method"
-" is not available to customers."
+"The list of currencies for that are supported by this payment method (if the "
+"provider allows it). When paying with another currency, this payment method "
+"is not available to customers."
 msgstr ""
 "Daftar mata uang yang mana didukung oleh metode pembayaran ini (bila "
 "penyedia mengizinkannya). Saat membayar dengan mata uang lain, metode "
@@ -2702,11 +2720,15 @@ msgstr "Pembayaran harus langsung, dengan pengalihan, atau dibuat oleh token."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
 msgid ""
-"The primary payment method of the current payment method, if the latter is a brand.\n"
-"For example, \"Card\" is the primary payment method of the card brand \"VISA\"."
+"The primary payment method of the current payment method, if the latter is a "
+"brand.\n"
+"For example, \"Card\" is the primary payment method of the card brand "
+"\"VISA\"."
 msgstr ""
-"Metode pembayaran utama dari metode pembayaran saat ini, bila yang terakhir adalah brand.\n"
-"Contohnya, \"Kartu\" adalah metode pembayaran utama bila brand adalah kartu \"VISA\"."
+"Metode pembayaran utama dari metode pembayaran saat ini, bila yang terakhir "
+"adalah brand.\n"
+"Contohnya, \"Kartu\" adalah metode pembayaran utama bila brand adalah kartu "
+"\"VISA\"."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
@@ -2787,31 +2809,31 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s encountered an error "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s encountered an error (%"
+"(provider_name)s)."
 msgstr ""
-"Transaksi dengan referensi %(ref)s untuk %(amount)s menemukan error "
-"(%(provider_name)s)."
+"Transaksi dengan referensi %(ref)s untuk %(amount)s menemukan error (%"
+"(provider_name)s)."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been authorized "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s has been authorized (%"
+"(provider_name)s)."
 msgstr ""
-"Transaksi dengan referensi %(ref)s untuk %(amount)s telah diotorisasi "
-"(%(provider_name)s)."
+"Transaksi dengan referensi %(ref)s untuk %(amount)s telah diotorisasi (%"
+"(provider_name)s)."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been confirmed "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s has been confirmed (%"
+"(provider_name)s)."
 msgstr ""
-"Transaksi dengan referensi %(ref)s untuk %(amount)s telah dikonfirmasi "
-"(%(provider_name)s)."
+"Transaksi dengan referensi %(ref)s untuk %(amount)s telah dikonfirmasi (%"
+"(provider_name)s)."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -2851,19 +2873,23 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. "
 msgstr ""
-"ACtion ini juga akan mengarsip token %s yang didaftarkan dengan penyedia "
-"ini."
+"ACtion ini juga akan mengarsip token %s yang didaftarkan dengan penyedia ini."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
 msgid ""
-"This controls whether customers can save their payment methods as payment tokens.\n"
-"A payment token is an anonymous link to the payment method details saved in the\n"
+"This controls whether customers can save their payment methods as payment "
+"tokens.\n"
+"A payment token is an anonymous link to the payment method details saved in "
+"the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
-"Ini menentukan apakah pelanggan dapat menyimpan metode pembayaran sebagai token pembayaran.\n"
-"Token pembayaran adalah link anonim ke detail metode pembayaran yang disimpan di\n"
-"database penyedia, mengizinkan pelanggan untuk menggunakan ulang di pembelian berikutnya."
+"Ini menentukan apakah pelanggan dapat menyimpan metode pembayaran sebagai "
+"token pembayaran.\n"
+"Token pembayaran adalah link anonim ke detail metode pembayaran yang "
+"disimpan di\n"
+"database penyedia, mengizinkan pelanggan untuk menggunakan ulang di "
+"pembelian berikutnya."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2872,17 +2898,19 @@ msgid ""
 "checkout enables customers to pay with Google Pay and Apple Pay from which "
 "address information is collected at payment."
 msgstr ""
-"Ini menentukan apakah pelanggan dapat menggunakan metode pembayaran express."
-" Express checkout memungkinkan pelanggan untuk membayar dengan Google Pay "
-"dan Apple Pay dari mana informasi alamat dikumpulkan pada pembayaran."
+"Ini menentukan apakah pelanggan dapat menggunakan metode pembayaran express. "
+"Express checkout memungkinkan pelanggan untuk membayar dengan Google Pay dan "
+"Apple Pay dari mana informasi alamat dikumpulkan pada pembayaran."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid ""
-"This partner has no email, which may cause issues with some payment providers.\n"
+"This partner has no email, which may cause issues with some payment "
+"providers.\n"
 "                     Setting an email for this partner is advised."
 msgstr ""
-"Mitra ini tidak memiliki email, yang mungkin bermasalah untuk beberapa penyedia pembayaran.\n"
+"Mitra ini tidak memiliki email, yang mungkin bermasalah untuk beberapa "
+"penyedia pembayaran.\n"
 "                     Disarankan untuk menetapkan email untuk mitra ini."
 
 #. module: payment
@@ -3118,8 +3146,8 @@ msgid ""
 "Whether the provider is visible on the website or not. Tokens remain "
 "functional but are only visible on manage forms."
 msgstr ""
-"Apakah penyedia terlihat pada website atau tidak. Token akan tetap berfungsi"
-" tapi hanya terlihat pada kelola formulir."
+"Apakah penyedia terlihat pada website atau tidak. Token akan tetap berfungsi "
+"tapi hanya terlihat pada kelola formulir."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -3143,8 +3171,8 @@ msgid ""
 "You can't unarchive tokens linked to inactive payment methods or disabled "
 "providers."
 msgstr ""
-"Anda tidak dapat membatalkan arsip token yang terhubung ke metode pembayaran"
-" yang tidak aktif atau penyedia yang dinonaktifkan."
+"Anda tidak dapat membatalkan arsip token yang terhubung ke metode pembayaran "
+"yang tidak aktif atau penyedia yang dinonaktifkan."
 
 #. module: payment
 #. odoo-python
@@ -3169,8 +3197,7 @@ msgid ""
 "You cannot delete the payment provider %s; disable it or uninstall it "
 "instead."
 msgstr ""
-"Anda tidak dapat menghapus penyedia pembayaran %s; nonaktifkan atau "
-"uninstal."
+"Anda tidak dapat menghapus penyedia pembayaran %s; nonaktifkan atau uninstal."
 
 #. module: payment
 #. odoo-python
@@ -3190,7 +3217,8 @@ msgid ""
 "You should receive an email confirming your payment within a few\n"
 "                                    minutes."
 msgstr ""
-"Anda seharusnya menerima email yang mengonfirmasi pembayaran Anda dalam beberapa\n"
+"Anda seharusnya menerima email yang mengonfirmasi pembayaran Anda dalam "
+"beberapa\n"
 "                                    menit."
 
 #. module: payment

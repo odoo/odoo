@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-10-27 22:20+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/repair/"
@@ -53,13 +53,15 @@ msgstr "(<i>取り外す</i>)"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__state
 msgid ""
-"* The 'New' status is used when a user is encoding a new and unconfirmed repair order.\n"
+"* The 'New' status is used when a user is encoding a new and unconfirmed "
+"repair order.\n"
 "* The 'Confirmed' status is used when a user confirms the repair order.\n"
 "* The 'Under Repair' status is used when the repair is ongoing.\n"
 "* The 'Repaired' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
-"* '新規' ステータスは、ユーザが未確定の新規修理オーダをエンコードする場合に使用されます。\n"
+"* '新規' ステータスは、ユーザが未確定の新規修理オーダをエンコードする場合に使"
+"用されます。\n"
 "* '確定済' ステータスはユーザが修理オーダを確定した際に使用されます。\n"
 "* '修理中' ステータスは修理が進行中の際に使用されます。\n"
 "* '修理済' ステータスは修理が完了した際に使用されます。\n"
@@ -297,7 +299,9 @@ msgstr "在庫を確認"
 msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
-msgstr "オーダの請求先および納品先となるパートナーを選択します。パートナーは、名前、TIN、Eメール、内部参照で見つけることができます。"
+msgstr ""
+"オーダの請求先および納品先となるパートナーを選択します。パートナーは、名前、"
+"TIN、Eメール、内部参照で見つけることができます。"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
@@ -350,7 +354,9 @@ msgstr "確認済"
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr "単位間の変換は同じカテゴリに属している場合のみ可能です。変換は比率に基づいて行われます。"
+msgstr ""
+"単位間の変換は同じカテゴリに属している場合のみ可能です。変換は比率に基づいて"
+"行われます。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -481,7 +487,9 @@ msgstr "Font awesomeのアイコン 例. fa-tasks"
 msgid ""
 "For some of the parts, there is a difference between the initial demand and "
 "the actual quantity that was used. Are you sure you want to confirm ?"
-msgstr "一部の部品については、当初の需要と実際に使用された数量に差異があります。確定しますか？"
+msgstr ""
+"一部の部品については、当初の需要と実際に使用された数量に差異があります。確定"
+"しますか？"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -546,7 +554,9 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 msgid ""
 "If ticked, the sales price will be set to 0 for all products transferred "
 "from the repair order."
-msgstr "チェックを入れると、修理オーダから転送された全てのプロダクトの販売価格が0に設定されます。"
+msgstr ""
+"チェックを入れると、修理オーダから転送された全てのプロダクトの販売価格が0に設"
+"定されます。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__is_repairable
@@ -558,7 +568,8 @@ msgstr "チェックを入れると、返品から修理オーダを直接作成
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
 "修理オーダでは、取り外したり交換した部品やそれぞれの作業で\n"
@@ -650,7 +661,9 @@ msgstr "遅れた活動"
 msgid ""
 "Latest parts availability status for this RO. If green, then the RO's "
 "readiness status is ready."
-msgstr "この修理オーダの最新の部品供給状況。緑色の場合、修理オーダの準備ステータスは準備完了です。"
+msgstr ""
+"この修理オーダの最新の部品供給状況。緑色の場合、修理オーダの準備ステータスは"
+"準備完了です。"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
@@ -796,8 +809,7 @@ msgstr "工程タイプ"
 
 #. module: repair
 #. odoo-python
-#: code:addons/repair/models/product.py:0
-#: code:addons/repair/models/repair.py:0
+#: code:addons/repair/models/product.py:0 code:addons/repair/models/repair.py:0
 msgid "Operation not supported"
 msgstr "操作はサポートされていません"
 
@@ -1322,7 +1334,8 @@ msgstr "明後日"
 msgid ""
 "The product unit of measure you chose has a different category than the "
 "product unit of measure."
-msgstr "選択したプロダクト単位は、プロダクト単位とは異なるカテゴリを持っています。"
+msgstr ""
+"選択したプロダクト単位は、プロダクト単位とは異なるカテゴリを持っています。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1334,28 +1347,36 @@ msgstr "これは修理メモです"
 msgid ""
 "This is the default destination location for the product to be repaired in "
 "repair orders with this operation type."
-msgstr "これは、この工程タイプの修理オーダで修理されるプロダクトのデフォルトの移動先ロケーションです。"
+msgstr ""
+"これは、この工程タイプの修理オーダで修理されるプロダクトのデフォルトの移動先"
+"ロケーションです。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
 msgid ""
 "This is the default recycle destination location when you create a repair "
 "order with this operation type."
-msgstr "この工程タイプで修理オーダを作成した場合のデフォルトのリサイクル移動先ロケーションです。"
+msgstr ""
+"この工程タイプで修理オーダを作成した場合のデフォルトのリサイクル移動先ロケー"
+"ションです。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_remove_location_dest_id
 msgid ""
 "This is the default remove destination location when you create a repair "
 "order with this operation type."
-msgstr "このオペレーションタイプで修理オーダを作成した際に使用される、デフォルトの払出先ロケーションです。"
+msgstr ""
+"このオペレーションタイプで修理オーダを作成した際に使用される、デフォルトの払"
+"出先ロケーションです。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_src_id
 msgid ""
-"This is the default source location for the product to be repaired in repair"
-" orders with this operation type."
-msgstr "これは、この工程タイプの修理オーダで修理されるプロダクトのデフォルトの移動元ロケーションです。"
+"This is the default source location for the product to be repaired in repair "
+"orders with this operation type."
+msgstr ""
+"これは、この工程タイプの修理オーダで修理されるプロダクトのデフォルトの移動元"
+"ロケーションです。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
@@ -1417,7 +1438,9 @@ msgstr "転送"
 msgid ""
 "True if this repair is linked to a Return Order and the order is 'Done'. "
 "False otherwise."
-msgstr "この修理が返品オーダにリンクされ、オーダが'完了'している場合はTRUE。そうでない場合はFALSE。"
+msgstr ""
+"この修理が返品オーダにリンクされ、オーダが'完了'している場合はTRUE。そうでな"
+"い場合はFALSE。"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_line_type
@@ -1520,11 +1543,13 @@ msgstr "すでに完了した修理オーダはキャンセルできません。
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid ""
-"You cannot create a quotation for a repair order that is already linked to an existing sale order.\n"
+"You cannot create a quotation for a repair order that is already linked to "
+"an existing sale order.\n"
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
-"既存の販売オーダにリンクされている修理オーダに対して、見積書を作成することはできません。\n"
+"既存の販売オーダにリンクされている修理オーダに対して、見積書を作成することは"
+"できません。\n"
 "該当する修理オーダ:\n"
 "%(ref_str)s"
 
@@ -1532,11 +1557,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid ""
-"You need to define a customer for a repair order in order to create an associated quotation.\n"
+"You need to define a customer for a repair order in order to create an "
+"associated quotation.\n"
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
-"関連する見積書を作成するためには、修理オーダの顧客を定義する必要があります。\n"
+"関連する見積書を作成するためには、修理オーダの顧客を定義する必要がありま"
+"す。\n"
 "該当する修理オーダ:\n"
 "%(ref_str)s"
 

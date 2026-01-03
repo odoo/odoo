@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_landed_costs
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_landed_costs
@@ -28,8 +28,10 @@ msgstr ""
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
-msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" title=\"วันที่\" role=\"รูปภาพ\" aria-label=\"วันที่\"/>"
+msgid ""
+"<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-clock-o\" title=\"วันที่\" role=\"รูปภาพ\" aria-label=\"วันที่\"/>"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -344,8 +346,7 @@ msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
 msgstr ""
-"ระบุว่าสินค้าเป็นต้นทุนแฝงรือไม่: "
-"เมื่อได้รับใบเรียกเก็บเงินของผู้จำหน่ายแล้ว "
+"ระบุว่าสินค้าเป็นต้นทุนแฝงรือไม่: เมื่อได้รับใบเรียกเก็บเงินของผู้จำหน่ายแล้ว "
 "คุณสามารถปันส่วนต้นทุนนี้ในใบเสร็จรับเงินก่อนหน้าได้"
 
 #. module: stock_landed_costs
@@ -423,8 +424,8 @@ msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
 msgstr ""
-"ต้นทุนแฝงช่วยให้คุณสามารถรวมค่าใช้จ่ายเพิ่มเติม (ค่าขนส่ง ค่าประกัน "
-"อากรศุลกากร ฯลฯ) ไว้ในต้นทุนของสินค้าได้"
+"ต้นทุนแฝงช่วยให้คุณสามารถรวมค่าใช้จ่ายเพิ่มเติม (ค่าขนส่ง ค่าประกัน อากรศุลกากร ฯลฯ) "
+"ไว้ในต้นทุนของสินค้าได้"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
@@ -680,8 +681,7 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
-"ต้นทุนแฝงที่ตรวจสอบแล้วไม่สามารถยกเลิกได้ "
-"แต่คุณสามารถสร้างต้นทุนแฝงที่เป็นลบเพื่อทำการย้อนกลับได้"
+"ต้นทุนแฝงที่ตรวจสอบแล้วไม่สามารถยกเลิกได้ แต่คุณสามารถสร้างต้นทุนแฝงที่เป็นลบเพื่อทำการย้อนกลับได้"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
@@ -726,14 +726,13 @@ msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
 msgstr ""
-"คุณไม่สามารถใช้ต้นทุนแฝงกับ %s ที่เลือกได้ "
-"ต้นทุนแฝงสามารถใช้ได้กับสินค้าที่มีวิธี FIFO หรือวิธีคิดต้นทุนเฉลี่ยเท่านั้น"
+"คุณไม่สามารถใช้ต้นทุนแฝงกับ %s ที่เลือกได้ ต้นทุนแฝงสามารถใช้ได้กับสินค้าที่มีวิธี FIFO "
+"หรือวิธีคิดต้นทุนเฉลี่ยเท่านั้น"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/product.py:0
 msgid ""
-"You cannot change the product type or disable landed cost option because the"
-" product is used in an account move line."
-msgstr ""
-"คุณไม่สามารถเปลี่ยนชนิดสินค้าหรือปิดใช้งานตัวเลือกต้นทุนแฝงได้เนื่องจากสินค้าถูกใช้ในบรรทัดการย้ายบัญชี"
+"You cannot change the product type or disable landed cost option because the "
+"product is used in an account move line."
+msgstr "คุณไม่สามารถเปลี่ยนชนิดสินค้าหรือปิดใช้งานตัวเลือกต้นทุนแฝงได้เนื่องจากสินค้าถูกใช้ในบรรทัดการย้ายบัญชี"

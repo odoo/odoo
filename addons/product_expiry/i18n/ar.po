@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_expiry
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -36,8 +37,8 @@ msgid ""
 "invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
 "expiration_date\"/>"
 msgstr ""
-"<span title=\"تنبيه \" class=\"fa fa-exclamation-triangle text-danger me-2\""
-" invisible=\"product_qty <= 0 or not product_expiry_alert or not "
+"<span title=\"تنبيه \" class=\"fa fa-exclamation-triangle text-danger me-2\" "
+"invisible=\"product_qty <= 0 or not product_expiry_alert or not "
 "expiration_date\"/>"
 
 #. module: product_expiry
@@ -231,8 +232,8 @@ msgid ""
 "not be consumed. It will be computed on the lot/serial number."
 msgstr ""
 "عدد الأيام بعد استلام المنتجات (من المورّد أو في المخزون بعد الإنتاج) التي "
-"ستصبح المنتجات بعدها خطرة ولا يجب استهلاكها. سوف يتم احتسابها في رقم "
-"الدفعة/الرقم التسلسلي. "
+"ستصبح المنتجات بعدها خطرة ولا يجب استهلاكها. سوف يتم احتسابها في رقم الدفعة/"
+"الرقم التسلسلي. "
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -260,8 +261,8 @@ msgstr ""
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_time
 msgid ""
 "Number of days before the Expiration Date after which the goods starts "
-"deteriorating, without being dangerous yet. It will be computed on the "
-"lot/serial number."
+"deteriorating, without being dangerous yet. It will be computed on the lot/"
+"serial number."
 msgstr ""
 "عدد الأيام قبل تاريخ انتهاء الصلاحية التي تبدأ حالة البضائع في التدهور "
 "بعدها، قبل أن تصبح خطرة. سوف يتم احتسابه في رقم الدفعة/الرقم التسلسلي. "
@@ -395,8 +396,8 @@ msgstr " تاريخ انتهاء صلاحية الاستخدام "
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
 msgid ""
-"When this box is ticked, you have the possibility to specify dates to manage"
-" product expiration, on the product and on the corresponding lot/serial "
+"When this box is ticked, you have the possibility to specify dates to manage "
+"product expiration, on the product and on the corresponding lot/serial "
 "numbers"
 msgstr ""
 "عندما يكون هذا المربع محدداً، لديك احتمالية تحديد التواريخ لإدارة انتهاء "
@@ -416,10 +417,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
 msgid ""
-"You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is "
+"expired.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
-"أنت على وشك توصيل المنتج %(product_name)s، %(lot_name)s، وهو منتهي الصلاحية. \n"
+"أنت على وشك توصيل المنتج %(product_name)s، %(lot_name)s، وهو منتهي "
+"الصلاحية. \n"
 "هل تؤكد بأنك ترغب في الاستمرار؟ "
 
 #. module: product_expiry

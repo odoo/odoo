@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment
-# 
+#
 # Translators:
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
@@ -41,42 +42,49 @@ msgstr "7Eleven"
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %(bank)s</li><li>Account "
-"Number: %(account_number)s</li><li>Account Holder: "
-"%(account_holder)s</li></ul>"
+"Number: %(account_number)s</li><li>Account Holder: %(account_holder)s</li></"
+"ul>"
 msgstr ""
-"<h3>رجى الدفع إلى: </h3><ul><li>البنك: %(bank)s</li><li>رقم الحساب: "
-"%(account_number)s</li><li>صاحب الحساب: %(account_holder)s</li></ul>"
+"<h3>رجى الدفع إلى: </h3><ul><li>البنك: %(bank)s</li><li>رقم الحساب: %"
+"(account_number)s</li><li>صاحب الحساب: %(account_holder)s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
-"                                match the behavior of providers and that of their integration with\n"
-"                                Odoo regarding this payment method. Any change may result in errors\n"
-"                                and should be tested on a test database first."
+"                                match the behavior of providers and that of "
+"their integration with\n"
+"                                Odoo regarding this payment method. Any "
+"change may result in errors\n"
+"                                and should be tested on a test database "
+"first."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/> تم ضبط هذه الخصائص على\n"
 "                                مطابقة سلوك مقدمي الخدمة وتكاملهم معهم\n"
-"                                Odoo فيما يتعلق بطريقة الدفع هذه. أي تغيير قد يؤدي إلى أخطاء\n"
+"                                Odoo فيما يتعلق بطريقة الدفع هذه. أي تغيير "
+"قد يؤدي إلى أخطاء\n"
 "                                ويجب اختباره على قاعدة بيانات اختبارية أولاً. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
-msgid "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr "<i class=\"fa fa-home\" role=\"img\" title=\"الرئيسية \" aria-label=\"Home\"/>"
+msgid ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgstr ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"الرئيسية \" aria-label=\"Home\"/"
+">"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
-" != 'full_only'\" title=\"Some of the transactions you intend to capture can"
-" only be captured in full. Handle the transactions individually to capture a"
-" partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
-" != 'full_only'\" title=\"بعض المعاملات التي تنوي تحصيلها يمكن تحصيلها فقط "
-"بشكل كامل. قم بالتعامل مع المعاملات بشكل فردي حتى تتمكن من تحصيل المبالغ "
-"الجزئية. \"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"بعض المعاملات "
+"التي تنوي تحصيلها يمكن تحصيلها فقط بشكل كامل. قم بالتعامل مع المعاملات بشكل "
+"فردي حتى تتمكن من تحصيل المبالغ الجزئية. \"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -151,7 +159,8 @@ msgstr "<span><i class=\"fa fa-lock\"/> محمي بواسطة</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
+msgid ""
+"<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
 msgstr "<strong><i class=\"fa fa-file-text\"/> إظهار تقرير التوافر</strong> "
 
 #. module: payment
@@ -173,11 +182,14 @@ msgstr "<strong>لا توجد طريقة دفع متاحة</strong> "
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a partial capture pending. Please wait a\n"
-"                    moment for it to be processed. Check your payment provider configuration if\n"
+"                    moment for it to be processed. Check your payment "
+"provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
-"<strong>تحذير!</strong> توجد عملية تحصيل دفع جزئي قيد الانتظار. يرجى الانتظار\n"
-"                    قليلاً حتى تتم معالجتها. تحقق من تهيئة مزود الدفع إذا كانت\n"
+"<strong>تحذير!</strong> توجد عملية تحصيل دفع جزئي قيد الانتظار. يرجى "
+"الانتظار\n"
+"                    قليلاً حتى تتم معالجتها. تحقق من تهيئة مزود الدفع إذا "
+"كانت\n"
 "                    عملية تحصيل الدفع لا تزال قيد الانتظار بعد عدة دقائق. "
 
 #. module: payment
@@ -192,7 +204,8 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid ""
-"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
+"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</"
+"em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
 "<strong>تحذير</strong> إنشاء مزود دفع باستخدام رز <em>إنشاء</em> غير مدعوم.\n"
@@ -202,7 +215,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid ""
 "<strong>Warning</strong> Make sure you are logged in as the\n"
-"                                    correct partner before making this payment."
+"                                    correct partner before making this "
+"payment."
 msgstr ""
 "<strong>تحذير</strong> تأكد من أنك قد قمت بتسجيل دخولك\n"
 "                                    كالشريك الصحيح قبل القيام بالدفع. "
@@ -241,8 +255,7 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated to save a new "
 "payment method (%(provider_name)s)"
 msgstr ""
-"لقد بدأت معاملة لها المرجع %(ref)s لحفظ طريقة دفع جديدة (%(provider_name)s)."
-" "
+"لقد بدأت معاملة لها المرجع %(ref)s لحفظ طريقة دفع جديدة (%(provider_name)s). "
 
 #. module: payment
 #. odoo-python
@@ -251,8 +264,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
 msgstr ""
-"لقد بدأت معاملة لها المرجع %(ref)s باستخدام طريقة الدفع %(token)s "
-"(%(provider_name)s). "
+"لقد بدأت معاملة لها المرجع %(ref)s باستخدام طريقة الدفع %(token)s (%"
+"(provider_name)s). "
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ach_direct_debit
@@ -1284,8 +1297,7 @@ msgstr "المُعرف"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid ""
-"If you believe that it is an error, please contact the website "
-"administrator."
+"If you believe that it is an error, please contact the website administrator."
 msgstr "إذا كنت تظن أن هذا خطأ، يرجى التواصل مع مدير الموقع الإلكتروني. "
 
 #. module: payment
@@ -2134,8 +2146,7 @@ msgstr "Pix"
 #: code:addons/payment/models/payment_method.py:0
 msgid "Please make sure that %(payment_method)s is supported by %(provider)s."
 msgstr ""
-"يرجى التأكد من أن طريقة الدفع %(payment_method)s مدعومة من قِبَل "
-"%(provider)s. "
+"يرجى التأكد من أن طريقة الدفع %(payment_method)s مدعومة من قِبَل %(provider)s. "
 
 #. module: payment
 #. odoo-python
@@ -2292,8 +2303,8 @@ msgid ""
 "Refund is a feature allowing to refund customers directly from the payment "
 "in Odoo."
 msgstr ""
-"استرداد الأموال هي ميزة تتيح استرداد الأموال للعملاء مباشرةً من خلال الدفع "
-"في Odoo. "
+"استرداد الأموال هي ميزة تتيح استرداد الأموال للعملاء مباشرةً من خلال الدفع في "
+"Odoo. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2416,8 +2427,8 @@ msgstr "Sofort"
 #. odoo-python
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 msgid ""
-"Some of the transactions you intend to capture can only be captured in full."
-" Handle the transactions individually to capture a partial amount."
+"Some of the transactions you intend to capture can only be captured in full. "
+"Handle the transactions individually to capture a partial amount."
 msgstr ""
 "بعض المعاملات التي تنوى تحصيلها يمكن تحصيلها بشكل كامل فقط. قم بمعالجة "
 "المعاملات كل على حدة لتحصيل المبلغ الجزئي. "
@@ -2539,8 +2550,7 @@ msgstr "الصورة الأساسية المستخدمة لطريقة الدفع
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
 msgid ""
-"The brands of the payment methods that will be displayed on the payment "
-"form."
+"The brands of the payment methods that will be displayed on the payment form."
 msgstr "العلامات التجارية لطرق الدفع التي سيتم عرضها في نموذج الدفع. "
 
 #. module: payment
@@ -2569,8 +2579,8 @@ msgid ""
 "The countries in which this payment provider is available. Leave blank to "
 "make it available in all countries."
 msgstr ""
-"الدول التي يكون فيها مزود الدفع هذا متاحاً. اتركه فارغاً لجعله متاحاً في "
-"كافة الدول. "
+"الدول التي يكون فيها مزود الدفع هذا متاحاً. اتركه فارغاً لجعله متاحاً في كافة "
+"الدول. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__available_currency_ids
@@ -2610,9 +2620,9 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
 msgid ""
-"The list of currencies for that are supported by this payment method (if the"
-" provider allows it). When paying with another currency, this payment method"
-" is not available to customers."
+"The list of currencies for that are supported by this payment method (if the "
+"provider allows it). When paying with another currency, this payment method "
+"is not available to customers."
 msgstr ""
 "قائمة العملات التي تدعمها طريقة الدفع هذه (إذا كان المزود يسمح بذلك). عند "
 "الدفع بعملة أخرى، لن تكون طريقة الدفع هذه متاحة للعملاء. "
@@ -2675,11 +2685,15 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
 msgid ""
-"The primary payment method of the current payment method, if the latter is a brand.\n"
-"For example, \"Card\" is the primary payment method of the card brand \"VISA\"."
+"The primary payment method of the current payment method, if the latter is a "
+"brand.\n"
+"For example, \"Card\" is the primary payment method of the card brand "
+"\"VISA\"."
 msgstr ""
-"طريقة الدفع الأساسية لطريقة الدفع الحالية، إذا كانت الثاني عبارة عن علامة تجارية.\n"
-"على سبيل المثال، \"البطاقة\" هي طريقة الدفع الأساسية للعلامة التجارية للبطاقة \"VISA\". "
+"طريقة الدفع الأساسية لطريقة الدفع الحالية، إذا كانت الثاني عبارة عن علامة "
+"تجارية.\n"
+"على سبيل المثال، \"البطاقة\" هي طريقة الدفع الأساسية للعلامة التجارية "
+"للبطاقة \"VISA\". "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
@@ -2756,8 +2770,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s encountered an error "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s encountered an error (%"
+"(provider_name)s)."
 msgstr ""
 "المعاملة مع المرجع %(ref)s لـ %(amount)s واجهت خطأً (%(provider_name)s). "
 
@@ -2765,8 +2779,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been authorized "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s has been authorized (%"
+"(provider_name)s)."
 msgstr ""
 "المعاملة مع المرجع %(ref)s لـ %(amount)s تم تفويضها (%(provider_name)s). "
 
@@ -2774,8 +2788,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been confirmed "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s has been confirmed (%"
+"(provider_name)s)."
 msgstr ""
 "المعاملات مع المرجع %(ref)s لـ %(amount)s تم تأكيدها (%(provider_name)s). "
 
@@ -2819,13 +2833,16 @@ msgstr "سيقوم هذا الإجراء أيضاً بأرشفة الرموز %s
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
 msgid ""
-"This controls whether customers can save their payment methods as payment tokens.\n"
-"A payment token is an anonymous link to the payment method details saved in the\n"
+"This controls whether customers can save their payment methods as payment "
+"tokens.\n"
+"A payment token is an anonymous link to the payment method details saved in "
+"the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
 "يتحكم ذلك بإمكانية حفظ العملاء لطرق الدفع كرموز دفع. \n"
 "رمز الدفع هو رابط مجهول المصدر لتفاصيل طريقة الدفع المحفوظة في \n"
-"قاعدة بيانات مزود الدفع، مما يتيح للعميل إعادة استخدامها لعملية الشراء القادمة. "
+"قاعدة بيانات مزود الدفع، مما يتيح للعميل إعادة استخدامها لعملية الشراء "
+"القادمة. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2841,10 +2858,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid ""
-"This partner has no email, which may cause issues with some payment providers.\n"
+"This partner has no email, which may cause issues with some payment "
+"providers.\n"
 "                     Setting an email for this partner is advised."
 msgstr ""
-"ليس لهذا الشريك عنوان بريد إلكتروني، مما قد يسبب المشاكل مع بعض مزودي الدفع.\n"
+"ليس لهذا الشريك عنوان بريد إلكتروني، مما قد يسبب المشاكل مع بعض مزودي "
+"الدفع.\n"
 "                     ننصح بتعيين بريد إلكتروني لهذا الشريك. "
 
 #. module: payment

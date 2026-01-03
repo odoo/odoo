@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* microsoft_calendar
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 18:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -64,15 +65,15 @@ msgid ""
 "An administrator needs to configure Outlook Synchronization before you can "
 "use it!"
 msgstr ""
-"Un administrator trebuie să configureze sincronizarea Outlook înainte de a o"
-" putea folosi!"
+"Un administrator trebuie să configureze sincronizarea Outlook înainte de a o "
+"putea folosi!"
 
 #. module: microsoft_calendar
 #. odoo-python
 #: code:addons/microsoft_calendar/models/res_users.py:0
 msgid ""
-"An error occurred while generating the token. Your authorization code may be"
-" invalid or has already expired [%s]. You should check your Client ID and "
+"An error occurred while generating the token. Your authorization code may be "
+"invalid or has already expired [%s]. You should check your Client ID and "
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
@@ -178,11 +179,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
-"Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
-"If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar."
+"Due to an Outlook Calendar limitation, recurrence updates must be done "
+"directly in Outlook Calendar.\n"
+"If this recurrence is not shown in Outlook Calendar, you must delete it in "
+"Odoo Calendar and recreate it in Outlook Calendar."
 msgstr ""
-"Datorită unei limitări Outlook Calendar, actualizările de recurență trebuie făcute direct în Outlook Calendar.\n"
-"Dacă această recurență nu apare în Outlook Calendar, trebuie să o ștergeți din Odoo Calendar și să o recreați în Outlook Calendar."
+"Datorită unei limitări Outlook Calendar, actualizările de recurență trebuie "
+"făcute direct în Outlook Calendar.\n"
+"Dacă această recurență nu apare în Outlook Calendar, trebuie să o ștergeți "
+"din Odoo Calendar și să o recreați în Outlook Calendar."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -208,12 +213,19 @@ msgstr "Regulă de recurență a evenimentului"
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
-"For a correct synchronization between Odoo and Outlook Calendar, all attendees must have an email address. However, some events do not respect this condition. As long as the events are incorrect, the calendars will not be synchronized.\n"
+"For a correct synchronization between Odoo and Outlook Calendar, all "
+"attendees must have an email address. However, some events do not respect "
+"this condition. As long as the events are incorrect, the calendars will not "
+"be synchronized.\n"
 "Either update the events/attendees or archive these events %(details)s:\n"
 "%(invalid_events)s"
 msgstr ""
-"Pentru o sincronizare corectă între Odoo și Outlook Calendar, toți participanții trebuie să aibă o adresă de email. Totuși, unele evenimente nu respectă această condiție. Atât timp cât evenimentele sunt incorecte, calendarele nu vor fi sincronizate.\n"
-"Actualizați evenimentele/participanții sau arhivați aceste evenimente %(details)s:\n"
+"Pentru o sincronizare corectă între Odoo și Outlook Calendar, toți "
+"participanții trebuie să aibă o adresă de email. Totuși, unele evenimente nu "
+"respectă această condiție. Atât timp cât evenimentele sunt incorecte, "
+"calendarele nu vor fi sincronizate.\n"
+"Actualizați evenimentele/participanții sau arhivați aceste evenimente %"
+"(details)s:\n"
 "%(invalid_events)s"
 
 #. module: microsoft_calendar
@@ -223,8 +235,8 @@ msgid ""
 "For having a different organizer in your event, it is necessary that the "
 "organizer have its Odoo Calendar synced with Outlook Calendar."
 msgstr ""
-"Pentru a avea un alt organizator la eveniment, este necesar ca organizatorul"
-" să aibă calendarul Odoo sincronizat cu Outlook Calendar."
+"Pentru a avea un alt organizator la eveniment, este necesar ca organizatorul "
+"să aibă calendarul Odoo sincronizat cu Outlook Calendar."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -375,8 +387,8 @@ msgid ""
 "the following event."
 msgstr ""
 "Limitare Outlook: într-o recurență, un eveniment nu poate fi mutat în sau "
-"înaintea zilei evenimentului precedent și nu poate fi mutat în sau după ziua"
-" evenimentului următor."
+"înaintea zilei evenimentului precedent și nu poate fi mutat în sau după ziua "
+"evenimentului următor."
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -422,8 +434,8 @@ msgstr "Sincronizați doar evenimentele noi"
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 msgid ""
-"The Outlook Synchronization needs to be configured before you can use it, do"
-" you want to do it now?"
+"The Outlook Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
 msgstr ""
 "Sincronizarea Outlook trebuie configurată înainte de a o putea utiliza, "
 "doriți să o configurați acum?"

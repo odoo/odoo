@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_online_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Chloe Wang, 2024
 # Odoo哥 <vnsoft.he@gmail.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_online_payment
@@ -28,8 +29,7 @@ msgstr "<strong>错误：</strong> 币别遗失或无效。"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
-msgid ""
-"<strong>Error:</strong> There was a problem during the payment process."
+msgid "<strong>Error:</strong> There was a problem during the payment process."
 msgstr "<strong>错误：</strong>  付款过程中出现问题。"
 
 #. module: pos_online_payment
@@ -47,8 +47,7 @@ msgstr "必须指定付款方式。"
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-msgid ""
-"A validation payment cannot be used for a Point of Sale online payment."
+msgid "A validation payment cannot be used for a Point of Sale online payment."
 msgstr "验证付款不能用于POS在线付款。"
 
 #. module: pos_online_payment
@@ -63,7 +62,9 @@ msgid ""
 "All payment providers configured for an online payment method must use the "
 "same currency as the Sales Journal, or the company currency if that is not "
 "set, of the POS config."
-msgstr "所有配置为在线支付方式的支付提供商必须使用与销售日志相同的币别，如果未设置公司币别，则使用 POS 配置中的币别。"
+msgstr ""
+"所有配置为在线支付方式的支付提供商必须使用与销售日志相同的币别，如果未设置公"
+"司币别，则使用 POS 配置中的币别。"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
@@ -112,7 +113,9 @@ msgstr "无法编辑 POS 在线支付基本数据。"
 msgid ""
 "Could not create an online payment method (company_id=%(company_id)d, "
 "pos_config_id=%(pos_config_id)d)"
-msgstr "未能创建网上付款方式（company_id=%(company_id)d，pos_config_id=%(pos_config_id)d）"
+msgstr ""
+"未能创建网上付款方式（company_id=%(company_id)d，pos_config_id=%"
+"(pos_config_id)d）"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
@@ -457,7 +460,9 @@ msgstr "待付款"
 msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
-msgstr "要在 POS 配置中使用在线支付方法，必须至少有一个已发布的支付提供商支持该 POS 配置的币别。"
+msgstr ""
+"要在 POS 配置中使用在线支付方法，必须至少有一个已发布的支付提供商支持该 POS "
+"配置的币别。"
 
 #. module: pos_online_payment
 #. odoo-python

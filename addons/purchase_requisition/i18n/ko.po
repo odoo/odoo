@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_requisition
-# 
+#
 # Translators:
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
 # Daye Jeong, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: purchase_requisition
@@ -306,7 +306,9 @@ msgstr "확인됨"
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr "단위 사이의 변환은 동일 카테고리에서만 가능합니다. 변환은 비율에 따라 이루어집니다."
+msgstr ""
+"단위 사이의 변환은 동일 카테고리에서만 가능합니다. 변환은 비율에 따라 이루어"
+"집니다."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
@@ -322,13 +324,18 @@ msgstr "대체 생성"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid ""
-"Create a call for tender by adding alternative requests for quotation to different vendors.\n"
-"                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
-"                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
+"Create a call for tender by adding alternative requests for quotation to "
+"different vendors.\n"
+"                            Make your choice by selecting the best "
+"combination of lead time, OTD and/or total amount.\n"
+"                            By comparing product lines you can also decide "
+"to order some products from one vendor and others from another vendor."
 msgstr ""
 "여러 업체로부터 받은 대체 견적 요청을 추가하여 입찰요청서를 생성하세요.\n"
-"                           리드타임과 OTD, 총 금액 면에서의 최적의 조합을 찾아서 선택하세요.\n"
-"                            품목 내역을 비교하여 일부는 한 업체에서 주문하고 나머지는 다른 업체에서 주문할 수도 있습니다."
+"                           리드타임과 OTD, 총 금액 면에서의 최적의 조합을 찾"
+"아서 선택하세요.\n"
+"                            품목 내역을 비교하여 일부는 한 업체에서 주문하고 "
+"나머지는 다른 업체에서 주문할 수도 있습니다."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -447,11 +454,13 @@ msgstr "멋진 아이콘 폰트 예: fa-tasks"
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specific period\n"
-"            (e.g. a year) and you order products within this agreement to benefit\n"
+"            (e.g. a year) and you order products within this agreement to "
+"benefit\n"
 "            from the negotiated prices."
 msgstr ""
 "포괄주계약의 경우, 특정 기간 (예: 1년)에 대해 계약을 맺고\n"
-"                   해당 계약 범위 내에서 품목을 주문하는 경우에 협상된 가격으로\n"
+"                   해당 계약 범위 내에서 품목을 주문하는 경우에 협상된 가격으"
+"로\n"
 "                   주문 혜택을 누릴 수 있습니다."
 
 #. module: purchase_requisition
@@ -510,12 +519,14 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
 msgid ""
 "If the chosen vendor or if any of the products in the original PO have a "
-"blocking warning then we prevent creation of alternative PO. This is because"
-" normally these fields are cleared w/warning message within form view, but "
-"we cannot recreate that in this case."
+"blocking warning then we prevent creation of alternative PO. This is because "
+"normally these fields are cleared w/warning message within form view, but we "
+"cannot recreate that in this case."
 msgstr ""
-"선택한 업체나 원래의 구매발주서 상의 품목에 금지 경고가 있는 경우에는 대체 구매계약서를 생성할 수 없도록 합니다. 양식 화면에서 이러한"
-" 필드는 경고 메시지와 함께 삭제되는 것이 일반적이지만, 이 경우에는 다시 생성할 수 없기 때문입니다."
+"선택한 업체나 원래의 구매발주서 상의 품목에 금지 경고가 있는 경우에는 대체 구"
+"매계약서를 생성할 수 없도록 합니다. 양식 화면에서 이러한 필드는 경고 메시지"
+"와 함께 삭제되는 것이 일반적이지만, 이 경우에는 다시 생성할 수 없기 때문입니"
+"다."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
@@ -961,11 +972,12 @@ msgstr "이 대체 구매발주서가 생성되는 원본 발주서입니다."
 #. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 msgid ""
-"The vendor you have selected or at least one of the products you are copying"
-" from the original order has a blocking warning on it and cannot be selected"
-" to create an alternative."
+"The vendor you have selected or at least one of the products you are copying "
+"from the original order has a blocking warning on it and cannot be selected "
+"to create an alternative."
 msgstr ""
-"선택한 공급업체 또는 원래의 발주서에서 복사해오려는 품목 중에 금지 경고가 있는 항목이 있으므로 대체용으로 선택할 수 없습니다."
+"선택한 공급업체 또는 원래의 발주서에서 복사해오려는 품목 중에 금지 경고가 있"
+"는 항목이 있으므로 대체용으로 선택할 수 없습니다."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -980,7 +992,8 @@ msgid ""
 "There is already an open blanket order for this supplier. We suggest you "
 "complete this open blanket order, instead of creating a new one."
 msgstr ""
-"이 업체에 미결 상태인 장기 단가 계약이 이미 있습니다. 신규로 발주서를 생성하는 것보다 기존의 미결 계약을 완료하는 것이 좋습니다. "
+"이 업체에 미결 상태인 장기 단가 계약이 이미 있습니다. 신규로 발주서를 생성하"
+"는 것보다 기존의 미결 계약을 완료하는 것이 좋습니다. "
 
 #. module: purchase_requisition
 #. odoo-python
@@ -994,7 +1007,8 @@ msgstr "금지 경고가 있습니다!\n"
 msgid ""
 "To close this purchase requisition, cancel related Requests for Quotation.\n"
 "\n"
-"Imagine the mess if someone confirms these duplicates: double the order, double the trouble :)"
+"Imagine the mess if someone confirms these duplicates: double the order, "
+"double the trouble :)"
 msgstr ""
 "해당 구매 요청 건을 마감하려면, 관련된 견적요청서를 취소하시기 바랍니다.\n"
 "\n"
@@ -1089,8 +1103,8 @@ msgstr "대체용 견적서 요청은 어떠신가요?"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
 msgid ""
-"Whether or not this purchase order is linked to another purchase order as an"
-" alternative."
+"Whether or not this purchase order is linked to another purchase order as an "
+"alternative."
 msgstr "이 구매발주서가 대체용 다른 발주서에 연결되어 있는지의 여부입니다."
 
 #. module: purchase_requisition
@@ -1133,9 +1147,10 @@ msgstr "수량이 누락된 항목은 일괄 주문을 확인할 수 없습니�
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid ""
-"You cannot confirm agreement '%(agreement)s' because it does not contain any"
-" product lines."
-msgstr "제품 항목이 포함되어 있지 않으므로 '%(agreement)s'을 확인할 수 없습니다."
+"You cannot confirm agreement '%(agreement)s' because it does not contain any "
+"product lines."
+msgstr ""
+"제품 항목이 포함되어 있지 않으므로 '%(agreement)s'을 확인할 수 없습니다."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1143,7 +1158,8 @@ msgstr "제품 항목이 포함되어 있지 않으므로 '%(agreement)s'을 확
 msgid ""
 "You cannot have a negative or unit price of 0 for an already confirmed "
 "blanket order."
-msgstr "이미 확정된 묶음 주문에는 마이너스 가격이나 0의 단가를 설정할 수 없습니다."
+msgstr ""
+"이미 확정된 묶음 주문에는 마이너스 가격이나 0의 단가를 설정할 수 없습니다."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
-"PO-Revision-Date: 2025-12-20 18:01+0000\n"
+"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"PO-Revision-Date: 2025-12-31 16:32+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/"
 "maintenance/hi/>\n"
@@ -63,8 +63,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"यह एक पायथन डिक्शनरी है. जब आप इस 'एलियास' के लिए कोई नया डेटा डालेंगे, तो "
-"यह डिक्शनरी अपने-आप कुछ खाली जगहें भर देगी."
+"यह एक पायथन डिक्शनरी है. जब आप इस 'एलियास' के लिए कोई नया डेटा डालेंगे, तो यह "
+"डिक्शनरी अपने-आप कुछ खाली जगहें भर देगी."
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_computer3
@@ -682,8 +682,8 @@ msgstr "आईडी"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
 "उपनाम रखने वाले पैरेंट रिकॉर्ड की आईडी (उदाहरण: वह प्रोजेक्ट जिसमें टास्क बनाने का उपनाम "
 "है)"
@@ -815,7 +815,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__1
 msgid "Low"
-msgstr ""
+msgstr "कम"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__mtbf
@@ -1129,8 +1129,8 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"एक थ्रेड (रिकॉर्ड) की वैकल्पिक आईडी जिससे आने वाले सभी मैसेज जुड़ जाएंगे, भले ही वे उसका जवा"
-"ब न हों. अगर यह सेट है, तो नए रिकॉर्ड बनाना पूरी तरह से बंद हो जाएगा।"
+"एक थ्रेड (रिकॉर्ड) की वैकल्पिक आईडी जिससे आने वाले सभी मैसेज जुड़ जाएंगे, भले ही वे उसका "
+"जवाब न हों. अगर यह सेट है, तो नए रिकॉर्ड बनाना पूरी तरह से बंद हो जाएगा।"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
@@ -1164,8 +1164,8 @@ msgstr "पैरेंट रिकॉर्ड थ्रेड आईडी"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "उपनाम (alias) रखने वाला पैरेंट मॉडल. उपनाम संदर्भ (alias reference) रखने वाला मॉडल "
@@ -1190,7 +1190,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "मेलगेटवे का इस्तेमाल करके दस्तावेज़ पर मैसेज पोस्ट करने की नीति..\n"
 "- सभी लोग: कोई भी पोस्ट कर सकता है.\n"
@@ -1341,7 +1342,7 @@ msgstr ""
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Scheduled"
-msgstr ""
+msgstr "शेड्यूल किया गया"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__schedule_date
@@ -1437,7 +1438,7 @@ msgstr ""
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_subcontractor
 msgid "Subcontractor"
-msgstr ""
+msgstr "सबकॉन्ट्रैक्टर"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__name
@@ -1464,7 +1465,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.maintenance_team_action_settings
 msgid "Teams"
-msgstr ""
+msgstr "टीम"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__technician_user_id
@@ -1483,9 +1484,9 @@ msgstr "टेक्स्ट"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
 "वह मॉडल (Odoo दस्तावेज़ प्रकार) जिससे यह उपनाम जुड़ा है. कोई भी आने वाला ईमेल जो किसी "
 "मौजूदा रिकॉर्ड का जवाब नहीं है, इस मॉडल का एक नया रिकॉर्ड बनाएगा (जैसे कि एक प्रोजेक्ट "
@@ -1533,7 +1534,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid ""
 "Track equipment and link it to an employee or department.\n"
-"                You will be able to manage allocations, issues and maintenance of your equipment."
+"                You will be able to manage allocations, issues and "
+"maintenance of your equipment."
 msgstr ""
 
 #. module: maintenance
@@ -1562,7 +1564,7 @@ msgstr "अपठित संदेश"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Unscheduled"
-msgstr ""
+msgstr "शेड्यूल नहीं किया गया"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__repeat_type

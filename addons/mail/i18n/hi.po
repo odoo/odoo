@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
-"PO-Revision-Date: 2025-12-06 17:08+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-12-31 16:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/mail/hi/>\n"
 "Language: hi\n"
@@ -1451,6 +1451,8 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that "
 "did not match any partner."
 msgstr ""
+"मैसेज का लेखक. अगर यह सेट नहीं है, तो 'email_from' में वह ईमेल एड्रेस हो सकता है जो किसी पार्टनर से "
+"मेल नहीं खाता।"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__author_avatar
@@ -2576,7 +2578,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Created"
-msgstr ""
+msgstr "बनाया गया"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -2676,7 +2678,7 @@ msgstr "निर्माण दिनांक"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_search
 msgid "Creator"
-msgstr ""
+msgstr "क्रिएटर"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_ice_server__credential
@@ -2943,7 +2945,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.js:0
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "Delete Template"
-msgstr ""
+msgstr "टेम्प्लेट मिटाएं"
 
 #. module: mail
 #. odoo-javascript
@@ -3509,6 +3511,8 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"भेजने वाले का ईमेल एड्रेस. जब कोई मैचिंग पार्टनर नहीं मिलता, तब यह फ़ील्ड सेट की जाती है और चैटर में "
+"'author_id' फ़ील्ड की जगह ले लेती है।"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4091,7 +4095,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
 msgid "Formatted Email"
-msgstr ""
+msgstr "फ़ॉर्मैट किया गया ईमेल"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -4880,7 +4884,7 @@ msgstr "अमान्य ईमेल पता"
 #. odoo-python
 #: code:addons/mail/models/mail_blacklist.py:0
 msgid "Invalid email address “%s”"
-msgstr ""
+msgstr "अमान्य ईमेल पता “%s”"
 
 #. module: mail
 #. odoo-python
@@ -5058,7 +5062,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_member
 msgid "Is Member"
-msgstr ""
+msgstr "सदस्य है"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__is_read
@@ -5376,7 +5380,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_layout_xmlid
 #: model:ir.model.fields,field_description:mail.field_mail_message__email_layout_xmlid
 msgid "Layout"
-msgstr ""
+msgstr "लेआउट"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
@@ -5545,7 +5549,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_config_settings__tenor_content_filter__low
 msgid "Low"
-msgstr ""
+msgstr "कम"
 
 #. module: mail
 #. odoo-javascript
@@ -5922,13 +5926,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Link Copied!"
-msgstr ""
+msgstr "मैसेज लिंक को कॉपी किया गया!"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Link Copy Failed (Permission denied?)!"
-msgstr ""
+msgstr "मैसेज लिंक कॉपी करने में विफल रहा (अनुमति नहीं मिली?)!"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
@@ -6004,6 +6008,9 @@ msgid ""
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
+"मैसेज सबटाइप मैसेज के बारे में सटीक जानकारी देता है, खासकर सिस्टम नोटिफिकेशन के लिए. उदाहरण के लिए, यह नए "
+"रिकॉर्ड या प्रक्रिया में स्टेज बदलने से संबंधित नोटिफिकेशन हो सकता है. मैसेज सबटाइप की मदद से यूज़र अपनी वॉल "
+"पर मिलने वाले नोटिफिकेशन को अपनी ज़रूरत के अनुसार सेट कर सकते हैं।"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -7812,7 +7819,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__received
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Received"
-msgstr ""
+msgstr "हासिल हुआ"
 
 #. module: mail
 #. odoo-javascript
@@ -9104,7 +9111,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message__subtype_id
 #: model_terms:ir.ui.view,arch_db:mail.view_message_subtype_tree
 msgid "Subtype"
-msgstr ""
+msgstr "सबटाइप"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_message_subtype
@@ -9205,7 +9212,7 @@ msgstr "टेंप्लेट"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_category
 msgid "Template Category"
-msgstr ""
+msgstr "टेम्प्लेट कैटगरी"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__description
@@ -9226,7 +9233,7 @@ msgstr "टेंप्लेट का नाम"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_template_preview_action
 msgid "Template Preview"
-msgstr ""
+msgstr "टेम्प्लेट प्रीव्यू"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__lang
@@ -10106,7 +10113,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Unblacklist"
-msgstr ""
+msgstr "अनब्लैकलिस्ट"
 
 #. module: mail
 #. odoo-python
@@ -11174,7 +11181,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "by"
-msgstr ""
+msgstr "के ज़रिए"
 
 #. module: mail
 #. odoo-javascript

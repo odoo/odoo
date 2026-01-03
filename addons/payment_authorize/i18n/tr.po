@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_authorize
-# 
+#
 # Translators:
 # Tiffany Chang, 2024
 # Hüseyin Cem Aras <hcemaras@gmail.com>, 2024
@@ -13,34 +13,40 @@
 # Martin Trigaux, 2024
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
-"                        <option value=\"checking\">Personal Checking</option>\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
+"select\">\n"
+"                        <option value=\"checking\">Personal Checking</"
+"option>\n"
 "                        <option value=\"savings\">Personal Savings</option>\n"
-"                        <option value=\"businessChecking\">Business Checking</option>\n"
+"                        <option value=\"businessChecking\">Business "
+"Checking</option>\n"
 "                    </select>"
 msgstr ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
-"                        <option value=\"checking\">Bireysel Vadesiz</option>\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
+"select\">\n"
+"                        <option value=\"checking\">Bireysel Vadesiz</"
+"option>\n"
 "                        <option value=\"savings\">Bireysel Vadeli</option>\n"
-"                        <option value=\"businessChecking\">Ticari Vadesiz</option>\n"
+"                        <option value=\"businessChecking\">Ticari Vadesiz</"
+"option>\n"
 "                    </select>"
 
 #. module: payment_authorize
@@ -125,8 +131,8 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %(error_code)s; "
 "error_details: %(error_message)s)"
 msgstr ""
-"İşlem ayrıntıları alınamadı. (hata kodu: %(error_code)s; hata_ayrıntıları: "
-"%(error_message)s)"
+"İşlem ayrıntıları alınamadı. (hata kodu: %(error_code)s; hata_ayrıntıları: %"
+"(error_message)s)"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -173,8 +179,7 @@ msgstr "Referans %s eşleşen bir işlem bulunamadı."
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "Only one currency can be selected by Authorize.Net account."
-msgstr ""
-"Authorize.Net hesabı yalnızca tek bir para birimi seçimine izin verir."
+msgstr "Authorize.Net hesabı yalnızca tek bir para birimi seçimine izin verir."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
@@ -200,8 +205,10 @@ msgstr "Ödeme işleme başarısız oldu"
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
-msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
-msgstr "Durum kodu \"%(status)s\" ve hata kodu \"%(error)s\" olan veriler alındı"
+msgid ""
+"Received data with status code \"%(status)s\" and error code \"%(error)s\""
+msgstr ""
+"Durum kodu \"%(status)s\" ve hata kodu \"%(error)s\" olan veriler alındı"
 
 #. module: payment_authorize
 #. odoo-python
@@ -240,8 +247,8 @@ msgid ""
 "The transaction is not in a status to be refunded. (status: %(status)s, "
 "details: %(message)s)"
 msgstr ""
-"İşlem, iade edilebilir bir durumda değil. (durum: %(status)s, detay: "
-"%(message)s)"
+"İşlem, iade edilebilir bir durumda değil. (durum: %(status)s, detay: %"
+"(message)s)"
 
 #. module: payment_authorize
 #. odoo-python

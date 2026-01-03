@@ -9,13 +9,13 @@
 # Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
 # "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:36+0000\n"
-"PO-Revision-Date: 2025-12-06 17:08+0000\n"
+"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"PO-Revision-Date: 2026-01-03 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-18/"
 "account/vi/>\n"
@@ -1924,6 +1924,8 @@ msgid ""
 "Account Code Mapping cannot be accessed directly. It is designed to be used "
 "only through the Chart of Accounts."
 msgstr ""
+"Bảng mã tài khoản không thể truy cập trực tiếp. Nó được thiết kế để chỉ sử "
+"dụng thông qua Bảng tài khoản."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -2410,6 +2412,9 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"%(date)sGhi nhận khoản phải trả được tạo vào ngày 20/11/2012: %"
+"(accrual_entry)s.                Và ghi nhận hủy bỏ tương ứng: %"
+"(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3370,7 +3375,7 @@ msgstr "Tệp đính kèm"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
 msgid "Attachments Not Supported"
-msgstr ""
+msgstr "Tệp đính kèm không được hỗ trợ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_activated
@@ -3915,6 +3920,8 @@ msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
+"Chức năng gửi hóa đơn theo lô hiện không khả dụng. Vui lòng kích hoạt cron "
+"để kích hoạt chức năng gửi hóa đơn theo lô."
 
 #. module: account
 #. odoo-python
@@ -6224,6 +6231,8 @@ msgstr "Thuế mặc định dùng khi bán sản phẩm"
 #: code:addons/account/models/account_move.py:0
 msgid "Default value for 'company_id' for %(record)s is not an integer"
 msgstr ""
+"Giá trị mặc định cho 'company_id' trong ' %(record)s ' không phải là số "
+"nguyên"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -6550,7 +6559,7 @@ msgstr "Hiển thị số tiền"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
 msgid "Display Attachments Widget"
-msgstr ""
+msgstr "Hiển thị tiện ích tệp đính kèm"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
@@ -8046,7 +8055,7 @@ msgstr "Ngày khoá sổ chung"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "Đi đến cấu hình cron"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -8131,6 +8140,8 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"Tính năng Groupby không được hỗ trợ bởi động cơ '%(engine)s'. Vui lòng xóa "
+"giá trị Groupby trên '%(report_line)s'"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
@@ -12432,7 +12443,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Các khoản thanh toán đã được đối chiếu với hóa đơn này."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -13111,7 +13122,7 @@ msgstr "Loại hóa đơn đã đối chiếu"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "Thanh toán đã đối chiếu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -16943,7 +16954,7 @@ msgstr "Bút toán định kỳ này sẽ được vào sổ cho đến và bao 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
-msgstr ""
+msgstr "Cài đặt này sẽ khóa sau khi một mục nhập sổ nhật ký được tạo."
 
 #. module: account
 #. odoo-python

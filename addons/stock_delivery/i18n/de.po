@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_delivery
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Felix Schubert <felix.schubert@go-erp.com>, 2025
 # Larissa Manderfeld, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_delivery
@@ -106,8 +106,7 @@ msgstr "Abbrechen"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
 "Die Stornierung einer Lieferung ist möglicherweise nicht rückgängig zu "
 "machen. Sind Sie sicher, dass Sie fortfahren möchten?"
@@ -200,11 +199,16 @@ msgstr "Sendungsverfolgungslinks anzeigen"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
-"Geschätzte Kosten: Dem Kunden werden die geschätzten Kosten für den Versand in Rechnung gestellt.\n"
-"Tatsächliche Kosten: Dem Kunden werden die tatsächlichen Kosten für den Versand in Rechnung gestellt, die Kosten für den Versand werden nach der Lieferung auf dem Verkaufsauftrag aktualisiert."
+"Geschätzte Kosten: Dem Kunden werden die geschätzten Kosten für den Versand "
+"in Rechnung gestellt.\n"
+"Tatsächliche Kosten: Dem Kunden werden die tatsächlichen Kosten für den "
+"Versand in Rechnung gestellt, die Kosten für den Versand werden nach der "
+"Lieferung auf dem Verkaufsauftrag aktualisiert."
 
 #. module: stock_delivery
 #. odoo-python
@@ -356,11 +360,15 @@ msgstr "Routen"
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
-"Die Ursprungsregeln bestimmen, woher die Waren stammen, d. h. nicht, woher sie versandt wurden, sondern wo sie produziert oder hergestellt wurden.\n"
-"Der „Ursprung“ ist somit die „wirtschaftliche Nationalität“ der im Handel befindlichen Waren."
+"Die Ursprungsregeln bestimmen, woher die Waren stammen, d. h. nicht, woher "
+"sie versandt wurden, sondern wo sie produziert oder hergestellt wurden.\n"
+"Der „Ursprung“ ist somit die „wirtschaftliche Nationalität“ der im Handel "
+"befindlichen Waren."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
@@ -391,11 +399,11 @@ msgstr "An Zusteller senden"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
+"(ref)s"
 msgstr ""
-"Die Sendung mit der Sendungsnummer %(ref)s wurde an den Zusteller "
-"%(carrier_name)s übergeben."
+"Die Sendung mit der Sendungsnummer %(ref)s wurde an den Zusteller %"
+"(carrier_name)s übergeben."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -444,15 +452,14 @@ msgstr "Typ des Lagerpakets"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
 msgid "Technical field indicating weight's number of decimal places"
-msgstr ""
-"Technisches Feld zur Angabe der Anzahl der Dezimalstellen des Gewichts"
+msgstr "Technisches Feld zur Angabe der Anzahl der Dezimalstellen des Gewichts"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
 msgstr ""
-"Technisches Feld, das angibt, ob die Gewichtseinheit kg ist oder nicht (d.h."
-" lb)"
+"Technisches Feld, das angibt, ob die Gewichtseinheit kg ist oder nicht (d.h. "
+"lb)"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
@@ -572,8 +579,8 @@ msgstr "Gewicht:"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
 "Sie können keine Produkte in ein und dasselbe Paket packen, wenn sie "
 "unterschiedliche Zusteller haben (d. h. überprüfen Sie, ob allen Ihren "

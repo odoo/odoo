@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-11-19 14:30+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
@@ -20,10 +20,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
-"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
-"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: payment
@@ -46,42 +46,48 @@ msgstr ""
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %(bank)s</li><li>Account "
-"Number: %(account_number)s</li><li>Account Holder: "
-"%(account_holder)s</li></ul>"
+"Number: %(account_number)s</li><li>Account Holder: %(account_holder)s</li></"
+"ul>"
 msgstr ""
-"<h3>Виконайте платіж на: </h3><ul><li>Банк: %(bank)s</li><li>Номер рахунку: "
-"%(account_number)s</li><li>Власник рахунку: %(account_holder)s</li></ul>"
+"<h3>Виконайте платіж на: </h3><ul><li>Банк: %(bank)s</li><li>Номер рахунку: %"
+"(account_number)s</li><li>Власник рахунку: %(account_holder)s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
-"                                match the behavior of providers and that of their integration with\n"
-"                                Odoo regarding this payment method. Any change may result in errors\n"
-"                                and should be tested on a test database first."
+"                                match the behavior of providers and that of "
+"their integration with\n"
+"                                Odoo regarding this payment method. Any "
+"change may result in errors\n"
+"                                and should be tested on a test database "
+"first."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/> Ці властивості налаштовано відповідно до\n"
+"<i class=\"fa fa-exclamation-triangle\"/> Ці властивості налаштовано "
+"відповідно до\n"
 " поведінки постачальників і їхньої інтеграції з\n"
 " Odoo щодо цього способу оплати. Будь-яка зміна може призвести до помилок\n"
 " і повинна спочатку перевірятися на тестовій базі даних."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
-msgid "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgid ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgstr ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
-" != 'full_only'\" title=\"Some of the transactions you intend to capture can"
-" only be captured in full. Handle the transactions individually to capture a"
-" partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
-" != 'full_only'\" title=\"Some of the transactions you intend to capture can"
-" only be captured in full. Handle the transactions individually to capture a"
-" partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -156,7 +162,8 @@ msgstr "<span><i class=\"fa fa-lock\"/> Захищено </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
+msgid ""
+"<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
 msgstr ""
 
 #. module: payment
@@ -178,11 +185,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a partial capture pending. Please wait a\n"
-"                    moment for it to be processed. Check your payment provider configuration if\n"
+"                    moment for it to be processed. Check your payment "
+"provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
-"<strong>Увага!</strong> Очікується часткове отримання. Будь ласка, зачекайте \n"
-"деякий час, поки його буде оброблено. Перевірте конфігурацію провайдера платежів, \n"
+"<strong>Увага!</strong> Очікується часткове отримання. Будь ласка, "
+"зачекайте \n"
+"деякий час, поки його буде оброблено. Перевірте конфігурацію провайдера "
+"платежів, \n"
 "якщо отримання буде все ще в очікуванні через кілька хвилин."
 
 #. module: payment
@@ -197,17 +207,20 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid ""
-"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
+"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</"
+"em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Попередження</strong> Створення платіжного провайдера з кнопки <em>СТВОРИТИ</em> не підтримується.\n"
+"<strong>Попередження</strong> Створення платіжного провайдера з кнопки "
+"<em>СТВОРИТИ</em> не підтримується.\n"
 "                        Використовуйте натомість дію <em>Дублювати</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid ""
 "<strong>Warning</strong> Make sure you are logged in as the\n"
-"                                    correct partner before making this payment."
+"                                    correct partner before making this "
+"payment."
 msgstr ""
 "<strong>Попередження</strong> Перш ніж здійснювати цей платіж,\n"
 " переконайтеся, що ви ввійшли як правильний партнер."
@@ -746,7 +759,8 @@ msgid ""
 "you are sure you can ship the goods to them."
 msgstr ""
 "Отримайте суму від Odoo, коли доставка буде завершена.\n"
-"Використовуйте це, якщо ви хочете стягувати плату з карток своїх клієнтів, лише \n"
+"Використовуйте це, якщо ви хочете стягувати плату з карток своїх клієнтів, "
+"лише \n"
 "коли ви впевнені, що можете відправити їм товари."
 
 #. module: payment
@@ -1290,8 +1304,7 @@ msgstr "ID"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid ""
-"If you believe that it is an error, please contact the website "
-"administrator."
+"If you believe that it is an error, please contact the website administrator."
 msgstr "Якщо ви вважаєте, що це помилка, зверніться до адміністратора сайту."
 
 #. module: payment
@@ -1306,7 +1319,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"У тестовому режимі фальшивий платіж обробляється через тестовий платіжний інтерфейс.\n"
+"У тестовому режимі фальшивий платіж обробляється через тестовий платіжний "
+"інтерфейс.\n"
 "Цей режим рекомендується використовувати при налаштуванні провайдера."
 
 #. module: payment
@@ -2420,8 +2434,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 msgid ""
-"Some of the transactions you intend to capture can only be captured in full."
-" Handle the transactions individually to capture a partial amount."
+"Some of the transactions you intend to capture can only be captured in full. "
+"Handle the transactions individually to capture a partial amount."
 msgstr ""
 "Деякі транзакції, які ви збираєтеся зафіксувати, можна зафіксувати лише "
 "повністю. Обробляйте транзакції окремо, щоб отримати часткову суму."
@@ -2545,8 +2559,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
 msgid ""
-"The brands of the payment methods that will be displayed on the payment "
-"form."
+"The brands of the payment methods that will be displayed on the payment form."
 msgstr "Бренди способів оплати, які відображатимуться в платіжній формі."
 
 #. module: payment
@@ -2611,15 +2624,15 @@ msgid ""
 "provider allows it). In other countries, this payment method is not "
 "available to customers."
 msgstr ""
-"Список країн, в яких можна використовувати цей спосіб оплати (якщо провайдер"
-" це дозволяє). В інших країнах цей спосіб оплати недоступний для клієнтів."
+"Список країн, в яких можна використовувати цей спосіб оплати (якщо провайдер "
+"це дозволяє). В інших країнах цей спосіб оплати недоступний для клієнтів."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
 msgid ""
-"The list of currencies for that are supported by this payment method (if the"
-" provider allows it). When paying with another currency, this payment method"
-" is not available to customers."
+"The list of currencies for that are supported by this payment method (if the "
+"provider allows it). When paying with another currency, this payment method "
+"is not available to customers."
 msgstr ""
 "Перелік валют, які підтримуються даним способом оплати (якщо провайдер це "
 "дозволяє). При оплаті іншою валютою цей спосіб оплати недоступний для "
@@ -2643,8 +2656,8 @@ msgid ""
 "The maximum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
 msgstr ""
-"Максимальна сума платежу, доступна для цього постачальника платежів. Залиште"
-" поле порожнім, щоб зробити його доступним для будь-якої суми платежу."
+"Максимальна сума платежу, доступна для цього постачальника платежів. Залиште "
+"поле порожнім, щоб зробити його доступним для будь-якої суми платежу."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
@@ -2670,8 +2683,8 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_provider__pending_msg
 msgid "The message displayed if the order pending after the payment process"
 msgstr ""
-"Повідомлення відображається, якщо замовлення очікує на розгляд після процесу"
-" оплати"
+"Повідомлення відображається, якщо замовлення очікує на розгляд після процесу "
+"оплати"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pre_msg
@@ -2690,8 +2703,10 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
 msgid ""
-"The primary payment method of the current payment method, if the latter is a brand.\n"
-"For example, \"Card\" is the primary payment method of the card brand \"VISA\"."
+"The primary payment method of the current payment method, if the latter is a "
+"brand.\n"
+"For example, \"Card\" is the primary payment method of the card brand "
+"\"VISA\"."
 msgstr ""
 "Основний спосіб оплати поточного способу оплати, якщо останнім є бренд.\n"
 "Наприклад, «Картка» є основним способом оплати картки марки «VISA»."
@@ -2775,31 +2790,31 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s encountered an error "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s encountered an error (%"
+"(provider_name)s)."
 msgstr ""
-"Транзакція з референсом %(ref)s для %(amount)s викликала помилку "
-"(%(provider_name)s)."
+"Транзакція з референсом %(ref)s для %(amount)s викликала помилку (%"
+"(provider_name)s)."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been authorized "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s has been authorized (%"
+"(provider_name)s)."
 msgstr ""
-"Транзакція з референсом %(ref)s на %(amount)s було авторизовано "
-"(%(provider_name)s)."
+"Транзакція з референсом %(ref)s на %(amount)s було авторизовано (%"
+"(provider_name)s)."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been confirmed "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s has been confirmed (%"
+"(provider_name)s)."
 msgstr ""
-"Транзакцію з референсом %(ref)s на %(amount)s було підтверджено "
-"(%(provider_name)s)."
+"Транзакцію з референсом %(ref)s на %(amount)s було підтверджено (%"
+"(provider_name)s)."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -2841,13 +2856,18 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
 msgid ""
-"This controls whether customers can save their payment methods as payment tokens.\n"
-"A payment token is an anonymous link to the payment method details saved in the\n"
+"This controls whether customers can save their payment methods as payment "
+"tokens.\n"
+"A payment token is an anonymous link to the payment method details saved in "
+"the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
-"Це визначає, чи можуть клієнти зберігати свої методи оплати як платіжні токени.\n"
-"Маркер платежу — це анонімне посилання на деталі способу оплати, збережені в \n"
-"базі даних постачальника, що дозволяє клієнту повторно використовувати його для наступної покупки."
+"Це визначає, чи можуть клієнти зберігати свої методи оплати як платіжні "
+"токени.\n"
+"Маркер платежу — це анонімне посилання на деталі способу оплати, збережені "
+"в \n"
+"базі даних постачальника, що дозволяє клієнту повторно використовувати його "
+"для наступної покупки."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2863,11 +2883,14 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid ""
-"This partner has no email, which may cause issues with some payment providers.\n"
+"This partner has no email, which may cause issues with some payment "
+"providers.\n"
 "                     Setting an email for this partner is advised."
 msgstr ""
-"У цього партнера немає електронної пошти, що може спричинити проблеми з деякими провайдерами платежів.\n"
-"                     Рекомендується встановити електронну адресу для цього партнера."
+"У цього партнера немає електронної пошти, що може спричинити проблеми з "
+"деякими провайдерами платежів.\n"
+"                     Рекомендується встановити електронну адресу для цього "
+"партнера."
 
 #. module: payment
 #. odoo-python
@@ -2876,8 +2899,8 @@ msgid ""
 "This payment method needs a partner in crime; you should enable a payment "
 "provider supporting this method first."
 msgstr ""
-"Для цього способу оплати потрібен партнер у злочині; спочатку слід увімкнути"
-" постачальника платежів, який підтримує цей метод."
+"Для цього способу оплати потрібен партнер у злочині; спочатку слід увімкнути "
+"постачальника платежів, який підтримує цей метод."
 
 #. module: payment
 #. odoo-python
@@ -3151,8 +3174,8 @@ msgid ""
 "You cannot delete the payment provider %s; disable it or uninstall it "
 "instead."
 msgstr ""
-"Ви не можете видалити постачальника платежів %s; натомість вимкніть його або"
-" видаліть."
+"Ви не можете видалити постачальника платежів %s; натомість вимкніть його або "
+"видаліть."
 
 #. module: payment
 #. odoo-python

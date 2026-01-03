@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* phone_validation
-# 
+#
 # Translators:
 # Tomáš Píšek, 2024
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:57+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
+">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: phone_validation
 #. odoo-python
@@ -47,6 +48,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_search
 msgid "Archived"
 msgstr "Archivovaný"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+msgid "Are you sure you want to unblacklist this Phone Number?"
+msgstr ""
 
 #. module: phone_validation
 #. odoo-python
@@ -179,11 +186,11 @@ msgstr "Ak označené, potom majú niektoré správy chybu dodania."
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
 msgid ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
+"If the sanitized phone number is on the blacklist, the contact won't receive "
+"mass mailing sms anymore, from any list"
 msgstr ""
-"Ak je upravené číslo na čiernej listine, kontakt už nebude dostávať hromadné"
-" správy SMS zo žiadneho zoznamu"
+"Ak je upravené číslo na čiernej listine, kontakt už nebude dostávať hromadné "
+"správy SMS zo žiadneho zoznamu"
 
 #. module: phone_validation
 #. odoo-python
@@ -217,8 +224,8 @@ msgid ""
 "mobile and phone field in a model."
 msgstr ""
 "Označte, či je overené telefónne číslo na čiernej listine mobilné číslo. "
-"Pomáha rozlíšiť, ktoré číslo je na čiernej listine, keď je v modeli pole pre"
-" mobil aj telefón."
+"Pomáha rozlíšiť, ktoré číslo je na čiernej listine, keď je v modeli pole pre "
+"mobil aj telefón."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
@@ -393,6 +400,14 @@ msgstr ""
 #: model:ir.model,name:phone_validation.model_res_users
 msgid "User"
 msgstr "Užívateľ"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+msgid ""
+"You do not have the access right to unblacklist phone numbers. Please "
+"contact your administrator."
+msgstr ""
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form

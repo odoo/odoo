@@ -1,46 +1,56 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_recruitment_survey
-# 
+# * hr_recruitment_survey
+#
 # Translators:
 # Wil Odoo, 2024
 # Marta Wacławek, 2025
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-12-31 08:42+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-18/"
+"hr_recruitment_survey/cs/>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant name]</t><br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant "
+"name]</t><br/><br/>\n"
 "        <t>\n"
-"            You've progressed through the recruitment process and we would like you to answer some questions.\n"
+"            You've progressed through the recruitment process and we would "
+"like you to answer some questions.\n"
 "        </t>\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-"
+"color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px; font-size:13px;\">\n"
 "                <t>\n"
 "                    Start the written interview\n"
 "                </t>\n"
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the interview for <t t-out=\"format_date(object.deadline)\">[deadline date]</t>.<br/><br/>\n"
+"            Please answer the interview for <t t-"
+"out=\"format_date(object.deadline)\">[deadline date]</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t>\n"
-"            We wish you good luck! Thank you in advance for your participation.\n"
+"            We wish you good luck! Thank you in advance for your "
+"participation.\n"
 "        </t>\n"
 "    \n"
 "</div>\n"
@@ -92,12 +102,12 @@ msgstr ""
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
 msgid ""
-"Choose an interview form for this job position and you will be able to "
-"print/answer this interview from all applicants who apply for this job"
+"Choose an interview form for this job position and you will be able to print/"
+"answer this interview from all applicants who apply for this job"
 msgstr ""
 "Vyberte si formulář pohovoru pro tuto pracovní pozici a budete si moci "
-"vytisknout / odpovědět na tento pohovor od všech uchazečů, kteří se ucházejí"
-" o tuto práci"
+"vytisknout / odpovědět na tento pohovor od všech uchazečů, kteří se ucházejí "
+"o tuto práci"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
@@ -216,17 +226,19 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
 msgid ""
-"Please fill information about you: who you are, what are your education, experience, and activities.\n"
+"Please fill information about you: who you are, what are your education, "
+"experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
-"Vyplňte prosím své údaje: kdo jste, jaké máte vzdělání, zkušenosti a aktivity.\n"
+"Vyplňte prosím své údaje: kdo jste, jaké máte vzdělání, zkušenosti a "
+"aktivity.\n"
 "    Pomůže nám to při správě vaší aplikace."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Please provide an applicant name."
-msgstr ""
+msgstr "Uveďte jméno uchazeče."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
