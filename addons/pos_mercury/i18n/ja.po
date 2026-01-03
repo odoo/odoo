@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_mercury
-# 
+#
 # Translators:
 # Wil Odoo, 2023
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_mercury
@@ -28,15 +28,22 @@ msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>カードリーダを購入"
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "<i>Vantiv Configurations</i> define what Vantiv account will be used when\n"
-"                                processing credit card transactions in the Point Of Sale. Setting up a Vantiv\n"
-"                                configuration will enable you to allow payments with various credit cards\n"
-"                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
-"                                configuration you should associate it with a Point Of Sale payment method."
+"                                processing credit card transactions in the "
+"Point Of Sale. Setting up a Vantiv\n"
+"                                configuration will enable you to allow "
+"payments with various credit cards\n"
+"                                (eg. Visa, MasterCard, Discovery, American "
+"Express, ...). After setting up this\n"
+"                                configuration you should associate it with a "
+"Point Of Sale payment method."
 msgstr ""
-"<i>Vantiv設定</i>はPOSでクレジットカード取引を処理する際に使用される                                Vantiv アカウントを定義します。Vantiv\n"
+"<i>Vantiv設定</i>はPOSでクレジットカード取引を処理する際に使用され"
+"る                                Vantiv アカウントを定義します。Vantiv\n"
 "                                設定により、様々なクレジットカード\n"
-"                                (例: Visa, MasterCard, Discovery, American Expressなど)による支払を許可できます。設定後、\n"
-"　　　　　　　　この設定をPOSの支払い方法と関連付ける必要があります。                                "
+"                                (例: Visa, MasterCard, Discovery, American "
+"Expressなど)による支払を許可できます。設定後、\n"
+"　　　　　　　　この設定をPOSの支払い方法と関連付ける必要がありま"
+"す。                                "
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -129,8 +136,9 @@ msgid ""
 "payment method, click 'Validate' and refund the original charge manually "
 "through the Vantiv backend."
 msgstr ""
-"クレジットカードの払い戻しはサポートされていません。代わりにクレジットカードの支払い方法を選択し、'検証' をクリックして、Vantiv "
-"バックエンドから手動で元の請求額を返金して下さい。"
+"クレジットカードの払い戻しはサポートされていません。代わりにクレジットカード"
+"の支払い方法を選択し、'検証' をクリックして、Vantiv バックエンドから手動で元"
+"の請求額を返金して下さい。"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__display_name
@@ -141,11 +149,14 @@ msgstr "表示名"
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"For quickly handling orders: just swiping a credit card when on the payment screen\n"
-"                                (without having pressed anything else) will charge the full amount of the order to\n"
+"For quickly handling orders: just swiping a credit card when on the payment "
+"screen\n"
+"                                (without having pressed anything else) will "
+"charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
-"オーダを素早く処理するため: 決済画面(何も押さずに)で、クレジットカードをスワイプ\n"
+"オーダを素早く処理するため: 決済画面(何も押さずに)で、クレジットカードをスワ"
+"イプ\n"
 "                              するだけでオーダの全金額をカードに\n"
 "                                課金します。"
 
@@ -177,7 +188,8 @@ msgstr "決済プロバイダサーバでマーチャントを認証するため
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472\n"
+"If you don't already have a Vantiv account, contact Vantiv at +1 (800) "
+"846-4472\n"
 "                                to create one."
 msgstr ""
 "まだVantivアカウントをお持ちでない場合は、Vantiv at +1 (800) 846-4472\n"
@@ -250,7 +262,6 @@ msgstr "サーバからの回答なし(ネットワークに接続済?)"
 
 #. module: pos_mercury
 #. odoo-javascript
-#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 #: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Odoo error while processing transaction."
@@ -399,7 +410,9 @@ msgstr "支払に使用したカードの下4桁の番号"
 msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
-msgstr "これは、スワイプの操作ミスや、キーボードレイアウトがUS QWERTY(USインターナショナルではなく)に設定されていないことが原因です。"
+msgstr ""
+"これは、スワイプの操作ミスや、キーボードレイアウトがUS QWERTY(USインターナ"
+"ショナルではなく)に設定されていないことが原因です。"
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -417,14 +430,19 @@ msgstr "タイプ"
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "Using the Vantiv integration in the Point Of Sale is easy: just press the\n"
-"                                associated payment method. After that the amount can be adjusted (eg. for cashback)\n"
-"                                just like on any other payment line. Whenever the payment line is set up, a card\n"
+"                                associated payment method. After that the "
+"amount can be adjusted (eg. for cashback)\n"
+"                                just like on any other payment line. "
+"Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
 "POSでのVantiv統合の使用は簡単です: 関連する決済方法\n"
-"                                をただ押して下さい。他の決済明細と同様、その後で金額を\n"
-"                                調整(例: キャッシュバックなど)できます。決済明細が設定されたら、カードを\n"
-"                                カードリーダデバイスにスワイプして通すことができます。"
+"                                をただ押して下さい。他の決済明細と同様、その"
+"後で金額を\n"
+"                                調整(例: キャッシュバックなど)できます。決済"
+"明細が設定されたら、カードを\n"
+"                                カードリーダデバイスにスワイプして通すことが"
+"できます。"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
@@ -474,10 +492,13 @@ msgstr "スワイプ待ちです"
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"We currently support the MagTek Dynamag card reader device. It can be connected\n"
-"                                directly to the Point Of Sale device or it can be connected to the IoTBox."
+"We currently support the MagTek Dynamag card reader device. It can be "
+"connected\n"
+"                                directly to the Point Of Sale device or it "
+"can be connected to the IoTBox."
 msgstr ""
-"現在、MagTek Dynamag カードリーダデバイスをサポートしています。直接POSデバイス\n"
+"現在、MagTek Dynamag カードリーダデバイスをサポートしています。直接POSデバイ"
+"ス\n"
 "                                またはIoTBoxに接続できます。"
 
 #. module: pos_mercury

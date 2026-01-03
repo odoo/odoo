@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* repair
-# 
+#
 # Translators:
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2023
 # Андрей Гусев <gaussgss@gmail.com>, 2023
@@ -14,20 +14,22 @@
 # Nadia Martynova, 2024
 # Wil Odoo, 2024
 # Ilya Rozhkov, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
@@ -47,14 +49,17 @@ msgstr "<i>(Удалить</i>)"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__state
 msgid ""
-"* The 'New' status is used when a user is encoding a new and unconfirmed repair order.\n"
+"* The 'New' status is used when a user is encoding a new and unconfirmed "
+"repair order.\n"
 "* The 'Confirmed' status is used when a user confirms the repair order.\n"
 "* The 'Under Repair' status is used when the repair is ongoing.\n"
 "* The 'Repaired' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
-"* Статус \"Новый\" используется, когда пользователь кодирует новый и неподтвержденный заказ на ремонт.\n"
-"* Статус \"Подтвержден\" используется, когда пользователь подтверждает заказ на ремонт.\n"
+"* Статус \"Новый\" используется, когда пользователь кодирует новый и "
+"неподтвержденный заказ на ремонт.\n"
+"* Статус \"Подтвержден\" используется, когда пользователь подтверждает заказ "
+"на ремонт.\n"
 "* Статус \"В ремонте\" используется, когда ремонт продолжается.\n"
 "* Статус \"Отремонтирован\" устанавливается, когда ремонт завершен.\n"
 "* Статус 'Отменен' используется, когда пользователь отменяет заказ на ремонт."
@@ -285,9 +290,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Пересчет между единицами измерения может произойти только в том случае, если"
-" они принадлежат к одной и той же категории. Пересчет будет осуществляться "
-"на основе коэффициентов."
+"Пересчет между единицами измерения может произойти только в том случае, если "
+"они принадлежат к одной и той же категории. Пересчет будет осуществляться на "
+"основе коэффициентов."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -314,8 +319,8 @@ msgstr "Создание заказов на ремонт на основе во
 msgid ""
 "Create a linked Repair Order on Sale Order confirmation of this product."
 msgstr ""
-"Создайте связанный заказ на ремонт при подтверждении заказа на продажу этого"
-" продукта."
+"Создайте связанный заказ на ремонт при подтверждении заказа на продажу этого "
+"продукта."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -433,10 +438,12 @@ msgstr "Шрифт, отличный значок, например. к.-а.-з�
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_warn_uncomplete_move
 msgid ""
-"For some of the parts, there is a difference between the initial demand and the actual quantity that was used.<br/>\n"
+"For some of the parts, there is a difference between the initial demand and "
+"the actual quantity that was used.<br/>\n"
 "                Are you sure you want to confirm ?"
 msgstr ""
-"Для некоторых деталей существует разница между первоначальным спросом и фактическим количеством, которое было использовано.<br/>\n"
+"Для некоторых деталей существует разница между первоначальным спросом и "
+"фактическим количеством, которое было использовано.<br/>\n"
 "                Вы уверены, что хотите подтвердить?"
 
 #. module: repair
@@ -515,11 +522,14 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
-"В заказе на ремонт вы можете подробно описать компоненты, которые вы удалили,\n"
-"                добавить или заменить, а также записать время, затраченное на различные\n"
+"В заказе на ремонт вы можете подробно описать компоненты, которые вы "
+"удалили,\n"
+"                добавить или заменить, а также записать время, затраченное "
+"на различные\n"
 "                операции."
 
 #. module: repair
@@ -605,8 +615,8 @@ msgid ""
 "Latest parts availability status for this RO. If green, then the RO's "
 "readiness status is ready."
 msgstr ""
-"Последний статус доступности деталей для данного РО. Если зеленый, то статус"
-" готовности РО - готов."
+"Последний статус доступности деталей для данного РО. Если зеленый, то статус "
+"готовности РО - готов."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
@@ -695,8 +705,7 @@ msgstr "Недоступно"
 #, python-format
 msgid ""
 "Note that the warehouses of the return and repair locations don't match!"
-msgstr ""
-"Обратите внимание, что склады пунктов возврата и ремонта не совпадают!"
+msgstr "Обратите внимание, что склады пунктов возврата и ремонта не совпадают!"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
@@ -1201,8 +1210,7 @@ msgstr "Теги"
 #: model:ir.model.fields,help:repair.field_repair_order__reserve_visible
 msgid "Technical field to check when we can reserve quantities"
 msgstr ""
-"Техническое поле, чтобы проверить, когда мы сможем зарезервировать "
-"количество"
+"Техническое поле, чтобы проверить, когда мы сможем зарезервировать количество"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__unreserve_visible
@@ -1372,7 +1380,7 @@ msgstr "Предупредить о незавершенном движении(
 
 #. module: repair
 #. odoo-python
-#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Warning"
 msgstr "Предупреждение"
@@ -1406,10 +1414,12 @@ msgstr "Вы не можете отменить заказ на ремонт, к
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
-"You cannot create a quotation for a repair order that is already linked to an existing sale order.\n"
+"You cannot create a quotation for a repair order that is already linked to "
+"an existing sale order.\n"
 "Concerned repair order(s) :\n"
 msgstr ""
-"Вы не можете создать предложение для заказа на ремонт, который уже связан с существующим заказом на продажу.\n"
+"Вы не можете создать предложение для заказа на ремонт, который уже связан с "
+"существующим заказом на продажу.\n"
 "Соответствующий заказ на ремонт :\n"
 
 #. module: repair
@@ -1417,10 +1427,12 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
-"You need to define a customer for a repair order in order to create an associated quotation.\n"
+"You need to define a customer for a repair order in order to create an "
+"associated quotation.\n"
 "Concerned repair order(s) :\n"
 msgstr ""
-"Чтобы создать соответствующее предложение, необходимо определить заказчика для ремонтного заказа.\n"
+"Чтобы создать соответствующее предложение, необходимо определить заказчика "
+"для ремонтного заказа.\n"
 "Соответствующий заказ на ремонт :\n"
 
 #. module: repair

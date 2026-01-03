@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_track
-# 
+#
 # Translators:
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2024
 # Claudia Baisan, 2024
@@ -16,20 +16,21 @@
 # Maria Muntean, 2024
 # Lyall Kindmurr, 2024
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-22 18:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -116,12 +117,19 @@ msgstr "<b>Introducere în discuții</b>:"
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
-"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name "
+"or ''\">What This Event Is All About</t> has been accepted and confirmed for "
+"the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online "
+"Reveal</t>.\n"
 "    <br>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
@@ -134,12 +142,19 @@ msgid ""
 "</div>"
 msgstr ""
 "<div>\n"
-"    Dragă <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
-"    Suntem încântați să vă informăm că propunerea dvs. <t t-out=\"object.name or ''\">Despre ce este acest eveniment</t> a fost acceptată și confirmată pentru evenimentul <t t-out=\"object.event_id.name or ''\">Dezvăluirea online a colecției OpenWood</t>.\n"
+"    Dragă <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br>\n"
+"    Suntem încântați să vă informăm că propunerea dvs. <t t-"
+"out=\"object.name or ''\">Despre ce este acest eveniment</t> a fost "
+"acceptată și confirmată pentru evenimentul <t t-out=\"object.event_id.name "
+"or ''\">Dezvăluirea online a colecției OpenWood</t>.\n"
 "    <br>\n"
 "    Veți găsi mai multe detalii aici:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            Vezi discuția\n"
 "        </a>\n"
 "    </div>\n"
@@ -194,13 +209,17 @@ msgstr "<span class=\"fa fa-plus me-1\"/> Programați piste"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                        <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                        <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                    </span>"
 
 #. module: website_event_track
@@ -416,14 +435,20 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
 msgid ""
-"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
-"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
-"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"As you may have heard before, making your own furniture is actually not as "
+"difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete "
+"them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee "
+"table you can easily put one together using\n"
 "    wood crates."
 msgstr ""
-"După cum probabil ați mai auzit, confecționarea propriei mobilă nu este de fapt atât de dificilă sau de complicată pe cât credeți.\n"
-"De fapt, unele proiecte sunt atât de ușoare încât oricine le poate realiza cu succes. De exemplu, realizarea unui taburet drăguț din\n"
-"o anvelopă veche este floare la ureche, iar dacă aveți nevoie de o măsuță de cafea, puteți asambla cu ușurință una folosind\n"
+"După cum probabil ați mai auzit, confecționarea propriei mobilă nu este de "
+"fapt atât de dificilă sau de complicată pe cât credeți.\n"
+"De fapt, unele proiecte sunt atât de ușoare încât oricine le poate realiza "
+"cu succes. De exemplu, realizarea unui taburet drăguț din\n"
+"o anvelopă veche este floare la ureche, iar dacă aveți nevoie de o măsuță de "
+"cafea, puteți asambla cu ușurință una folosind\n"
 "lăzi de lemn."
 
 #. module: website_event_track
@@ -912,7 +937,6 @@ msgstr "Evenimente PWA"
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 #, python-format
 msgid "Favorite On"
@@ -1140,14 +1164,14 @@ msgid ""
 "If set an email will be sent to the customer when the track reaches this "
 "step."
 msgstr ""
-"Dacă este setat, se va trimite un e-mail clientului atunci când pista ajunge"
-" la acest pas."
+"Dacă este setat, se va trimite un e-mail clientului atunci când pista ajunge "
+"la acest pas."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
 msgid ""
-"If set, the talk will be set as favorite for each attendee registered to the"
-" event."
+"If set, the talk will be set as favorite for each attendee registered to the "
+"event."
 msgstr ""
 "Dacă este setată, discuția va fi setată ca favorită pentru fiecare "
 "participant înregistrat la eveniment."
@@ -1833,7 +1857,6 @@ msgstr "Secvență"
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 #, python-format
 msgid "Set Favorite"
@@ -1847,8 +1870,7 @@ msgstr "Afișați butonul"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Afișați toate înregistrările care au data următoarei acțiuni în trecut"
+msgstr "Afișați toate înregistrările care au data următoarei acțiuni în trecut"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
@@ -2010,8 +2032,7 @@ msgstr "Tipuri discuții"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Task in progress. Click to block or set as done."
-msgstr ""
-"Sarcină în curs. Click aici pentru a bloca sau a seta ca și finalizat."
+msgstr "Sarcină în curs. Click aici pentru a bloca sau a seta ca și finalizat."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
@@ -2055,10 +2076,13 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"There are several variants of wood is available in the world but we are talking about most expensive\n"
-"    ones in the world and keeping to the point we have arranged ten most expensive wood."
+"There are several variants of wood is available in the world but we are "
+"talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most "
+"expensive wood."
 msgstr ""
-"Există mai multe variante de lemn disponibile în lume, dar vorbim despre cele mai scumpe\n"
+"Există mai multe variante de lemn disponibile în lume, dar vorbim despre "
+"cele mai scumpe\n"
 "    din lume și rămânând la subiect, am aranjat cele mai scumpe zece lemne."
 
 #. module: website_event_track
@@ -2080,8 +2104,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid ""
-"They will be created automatically once attendees start browsing your "
-"events."
+"They will be created automatically once attendees start browsing your events."
 msgstr ""
 "Acestea vor fi create automat odată ce participanții încep să navigheze "
 "printre evenimentele dvs."
@@ -2165,11 +2188,15 @@ msgstr "Top 10 cele mai scumpe lemne din lume"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
-"    that there are hundreds of wood types exist around the globe following different properties and use."
+"Top most expensive wood in the world is quite interesting topic and several "
+"people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following "
+"different properties and use."
 msgstr ""
-"Topul celor mai scumpe lemne din lume este un subiect destul de interesant și mulți oameni pot fi surprinși\n"
-"    că pe glob există sute de tipuri de lemn cu proprietăți și utilizări diferite."
+"Topul celor mai scumpe lemne din lume este un subiect destul de interesant "
+"și mulți oameni pot fi surprinși\n"
+"    că pe glob există sute de tipuri de lemn cu proprietăți și utilizări "
+"diferite."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
@@ -2355,22 +2382,32 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Use these simple steps to easily haul LONG lumber in a short box pickup truck.  A dose of carpenter's\n"
-"    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
-"    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
+"Use these simple steps to easily haul LONG lumber in a short box pickup "
+"truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws "
+"are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or "
+"jobsite."
 msgstr ""
-"Utilizați acești pași simpli pentru a transporta cu ușurință cherestea lungă într-o camionetă cu cutie scurtă. O doză de ingeniozitate\n"
-"    de tâmplar împreună cu câteva scânduri, o curea rezistentă și câteva șuruburi sunt tot ce folosesc pentru a transporta cu ușurință\n"
-"    plăci lungi de la depozitul de cherestea la atelierul sau șantierul Next Level Carpentry."
+"Utilizați acești pași simpli pentru a transporta cu ușurință cherestea lungă "
+"într-o camionetă cu cutie scurtă. O doză de ingeniozitate\n"
+"    de tâmplar împreună cu câteva scânduri, o curea rezistentă și câteva "
+"șuruburi sunt tot ce folosesc pentru a transporta cu ușurință\n"
+"    plăci lungi de la depozitul de cherestea la atelierul sau șantierul Next "
+"Level Carpentry."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
-"    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) "
+"allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated "
+"knots."
 msgstr ""
-"Utilizarea unei metode unice de înfășurare pentru o curea de legare (NU cordoane Bungee!!!) permite ca cheresteaua să fie\n"
-"    strânsă în siguranță FĂRĂ a fi nevoie să legați și să dezlegați noduri complicate sau complicate."
+"Utilizarea unei metode unice de înfășurare pentru o curea de legare (NU "
+"cordoane Bungee!!!) permite ca cheresteaua să fie\n"
+"    strânsă în siguranță FĂRĂ a fi nevoie să legați și să dezlegați noduri "
+"complicate sau complicate."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban

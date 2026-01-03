@@ -1,38 +1,45 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_authorize
-# 
+#
 # Translators:
 # Wil Odoo, 2023
 # Rasareeyar Lappiam, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
-"                        <option value=\"checking\">Personal Checking</option>\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
+"select\">\n"
+"                        <option value=\"checking\">Personal Checking</"
+"option>\n"
 "                        <option value=\"savings\">Personal Savings</option>\n"
-"                        <option value=\"businessChecking\">Business Checking</option>\n"
+"                        <option value=\"businessChecking\">Business "
+"Checking</option>\n"
 "                    </select>"
 msgstr ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
-"                        <option value=\"checking\">บัญชีเงินฝากกระแสรายวันส่วนบุคคล</option>\n"
-"                        <option value=\"savings\">บัญชีออมทรัพย์ส่วนบุคคล</option>\n"
-"                        <option value=\"businessChecking\">บัญชีเงินฝากกระแสรายวันสำหรับธุรกิจ</option>\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
+"select\">\n"
+"                        <option "
+"value=\"checking\">บัญชีเงินฝากกระแสรายวันส่วนบุคคล</option>\n"
+"                        <option value=\"savings\">บัญชีออมทรัพย์ส่วนบุคคล</"
+"option>\n"
+"                        <option "
+"value=\"businessChecking\">บัญชีเงินฝากกระแสรายวันสำหรับธุรกิจ</option>\n"
 "                    </select>"
 
 #. module: payment_authorize
@@ -118,8 +125,7 @@ msgstr ""
 msgid ""
 "Could not retrieve the transaction details. (error code: %s; error_details: "
 "%s)"
-msgstr ""
-"ไม่สามารถเรียกรายละเอียดธุรกรรมได้ (รหัสข้อผิดพลาด:%s; error_details: %s)"
+msgstr "ไม่สามารถเรียกรายละเอียดธุรกรรมได้ (รหัสข้อผิดพลาด:%s; error_details: %s)"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -189,7 +195,6 @@ msgstr "ธุรกรรมสำหรับการชำระเงิน
 #. module: payment_authorize
 #. odoo-javascript
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
-#: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "Payment processing failed"
 msgstr "การประมวลผลการชำระเงินล้มเหลว"
@@ -198,7 +203,8 @@ msgstr "การประมวลผลการชำระเงินล้
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
-msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
+msgid ""
+"Received data with status code \"%(status)s\" and error code \"%(error)s\""
 msgstr "รับข้อมูลที่มีรหัสสถานะ \"%(status)s\" และรหัสข้อผิดพลาด \"%(error)s\""
 
 #. module: payment_authorize
@@ -224,8 +230,7 @@ msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
 msgstr ""
-"รหัสลูกค้าสาธารณะ เพื่อสร้างโดยตรงจาก Odoo หรือจากการทำงานเบื้องหลังของ "
-"Authorize.Net"
+"รหัสลูกค้าสาธารณะ เพื่อสร้างโดยตรงจาก Odoo หรือจากการทำงานเบื้องหลังของ Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
@@ -252,8 +257,7 @@ msgstr "ธุรกรรมไม่ได้เชื่อมโยงกั
 msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
-msgstr ""
-"ข้อมูลอ้างอิงเฉพาะสำหรับการรวม พาร์ทเนอร์/โทเค็น ในแบ็กเอนด์ Authorize.net"
+msgstr "ข้อมูลอ้างอิงเฉพาะสำหรับการรวม พาร์ทเนอร์/โทเค็น ในแบ็กเอนด์ Authorize.net"
 
 #. module: payment_authorize
 #. odoo-python

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-22 18:36+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-11-11 13:00+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-17/"
@@ -136,7 +136,6 @@ msgstr "(trống)"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ". This way, they will be secured."
 msgstr ". Bằng cách này, chúng sẽ được bảo mật."
@@ -189,7 +188,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br><br>\n"
-"        You have been enrolled to a new course: <t t-out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been enrolled to a new course: <t t-"
+"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -197,7 +197,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Xin chào<br><br>\n"
-"        Bạn đã tham gia một khóa học mới: <t t-out=\"object.channel_id.name or ''\">Nhập môn Làm vườn</t>.\n"
+"        Bạn đã tham gia một khóa học mới: <t t-out=\"object.channel_id.name "
+"or ''\">Nhập môn Làm vườn</t>.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -208,7 +209,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br><br>\n"
-"        You have been invited to check out this course: <t t-out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been invited to check out this course: <t t-"
+"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -216,7 +218,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Xin chào<br><br>\n"
-"        Bạn đã được mời tham khảo khóa học mới: <t t-out=\"object.channel_id.name or ''\">Nhập môn Làm vườn</t>.\n"
+"        Bạn đã được mời tham khảo khóa học mới: <t t-"
+"out=\"object.channel_id.name or ''\">Nhập môn Làm vườn</t>.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -225,42 +228,56 @@ msgstr ""
 #: model:mail.template,body_html:website_slides.mail_template_channel_completed
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br>\n"
+"                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;"
+"\">\n"
+"                        <p style=\"margin: 0px;\">Hello <t t-"
+"out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br>\n"
 "                        <p><b>Congratulations!</b></p>\n"
-"                        <p>You've completed the course <b t-out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
+"                        <p>You've completed the course <b t-"
+"out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
 "                        <p>Check out the other available courses.</p><br>\n"
 "\n"
-"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a href=\"/slides/all\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a href=\"/slides/all\" style=\"background-"
+"color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
 "                                Explore courses\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
 "                        <t t-if=\"object.channel_id.user_id.signature\">\n"
 "                            <br>\n"
-"                            <t t-out=\"object.channel_id.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                            <t t-out=\"object.channel_id.user_id.signature "
+"or ''\">--<br>Mitchell Admin</t>\n"
 "                        </t>\n"
 "                    </div>\n"
 "                </div>\n"
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        <p style=\"margin: 0px;\">Xin chào <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br>\n"
+"                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;"
+"\">\n"
+"                        <p style=\"margin: 0px;\">Xin chào <t t-"
+"out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br>\n"
 "                        <p><b>Chúc mừng bạn!</b></p>\n"
-"                        <p>Bạn đã hoàn thành khóa học <b t-out=\"object.channel_id.name or ''\">Nhập môn Làm vườn</b></p>\n"
+"                        <p>Bạn đã hoàn thành khóa học <b t-"
+"out=\"object.channel_id.name or ''\">Nhập môn Làm vườn</b></p>\n"
 "                        <p>Hãy tham khảo thêm các khóa học khác.</p><br>\n"
 "\n"
-"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a href=\"/slides/all\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a href=\"/slides/all\" style=\"background-"
+"color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
 "                                Khám phá khoá học\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        Hi vọng bạn thích nội dung chọn lọc này!\n"
 "                        <t t-if=\"object.channel_id.user_id.signature\">\n"
 "                            <br>\n"
-"                            <t t-out=\"object.channel_id.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                            <t t-out=\"object.channel_id.user_id.signature "
+"or ''\">--<br>Mitchell Admin</t>\n"
 "                        </t>\n"
 "                    </div>\n"
 "                </div>\n"
@@ -270,42 +287,64 @@ msgstr ""
 #: model:mail.template,body_html:website_slides.mail_template_channel_shared
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
+"\">\n"
 "                        Hello<br><br>\n"
-"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> shared the <strong t-out=\"object.name or ''\">document</strong> with you!\n"
-"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> "
+"shared the <strong t-out=\"object.name or ''\">document</strong> with you!\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
 "                            <a t-att-href=\"object.website_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" style=\"height:auto; width:150px; margin: 16px;\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-"
+"src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/"
+"image_256\" style=\"height:auto; width:150px; margin: 16px;\">\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px;                                 text-decoration: none; color: #fff; border-radius: 5px;\">\n"
-"                                View <strong t-out=\"object.name or ''\">Document</strong></a>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"object.website_url\" "
+"style=\"background-color: #875a7b; padding: 8px 16px 8px "
+"16px;                                 text-decoration: none; color: #fff; "
+"border-radius: 5px;\">\n"
+"                                View <strong t-out=\"object.name or "
+"''\">Document</strong></a>\n"
 "                        </div>\n"
 "                        <t t-if=\"user.signature\">\n"
 "                            <br>\n"
-"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "                        </t>\n"
 "                    </p>\n"
 "                </div>\n"
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
+"\">\n"
 "                        Xin chào<br><br>\n"
-"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> đã chia sẻ <strong t-out=\"object.name or ''\">tài liệu</strong> với bạn!\n"
-"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> đã "
+"chia sẻ <strong t-out=\"object.name or ''\">tài liệu</strong> với bạn!\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
 "                            <a t-att-href=\"object.website_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" style=\"height:auto; width:150px; margin: 16px;\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-"
+"src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/"
+"image_256\" style=\"height:auto; width:150px; margin: 16px;\">\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px;                                 text-decoration: none; color: #fff; border-radius: 5px;\">\n"
-"                                Xem <strong t-out=\"object.name or ''\">tài liệu</strong></a>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"object.website_url\" "
+"style=\"background-color: #875a7b; padding: 8px 16px 8px "
+"16px;                                 text-decoration: none; color: #fff; "
+"border-radius: 5px;\">\n"
+"                                Xem <strong t-out=\"object.name or ''\">tài "
+"liệu</strong></a>\n"
 "                        </div>\n"
 "                        <t t-if=\"user.signature\">\n"
 "                            <br>\n"
-"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "                        </t>\n"
 "                    </p>\n"
 "                </div>\n"
@@ -315,40 +354,66 @@ msgstr ""
 #: model:mail.template,body_html:website_slides.slide_template_shared
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
+"\">\n"
 "                        Hello<br><br>\n"
-"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> shared the <t t-out=\"object.slide_category or ''\">document</t> <strong t-out=\"object.name or ''\">Trees</strong> with you!\n"
-"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> "
+"shared the <t t-out=\"object.slide_category or ''\">document</t> <strong t-"
+"out=\"object.name or ''\">Trees</strong> with you!\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + '?"
+"fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-"
+"src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/"
+"image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View <strong t-out=\"object.name or ''\">Trees</strong></a>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + '?"
+"fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" "
+"style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px;\">View <strong t-"
+"out=\"object.name or ''\">Trees</strong></a>\n"
 "                        </div>\n"
 "                        <t t-if=\"user.signature\">\n"
 "                            <br>\n"
-"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "                        </t>\n"
 "                    </p>\n"
 "                </div>\n"
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
+"\">\n"
 "                        Xin chào<br><br>\n"
-"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> đã chia sẻ <t t-out=\"object.slide_category or ''\">tài liệu</t> <strong t-out=\"object.name or ''\">Cây cối</strong> với bạn!\n"
-"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> đã "
+"chia sẻ <t t-out=\"object.slide_category or ''\">tài liệu</t> <strong t-"
+"out=\"object.name or ''\">Cây cối</strong> với bạn!\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + '?"
+"fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-"
+"src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/"
+"image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Xem <strong t-out=\"object.name or ''\">Cây cối</strong></a>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + '?"
+"fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" "
+"style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px;\">Xem <strong t-"
+"out=\"object.name or ''\">Cây cối</strong></a>\n"
 "                        </div>\n"
 "                        <t t-if=\"user.signature\">\n"
 "                            <br>\n"
-"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "                        </t>\n"
 "                    </p>\n"
 "                </div>\n"
@@ -358,48 +423,70 @@ msgstr ""
 #: model:mail.template,body_html:website_slides.slide_template_published
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
+"\">\n"
 "                        Hello<br><br>\n"
-"                        There is something new in the course <strong t-out=\"object.channel_id.name or ''\">Trees, Wood and Gardens</strong> you are following:<br><br>\n"
-"                        <center><strong t-out=\"object.name or ''\">Trees</strong></center>\n"
+"                        There is something new in the course <strong t-"
+"out=\"object.channel_id.name or ''\">Trees, Wood and Gardens</strong> you "
+"are following:<br><br>\n"
+"                        <center><strong t-out=\"object.name or ''\">Trees</"
+"strong></center>\n"
 "                        <t t-if=\"object.image_1024\">\n"
-"                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <div style=\"padding: 16px 8px 16px 8px; text-"
+"align: center;\">\n"
 "                                <a t-att-href=\"object.website_share_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-"
+"src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/"
+"image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        </t>\n"
-"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View content</a>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"object.website_share_url\" "
+"style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px;\">View content</a>\n"
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
 "                        <t t-if=\"user.signature\">\n"
 "                            <br>\n"
-"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "                        </t>\n"
 "                    </p>\n"
 "                </div>\n"
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
+"\">\n"
 "                        Xin chào<br><br>\n"
-"                        Có nội dung mới trong khóa học <strong t-out=\"object.channel_id.name or ''\">Cây, Gỗ và Vườn tược</strong> mà bạn đang theo dõi:<br><br>\n"
-"                        <center><strong t-out=\"object.name or ''\">Cây cối</strong></center>\n"
+"                        Có nội dung mới trong khóa học <strong t-"
+"out=\"object.channel_id.name or ''\">Cây, Gỗ và Vườn tược</strong> mà bạn "
+"đang theo dõi:<br><br>\n"
+"                        <center><strong t-out=\"object.name or ''\">Cây cối</"
+"strong></center>\n"
 "                        <t t-if=\"object.image_1024\">\n"
-"                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <div style=\"padding: 16px 8px 16px 8px; text-"
+"align: center;\">\n"
 "                                <a t-att-href=\"object.website_share_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-"
+"src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/"
+"image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        </t>\n"
-"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Xem nội dung</a>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"object.website_share_url\" "
+"style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px;\">Xem nội dung</a>\n"
 "                        </div>\n"
 "                        Hi vọng bạn thích nội dung chọn lọc này!\n"
 "                        <t t-if=\"user.signature\">\n"
 "                            <br>\n"
-"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "                        </t>\n"
 "                    </p>\n"
 "                </div>\n"
@@ -504,8 +591,12 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid "<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" title=\"Views\"/>"
-msgstr "<i class=\"fa fa-eye me-2\" aria-label=\"Lượt xem\" role=\"img\" title=\"Lượt xem\"/>"
+msgid ""
+"<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" "
+"title=\"Views\"/>"
+msgstr ""
+"<i class=\"fa fa-eye me-2\" aria-label=\"Lượt xem\" role=\"img\" "
+"title=\"Lượt xem\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -519,8 +610,8 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid ""
-"<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\""
-" title=\"Infographic\"/>"
+"<i class=\"fa fa-file-image-o me-2\" aria-label=\"Infographic\" role=\"img\" "
+"title=\"Infographic\"/>"
 msgstr ""
 "<i class=\"fa fa-file-image-o me-2\" aria-label=\"Đồ họa thông tin\" "
 "role=\"img\" title=\"Đồ họa thông tin\"/>"
@@ -545,8 +636,12 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
-msgid "<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/>"
-msgstr "<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/>"
+msgid ""
+"<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/"
+">"
+msgstr ""
+"<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/"
+">"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
@@ -612,8 +707,8 @@ msgid ""
 "<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-block\">Add "
 "Content</span>"
 msgstr ""
-"<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-block\">Thêm"
-" nội dung</span>"
+"<i class=\"fa fa-plus me-1\"/> <span class=\"d-none d-md-inline-block\">Thêm "
+"nội dung</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -669,10 +764,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
 "<i class=\"fa fa-share-alt\"/>\n"
-"                        <span class=\"d-none d-md-inline-block ms-2\">Share</span>"
+"                        <span class=\"d-none d-md-inline-block ms-2\">Share</"
+"span>"
 msgstr ""
 "<i class=\"fa fa-share-alt\"/>\n"
-"                        <span class=\"d-none d-md-inline-block ms-2\">Chia sẻ</span>"
+"                        <span class=\"d-none d-md-inline-block ms-2\">Chia "
+"sẻ</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -772,8 +869,8 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 msgid ""
-"<span class=\"badge text-bg-success fw-normal px-2 py-1 "
-"m-1\"><span>Preview</span></span>"
+"<span class=\"badge text-bg-success fw-normal px-2 py-1 m-1\"><span>Preview</"
+"span></span>"
 msgstr ""
 "<span class=\"badge text-bg-success fw-normal px-2 py-1 m-1\"><span>Xem "
 "trước</span></span>"
@@ -783,8 +880,8 @@ msgstr ""
 msgid ""
 "<span class=\"badge text-bg-success fw-normal px-2 py-1 m-1\">Preview</span>"
 msgstr ""
-"<span class=\"badge text-bg-success fw-normal px-2 py-1 m-1\">Xem "
-"trước</span>"
+"<span class=\"badge text-bg-success fw-normal px-2 py-1 m-1\">Xem trước</"
+"span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -823,10 +920,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Slides</span>\n"
-"                    <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+"                    <span class=\"fa fa-lg fa-globe\" title=\"Values set "
+"here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Slide</span>\n"
-"                    <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+"                    <span class=\"fa fa-lg fa-globe\" title=\"Values set "
+"here are website-specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -890,8 +989,10 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<span class=\"text-muted fw-bold col-4 col-md-3\">External sources</span>"
-msgstr "<span class=\"text-muted fw-bold col-4 col-md-3\">Nguồn bên ngoài</span>"
+msgid ""
+"<span class=\"text-muted fw-bold col-4 col-md-3\">External sources</span>"
+msgstr ""
+"<span class=\"text-muted fw-bold col-4 col-md-3\">Nguồn bên ngoài</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -902,8 +1003,8 @@ msgstr "<span class=\"text-muted fw-bold me-3\">Đánh giá</span>"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span class=\"text-muted\">Common tasks for a computer scientist</span>"
 msgstr ""
-"<span class=\"text-muted\">Các nhiệm vụ chung cho một nhà khoa học máy "
-"tính</span>"
+"<span class=\"text-muted\">Các nhiệm vụ chung cho một nhà khoa học máy tính</"
+"span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -928,54 +1029,82 @@ msgstr "<span class=\"text-muted\">Tổng</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<span id=\"first\" class=\"me-1 me-sm-2\" title=\"First slide\" aria-label=\"First slide\" role=\"button\"><i class=\"fa fa-step-backward\"/></span>\n"
-"                                        <span id=\"previous\" class=\"mx-1 mx-sm-2\" title=\"Previous slide\" aria-label=\"Previous slide\" role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
-"                                        <span id=\"next\" class=\"mx-1 mx-sm-2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i class=\"fa fa-arrow-circle-right\"/></span>\n"
-"                                        <span id=\"last\" class=\"mx-1 mx-sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i class=\"fa fa-step-forward\"/></span>"
+"<span id=\"first\" class=\"me-1 me-sm-2\" title=\"First slide\" aria-"
+"label=\"First slide\" role=\"button\"><i class=\"fa fa-step-backward\"/></"
+"span>\n"
+"                                        <span id=\"previous\" class=\"mx-1 "
+"mx-sm-2\" title=\"Previous slide\" aria-label=\"Previous slide\" "
+"role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
+"                                        <span id=\"next\" class=\"mx-1 mx-"
+"sm-2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i "
+"class=\"fa fa-arrow-circle-right\"/></span>\n"
+"                                        <span id=\"last\" class=\"mx-1 mx-"
+"sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i "
+"class=\"fa fa-step-forward\"/></span>"
 msgstr ""
-"<span id=\"first\" class=\"me-1 me-sm-2\" title=\"Slide đầu tiên\" aria-label=\"Slide đầu tiên\" role=\"nút\"><i class=\"fa fa-step-backward\"/></span>\n"
-"                                        <span id=\"previous\" class=\"mx-1 mx-sm-2\" title=\"Slide trước\" aria-label=\"Slide trước\" role=\"nút\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
-"                                        <span id=\"next\" class=\"mx-1 mx-sm-2\" title=\"Slide tiếp theo\" aria-label=\"Slide tiếp theo\" role=\"nút\"><i class=\"fa fa-arrow-circle-right\"/></span>\n"
-"                                        <span id=\"last\" class=\"mx-1 mx-sm-2\" title=\"Slide cuối cùng\" aria-label=\"Slide cuối cùng\" role=\"nút\"><i class=\"fa fa-step-forward\"/></span>"
+"<span id=\"first\" class=\"me-1 me-sm-2\" title=\"Slide đầu tiên\" aria-"
+"label=\"Slide đầu tiên\" role=\"nút\"><i class=\"fa fa-step-backward\"/></"
+"span>\n"
+"                                        <span id=\"previous\" class=\"mx-1 "
+"mx-sm-2\" title=\"Slide trước\" aria-label=\"Slide trước\" role=\"nút\"><i "
+"class=\"fa fa-arrow-circle-left\"/></span>\n"
+"                                        <span id=\"next\" class=\"mx-1 mx-"
+"sm-2\" title=\"Slide tiếp theo\" aria-label=\"Slide tiếp theo\" "
+"role=\"nút\"><i class=\"fa fa-arrow-circle-right\"/></span>\n"
+"                                        <span id=\"last\" class=\"mx-1 mx-"
+"sm-2\" title=\"Slide cuối cùng\" aria-label=\"Slide cuối cùng\" "
+"role=\"nút\"><i class=\"fa fa-step-forward\"/></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<span id=\"fullscreen\" class=\"ms-1 ms-sm-2\" title=\"View fullscreen\" aria-label=\"Fullscreen\" role=\"button\">\n"
+"<span id=\"fullscreen\" class=\"ms-1 ms-sm-2\" title=\"View fullscreen\" "
+"aria-label=\"Fullscreen\" role=\"button\">\n"
 "                                            <i class=\"fa fa-arrows-alt\"/>\n"
 "                                        </span>"
 msgstr ""
-"<span id=\"fullscreen\" class=\"ms-1 ms-sm-2\" title=\"Xem toàn màn hình\" aria-label=\"Toàn màn hình\" role=\"nút\">\n"
+"<span id=\"fullscreen\" class=\"ms-1 ms-sm-2\" title=\"Xem toàn màn hình\" "
+"aria-label=\"Toàn màn hình\" role=\"nút\">\n"
 "                                            <i class=\"fa fa-arrows-alt\"/>\n"
 "                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-minus\"/>\n"
+"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-"
+"label=\"Zoom out\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-minus\"/"
+">\n"
 "                                        </span>\n"
-"                                        <span id=\"zoomin\" class=\"d-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-plus\"/>\n"
+"                                        <span id=\"zoomin\" class=\"d-"
+"inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-plus\"/"
+">\n"
 "                                        </span>"
 msgstr ""
-"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Thu nhỏ\" aria-label=\"Thu nhỏ\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-minus\"/>\n"
+"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Thu nhỏ\" aria-"
+"label=\"Thu nhỏ\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-minus\"/"
+">\n"
 "                                        </span>\n"
-"                                        <span id=\"zoomin\" class=\"d-inline\" title=\"Phóng to\" aria-label=\"Phóng to\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-plus\"/>\n"
+"                                        <span id=\"zoomin\" class=\"d-"
+"inline\" title=\"Phóng to\" aria-label=\"Phóng to\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-plus\"/"
+">\n"
 "                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
-msgid "<span name=\"done_members_count_label\" class=\"text-muted\">Finished</span>"
-msgstr "<span name=\"done_members_count_label\" class=\"text-muted\">Hoàn tất</span>"
+msgid ""
+"<span name=\"done_members_count_label\" class=\"text-muted\">Finished</span>"
+msgstr ""
+"<span name=\"done_members_count_label\" class=\"text-muted\">Hoàn tất</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid ""
-"<span name=\"members_completed_count_label\" "
-"class=\"o_stat_text\">Finished</span>"
+"<span name=\"members_completed_count_label\" class=\"o_stat_text\">Finished</"
+"span>"
 msgstr ""
 "<span name=\"members_completed_count_label\" class=\"o_stat_text\">Đã hoàn "
 "thành</span>"
@@ -1270,7 +1399,6 @@ msgstr "Thêm nhận xét"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #, python-format
@@ -1394,7 +1522,8 @@ msgstr "Tất cả câu hỏi phải được trả lời!"
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
 msgid ""
-"All questions must have at least one correct answer and one incorrect answer: \n"
+"All questions must have at least one correct answer and one incorrect "
+"answer: \n"
 "%s\n"
 msgstr ""
 "Tất cả câu hỏi phải có ít nhất một câu trả lời đúng và một câu trả lời sai:\n"
@@ -1645,7 +1774,6 @@ msgstr "CÁC KHỐI DỰNG ĐƯỢC THẢ Ở ĐÂY SẼ ĐƯỢC HIỂN THỊ T
 #: code:addons/website_slides/static/src/js/slides_category_add.js:0
 #: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Back"
 msgstr "Quay lại"
@@ -1754,7 +1882,6 @@ msgstr "Không thể đánh dấu là chưa hoàn tất"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
-#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
 #, python-format
 msgid "Cancel"
@@ -1802,7 +1929,6 @@ msgstr "Chứng chỉ"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Change video privacy settings"
@@ -1868,7 +1994,6 @@ msgstr "Kiểm tra hồ sơ"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Check answers"
@@ -2022,8 +2147,8 @@ msgid ""
 "activities about mathematics, science and logic."
 msgstr ""
 "Nhiệm vụ phổ biến đối với một nhà khoa học máy tính là đặt câu hỏi đúng và "
-"trả lời câu hỏi. Trong khóa học này, bạn sẽ nghiên cứu các chủ đề đó với các"
-" hoạt động về toán học, khoa học và logic."
+"trả lời câu hỏi. Trong khóa học này, bạn sẽ nghiên cứu các chủ đề đó với các "
+"hoạt động về toán học, khoa học và logic."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
@@ -2134,9 +2259,9 @@ msgid ""
 "available here. The tag \"<b>New</b>\" indicates that this lesson was "
 "created less than 7 days ago."
 msgstr ""
-"Xin chúc mừng! Bài học đầu tiên của bạn đã có. Hãy xem các tùy chọn có sẵn ở"
-" đây. Thẻ \"<b>Mới</b>\" cho biết rằng bài học này đã được tạo cách đây chưa"
-" đầy 7 ngày."
+"Xin chúc mừng! Bài học đầu tiên của bạn đã có. Hãy xem các tùy chọn có sẵn ở "
+"đây. Thẻ \"<b>Mới</b>\" cho biết rằng bài học này đã được tạo cách đây chưa "
+"đầy 7 ngày."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
@@ -2148,8 +2273,8 @@ msgstr "Xin chúc mừng, bạn đã đạt được thứ hạng cuối cùng!"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid ""
-"Congratulations, you've created your first course.<br/>Click on the title of"
-" this content to see it in fullscreen mode."
+"Congratulations, you've created your first course.<br/>Click on the title of "
+"this content to see it in fullscreen mode."
 msgstr ""
 "Xin chúc mừng, bạn đã tạo khóa học đầu tiên của mình. <br/>Nhấp vào tiêu đề "
 "của nội dung này để xem ở chế độ toàn màn hình."
@@ -2163,8 +2288,8 @@ msgid ""
 "yet. First, let's add a <b>Section</b> to give your course a structure."
 msgstr ""
 "Xin chúc mừng, khóa học của bạn đã được tạo nhưng vẫn chưa có bất kỳ nội "
-"dung nào. Đầu tiên, hãy thêm một <b>Mục</b> để tạo cấu trúc cho khóa học của"
-" bạn."
+"dung nào. Đầu tiên, hãy thêm một <b>Mục</b> để tạo cấu trúc cho khóa học của "
+"bạn."
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_partner
@@ -2214,11 +2339,6 @@ msgstr "Nội dung"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Content Preview"
 msgstr "Xem trước nội dung"
@@ -2248,10 +2368,12 @@ msgstr "Loại nội dung"
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action
 msgid ""
 "Content are the lessons that compose a course\n"
-"                    <br>and can be of different types (presentations, documents, videos, ...)."
+"                    <br>and can be of different types (presentations, "
+"documents, videos, ...)."
 msgstr ""
 "Nội dung là các bài học hình thành một khóa học\n"
-"                    <br>và có thể thuộc nhiều thể loại khác nhau (bài thuyết trình, tài liệu, video,...)."
+"                    <br>và có thể thuộc nhiều thể loại khác nhau (bài thuyết "
+"trình, tài liệu, video,...)."
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_slide_action
@@ -2625,8 +2747,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__channel_visibility
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_visibility
 msgid "Defines who can access your courses and their content."
-msgstr ""
-"Xác định ai có thể truy cập các khóa học của bạn và nội dung khoá học."
+msgstr "Xác định ai có thể truy cập các khóa học của bạn và nội dung khoá học."
 
 #. module: website_slides
 #. odoo-javascript
@@ -2673,7 +2794,6 @@ msgstr "Bạn đã đọc toàn bộ bài viết chưa?"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.xml:0
 #: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.xml:0
 #, python-format
 msgid "Discard"
@@ -3076,7 +3196,6 @@ msgstr "Trang web bên ngoài"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Failed to install \"%s\"."
 msgstr "Thất bại khi cài \"%s\"."
@@ -3152,9 +3271,8 @@ msgid ""
 "First, create your lesson, then edit it with the website builder. You'll be "
 "able to drop building blocks on your page and edit them."
 msgstr ""
-"Đầu tiên, tạo bài học của bạn, sau đó chỉnh sửa nó bằng trình xây dựng trang"
-" web. Bạn sẽ có thể thả các khối dựng trên trang của mình và chỉnh sửa "
-"chúng."
+"Đầu tiên, tạo bài học của bạn, sau đó chỉnh sửa nó bằng trình xây dựng trang "
+"web. Bạn sẽ có thể thả các khối dựng trên trang của mình và chỉnh sửa chúng."
 
 #. module: website_slides
 #. odoo-javascript
@@ -3236,8 +3354,7 @@ msgstr "Từ một khúc gỗ thành một đồ nội thất đầy đủ chứ
 #, python-format
 msgid ""
 "From here you'll be able to monitor attendees and to track their progress."
-msgstr ""
-"Từ đây bạn sẽ có thể theo dõi các học viên và cập nhật tiến độ của họ."
+msgstr "Từ đây bạn sẽ có thể theo dõi các học viên và cập nhật tiến độ của họ."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -3313,7 +3430,6 @@ msgstr "Google Doc Key"
 
 #. module: website_slides
 #. odoo-python
-#: code:addons/website_slides/models/slide_slide.py:0
 #: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__google_drive
 #, python-format
@@ -3425,7 +3541,6 @@ msgstr "Cách đóng bàn ăn CHẤT LƯỢNG CAO chỉ với CÔNG CỤ HẠN C
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How do I add new content?"
@@ -3547,8 +3662,8 @@ msgid ""
 "If you want to be sure that attendees have understood and memorized the "
 "content, you can add a Quiz on the lesson. Click on <b>Add Quiz</b>."
 msgstr ""
-"Nếu bạn muốn bảo đảm học viên hiểu và nhớ nội dung, bạn có thể thêm Quiz vào"
-" mỗi bài học. Bấm vào <b>Thêm quiz</b>."
+"Nếu bạn muốn bảo đảm học viên hiểu và nhớ nội dung, bạn có thể thêm Quiz vào "
+"mỗi bài học. Bấm vào <b>Thêm quiz</b>."
 
 #. module: website_slides
 #. odoo-javascript
@@ -3835,9 +3950,6 @@ msgstr "Liệu lời mời học viên này có đang treo."
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "It should look similar to"
 msgstr "Nó phải giống với"
@@ -3860,7 +3972,6 @@ msgstr "Tham gia & Gửi"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Join the Course"
@@ -3933,17 +4044,19 @@ msgstr "Biết về bản thân"
 #: model_terms:slide.channel,description:website_slides.slide_channel_demo_3_furn0
 #: model_terms:slide.channel,description_short:website_slides.slide_channel_demo_3_furn0
 msgid ""
-"Knowing which kind of wood to use depending on your application is important. In this course you\n"
+"Knowing which kind of wood to use depending on your application is "
+"important. In this course you\n"
 "will learn the basics of wood characteristics."
 msgstr ""
-"Hiểu biết về loại gỗ nào cần dùng cho mỗi loại đồ nhất định là rất quan trọng. Trong khóa học này bạn\n"
+"Hiểu biết về loại gỗ nào cần dùng cho mỗi loại đồ nhất định là rất quan "
+"trọng. Trong khóa học này bạn\n"
 "sẽ tìm hiểu những đặc điểm cơ bản của gỗ."
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_3
 msgid ""
-"Knowing wood characteristics is a requirement in order to know which kind of"
-" wood to use in a given situation."
+"Knowing wood characteristics is a requirement in order to know which kind of "
+"wood to use in a given situation."
 msgstr ""
 "Hiểu biết đặc điểm của gỗ là cần thiết để biết loại gỗ nào sẽ sử dụng trong "
 "một tình huống nhất định."
@@ -4096,8 +4209,7 @@ msgstr "Liên kết"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__document_google_url
-msgid ""
-"Link of the document (we currently only support Google Drive as source)"
+msgid "Link of the document (we currently only support Google Drive as source)"
 msgstr "Liên kết của tài liệu (hiện tại chúng tôi chỉ hỗ trợ Google Drive)"
 
 #. module: website_slides
@@ -4356,8 +4468,7 @@ msgstr "Khóa học mới"
 msgid ""
 "New {{ object.slide_category }} published on {{ object.channel_id.name }}"
 msgstr ""
-"{{ object.slide_category }} mới đã được đăng lên {{ object.channel_id.name "
-"}}"
+"{{ object.slide_category }} mới đã được đăng lên {{ object.channel_id.name }}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -4676,7 +4787,6 @@ msgstr "Mở"
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
-#: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Operation not supported"
 msgstr "Thao tác không được hỗ trợ"
@@ -4686,8 +4796,8 @@ msgstr "Thao tác không được hỗ trợ"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
 "Ngôn ngữ dịch tuỳ chọn (mã ISO) để chọn khi gửi email. Nếu không đặt, phiên "
 "bản tiếng Anh sẽ được sử dụng. Đây luôn là biểu thức placeholder cung cấp "
@@ -4732,8 +4842,6 @@ msgstr "Pivot"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
-#: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
-#: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -4747,13 +4855,11 @@ msgstr "Vui lòng"
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid ""
-"Please <a href=\"/web/login?redirect=%s\">login</a> or <a "
-"href=\"/web/signup?redirect=%s\">create an account</a> to vote for this "
-"lesson"
+"Please <a href=\"/web/login?redirect=%s\">login</a> or <a href=\"/web/signup?"
+"redirect=%s\">create an account</a> to vote for this lesson"
 msgstr ""
-"Vui lòng <a href=\"/web/login?redirect=%s\">đăng nhập</a> hoặc <a "
-"href=\"/web/signup?redirect=%s\">tạo một tài khoản</a> để bình chọn bài học "
-"này"
+"Vui lòng <a href=\"/web/login?redirect=%s\">đăng nhập</a> hoặc <a href=\"/"
+"web/signup?redirect=%s\">tạo một tài khoản</a> để bình chọn bài học này"
 
 #. module: website_slides
 #. odoo-javascript
@@ -4782,8 +4888,6 @@ msgstr "Vui lòng nhập liên kết Google Drive hợp lệ. "
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_course_fullscreen_player.js:0
-#: code:addons/website_slides/static/src/js/slides_course_fullscreen_player.js:0
-#: code:addons/website_slides/static/src/js/slides_share.js:0
 #: code:addons/website_slides/static/src/js/slides_share.js:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
@@ -5133,7 +5237,6 @@ msgstr "Đặt lại"
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide_resource.py:0
-#: code:addons/website_slides/models/slide_slide_resource.py:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__data
 #, python-format
 msgid "Resource"
@@ -5143,8 +5246,7 @@ msgstr "Tài nguyên"
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide_resource.py:0
 #, python-format
-msgid ""
-"Resource %(resource_name)s is a link and should not contain a data file"
+msgid "Resource %(resource_name)s is a link and should not contain a data file"
 msgstr ""
 "Tài nguyên %(resource_name)s là một liên kết và không được chứa tệp dữ liệu"
 
@@ -5183,7 +5285,6 @@ msgstr "Hạn chế phát hành cho website này"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__source_type__external
 #, python-format
@@ -5284,7 +5385,6 @@ msgstr "Mẫu"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.xml:0
 #: code:addons/website_slides/static/src/js/slides_category_add.js:0
-#: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
@@ -5396,8 +5496,8 @@ msgstr "Chọn câu trả lời đúng dưới đây:"
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Sell access to your courses on your website and track revenues."
 msgstr ""
-"Bán quyền truy cập vào các khóa học trên trang web của bạn và theo dõi doanh"
-" thu."
+"Bán quyền truy cập vào các khóa học trên trang web của bạn và theo dõi doanh "
+"thu."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_sale_slides
@@ -5517,7 +5617,6 @@ msgstr "Chia sẻ qua mail"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, python-format
 msgid "Share on Facebook"
@@ -5526,7 +5625,6 @@ msgstr "Chia sẻ trên facebook"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, python-format
 msgid "Share on LinkedIn"
@@ -5534,7 +5632,6 @@ msgstr "Chia sẻ trên LinkedIn"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, python-format
@@ -5552,7 +5649,6 @@ msgstr "Chia sẻ lên mạng xã hội"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, python-format
 msgid "Share on Twitter"
@@ -5560,7 +5656,6 @@ msgstr "Chia sẻ trên Twitter"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, python-format
@@ -5677,8 +5772,7 @@ msgstr "Hình ảnh bài viết"
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid ""
-"Slide with questions must be marked as done when submitting all good answers"
-" "
+"Slide with questions must be marked as done when submitting all good answers "
 msgstr ""
 "Slide với các câu hỏi phải được đánh dấu là xong khi gửi tất cả các câu trả "
 "lời "
@@ -5798,19 +5892,14 @@ msgstr "Thông tin người đăng ký"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
 msgid ""
-"Subtype of the slide category, allows more precision on the actual file type"
-" / source type."
+"Subtype of the slide category, allows more precision on the actual file "
+"type / source type."
 msgstr ""
 "Loại phụ của danh mục slide, cho phép độ chính xác cao hơn về loại tệp/loại "
 "nguồn thực tế."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Succeed and gain karma"
@@ -5848,8 +5937,8 @@ msgstr "Tên thẻ"
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag__color
 msgid ""
 "Tag color used in both backend and website. No color means no display in "
-"kanban or front-end, to distinguish internal tags from public categorization"
-" tags"
+"kanban or front-end, to distinguish internal tags from public categorization "
+"tags"
 msgstr ""
 "Màu thẻ được dùng trong cả backend và website. Không màu có nghĩa là không "
 "hiển thị ở kanban hay front-end, để phân biệt thẻ nội bộ với thẻ danh mục "
@@ -5947,15 +6036,14 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_channel_check_enroll
 msgid ""
-"The Enroll Policy should be set to 'On Invitation' when visibility is set to"
-" 'Course Attendees'"
+"The Enroll Policy should be set to 'On Invitation' when visibility is set to "
+"'Course Attendees'"
 msgstr ""
 "Chính sách tham gia phải được đặt thành 'Khi mời' khi chế độ hiển thị được "
 "đặt là 'Học viên khóa học'"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
@@ -5979,8 +6067,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_channel_partner_check_completion
 msgid ""
-"The completion of a channel is a percentage and should be between 0% and "
-"100."
+"The completion of a channel is a percentage and should be between 0% and 100."
 msgstr ""
 "Mức độ hoàn thành của một kênh là tỷ lệ phần trăm và phải nằm trong khoảng "
 "từ 0% đến 100."
@@ -6050,7 +6137,8 @@ msgstr "Bình chọn phải là 1, 0 hoặc -1."
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
-msgid "Then, go into the file permissions and set it as \"Anyone with the link\"."
+msgid ""
+"Then, go into the file permissions and set it as \"Anyone with the link\"."
 msgstr "Sau đó, đi đến quyền tệp và đặt thành \"Bất kỳ ai có liên kết\"."
 
 #. module: website_slides
@@ -6163,8 +6251,7 @@ msgstr "Xin chúc mừng, đây là câu trả lời chính xác. "
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
 msgid ""
-"This question must have at least one correct answer and one incorrect "
-"answer."
+"This question must have at least one correct answer and one incorrect answer."
 msgstr ""
 "Câu hỏi này phải có ít nhất một câu trả lời đúng và một câu trả lời sai."
 
@@ -6202,14 +6289,16 @@ msgstr "Video này đã tồn tại trong kênh này trên nội dung sau: %s"
 #, python-format
 msgid ""
 "Through Google Drive, we support most common types of documents.\n"
-"                                        Including regular documents (Google Doc, .docx), Sheets (Google Sheet, .xlsx), PowerPoints, ..."
+"                                        Including regular documents (Google "
+"Doc, .docx), Sheets (Google Sheet, .xlsx), PowerPoints, ..."
 msgstr ""
-"Thông qua Google Drive, chúng tôi hỗ trợ hầu hết các loại tài liệu phổ biến.\n"
-"                                        Bao gồm các tài liệu thông thường (Google Doc, .docx), Trang tính (Google Sheet, .xlsx), PowerPoints,..."
+"Thông qua Google Drive, chúng tôi hỗ trợ hầu hết các loại tài liệu phổ "
+"biến.\n"
+"                                        Bao gồm các tài liệu thông thường "
+"(Google Doc, .docx), Trang tính (Google Sheet, .xlsx), PowerPoints,..."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__name
 #, python-format
@@ -6338,7 +6427,6 @@ msgstr "Bỏ lưu trữ"
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
-#: code:addons/website_slides/models/slide_channel.py:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 #, python-format
 msgid "Uncategorized"
@@ -6419,7 +6507,6 @@ msgstr "Đang tải nhóm"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__source_type__local_file
 #, python-format
@@ -6545,7 +6632,6 @@ msgstr "Lượt xem •"
 
 #. module: website_slides
 #. odoo-python
-#: code:addons/website_slides/models/slide_slide.py:0
 #: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__vimeo
 #, python-format
@@ -6685,7 +6771,6 @@ msgstr ""
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "What does"
 msgstr "Vậy"
@@ -6702,7 +6787,6 @@ msgstr "Công cụ tốt nhất để đào hố trồng cây là gì? "
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "What types of documents do we support?"
@@ -6726,8 +6810,8 @@ msgid ""
 "Whether invited partners will be added as enrolled. Otherwise, they will be "
 "added as invited."
 msgstr ""
-"Liệu đối tác được mời sẽ được thêm vào khi tham gia hay không. Nếu không, họ"
-" sẽ được thêm vào khi được mời."
+"Liệu đối tác được mời sẽ được thêm vào khi tham gia hay không. Nếu không, họ "
+"sẽ được thêm vào khi được mời."
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_1
@@ -6735,8 +6819,8 @@ msgid ""
 "Which wood type is best for my solid wood furniture? That's the question we "
 "help you answer in this video!"
 msgstr ""
-"Loại gỗ nào là tốt nhất để đóng đồ nội thất bằng gỗ nguyên khối? Trong video"
-" này, chúng tôi sẽ giúp bạn trả lời câu hỏi đó. "
+"Loại gỗ nào là tốt nhất để đóng đồ nội thất bằng gỗ nguyên khối? Trong video "
+"này, chúng tôi sẽ giúp bạn trả lời câu hỏi đó. "
 
 #. module: website_slides
 #. odoo-javascript
@@ -6782,8 +6866,8 @@ msgid ""
 "Write one or two paragraphs describing your product or services. <br>To be "
 "successful your content needs to be useful to your readers."
 msgstr ""
-"Viết một hoặc hai đoạn văn mô tả sản phẩm hoặc dịch vụ của bạn. <br>Để thành"
-" công, nội dung bạn viết cần phải hữu ích cho người đọc."
+"Viết một hoặc hai đoạn văn mô tả sản phẩm hoặc dịch vụ của bạn. <br>Để thành "
+"công, nội dung bạn viết cần phải hữu ích cho người đọc."
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
@@ -6794,14 +6878,11 @@ msgid ""
 "feature.<br> To be successful your content needs to be useful to your "
 "readers."
 msgstr ""
-"Viết một hoặc hai đoạn văn mô tả sản phẩm, dịch vụ hoặc một tính năng cụ "
-"thể.<br> Để thành công, nội dung bạn viết cần phải hữu ích cho người đọc."
+"Viết một hoặc hai đoạn văn mô tả sản phẩm, dịch vụ hoặc một tính năng cụ thể."
+"<br> Để thành công, nội dung bạn viết cần phải hữu ích cho người đọc."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "XP"
@@ -6825,8 +6906,8 @@ msgstr "Có"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid ""
-"You are not allowed to add members to this course. Please contact the course"
-" responsible or an administrator."
+"You are not allowed to add members to this course. Please contact the course "
+"responsible or an administrator."
 msgstr ""
 "Bạn không được phép thêm thành viên vào khóa học này. Vui lòng liên hệ với "
 "người chịu trách nhiệm khóa học hoặc quản trị viên."
@@ -6849,7 +6930,6 @@ msgstr "Bạn có thể thêm câu hỏi vào quiz này trong tab 'Quiz'."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
@@ -6908,8 +6988,8 @@ msgid ""
 "You cannot mark a slide quiz as completed if you are not among its members "
 "or it is unpublished."
 msgstr ""
-"Bạn không thể đánh dấu một quiz slide là đã hoàn thành nếu bạn không phải là"
-" thành viên hoặc nó đã bị huỷ đăng. "
+"Bạn không thể đánh dấu một quiz slide là đã hoàn thành nếu bạn không phải là "
+"thành viên hoặc nó đã bị huỷ đăng. "
 
 #. module: website_slides
 #. odoo-python
@@ -7064,7 +7144,8 @@ msgid ""
 "                    Upload content, set up rewards, manage attendees..."
 msgstr ""
 "Nền tảng Học trực tuyến của bạn bắt đầu từ đây!<br>\n"
-"                    Tải lên nội dung, thiết lập phần thưởng, quản lý học viên..."
+"                    Tải lên nội dung, thiết lập phần thưởng, quản lý học "
+"viên..."
 
 #. module: website_slides
 #. odoo-python
@@ -7074,8 +7155,8 @@ msgid ""
 "Your file could not be found on Google Drive, please check the link and/or "
 "privacy settings"
 msgstr ""
-"Không thể tìm thấy tệp của bạn trên Google Drive, vui lòng kiểm tra liên kết"
-" và/hoặc cài đặt quyền riêng tư"
+"Không thể tìm thấy tệp của bạn trên Google Drive, vui lòng kiểm tra liên kết "
+"và/hoặc cài đặt quyền riêng tư"
 
 #. module: website_slides
 #. odoo-javascript
@@ -7087,35 +7168,33 @@ msgid ""
 "a video."
 msgstr ""
 "Bạn đã tạo phần đầu tiên, bây giờ hãy thêm bài học vào khóa học. Bấm vào "
-"<b>Thêm nội dung</b> để tải lên tài liệu, tạo một bài viết hoặc liên kết một"
-" video. "
+"<b>Thêm nội dung</b> để tải lên tài liệu, tạo một bài viết hoặc liên kết một "
+"video. "
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid ""
-"Your video could not be found on Vimeo, please check the link and/or privacy"
-" settings"
+"Your video could not be found on Vimeo, please check the link and/or privacy "
+"settings"
 msgstr ""
-"Không thể tìm thấy video của bạn trên Vimeo, vui lòng kiểm tra liên kết "
-"và/hoặc cài đặt quyền riêng tư"
+"Không thể tìm thấy video của bạn trên Vimeo, vui lòng kiểm tra liên kết và/"
+"hoặc cài đặt quyền riêng tư"
 
 #. module: website_slides
 #. odoo-python
-#: code:addons/website_slides/models/slide_slide.py:0
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid ""
 "Your video could not be found on YouTube, please check the link and/or "
 "privacy settings"
 msgstr ""
-"Không thể tìm thấy video của bạn trên YouTube, vui lòng kiểm tra liên kết "
-"và/hoặc cài đặt quyền riêng tư"
+"Không thể tìm thấy video của bạn trên YouTube, vui lòng kiểm tra liên kết và/"
+"hoặc cài đặt quyền riêng tư"
 
 #. module: website_slides
 #. odoo-python
-#: code:addons/website_slides/models/slide_channel.py:0
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "a course"
@@ -7165,7 +7244,6 @@ msgstr "khóa học"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
-#: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "create an account"
 msgstr "tạo một tài khoản"
@@ -7177,7 +7255,6 @@ msgstr "truy cập trực tiếp"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
@@ -7235,12 +7312,12 @@ msgstr "ví dụ: Khoa học máy tính cho trẻ em"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid ""
-"e.g. In this video, we'll give you the keys on how Odoo can help you to grow"
-" your business. At the end, we'll propose you a quiz to test your knowledge."
+"e.g. In this video, we'll give you the keys on how Odoo can help you to grow "
+"your business. At the end, we'll propose you a quiz to test your knowledge."
 msgstr ""
 "ví dụ. Trong video này, chúng tôi sẽ cung cấp cho bạn các nội dung chính về "
-"cách Odoo có thể giúp bạn phát triển doanh nghiệp của mình. Cuối cùng, chúng"
-" tôi đề xuất cho bạn một quiz để kiểm tra kiến thức của bạn."
+"cách Odoo có thể giúp bạn phát triển doanh nghiệp của mình. Cuối cùng, chúng "
+"tôi đề xuất cho bạn một quiz để kiểm tra kiến thức của bạn."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -7298,8 +7375,6 @@ msgstr "friend1@email.com, friend2@email.com"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "https://drive.google.com/file/d/ABC/view?usp=sharing"
 msgstr "https://drive.google.com/file/d/ABC/view?usp=sharing"
@@ -7326,8 +7401,6 @@ msgstr "tham gia"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
-#: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
-#: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
@@ -7339,24 +7412,28 @@ msgstr "đăng nhập"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
-"                                    Your video will never come up in the search results nor on your channel."
+"mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can "
+"be viewed only by the users with the link to it.\n"
+"                                    Your video will never come up in the "
+"search results nor on your channel."
 msgstr ""
-"? Cài đặt quyền riêng tư \"Không công khai\" của Vimeo cho biết đây là video mà chỉ những người dùng có liên kết tới video mới có thể xem được.\n"
-"                                     Video của bạn sẽ không bao giờ xuất hiện trong kết quả tìm kiếm cũng như trên kênh của bạn."
+"? Cài đặt quyền riêng tư \"Không công khai\" của Vimeo cho biết đây là video "
+"mà chỉ những người dùng có liên kết tới video mới có thể xem được.\n"
+"                                     Video của bạn sẽ không bao giờ xuất "
+"hiện trong kết quả tìm kiếm cũng như trên kênh của bạn."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"means? The YouTube \"unlisted\" means it is a video which can be viewed only"
-" by the users with the link to it. Your video will never come up in the "
+"means? The YouTube \"unlisted\" means it is a video which can be viewed only "
+"by the users with the link to it. Your video will never come up in the "
 "search results nor on your channel."
 msgstr ""
 "nghĩa là gì? \"không liệt kê\" trong Youtube nghĩa là video chỉ có thể xem "
-"bởi người dùng có đường link tới đó. Video của bạn sẽ không bao giờ hiện lên"
-" trong kết quả tìm kiếm hoặc trên kênh của bạn. "
+"bởi người dùng có đường link tới đó. Video của bạn sẽ không bao giờ hiện lên "
+"trong kết quả tìm kiếm hoặc trên kênh của bạn. "
 
 #. module: website_slides
 #. odoo-javascript
@@ -7426,8 +7503,6 @@ msgstr "để tham gia."
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
-#: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
-#: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "to join this course"
 msgstr "để tham gia khóa học này"
@@ -7452,7 +7527,6 @@ msgstr "để mở khoá"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "unlisted"

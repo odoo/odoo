@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-# 
+#
 # Translators:
 # NoaFarkash, 2023
 # Jonathan Spier, 2023
@@ -14,20 +14,21 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # Yihya Hugirat <hugirat@gmail.com>, 2025
 # or balmas, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: he\n"
-"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
+"1 == 0) ? 1: 2;\n"
 
 #. module: delivery
 #. odoo-python
@@ -65,7 +66,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 
 #. module: delivery
@@ -82,7 +84,8 @@ msgstr "<span class=\"text-success\">בקשות לאיתור תקלות</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 
 #. module: delivery
@@ -367,7 +370,6 @@ msgstr "סביבה"
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
-#: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
 msgstr "שגיאה: שיטת משלוח זו אינה זמינה עבור כתובת זו."
@@ -382,11 +384,14 @@ msgstr "שגיאה: שיטת משלוח זו אינה זמינה."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "עלות משוערת: הלקוח יחויב בעלות המשוערת של המשלוח.\n"
-"עלות אמיתית: הלקוח יחויב בעלות האמיתית של המשלוח, עלות המשלוח תעודכן בהזמנה לאחר ביצוע המסירה."
+"עלות אמיתית: הלקוח יחויב בעלות האמיתית של המשלוח, עלות המשלוח תעודכן בהזמנה "
+"לאחר ביצוע המסירה."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -599,7 +604,10 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
-"קידומות של מיקודים שהמשלוח הזה חל עליהם. שים לב כי ניתן להשתמש בביטויים רגולריים (Regular Expressions) כדי לתמוך במדינות עם אורכי מיקוד משתנים, כלומר, ניתן להוסיף את הסימן '$' בסוף הקידומת כדי להתאים למיקוד מדויק (למשל, '100$' יתאים רק ל-'100' ולא ל-'1000').\n"
+"קידומות של מיקודים שהמשלוח הזה חל עליהם. שים לב כי ניתן להשתמש בביטויים "
+"רגולריים (Regular Expressions) כדי לתמוך במדינות עם אורכי מיקוד משתנים, "
+"כלומר, ניתן להוסיף את הסימן '$' בסוף הקידומת כדי להתאים למיקוד מדויק (למשל, "
+"'100$' יתאים רק ל-'100' ולא ל-'1000').\n"
 " "
 
 #. module: delivery
@@ -843,9 +851,11 @@ msgstr "שם יחידת מידה של משקל"
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
 "לא ניתן לעדכן את עלויות המשלוח בהזמנה שכבר חויבה!\n"
@@ -861,8 +871,7 @@ msgid ""
 "You cannot delete the deliveries product category as it is used on the "
 "delivery carriers products."
 msgstr ""
-"אינך יכול למחוק את קטגוריית המוצר של המשלוחים שכן היא בשימוש במוצרי "
-"המובילים."
+"אינך יכול למחוק את קטגוריית המוצר של המשלוחים שכן היא בשימוש במוצרי המובילים."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

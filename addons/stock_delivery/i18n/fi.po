@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_delivery
-# 
+#
 # Translators:
 # Mikko Salmela <salmemik@gmail.com>, 2023
 # Jussi Lehto <jussi@gulfeo.com>, 2023
@@ -16,19 +16,19 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Miika Nissi <miika.nissi@tawasta.fi>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Miika Nissi <miika.nissi@tawasta.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_delivery
@@ -130,8 +130,7 @@ msgstr "Peruuta"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
 "Toimituksen peruuttamista ei välttämättä voi perua. Oletko varma, että "
 "haluat jatkaa?"
@@ -220,11 +219,15 @@ msgstr "Näytä seurantalinkit"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
-"Arvioidut kustannukset: asiakkaalta laskutetaan arvioidut toimituskustannukset.\n"
-"Todelliset kustannukset: asiakkaalta laskutetaan todelliset toimituskulut, toimituskulut päivitetään myyntitilauksessa (SO) toimituksen jälkeen."
+"Arvioidut kustannukset: asiakkaalta laskutetaan arvioidut "
+"toimituskustannukset.\n"
+"Todelliset kustannukset: asiakkaalta laskutetaan todelliset toimituskulut, "
+"toimituskulut päivitetään myyntitilauksessa (SO) toimituksen jälkeen."
 
 #. module: stock_delivery
 #. odoo-python
@@ -376,11 +379,15 @@ msgstr "Reitit"
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
-"Alkuperäsäännöissä määritetään, mistä tavarat ovat peräisin, eli ei siitä, mistä ne on lähetetty, vaan siitä, missä ne on tuotettu tai valmistettu.\n"
-"Alkuperä\" on näin ollen kaupassa myytävien tavaroiden \"taloudellinen kansallisuus\"."
+"Alkuperäsäännöissä määritetään, mistä tavarat ovat peräisin, eli ei siitä, "
+"mistä ne on lähetetty, vaan siitä, missä ne on tuotettu tai valmistettu.\n"
+"Alkuperä\" on näin ollen kaupassa myytävien tavaroiden \"taloudellinen "
+"kansallisuus\"."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
@@ -487,14 +494,13 @@ msgstr ""
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
-#: code:addons/stock_delivery/models/delivery_carrier.py:0
 #, python-format
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
 msgstr ""
-"Pakkausta ei voida luoda, koska poiminnassa olevien tuotteiden kokonaispaino"
-" on 0.0 %s"
+"Pakkausta ei voida luoda, koska poiminnassa olevien tuotteiden kokonaispaino "
+"on 0.0 %s"
 
 #. module: stock_delivery
 #. odoo-python
@@ -530,8 +536,8 @@ msgstr "Kaikkien pakkauksen sisältämien tuotteiden kokonaispaino."
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__shipping_weight
 msgid ""
 "Total weight of packages and products not in a package. Packages with no "
-"shipping weight specified will default to their products' total weight. This"
-" is the weight used to compute the cost of the shipping."
+"shipping weight specified will default to their products' total weight. This "
+"is the weight used to compute the cost of the shipping."
 msgstr ""
 "Pakkausten ja pakkauksen ulkopuolisten tuotteiden kokonaispaino. Pakettien, "
 "joiden lähetyspainoa ei ole määritetty, oletusarvo on niiden tuotteiden "
@@ -625,18 +631,17 @@ msgstr "Paino:"
 #, python-format
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
-"Tuotteita ei voi pakata samaan pakettiin, jos niillä on eri kuljetusliikkeet"
-" (tarkista, että kaikille niiden siirroille on määritetty kuljetusliike ja "
+"Tuotteita ei voi pakata samaan pakettiin, jos niillä on eri kuljetusliikkeet "
+"(tarkista, että kaikille niiden siirroille on määritetty kuljetusliike ja "
 "että ne käyttävät samaa kuljetusliikettä)."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr ""
-"Sinulla on useita seurantalinkkejä, ne ovat saatavilla keskusteluissa."
+msgstr "Sinulla on useita seurantalinkkejä, ne ovat saatavilla keskusteluissa."
 
 #. module: stock_delivery
 #. odoo-python

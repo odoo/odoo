@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_track
-# 
+#
 # Translators:
 # Tomáš Píšek, 2023
 # Jakub Smolka, 2023
@@ -10,20 +10,21 @@
 # Vojtech Smolka, 2024
 # Jiří Podhorecký <jirka.p@volny.cz>, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -110,12 +111,19 @@ msgstr "<b>Úvodní řeč</b>:"
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
-"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name "
+"or ''\">What This Event Is All About</t> has been accepted and confirmed for "
+"the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online "
+"Reveal</t>.\n"
 "    <br>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
@@ -128,12 +136,18 @@ msgid ""
 "</div>"
 msgstr ""
 "<div>\n"
-"    Vážený <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandone Freemane</t><br>\n"
-"    S potěšením vám oznamujeme, že váš návrh <t t-out=\"object.name or ''\">O čem tato akce je</t> byl přijat a potvrzen pro událost <t t-out=\"object.event_id.name or ''\">Online odhalení kolekce OpenWood</t>.\n"
+"    Vážený <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandone Freemane</t><br>\n"
+"    S potěšením vám oznamujeme, že váš návrh <t t-out=\"object.name or "
+"''\">O čem tato akce je</t> byl přijat a potvrzen pro událost <t t-"
+"out=\"object.event_id.name or ''\">Online odhalení kolekce OpenWood</t>.\n"
 "    <br>\n"
 "    Více podrobností najdete zde:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            Zobrazit přednášku\n"
 "        </a>\n"
 "    </div>\n"
@@ -186,13 +200,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                        <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Chyba\" title=\"Chyba\"/>\n"
-"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                        <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Chyba\" title=\"Chyba\"/>\n"
+"                                        <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                    </span>"
 
 #. module: website_event_track
@@ -395,9 +413,12 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
 msgid ""
-"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
-"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
-"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"As you may have heard before, making your own furniture is actually not as "
+"difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete "
+"them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee "
+"table you can easily put one together using\n"
 "    wood crates."
 msgstr ""
 
@@ -567,8 +588,8 @@ msgid ""
 "simple explanation! Interested?"
 msgstr ""
 "Uvažujete o stavbě dřevěného domu? Podívejte se na toto video a zjistěte "
-"více informací o postupu výstavby a konečném výsledku. Jednoduché vysvětlení"
-" krok za krokem! Máte zájem?"
+"více informací o postupu výstavby a konečném výsledku. Jednoduché vysvětlení "
+"krok za krokem! Máte zájem?"
 
 #. module: website_event_track
 #. odoo-python
@@ -887,7 +908,6 @@ msgstr ""
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 #, python-format
 msgid "Favorite On"
@@ -1062,8 +1082,7 @@ msgstr "Jak integrovat hardwarové materiály do nábytku"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track8
 msgid "How to optimize your sales, from leads to sales orders"
-msgstr ""
-"Jak optimalizovat svůj prodej, od příležitostí k prodejním objednávkám"
+msgstr "Jak optimalizovat svůj prodej, od příležitostí k prodejním objednávkám"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__id
@@ -1123,8 +1142,8 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
 msgid ""
-"If set, the talk will be set as favorite for each attendee registered to the"
-" event."
+"If set, the talk will be set as favorite for each attendee registered to the "
+"event."
 msgstr ""
 "Pokud je nastaveno, bude přednáška nastavena jako oblíbená pro každého "
 "účastníka přihlášeného na akci."
@@ -1804,7 +1823,6 @@ msgstr "Sekvence"
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 #, python-format
 msgid "Set Favorite"
@@ -2023,8 +2041,10 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"There are several variants of wood is available in the world but we are talking about most expensive\n"
-"    ones in the world and keeping to the point we have arranged ten most expensive wood."
+"There are several variants of wood is available in the world but we are "
+"talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most "
+"expensive wood."
 msgstr ""
 "Existuje několik variant dřeva, které jsou na světě k dispozici, ale my "
 "mluvíme o těch nejdražších na světě a v souladu s tímto bodem jsme "
@@ -2049,8 +2069,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid ""
-"They will be created automatically once attendees start browsing your "
-"events."
+"They will be created automatically once attendees start browsing your events."
 msgstr ""
 "Vytvoří se automaticky, jakmile účastníci začnou procházet vaše události."
 
@@ -2080,8 +2099,8 @@ msgid ""
 "This page hasn't been saved for offline reading yet.<br/>Please check your "
 "network connection."
 msgstr ""
-"Tato stránka ještě nebyla uložena pro čtení offline.<br/>Zkontrolujte prosím"
-" své připojení k síti."
+"Tato stránka ještě nebyla uložena pro čtení offline.<br/>Zkontrolujte prosím "
+"své připojení k síti."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
@@ -2134,8 +2153,10 @@ msgstr "10 nejdražších dřev na světě"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
-"    that there are hundreds of wood types exist around the globe following different properties and use."
+"Top most expensive wood in the world is quite interesting topic and several "
+"people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following "
+"different properties and use."
 msgstr ""
 "Nejdražší dřevo na světě je docela zajímavé téma a několik lidí možná "
 "překvapí, že na světě existují stovky druhů dřeva, které se liší svými "
@@ -2309,11 +2330,22 @@ msgid "Unread Messages"
 msgstr "Nepřečtené zprávy"
 
 #. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#: code:addons/website_event_track/models/website_visitor.py:0
+#, python-format
+msgid "Unsupported 'Not In' operation on track wishlist visitors"
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Use these simple steps to easily haul LONG lumber in a short box pickup truck.  A dose of carpenter's\n"
-"    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
-"    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
+"Use these simple steps to easily haul LONG lumber in a short box pickup "
+"truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws "
+"are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or "
+"jobsite."
 msgstr ""
 "Pomocí těchto jednoduchých kroků můžete snadno převážet dlouhé řezivo v "
 "krátkém skříňovém pickupu. Dávka tesařského důvtipu spolu s několika prkny, "
@@ -2324,8 +2356,10 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
-"    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) "
+"allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated "
+"knots."
 msgstr ""
 "Použití jedinečného způsobu omotání vázacího popruhu (NE Bungee šňůr!!!) "
 "umožňuje bezpečné přichycení řeziva BEZ nutnosti vázat a rozvazovat složité "

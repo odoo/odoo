@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_picking_batch
-# 
+#
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Daye Jeong, 2023
 # Wil Odoo, 2024
 # Sarah Park, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_picking_batch
@@ -30,11 +30,11 @@ msgstr "2023-08-20"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group "
-"by</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group by</"
+"span>"
 msgstr ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">그룹 "
-"기준</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">그룹 기준</"
+"span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -74,16 +74,19 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"이 라인 수를 초과하여 전송 항목 추가 시 일괄 전송 항목에 자동으로 추가되지 않습니다. \n"
+"이 라인 수를 초과하여 전송 항목 추가 시 일괄 전송 항목에 자동으로 추가되지 않"
+"습니다. \n"
 "라인 한도가 없는 경우 이 값을 '0'으로 두십시오."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
 "이 전송 항목 수를 초과할 시 일괄 전송 항목에 자동으로 추가되지 않습니다. \n"
@@ -465,7 +468,9 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
-msgstr "자동 배치 기능이 활성화된 경우 하나 이상 '그룹화 기준' 옵션을 선택하셔야 합니다."
+msgstr ""
+"자동 배치 기능이 활성화된 경우 하나 이상 '그룹화 기준' 옵션을 선택하셔야 합니"
+"다."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -641,8 +646,7 @@ msgstr "선별 유형"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
-msgid ""
-"Please add 'Done' quantities to the batch picking to create a new pack."
+msgid "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr "새로운 포장을 생성하려면 '완료된' 수량을 일괄 선별에 넣어주세요."
 
 #. module: stock_picking_batch
@@ -728,14 +732,20 @@ msgstr "예정일"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "이체 처리 예정일.\n"
-"              - 수동으로 설정할 경우 모든 일괄 이체 예정일이 자동으로 이 날짜로 업데이트됩니다.\n"
-"              - 수동으로 변경하지 않고 이체를 추가, 제거 또는 업데이트할 경우 이 날짜가 가장 빠른 예정일이 됩니다.\n"
-"                그러나 이 예정일이 이체 전체 항목에 대해 일괄적으로 설정되지는 않습니다."
+"              - 수동으로 설정할 경우 모든 일괄 이체 예정일이 자동으로 이 날짜"
+"로 업데이트됩니다.\n"
+"              - 수동으로 변경하지 않고 이체를 추가, 제거 또는 업데이트할 경"
+"우 이 날짜가 가장 빠른 예정일이 됩니다.\n"
+"                그러나 이 예정일이 이체 전체 항목에 대해 일괄적으로 설정되지"
+"는 않습니다."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -843,11 +853,13 @@ msgstr "요약 :"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid ""
-"The following transfers cannot be added to batch transfer %s. Please check their states and operation types.\n"
+"The following transfers cannot be added to batch transfer %s. Please check "
+"their states and operation types.\n"
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"다음 이동 항목은 일괄 전송 %s에 추가할 수 없습니다. 해당 항목의 상태 및 작업 유형을 확인하시기 바랍니다.\n"
+"다음 이동 항목은 일괄 전송 %s에 추가할 수 없습니다. 해당 항목의 상태 및 작업 "
+"유형을 확인하시기 바랍니다.\n"
 "\n"
 "비호환: %s"
 
@@ -855,27 +867,35 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
 "The goal of the batch transfer is to group operations that may\n"
-"            (needs to) be done together in order to increase their efficiency.\n"
-"            It may also be useful to assign jobs (one person = one batch) or\n"
-"            help the timing management of operations (tasks to be done at 1pm)."
+"            (needs to) be done together in order to increase their "
+"efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) "
+"or\n"
+"            help the timing management of operations (tasks to be done at "
+"1pm)."
 msgstr ""
 "이송 일괄 작업의 목표는 효율성을 높이기 위해 함께 수행되어야 할(필요할) \n"
 "                 그룹 작업을 수행하는 것입니다.\n"
 "                 작업을 할당하거나(한 사람 = 한 일괄 작업) 작업의 타이밍 \n"
-"                 관리(일 오후 1시에 수행해야 하는 태스크)를 돕는 것도 유용할 수 있습니다."
+"                 관리(일 오후 1시에 수행해야 하는 태스크)를 돕는 것도 유용할 "
+"수 있습니다."
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid ""
-"The goal of the wave transfer is to group operations from different transfer\n"
+"The goal of the wave transfer is to group operations from different "
+"transfer\n"
 "                    together in order to increase their efficiency.\n"
-"                    It may also be useful to assign jobs (one person = one batch) or\n"
-"                    help the timing management of operations (tasks to be done at 1pm)."
+"                    It may also be useful to assign jobs (one person = one "
+"batch) or\n"
+"                    help the timing management of operations (tasks to be "
+"done at 1pm)."
 msgstr ""
 "웨이브 작업의 목표는 다른 전송 작업들을 그룹으로 함께 실행하여  \n"
 "                    효율성을 증대시키는 것입니다.\n"
 "                    작업을 할당 (1인 = 1 배치)하거나\n"
-"                    작업 시간 관리 (오후 1시까지 작업 완료)를 하는데 유용하게 활용할 수 있습니다."
+"                    작업 시간 관리 (오후 1시까지 작업 완료)를 하는데 유용하"
+"게 활용할 수 있습니다."
 
 #. module: stock_picking_batch
 #. odoo-python

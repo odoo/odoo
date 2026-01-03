@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Larissa Manderfeld, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
@@ -49,17 +49,20 @@ msgid ""
 "                </p>"
 msgstr ""
 "<p class=\"o_view_nocontent\">\n"
-"                    Kaufen Sie jetzt Odoo Enterprise, um weitere Anbieter zu erhalten.\n"
+"                    Kaufen Sie jetzt Odoo Enterprise, um weitere Anbieter zu "
+"erhalten.\n"
 "                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_warning_text\">Test-</span>\n"
-"                                    <span class=\"o_stat_text\">Umgebung</span>"
+"                                    <span class=\"o_stat_text\">Umgebung</"
+"span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -75,7 +78,8 @@ msgstr "<span class=\"text-success\">Fehlerbeseitigungsanfragen</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">Produktions-</span>\n"
 "                                <span class=\"o_stat_text\">umgebung</span>"
@@ -92,9 +96,9 @@ msgid ""
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
 msgstr ""
-"Eine Beschreibung der Liefermethode, die Sie Ihren Kunden im Verkaufsauftrag"
-" und in der Verkaufsbestätigungs-E-Mail mitteilen möchten, z. B. "
-"Anweisungen, die die Kunden befolgen sollen."
+"Eine Beschreibung der Liefermethode, die Sie Ihren Kunden im Verkaufsauftrag "
+"und in der Verkaufsbestätigungs-E-Mail mitteilen möchten, z. B. Anweisungen, "
+"die die Kunden befolgen sollen."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -140,8 +144,7 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
-"Betrag (in Unternehmenswährung) des Auftrags, ab dem kostenlos geliefert "
-"wird"
+"Betrag (in Unternehmenswährung) des Auftrags, ab dem kostenlos geliefert wird"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -318,7 +321,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
-"PLZ-Präfixe für Lieferungen werden den Zustellern zugewiesen, um einzuschränken,\n"
+"PLZ-Präfixe für Lieferungen werden den Zustellern zugewiesen, um "
+"einzuschränken,\n"
 "            welche Postleitzahlen sie verfügbar sind."
 
 #. module: delivery
@@ -356,7 +360,8 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
-"Jedes Transportunternehmen (z. B. UPS) kann verschiedene Liefermethoden (z. B.\n"
+"Jedes Transportunternehmen (z. B. UPS) kann verschiedene Liefermethoden (z. "
+"B.\n"
 "            UPS Express, UPS Standard), mit einer individuellen Preisliste\n"
 "            für jede Methode haben."
 
@@ -367,7 +372,6 @@ msgstr "Umgebung"
 
 #. module: delivery
 #. odoo-python
-#: code:addons/delivery/models/delivery_carrier.py:0
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
@@ -383,11 +387,16 @@ msgstr "Fehler: Diese Liefermethode ist nicht verfügbar."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
-"Geschätzte Kosten: Dem Kunden werden die geschätzten Kosten für den Versand in Rechnung gestellt.\n"
-"Tatsächliche Kosten: Dem Kunden werden die tatsächlichen Kosten für den Versand in Rechnung gestellt, die Kosten für den Versand werden nach der Lieferung auf dem Verkaufsauftrag aktualisiert."
+"Geschätzte Kosten: Dem Kunden werden die geschätzten Kosten für den Versand "
+"in Rechnung gestellt.\n"
+"Tatsächliche Kosten: Dem Kunden werden die tatsächlichen Kosten für den "
+"Versand in Rechnung gestellt, die Kosten für den Versand werden nach der "
+"Lieferung auf dem Verkaufsauftrag aktualisiert."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -607,8 +616,8 @@ msgid ""
 "will only match '100' and not '1000')"
 msgstr ""
 "Präfixe der Postleitzahlen, die für dieses Transportunternehmen gelten. "
-"Beachten Sie, dass reguläre Ausdrücke verwendet werden können, um Länder mit"
-" unterschiedlich langen Postleitzahlen zu unterstützen, d. h. „$“ kann am "
+"Beachten Sie, dass reguläre Ausdrücke verwendet werden können, um Länder mit "
+"unterschiedlich langen Postleitzahlen zu unterstützen, d. h. „$“ kann am "
 "Ende des Präfixes hinzugefügt werden, um die genaue Postleitzahl zu finden "
 "(z. B. „100 $“ passt nur zu „100“ und nicht zu „1000“)."
 
@@ -735,8 +744,8 @@ msgid ""
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
 "Details zur Versandmethode, die in den unteren Teil der Bestellungen und "
-"deren Bestätigungs-E-Mails aufgenommen werden. Z. B. Anweisungen für Kunden,"
-" die zu befolgen sind."
+"deren Bestätigungs-E-Mails aufgenommen werden. Z. B. Anweisungen für Kunden, "
+"die zu befolgen sind."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -793,8 +802,10 @@ msgid ""
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Diese Methode ermöglicht die automatische Berechnung der Versandkosten,\n"
-"            entsprechend Ihrer Einstellungen; auf dem Verkaufsauftrag (basierend\n"
-"                auf dem Angebot) oder der Rechnung (basierend auf den Lieferaufträgen)."
+"            entsprechend Ihrer Einstellungen; auf dem Verkaufsauftrag "
+"(basierend\n"
+"                auf dem Angebot) oder der Rechnung (basierend auf den "
+"Lieferaufträgen)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
@@ -862,14 +873,18 @@ msgstr "Name der Gewichtsmaßeinheit"
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
-"Sie können die Versandkosten für einen Auftrag, der bereits abgerechnet wurde, nicht aktualisieren!\n"
+"Sie können die Versandkosten für einen Auftrag, der bereits abgerechnet "
+"wurde, nicht aktualisieren!\n"
 "\n"
-"Die folgenden Lieferpositionen (Produkt, abgerechnete Menge und Preis) sind bereits bearbeitet worden:\n"
+"Die folgenden Lieferpositionen (Produkt, abgerechnete Menge und Preis) sind "
+"bereits bearbeitet worden:\n"
 
 #. module: delivery
 #. odoo-python

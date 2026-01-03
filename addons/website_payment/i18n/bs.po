@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2025-11-23 06:11+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-17/"
@@ -28,7 +28,8 @@ msgstr ""
 msgid ""
 ".\n"
 "                        <br/>\n"
-"                        We appreciate your support for our organization as such.\n"
+"                        We appreciate your support for our organization as "
+"such.\n"
 "                        <br/>\n"
 "                        Regards."
 msgstr ""
@@ -64,7 +65,7 @@ msgid "<b>Payment Method:</b>"
 msgstr ""
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "<option value=\"\">Country...</option>"
 msgstr ""
 
@@ -72,7 +73,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
 msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please contact the website administrator."
+"                                If you believe that it is an error, please "
+"contact the website administrator."
 msgstr ""
 
 #. module: website_payment
@@ -98,6 +100,7 @@ msgid "Activate Payments"
 msgstr ""
 
 #. module: website_payment
+#: model:ir.actions.server,name:website_payment.action_activate_stripe
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Stripe"
 msgstr ""
@@ -124,7 +127,7 @@ msgid "Amount"
 msgstr "Iznos"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Amount ("
 msgstr ""
 
@@ -158,23 +161,18 @@ msgid "Configure %s"
 msgstr ""
 
 #. module: website_payment
-#: model:ir.actions.server,name:website_payment.action_stripe_connect_account
-msgid "Connect to Stripe"
-msgstr ""
-
-#. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 #: model:ir.model,name:website_payment.model_res_country
 #, python-format
 msgid "Country"
 msgstr "Država"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid ""
 "Country\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 
 #. module: website_payment
@@ -214,14 +212,20 @@ msgid "Display Options"
 msgstr ""
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+#, python-format
+msgid "Donate"
+msgstr ""
+
+#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "Donate Now"
 msgstr ""
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 #: model_terms:ir.ui.view,arch_db:website_payment.snippets
 msgid "Donation"
 msgstr ""
@@ -252,21 +256,21 @@ msgstr ""
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Email"
 msgstr "E-Mail"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid ""
 "Email\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Email is invalid"
 msgstr ""
@@ -280,7 +284,7 @@ msgstr ""
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Field '%s' is mandatory"
 msgstr ""
@@ -328,16 +332,16 @@ msgstr ""
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Name"
 msgstr "Naziv:"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid ""
 "Name\n"
-"                            <span class=\"s_website_form_mark\"> *</span>"
+"                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 
 #. module: website_payment
@@ -369,7 +373,7 @@ msgid "Other than Paypal"
 msgstr ""
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Payment Details"
 msgstr ""
 
@@ -382,6 +386,13 @@ msgstr ""
 #: model:ir.model,name:website_payment.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Transakcija plaćanja"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "Payment processing failed"
+msgstr ""
 
 #. module: website_payment
 #. odoo-python
@@ -423,13 +434,6 @@ msgid "Recipient Email"
 msgstr ""
 
 #. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-#, python-format
-msgid "Server Error"
-msgstr "Serverska greška"
-
-#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Shop - Payment"
 msgstr ""
@@ -446,7 +450,7 @@ msgstr ""
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: code:addons/website_payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Some information is missing to process your payment."
 msgstr ""
@@ -458,12 +462,16 @@ msgstr "Korak"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Stripe Connect is not available in your country, please use another payment provider."
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
 msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges."
+msgid ""
+"Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
+"Pay, etc. as well as recurring charges."
 msgstr ""
 
 #. module: website_payment
@@ -484,13 +492,6 @@ msgid "There is nothing to pay."
 msgstr ""
 
 #. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-#, python-format
-msgid "Validation Error"
-msgstr "Greška validacije"
-
-#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View Alternatives"
 msgstr ""
@@ -498,13 +499,6 @@ msgstr ""
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View other providers"
-msgstr ""
-
-#. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/website_payment_form.js:0
-#, python-format
-msgid "We could not obtain payment fees."
 msgstr ""
 
 #. module: website_payment
@@ -518,12 +512,12 @@ msgid "Website: Donation"
 msgstr ""
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Write us a comment"
 msgstr ""
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Your comment"
 msgstr ""
 
@@ -531,3 +525,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "made on"
 msgstr ""
+
+#, python-format
+#~ msgid "Server Error"
+#~ msgstr "Serverska greška"
+
+#, python-format
+#~ msgid "Validation Error"
+#~ msgstr "Greška validacije"

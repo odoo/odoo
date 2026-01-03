@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2025-11-20 17:46+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-12-30 17:21+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-17/"
 "website_event_sale/mn/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
@@ -35,10 +35,8 @@ msgstr ""
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid ""
-"<small class=\"o_wevent_participating text-bg-success\">\n"
-"                                            <i class=\"fa fa-check me-2\"/>\n"
-"                                            Registered\n"
-"                                        </small>"
+"<i class=\"fa fa-check me-2\"/>\n"
+"                                            Registered"
 msgstr ""
 
 #. module: website_event_sale
@@ -52,20 +50,33 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
-msgid "A pricelist item with a positive min. quantity cannot be applied to this event tickets product."
-msgstr "Үнийн хүснэгтийн дүрмийн хамгийн бага тоо хэмжээ нь нэмэх тэмдэгтэй тоо байна. Энэхүү үйл ажиллагааны тасалбарт тоо хэмжээ оруулах боломжгүй."
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+"Үнийн хүснэгтийн дүрмийн хамгийн бага тоо хэмжээ нь нэмэх тэмдэгтэй тоо "
+"байна. Энэхүү үйл ажиллагааны тасалбарт тоо хэмжээ оруулах боломжгүй."
 
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
-msgid "A pricelist item with a positive min. quantity will not be applied to the event tickets products."
-msgstr "Үнийн хүснэгтийн дүрмийн хамгийн бага тоо хэмжээ нь нэмэх тэмдэгтэй тоо байна. Энэхүү үйл ажиллагааны тасалбарт тоо хэмжээ оруулах боломжгүй."
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+"Үнийн хүснэгтийн дүрмийн хамгийн бага тоо хэмжээ нь нэмэх тэмдэгтэй тоо "
+"байна. Энэхүү үйл ажиллагааны тасалбарт тоо хэмжээ оруулах боломжгүй."
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
 msgid "Confirm Registration"
 msgstr "Бүртгэлийг батлах"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_event_sale_report
@@ -78,12 +89,12 @@ msgid "Event Tickets"
 msgstr "Арга хэмжээний тасалбарууд"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "Free"
 msgstr "үнэгүй"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "From"
 msgstr "Эхлэх"
 
@@ -101,6 +112,11 @@ msgstr ""
 #: model:ir.model,name:website_event_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
 msgstr "Үнийн хүснэгтийн дүрэм"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_template
+msgid "Product"
+msgstr "Бараа"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -128,14 +144,20 @@ msgstr "Борлуулалтын захиалгын мөр"
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
-msgstr "Уучлаарай, %(event)s арга хэмжээний %(ticket)s тасалбарууд зарагдаж дууссан байна."
+msgstr ""
+"Уучлаарай, %(event)s арга хэмжээний %(ticket)s тасалбарууд зарагдаж дууссан "
+"байна."
 
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
-msgid "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event."
-msgstr "Уучлаарай, %(event)s арга хэмжээний %(ticket)s тасалбаруудаас %(remaining_seats)d л суудал үлдсэн байна."
+msgid ""
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
+"ticket for the %(event)s event."
+msgstr ""
+"Уучлаарай, %(event)s арга хэмжээний %(ticket)s тасалбаруудаас "
+"%(remaining_seats)d л суудал үлдсэн байна."
 
 #. module: website_event_sale
 #. odoo-python
@@ -186,6 +208,6 @@ msgid "events"
 msgstr ""
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "to"
 msgstr "дуусах"

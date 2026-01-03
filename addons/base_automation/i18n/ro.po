@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_automation
-# 
+#
 # Translators:
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
@@ -14,20 +14,21 @@
 # Alin Miclea, 2024
 # Lyall Kindmurr, 2024
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: base_automation
 #. odoo-javascript
@@ -55,8 +56,8 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
-"Regulile de automatizare „On live update” pot fi utilizate numai cu tipul de"
-" acțiune „Executare cod Python”."
+"Regulile de automatizare „On live update” pot fi utilizate numai cu tipul de "
+"acțiune „Executare cod Python”."
 
 #. module: base_automation
 #. odoo-javascript
@@ -80,8 +81,8 @@ msgstr "<code>env</code>: mediul asupra căruia este declanșată acțiunea"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is"
-" a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is "
+"a void recordset"
 msgstr ""
 "<code>model</code>: modelul înregistrării pe care este declanșată acțiunea; "
 "este un set de înregistrări nule"
@@ -116,8 +117,8 @@ msgid ""
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
 "<i class=\"fa fa-info-circle\"/> Instrumentul implicit de obținere a "
-"înregistrărilor țintă va funcționa imediat pentru orice webhook care provine"
-" dintr-o altă instanță Odoo."
+"înregistrărilor țintă va funcționa imediat pentru orice webhook care provine "
+"dintr-o altă instanță Odoo."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -139,21 +140,30 @@ msgstr "Variabile <span class=\"text-muted\"> disponibile: </span>"
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"evaluation_type != 'value'\">to</span>\n"
-"                                                                <span invisible=\"evaluation_type != 'equation'\">as</span>"
+"                                                                <span "
+"invisible=\"evaluation_type != 'equation'\">as</span>"
 msgstr ""
 "<span invisible=\"evaluation_type != 'value'\">la în\n"
-"                                                                </span>                                                                <span invisible=\"evaluation_type != 'equation'\">calitate de</span>"
+"                                                                </"
+"span>                                                                <span "
+"invisible=\"evaluation_type != 'equation'\">calitate de</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"trigger != 'on_time_created'\">after creation</span>\n"
-"                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
-"                                    <span invisible=\"trigger != 'on_time'\">after</span>"
+"                                    <span invisible=\"trigger != "
+"'on_time_updated'\">after last update</span>\n"
+"                                    <span invisible=\"trigger != "
+"'on_time'\">after</span>"
 msgstr ""
 "<span invisible=\"trigger != 'on_time_created'\">după creare\n"
-"                                    </span>                                    <span invisible=\"trigger != 'on_time_updated'\">după ultima actualizare\n"
-"                                    </span>                                    <span invisible=\"trigger != 'on_time'\">după</span>"
+"                                    </"
+"span>                                    <span invisible=\"trigger != "
+"'on_time_updated'\">după ultima actualizare\n"
+"                                    </"
+"span>                                    <span invisible=\"trigger != "
+"'on_time'\">după</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -177,10 +187,11 @@ msgstr "<span>setându-l la</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
+msgid ""
+"<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
 msgstr ""
-"<strong><i class=\"fa fa-lock\"/> Păstrați secretul, păstrați-l în "
-"siguranță.</strong>"
+"<strong><i class=\"fa fa-lock\"/> Păstrați secretul, păstrați-l în siguranță."
+"</strong>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
@@ -210,7 +221,6 @@ msgstr "Adăuga o acțiune"
 
 #. module: base_automation
 #. odoo-javascript
-#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Add followers"
@@ -321,7 +331,6 @@ msgstr "Creează %(model_name)s cu nume %(value)s"
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
-#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Create a new Record"
 msgstr "Creează o înregistrare nouă"
@@ -335,7 +344,6 @@ msgstr "Creare activitate: %(activity_name)s"
 
 #. module: base_automation
 #. odoo-javascript
-#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Create next activity"
@@ -427,13 +435,17 @@ msgstr "Dezactivați regula de automatizare"
 #, python-format
 msgid ""
 "Disabling this automation rule will enable you to continue your workflow\n"
-"                but any data created after this could potentially be corrupted,\n"
-"                as you are effectively disabling a customization that may set\n"
+"                but any data created after this could potentially be "
+"corrupted,\n"
+"                as you are effectively disabling a customization that may "
+"set\n"
 "                important and/or required fields."
 msgstr ""
-"Dezactivarea acestei reguli de automatizare vă va permite să continuați fluxul de lucru\n"
+"Dezactivarea acestei reguli de automatizare vă va permite să continuați "
+"fluxul de lucru\n"
 "                dar orice date create după aceasta ar putea fi corupte,\n"
-"                deoarece dezactivați în mod eficient o personalizare care poate fi setată\n"
+"                deoarece dezactivați în mod eficient o personalizare care "
+"poate fi setată\n"
 "                câmpuri importante și/sau obligatorii."
 
 #. module: base_automation
@@ -477,14 +489,12 @@ msgstr ""
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
-#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Execute Python Code"
 msgstr "Execută cod Python"
 
 #. module: base_automation
 #. odoo-javascript
-#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Execute several actions"
@@ -532,8 +542,8 @@ msgstr "ID"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation"
-" rule."
+"If present, this condition must be satisfied before executing the automation "
+"rule."
 msgstr ""
 "Dacă este prezentă, această condiție trebuie să fie îndeplinită înainte de "
 "executarea regulii de automatizare."
@@ -737,7 +747,6 @@ msgstr "Înregistrare Getter"
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
-#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Remove followers"
 msgstr "Elimină urmăritorii"
@@ -772,7 +781,6 @@ msgstr "Câmpuri selectate"
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
-#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Send SMS Text Message"
 msgstr "Trimitere mesaj text SMS"
@@ -795,16 +803,17 @@ msgstr "Trimiteți o notificare Webhook"
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up on\n"
+"                after a month of inactivity or remind yourself to follow-up "
+"on\n"
 "                tasks when a specific tag is added."
 msgstr ""
-"Trimiteți un e-mail atunci când un obiect își schimbă starea, arhivați înregistrările\n"
+"Trimiteți un e-mail atunci când un obiect își schimbă starea, arhivați "
+"înregistrările\n"
 "                după o lună de inactivitate sau reamintiți-vă să urmăriți\n"
 "                atunci când este adăugată o anumită etichetă."
 
 #. module: base_automation
 #. odoo-javascript
-#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Send email"
@@ -834,11 +843,11 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store"
-" it."
+"Some triggers need a reference to another field. This field is used to store "
+"it."
 msgstr ""
-"Unele mecanisme de declanșare au nevoie de o referință la un alt câmp. Acest"
-" câmp este utilizat pentru a o stoca."
+"Unele mecanisme de declanșare au nevoie de o referință la un alt câmp. Acest "
+"câmp este utilizat pentru a o stoca."
 
 #. module: base_automation
 #. odoo-javascript
@@ -878,8 +887,7 @@ msgstr "Înregistrare țintă"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
-msgid ""
-"Target model of actions %(action_names)s are different from rule model."
+msgid "Target model of actions %(action_names)s are different from rule model."
 msgstr ""
 "Modelul țintă al acțiunilor %(action_names)s este diferit de modelul de "
 "regulă."
@@ -991,7 +999,6 @@ msgstr "Actualizare"
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
-#: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Update the Record"
 msgstr "Actualizați înregistrarea"
@@ -1026,7 +1033,6 @@ msgstr "Valori actualizate"
 
 #. module: base_automation
 #. odoo-python
-#: code:addons/base_automation/models/base_automation.py:0
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
@@ -1071,10 +1077,12 @@ msgstr ""
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will "
+"be checked at creation and update."
 msgstr ""
 "Când ar trebui să fie declanșată condiția.\n"
-"                Dacă este prezent, va fi verificat de programator. Dacă este gol, va fi verificat la creare și actualizare."
+"                Dacă este prezent, va fi verificat de programator. Dacă este "
+"gol, va fi verificat la creare și actualizare."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

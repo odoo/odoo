@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_timesheet
-# 
+#
 # Translators:
 # Daniel Löfgren, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
@@ -17,19 +17,19 @@
 # Lasse L, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:33+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet
@@ -121,8 +121,12 @@ msgstr "<b class=\"tip_title\">Tips: Registrera dina tidrapporter snabbare</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
-msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Datum\" title=\"Datum\"/>"
+msgid ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Datum\" "
+"title=\"Datum\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -138,11 +142,15 @@ msgstr "<span class=\"o_stat_text\">tidrapporter</span>"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
-"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Hours Spent on Sub-tasks:</span>\n"
-"                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">Days Spent on Sub-tasks:</span>"
+"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Hours Spent on "
+"Sub-tasks:</span>\n"
+"                                <span class=\"text-nowrap\" invisible=\"not "
+"encode_uom_in_days\">Days Spent on Sub-tasks:</span>"
 msgstr ""
-"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Timmar ägnade åt deluppgifter:</span>\n"
-"                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">Dagar spenderade på deluppgifter:</span>"
+"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Timmar ägnade "
+"åt deluppgifter:</span>\n"
+"                                <span class=\"text-nowrap\" invisible=\"not "
+"encode_uom_in_days\">Dagar spenderade på deluppgifter:</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -150,9 +158,11 @@ msgid ""
 "<span invisible=\"not has_timesheet\">\n"
 "                        You cannot delete employees who have timesheets.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            You can either archive these employees or first delete all of their timesheets.\n"
+"                            You can either archive these employees or first "
+"delete all of their timesheets.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Please first delete all of their timesheets.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -163,9 +173,11 @@ msgstr ""
 "<span invisible=\"not has_timesheet\">\n"
 "                        Du kan inte ta bort anställda som har tidrapporter.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            Du kan antingen arkivera dessa anställda eller först ta bort alla deras tidrapporter.\n"
+"                            Du kan antingen arkivera dessa anställda eller "
+"först ta bort alla deras tidrapporter.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Ta först bort alla deras tidrapporter.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -302,13 +314,20 @@ msgstr "Objekttransaktion"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_id
 msgid ""
-"Analytic account to which this project, its tasks and its timesheets are linked. \n"
-"Track the costs and revenues of your project by setting this analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
-"This analytic account can be changed on each task individually if necessary.\n"
+"Analytic account to which this project, its tasks and its timesheets are "
+"linked. \n"
+"Track the costs and revenues of your project by setting this analytic "
+"account on your related documents (e.g. sales orders, invoices, purchase "
+"orders, vendor bills, expenses etc.).\n"
+"This analytic account can be changed on each task individually if "
+"necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
-"Objektt konto till vilket detta projekt, dess uppgifter och dess tidrapporter är kopplade.\n"
-"Spåra kostnaderna och intäkterna för ditt projekt genom att ställa in detta analytiska konto på dina relaterade dokument (t.ex. försäljningsorder, fakturor, inköpsorder, leverantörsräkningar, utgifter etc.).\n"
+"Objektt konto till vilket detta projekt, dess uppgifter och dess "
+"tidrapporter är kopplade.\n"
+"Spåra kostnaderna och intäkterna för ditt projekt genom att ställa in detta "
+"analytiska konto på dina relaterade dokument (t.ex. försäljningsorder, "
+"fakturor, inköpsorder, leverantörsräkningar, utgifter etc.).\n"
 "Detta analytiska konto kan ändras för varje uppgift individuellt vid behov.\n"
 "Ett objektkonto krävs för att använda tidrapporter."
 
@@ -317,11 +336,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid ""
-"Analyze the projects and tasks on which your employees spend their time.<br>\n"
+"Analyze the projects and tasks on which your employees spend their time."
+"<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
 "Objekta de projekt och uppgifter som dina anställda ägnar sin tid åt.<br>\n"
-"                Utvärdera vilken del som är fakturerbar och vilka kostnader den representerar."
+"                Utvärdera vilken del som är fakturerbar och vilka kostnader "
+"den representerar."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_allow
@@ -521,7 +542,6 @@ msgstr "Faktisk tid"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
-#: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__employee_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__employee_id
@@ -586,8 +606,7 @@ msgstr "Extra tid"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid ""
-"Generate timesheets for validated time off requests and public holidays"
+msgid "Generate timesheets for validated time off requests and public holidays"
 msgstr ""
 "Skapa tidrapporter för bekräftade ansökningar om ledighet och helgdagar"
 
@@ -664,14 +683,12 @@ msgstr "Internt projekt"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
-#: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "Invalid operator: %s"
 msgstr "Ogiltig operator: %s"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/project_project.py:0
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "Invalid value: %s"
@@ -837,7 +854,6 @@ msgstr "Förlopp"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/controllers/portal.py:0
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_project_project
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__project_id
@@ -1021,7 +1037,6 @@ msgstr "Deluppgifter Nedlagda timmar"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
-#: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_project_task
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__task_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__task_id
@@ -1059,11 +1074,11 @@ msgstr "Det finns inga tidrapporter."
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid ""
-"These projects have some timesheet entries referencing them. Before removing"
-" these projects, you have to remove these timesheet entries."
+"These projects have some timesheet entries referencing them. Before removing "
+"these projects, you have to remove these timesheet entries."
 msgstr ""
-"Dessa projekt har några tidrapporteringsposter som refererar till dem. Innan"
-" du tar bort dessa projekt måste du ta bort dessa tidrapporteringsposter."
+"Dessa projekt har några tidrapporteringsposter som refererar till dem. Innan "
+"du tar bort dessa projekt måste du ta bort dessa tidrapporteringsposter."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1103,11 +1118,11 @@ msgstr "Operatorn %s stöds inte i denna sökmetod."
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid ""
-"This project has some timesheet entries referencing it. Before removing this"
-" project, you have to remove these timesheet entries."
+"This project has some timesheet entries referencing it. Before removing this "
+"project, you have to remove these timesheet entries."
 msgstr ""
-"Detta projekt har några tidrapporteringsposter som refererar till det. Innan"
-" du tar bort detta projekt måste du ta bort dessa tidrapporteringsposter."
+"Detta projekt har några tidrapporteringsposter som refererar till det. Innan "
+"du tar bort detta projekt måste du ta bort dessa tidrapporteringsposter."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1143,10 +1158,12 @@ msgstr "Denna vecka"
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects, don't forget to setup the right "
+"unit of measure in your employees."
 msgstr ""
 "Detta kommer att ange den måttenhet som används i projekt och uppgifter.\n"
-"Om du använder tidrapporten kopplad till projekt, glöm inte att ställa in rätt måttenhet för dina anställda."
+"Om du använder tidrapporten kopplad till projekt, glöm inte att ställa in "
+"rätt måttenhet för dina anställda."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1361,8 +1378,7 @@ msgstr ""
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid ""
-"Timesheets must be created with an active employee in the selected "
-"companies."
+"Timesheets must be created with an active employee in the selected companies."
 msgstr "Tidrapporter måste skapas med en aktiv anställd i de valda företagen."
 
 #. module: hr_timesheet
@@ -1423,11 +1439,11 @@ msgstr "Total tidrapporteringstid"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
 msgid ""
-"Total number of time (in the proper UoM) recorded in the project, rounded to"
-" the unit."
+"Total number of time (in the proper UoM) recorded in the project, rounded to "
+"the unit."
 msgstr ""
-"Totalt antal timmar (i rätt UoM) som registrerats i projektet, avrundat till"
-" enheten."
+"Totalt antal timmar (i rätt UoM) som registrerats i projektet, avrundat till "
+"enheten."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1439,8 +1455,8 @@ msgstr "Total:"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
-"Track your working hours by projects every day and invoice this time to your"
-" customers."
+"Track your working hours by projects every day and invoice this time to your "
+"customers."
 msgstr ""
 "Notera era arbetade timmar per projekt varje dag och fakturera denna tid "
 "till era kunder."
@@ -1467,7 +1483,8 @@ msgid ""
 "        @user Assign the task to a user\n"
 "        ! Set the task a high priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
 "Använd dessa nyckelord i titeln för att ställa in nya uppgifter:\n"
 "\n"
@@ -1476,7 +1493,8 @@ msgstr ""
 "        @user Tilldela uppgiften till en användare\n"
 "        ! Ge uppgiften hög prioritet\n"
 "\n"
-"        Se till att använda rätt format och ordning, t.ex. Förbättra konfigurationsskärmen 5 tim #feature #v16 @Mitchell !"
+"        Se till att använda rätt format och ordning, t.ex. Förbättra "
+"konfigurationsskärmen 5 tim #feature #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1574,10 +1592,12 @@ msgstr "timmar"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "on\n"
-"                            <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
+"                            <span class=\"fw-bold text-dark\"> Sub-tasks</"
+"span>)"
 msgstr ""
 "på\n"
-"                            <span class=\"fw-bold text-dark\"> Underuppgifter</span>)"
+"                            <span class=\"fw-bold text-dark\"> "
+"Underuppgifter</span>)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1586,4 +1606,5 @@ msgid ""
 "                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
 "på\n"
-"                        <span class=\"fw-bold text-dark\"> Underuppgifter</span>)"
+"                        <span class=\"fw-bold text-dark\"> Underuppgifter</"
+"span>)"

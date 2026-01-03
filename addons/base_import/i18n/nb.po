@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-# 
+#
 # Translators:
 # Thor Arne Hvidsten <thor.arne.hvidsten@gmail.com>, 2024
 # Marius Stedjan <marius@stedjan.com>, 2024
 # Jorunn D. Newth, 2024
 # Martin Trigaux, 2024
 # Rune Restad, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Rune Restad, 2025\n"
-"Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
+"Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/"
+"nb/)\n"
+"Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_import
@@ -73,8 +74,8 @@ msgstr ""
 #, python-format
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
 
@@ -151,8 +152,6 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Comma"
 msgstr "Komma"
@@ -169,8 +168,7 @@ msgstr "Kommentarer"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
 
 #. module: base_import
@@ -194,7 +192,6 @@ msgstr "Opprettet den"
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
@@ -230,7 +227,6 @@ msgstr "Visningsnavn"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Dot"
 msgstr ""
@@ -238,8 +234,6 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Download"
@@ -308,7 +302,6 @@ msgstr ""
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
 msgstr "Ekstern ID"
@@ -342,7 +335,6 @@ msgstr "Filtype"
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
@@ -379,8 +371,8 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
 msgstr ""
 
 #. module: base_import
@@ -505,7 +497,6 @@ msgstr ""
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
@@ -704,7 +695,6 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
-#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Skip record"
 msgstr ""
@@ -732,7 +722,6 @@ msgstr ""
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Stop Import"
@@ -826,8 +815,10 @@ msgstr "Spor historikk under import"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr "Kunne ikke laste inn \"{extension}\"-fil, krever Python-modul \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgstr ""
+"Kunne ikke laste inn \"{extension}\"-fil, krever Python-modul \"{modname}\""
 
 #. module: base_import
 #. odoo-python
@@ -836,8 +827,7 @@ msgstr "Kunne ikke laste inn \"{extension}\"-fil, krever Python-modul \"{modname
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
-"Filformatet \"{}\" er ikke støttet, import støtter bare CSV, ODS, XLS og "
-"XLSX"
+"Filformatet \"{}\" er ikke støttet, import støtter bare CSV, ODS, XLS og XLSX"
 
 #. module: base_import
 #. odoo-javascript
@@ -866,8 +856,8 @@ msgstr ""
 #, python-format
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
-"system. You can use a custom format in addition to the suggestions provided."
-" Leave empty to let Odoo guess the format (recommended)"
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
 
 #. module: base_import
@@ -875,10 +865,10 @@ msgstr ""
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid ""
-"Use YYYY to represent the year, MM for the month and DD for the day. Include"
-" separators such as a dot, forward slash or dash. You can use a custom "
-"format in addition to the suggestions provided. Leave empty to let Odoo "
-"guess the format (recommended)"
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
 
 #. module: base_import

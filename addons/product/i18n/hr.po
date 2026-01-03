@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2025-11-20 16:27+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-17/product/"
@@ -85,7 +85,8 @@ msgstr "$15.00"
 #, python-format
 msgid ""
 "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 msgstr ""
 
 #. module: product
@@ -149,10 +150,13 @@ msgstr "- Barkod \"%s\" je već dodijeljen prooizvod(ima)u: %s"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
 msgid ""
-"- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.\n"
-"        - Dynamically: Each variant is created only when its corresponding attributes and values are added to a sales order.\n"
+"- Instantly: All possible variants are created as soon as the attribute and "
+"its values are added to a product.\n"
+"        - Dynamically: Each variant is created only when its corresponding "
+"attributes and values are added to a sales order.\n"
 "        - Never: Variants are never created for the attribute.\n"
-"        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
+"        Note: the variants creation mode cannot be changed once the "
+"attribute is used on at least one product."
 msgstr ""
 
 #. module: product
@@ -216,8 +220,12 @@ msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
-msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Valuta\" title=\"Valuta\"/>"
+msgid ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
+msgstr ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Valuta\" title=\"Valuta\"/"
+">"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -225,7 +233,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
 "                                        Extra Prices\n"
 "                                    </span>\n"
-"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                    <span class=\"o_stat_text\" "
+"invisible=\"pricelist_item_count != 1\">\n"
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
@@ -298,8 +307,8 @@ msgstr " Barkod se može dodijeliti samo jednom pakiranju."
 #: model:ir.model.fields,help:product.field_product_product__description_sale
 #: model:ir.model.fields,help:product.field_product_template__description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
 "Opis proizvoda koji želite prenijeti svojim kupcima. Ovaj opis bit će "
@@ -316,8 +325,11 @@ msgstr "Pakiranje već koristi ovaj barkod"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
-"A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
-"            This is the perfect tool to handle several pricings, seasonal discounts, etc."
+"A price is a set of sales prices or rules to compute the price of sales "
+"order lines based on products, product categories, dates and ordered "
+"quantities.\n"
+"            This is the perfect tool to handle several pricings, seasonal "
+"discounts, etc."
 msgstr ""
 
 #. module: product
@@ -331,11 +343,13 @@ msgstr "Proizvod već koristi ovaj barkod"
 #: model:ir.model.fields,help:product.field_product_product__detailed_type
 #: model:ir.model.fields,help:product.field_product_template__detailed_type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory "
+"app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Proizvod koji se može skladištiti je proizvod čijim zalihama možete upravljati. \n"
+"Proizvod koji se može skladištiti je proizvod čijim zalihama možete "
+"upravljati. \n"
 "Potrebno je instalirati aplikaciju Inventar.\n"
 "Potrošni proizvod je proizvod za koji se ne upravlja zalihama.\n"
 "Usluga je nematerijalni proizvod koji pružate."
@@ -479,9 +493,11 @@ msgstr "Dozvoli korisnicima da unose prilagođene vrijednosti za ovaj atribut"
 #: model:ir.model.fields,help:product.field_res_config_settings__group_sale_pricelist
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
-"                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
+"                Example: 10% for retailers, promotion of 5 EUR on this "
+"product, etc."
 msgstr ""
-"Omogućuje korištenje različitih cijena, bazirano na pravilima po kategorijama kupaca.\n"
+"Omogućuje korištenje različitih cijena, bazirano na pravilima po "
+"kategorijama kupaca.\n"
 "Primjer: 10% za trgovce, popust od 5 kn na odabrani proizvod itd."
 
 #. module: product
@@ -730,8 +746,7 @@ msgstr "Odaberite izgled naljepnica"
 #. module: product
 #: model:ir.model,name:product.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
-"Odaberite kako želite rasporediti naljepnice na papiru prilikom ispisa"
+msgstr "Odaberite kako želite rasporediti naljepnice na papiru prilikom ispisa"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -1317,8 +1332,8 @@ msgstr "Dodatne naknade"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
 msgid ""
-"Extra price for the variant with this attribute value on sale price. eg. 200"
-" price extra, 1000 + 200 = 1200."
+"Extra price for the variant with this attribute value on sale price. eg. 200 "
+"price extra, 1000 + 200 = 1200."
 msgstr ""
 
 #. module: product
@@ -1384,7 +1399,8 @@ msgstr "Font awesome ikona npr. fa-tasks"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
 msgid ""
-"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
 
@@ -1812,8 +1828,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
 msgid ""
-"Make this attribute value not compatible with other values of the product or"
-" some attribute values of optional and accessory products."
+"Make this attribute value not compatible with other values of the product or "
+"some attribute values of optional and accessory products."
 msgstr ""
 
 #. module: product
@@ -2049,8 +2065,8 @@ msgstr "Uredska svjetiljka"
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
 msgid ""
-"On the product %(product)s you cannot associate the value %(value)s with the"
-" attribute %(attribute)s because they do not match."
+"On the product %(product)s you cannot associate the value %(value)s with the "
+"attribute %(attribute)s because they do not match."
 msgstr ""
 
 #. module: product
@@ -2291,7 +2307,6 @@ msgstr "Cijene"
 
 #. module: product
 #. odoo-javascript
-#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #, python-format
 msgid "Print"
@@ -2708,8 +2723,8 @@ msgstr "Vezna oznaka"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid ""
-"Register the prices requested by your vendors for each product, based on the"
-" quantity and the period."
+"Register the prices requested by your vendors for each product, based on the "
+"quantity and the period."
 msgstr ""
 "Zabilježite cijene koje su ponudili vaši dobavljači za svaki proizvod, "
 "ovisno o količini i razdoblju."
@@ -2863,7 +2878,8 @@ msgid ""
 msgstr ""
 "Postavlja cijenu kao višestruku vrijednost ove vrijednosti.\n"
 "Zaokruživanje se izvršava nakon izračuna popusta i prije dodatka na cijenu.\n"
-"Za dobivanje cijene koja završava na 9.99 postavite zaokruživanje na 10, a dodatak na cijenu -0.01"
+"Za dobivanje cijene koja završava na 9.99 postavite zaokruživanje na 10, a "
+"dodatak na cijenu -0.01"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -2891,8 +2907,8 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
-"Odredite proizvod ako se ovo pravilo odnosi na jedan proizvod inače ostavite"
-" prazno."
+"Odredite proizvod ako se ovo pravilo odnosi na jedan proizvod inače ostavite "
+"prazno."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
@@ -3073,8 +3089,8 @@ msgstr "Broj proizvoda u ovoj kategoriji (ne ubraja podređene kategorije)"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
-"The number of variants to generate is above allowed limit. You should either"
-" not generate variants for each combination or generate them on demand from "
+"The number of variants to generate is above allowed limit. You should either "
+"not generate variants for each combination or generate them on demand from "
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
@@ -3099,8 +3115,8 @@ msgid ""
 "unit of measure of the product otherwise."
 msgstr ""
 "Količina za nabavu od ovog dobavljača kako bi se ostvarila povoljna cijena, "
-"izražena u dobavljačevoj jedinici mjere proizvoda, a ako takva ne postoji, u"
-" zadanoj jedinici mjere proizvoda."
+"izražena u dobavljačevoj jedinici mjere proizvoda, a ako takva ne postoji, u "
+"zadanoj jedinici mjere proizvoda."
 
 #. module: product
 #. odoo-python
@@ -3112,8 +3128,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
-"The sale price is managed from the product template. Click on the 'Configure"
-" Variants' button to set the extra attribute prices."
+"The sale price is managed from the product template. Click on the 'Configure "
+"Variants' button to set the extra attribute prices."
 msgstr ""
 "Prodajnom cijenom upravlja se od predloška proizvoda. Kliknite gumb "
 "\"Konfiguriraj varijante\" da biste postavili cijene dodatnih atributa."
@@ -3373,7 +3389,8 @@ msgstr "Vrijednost cijene dodatno"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
+"        Used to value the product when the purchase cost is not known (e.g. "
+"inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 
@@ -3552,8 +3569,8 @@ msgstr "Upozorenja"
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
-"We pay special attention to detail, which is why our desks are of a superior"
-" quality."
+"We pay special attention to detail, which is why our desks are of a superior "
+"quality."
 msgstr ""
 
 #. module: product
@@ -3601,7 +3618,8 @@ msgid ""
 "You are setting a Decimal Accuracy less precise than the UOMs:\n"
 "%s\n"
 "This may cause inconsistencies in computations.\n"
-"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+"Please increase the rounding of those units of measure, or the digits of "
+"this Decimal Accuracy."
 msgstr ""
 
 #. module: product
@@ -3656,7 +3674,8 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
-"You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot change the Variants Creation Mode of the attribute %(attribute)s "
+"because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
 
@@ -3665,8 +3684,8 @@ msgstr ""
 #: code:addons/product/models/product_attribute_value.py:0
 #, python-format
 msgid ""
-"You cannot change the attribute of the value %(value)s because it is used on"
-" the following products: %(products)s"
+"You cannot change the attribute of the value %(value)s because it is used on "
+"the following products: %(products)s"
 msgstr ""
 
 #. module: product
@@ -3696,8 +3715,7 @@ msgstr "Nije moguće kreirati rekurzivne kategorije."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_value_value_company_uniq
-msgid ""
-"You cannot create two values with the same name for the same attribute."
+msgid "You cannot create two values with the same name for the same attribute."
 msgstr ""
 
 #. module: product
@@ -3712,7 +3730,6 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_category.py:0
-#: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot delete the %s product category."
 msgstr "Nije moguće brisati kategoriju %s."
@@ -3722,7 +3739,8 @@ msgstr "Nije moguće brisati kategoriju %s."
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
-"You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot delete the attribute %(attribute)s because it is used on the "
+"following products:\n"
 "%(products)s"
 msgstr ""
 
@@ -3731,9 +3749,11 @@ msgstr ""
 #: code:addons/product/models/product_attribute_value.py:0
 #, python-format
 msgid ""
-"You cannot delete the value %(value)s because it is used on the following products:\n"
+"You cannot delete the value %(value)s because it is used on the following "
+"products:\n"
 "%(products)s\n"
-" If the value has been associated to a product in the past, you will not be able to delete it."
+" If the value has been associated to a product in the past, you will not be "
+"able to delete it."
 msgstr ""
 
 #. module: product
@@ -3767,13 +3787,12 @@ msgstr ""
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
 msgid ""
-"You cannot move the attribute %(attribute)s from the product %(product_src)s"
-" to the product %(product_dest)s."
+"You cannot move the attribute %(attribute)s from the product %(product_src)s "
+"to the product %(product_dest)s."
 msgstr ""
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_template_attribute_value.py:0
 #: code:addons/product/models/product_template_attribute_value.py:0
 #, python-format
 msgid ""
@@ -3787,7 +3806,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
-"                            whether it's a storable product, a consumable or a service."
+"                            whether it's a storable product, a consumable or "
+"a service."
 msgstr ""
 
 #. module: product
@@ -3798,33 +3818,43 @@ msgid ""
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
 "Sve što prodajete ili kupujete potrebno je definirati kao atrikl,\n"
-"                bez obzira na to radi li se o artiklu koji je moguće pohraniti, potrošnom materijalu ili usluzi."
+"                bez obzira na to radi li se o artiklu koji je moguće "
+"pohraniti, potrošnom materijalu ili usluzi."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
 "Morate definirati artikl za sve što prodate, bilo da je fizički artikl,\n"
 "                potrošni materijal ili usluga koju nudite kupcima.\n"
-"                Obrazac artikala sadrži podatke za pojednostavljivanje postupka prodaje:\n"
-"                cijena, bilješke u ponudi, računovodstveni podaci, načini nabave itd."
+"                Obrazac artikala sadrži podatke za pojednostavljivanje "
+"postupka prodaje:\n"
+"                cijena, bilješke u ponudi, računovodstveni podaci, načini "
+"nabave itd."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 msgid ""
-"You must define a product for everything you sell, whether it's a physical product,\n"
+"You must define a product for everything you sell, whether it's a physical "
+"product,\n"
 "                a consumable or a service you offer to customers.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
 "Morate definirati artikl za sve što prodate, bilo da je fizički artikl,\n"
 "                potrošni materijal ili usluga koju nudite kupcima.\n"
-"                Obrazac artikala sadrži podatke za pojednostavljivanje postupka prodaje:\n"
-"                cijena, bilješke u ponudi, računovodstveni podaci, načini nabave itd."
+"                Obrazac artikala sadrži podatke za pojednostavljivanje "
+"postupka prodaje:\n"
+"                cijena, bilješke u ponudi, računovodstveni podaci, načini "
+"nabave itd."
 
 #. module: product
 #. odoo-javascript

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-11-04 20:30+0000\n"
 "Last-Translator: Sayaka Yamada <sayaka@quartile.co>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
@@ -35,8 +35,8 @@ msgid ""
 "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
 "Pay Now</span>"
 msgstr ""
-"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
-"今すぐ支払う</span>"
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> 今"
+"すぐ支払う</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -85,21 +85,26 @@ msgstr "<span class=\"o_stat_text\">支払取引</span>"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
 "<strong>No suitable payment method could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please contact the website\n"
+"                                If you believe that it is an error, please "
+"contact the website\n"
 "                                administrator."
 msgstr ""
 "<strong>適用可能な決済方法が見つかりませんでした</strong><br/>\n"
-"                                エラーと思われる場合は、ウェブサイトの管理者までお問い合わせください。"
+"                                エラーと思われる場合は、ウェブサイトの管理者"
+"までお問い合わせください。"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>警告！</strong>この支払には保留中の返金があります。 \n"
-"                        処理されるまでしばらくお待ち下さい。数分経っても返金が保留中の場合は\n"
+"                        処理されるまでしばらくお待ち下さい。数分経っても返金"
+"が保留中の場合は\n"
 "                        支払いプロバイダーの設定を確認して下さい。"
 
 #. module: account_payment
@@ -138,7 +143,8 @@ msgstr "支払済金額"
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
-msgstr "承認されたトランザクションを無効にしますか?このアクションは元に戻せません。"
+msgstr ""
+"承認されたトランザクションを無効にしますか?このアクションは元に戻せません。"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
@@ -231,7 +237,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"テストモードでは、偽の支払いがテスト支払インターフェイスを通じて処理されます。\n"
+"テストモードでは、偽の支払いがテスト支払インターフェイスを通じて処理されま"
+"す。\n"
 "このモードは、プロバイダを設定する際に推奨されます。"
 
 #. module: account_payment
@@ -287,14 +294,18 @@ msgstr "返金上限"
 msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
-msgstr "利用できるのは、金額を把握できるプロバイダーのトークンのみであるることに注意して下さい。"
+msgstr ""
+"利用できるのは、金額を把握できるプロバイダーのトークンのみであるることに注意"
+"して下さい。"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
 msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
-msgstr "（金額をキャプチャする代わりに）トランザクションの承認のみに設定されたプロバイダーのトークンは利用できないことに注意して下さい。"
+msgstr ""
+"（金額をキャプチャする代わりに）トランザクションの承認のみに設定されたプロバ"
+"イダーのトークンは利用できないことに注意して下さい。"
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
@@ -407,7 +418,6 @@ msgstr "プロバイダー"
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
-#: code:addons/account_payment/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 #, python-format
@@ -507,7 +517,6 @@ msgstr "参照された取引%(ref)sに関連する支払いが計上されま�
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
-#: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The provided parameters are invalid."
 msgstr "指定されたパラメータが無効です。"
@@ -567,10 +576,12 @@ msgstr "無効な取引"
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"有効状態またはテスト状態のプロバイダーにリンクされている支払方法を削除することはできません。\n"
+"有効状態またはテスト状態のプロバイダーにリンクされている支払方法を削除するこ"
+"とはできません。\n"
 "リンクされているプロバイダー:%s"
 
 #. module: account_payment
@@ -580,7 +591,9 @@ msgstr ""
 msgid ""
 "You cannot uninstall this module as payments using this payment method "
 "already exist."
-msgstr "この支払い方法を使用した支払が既に存在するため、このモジュールをアンインストールすることはできません。"
+msgstr ""
+"この支払い方法を使用した支払が既に存在するため、このモジュールをアンインス"
+"トールすることはできません。"
 
 #. module: account_payment
 #. odoo-python

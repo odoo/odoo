@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* microsoft_calendar
-# 
+#
 # Translators:
 # Abe Manyo, 2024
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:36+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: microsoft_calendar
@@ -78,8 +78,8 @@ msgstr ""
 #: code:addons/microsoft_calendar/models/res_users.py:0
 #, python-format
 msgid ""
-"An error occurred while generating the token. Your authorization code may be"
-" invalid or has already expired [%s]. You should check your Client ID and "
+"An error occurred while generating the token. Your authorization code may be "
+"invalid or has already expired [%s]. You should check your Client ID and "
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
@@ -120,8 +120,6 @@ msgstr "Pengaturan Konfigurasi"
 
 #. module: microsoft_calendar
 #. odoo-javascript
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid "Configuration"
@@ -195,11 +193,15 @@ msgstr ""
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid ""
-"Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
-"If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar."
+"Due to an Outlook Calendar limitation, recurrence updates must be done "
+"directly in Outlook Calendar.\n"
+"If this recurrence is not shown in Outlook Calendar, you must delete it in "
+"Odoo Calendar and recreate it in Outlook Calendar."
 msgstr ""
-"Oleh karena batasan Outlook Calendar, update rutin harus dilakukan langsung di Outlook Calendar.\n"
-"Bila update rutin tersebut tidak ditunjukkan di Outlook Calendar, Anda harus menghapusnya di Odoo Calendar dan membuat ulang di Outlook Calendar."
+"Oleh karena batasan Outlook Calendar, update rutin harus dilakukan langsung "
+"di Outlook Calendar.\n"
+"Bila update rutin tersebut tidak ditunjukkan di Outlook Calendar, Anda harus "
+"menghapusnya di Odoo Calendar dan membuat ulang di Outlook Calendar."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -227,11 +229,17 @@ msgstr "Peraturan Acara Rutin"
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid ""
-"For a correct synchronization between Odoo and Outlook Calendar, all attendees must have an email address. However, some events do not respect this condition. As long as the events are incorrect, the calendars will not be synchronized.\n"
+"For a correct synchronization between Odoo and Outlook Calendar, all "
+"attendees must have an email address. However, some events do not respect "
+"this condition. As long as the events are incorrect, the calendars will not "
+"be synchronized.\n"
 "Either update the events/attendees or archive these events %s:\n"
 "%s"
 msgstr ""
-"Untuk sinkronisasi yang tepat di antara Odoo dan Outlook Calendar, semua peserta harus memiliki alamat email. Namun, beberapa acara tidak mematuhi kondisi ini. Selama acara tidak tepat, kalender-kalender tersebut tidak akan disinkronisasi.\n"
+"Untuk sinkronisasi yang tepat di antara Odoo dan Outlook Calendar, semua "
+"peserta harus memiliki alamat email. Namun, beberapa acara tidak mematuhi "
+"kondisi ini. Selama acara tidak tepat, kalender-kalender tersebut tidak akan "
+"disinkronisasi.\n"
 "Baik update acara/peserta atau arsip acara berikut %s:\n"
 "%s"
 
@@ -404,8 +412,6 @@ msgstr "Id acara Organizer"
 #. module: microsoft_calendar
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
 #, python-format
 msgid "Outlook"
 msgstr "Outlook"
@@ -431,8 +437,8 @@ msgid ""
 "the following event."
 msgstr ""
 "Batasan outlook: dalam recurrence, acara tidak dapat dipindahkan ke atau "
-"sebelum hari acara sebelumnya, dan tidak dapat dipindah ke atau setelah hari"
-" acara berikutnya."
+"sebelum hari acara sebelumnya, dan tidak dapat dipindah ke atau setelah hari "
+"acara berikutnya."
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -493,8 +499,8 @@ msgstr "Sinkronisasi hanya acara baru"
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid ""
-"The Outlook Synchronization needs to be configured before you can use it, do"
-" you want to do it now?"
+"The Outlook Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
 msgstr ""
 "Sinkronisasi Outlook harus dikonfigurasi sebelum Anda dapat menggunakannya, "
 "apakah Anda ingin melakukannya sekarang?"
@@ -557,8 +563,8 @@ msgstr "Acara User yang Tersedia"
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid ""
-"You are about to stop the synchronization of your calendar with Outlook. Are"
-" you sure you want to continue?"
+"You are about to stop the synchronization of your calendar with Outlook. Are "
+"you sure you want to continue?"
 msgstr ""
 "Anda akan menghentikan sinkronisasi kalender Anda dengan Outlook. Apakah "
 "Anda yakin ingin melanjutkan?"

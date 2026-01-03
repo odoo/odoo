@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-11-18 13:57+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-17/"
@@ -44,8 +44,6 @@ msgstr "% Õigeaegne tarne"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/stock_rule.py:0
-#: code:addons/purchase_stock/models/stock_rule.py:0
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -68,7 +66,8 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
+msgid ""
+"<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
 msgstr ""
 "<span invisible=\"on_time_rate &gt;= 0\">Õigeaegse kohaletoimetamise kohta "
 "pole andmeid</span>"
@@ -98,11 +97,13 @@ msgstr "<strong>Tarneaadress:</strong>"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Vastavalt toote konfiguratsioonile saab saadetud kogust automaatselt arvutada mehhanismi abil:\n"
+"Vastavalt toote konfiguratsioonile saab saadetud kogust automaatselt "
+"arvutada mehhanismi abil:\n"
 "  - Käsitsi: kogus määratakse reale käsitsi\n"
 "  - Laoliikumised: kogus tuleb kinnitatud korjetest\n"
 
@@ -170,7 +171,6 @@ msgstr "Loodud ostutellimuse read"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/stock_move.py:0
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid "Currency exchange rate difference"
@@ -270,13 +270,13 @@ msgstr "Muudatus(ed):"
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 #, python-format
 msgid ""
-"For the product %s, the warehouse of the operation type (%s) is inconsistent"
-" with the location (%s) of the reordering rule (%s). Change the operation "
+"For the product %s, the warehouse of the operation type (%s) is inconsistent "
+"with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
 msgstr ""
-"For the product %s, the warehouse of the operation type (%s) is inconsistent"
-" with the location (%s) of the reordering rule (%s). Muuda operatsioonitüüpi"
-" või tühista hinnapäring."
+"For the product %s, the warehouse of the operation type (%s) is inconsistent "
+"with the location (%s) of the reordering rule (%s). Muuda operatsioonitüüpi "
+"või tühista hinnapäring."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -371,12 +371,12 @@ msgstr "Võib-olla on vaja teha manuaalseid tegevusi."
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -408,8 +408,8 @@ msgstr "Mitte vastuvõetud"
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
 msgstr "Odoo ei saa anglosaksi kirjeid genereerida. Kogu väärtus %s on null."
 
 #. module: purchase_stock
@@ -451,8 +451,8 @@ msgstr "Tellimispunkt"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past x days; the number of products received on time divided by the"
-" number of ordered products.x is either the System Parameter "
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
 "Viimase x päeva jooksul: õigeaegselt saabunud toodete arv jagatud tellitud "
@@ -741,9 +741,9 @@ msgstr ""
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
-"There is no matching vendor price to generate the purchase order for product"
-" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
-" Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
 msgstr ""
 "Toote ostutellimuse genereerimiseks pole ühtegi sobivat tarnija hinda %s "
 "(pole määratletud müüjat, miinimumkogust pole saavutatud, kuupäevad pole "
@@ -773,17 +773,17 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -822,8 +822,7 @@ msgstr "Siirded"
 #: code:addons/purchase_stock/models/purchase_order.py:0
 #, python-format
 msgid ""
-"Unable to cancel purchase order %s as some receptions have already been "
-"done."
+"Unable to cancel purchase order %s as some receptions have already been done."
 msgstr ""
 "Ei ole võimalik tühistada ostuarvet %s kuna osaliselt on kauba vastuvõtt "
 "juba toimunud."
@@ -887,8 +886,8 @@ msgstr "Kui tooted on ostetud, saab need siia lattu toimetada"
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need.<br/>Note: This rule will be used in combination"
-" with the rules<br/>of the reception route(s)"
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
 msgstr ""
 "Kui %s on tooteid vaja, luuakse vajaduse täitmiseks hinnapakkumine. Märkus: "
 "Seda reeglit kasutatakse koos vastuvõtumarsruudi(de) reeglitega"

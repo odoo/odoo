@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-# 
+#
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # Chloe Wang, 2024
 # Wil Odoo, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: delivery
@@ -58,7 +59,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">测试</span>\n"
 "                                <span class=\"o_stat_text\">环境</span>"
@@ -77,7 +79,8 @@ msgstr "<span class=\"text-success\">调试请求</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">生产</span>\n"
 "                                <span class=\"o_stat_text\">环境</span>"
@@ -93,7 +96,9 @@ msgid ""
 "A description of the delivery method that you want to communicate to your "
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
-msgstr "您希望在销售订单和销售确认电子邮件中与客户沟通的交货方式的描述，例如，客户要遵循的指示。"
+msgstr ""
+"您希望在销售订单和销售确认电子邮件中与客户沟通的交货方式的描述，例如，客户要"
+"遵循的指示。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -352,7 +357,9 @@ msgid ""
 "Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
-msgstr "每家承运商（如 UPS）可以有多种运输方式（如 UPS 快递、UPS 标准），并有一套相应的定价规则。"
+msgstr ""
+"每家承运商（如 UPS）可以有多种运输方式（如 UPS 快递、UPS 标准），并有一套相应"
+"的定价规则。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -361,7 +368,6 @@ msgstr "环境"
 
 #. module: delivery
 #. odoo-python
-#: code:addons/delivery/models/delivery_carrier.py:0
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
@@ -377,8 +383,10 @@ msgstr "错误：此交货方式不适用。"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "预估成本：客户将收到预估运费的发票。\n"
 "实际费用：客户将收到实际运费的发票，运费将在交货后更新到 SO 上。"
@@ -592,8 +600,9 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
-"该承运商适用的邮编前缀。请注意，正则表达式可用于支持不同国家/地区的不同邮编长度，例如，可将“$”添加至邮编前缀的末尾，以匹配具体邮编（例如，“100$”"
-" 只匹配“100”，而不匹配 “1000”）"
+"该承运商适用的邮编前缀。请注意，正则表达式可用于支持不同国家/地区的不同邮编长"
+"度，例如，可将“$”添加至邮编前缀的末尾，以匹配具体邮编（例如，“100$” 只匹"
+"配“100”，而不匹配 “1000”）"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -712,7 +721,9 @@ msgstr "运输保险服务，可为包裹在运输途中丢失、被盗和/或�
 msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
-msgstr "交货方式详细信息将包含在底部销售订单及其确认电子邮件中。例如，客户要遵循的指示。"
+msgstr ""
+"交货方式详细信息将包含在底部销售订单及其确认电子邮件中。例如，客户要遵循的指"
+"示。"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -765,7 +776,9 @@ msgid ""
 "These methods allow to automatically compute the delivery price\n"
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
-msgstr "这些方法可以根据您的设置，在销售订单（基于报价单）或发票（基于交货单）上自动计算运费。"
+msgstr ""
+"这些方法可以根据您的设置，在销售订单（基于报价单）或发票（基于交货单）上自动"
+"计算运费。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
@@ -833,9 +846,11 @@ msgstr "重量单位名称"
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
 "已结算的订单，不支持修改运费！\n"

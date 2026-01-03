@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2025-11-11 13:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-17/"
@@ -43,7 +43,10 @@ msgstr "Шинжилгээний мөр"
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
 #, python-format
-msgid "Both the internal project and task are required to generate a timesheet for the time off %s. If you don't want a timesheet, you should leave the internal project and task empty."
+msgid ""
+"Both the internal project and task are required to generate a timesheet for "
+"the time off %s. If you don't want a timesheet, you should leave the "
+"internal project and task empty."
 msgstr ""
 
 #. module: project_timesheet_holidays
@@ -63,8 +66,8 @@ msgstr "Ажилтан"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
-msgid "Generate Timesheet"
-msgstr "Цагийн хуудас үүсгэх"
+msgid "Generate Timesheets"
+msgstr ""
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -78,12 +81,14 @@ msgstr "Бүх нийтийн амралт"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
-msgid "If checked, when validating a time off, timesheet will be generated in the Vacation Project of the company."
+msgid ""
+"If checked, when validating a time off, timesheet will be generated in the "
+"Vacation Project of the company."
 msgstr ""
 
 #. module: project_timesheet_holidays
 #. odoo-python
-#: code:addons/project_timesheet_holidays/models/res_company.py:0
+#: code:addons/project_timesheet_holidays/__init__.py:0
 #, python-format
 msgid "Internal"
 msgstr "Дотоод"
@@ -126,16 +131,22 @@ msgstr "Даалгавар"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
-msgid "The default project used when automatically generating timesheets via time off requests. You can specify another project on each time off type individually."
+msgid ""
+"The default project used when automatically generating timesheets via time "
+"off requests. You can specify another project on each time off type "
+"individually."
 msgstr ""
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
-msgid "The default task used when automatically generating timesheets via time off requests. You can specify another task on each time off type individually."
+msgid ""
+"The default task used when automatically generating timesheets via time off "
+"requests. You can specify another task on each time off type individually."
 msgstr ""
 
 #. module: project_timesheet_holidays
 #. odoo-python
+#: code:addons/project_timesheet_holidays/__init__.py:0
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave
@@ -188,26 +199,44 @@ msgstr ""
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
-msgid "You cannot create timesheets for a task that is linked to a time off type. Please use the Time Off application to request new time off instead."
+msgid ""
+"You cannot create timesheets for a task that is linked to a time off type. "
+"Please use the Time Off application to request new time off instead."
 msgstr ""
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
-msgid "You cannot delete timesheets linked to time off. Please, cancel the time off instead."
+msgid ""
+"You cannot delete timesheets linked to time off. Please, cancel the time off "
+"instead."
 msgstr ""
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
-msgid "You cannot delete timesheets that are linked to time off requests. Please cancel your time off request from the Time Off application instead."
+msgid "You cannot delete timesheets that are linked to global time off."
 msgstr ""
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
-msgid "You cannot modify timesheets that are linked to time off requests. Please use the Time Off application to modify your time off requests instead."
+msgid ""
+"You cannot delete timesheets that are linked to time off requests. Please "
+"cancel your time off request from the Time Off application instead."
 msgstr ""
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+#, python-format
+msgid ""
+"You cannot modify timesheets that are linked to time off requests. Please "
+"use the Time Off application to modify your time off requests instead."
+msgstr ""
+
+#~ msgid "Generate Timesheet"
+#~ msgstr "Цагийн хуудас үүсгэх"

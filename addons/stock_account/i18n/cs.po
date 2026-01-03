@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
-"PO-Revision-Date: 2025-11-20 16:13+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-12-31 11:32+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-17/"
 "stock_account/cs/>\n"
@@ -23,9 +23,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : "
+"(n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_account
 #. odoo-python
@@ -39,11 +39,10 @@ msgstr ""
 #: code:addons/stock_account/models/stock_quant.py:0
 #, python-format
 msgid " [Accounted on %s]"
-msgstr ""
+msgstr " [Zaznamenáno na %s]"
 
 #. module: stock_account
 #. odoo-python
-#: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
@@ -51,7 +50,6 @@ msgstr "%(user)s změnil cenu z %(previous)s na %(new_price)s - %(product)s"
 
 #. module: stock_account
 #. odoo-python
-#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid ""
@@ -63,7 +61,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid ""
 ")\n"
-"                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
+"                            <small class=\"mx-2 fst-italic\">Use a negative "
+"added value to record a decrease in the product value</small>"
 msgstr ""
 
 #. module: stock_account
@@ -153,8 +152,8 @@ msgstr "Přidaná hodnota"
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
-"Affect landed costs on reception operations and split them among products to"
-" update their cost price."
+"Affect landed costs on reception operations and split them among products to "
+"update their cost price."
 msgstr ""
 
 #. module: stock_account
@@ -212,8 +211,8 @@ msgstr "Zrušit"
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
-"Cannot find a stock input account for the product %s. You must define one on"
-" the product category, or on the location, before processing this operation."
+"Cannot find a stock input account for the product %s. You must define one on "
+"the product category, or on the location, before processing this operation."
 msgstr ""
 "Nelze najít vstupní skladový účet zásob pro produkt %s. Před zpracováním "
 "této operace je nutné jej definovat na kategorii výrobku nebo na umístění."
@@ -297,8 +296,10 @@ msgstr "Odpovídající účet"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid ""
-"Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
-"                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
+"Counterpart journal items for all incoming stock moves will be posted in "
+"this account, unless there is a specific valuation account\n"
+"                set on the source location. This is the default value for "
+"all products in this category. It can also directly be set on each product."
 msgstr ""
 
 #. module: stock_account
@@ -516,12 +517,15 @@ msgstr "Ruční ocenění zásob: Není uveden žádný důvod."
 #: model:ir.model.fields,help:stock_account.field_product_template__valuation
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__property_valuation
 msgid ""
-"Manual: The accounting entries to value the inventory are not posted automatically.\n"
-"        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
+"Manual: The accounting entries to value the inventory are not posted "
+"automatically.\n"
+"        Automated: An accounting entry is automatically created to value the "
+"inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
 "Manuální: Účetní položky pro ocenění zásob nejsou automaticky zaúčtovány. \n"
-"Automatizované: Účetní položka je automaticky vytvořena pro ocenění zásob, když produkt vstoupí do společnosti nebo opustí společnost"
+"Automatizované: Účetní položka je automaticky vytvořena pro ocenění zásob, "
+"když produkt vstoupí do společnosti nebo opustí společnost"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -675,9 +679,12 @@ msgstr "Standardní cena"
 #: model:ir.model.fields,help:stock_account.field_product_template__cost_method
 #: model:ir.model.fields,help:stock_account.field_stock_quant__cost_method
 msgid ""
-"Standard Price: The products are valued at their standard cost defined on the product.\n"
-"        Average Cost (AVCO): The products are valued at weighted average cost.\n"
-"        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
+"Standard Price: The products are valued at their standard cost defined on "
+"the product.\n"
+"        Average Cost (AVCO): The products are valued at weighted average "
+"cost.\n"
+"        First In First Out (FIFO): The products are valued supposing those "
+"that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
 
@@ -775,8 +782,7 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"ISO kód země ve dvou znacích. Toto pole můžete použít pro rychlé "
-"vyhledávání."
+"ISO kód země ve dvou znacích. Toto pole můžete použít pro rychlé vyhledávání."
 
 #. module: stock_account
 #. odoo-python
@@ -789,7 +795,6 @@ msgstr ""
 
 #. module: stock_account
 #. odoo-python
-#: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -888,8 +893,8 @@ msgstr "Převod"
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,help:stock_account.field_stock_return_picking_line__to_refund
 msgid ""
-"Trigger a decrease of the delivered/received quantity in the associated Sale"
-" Order/Purchase Order"
+"Trigger a decrease of the delivered/received quantity in the associated Sale "
+"Order/Purchase Order"
 msgstr ""
 "Spusťte snížení dodaného / přijatého množství v související objednávce / "
 "objednávce"
@@ -926,10 +931,10 @@ msgid ""
 "internal locations."
 msgstr ""
 "Používá se pro oceňování zásob v reálném čase. Pokud je tento účet nastaven "
-"na virtuálním místě (bez interního typu), bude tento účet používán k udržení"
-" hodnoty produktů přesunutých z interního umístění do tohoto umístění "
-"namísto generického účtu Stock Output nastaveného na produktu. To nemá žádný"
-" vliv na vnitřní umístění."
+"na virtuálním místě (bez interního typu), bude tento účet používán k udržení "
+"hodnoty produktů přesunutých z interního umístění do tohoto umístění namísto "
+"generického účtu Stock Output nastaveného na produktu. To nemá žádný vliv na "
+"vnitřní umístění."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -940,11 +945,11 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Používá se pro ocenění zásob v reálném čase. Pokud je nastaven na virtuálním"
-" místě (ne interním typu), bude tento účet používán k držení hodnoty "
-"produktů přesunutých z tohoto umístění a do interního umístění, namísto "
-"obecného účtu výstupu produktu nastaveného na produktu. To nemá žádný vliv "
-"na interní umístění."
+"Používá se pro ocenění zásob v reálném čase. Pokud je nastaven na virtuálním "
+"místě (ne interním typu), bude tento účet používán k držení hodnoty produktů "
+"přesunutých z tohoto umístění a do interního umístění, namísto obecného účtu "
+"výstupu produktu nastaveného na produktu. To nemá žádný vliv na interní "
+"umístění."
 
 #. module: stock_account
 #: model:ir.ui.menu,name:stock_account.menu_valuation
@@ -1013,8 +1018,11 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
 msgid ""
-"When doing automated inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account,\n"
-"                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
+"When doing automated inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account,\n"
+"                unless there is a specific valuation account set on the "
+"destination location. This is the default value for all products in this "
+"category.\n"
 "                It can also directly be set on each product."
 msgstr ""
 
@@ -1024,8 +1032,8 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
-"Při automatizovaném oceňování zásob se jedná o účetní deník, ve kterém budou"
-" položky při zpracování pohybů zásob automaticky zaúčtovány."
+"Při automatizovaném oceňování zásob se jedná o účetní deník, ve kterém budou "
+"položky při zpracování pohybů zásob automaticky zaúčtovány."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
@@ -1063,15 +1071,14 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"You don't have any input valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any input valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
 "Ve své kategorii produktů nemáte definován žádný účet pro hodnocení vstupů. "
 "Před zpracováním této operace musíte definovat jeden."
 
 #. module: stock_account
 #. odoo-python
-#: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -1084,8 +1091,8 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"You don't have any stock input account defined on your product category. You"
-" must define one before processing this operation."
+"You don't have any stock input account defined on your product category. You "
+"must define one before processing this operation."
 msgstr ""
 
 #. module: stock_account
@@ -1102,13 +1109,11 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#: code:addons/stock_account/models/product.py:0
-#: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
-"You don't have any stock valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any stock valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
 "Ve své kategorii produktů nemáte definován žádný účet pro oceňování zásob. "
 "Před zpracováním této operace musíte definovat jeden."

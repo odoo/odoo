@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-# 
+#
 # Translators:
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
 # Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2023
@@ -12,19 +12,19 @@
 # Janne Rättyä <janne.rattya@web-veistamo.fi>, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_import
@@ -79,8 +79,8 @@ msgstr "Mahdollista alikenttien tunnistus"
 #, python-format
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
 "Latauksessa tapahtui tunnistamaton virhe. Mahdollisesti yhteys katkesi, "
@@ -160,8 +160,6 @@ msgstr "Sarakkeen nimi"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Comma"
 msgstr "Pilkku"
@@ -178,11 +176,9 @@ msgstr "Kommentit"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"Ei pysty lataamaan URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Ei pysty lataamaan URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -205,7 +201,6 @@ msgstr "Luotu"
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
@@ -241,7 +236,6 @@ msgstr "Näyttönimi"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Dot"
 msgstr "Piste"
@@ -249,8 +243,6 @@ msgstr "Piste"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Download"
@@ -295,9 +287,9 @@ msgid ""
 "title row has %d entries while the first row has %d. You may need to change "
 "the separator character."
 msgstr ""
-"Virhe tietueiden tuonnin aikana: kaikkien rivien pitäisi olla samankokoisia,"
-" mutta otsikkorivillä on %d merkintää, kun taas ensimmäisellä rivillä on %d."
-" Sinun on ehkä muutettava erotinmerkkiäs."
+"Virhe tietueiden tuonnin aikana: kaikkien rivien pitäisi olla samankokoisia, "
+"mutta otsikkorivillä on %d merkintää, kun taas ensimmäisellä rivillä on %d. "
+"Sinun on ehkä muutettava erotinmerkkiäs."
 
 #. module: base_import
 #. odoo-javascript
@@ -323,7 +315,6 @@ msgstr ""
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
@@ -358,7 +349,6 @@ msgstr "Tiedostotyyppi"
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
@@ -395,11 +385,11 @@ msgstr "Muotoilu"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
 msgstr ""
-"Havaittu väärän muotoinen kuvadata. Kuvien tulisi olla koodattuna "
-"base64-muotoon tai URLeja."
+"Havaittu väärän muotoinen kuvadata. Kuvien tulisi olla koodattuna base64-"
+"muotoon tai URLeja."
 
 #. module: base_import
 #. odoo-javascript
@@ -439,8 +429,10 @@ msgid ""
 "                    simpler especially when the file has many columns."
 msgstr ""
 "Jos tiedosto sisältää\n"
-"                    sarakkeiden nimet, Odoo voi auatomaattisesti yrittää tunnistaa niitä\n"
-"                    vastaavat kentätä. Tämä tekee latauksesta yksinkertaista, erityisesti\n"
+"                    sarakkeiden nimet, Odoo voi auatomaattisesti yrittää "
+"tunnistaa niitä\n"
+"                    vastaavat kentätä. Tämä tekee latauksesta "
+"yksinkertaista, erityisesti\n"
 "\\v                    jos tiedostossa on useita sarakkeita."
 
 #. module: base_import
@@ -534,11 +526,9 @@ msgstr ""
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
-msgstr ""
-"Virheellinen solu rivillä %(row)s, sarakkeessa %(col)s: %(cell_value)s"
+msgstr "Virheellinen solu rivillä %(row)s, sarakkeessa %(col)s: %(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -733,7 +723,6 @@ msgstr "Sivu:"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
-#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Skip record"
 msgstr "Hyppää tietueen yli"
@@ -761,7 +750,6 @@ msgstr "Aloita riviltä"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Stop Import"
@@ -855,10 +843,11 @@ msgstr "Kirjaa muutoshistoria tuonnin aikana"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
-"Ei voi ladata \"{extension}\" tiedosto: tarvitsee Python-moduulin "
-"\"{modname}\""
+"Ei voi ladata \"{extension}\" tiedosto: tarvitsee Python-moduulin \"{modname}"
+"\""
 
 #. module: base_import
 #. odoo-python
@@ -866,7 +855,8 @@ msgstr ""
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr "Tukematon tiedostomuoto \"{}\", tuonti tukee vain CSV, ODS, XLS and XLSX"
+msgstr ""
+"Tukematon tiedostomuoto \"{}\", tuonti tukee vain CSV, ODS, XLS and XLSX"
 
 #. module: base_import
 #. odoo-javascript
@@ -895,8 +885,8 @@ msgstr "Lataa Excel- tai CSV-tiedosto tuontiin"
 #, python-format
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
-"system. You can use a custom format in addition to the suggestions provided."
-" Leave empty to let Odoo guess the format (recommended)"
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
 "Käytä HH-tuntia 24 tunnin järjestelmässä ja II-tuntia yhdessä p-kirjaimen "
 "kanssa 12 tunnin järjestelmässä. Voit käyttää mukautettua muotoa annettujen "
@@ -908,10 +898,10 @@ msgstr ""
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid ""
-"Use YYYY to represent the year, MM for the month and DD for the day. Include"
-" separators such as a dot, forward slash or dash. You can use a custom "
-"format in addition to the suggestions provided. Leave empty to let Odoo "
-"guess the format (recommended)"
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
 "Käytä YYYY-vuotta, MM-kuukautta ja DD-päivää. Käytä erottimia, kuten "
 "pistettä, vinoviivaa tai katkoviivaa. Voit käyttää mukautettua muotoa "

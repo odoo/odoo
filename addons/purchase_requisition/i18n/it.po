@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_requisition
-# 
+#
 # Translators:
 # Marianna Ciofani, 2024
 # Wil Odoo, 2025
 # Sergio Zanchetta <primes2h@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -358,13 +359,19 @@ msgstr "Crea alternativa"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid ""
-"Create a call for tender by adding alternative requests for quotation to different vendors.\n"
-"                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
-"                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
+"Create a call for tender by adding alternative requests for quotation to "
+"different vendors.\n"
+"                            Make your choice by selecting the best "
+"combination of lead time, OTD and/or total amount.\n"
+"                            By comparing product lines you can also decide "
+"to order some products from one vendor and others from another vendor."
 msgstr ""
-"Crea una gara d'appalto aggiungendo richiese di preventivo alternative per vari fornitori.\n"
-"                            Effettua una scelta in base alla migliore combinazione in termini di tempi di risposta, OTS e/o importo totale.\n"
-"                            Confrontando le righe del prodotto puoi anche decidere di ordinare alcuni prodotti da un fornitore e altri da un altro."
+"Crea una gara d'appalto aggiungendo richiese di preventivo alternative per "
+"vari fornitori.\n"
+"                            Effettua una scelta in base alla migliore "
+"combinazione in termini di tempi di risposta, OTS e/o importo totale.\n"
+"                            Confrontando le righe del prodotto puoi anche "
+"decidere di ordinare alcuni prodotti da un fornitore e altri da un altro."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -479,11 +486,13 @@ msgstr "Icona Font Awesome es. fa-tasks"
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specific period\n"
-"            (e.g. a year) and you order products within this agreement to benefit\n"
+"            (e.g. a year) and you order products within this agreement to "
+"benefit\n"
 "            from the negotiated prices."
 msgstr ""
 "Per un ordine quadro è possibile registrare un contratto per un periodo\n"
-"            specifico (es. un anno), ordinando i prodotti all'interno dell'accordo e beneficiando\n"
+"            specifico (es. un anno), ordinando i prodotti all'interno "
+"dell'accordo e beneficiando\n"
 "            dei prezzi negoziati."
 
 #. module: purchase_requisition
@@ -543,9 +552,9 @@ msgstr "Se selezionata, alcuni messaggi presentano un errore di consegna."
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
 msgid ""
 "If the chosen vendor or if any of the products in the original PO have a "
-"blocking warning then we prevent creation of alternative PO. This is because"
-" normally these fields are cleared w/warning message within form view, but "
-"we cannot recreate that in this case."
+"blocking warning then we prevent creation of alternative PO. This is because "
+"normally these fields are cleared w/warning message within form view, but we "
+"cannot recreate that in this case."
 msgstr ""
 "Se il venditore scelto o se uno dei prodotti dell'ordine di acquisto "
 "originale presenta un avviso di blocco, impediamo la creazione di un ordine "
@@ -942,13 +951,19 @@ msgstr "Selezione di una sola RdP (esclusiva)"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__exclusive
 msgid ""
-"Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel the remaining purchase order.\n"
+"Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel "
+"the remaining purchase order.\n"
 "\n"
-"                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
+"                    Select multiple RFQ (non-exclusive): allows multiple "
+"purchase orders. On confirmation of a purchase order it does not cancel the "
+"remaining orders"
 msgstr ""
-"Selezione di una sola RdP (esclusiva):  quando viene confermato un ordine di acquisto, annulla quelli restanti.\n"
+"Selezione di una sola RdP (esclusiva):  quando viene confermato un ordine di "
+"acquisto, annulla quelli restanti.\n"
 "\n"
-"                    Selezione di RdP multiple (non esclusiva): consente ordini di acquisto multipli. Alla conferma di un ordine di acquisto, non annulla quelli restanti."
+"                    Selezione di RdP multiple (non esclusiva): consente "
+"ordini di acquisto multipli. Alla conferma di un ordine di acquisto, non "
+"annulla quelli restanti."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -958,8 +973,7 @@ msgstr "Sequenza"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
 msgid ""
-"Set active to false to hide the Purchase Agreement Types without removing "
-"it."
+"Set active to false to hide the Purchase Agreement Types without removing it."
 msgstr ""
 "Per nascondere le tipologie di contratto di acquisto senza rimuoverle, "
 "impostare Attivo a falso."
@@ -1066,9 +1080,9 @@ msgstr ""
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
-"The vendor you have selected or at least one of the products you are copying"
-" from the original order has a blocking warning on it and cannot be selected"
-" to create an alternative."
+"The vendor you have selected or at least one of the products you are copying "
+"from the original order has a blocking warning on it and cannot be selected "
+"to create an alternative."
 msgstr ""
 "Il venditore che hai selezionato oppure almeno uno dei prodotti che stai "
 "copiando dal'ordine originale presenta un avviso di blocco e non può essere "
@@ -1095,7 +1109,6 @@ msgstr ""
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
-#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid "This is a blocking warning!\n"
 msgstr "Questo è  un avviso di blocco!\n"
@@ -1107,11 +1120,14 @@ msgstr "Questo è  un avviso di blocco!\n"
 msgid ""
 "To close this purchase requisition, cancel related Requests for Quotation.\n"
 "\n"
-"Imagine the mess if someone confirms these duplicates: double the order, double the trouble :)"
+"Imagine the mess if someone confirms these duplicates: double the order, "
+"double the trouble :)"
 msgstr ""
-"Per chiudere questa richiesta di acquisto annulla le richieste di preventivo collegate.\n"
+"Per chiudere questa richiesta di acquisto annulla le richieste di preventivo "
+"collegate.\n"
 "\n"
-"Immagina cosa può accadere se qualcuno conferma i duplicati: ordini duplicati, problemi duplicati :)"
+"Immagina cosa può accadere se qualcuno conferma i duplicati: ordini "
+"duplicati, problemi duplicati :)"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -1224,8 +1240,8 @@ msgstr "Cosa ne pensi dell'alternativa Richieste di preventivo?"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
 msgid ""
-"Whether or not this purchase order is linked to another purchase order as an"
-" alternative."
+"Whether or not this purchase order is linked to another purchase order as an "
+"alternative."
 msgstr ""
 "Se l'ordine di acquisto è collegato o meno ad un altro ordine di acquisto "
 "come alternativa."
@@ -1256,13 +1272,10 @@ msgstr "È possibile cancellare solo le bozze o le richieste annullate."
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
 msgstr ""
-"Impossibile confermare il contratto \"%s\", non sono presenti righe "
-"prodotto."
+"Impossibile confermare il contratto \"%s\", non sono presenti righe prodotto."
 
 #. module: purchase_requisition
 #. odoo-python
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."

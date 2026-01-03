@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-11-18 13:55+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-17/"
@@ -43,8 +43,6 @@ msgstr "% Entrega a temps"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/stock_rule.py:0
-#: code:addons/purchase_stock/models/stock_rule.py:0
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -67,7 +65,8 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
+msgid ""
+"<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
 msgstr ""
 "<span invisible=\"on_time_rate &gt;= 0\">No hi ha dades sobre els "
 "lliuraments a temps</span>"
@@ -97,11 +96,13 @@ msgstr "<strong>Adreça d'enviament:</strong>"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Segons la configuració del producte, la quantitat rebuda es pot calcular automàticament mitjançant un mecanisme:\n"
+"Segons la configuració del producte, la quantitat rebuda es pot calcular "
+"automàticament mitjançant un mecanisme:\n"
 "  - Manual: la quantitat s'estableix manualment a la línia\n"
 "  - Moviments d'estoc: la quantitat prové de recollida confirmada\n"
 
@@ -169,7 +170,6 @@ msgstr "Línies creades de la comanda de compra"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/stock_move.py:0
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid "Currency exchange rate difference"
@@ -268,8 +268,8 @@ msgstr "Excepció(ns):"
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 #, python-format
 msgid ""
-"For the product %s, the warehouse of the operation type (%s) is inconsistent"
-" with the location (%s) of the reordering rule (%s). Change the operation "
+"For the product %s, the warehouse of the operation type (%s) is inconsistent "
+"with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
 msgstr ""
 "Per al producte %s, el magatzem del tipus d'operació (%s) és inconsistent "
@@ -369,8 +369,8 @@ msgstr "Accions manuals poden ser requerides."
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 "Marge d'error pels terminis d'entrega del venedor. Quan el sistema genera "
 "comandes per productes, es programaran dies abans per fer front a retards "
@@ -406,8 +406,8 @@ msgstr "No s'ha rebut"
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
 msgstr ""
 "Odoo no és capaç de generar les entrades de saxons anglòfons. La valoració "
 "total%s és zero"
@@ -451,8 +451,8 @@ msgstr "Punt de comanda"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past x days; the number of products received on time divided by the"
-" number of ordered products.x is either the System Parameter "
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
 "Durant els últims x dies, el nombre de productes rebuts a temps dividit pel "
@@ -741,9 +741,9 @@ msgstr ""
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
-"There is no matching vendor price to generate the purchase order for product"
-" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
-" Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
 msgstr ""
 "No hi ha cap preu de proveïdor coincident per generar la comanda de compra "
 "del producte %s (cap venedor definit, quantitat mínima no assolit, dates no "
@@ -774,18 +774,18 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
 "Això afegeix una ruta d'expedició a aplicar en productes amb l'objectiu de "
 "demanar als teus proveïdors de realitzar entregues als teus clients. Un "
 "producte destinat a la navegació generarà una sol·licitud pressupost de "
 "compra un cop confirmada la comanda de venda. Es tracta d’un flux sota "
-"demanda. L’adreça de lliurament sol·licitada serà l’adreça de lliurament del"
-" client i no el vostre magatzem."
+"demanda. L’adreça de lliurament sol·licitada serà l’adreça de lliurament del "
+"client i no el vostre magatzem."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -825,8 +825,7 @@ msgstr "Transferència"
 #: code:addons/purchase_stock/models/purchase_order.py:0
 #, python-format
 msgid ""
-"Unable to cancel purchase order %s as some receptions have already been "
-"done."
+"Unable to cancel purchase order %s as some receptions have already been done."
 msgstr ""
 "No es pot cancel·lar la comanda de compra %s, ja que algunes recepcions ja "
 "s'han completat."
@@ -890,12 +889,12 @@ msgstr "Quan es comprin productes, podran ser enviats a aquest magatzem."
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need.<br/>Note: This rule will be used in combination"
-" with the rules<br/>of the reception route(s)"
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
 msgstr ""
 "Quan es necessiten productes en <b>%s</b>, <br/> es crea una sol·licitud de "
-"pressupost per satisfer la necessitat. <br/>Nota: Aquesta regla s'utilitzarà"
-" en combinació amb les regles<br/>de la(es) ruta(es) de recepció"
+"pressupost per satisfer la necessitat. <br/>Nota: Aquesta regla s'utilitzarà "
+"en combinació amb les regles<br/>de la(es) ruta(es) de recepció"
 
 #. module: purchase_stock
 #. odoo-python

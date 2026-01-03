@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_adyen
-# 
+#
 # Translators:
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Claudia Baisan, 2024
@@ -11,29 +11,32 @@
 # Lyall Kindmurr, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2025
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid ""
-"<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
-"                    the Capture Delay to manual on your Adyen account settings."
+"<strong>Warning:</strong> To capture the amount manually, you also need to "
+"set\n"
+"                    the Capture Delay to manual on your Adyen account "
+"settings."
 msgstr ""
-"<strong>Alertă:</strong> Dacă doriți să efectuați transferul manual, trebuie"
-" să setați Capture Delay din contul dvs Adyen în modul manual."
+"<strong>Alertă:</strong> Dacă doriți să efectuați transferul manual, trebuie "
+"să setați Capture Delay din contul dvs Adyen în modul manual."
 
 #. module: payment_adyen
 #. odoo-python
@@ -147,8 +150,6 @@ msgstr "Tranzacție plată"
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
-#: code:addons/payment_adyen/static/src/js/payment_form.js:0
-#: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "Payment processing failed"
 msgstr "Procesarea plății a eșuat"
@@ -222,7 +223,6 @@ msgstr "URL de bază pentru terminale API"
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
-#: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "The capture of the transaction with reference %s failed."
 msgstr "Captarea tranzacției cu referința %s a eșuat."
@@ -241,8 +241,8 @@ msgstr ""
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid ""
-"The capture request of %(amount)s for the transaction with reference %(ref)s"
-" has been requested (%(provider_name)s)."
+"The capture request of %(amount)s for the transaction with reference %(ref)s "
+"has been requested (%(provider_name)s)."
 msgstr ""
 "Solicitarea de captare a %(amount)s pentru tranzacția cu referința %(ref)sa "
 "fost solicitată (%(provider_name)s)."
@@ -283,7 +283,6 @@ msgstr "Referința unică a partenerului care deține acest token"
 
 #. module: payment_adyen
 #. odoo-python
-#: code:addons/payment_adyen/models/payment_transaction.py:0
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "The void of the transaction with reference %s failed."

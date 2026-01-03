@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
-"PO-Revision-Date: 2025-11-20 17:44+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-12-31 11:39+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-17/"
 "stock_delivery/mn/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -34,18 +34,18 @@ msgstr "(тооцоолсон:"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight (estimated): </span>"
-msgstr ""
+msgstr "<span> - Жин (таамагласан): </span>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_stock_report_delivery_no_package_section_line
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight: </span>"
-msgstr ""
+msgstr "<span> - Жин: </span>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "<span>Shipping Weight: </span>"
-msgstr ""
+msgstr "<span>Ачааны жин: </span>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
@@ -61,7 +61,7 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
 msgid "<strong>Shipping Weight: </strong>"
-msgstr ""
+msgstr "<strong>Ачааны жин: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
@@ -69,6 +69,8 @@ msgid ""
 "<strong>Shipping Weight:</strong>\n"
 "                    <br/>"
 msgstr ""
+"<strong>Ачааны жин:</strong>\n"
+"                    <br/>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
@@ -85,7 +87,7 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
 msgid "<strong>Weight: </strong>"
-msgstr ""
+msgstr "<strong>Жин: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
@@ -97,7 +99,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Shipping Methods"
-msgstr ""
+msgstr "Тээврийн арга дээр ашиглагдах"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_bulk
@@ -112,9 +114,10 @@ msgstr "Цуцлах"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
+"Тээврийн захиалгыг цуцлах боломжгүй байж болзошгүй. Та үргэлжүүлэхдээ "
+"итгэлтэй байна уу?"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
@@ -127,12 +130,12 @@ msgstr "Тээвэрлэгч"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__shipper_package_code
 msgid "Carrier Code"
-msgstr ""
+msgstr "Тээвэрлэгчийн код"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr ""
+msgstr "Тээвэрлэгчийн нэр"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
@@ -144,7 +147,7 @@ msgstr "Компани"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Cost: %(price).2f %(currency)s"
-msgstr ""
+msgstr "Өртөг: %(price).2f %(currency)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_uid
@@ -169,7 +172,7 @@ msgstr "Хүргэлтийн савлагааг сонгох цонх"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__delivery_package_type_id
 msgid "Delivery Package Type"
-msgstr ""
+msgstr "Хүргэлтийн савлагааны төрөл"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
@@ -200,23 +203,29 @@ msgstr "Хяналтын холбоосыг харуулах"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Тооцоолсон өртөг: захиалагчаас уг урьдчилан тооцсон тээврийн үнээр "
+"нэхэмжилнэ.\n"
+"Бодит өртөг: захиалагчаас тээврийн бодит гарсан өртөгөөр нэхэмжилнэ, "
+"захиалга батлагдаж хүргэлт нь биелсний дараа тээврийн үнэ шинэчлэгдэнэ."
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Exception occurred with respect to carrier on the transfer"
-msgstr ""
+msgstr "Энэ хүргэлт явцад тээвэрлэгчэй холбоотой саатал үүслээ"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Exception:"
-msgstr ""
+msgstr "Саатал:"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -260,7 +269,7 @@ msgstr "Сүүлд зассан огноо"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Manual actions might be needed."
-msgstr ""
+msgstr "Гар ажиллагаа шаардлагатай."
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
@@ -276,7 +285,7 @@ msgstr "OK"
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__country_of_origin
 msgid "Origin of Goods"
-msgstr ""
+msgstr "Бүтээгдэхүүний гарал үүсэл"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
@@ -312,7 +321,7 @@ msgstr "Бэлтгэх баримт"
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
-msgstr ""
+msgstr "Буцаалтын шошго хэвлэх"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_template
@@ -337,7 +346,7 @@ msgstr "Бодит өртөг"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
-msgstr ""
+msgstr "Буцаалтын шошго"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_return_picking
@@ -354,9 +363,16 @@ msgstr "Дамжлагууд"
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
+"Барааны гарал үүсгийн дүрэм нь тухайн бараа хаанаас үүсэлтэй болохыг "
+"тодорхойлдог. Энэ нь барааг хаанаас илгээсэнтэй биш, харин хаана "
+"үйлдвэрлэсэн эсвэл боловсруулсантэй холбоотой.\n"
+"Иймээс ‘гарал’ гэдэг нь олон улсын худалдаанд ашиглагддаг барааны ‘эдийн "
+"засгийн харьяалал’-ыг илэрхийлдэг."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
@@ -391,6 +407,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s"
 msgstr ""
+"Ачаа %(carrier_name)s тээвэрлэгчид хүргэгдсэн бөгөөд тээвэрлэлт мөшгин "
+"дугаар %(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -442,11 +460,12 @@ msgstr "Савлагааны төрөл"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
 msgid "Technical field indicating weight's number of decimal places"
 msgstr ""
+"Жингийн утгын бутархайн оронгийн нарийвчлалыг тодорхойлох техникийн талбар"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
-msgstr ""
+msgstr "Жингийн хэмжих нэгж нь кг (ж.ш lb) эсэхийг илгэх техникийн нэр"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
@@ -461,12 +480,13 @@ msgstr ""
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
-#: code:addons/stock_delivery/models/delivery_carrier.py:0
 #, python-format
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
 msgstr ""
+"Хайрцаг бүртгэх боломжгүй учир нь бэлтгэх баримтанд тусгагдсан бараануудын "
+"жингийн нийлбэр 0.0 %s байна"
 
 #. module: stock_delivery
 #. odoo-python
@@ -502,14 +522,18 @@ msgstr "Савлагдсан бүтээгдэхүүний нийт жин."
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__shipping_weight
 msgid ""
 "Total weight of packages and products not in a package. Packages with no "
-"shipping weight specified will default to their products' total weight. This"
-" is the weight used to compute the cost of the shipping."
+"shipping weight specified will default to their products' total weight. This "
+"is the weight used to compute the cost of the shipping."
 msgstr ""
+"Хайрцагны жин болон хайрцагт хийгээгүй задгай барааны нийт жин. Хэрэв "
+"хайрцагны тогтмол жинг тодорхойлсон байвал тус жингээр, тодорхойлоогүй "
+"байвал доторх барааны жингээр тус тус нийт жин тогтоогдоно. Энэ нь "
+"хүргэлтийн өртөг тооцоолоход ашиглагдаж болно."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight_bulk
 msgid "Total weight of products which are not in a package."
-msgstr ""
+msgstr "Хайрцагт хийгээгүй задгай барааны нийт жин."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__shipping_weight
@@ -546,7 +570,7 @@ msgstr "Мөшгөлтийн холбоос"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Tracking links for shipment:"
-msgstr ""
+msgstr "Тээвэрлэлтийн мөшгих холбоос:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -594,9 +618,11 @@ msgstr "Жин:"
 #, python-format
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
+"Өөр тээвэрлэгчтэй бараануудыг ижил хайрцагт савлаж болохгүй (захиалгын "
+"бараануудад бүгдэд нь ижил тээвэрлэгч сонгож өгсөн эсэхийг нягтлана уу)."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
@@ -617,17 +643,17 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
+msgstr "Зип угтвар"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDShipping Weight:"
-msgstr ""
+msgstr "^A0N,44,33^FDАчааны жин:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDWeight:"
-msgstr ""
+msgstr "^A0N,44,33^FDЖин:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-11-20 14:39+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-17/"
@@ -63,7 +63,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Ambiente</span>\n"
 "                                <span class=\"o_stat_text\">de teste</span>"
@@ -82,11 +83,12 @@ msgstr "<span class=\"text-success\">Solicitações de depuração</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">Ambiente</span>\n"
-"                                <span class=\"o_stat_text\">de "
-"produção</span>"
+"                                <span class=\"o_stat_text\">de produção</"
+"span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
@@ -148,8 +150,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
-"Montante da encomenda para beneficiar de um transporte gratuito, expresso na"
-" moeda da empresa"
+"Montante da encomenda para beneficiar de um transporte gratuito, expresso na "
+"moeda da empresa"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -364,8 +366,8 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
-"Cada transportadora (por exemplo, UPS) pode ter vários métodos de entrega ("
-"por exemplo, \n"
+"Cada transportadora (por exemplo, UPS) pode ter vários métodos de entrega "
+"(por exemplo, \n"
 "UPS Express, UPS Standard) com regras de preços associadas \n"
 "a cada método."
 
@@ -376,7 +378,6 @@ msgstr "Ambiente"
 
 #. module: delivery
 #. odoo-python
-#: code:addons/delivery/models/delivery_carrier.py:0
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
@@ -392,11 +393,13 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
-"Custo estimado: o cliente receberá uma fatura com o custo estimado do frete."
-"\n"
+"Custo estimado: o cliente receberá uma fatura com o custo estimado do "
+"frete.\n"
 "Custo real: o cliente receberá uma fatura com o custo real do frete, o custo "
 "do frete será atualizado no PV após a entrega."
 
@@ -408,8 +411,7 @@ msgstr "Custo estimado"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr ""
-"Preencha este campo se planeia faturar a expedição baseada na entrega."
+msgstr "Preencha este campo se planeia faturar a expedição baseada na entrega."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -868,13 +870,15 @@ msgstr "Nome da UM de peso"
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
-"Não é possível atualizar os custos de envio em um pedido que já foi faturado."
-"\n"
+"Não é possível atualizar os custos de envio em um pedido que já foi "
+"faturado.\n"
 "\n"
 "As seguintes linhas da entrega (produto, quantidade faturada e preço) já "
 "foram processadas:\n"

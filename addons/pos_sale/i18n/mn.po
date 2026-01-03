@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2025-11-20 16:17+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-12-30 17:19+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-17/"
 "pos_sale/mn/>\n"
@@ -26,18 +26,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.xml:0
 #, python-format
 msgid "(left:"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
+#: code:addons/pos_sale/static/src/overrides/components/product_screen/product_screen.xml:0
 #, python-format
 msgid "(tax incl.)"
 msgstr "(татвартай.)"
@@ -49,42 +49,35 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "A new order has been created."
 msgstr "Шинэ захиалга үүссэн."
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Apply a down payment (fixed amount)"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Apply a down payment (percentage)"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_control_panel/sale_order_management_control_panel.xml:0
 #, python-format
 msgid "Back"
 msgstr "Буцах"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/MobileSaleOrderManagementScreen.xml:0
-#, python-format
-msgid "Back to list"
-msgstr "Жагсаалт руу буцах"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.js:0
 #, python-format
 msgid "Cancelled"
 msgstr "Цуцлагдсан"
@@ -101,23 +94,23 @@ msgstr "Валютын ханш"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_list/sale_order_list.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.xml:0
 #, python-format
 msgid "Customer"
 msgstr "Үйлчлүүлэгч"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Customer loading error"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_list/sale_order_list.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.xml:0
 #, python-format
 msgid "Date"
 msgstr "Огноо"
@@ -129,14 +122,14 @@ msgstr "Хаанаас ирсэн"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
 msgstr "Борлуулалтын захиалганд ашиглах серийн дугаарын өгөгдлийг ачааллах уу?"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Down Payment"
 msgstr "Урьдчилгаа төлбөр"
@@ -160,21 +153,28 @@ msgstr "Урьдчилгаа төлбөр төлөөлөх бараа"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Due balance: %s"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_control_panel/sale_order_management_control_panel.xml:0
 #, python-format
 msgid "E.g. customer: Steward, date: 2020-05-09"
 msgstr "Ж.ш. захиалагч: Санжаажамц, огноо: 2020-05-09"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/ReceiptScreen/OrderReceipt.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
+#, python-format
+msgid "Error amount too high"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 #, python-format
 msgid "From"
@@ -187,11 +187,11 @@ msgstr "Нэхэмжилсэн"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid ""
-"It seems that you didn't configure a down payment product in your point of sale.\n"
-"                        You can go to your point of sale configuration to choose one."
+"It seems that you didn't configure a down payment product in your point of "
+"sale. You can go to your point of sale configuration to choose one."
 msgstr ""
 
 #. module: pos_sale
@@ -215,33 +215,28 @@ msgstr "Холбоотой борлуулалтын захиалга"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.js:0
 #, python-format
 msgid "Locked"
 msgstr "Түгжигдсэн"
 
 #. module: pos_sale
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_draft
-msgid "New"
-msgstr "Шинэ"
-
-#. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_control_panel/sale_order_management_control_panel.xml:0
 #, python-format
 msgid "Next Order List"
 msgstr "Дараагийн захиалгын жагсаалт"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "No"
 msgstr "Үгүй"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "No down payment product"
 msgstr "Урьдчилгаа төлбөрийн бүртгэл алга"
@@ -258,8 +253,8 @@ msgstr "Шинэ Сэшн"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_list/sale_order_list.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.xml:0
 #, python-format
 msgid "Order"
 msgstr "Захиалга"
@@ -269,6 +264,11 @@ msgstr "Захиалга"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
 msgid "Order lines Transfered to Point of Sale"
 msgstr "Захиалгын мөрүүд Борлуулалтын цэг рүү хөрвүүлэгдсэн"
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
+msgid "POS Order"
+msgstr "Пос захиалга"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -306,55 +306,55 @@ msgid "Pos Order Count"
 msgstr "ПОС баримтын тоо"
 
 #. module: pos_sale
-#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
-msgid "Posted"
-msgstr "Батлагдсан"
-
-#. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_control_panel/sale_order_management_control_panel.xml:0
 #, python-format
 msgid "Previous Order List"
 msgstr "Өмнөх захиалгын жагсаалт"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Products not available in POS"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.js:0
 #, python-format
 msgid "Quotation"
 msgstr "Үнийн санал"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.js:0
 #, python-format
 msgid "Quotation Sent"
 msgstr "Үнийн санал илгээгдсэн"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
+#: code:addons/pos_sale/static/src/app/set_sale_order_button/set_sale_order_button.xml:0
 #, python-format
 msgid "Quotation/Order"
 msgstr "Үнийн санал"
 
 #. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__order_reference
+msgid "Related Order"
+msgstr ""
+
+#. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "SN/Lots Loading"
 msgstr "Серийн дугаар уншиж байна"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
+#: code:addons/pos_sale/static/src/overrides/components/product_screen/product_screen.xml:0
 #, python-format
 msgid "SO"
 msgstr ""
@@ -376,7 +376,7 @@ msgstr "Борлуулалтын шинжилгээ тайлан"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.js:0
 #: model:ir.model,name:pos_sale.model_sale_order
 #, python-format
 msgid "Sales Order"
@@ -408,14 +408,14 @@ msgstr "Борлуулалтууд нь дараах борлуулалтын б
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.xml:0
 #, python-format
 msgid "Salesman"
 msgstr "Борлуулагч"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_list/sale_order_list.xml:0
 #, python-format
 msgid "Salesperson"
 msgstr "Борлуулагч"
@@ -437,23 +437,25 @@ msgstr "Ажиллаж байгаа сэшнүүд"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
+#: code:addons/pos_sale/static/src/app/set_sale_order_button/set_sale_order_button.xml:0
 #, python-format
 msgid "Set Sale Order"
 msgstr "Борлуулалтын захиалга болгох"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Settle the order"
 msgstr "Борлуулалтын захиалга руу хөрвүүлэх"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
-msgid "Some of the products in your Sale Order are not available in POS, do you want to import them?"
+msgid ""
+"Some of the products in your Sale Order are not available in POS, do you "
+"want to import them?"
 msgstr ""
 
 #. module: pos_sale
@@ -463,8 +465,8 @@ msgstr "Захиалгын мөрийн эх үүсвэр"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_list/sale_order_list.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.xml:0
 #, python-format
 msgid "State"
 msgstr "Төлөв"
@@ -481,12 +483,14 @@ msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
-msgid "The rate of the currency to the currency of rate applicable at the date of the order"
+msgid ""
+"The rate of the currency to the currency of rate applicable at the date of "
+"the order"
 msgstr "Захиалга хийгдсэн өдөр тухайн валютын ханштай харьцах ханш"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "There was a problem in loading the %s customer."
 msgstr ""
@@ -513,11 +517,16 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
-#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_list/sale_order_list.xml:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_row/sale_order_row.xml:0
 #, python-format
 msgid "Total"
 msgstr "Нийт дүн"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Шилжүүлэг"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
@@ -540,24 +549,36 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "What do you want to do?"
 msgstr "Та юу хиймээр байна?"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Yes"
 msgstr "Тийм"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
-msgid "You have tried to charge a down payment of %s but only %s remains to be paid, %s will be applied to the purchase order line."
+msgid ""
+"You have tried to charge a down payment of %s but only %s remains to be "
+"paid, %s will be applied to the purchase order line."
 msgstr ""
 "Та %s дүнгээр урьдчилгаа төлөлт бүртгэх гэж байна гэвч төлвөл зохих үлдэгдэл "
 "нь ердөө %s юм, тиймээс %s дүнгээр худалдан авалтын захиалгын мөр үүсэх "
 "болно."
+
+#, python-format
+#~ msgid "Back to list"
+#~ msgstr "Жагсаалт руу буцах"
+
+#~ msgid "New"
+#~ msgstr "Шинэ"
+
+#~ msgid "Posted"
+#~ msgstr "Батлагдсан"

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_requisition
-# 
+#
 # Translators:
 # Claudia Baisan, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
@@ -13,20 +13,21 @@
 # Lyall Kindmurr, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2025
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -364,13 +365,20 @@ msgstr "Creează alternativă"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid ""
-"Create a call for tender by adding alternative requests for quotation to different vendors.\n"
-"                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
-"                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
+"Create a call for tender by adding alternative requests for quotation to "
+"different vendors.\n"
+"                            Make your choice by selecting the best "
+"combination of lead time, OTD and/or total amount.\n"
+"                            By comparing product lines you can also decide "
+"to order some products from one vendor and others from another vendor."
 msgstr ""
-"Creați o cerere de ofertă adăugând cereri alternative de ofertă către diferiți furnizori.\n"
-"                            Faceți alegerea dvs. selectând cea mai bună combinație de timp de livrare, LLT și/sau suma totală.\n"
-"                            Prin compararea liniilor de produse, puteți decide să comandați unele produse de la un furnizor și altele de la alt furnizor."
+"Creați o cerere de ofertă adăugând cereri alternative de ofertă către "
+"diferiți furnizori.\n"
+"                            Faceți alegerea dvs. selectând cea mai bună "
+"combinație de timp de livrare, LLT și/sau suma totală.\n"
+"                            Prin compararea liniilor de produse, puteți "
+"decide să comandați unele produse de la un furnizor și altele de la alt "
+"furnizor."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -485,11 +493,14 @@ msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specific period\n"
-"            (e.g. a year) and you order products within this agreement to benefit\n"
+"            (e.g. a year) and you order products within this agreement to "
+"benefit\n"
 "            from the negotiated prices."
 msgstr ""
-"Pentru o comandă cadru, puteți înregistra un acord pentru un anumit perioadă\n"
-"            (de ex. un an) și puteți comanda produse în cadrul acestui acord pentru a beneficia\n"
+"Pentru o comandă cadru, puteți înregistra un acord pentru un anumit "
+"perioadă\n"
+"            (de ex. un an) și puteți comanda produse în cadrul acestui acord "
+"pentru a beneficia\n"
 "            de prețurile negociate."
 
 #. module: purchase_requisition
@@ -549,13 +560,13 @@ msgstr "Dacă este bifată, unele mesaje au o eroare de livrare."
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
 msgid ""
 "If the chosen vendor or if any of the products in the original PO have a "
-"blocking warning then we prevent creation of alternative PO. This is because"
-" normally these fields are cleared w/warning message within form view, but "
-"we cannot recreate that in this case."
+"blocking warning then we prevent creation of alternative PO. This is because "
+"normally these fields are cleared w/warning message within form view, but we "
+"cannot recreate that in this case."
 msgstr ""
 "Dacă furnizorul ales sau oricare dintre produsele din comanda originală au "
-"un avertisment de blocare, atunci prevenim crearea unei comenzi alternative."
-" Aceasta se întâmplă de obicei în formularul de vizualizare, dar nu putem "
+"un avertisment de blocare, atunci prevenim crearea unei comenzi alternative. "
+"Aceasta se întâmplă de obicei în formularul de vizualizare, dar nu putem "
 "recrea aceasta în acest caz."
 
 #. module: purchase_requisition
@@ -947,13 +958,19 @@ msgstr "Selectați un singur RFQ (exclusiv)"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__exclusive
 msgid ""
-"Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel the remaining purchase order.\n"
+"Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel "
+"the remaining purchase order.\n"
 "\n"
-"                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
+"                    Select multiple RFQ (non-exclusive): allows multiple "
+"purchase orders. On confirmation of a purchase order it does not cancel the "
+"remaining orders"
 msgstr ""
-"Selectați o singură cerere de ofertă (exclusivă): când o comandă de achiziție este confirmată, anulați comanda de achiziție rămasă.\n"
+"Selectați o singură cerere de ofertă (exclusivă): când o comandă de "
+"achiziție este confirmată, anulați comanda de achiziție rămasă.\n"
 "\n"
-"                    Selectați mai multe RFQ (neexclusiv): permite mai multe comenzi de achiziție. La confirmarea unei comenzi de achiziție, aceasta nu anulează comenzile rămase"
+"                    Selectați mai multe RFQ (neexclusiv): permite mai multe "
+"comenzi de achiziție. La confirmarea unei comenzi de achiziție, aceasta nu "
+"anulează comenzile rămase"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -963,8 +980,7 @@ msgstr "Secvență"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
 msgid ""
-"Set active to false to hide the Purchase Agreement Types without removing "
-"it."
+"Set active to false to hide the Purchase Agreement Types without removing it."
 msgstr ""
 "Setați activ la fals pentru a ascunde tipurile de acord de achiziție fără a "
 "le șterge."
@@ -977,8 +993,7 @@ msgstr "Setare cantități manual"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Afișați toate înregistrările care au data următoarei acțiuni în trecut"
+msgstr "Afișați toate înregistrările care au data următoarei acțiuni în trecut"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1067,9 +1082,9 @@ msgstr "Comanda originală pentru care se creează această comandă alternativ�
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
-"The vendor you have selected or at least one of the products you are copying"
-" from the original order has a blocking warning on it and cannot be selected"
-" to create an alternative."
+"The vendor you have selected or at least one of the products you are copying "
+"from the original order has a blocking warning on it and cannot be selected "
+"to create an alternative."
 msgstr ""
 "Furnizorul pe care l-ați selectat sau cel puțin unul dintre produsele pe "
 "care le copiați din comanda originală are un avertisment de blocare și nu "
@@ -1096,7 +1111,6 @@ msgstr ""
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
-#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid "This is a blocking warning!\n"
 msgstr "Aceasta este o avertizare de blocare!\n"
@@ -1108,11 +1122,14 @@ msgstr "Aceasta este o avertizare de blocare!\n"
 msgid ""
 "To close this purchase requisition, cancel related Requests for Quotation.\n"
 "\n"
-"Imagine the mess if someone confirms these duplicates: double the order, double the trouble :)"
+"Imagine the mess if someone confirms these duplicates: double the order, "
+"double the trouble :)"
 msgstr ""
-"Pentru a închide această solicitare de achiziție, anulați cererile de ofertă aferente.\n"
+"Pentru a închide această solicitare de achiziție, anulați cererile de ofertă "
+"aferente.\n"
 "\n"
-"Imaginați-vă haosul dacă cineva confirmă aceste dubluri: dublați comanda, dublați problemele :)"
+"Imaginați-vă haosul dacă cineva confirmă aceste dubluri: dublați comanda, "
+"dublați problemele :)"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -1225,8 +1242,8 @@ msgstr "Cum rămâne cu cererile alternative de cotații?"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
 msgid ""
-"Whether or not this purchase order is linked to another purchase order as an"
-" alternative."
+"Whether or not this purchase order is linked to another purchase order as an "
+"alternative."
 msgstr ""
 "Dacă această comandă de achiziție este sau nu legată de o altă comandă de "
 "achiziție ca alternativă."
@@ -1260,8 +1277,6 @@ msgstr ""
 
 #. module: purchase_requisition
 #. odoo-python
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."

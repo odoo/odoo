@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_picking_batch
-# 
+#
 # Translators:
 # Martin Trigaux, 2023
 # Wil Odoo, 2024
 # Thi Huong Nguyen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_picking_batch
@@ -29,11 +29,11 @@ msgstr "2023-08-20"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group "
-"by</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group by</"
+"span>"
 msgstr ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Nhóm "
-"theo</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Nhóm theo</"
+"span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -73,19 +73,23 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Lệnh chuyển hàng sẽ không được tự động thêm vào lô lấy hàng nếu số lượng dòng này bị vượt quá khi thêm lệnh chuyển hàng.\n"
+"Lệnh chuyển hàng sẽ không được tự động thêm vào lô lấy hàng nếu số lượng "
+"dòng này bị vượt quá khi thêm lệnh chuyển hàng.\n"
 "Để giá trị này là '0' nếu không có giới hạn dòng."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Lệnh chuyển hàng sẽ không được tự động thêm vào lô lấy hàng nếu vượt quá số lượng lệnh chuyển hàng.\n"
+"Lệnh chuyển hàng sẽ không được tự động thêm vào lô lấy hàng nếu vượt quá số "
+"lượng lệnh chuyển hàng.\n"
 "Để giá trị này là '0' nếu không có giới hạn lệnh chuyển hàng."
 
 #. module: stock_picking_batch
@@ -465,8 +469,7 @@ msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
 msgstr ""
-"Nếu bật tính năng Lô tự động, thì phải chọn ít nhất một tùy chọn 'Nhóm "
-"theo'."
+"Nếu bật tính năng Lô tự động, thì phải chọn ít nhất một tùy chọn 'Nhóm theo'."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -642,8 +645,7 @@ msgstr "Kiểu lấy hàng"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
-msgid ""
-"Please add 'Done' quantities to the batch picking to create a new pack."
+msgid "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
 "Hãy thêm số lượng 'Hoàn tất' vào phiếu xuất kho theo lô này để tạo một kiện "
 "hàng mới."
@@ -731,14 +733,20 @@ msgstr "Ngày đã lên lịch"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "Ngày đã lên lịch để xử lý lệnh chuyển hàng.\n"
-"            - Nếu được đặt thủ công thì ngày đã lên lịch cho tất cả lệnh chuyển hàng trong lô sẽ tự động cập nhật đến ngày này.\n"
-"            - Nếu không được thay đổi thủ công và các lệnh chuyển hàng được thêm/xóa/cập nhật thì đây sẽ là ngày đã lên lịch sớm nhất của chúng\n"
-"              nhưng ngày đã lên lịch này sẽ không được đặt cho tất cả lệnh chuyển hàng trong lô."
+"            - Nếu được đặt thủ công thì ngày đã lên lịch cho tất cả lệnh "
+"chuyển hàng trong lô sẽ tự động cập nhật đến ngày này.\n"
+"            - Nếu không được thay đổi thủ công và các lệnh chuyển hàng được "
+"thêm/xóa/cập nhật thì đây sẽ là ngày đã lên lịch sớm nhất của chúng\n"
+"              nhưng ngày đã lên lịch này sẽ không được đặt cho tất cả lệnh "
+"chuyển hàng trong lô."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -846,11 +854,13 @@ msgstr "Tóm tắt:"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid ""
-"The following transfers cannot be added to batch transfer %s. Please check their states and operation types.\n"
+"The following transfers cannot be added to batch transfer %s. Please check "
+"their states and operation types.\n"
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"Không thể thêm các lệnh chuyển hàng sau vào lệnh chuyển hàng theo lô %s. Vui lòng kiểm tra trạng thái và loại hoạt động của chúng.\n"
+"Không thể thêm các lệnh chuyển hàng sau vào lệnh chuyển hàng theo lô %s. Vui "
+"lòng kiểm tra trạng thái và loại hoạt động của chúng.\n"
 "\n"
 "Lệnh chuyển hàng không tương thích: %s"
 
@@ -858,26 +868,38 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
 "The goal of the batch transfer is to group operations that may\n"
-"            (needs to) be done together in order to increase their efficiency.\n"
-"            It may also be useful to assign jobs (one person = one batch) or\n"
-"            help the timing management of operations (tasks to be done at 1pm)."
+"            (needs to) be done together in order to increase their "
+"efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) "
+"or\n"
+"            help the timing management of operations (tasks to be done at "
+"1pm)."
 msgstr ""
-"Mục tiêu của lệnh chuyển hàng theo lô là nhóm các hoạt động có thể (cần) được\n"
-"             thực hiện vào với nhau để cải thiện hiệu quả. Điều này cũng có thể hữu ích\n"
-"             khi phân công công việc (một người = một lô) hoặc giúp quản lý thời gian\n"
+"Mục tiêu của lệnh chuyển hàng theo lô là nhóm các hoạt động có thể (cần) "
+"được\n"
+"             thực hiện vào với nhau để cải thiện hiệu quả. Điều này cũng có "
+"thể hữu ích\n"
+"             khi phân công công việc (một người = một lô) hoặc giúp quản lý "
+"thời gian\n"
 "             của các hoạt động (nhiệm vụ sẽ được thực hiện lúc 1 giờ chiều)."
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid ""
-"The goal of the wave transfer is to group operations from different transfer\n"
+"The goal of the wave transfer is to group operations from different "
+"transfer\n"
 "                    together in order to increase their efficiency.\n"
-"                    It may also be useful to assign jobs (one person = one batch) or\n"
-"                    help the timing management of operations (tasks to be done at 1pm)."
+"                    It may also be useful to assign jobs (one person = one "
+"batch) or\n"
+"                    help the timing management of operations (tasks to be "
+"done at 1pm)."
 msgstr ""
-"Mục tiêu của lệnh chuyển hàng theo đợt là nhóm các hoạt động từ lệnh chuyển hàng khác nhau\n"
-"             vào với nhau để cải thiện hiệu quả. Điều này cũng có thể hữu ích\n"
-"             khi phân công công việc (một người = một lô) hoặc giúp quản lý thời gian\n"
+"Mục tiêu của lệnh chuyển hàng theo đợt là nhóm các hoạt động từ lệnh chuyển "
+"hàng khác nhau\n"
+"             vào với nhau để cải thiện hiệu quả. Điều này cũng có thể hữu "
+"ích\n"
+"             khi phân công công việc (một người = một lô) hoặc giúp quản lý "
+"thời gian\n"
 "             của các hoạt động (nhiệm vụ sẽ được thực hiện lúc 1 giờ chiều)."
 
 #. module: stock_picking_batch
