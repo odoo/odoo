@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_project
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:38+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_project
@@ -29,7 +30,8 @@ msgid ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    No milestones found. Let's create one!\n"
 "                </p><p>\n"
-"                    Track major progress points that must be reached to achieve success.\n"
+"                    Track major progress points that must be reached to "
+"achieve success.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -61,21 +63,23 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
 "company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"此處設定的值是特定於每間公司的。\" "
-"groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"此處設定的值是特定於每間"
+"公司的。\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span> Sales Order\n"
+"                            <span class=\"o_stat_value\">0</span> Sales "
+"Order\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span> 張銷售訂單\n"
+"                            <span class=\"o_stat_value\">0</span> 張銷售訂"
+"單\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            設為可計費\n"
@@ -107,10 +111,13 @@ msgstr "<span>）</span>"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "根據產品配置，可透過機制自動計算交貨數量：\n"
@@ -270,19 +277,22 @@ msgstr "此服務售出後，立即對訂購的數量開立發票。"
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
-"Invoice ordered quantities as soon as this service is sold. Create a project"
-" for the order with a task for each sales order line to track the time "
-"spent."
-msgstr "售出此服務後立即開立訂購數量的發票，並為該訂單建立一個項目。為每個銷售訂單行分配一個任務來紀錄所花的時間。"
+"Invoice ordered quantities as soon as this service is sold. Create a project "
+"for the order with a task for each sales order line to track the time spent."
+msgstr ""
+"售出此服務後立即開立訂購數量的發票，並為該訂單建立一個項目。為每個銷售訂單行"
+"分配一個任務來紀錄所花的時間。"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
-"Invoice ordered quantities as soon as this service is sold. Create a task in"
-" an existing project to track the time spent."
-msgstr "售出此服務後立即開立訂購數量的發票，並於現有之項目中建立一個任務來紀錄所花的時間。"
+"Invoice ordered quantities as soon as this service is sold. Create a task in "
+"an existing project to track the time spent."
+msgstr ""
+"售出此服務後立即開立訂購數量的發票，並於現有之項目中建立一個任務來紀錄所花的"
+"時間。"
 
 #. module: sale_project
 #. odoo-python
@@ -291,7 +301,8 @@ msgstr "售出此服務後立即開立訂購數量的發票，並於現有之項
 msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create an empty "
 "project for the order to track the time spent."
-msgstr "在此服務售出後立即為訂購數量開立發票。為訂單創建一個新專案以追蹤花費的時間。"
+msgstr ""
+"在此服務售出後立即為訂購數量開立發票。為訂單創建一個新專案以追蹤花費的時間。"
 
 #. module: sale_project
 #. odoo-python
@@ -310,7 +321,9 @@ msgid ""
 "Invoice this service when it is delivered (set the quantity by hand on your "
 "sales order lines). Create a project for the order with a task for each "
 "sales order line to track the time spent."
-msgstr "交貨時為此服務開立發票（在銷售訂單資料行上手動設定數量）。為訂單建立一個專案，並為每個銷售訂單資料行分配一個任務，以追蹤所花費的時間。"
+msgstr ""
+"交貨時為此服務開立發票（在銷售訂單資料行上手動設定數量）。為訂單建立一個專"
+"案，並為每個銷售訂單資料行分配一個任務，以追蹤所花費的時間。"
 
 #. module: sale_project
 #. odoo-python
@@ -320,7 +333,9 @@ msgid ""
 "Invoice this service when it is delivered (set the quantity by hand on your "
 "sales order lines). Create a task in an existing project to track the time "
 "spent."
-msgstr "交貨時為此服務開立發票（在銷售訂單資料行上手動設定數量）。在現有專案中建立任務，以追蹤所花費的時間。"
+msgstr ""
+"交貨時為此服務開立發票（在銷售訂單資料行上手動設定數量）。在現有專案中建立任"
+"務，以追蹤所花費的時間。"
 
 #. module: sale_project
 #. odoo-python
@@ -330,7 +345,9 @@ msgid ""
 "Invoice this service when it is delivered (set the quantity by hand on your "
 "sales order lines). Create an empty project for the order to track the time "
 "spent."
-msgstr "交貨時為此服務開立發票（在銷售訂單資料行上手動設定數量）。為訂單建立一個新專案，以追蹤所花費的時間。"
+msgstr ""
+"交貨時為此服務開立發票（在銷售訂單資料行上手動設定數量）。為訂單建立一個新專"
+"案，以追蹤所花費的時間。"
 
 #. module: sale_project
 #. odoo-python
@@ -346,7 +363,9 @@ msgstr "達到里程碑時開立發票。"
 msgid ""
 "Invoice your milestones when they are reached. Create a project for the "
 "order with a task for each sales order line to track the time spent."
-msgstr "當達到里程碑時，開立發票。為訂單建立一個專案，並為每個銷售訂單資料行分配一個任務，以追蹤所花費的時間。"
+msgstr ""
+"當達到里程碑時，開立發票。為訂單建立一個專案，並為每個銷售訂單資料行分配一個"
+"任務，以追蹤所花費的時間。"
 
 #. module: sale_project
 #. odoo-python
@@ -382,7 +401,6 @@ msgstr "已開立發票"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
-#: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Invoices"
 msgstr "發票"
@@ -413,9 +431,12 @@ msgstr "載入更多"
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
 #: model:ir.model.fields,help:sale_project.field_product_template__service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
 msgstr ""
 "手動設定訂單數量：根據手動輸入數量的應收憑單，不建立分析帳戶。\n"
 "工時表：在合約的基礎上對相關應收憑單追蹤小時工時表。\n"
@@ -485,11 +506,16 @@ msgstr "專案數量"
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,help:sale_project.field_product_template__service_tracking
 msgid ""
-"On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
-"         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
+"On Sales order confirmation, this product can generate a project and/or "
+"task.         From those, you can track the service you are selling.\n"
+"         'In sale order's project': Will use the sale order's configured "
+"project if defined or fallback to         creating a new project based on "
+"the selected template."
 msgstr ""
-"在銷售訂單確認時，此產品可以生成專案和/或任務。        從中，您可以跟蹤您正在銷售的服務。\n"
-"         \"銷售訂單項目\"：如果定義或回退，將使用銷售訂單的設定項目基於所選範本創建新專案。"
+"在銷售訂單確認時，此產品可以生成專案和/或任務。        從中，您可以跟蹤您正在"
+"銷售的服務。\n"
+"         \"銷售訂單項目\"：如果定義或回退，將使用銷售訂單的設定項目基於所選範"
+"本創建新專案。"
 
 #. module: sale_project
 #. odoo-python
@@ -501,8 +527,8 @@ msgstr "其他服務"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
 msgid ""
-"Percentage of the ordered quantity that will automatically be delivered once"
-" the milestone is reached."
+"Percentage of the ordered quantity that will automatically be delivered once "
+"the milestone is reached."
 msgstr "達到里程碑後自動交貨的訂購數量百分比。"
 
 #. module: sale_project
@@ -660,18 +686,24 @@ msgstr "達到里程碑後立即更新的銷售訂單項目。"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
 msgid ""
-"Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
-"By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
-"Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
+"Sales Order Item to which the time spent on this task will be added in order "
+"to be invoiced to your customer.\n"
+"By default the sales order item set on the project will be selected. In the "
+"absence of one, the last prepaid sales order item that has time remaining "
+"will be used.\n"
+"Remove the sales order item in order to make this task non billable. You can "
+"also change or remove the sales order item of each timesheet entry "
+"individually."
 msgstr ""
 "將會加入此任務花費時間、以向客戶開立發票的銷售訂單項目。\n"
-"預設情況下，會選擇專案設定的銷售訂單項目。如果沒有，將使用尚有剩餘時間的最後一個預付銷售訂單項目。\n"
-"要將此任務設為不計費，可刪除此銷售訂單項目。你也可以單獨修改或刪除工時表每個記項的銷售訂單項目。"
+"預設情況下，會選擇專案設定的銷售訂單項目。如果沒有，將使用尚有剩餘時間的最後"
+"一個預付銷售訂單項目。\n"
+"要將此任務設為不計費，可刪除此銷售訂單項目。你也可以單獨修改或刪除工時表每個"
+"記項的銷售訂單項目。"
 
 #. module: sale_project
 #. odoo-javascript
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
@@ -693,10 +725,14 @@ msgstr "銷售訂單"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
 msgid ""
-"Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
-"It can be modified on each task and timesheet entry individually if necessary."
+"Sales order item that will be selected by default on the tasks and "
+"timesheets of this project, except if the employee set on the timesheets is "
+"explicitely linked to another sales order item on the project.\n"
+"It can be modified on each task and timesheet entry individually if "
+"necessary."
 msgstr ""
-"此專案的任務及工時表預設選擇的銷售訂單項目，除非工時表設定的員工明確連結至專案的另一個銷售訂單項目。\n"
+"此專案的任務及工時表預設選擇的銷售訂單項目，除非工時表設定的員工明確連結至專"
+"案的另一個銷售訂單項目。\n"
 "如有必要，可在任務或工時表的每個記項上單獨修改。"
 
 #. module: sale_project
@@ -875,7 +911,6 @@ msgstr "供應商賬單數目"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
-#: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Vendor Bills"
 msgstr "供應商賬單"
@@ -892,4 +927,6 @@ msgstr "查看銷售訂單"
 msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
-msgstr "您不能將訂單項目  %(order_id)s - %(product_id)s 連結到此任務，因為它是重新開立應收憑單的費用。"
+msgstr ""
+"您不能將訂單項目  %(order_id)s - %(product_id)s 連結到此任務，因為它是重新開"
+"立應收憑單的費用。"

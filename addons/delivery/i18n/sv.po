@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-# 
+#
 # Translators:
 # Robin Calvin, 2023
 # Simon S, 2023
@@ -13,19 +13,19 @@
 # Lasse L, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
@@ -64,7 +64,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
 "                                <span class=\"o_stat_text\">Miljö</span>"
@@ -83,7 +84,8 @@ msgstr "<span class=\"text-success\">Begäran om felsökning</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-framgång\">Produktion</span>\n"
 "                                <span class=\"o_stat_text\">Miljö</span>"
@@ -101,8 +103,8 @@ msgid ""
 "for customers to follow."
 msgstr ""
 "En beskrivning av leveransmetoden som du vill kommunicera till dina kunder "
-"på försäljningsordern och försäljningsbekräftelsemailet, t.ex. instruktioner"
-" för kunderna att följa."
+"på försäljningsordern och försäljningsbekräftelsemailet, t.ex. instruktioner "
+"för kunderna att följa."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -148,8 +150,7 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
-"Orderbeloppet för att dra nytta av gratis frakt, uttryckt i företagets "
-"valuta"
+"Orderbeloppet för att dra nytta av gratis frakt, uttryckt i företagets valuta"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -365,7 +366,8 @@ msgid ""
 "            to each method."
 msgstr ""
 "Varje transportör (t.ex. UPS) kan ha flera leveranssätt (t.ex.\n"
-"            UPS Express, UPS Standard) med en uppsättning prissättningsregler bifogade\n"
+"            UPS Express, UPS Standard) med en uppsättning "
+"prissättningsregler bifogade\n"
 "           till varje metod."
 
 #. module: delivery
@@ -375,7 +377,6 @@ msgstr "Miljö"
 
 #. module: delivery
 #. odoo-python
-#: code:addons/delivery/models/delivery_carrier.py:0
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
@@ -391,11 +392,14 @@ msgstr "Fel: den här leveransmetoden är inte tillgänglig."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "Beräknad kostnad: kunden faktureras den beräknade kostnaden för frakten.\n"
-"Verklig kostnad: kunden faktureras den verkliga kostnaden för frakten, kostnaden för frakten uppdateras på SO efter leveransen."
+"Verklig kostnad: kunden faktureras den verkliga kostnaden för frakten, "
+"kostnaden för frakten uppdateras på SO efter leveransen."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -738,8 +742,8 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
-"Uppgifter om leveransmetod ska inkluderas längst ner i försäljningsorder och"
-" deras bekräftelsemail. T.ex. instruktioner för kunder att följa."
+"Uppgifter om leveransmetod ska inkluderas längst ner i försäljningsorder och "
+"deras bekräftelsemail. T.ex. instruktioner för kunder att följa."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -794,7 +798,8 @@ msgid ""
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Dessa metoder gör det möjligt att automatiskt beräkna leveranspriset\n"
-"            enligt dina inställningar; på försäljningsordern (baserat på offerten)\n"
+"            enligt dina inställningar; på försäljningsordern (baserat på "
+"offerten)\n"
 "            offerten) eller fakturan (baserat på leveransorder)."
 
 #. module: delivery
@@ -863,14 +868,18 @@ msgstr "Vikt Uom Namn"
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
-"Du kan inte uppdatera fraktkostnaderna på en order som redan har fakturerats!\n"
+"Du kan inte uppdatera fraktkostnaderna på en order som redan har "
+"fakturerats!\n"
 "\n"
-"Följande leveransrader (produkt, fakturerad kvantitet och pris) har redan behandlats:\n"
+"Följande leveransrader (produkt, fakturerad kvantitet och pris) har redan "
+"behandlats:\n"
 "\n"
 
 #. module: delivery

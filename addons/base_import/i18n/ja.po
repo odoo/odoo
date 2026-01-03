@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-# 
+#
 # Translators:
 # Junko Augias, 2024
 # Martin Trigaux, 2024
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_import
@@ -42,7 +42,9 @@ msgstr "%sレコードがインポートされました "
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect."
-msgstr "単一カラムがファイル内に見つかりました。これは区切り記号が間違っているときによくあることです。"
+msgstr ""
+"単一カラムがファイル内に見つかりました。これは区切り記号が間違っているときに"
+"よくあることです。"
 
 #. module: base_import
 #. odoo-javascript
@@ -71,11 +73,14 @@ msgstr "サブフィールドとのマッチングを許可する"
 #, python-format
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
-"インポート中に不明な問題が発生しました（接続が失われた、データ制限を超えた、またはメモリ制限を超えた可能性があります）。問題が一時的なものである場合は、再試行してください。それでも問題が発生する場合は、ファイルを一度にインポートするのではなく、分割してみてください。"
+"インポート中に不明な問題が発生しました（接続が失われた、データ制限を超えた、"
+"またはメモリ制限を超えた可能性があります）。問題が一時的なものである場合は、"
+"再試行してください。それでも問題が発生する場合は、ファイルを一度にインポート"
+"するのではなく、分割してみてください。"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -149,8 +154,6 @@ msgstr "カラム名"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Comma"
 msgstr "コンマ"
@@ -167,9 +170,9 @@ msgstr "コメント"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
-msgstr "取得できなかったURL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+msgstr ""
+"取得できなかったURL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -192,7 +195,6 @@ msgstr "作成日"
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
@@ -228,7 +230,6 @@ msgstr "表示名"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Dot"
 msgstr "ドット"
@@ -236,8 +237,6 @@ msgstr "ドット"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Download"
@@ -270,7 +269,9 @@ msgstr "列 %s: \"%s\"でのエラー"
 #, python-format
 msgid ""
 "Error while importing records: Text Delimiter should be a single character."
-msgstr "レコードのインポート中にエラーが発生しました： テキストの区切り文字は1文字でなければなりません。"
+msgstr ""
+"レコードのインポート中にエラーが発生しました： テキストの区切り文字は1文字で"
+"なければなりません。"
 
 #. module: base_import
 #. odoo-python
@@ -281,8 +282,9 @@ msgid ""
 "title row has %d entries while the first row has %d. You may need to change "
 "the separator character."
 msgstr ""
-"レコードをインポート中にエラーが発生しました: "
-"全ての列は同じサイズである必要がありますが、タイトル列は%dエントリを持っており、最初の列は%dを持っています。セパレータ文字を変更する必要があるかもしれません。"
+"レコードをインポート中にエラーが発生しました: 全ての列は同じサイズである必要"
+"がありますが、タイトル列は%dエントリを持っており、最初の列は%dを持っていま"
+"す。セパレータ文字を変更する必要があるかもしれません。"
 
 #. module: base_import
 #. odoo-javascript
@@ -307,7 +309,6 @@ msgstr "フォーマットが自動であるため、エクセルファイルを
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
@@ -343,7 +344,6 @@ msgstr "ファイルタイプ"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
 msgstr "ファイルサイズが設定された最大値を超えています(%s bytes)"
@@ -351,7 +351,8 @@ msgstr "ファイルサイズが設定された最大値を超えています(%s
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "ファイルのチェック と/または インポート。 バイナリ形式で (base64でない)"
+msgstr ""
+"ファイルのチェック と/または インポート。 バイナリ形式で (base64でない)"
 
 #. module: base_import
 #. odoo-javascript
@@ -365,7 +366,8 @@ msgstr "中断する前に現在のバッチを最終処理しています..."
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr "CSVファイルの場合、正しい区切り文字を選択する必要がある場合があります。"
+msgstr ""
+"CSVファイルの場合、正しい区切り文字を選択する必要がある場合があります。"
 
 #. module: base_import
 #. odoo-javascript
@@ -379,9 +381,11 @@ msgstr "フォーマット"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
-msgstr "無効な画像データが見つかりました。画像はURLまたはbase64でエンコードされたデータとしてインポートする必要があります。"
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
+msgstr ""
+"無効な画像データが見つかりました。画像はURLまたはbase64でエンコードされたデー"
+"タとしてインポートする必要があります。"
 
 #. module: base_import
 #. odoo-javascript
@@ -433,7 +437,8 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
-"モデルがopenchatterを使用する場合は、履歴トラッキングはサブスクリプションを作成し、インポート中に通知を送信しますが、インポート速度が落ちます。"
+"モデルがopenchatterを使用する場合は、履歴トラッキングはサブスクリプションを作"
+"成し、インポート中に通知を送信しますが、インポート速度が落ちます。"
 
 #. module: base_import
 #. odoo-python
@@ -441,7 +446,9 @@ msgstr ""
 #, python-format
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
-msgstr "画像サイズが大きすます、アップロードされた画像は4200万ピクセル未満である必要があります。"
+msgstr ""
+"画像サイズが大きすます、アップロードされた画像は4200万ピクセル未満である必要"
+"があります。"
 
 #. module: base_import
 #. odoo-javascript
@@ -507,12 +514,12 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"行 %(row)s, 列 %(col)s: %(cell_value)s, フォーマット: %(cell_format)sの無効なセルフォーマット。 "
-"(%(format_type)s) フォーマットはサポートされていないためです。"
+"行 %(row)s, 列 %(col)s: %(cell_value)s, フォーマット: %(cell_format)sの無効な"
+"セルフォーマット。 (%(format_type)s) フォーマットはサポートされていないためで"
+"す。"
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
@@ -711,7 +718,6 @@ msgstr "シート:"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
-#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Skip record"
 msgstr "レコードをスキップ"
@@ -739,7 +745,6 @@ msgstr "何行目から"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Stop Import"
@@ -833,8 +838,11 @@ msgstr "インポートの経過を追跡"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr " \"{extension}\" ファイルが読み込めません: 以下のPythonモジュールが必要です \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgstr ""
+" \"{extension}\" ファイルが読み込めません: 以下のPythonモジュールが必要です "
+"\"{modname}\""
 
 #. module: base_import
 #. odoo-python
@@ -842,7 +850,9 @@ msgstr " \"{extension}\" ファイルが読み込めません: 以下のPython�
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr "対応できないファイルフォーマット{}\"、インポートできるのはCSV, ODS, XLS及びXLSXのみです"
+msgstr ""
+"対応できないファイルフォーマット{}\"、インポートできるのはCSV, ODS, XLS及び"
+"XLSXのみです"
 
 #. module: base_import
 #. odoo-javascript
@@ -871,22 +881,26 @@ msgstr "Excel、又はCSVファイルをアップロードしてインポート�
 #, python-format
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
-"system. You can use a custom format in addition to the suggestions provided."
-" Leave empty to let Odoo guess the format (recommended)"
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
-"24時間制の場合はHHを、12時間制の場合はIIを'p'と組み合わせて使用します。提案されたフォーマットに加え、カスタムフォーマットを使用することもできます。Odooにフォーマットを推測させる場合は空白にして下さい。(推奨)"
+"24時間制の場合はHHを、12時間制の場合はIIを'p'と組み合わせて使用します。提案さ"
+"れたフォーマットに加え、カスタムフォーマットを使用することもできます。Odooに"
+"フォーマットを推測させる場合は空白にして下さい。(推奨)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid ""
-"Use YYYY to represent the year, MM for the month and DD for the day. Include"
-" separators such as a dot, forward slash or dash. You can use a custom "
-"format in addition to the suggestions provided. Leave empty to let Odoo "
-"guess the format (recommended)"
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
-"年はYYYY、月はMM、日はDDで表します。ドット、スラッシュ、ダッシュなどの区切り文字を含めます。提案されたフォーマット以外に、カスタムフォーマットを使用することもできます。Odooにフォーマットを推測させる場合は空白にして下さい。(推奨)"
+"年はYYYY、月はMM、日はDDで表します。ドット、スラッシュ、ダッシュなどの区切り"
+"文字を含めます。提案されたフォーマット以外に、カスタムフォーマットを使用する"
+"こともできます。Odooにフォーマットを推測させる場合は空白にして下さい。(推奨)"
 
 #. module: base_import
 #. odoo-javascript
@@ -923,7 +937,9 @@ msgstr "値が一致しない場合："
 msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
-msgstr "URL経由で画像をインポートすることはできません。理由については、管理者またはサポートに確認してください。"
+msgstr ""
+"URL経由で画像をインポートすることはできません。理由については、管理者またはサ"
+"ポートに確認してください。"
 
 #. module: base_import
 #. odoo-javascript

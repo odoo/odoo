@@ -1,49 +1,56 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_recruitment_survey
-# 
+#
 # Translators:
 # Martin Trigaux, 2023
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Anzelika Adejanova, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lv\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant name]</t><br><br>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant "
+"name]</t><br><br>\n"
 "        <t>\n"
-"            You've progressed through the recruitment process and we would like you to answer some questions.\n"
+"            You've progressed through the recruitment process and we would "
+"like you to answer some questions.\n"
 "        </t>\n"
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-"
+"color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px; font-size:13px;\">\n"
 "                <t>\n"
 "                    Start the written interview\n"
 "                </t>\n"
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the interview for <t t-out=\"format_date(object.deadline)\">[deadline date]</t>.<br><br>\n"
+"            Please answer the interview for <t t-"
+"out=\"format_date(object.deadline)\">[deadline date]</t>.<br><br>\n"
 "        </t>\n"
 "        <t>\n"
-"            We wish you good luck! Thank you in advance for your participation.\n"
+"            We wish you good luck! Thank you in advance for your "
+"participation.\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -85,8 +92,8 @@ msgstr "Kandidāts: Intervija"
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
 msgid ""
-"Choose an interview form for this job position and you will be able to "
-"print/answer this interview from all applicants who apply for this job"
+"Choose an interview form for this job position and you will be able to print/"
+"answer this interview from all applicants who apply for this job"
 msgstr ""
 
 #. module: hr_recruitment_survey
@@ -112,8 +119,7 @@ msgstr "Sadarbība ar kolēģiem"
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row8
 msgid "Getting perks such as free parking, gym passes"
-msgstr ""
-"Iegūsiet priekšrocības kā bezmaksas stāvvietu, abonementu sporta zālei"
+msgstr "Iegūsiet priekšrocības kā bezmaksas stāvvietu, abonementu sporta zālei"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
@@ -205,10 +211,12 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
 msgid ""
-"Please fill information about you: who you are, what are your education, experience, and activities.\n"
+"Please fill information about you: who you are, what are your education, "
+"experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
-"Lūdzu, aizpildiet informāciju par Jums: kas Jūs esat, kāda ir Jūsu izglītība, pieredze un aktivitātes..\n"
+"Lūdzu, aizpildiet informāciju par Jums: kas Jūs esat, kāda ir Jūsu "
+"izglītība, pieredze un aktivitātes..\n"
 "    Tas palīdzēs mums apstrādāt Jūsu pieteikumu."
 
 #. module: hr_recruitment_survey
@@ -232,8 +240,8 @@ msgstr ""
 msgid ""
 "Please tell us a bit more about yourself: what are your main activities, ..."
 msgstr ""
-"Lūdzu, pastāstiet mums nedaudz par Jums: kādas ir Jūsu galvenās aktivitātes,"
-" ..."
+"Lūdzu, pastāstiet mums nedaudz par Jums: kādas ir Jūsu galvenās "
+"aktivitātes, ..."
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form

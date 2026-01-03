@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2025-10-01 01:40+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-17/product/"
@@ -83,10 +83,12 @@ msgstr "15,00 €"
 #, python-format
 msgid ""
 "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 msgstr ""
 "%(base)s amb un %(discount)s %% descompte i %(surcharge)s tarifa extra\n"
-"Exemple: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
+"Exemple: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -149,15 +151,21 @@ msgstr "- El codi de barres «%s» ja està assignat al(s) producte(s): %s"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
 msgid ""
-"- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.\n"
-"        - Dynamically: Each variant is created only when its corresponding attributes and values are added to a sales order.\n"
+"- Instantly: All possible variants are created as soon as the attribute and "
+"its values are added to a product.\n"
+"        - Dynamically: Each variant is created only when its corresponding "
+"attributes and values are added to a sales order.\n"
 "        - Never: Variants are never created for the attribute.\n"
-"        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
+"        Note: the variants creation mode cannot be changed once the "
+"attribute is used on at least one product."
 msgstr ""
-"- Instantàniament: totes les variants possibles es creen tan aviat com l'atribut i els seus valors s'afegeixin a un producte.\n"
-"        - Dinàmicament: cada variant es crea només quan s'afegeixen els seus atributs i valors corresponents a una comanda.\n"
+"- Instantàniament: totes les variants possibles es creen tan aviat com "
+"l'atribut i els seus valors s'afegeixin a un producte.\n"
+"        - Dinàmicament: cada variant es crea només quan s'afegeixen els seus "
+"atributs i valors corresponents a una comanda.\n"
 "        - Mai: les variants mai es creen per a l'atribut.\n"
-"        Nota: el mode de creació de variants no es pot canviar una vegada que l'atribut s'utilitzi en almenys un producte."
+"        Nota: el mode de creació de variants no es pot canviar una vegada "
+"que l'atribut s'utilitzi en almenys un producte."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -220,8 +228,12 @@ msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
-msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
+msgid ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
+msgstr ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -229,7 +241,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
 "                                        Extra Prices\n"
 "                                    </span>\n"
-"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                    <span class=\"o_stat_text\" "
+"invisible=\"pricelist_item_count != 1\">\n"
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
@@ -289,8 +302,8 @@ msgid ""
 "                        to the loss of their possible customizations."
 msgstr ""
 "<strong>Advertència</strong>: afegir o eliminar atributs esborrarà i "
-"recrearà les variants existents i portarà a la pèrdua de les seves possibles"
-" personalitzacions."
+"recrearà les variants existents i portarà a la pèrdua de les seves possibles "
+"personalitzacions."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
@@ -301,13 +314,13 @@ msgstr "Un codi de barres només es pot assignar a un embalatge."
 #: model:ir.model.fields,help:product.field_product_product__description_sale
 #: model:ir.model.fields,help:product.field_product_template__description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
 "Una descripció del producte que es vol comunicar als seus clients. Aquesta "
-"descripció serà copiada a cada comanda de venda, comanda d'entrega i factura"
-" de client."
+"descripció serà copiada a cada comanda de venda, comanda d'entrega i factura "
+"de client."
 
 #. module: product
 #. odoo-python
@@ -319,11 +332,17 @@ msgstr "Un embalatge ja utilitza el codi de barres"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
-"A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
-"            This is the perfect tool to handle several pricings, seasonal discounts, etc."
+"A price is a set of sales prices or rules to compute the price of sales "
+"order lines based on products, product categories, dates and ordered "
+"quantities.\n"
+"            This is the perfect tool to handle several pricings, seasonal "
+"discounts, etc."
 msgstr ""
-"Un preu és un conjunt de preus de venda o regles per calcular el preu de les línies de comandes de vendes basades en productes, categories de productes, dates i quantitats ordenades.\n"
-"            Aquesta és l'eina perfecta per gestionar diversos preus, descomptes estacionals, etc."
+"Un preu és un conjunt de preus de venda o regles per calcular el preu de les "
+"línies de comandes de vendes basades en productes, categories de productes, "
+"dates i quantitats ordenades.\n"
+"            Aquesta és l'eina perfecta per gestionar diversos preus, "
+"descomptes estacionals, etc."
 
 #. module: product
 #. odoo-python
@@ -336,11 +355,13 @@ msgstr "Un producte ja utilitza el codi de barres"
 #: model:ir.model.fields,help:product.field_product_product__detailed_type
 #: model:ir.model.fields,help:product.field_product_template__detailed_type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory "
+"app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producte emmagatzemable és un producte pel qual gestioneu estoc. Cal instal·lar l'aplicació Inventari.\n"
+"Un producte emmagatzemable és un producte pel qual gestioneu estoc. Cal "
+"instal·lar l'aplicació Inventari.\n"
 "Un consumible és un producte pel qual no es gestiona estoc.\n"
 "Un servei és un producte no material que subministreu. "
 
@@ -478,16 +499,17 @@ msgstr "Tots els fitxers s'han carregat"
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow users to input custom values for this attribute value"
 msgstr ""
-"Permet als usuaris introduir valors personalitzats per aquest valor "
-"d'atribut"
+"Permet als usuaris introduir valors personalitzats per aquest valor d'atribut"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__group_sale_pricelist
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
-"                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
+"                Example: 10% for retailers, promotion of 5 EUR on this "
+"product, etc."
 msgstr ""
-"Permet gestionar diferents preus basats en regles per categories de clients.\n"
+"Permet gestionar diferents preus basats en regles per categories de "
+"clients.\n"
 "Per exemple: 10% pels minoristes, promoció de 5€ en aquest producte, etc."
 
 #. module: product
@@ -1268,8 +1290,7 @@ msgstr "Dinàmicament"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
-msgstr ""
-"Cada valor s' ha de definir només una vegada per atribut per producte."
+msgstr "Cada valor s' ha de definir només una vegada per atribut per producte."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -1300,7 +1321,8 @@ msgid ""
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
 "Hora final de la data per a la validació de l' element preulist\n"
-"El valor mostrat depèn de la zona horària establerta a les vostres preferències."
+"El valor mostrat depèn de la zona horària establerta a les vostres "
+"preferències."
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -1331,8 +1353,8 @@ msgstr "Tarifa extra"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
 msgid ""
-"Extra price for the variant with this attribute value on sale price. eg. 200"
-" price extra, 1000 + 200 = 1200."
+"Extra price for the variant with this attribute value on sale price. eg. 200 "
+"price extra, 1000 + 200 = 1200."
 msgstr ""
 "Més preu per a la variant amb aquest valor d' atribut en el preu de la "
 "venda. Per exemple. 200 dòlars extra, 1000 + 200 = 1200."
@@ -1400,12 +1422,13 @@ msgstr "Icona Font Awesome p.e. fa-tasks"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
 msgid ""
-"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
-"Perquè s'apliqui la regla, la quantitat comprada/venuda ha de ser més gran o"
-" igual que la quantitat mínima especificada en aquest camp. Expressada en la"
-" UdM per defecte del producte."
+"Perquè s'apliqui la regla, la quantitat comprada/venuda ha de ser més gran o "
+"igual que la quantitat mínima especificada en aquest camp. Expressada en la "
+"UdM per defecte del producte."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
@@ -1800,8 +1823,8 @@ msgid ""
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
-"Termini de lliurament en dies entre la confirmació de la comanda de compra i"
-" la recepció dels productes al seu magatzem. Utilitzat pel planificador per "
+"Termini de lliurament en dies entre la confirmació de la comanda de compra i "
+"la recepció dels productes al seu magatzem. Utilitzat pel planificador per "
 "al càlcul automàtic de la planificació de la comanda de compra."
 
 #. module: product
@@ -1838,8 +1861,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
 msgid ""
-"Make this attribute value not compatible with other values of the product or"
-" some attribute values of optional and accessory products."
+"Make this attribute value not compatible with other values of the product or "
+"some attribute values of optional and accessory products."
 msgstr ""
 "Fes que aquest valor d' atribut no sigui compatible amb altres valors del "
 "producte o d' alguns valors d' atribut de productes opcionals i accessoris."
@@ -1926,7 +1949,8 @@ msgid ""
 "Advanced rules: enables advanced price rules for pricelists."
 msgstr ""
 "Múltiples preus: Prepistes amb regles de preu fixes per producte,\n"
-"Regles avançades: habilita regles avançades de preu per a les llistes de preus."
+"Regles avançades: habilita regles avançades de preu per a les llistes de "
+"preus."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__my_activity_date_deadline
@@ -2079,8 +2103,8 @@ msgstr "Làmpada de l' oficinaName"
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
 msgid ""
-"On the product %(product)s you cannot associate the value %(value)s with the"
-" attribute %(attribute)s because they do not match."
+"On the product %(product)s you cannot associate the value %(value)s with the "
+"attribute %(attribute)s because they do not match."
 msgstr ""
 "En el producte %(product)s no podeu associar el valor %(value)s amb l' "
 "atribut %(attribute)s perquè no coincideixen."
@@ -2093,8 +2117,8 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
-"En el producte %(product)s no podeu transformar l' atribut %(attribute_src)s"
-" a l' atribut %(attribute_dest)s."
+"En el producte %(product)s no podeu transformar l' atribut %(attribute_src)s "
+"a l' atribut %(attribute_dest)s."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2336,7 +2360,6 @@ msgstr "Fixar preu"
 
 #. module: product
 #. odoo-javascript
-#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #, python-format
 msgid "Print"
@@ -2628,8 +2651,7 @@ msgstr "Variants de producte"
 #: code:addons/product/report/product_label_report.py:0
 #, python-format
 msgid "Product model not defined, Please contact your administrator."
-msgstr ""
-"No s' ha definit el model de producte, contacteu amb l' administrador."
+msgstr "No s' ha definit el model de producte, contacteu amb l' administrador."
 
 #. module: product
 #. odoo-python
@@ -2753,8 +2775,8 @@ msgstr "Referència"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid ""
-"Register the prices requested by your vendors for each product, based on the"
-" quantity and the period."
+"Register the prices requested by your vendors for each product, based on the "
+"quantity and the period."
 msgstr ""
 "Registra els preus sol·licitats per cada producte, basat en la quantitat i "
 "el període."
@@ -2946,8 +2968,8 @@ msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
 msgstr ""
-"Especifiqui una plantilla si aquesta regla només s'aplica a una plantilla de"
-" producte. Deixi'l buit en cas contrari."
+"Especifiqui una plantilla si aquesta regla només s'aplica a una plantilla de "
+"producte. Deixi'l buit en cas contrari."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
@@ -2986,7 +3008,8 @@ msgid ""
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
 "Hora inicial de la validació de l' element de la llista de preus\n"
-"El valor mostrat depèn de la zona horària establerta a les vostres preferències."
+"El valor mostrat depèn de la zona horària establerta a les vostres "
+"preferències."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__activity_state
@@ -3135,15 +3158,15 @@ msgstr ""
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
-"The number of variants to generate is above allowed limit. You should either"
-" not generate variants for each combination or generate them on demand from "
+"The number of variants to generate is above allowed limit. You should either "
+"not generate variants for each combination or generate them on demand from "
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
 "El nombre de variants a generar és superior al límit permès. Evita crear "
 "variants per a cada combinació o crea-les sota demanda des de la comanda de "
-"venda. Per fer-ho, obre la vista de formulari d'atributs i canvia el mode de"
-" *Crear variants*."
+"venda. Per fer-ho, obre la vista de formulari d'atributs i canvia el mode de "
+"*Crear variants*."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -3166,8 +3189,8 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr ""
-"La quantitat a comprar d' aquest proveïdor a beneficiar del preu, expressada"
-" en la unitat de producte del proveïdor de mesura si no en qualsevol, en la "
+"La quantitat a comprar d' aquest proveïdor a beneficiar del preu, expressada "
+"en la unitat de producte del proveïdor de mesura si no en qualsevol, en la "
 "unitat per omissió de mesura del producte en cas contrari."
 
 #. module: product
@@ -3180,8 +3203,8 @@ msgstr "El mètode d'arrodoniment ha de ser positiu."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
-"The sale price is managed from the product template. Click on the 'Configure"
-" Variants' button to set the extra attribute prices."
+"The sale price is managed from the product template. Click on the 'Configure "
+"Variants' button to set the extra attribute prices."
 msgstr ""
 "El preu de venda s' ha gestionat de la plantilla de producte. Cliqueu al "
 "botó 'Configure Variants' per establir els preus de l' atribut extra."
@@ -3227,8 +3250,8 @@ msgid ""
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
 msgstr ""
-"Aquesta configuració dels atributs del producte, els valors i les excepcions"
-" no comportarien cap variant possible. Si us plau, ompliu o esborreu el "
+"Aquesta configuració dels atributs del producte, els valors i les excepcions "
+"no comportarien cap variant possible. Si us plau, ompliu o esborreu el "
 "vostre producte directament si voleu."
 
 #. module: product
@@ -3451,11 +3474,13 @@ msgstr "Valor Preu extra"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
+"        Used to value the product when the purchase cost is not known (e.g. "
+"inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 "El valor del producte (calculat automàticament mitjançant AVCO).\n"
-"        S'utilitza per valorar el producte quan no es coneix el cost de compra (per exemple, en un ajust d'inventari).\n"
+"        S'utilitza per valorar el producte quan no es coneix el cost de "
+"compra (per exemple, en un ajust d'inventari).\n"
 "        S'utilitza per calcular els marges de les comandes de venda."
 
 #. module: product
@@ -3633,8 +3658,8 @@ msgstr "Avisos"
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
-"We pay special attention to detail, which is why our desks are of a superior"
-" quality."
+"We pay special attention to detail, which is why our desks are of a superior "
+"quality."
 msgstr ""
 "Prestem especial atenció als detalls, per això els nostres escriptoris són "
 "de qualitat superior."
@@ -3686,12 +3711,14 @@ msgid ""
 "You are setting a Decimal Accuracy less precise than the UOMs:\n"
 "%s\n"
 "This may cause inconsistencies in computations.\n"
-"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+"Please increase the rounding of those units of measure, or the digits of "
+"this Decimal Accuracy."
 msgstr ""
 "Esteu establint un valor decimal menys precís que els UOM:\n"
 "%s\n"
 "Això pot causar inconsistències en els càlculs.\n"
-"Si us plau, augmenteu la ronda d'aquestes unitats de mesura, o els dígits d' aquesta precisió decimal."
+"Si us plau, augmenteu la ronda d'aquestes unitats de mesura, o els dígits d' "
+"aquesta precisió decimal."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
@@ -3748,10 +3775,12 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
-"You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot change the Variants Creation Mode of the attribute %(attribute)s "
+"because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
-"No podeu canviar el mode de creació de Varites de l' atribut %(attribute)s perquè s'utilitza en els següents productes:\n"
+"No podeu canviar el mode de creació de Varites de l' atribut %(attribute)s "
+"perquè s'utilitza en els següents productes:\n"
 "%(products)s"
 
 #. module: product
@@ -3759,8 +3788,8 @@ msgstr ""
 #: code:addons/product/models/product_attribute_value.py:0
 #, python-format
 msgid ""
-"You cannot change the attribute of the value %(value)s because it is used on"
-" the following products: %(products)s"
+"You cannot change the attribute of the value %(value)s because it is used on "
+"the following products: %(products)s"
 msgstr ""
 "No és possible canviar l'atribut del valor %(value)s perquè s'utilitza en "
 "els següents productes: %(products)s"
@@ -3796,8 +3825,7 @@ msgstr "No podeu crear categories recursives."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_value_value_company_uniq
-msgid ""
-"You cannot create two values with the same name for the same attribute."
+msgid "You cannot create two values with the same name for the same attribute."
 msgstr "No podeu crear dos valors amb el mateix nom pel mateix atribut."
 
 #. module: product
@@ -3814,7 +3842,6 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_category.py:0
-#: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot delete the %s product category."
 msgstr "No podeu esborrar la categoria de producte %s."
@@ -3824,10 +3851,12 @@ msgstr "No podeu esborrar la categoria de producte %s."
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
-"You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot delete the attribute %(attribute)s because it is used on the "
+"following products:\n"
 "%(products)s"
 msgstr ""
-"No podeu eliminar l' atribut %(attribute)s perquè s'utilitza en els següents productes:\n"
+"No podeu eliminar l' atribut %(attribute)s perquè s'utilitza en els següents "
+"productes:\n"
 "%(products)s"
 
 #. module: product
@@ -3835,11 +3864,14 @@ msgstr ""
 #: code:addons/product/models/product_attribute_value.py:0
 #, python-format
 msgid ""
-"You cannot delete the value %(value)s because it is used on the following products:\n"
+"You cannot delete the value %(value)s because it is used on the following "
+"products:\n"
 "%(products)s\n"
-" If the value has been associated to a product in the past, you will not be able to delete it."
+" If the value has been associated to a product in the past, you will not be "
+"able to delete it."
 msgstr ""
-"No podeu suprimir el valor %(value)s perquè s'utilitza en els productes següents:\n"
+"No podeu suprimir el valor %(value)s perquè s'utilitza en els productes "
+"següents:\n"
 "%(products)s\n"
 " Si el valor s'ha associat a un producte en el passat, no el podreu suprimir."
 
@@ -3881,15 +3913,14 @@ msgstr ""
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, python-format
 msgid ""
-"You cannot move the attribute %(attribute)s from the product %(product_src)s"
-" to the product %(product_dest)s."
+"You cannot move the attribute %(attribute)s from the product %(product_src)s "
+"to the product %(product_dest)s."
 msgstr ""
 "No podeu moure l'atribució %(attribute)s del producte %(product_src)s al "
 "producte %(product_dest)s."
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_template_attribute_value.py:0
 #: code:addons/product/models/product_template_attribute_value.py:0
 #, python-format
 msgid ""
@@ -3905,10 +3936,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
-"                            whether it's a storable product, a consumable or a service."
+"                            whether it's a storable product, a consumable or "
+"a service."
 msgstr ""
 "Has de definir un producte per a tot el que vens o compres,\n"
-"                            sigui un producte emmagatzemable, un consumible o un servei."
+"                            sigui un producte emmagatzemable, un consumible "
+"o un servei."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -3918,33 +3951,44 @@ msgid ""
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
 "Heu de definir un producte per a tot el que veneu o compreu,\n"
-"                 ja sigui un producte emmagatzemable, un consumible o un servei."
+"                 ja sigui un producte emmagatzemable, un consumible o un "
+"servei."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
 "Has de definir un producte per tot el que venguis o compres.\n"
-"                Si es tracta d'un producte esorables, d'un servei o bé d'un servei.\n"
-"                El formulari de producte conté informació per simplificar el procés de venda:\n"
-"                preu, notes als pressupostos, dades comptables, mètodes d'adquisició, etc."
+"                Si es tracta d'un producte esorables, d'un servei o bé d'un "
+"servei.\n"
+"                El formulari de producte conté informació per simplificar el "
+"procés de venda:\n"
+"                preu, notes als pressupostos, dades comptables, mètodes "
+"d'adquisició, etc."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 msgid ""
-"You must define a product for everything you sell, whether it's a physical product,\n"
+"You must define a product for everything you sell, whether it's a physical "
+"product,\n"
 "                a consumable or a service you offer to customers.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
 "Has de definir un producte per tot el que vens, si és un producte físic,\n"
 "                un estafador o un servei que ofereix als clients.\n"
-"                El formulari de producte conté informació per simplificar el procés de venda:\n"
-"                preu, notes als pressupostos, dades comptables, mètodes d'adquisició, etc."
+"                El formulari de producte conté informació per simplificar el "
+"procés de venda:\n"
+"                preu, notes als pressupostos, dades comptables, mètodes "
+"d'adquisició, etc."
 
 #. module: product
 #. odoo-javascript

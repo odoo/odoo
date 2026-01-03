@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-10-24 00:54+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-17/"
@@ -31,8 +31,6 @@ msgstr "% Fiabilité des livraisons"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/stock_rule.py:0
-#: code:addons/purchase_stock/models/stock_rule.py:0
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -55,7 +53,8 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
+msgid ""
+"<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
 msgstr ""
 "<span invisible=\"on_time_rate &gt;= 0\">Aucune donnée sur la fiabilité des "
 "livraisons</span>"
@@ -85,11 +84,13 @@ msgstr "<strong>Adresse d'expédition :</strong>"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"En fonction de la configuration du produit, la quantité reçue peut être calculée automatiquement par mécanisme : \n"
+"En fonction de la configuration du produit, la quantité reçue peut être "
+"calculée automatiquement par mécanisme : \n"
 "  - Manuel : la quantité est définie manuellement sur la ligne\n"
 "  - Mouvements de stock : la quantité provient des transferts confirmés\n"
 
@@ -158,7 +159,6 @@ msgstr "Lignes de commande créées"
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
-#: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Différence de taux de change"
@@ -178,8 +178,8 @@ msgstr "Jours nécessaires pour confirmer un bon de commande"
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
 msgid "Days needed to confirm a PO, define when a PO should be validated"
 msgstr ""
-"Jours nécessaires pour confirmer un bon de commande, définir quand un bon de"
-" commande devrait être validé"
+"Jours nécessaires pour confirmer un bon de commande, définir quand un bon de "
+"commande devrait être validé"
 
 #. module: purchase_stock
 #. odoo-python
@@ -258,8 +258,8 @@ msgstr "Exception(s) :"
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 #, python-format
 msgid ""
-"For the product %s, the warehouse of the operation type (%s) is inconsistent"
-" with the location (%s) of the reordering rule (%s). Change the operation "
+"For the product %s, the warehouse of the operation type (%s) is inconsistent "
+"with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
 msgstr ""
 "Pour le produit %s, l'entrepôt du type d'opération (%s) est incompatible "
@@ -359,8 +359,8 @@ msgstr "Des actions manuelles pourraient être requises. "
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 "Marge d'erreur pour les délais des fournisseurs. Lorsque le système génère "
 "des commandes de réapprovisionnement, ils sont programmés tant de jours à "
@@ -396,8 +396,8 @@ msgstr "Non reçu"
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
 msgstr ""
 "Odoo n'est pas capable de générer les écritures anglo-saxonnes. La "
 "valorisation totale de %s est zéro"
@@ -441,8 +441,8 @@ msgstr "Point de commande"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past x days; the number of products received on time divided by the"
-" number of ordered products.x is either the System Parameter "
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
 "Au cours des x derniers jours, le nombre de produits reçus à temps divisé "
@@ -731,9 +731,9 @@ msgstr ""
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
-"There is no matching vendor price to generate the purchase order for product"
-" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
-" Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
 msgstr ""
 "Il n'y a pas de prix fournisseur correspondant pour générer un bon d'achat "
 "pour le produit %s (aucun fournisseur défini, quantité minimale non "
@@ -764,17 +764,17 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
 "Cela permet d'ajouter une route de dropshipping à appliquer aux produits "
 "afin de demander à vos fournisseurs de livrer à vos clients. Un produit en "
 "dropshipping génère une demande de prix d'achat une fois la commande client "
-"confirmée. Il s'agit d'un flux à la demande. L'adresse de livraison demandée"
-" est celle de votre client, et non de votre entrepôt."
+"confirmée. Il s'agit d'un flux à la demande. L'adresse de livraison demandée "
+"est celle de votre client, et non de votre entrepôt."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -814,8 +814,7 @@ msgstr "Transfert"
 #: code:addons/purchase_stock/models/purchase_order.py:0
 #, python-format
 msgid ""
-"Unable to cancel purchase order %s as some receptions have already been "
-"done."
+"Unable to cancel purchase order %s as some receptions have already been done."
 msgstr ""
 "Impossibilité d'annuler le bon de commande %s car des réceptions ont déjà "
 "été effectuées. "
@@ -879,8 +878,8 @@ msgstr "Quand on achète des produits, ils peuvent être livrés à cet entrepô
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need.<br/>Note: This rule will be used in combination"
-" with the rules<br/>of the reception route(s)"
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
 msgstr ""
 "Lorsque des produits sont nécessaires dans <b>%s</b>, <br/> une demande de "
 "prix est créée pour répondre au besoin.<br/>Remarque : Cette règle sera "

@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_picking_batch
-# 
+#
 # Translators:
 # Martin Trigaux, 2023
 # Wil Odoo, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -29,11 +32,11 @@ msgstr "2023-08-20"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group "
-"by</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group by</"
+"span>"
 msgstr ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not "
-"auto_batch\">Групувати</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Групувати</"
+"span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -73,19 +76,23 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Перенесення не буде автоматично додано до групових переміщень, які перевищуватимуть цю кількість рядків, якщо до них буде додано переміщення.\n"
+"Перенесення не буде автоматично додано до групових переміщень, які "
+"перевищуватимуть цю кількість рядків, якщо до них буде додано переміщення.\n"
 "Залиште це значення як '0' якщо немає обмежень по рядкам."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Переміщення не буде автоматично додане до групового, яке перевищуватиме цю кількість переміщень.\n"
+"Переміщення не буде автоматично додане до групового, яке перевищуватиме цю "
+"кількість переміщень.\n"
 "Залиште значення на '0' якщо немає обмежень по переміщенням."
 
 #. module: stock_picking_batch
@@ -644,8 +651,7 @@ msgstr "Тип комплектування"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
-msgid ""
-"Please add 'Done' quantities to the batch picking to create a new pack."
+msgid "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
 "Додайте 'Виконані' кількості в групове комплектування, щоб створити нову "
 "упаковку."
@@ -733,14 +739,20 @@ msgstr "Запланована дата"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "Запланована дата для виконання переміщень.\n"
-"              - Якщо встановити вручну, запланована дата для всіх групових переміщень автоматично оновиться до цієї дати.\n"
-"              - Якщо не змінювати вручну, а переміщення додавати/видаляти/оновлювати, то це буде їх найраніша запланована дата\n"
-"                але ця запланована дата не буде встановлена для всіх групових переміщень."
+"              - Якщо встановити вручну, запланована дата для всіх групових "
+"переміщень автоматично оновиться до цієї дати.\n"
+"              - Якщо не змінювати вручну, а переміщення додавати/видаляти/"
+"оновлювати, то це буде їх найраніша запланована дата\n"
+"                але ця запланована дата не буде встановлена для всіх "
+"групових переміщень."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -848,11 +860,13 @@ msgstr "Короткий опис:"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid ""
-"The following transfers cannot be added to batch transfer %s. Please check their states and operation types.\n"
+"The following transfers cannot be added to batch transfer %s. Please check "
+"their states and operation types.\n"
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"Наведені нижче переміщення не можна додати до групового переміщення %s. Перевірте їх статус та типи операцій.\n"
+"Наведені нижче переміщення не можна додати до групового переміщення %s. "
+"Перевірте їх статус та типи операцій.\n"
 "\n"
 "Несумісність: %s"
 
@@ -860,27 +874,37 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
 "The goal of the batch transfer is to group operations that may\n"
-"            (needs to) be done together in order to increase their efficiency.\n"
-"            It may also be useful to assign jobs (one person = one batch) or\n"
-"            help the timing management of operations (tasks to be done at 1pm)."
+"            (needs to) be done together in order to increase their "
+"efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) "
+"or\n"
+"            help the timing management of operations (tasks to be done at "
+"1pm)."
 msgstr ""
 "Ціль групового переміщення - згрупувати операції, які можуть\n"
-"            (повинні) бути виконані разом з метою підвищення їх ефективності.\n"
-"           Також може бути корисним призначити завдання (одна особа = одна група) або\n"
-"           допомога в управлінні термінами операцій (завдання має бути виконане в 13:00)."
+"            (повинні) бути виконані разом з метою підвищення їх "
+"ефективності.\n"
+"           Також може бути корисним призначити завдання (одна особа = одна "
+"група) або\n"
+"           допомога в управлінні термінами операцій (завдання має бути "
+"виконане в 13:00)."
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid ""
-"The goal of the wave transfer is to group operations from different transfer\n"
+"The goal of the wave transfer is to group operations from different "
+"transfer\n"
 "                    together in order to increase their efficiency.\n"
-"                    It may also be useful to assign jobs (one person = one batch) or\n"
-"                    help the timing management of operations (tasks to be done at 1pm)."
+"                    It may also be useful to assign jobs (one person = one "
+"batch) or\n"
+"                    help the timing management of operations (tasks to be "
+"done at 1pm)."
 msgstr ""
 "Мета хвильового переказу — згрупувати операції з різних переиіщень \n"
 "разом, щоб підвищити їх ефективність.\n"
 "Також може бути корисним призначити завдання (одна особа = одне \n"
-"групове переміщення) або допомогти в управлінні часом операцій (завдання, які потрібно виконувати о 13:00)."
+"групове переміщення) або допомогти в управлінні часом операцій (завдання, "
+"які потрібно виконувати о 13:00)."
 
 #. module: stock_picking_batch
 #. odoo-python

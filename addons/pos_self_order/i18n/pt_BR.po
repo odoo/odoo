@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_self_order
-# 
+#
 # Translators:
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # Wil Odoo, 2024
 # Maitê Dietze, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:36+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
+"41243/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -34,8 +36,8 @@ msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
 msgstr ""
-"%s não está mais disponível, e por isso foi removido do seu pedido. Revise o"
-" pedido e valide-o novamente."
+"%s não está mais disponível, e por isso foi removido do seu pedido. Revise o "
+"pedido e valide-o novamente."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -59,8 +61,8 @@ msgid ""
 "<span>Please note that the kiosk only works with Adyen &amp; Stripe "
 "terminals</span>"
 msgstr ""
-"<span>Observe que o quiosque só funciona com os terminais Adyen e "
-"Stripe</span>"
+"<span>Observe que o quiosque só funciona com os terminais Adyen e Stripe</"
+"span>"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -209,7 +211,6 @@ msgstr "Cancelar pedido"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 #, python-format
@@ -263,7 +264,6 @@ msgstr "Fechar sessão"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #, python-format
 msgid "Combo"
@@ -415,11 +415,15 @@ msgstr "Cada pedido"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
-"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
 msgstr ""
-"Cada mesa no piso tem um código QR atribuído com base na sua configuração. Por motivos de segurança,\n"
-"                    o nome das mesas e do ponto de venda estão criptografados na URL gerada, como mostrado no exemplo abaixo:"
+"Cada mesa no piso tem um código QR atribuído com base na sua configuração. "
+"Por motivos de segurança,\n"
+"                    o nome das mesas e do ponto de venda estão "
+"criptografados na URL gerada, como mostrado no exemplo abaixo:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -450,8 +454,8 @@ msgstr "Insira seu valor personalizado"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Feel free to use and print this QR code as many times as needed according to"
-" your requirements."
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
 msgstr "Use e imprima este código QR quantas vezes forem necessárias."
 
 #. module: pos_self_order
@@ -498,8 +502,8 @@ msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
 msgstr ""
-"Ei, parece que você esqueceu de criar produtos ou adicioná-los a pos_config."
-" Adicione-os antes de usar o autoatendimento"
+"Ei, parece que você esqueceu de criar produtos ou adicioná-los a pos_config. "
+"Adicione-os antes de usar o autoatendimento"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -537,11 +541,15 @@ msgstr "Se esse produto está ou não disponível nas telas de autoatendimento"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
-"Se você precisa de códigos QR, comece escaneando o código QR relevante para adquirir a URL Em seguida, use um\n"
-"                gerador de código QR como https://www.qrcode-monkey.com ou https://www.qr-code-generator.com"
+"Se você precisa de códigos QR, comece escaneando o código QR relevante para "
+"adquirir a URL Em seguida, use um\n"
+"                gerador de código QR como https://www.qrcode-monkey.com ou "
+"https://www.qr-code-generator.com"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -553,7 +561,6 @@ msgstr "Imagem a ser exibida na tela de autoatendimento"
 
 #. module: pos_self_order
 #. odoo-python
-#: code:addons/pos_self_order/models/res_config_settings.py:0
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -762,8 +769,6 @@ msgstr "Abrir em uma nova aba"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #, python-format
 msgid "Order"
 msgstr "Pedido"
@@ -936,7 +941,6 @@ msgstr "Descrição do produto para autoatendimento"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
-#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 #, python-format
 msgid "Product Information"
 msgstr "Informações do produto"
@@ -951,7 +955,6 @@ msgstr "Variante do produto"
 #: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
 #: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
@@ -1048,8 +1051,8 @@ msgstr "Chave de segurança"
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid ""
 "Select for which points of sale you want to display this link. Leave empty "
-"to display it for all points of sale. You have to select among the points of"
-" sale that have the 'QR Code Menu' feature enabled."
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
 "Selecione para quais pontos de venda você deseja exibir este link. Deixe em "
 "branco para exibi-lo em todos os pontos de venda. É necessário selecionar "
@@ -1057,7 +1060,6 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
-#: code:addons/pos_self_order/models/pos_config.py:0
 #: code:addons/pos_self_order/models/pos_config.py:0
 #, python-format
 msgid "Self Kiosk"
@@ -1249,8 +1251,8 @@ msgstr "O usuário deve ser um usuário do PDV"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_alternative_fp_id
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_alternative_fp_id
 msgid ""
-"This is useful for restaurants with onsite and take-away services that imply"
-" specific tax rates."
+"This is useful for restaurants with onsite and take-away services that imply "
+"specific tax rates."
 msgstr ""
 "Isso é útil em restaurantes com serviços no local e para retirada que "
 "acarretam em tributação específica."

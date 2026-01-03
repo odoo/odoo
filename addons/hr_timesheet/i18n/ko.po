@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:33+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-10-24 00:54+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-17/"
@@ -113,8 +113,12 @@ msgstr "<b class=\"tip_title\">팁: 작업시간표를 빠르게 기록할 수 �
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
-msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"날ㅉ\" title=\"날짜\"/>"
+msgid ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"날ㅉ\" title=\"날"
+"짜\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -130,11 +134,15 @@ msgstr "<span class=\"o_stat_text\">작업 기록</span>"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
-"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Hours Spent on Sub-tasks:</span>\n"
-"                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">Days Spent on Sub-tasks:</span>"
+"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Hours Spent on "
+"Sub-tasks:</span>\n"
+"                                <span class=\"text-nowrap\" invisible=\"not "
+"encode_uom_in_days\">Days Spent on Sub-tasks:</span>"
 msgstr ""
-"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">하위 작업에 소요된 시간:</span>\n"
-"                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">하위 작업에 소요된 일수:</span>"
+"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">하위 작업에 소요"
+"된 시간:</span>\n"
+"                                <span class=\"text-nowrap\" invisible=\"not "
+"encode_uom_in_days\">하위 작업에 소요된 일수:</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -142,9 +150,11 @@ msgid ""
 "<span invisible=\"not has_timesheet\">\n"
 "                        You cannot delete employees who have timesheets.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            You can either archive these employees or first delete all of their timesheets.\n"
+"                            You can either archive these employees or first "
+"delete all of their timesheets.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Please first delete all of their timesheets.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -155,9 +165,11 @@ msgstr ""
 "<span invisible=\"not has_timesheet\">\n"
 "                        작업기록이 있는 직원은 삭제할 수 없습니다.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                           해당 직원을 보관함으로 이동시키거나 작업기록을 삭제할 수 있습니다.\n"
+"                           해당 직원을 보관함으로 이동시키거나 작업기록을 삭"
+"제할 수 있습니다.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                           먼저 모든 작업기록을 삭제해주십시오.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -294,13 +306,18 @@ msgstr "분석 라인"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_id
 msgid ""
-"Analytic account to which this project, its tasks and its timesheets are linked. \n"
-"Track the costs and revenues of your project by setting this analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
-"This analytic account can be changed on each task individually if necessary.\n"
+"Analytic account to which this project, its tasks and its timesheets are "
+"linked. \n"
+"Track the costs and revenues of your project by setting this analytic "
+"account on your related documents (e.g. sales orders, invoices, purchase "
+"orders, vendor bills, expenses etc.).\n"
+"This analytic account can be changed on each task individually if "
+"necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
 "이 프로젝트와 작업, 작업 기록이 연결된 분석 계정입니다. \n"
-"관련 문서 (예: 판매주문서, 청구서, 구매주문서, 공급업체 청구서, 비용 등)에 이 분석 계정을 설정하여 프로젝트에 소요된 비용과 수익을 추적할 수 있습니다.\n"
+"관련 문서 (예: 판매주문서, 청구서, 구매주문서, 공급업체 청구서, 비용 등)에 "
+"이 분석 계정을 설정하여 프로젝트에 소요된 비용과 수익을 추적할 수 있습니다.\n"
 "분석 계정은 필요한 경우 각 작업에서 개별적으로 변경할 수 있습니다.\n"
 "작업기록을 사용하려면 분석 계정이 필요합니다."
 
@@ -309,7 +326,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid ""
-"Analyze the projects and tasks on which your employees spend their time.<br>\n"
+"Analyze the projects and tasks on which your employees spend their time."
+"<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
 "직원들의 시간을 기록한 프로젝트와 작업을 분석합니다.<br>\n"
@@ -511,7 +529,6 @@ msgstr "유효 시간"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
-#: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__employee_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__employee_id
@@ -576,8 +593,7 @@ msgstr "추가 시간"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid ""
-"Generate timesheets for validated time off requests and public holidays"
+msgid "Generate timesheets for validated time off requests and public holidays"
 msgstr "승인된 휴가 요청 및 공휴일에 대한 출퇴근 기록표 생성"
 
 #. module: hr_timesheet
@@ -653,14 +669,12 @@ msgstr "내부 프로젝트"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
-#: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "Invalid operator: %s"
 msgstr "잘못된 운영자: %s"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/project_project.py:0
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "Invalid value: %s"
@@ -827,7 +841,6 @@ msgstr "진행"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
-#: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_project_project
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__project_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__project_id
@@ -876,7 +889,8 @@ msgstr "새로운 활동 기록하기"
 msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
-msgstr "Shift + 해당 단축키를 누르면 프로젝트의 작업기록에 15분을 추가할 수 있습니다."
+msgstr ""
+"Shift + 해당 단축키를 누르면 프로젝트의 작업기록에 15분을 추가할 수 있습니다."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -976,14 +990,16 @@ msgstr "작업기록 항목 보기"
 msgid ""
 "Send a periodical email reminder to timesheets approvers that still have "
 "timesheets to validate"
-msgstr "승인할 작업기록이 남아있는 결재권자에게 정기적으로 이메일 알림을 전송합니다."
+msgstr ""
+"승인할 작업기록이 남아있는 결재권자에게 정기적으로 이메일 알림을 전송합니다."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid ""
 "Send a periodical email reminder to timesheets users that still have "
 "timesheets to encode"
-msgstr "인코딩할 작업기록이 남아있는 사용자에게 정기적으로 이메일 알림을 전송합니다."
+msgstr ""
+"인코딩할 작업기록이 남아있는 사용자에게 정기적으로 이메일 알림을 전송합니다."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -1003,7 +1019,6 @@ msgstr "하위 작업 소요 시간"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/controllers/portal.py:0
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_project_task
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__task_id
@@ -1042,10 +1057,11 @@ msgstr "작업 기록이 없습니다."
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid ""
-"These projects have some timesheet entries referencing them. Before removing"
-" these projects, you have to remove these timesheet entries."
+"These projects have some timesheet entries referencing them. Before removing "
+"these projects, you have to remove these timesheet entries."
 msgstr ""
-"이 프로젝트에는 다른 곳에서 참조되고 있는 일부 작업기록 항목이 있습니다. 프로젝트를 삭제하기 전에 작업기록 항목을 먼저 제거하십시오."
+"이 프로젝트에는 다른 곳에서 참조되고 있는 일부 작업기록 항목이 있습니다. 프로"
+"젝트를 삭제하기 전에 작업기록 항목을 먼저 제거하십시오."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1055,7 +1071,8 @@ msgid ""
 "These tasks have some timesheet entries referencing them. Before removing "
 "these tasks, you have to remove these timesheet entries."
 msgstr ""
-"이 작업에는 다른 곳에서 참조되고 있는 일부 작업기록 항목이 있습니다. 작업을 삭제하기 전에 작업기록 항목을 먼저 제거하십시오."
+"이 작업에는 다른 곳에서 참조되고 있는 일부 작업기록 항목이 있습니다. 작업을 "
+"삭제하기 전에 작업기록 항목을 먼저 제거하십시오."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1083,10 +1100,11 @@ msgstr "이 검색 방법에서는 해당 운영자 %s 가 지원되지 않습�
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid ""
-"This project has some timesheet entries referencing it. Before removing this"
-" project, you have to remove these timesheet entries."
+"This project has some timesheet entries referencing it. Before removing this "
+"project, you have to remove these timesheet entries."
 msgstr ""
-"이 프로젝트에는 다른 곳에서 참조되고 있는 일부 작업기록 항목이 있습니다. 프로젝트를 삭제하기 전에 작업기록 항목을 먼저 제거하십시오."
+"이 프로젝트에는 다른 곳에서 참조되고 있는 일부 작업기록 항목이 있습니다. 프로"
+"젝트를 삭제하기 전에 작업기록 항목을 먼저 제거하십시오."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1094,7 +1112,9 @@ msgstr ""
 #, python-format
 msgid ""
 "This task cannot be private because there are some timesheets linked to it."
-msgstr "이 작업의 일부 기록이 작업기록표와 연결되어 있으므로 비공개로 변경할 수 없습니다."
+msgstr ""
+"이 작업의 일부 기록이 작업기록표와 연결되어 있으므로 비공개로 변경할 수 없습"
+"니다."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1104,7 +1124,8 @@ msgid ""
 "This task has some timesheet entries referencing it. Before removing this "
 "task, you have to remove these timesheet entries."
 msgstr ""
-"이 작업에는 다른 곳에서 참조되고 있는 일부 작업기록 항목이 있습니다. 작업을 삭제하기 전에 작업기록 항목을 먼저 제거하십시오."
+"이 작업에는 다른 곳에서 참조되고 있는 일부 작업기록 항목이 있습니다. 작업을 "
+"삭제하기 전에 작업기록 항목을 먼저 제거하십시오."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1118,10 +1139,12 @@ msgstr "이번 주"
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects, don't forget to setup the right "
+"unit of measure in your employees."
 msgstr ""
 "프로젝트 및 작업에 사용되는 측정 단위가 설정됩니다.\n"
-"만약 프로젝트에 연결된 작업 기록을 사용하는 경우, 직원에게 올바른 측정 단위를 설정하는 것을 잊지 마십시오."
+"만약 프로젝트에 연결된 작업 기록을 사용하는 경우, 직원에게 올바른 측정 단위"
+"를 설정하는 것을 잊지 마십시오."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1323,15 +1346,15 @@ msgstr "비공개 작업에는 작업기록을 생성할 수 없습니다."
 msgid ""
 "Timesheets must be created on a project or a task with an active analytic "
 "account."
-msgstr "활성 분석 계정이 있는 프로젝트 또는 작업에서 작업기록을 생성할 수 있습니다."
+msgstr ""
+"활성 분석 계정이 있는 프로젝트 또는 작업에서 작업기록을 생성할 수 있습니다."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid ""
-"Timesheets must be created with an active employee in the selected "
-"companies."
+"Timesheets must be created with an active employee in the selected companies."
 msgstr "작업기록은 선택한 회사의 활성 직원으로 생성해야 합니다."
 
 #. module: hr_timesheet
@@ -1392,8 +1415,8 @@ msgstr "전체 작업기록 시간"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
 msgid ""
-"Total number of time (in the proper UoM) recorded in the project, rounded to"
-" the unit."
+"Total number of time (in the proper UoM) recorded in the project, rounded to "
+"the unit."
 msgstr "올림 후 프로젝트에 기록한 총 시간(적절한 단위 사용)"
 
 #. module: hr_timesheet
@@ -1406,8 +1429,8 @@ msgstr "합계 :"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
-"Track your working hours by projects every day and invoice this time to your"
-" customers."
+"Track your working hours by projects every day and invoice this time to your "
+"customers."
 msgstr "매일 프로젝트별로 작업 시간을 추적하고 고객에게 청구서를 발행하십시오."
 
 #. module: hr_timesheet
@@ -1432,7 +1455,8 @@ msgid ""
 "        @user Assign the task to a user\n"
 "        ! Set the task a high priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
 "새로운 작업을 설정하려면 제목에 다음 키워드를 사용하십시오:\n"
 "\n"
@@ -1441,7 +1465,8 @@ msgstr ""
 "        @user 사용자에게 작업 배정\n"
 "        ! 작업에 우선 순위를 설정\n"
 "\n"
-"        올바른 형식과 순서를 사용했는지 확인하십시오. 예. 환경 설정 화면 개선 5h #feature #v16 @Mitchell !"
+"        올바른 형식과 순서를 사용했는지 확인하십시오. 예. 환경 설정 화면 개"
+"선 5h #feature #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1490,8 +1515,9 @@ msgid ""
 "analytic account. Please change this account, or reactivate the current one "
 "to timesheet on the project."
 msgstr ""
-"이 프로젝트는 비활성 분석 계정에 연결되어 있으므로 작업 시간을 기록할 수 없습니다. 다른 계정으로 변경하거나 현재 계정의 프로젝트 작업"
-" 기록을 다시 활성화하십시오."
+"이 프로젝트는 비활성 분석 계정에 연결되어 있으므로 작업 시간을 기록할 수 없습"
+"니다. 다른 계정으로 변경하거나 현재 계정의 프로젝트 작업 기록을 다시 활성화하"
+"십시오."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1536,10 +1562,12 @@ msgstr "시간"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "on\n"
-"                            <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
+"                            <span class=\"fw-bold text-dark\"> Sub-tasks</"
+"span>)"
 msgstr ""
 ".\n"
-"                            <span class=\"fw-bold text-dark\"> 하위 작업</span>)"
+"                            <span class=\"fw-bold text-dark\"> 하위 작업</"
+"span>)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form

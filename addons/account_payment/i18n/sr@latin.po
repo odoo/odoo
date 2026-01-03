@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2025-11-17 14:11+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-12-31 11:43+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
 "odoo-17/account_payment/sr_Latn/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -27,7 +27,9 @@ msgstr "<b>Komunikacija: </b>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
-msgid "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> Pay Now</span>"
+msgid ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Pay Now</span>"
 msgstr ""
 "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
 "Plati odmah</span>"
@@ -78,19 +80,20 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please contact the website administrator."
+"<strong>No suitable payment method could be found.</strong><br/>\n"
+"                                If you believe that it is an error, please "
+"contact the website\n"
+"                                administrator."
 msgstr ""
-"<strong>Nije moguće pronaći odgovarajuću opciju plaćanja.</strong><br/>\n"
-"                                Ukoliko smatrate da je u pitanju greška, "
-"molimo vas da kontaktirate administratora website-a."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>Upozorenje!</strong> Čeka se povraćaj sredstava za ovu uplatu.\n"
 "                        Sačekajte trenutak da se obradi. Ako je povraćaj još "
@@ -113,7 +116,7 @@ msgid "A token is required to create a new payment transaction."
 msgstr "Za kreiranje nove platne transakcije neophodan je token."
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
+#: model:onboarding.onboarding.step,button_text:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Activate Stripe"
 msgstr "Aktiviraj Stripe"
 
@@ -131,7 +134,9 @@ msgstr "Plaćeni iznos"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
-msgid "Are you sure you want to void the authorized transaction? This action can't be undone."
+msgid ""
+"Are you sure you want to void the authorized transaction? This action can't "
+"be undone."
 msgstr ""
 "Da li ste sigurni da želite da poništite autorizovanu transakciju? Ova "
 "radnja se ne može opozvati."
@@ -160,11 +165,6 @@ msgid "Code"
 msgstr "Kod"
 
 #. module: account_payment
-#: model:ir.model,name:account_payment.model_res_company
-msgid "Companies"
-msgstr "Preduzeća"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
 msgid "Config Settings"
 msgstr "Podešavanje konfiguracije"
@@ -191,14 +191,21 @@ msgstr "Naziv za prikaz"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
-msgid "Done, your online payment has been successfully processed. Thank you for your order."
+msgid ""
+"Done, your online payment has been successfully processed. Thank you for "
+"your order."
 msgstr ""
 "Završeno, vaše online plaćanje je uspešno obrađeno. Hvala vam na porudžbini."
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
-msgid "Enable credit &amp; debit card payments supported by Stripe"
-msgstr ""
+#: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Enable credit & debit card payments supported by Stripe."
+msgstr "Omogući plaćanje kreditnim & debitnim karticama koje podržava Stripe."
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
+msgid "Full Only"
+msgstr "Samo ceo"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
@@ -279,27 +286,41 @@ msgstr "Maksimalno dozvoljen povraćaj novca"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
-msgid "Note that only tokens from providers allowing to capture the amount are available."
+msgid ""
+"Note that only tokens from providers allowing to capture the amount are "
+"available."
 msgstr ""
 "Imajte na umu da su dostupni samo tokeni od provajdera koji dozvoljavaju da "
 "se beleži iznos."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
-msgid "Note that tokens from providers set to only authorize transactions (instead of capturing the amount) are not available."
+msgid ""
+"Note that tokens from providers set to only authorize transactions (instead "
+"of capturing the amount) are not available."
 msgstr ""
 "Imajte na umu da tokeni od provajdera koji su podešeni samo da autorizuju "
 "transakcije (umesto beleženja iznosa) nisu dostupni."
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
+#: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Onboarding Online Payments"
+msgstr "Onboarding Online Plaćanja"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_onboarding_onboarding_step
+msgid "Onboarding Step"
+msgstr "Onboarding korak"
+
+#. module: account_payment
+#: model:onboarding.onboarding.step,title:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Online Payments"
 msgstr "Online plaćanja"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
-msgid "Online payments enabled"
-msgstr ""
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__partial
+msgid "Partial"
+msgstr "Delimično"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_res_config_settings__pay_invoices_online
@@ -449,6 +470,11 @@ msgid "State"
 msgstr "Stanje"
 
 #. module: account_payment
+#: model:onboarding.onboarding.step,done_text:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Step Completed!"
+msgstr "Korak je završen!"
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
@@ -465,7 +491,8 @@ msgstr "Tok za pristup je nevažeći."
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_refund_wizard.py:0
 #, python-format
-msgid "The amount to be refunded must be positive and cannot be superior to %s."
+msgid ""
+"The amount to be refunded must be positive and cannot be superior to %s."
 msgstr "Iznos za povraćaj mora biti pozitivan i ne sme biti veći od %s."
 
 #. module: account_payment
@@ -477,7 +504,9 @@ msgstr "Dnevnik u koji se uspešne transakcije knjiže."
 #. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 #, python-format
-msgid "The payment related to the transaction with reference %(ref)s has been posted: %(link)s"
+msgid ""
+"The payment related to the transaction with reference %(ref)s has been "
+"posted: %(link)s"
 msgstr ""
 "Plaćanje povezano sa transakcijom sa brojem %(ref)s je proknjiženo: %(link)s"
 
@@ -500,7 +529,9 @@ msgstr "Došlo je do greške prilikom obrade vašeg plaćanja: neispravna faktur
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
-msgid "There was an error processing your payment: issue with credit card ID validation."
+msgid ""
+"There was an error processing your payment: issue with credit card ID "
+"validation."
 msgstr ""
 "Došlo je do greške prilikom obrade vašeg plaćanja: problem sa potvrdom ID "
 "broja kreditne kartice."
@@ -509,8 +540,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
 msgstr ""
-"Došlo je do greške prilikom obrade vašeg plaćanja: transakcija nije uspela.<"
-"br/>"
+"Došlo je do greške prilikom obrade vašeg plaćanja: transakcija nije uspela."
+"<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -544,12 +575,27 @@ msgstr "Ništavna transakcija"
 
 #. module: account_payment
 #. odoo-python
-#: code:addons/account_payment/models/account_journal.py:0
+#: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
-"Linked provider(s): %s"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
+"Linked providers(s): %s"
 msgstr ""
+"Ne možete obrisati metod plaćanja koji je povezan sa provajderom koji je "
+"statusu testiranja.\n"
+"Povezani provajder(i): %s"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot uninstall this module as payments using this payment method "
+"already exist."
+msgstr ""
+"Ne moežte deinstalirati ovaj modul jer plaćanje koje koristi ovaj metod "
+"plaćanja već postoji."
 
 #. module: account_payment
 #. odoo-python
@@ -561,3 +607,15 @@ msgid ""
 msgstr ""
 "Morate prvo deaktivirati provajdera plaćanja pre brisanja unosa u dnevnik.\n"
 "Povezani provajderi: %s"
+
+#~ msgid ""
+#~ "<strong>No suitable payment option could be found.</strong><br/>\n"
+#~ "                                If you believe that it is an error, "
+#~ "please contact the website administrator."
+#~ msgstr ""
+#~ "<strong>Nije moguće pronaći odgovarajuću opciju plaćanja.</strong><br/>\n"
+#~ "                                Ukoliko smatrate da je u pitanju greška, "
+#~ "molimo vas da kontaktirate administratora website-a."
+
+#~ msgid "Companies"
+#~ msgstr "Preduzeća"

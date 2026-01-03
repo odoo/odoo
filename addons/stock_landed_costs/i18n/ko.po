@@ -1,29 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_landed_costs
-# 
+#
 # Translators:
 # Wil Odoo, 2023
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_landed_costs
 #. odoo-python
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid " already out"
@@ -31,8 +28,10 @@ msgstr " 이미 종료"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
-msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -42,11 +41,13 @@ msgstr "<span class=\"o_stat_text\">가치 평가</span>"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory "
+"app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"저장 가능 품목이란 재고 관리가 가능한 품목을 의미하며, 사용을 위해서는 재고 관리 앱을 설치하셔야 합니다.\n"
+"저장 가능 품목이란 재고 관리가 가능한 품목을 의미하며, 사용을 위해서는 재고 "
+"관리 앱을 설치하셔야 합니다.\n"
 "소모품은 재고가 따로 관리되지 않는 품목입니다.\n"
 "서비스는 회사 측에서 제공하는 비물질적 재화입니다."
 
@@ -182,7 +183,8 @@ msgstr "비용 명세서"
 msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
-msgstr "비용 및 조정 명세가 일치하지 않습니다. 양륙 비용을 다시 계산해야 합니다."
+msgstr ""
+"비용 및 조정 명세가 일치하지 않습니다. 양륙 비용을 다시 계산해야 합니다."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
@@ -349,7 +351,9 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
-msgstr "품목이 양륙 비용인지 여부를 나타냅니다. 업체 청구서를 받을 경우 이전 수령 품목에 이 비용을 배분할 수 있습니다."
+msgstr ""
+"품목이 양륙 비용인지 여부를 나타냅니다. 업체 청구서를 받을 경우 이전 수령 품"
+"목에 이 비용을 배분할 수 있습니다."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -427,7 +431,9 @@ msgstr "승인된 양륙 비용"
 msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
-msgstr "수입부대비용에서 품목 원가에 추가 비용 (선적비, 보험료, 관세 등)을 포함시킬 수 있습니다."
+msgstr ""
+"수입부대비용에서 품목 원가에 추가 비용 (선적비, 보험료, 관세 등)을 포함시킬 "
+"수 있습니다."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
@@ -476,8 +482,6 @@ msgstr "이름"
 
 #. module: stock_landed_costs
 #. odoo-python
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "New"
@@ -688,7 +692,9 @@ msgstr "승인"
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
-msgstr "승인된 양륙 비용은 취소할 수 없습니다. 대신 마이너스의 양륙 비용을 생성하여 복구시킬 수 있습니다."
+msgstr ""
+"승인된 양륙 비용은 취소할 수 없습니다. 대신 마이너스의 양륙 비용을 생성하여 "
+"복구시킬 수 있습니다."
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
@@ -734,14 +740,16 @@ msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
 msgstr ""
-"선택한 %s 항목에 양륙 비용을 적용시킬 수 없습니다. 양륙 비용은 FIFO (선입선출법)이나 평균원가법을 사용하는 품목에만 적용하실 수"
-" 있습니다."
+"선택한 %s 항목에 양륙 비용을 적용시킬 수 없습니다. 양륙 비용은 FIFO (선입선출"
+"법)이나 평균원가법을 사용하는 품목에만 적용하실 수 있습니다."
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/product.py:0
 #, python-format
 msgid ""
-"You cannot change the product type or disable landed cost option because the"
-" product is used in an account move line."
-msgstr "해당 품목이 계정 이동 내역에서 사용되기 때문에 품목 유형을 변경하거나 수입부대비용 옵션을 비활성화시킬 수 없습니다."
+"You cannot change the product type or disable landed cost option because the "
+"product is used in an account move line."
+msgstr ""
+"해당 품목이 계정 이동 내역에서 사용되기 때문에 품목 유형을 변경하거나 수입부"
+"대비용 옵션을 비활성화시킬 수 없습니다."

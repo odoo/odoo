@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_stock
-# 
+#
 # Translators:
 # InfernalLV <karlisdreizis@gmail.com>, 2023
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
@@ -10,20 +10,21 @@
 # Martin Trigaux, 2023
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Will Sensors, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Will Sensors, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lv\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -32,8 +33,6 @@ msgstr "% piegāde laikā"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/stock_rule.py:0
-#: code:addons/purchase_stock/models/stock_rule.py:0
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -56,7 +55,8 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
+msgid ""
+"<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
 msgstr ""
 "<span invisible=\"on_time_rate &gt;= 0\">Nav laicīgas piegādes datu</span>"
 
@@ -85,13 +85,16 @@ msgstr "<strong>Piegādes adrese:</strong>"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Atbilstoši produkta konfigurācijai saņemto daudzumu var automātiski aprēķināt ar mehānisma palīdzību:\n"
+"Atbilstoši produkta konfigurācijai saņemto daudzumu var automātiski "
+"aprēķināt ar mehānisma palīdzību:\n"
 "  - Manuāli: daudzums tiek iestatīts manuāli uz līnijas\n"
-"  - Krājumu pārvietošana: daudzums tiek iegūts no apstiprinātās komplektācijas\n"
+"  - Krājumu pārvietošana: daudzums tiek iegūts no apstiprinātās "
+"komplektācijas\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -157,7 +160,6 @@ msgstr "Izveidotās pirkuma pasūtījuma rindas"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/stock_move.py:0
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid "Currency exchange rate difference"
@@ -256,12 +258,12 @@ msgstr "Izņēmums(-i):"
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 #, python-format
 msgid ""
-"For the product %s, the warehouse of the operation type (%s) is inconsistent"
-" with the location (%s) of the reordering rule (%s). Change the operation "
+"For the product %s, the warehouse of the operation type (%s) is inconsistent "
+"with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
 msgstr ""
-"Produktam %s operācijas tipa noliktava (%s) neatbilst sakārtošanas noteikuma"
-" (%s) atrašanās vietai (%s). Mainiet operācijas veidu vai anulējiet cenu "
+"Produktam %s operācijas tipa noliktava (%s) neatbilst sakārtošanas noteikuma "
+"(%s) atrašanās vietai (%s). Mainiet operācijas veidu vai anulējiet cenu "
 "piedāvājuma pieprasījumu."
 
 #. module: purchase_stock
@@ -357,8 +359,8 @@ msgstr "Var būt nepieciešamas manuālas darbības."
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 "Kļūdas robeža attiecībā uz piegādātāju izpildes termiņiem. Kad sistēma "
 "ģenerē iepirkuma pasūtījumus produktu atkārtotai pasūtīšanai, tie tiks "
@@ -395,8 +397,8 @@ msgstr "Nav saņemts"
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
 msgstr ""
 "Odoo nespēj ģenerēt anglosakšu ierakstus. Kopējais %s novērtējums ir nulle."
 
@@ -439,12 +441,12 @@ msgstr "Pasūtījuma punkts"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past x days; the number of products received on time divided by the"
-" number of ordered products.x is either the System Parameter "
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
-"Pēdējo x dienu laikā; savlaicīgi saņemto produktu skaits, dalīts ar pasūtīto"
-" produktu skaitu.x ir vai nu sistēmas parametrs "
+"Pēdējo x dienu laikā; savlaicīgi saņemto produktu skaits, dalīts ar pasūtīto "
+"produktu skaitu.x ir vai nu sistēmas parametrs "
 "purchase_stock.on_time_delivery_days, vai noklusējuma vērtība 365"
 
 #. module: purchase_stock
@@ -730,12 +732,12 @@ msgstr ""
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
-"There is no matching vendor price to generate the purchase order for product"
-" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
-" Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
 msgstr ""
-"Preces %s pirkuma pasūtījuma sagatavošanai nav atbilstošas piegādātāja cenas"
-" (nav noteikts piegādātājs, minimālais daudzums nav sasniegts, datumi nav "
+"Preces %s pirkuma pasūtījuma sagatavošanai nav atbilstošas piegādātāja cenas "
+"(nav noteikts piegādātājs, minimālais daudzums nav sasniegts, datumi nav "
 "derīgi, ...). Iet uz produkta kartiņu un aizpildiet piegādātāja sarakstu."
 
 #. module: purchase_stock
@@ -762,16 +764,16 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
 "Tas papildina dropshipping maršrutu, kas jāpiemēro produktiem, lai "
 "pieprasītu piegādātājiem piegādāt jūsu klientiem. Kad pārdošanas pasūtījums "
-"būs apstiprināts, dropship produkts radīs pirkuma pieprasījumu. Šī ir plūsma"
-" pēc pieprasījuma. Pieprasītā piegādes adrese būs klienta piegādes adrese, "
+"būs apstiprināts, dropship produkts radīs pirkuma pieprasījumu. Šī ir plūsma "
+"pēc pieprasījuma. Pieprasītā piegādes adrese būs klienta piegādes adrese, "
 "nevis jūsu noliktava."
 
 #. module: purchase_stock
@@ -812,8 +814,7 @@ msgstr "Pārskaitījums"
 #: code:addons/purchase_stock/models/purchase_order.py:0
 #, python-format
 msgid ""
-"Unable to cancel purchase order %s as some receptions have already been "
-"done."
+"Unable to cancel purchase order %s as some receptions have already been done."
 msgstr "Nevar atcelt iepirkumu %s jo dažas pozīcijas ir jau saņemtas."
 
 #. module: purchase_stock
@@ -875,8 +876,8 @@ msgstr "Kad produkti tiek iepirkti, they can be delivered to this warehouse"
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need.<br/>Note: This rule will be used in combination"
-" with the rules<br/>of the reception route(s)"
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
 msgstr ""
 "Kad produkti ir nepieciešami <b>%s</b>, <br/> tiek izveidots cenu "
 "piedāvājuma pieprasījums, lai apmierinātu vajadzību.<br/>Piezīme: Šis "

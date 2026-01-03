@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sales_team
-# 
+#
 # Translators:
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2023
 # Андрей Гусев <gaussgss@gmail.com>, 2023
@@ -15,26 +15,32 @@
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Wil Odoo, 2024
 # Nadia Martynova, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Nadia Martynova, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgid ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
@@ -80,19 +86,18 @@ msgstr "Добавление сотрудника штата"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
-msgid ""
-"Add members to automatically assign their documents to this sales team."
+msgid "Add members to automatically assign their documents to this sales team."
 msgstr ""
-"Добавьте участников, чтобы автоматически назначить их документы в этот отдел"
-" продаж."
+"Добавьте участников, чтобы автоматически назначить их документы в этот отдел "
+"продаж."
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid ""
-"Adding %(user_name)s in this team would remove him/her from its current team"
-" %(team_name)s."
+"Adding %(user_name)s in this team would remove him/her from its current team "
+"%(team_name)s."
 msgstr ""
 "Добавив %(user_name)s в эту команду, вы удалите его из текущей команды "
 "%(team_name)s."
@@ -269,8 +274,7 @@ msgstr "Лучшие Участники"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
-msgid ""
-"Favorite teams to display them in the dashboard and access them easily."
+msgid "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
 "Избранные команды для отображения их в панели управления и получения "
 "быстрого к ним доступа."
@@ -281,8 +285,8 @@ msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
 msgstr ""
-"Следите за этой командой продавцов, чтобы автоматически отслеживать события,"
-" связанные с пользователями этой команды."
+"Следите за этой командой продавцов, чтобы автоматически отслеживать события, "
+"связанные с пользователями этой команды."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -403,8 +407,8 @@ msgid ""
 "invoicing or subscription."
 msgstr ""
 "Основной пользователь отдела продаж. Используется в основном для работы с "
-"воронкой продаж, а также для выбора отдела продаж при выставлении счетов или"
-" назначения подписки. "
+"воронкой продаж, а также для выбора отдела продаж при выставлении счетов или "
+"назначения подписки. "
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
@@ -638,8 +642,7 @@ msgstr "Члены команды"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Team Members are salespersons assigned to specific teams."
-msgstr ""
-"Члены команды - это продавцы, закрепленные за определенными командами."
+msgstr "Члены команды - это продавцы, закрепленные за определенными командами."
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_pipeline
@@ -698,18 +701,15 @@ msgstr "UX: Ограничить компанию командой или все
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
-#: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
 msgstr "Неопределенная модель графа для команды продаж: %s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
-msgid ""
-"Use Sales Teams to organize your sales departments and draw up reports."
+msgid "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
-"Используйте Sales Teams для организации отделов продаж и составления "
-"отчетов."
+"Используйте Sales Teams для организации отделов продаж и составления отчетов."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -727,8 +727,8 @@ msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
 msgstr ""
-"Используйте теги для управления и отслеживания ваших возможностей (структура"
-" продукта, тип продаж, ...)"
+"Используйте теги для управления и отслеживания ваших возможностей (структура "
+"продукта, тип продаж, ...)"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -778,8 +778,8 @@ msgid ""
 "You are trying to create duplicate membership(s). We found that "
 "%(duplicates)s already exist(s)."
 msgstr ""
-"Вы пытаетесь создать дубликат(ы) членства. Мы обнаружили, что %(duplicates)s"
-" уже существует (существуют)."
+"Вы пытаетесь создать дубликат(ы) членства. Мы обнаружили, что %(duplicates)s "
+"уже существует (существуют)."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -814,8 +814,8 @@ msgstr ""
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
 msgid ""
-"the user will have an access to the sales configuration as well as statistic"
-" reports."
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
 msgstr ""
-"пользователь получает доступ к конфигурации продаж, а также к статистическим"
-" отчетам."
+"пользователь получает доступ к конфигурации продаж, а также к статистическим "
+"отчетам."

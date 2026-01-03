@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-# 
+#
 # Translators:
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # Maitê Dietze, 2024
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
+"41243/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: delivery
 #. odoo-python
@@ -50,14 +52,16 @@ msgid ""
 "                </p>"
 msgstr ""
 "<p class=\"o_view_nocontent\">\n"
-"                    Adquira o Odoo Enterprise agora para obter mais prestadores.\n"
+"                    Adquira o Odoo Enterprise agora para obter mais "
+"prestadores.\n"
 "                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Ambiente</span>\n"
 "                                <span class=\"o_stat_text\">de teste</span>"
@@ -76,10 +80,12 @@ msgstr "<span class=\"text-success\">Solicitações de depuração</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">Ambiente</span>\n"
-"                                <span class=\"o_stat_text\">de produção</span>"
+"                                <span class=\"o_stat_text\">de produção</"
+"span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
@@ -357,7 +363,8 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
-"Cada transportadora (por exemplo, UPS) pode ter vários métodos de entrega (por exemplo, \n"
+"Cada transportadora (por exemplo, UPS) pode ter vários métodos de entrega "
+"(por exemplo, \n"
 "UPS Express, UPS Standard) com regras de preços associadas \n"
 "a cada método."
 
@@ -368,7 +375,6 @@ msgstr "Ambiente"
 
 #. module: delivery
 #. odoo-python
-#: code:addons/delivery/models/delivery_carrier.py:0
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
@@ -384,11 +390,15 @@ msgstr "Erro: este método de entrega não está disponível."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
-"Custo estimado: o cliente receberá uma fatura com o custo estimado do frete.\n"
-"Custo real: o cliente receberá uma fatura com o custo real do frete, o custo do frete será atualizado no PV após a entrega."
+"Custo estimado: o cliente receberá uma fatura com o custo estimado do "
+"frete.\n"
+"Custo real: o cliente receberá uma fatura com o custo real do frete, o custo "
+"do frete será atualizado no PV após a entrega."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -468,8 +478,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
-"Se o valor total do pedido (sem o envio) for superior ou igual a esse valor,"
-" o cliente terá frete grátis"
+"Se o valor total do pedido (sem o envio) for superior ou igual a esse valor, "
+"o cliente terá frete grátis"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -607,8 +617,8 @@ msgid ""
 msgstr ""
 "Prefixos de códigos postais aos quais essa operadora se aplica. Observe que "
 "expressões regulares podem ser usadas para dar suporte a países com "
-"diferentes comprimentos de CEP, ou seja, '$' pode ser adicionado ao final do"
-" prefixo para corresponder ao CEP exato (por exemplo, '100$' corresponderá "
+"diferentes comprimentos de CEP, ou seja, '$' pode ser adicionado ao final do "
+"prefixo para corresponder ao CEP exato (por exemplo, '100$' corresponderá "
 "apenas a '100' e não a '1000')"
 
 #. module: delivery
@@ -734,8 +744,8 @@ msgid ""
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
 "Informações do método de envio a serem incluídas na parte inferior dos "
-"pedidos de venda e seus e-mails de confirmação. Por exemplo, instruções para"
-" os clientes."
+"pedidos de venda e seus e-mails de confirmação. Por exemplo, instruções para "
+"os clientes."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -861,14 +871,18 @@ msgstr "Nome da UM de peso"
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
-"Não é possível atualizar os custos de envio em um pedido que já foi faturado.\n"
+"Não é possível atualizar os custos de envio em um pedido que já foi "
+"faturado.\n"
 "\n"
-"As seguintes linhas da entrega (produto, quantidade faturada e preço) já foram processadas:\n"
+"As seguintes linhas da entrega (produto, quantidade faturada e preço) já "
+"foram processadas:\n"
 "\n"
 
 #. module: delivery

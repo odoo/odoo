@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mail
-# 
+#
 # Translators:
 # Marek Pontus, 2023
 # Wanradt Koell <wanradt@gmail.com>, 2023
@@ -30,19 +30,19 @@
 # Stevin Lilla, 2024
 # JanaAvalah, 2024
 # Katrin Kampura, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Katrin Kampura, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mail
@@ -54,19 +54,27 @@ msgid ""
 "            <p class=\"o_view_nocontent_smiling_face\">\n"
 "                Add addresses to the Allowed List\n"
 "            </p><p>\n"
-"                To protect you from spam and reply loops, Odoo automatically blocks emails\n"
-"                coming to your gateway past a threshold of <b>%(threshold)i</b> emails every <b>%(minutes)i</b>\n"
-"                minutes. If there are some addresses from which you need to receive very frequent\n"
-"                updates, you can however add them below and Odoo will let them go through.\n"
+"                To protect you from spam and reply loops, Odoo automatically "
+"blocks emails\n"
+"                coming to your gateway past a threshold of <b>%(threshold)i</"
+"b> emails every <b>%(minutes)i</b>\n"
+"                minutes. If there are some addresses from which you need to "
+"receive very frequent\n"
+"                updates, you can however add them below and Odoo will let "
+"them go through.\n"
 "            </p>"
 msgstr ""
 "\n"
 "            <p class=\"o_view_nocontent_smiling_face\">\n"
 "                Lisa aadressid \"Lubatud\" nimekirja\n"
 "            </p><p>\n"
-"             Odoo blokeerib automaatselt spämm ja korduva vastusega meilid, mis jõuavad sissepääsuteeni üle lävendi <b>%(threshold)i</b> e-maili iga <b>%(minutes)i</b>\n"
-"                minuti järel. Kui sealhulgas on aadresse, millelt vajate tihti uuendusi\n"
-"                 saate need lisada alljärgnevasse nimekirja ning Odoo märgib need erandiks.\n"
+"             Odoo blokeerib automaatselt spämm ja korduva vastusega meilid, "
+"mis jõuavad sissepääsuteeni üle lävendi <b>%(threshold)i</b> e-maili iga "
+"<b>%(minutes)i</b>\n"
+"                minuti järel. Kui sealhulgas on aadresse, millelt vajate "
+"tihti uuendusi\n"
+"                 saate need lisada alljärgnevasse nimekirja ning Odoo märgib "
+"need erandiks.\n"
 "            </p>        "
 
 #. module: mail
@@ -124,8 +132,8 @@ msgid ""
 "%(email)s is not recognized as a valid email. This is required to create a "
 "new customer."
 msgstr ""
-"%(email)s ei ole kehtiv e-post. Kehtiv e-postiaadress on vajalik uue kliendi"
-" loomiseks."
+"%(email)s ei ole kehtiv e-post. Kehtiv e-postiaadress on vajalik uue kliendi "
+"loomiseks."
 
 #. module: mail
 #. odoo-javascript
@@ -150,8 +158,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/composer.js:0
 #, python-format
 msgid ""
-"%(open_button)s%(icon)s%(open_em)sDiscard "
-"editing%(close_em)s%(close_button)s"
+"%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s"
 msgstr ""
 "%(open_button)s%(icon)s%(open_em)sLoobu "
 "muutmisest%(close_em)s%(close_button)s"
@@ -163,8 +170,7 @@ msgstr ""
 msgid ""
 "%(open_samp)sEscape%(close_samp)s %(open_em)sto "
 "%(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
-"Enter%(close_samp)s %(open_em)sto "
-"%(open_save)ssave%(close_save)s%(close_em)s"
+"Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)s Escape%(close_samp)s %(open_em)s to %(open_cancel)s tühista "
 "%(close_cancel)s%(close_em)s%(open_samp)s CTRL-Enter%(close_samp)s "
@@ -181,8 +187,9 @@ msgid ""
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEscape%(close_samp)s %(open_em)s to "
-"%(open_cancel)scancel%(close_cancel)s%(close_em)s,%(open_samp)sEnter%(close_samp)s"
-" %(open_em)s to%(open_save)ssave%(close_save)s%(close_em)s "
+"%(open_cancel)scancel%(close_cancel)s%(close_em)s,"
+"%(open_samp)sEnter%(close_samp)s %(open_em)s "
+"to%(open_save)ssave%(close_save)s%(close_em)s "
 
 #. module: mail
 #. odoo-javascript
@@ -470,16 +477,22 @@ msgstr "<span class=\"text-bg-danger\">Arhiveeritud</span>"
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid ""
 "<span invisible=\"mail_post_method != 'email'\">\n"
-"                                The message will be sent as an email to the recipients of the\n"
-"                                template and will not appear in the messaging history.\n"
+"                                The message will be sent as an email to the "
+"recipients of the\n"
+"                                template and will not appear in the "
+"messaging history.\n"
 "                            </span>\n"
 "                            <span invisible=\"mail_post_method != 'note'\">\n"
-"                                The message will be posted as an internal note visible to internal\n"
+"                                The message will be posted as an internal "
+"note visible to internal\n"
 "                                users in the messaging history.\n"
 "                            </span>\n"
-"                            <span invisible=\"mail_post_method != 'comment'\">\n"
-"                                The message will be posted as a message on the record,\n"
-"                                notifying all followers. It will appear in the messaging history.\n"
+"                            <span invisible=\"mail_post_method != "
+"'comment'\">\n"
+"                                The message will be posted as a message on "
+"the record,\n"
+"                                notifying all followers. It will appear in "
+"the messaging history.\n"
 "                            </span>"
 msgstr ""
 "<span invisible=\"mail_post_method != 'email'\">\n"
@@ -600,17 +613,16 @@ msgstr "Sõnumi reaktsioon peab tulema kontaktilt või külaliselt."
 #, python-format
 msgid "A next activity can only be planned on models that use activities."
 msgstr ""
-"Järgmist tegevust saab planeerida ainult moodulitele, mis kasutavad "
-"tegevusi."
+"Järgmist tegevust saab planeerida ainult moodulitele, mis kasutavad tegevusi."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__google_translate_api_key
 msgid ""
-"A valid Google API key is required to enable message translation. "
-"https://cloud.google.com/translate/docs/setup"
+"A valid Google API key is required to enable message translation. https://"
+"cloud.google.com/translate/docs/setup"
 msgstr ""
-"Sõnumi tõlkimise aktiveerimiseks on vaja kehtivat Google API võtit. "
-"https://cloud.google.com/translate/docs/setup"
+"Sõnumi tõlkimise aktiveerimiseks on vaja kehtivat Google API võtit. https://"
+"cloud.google.com/translate/docs/setup"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
@@ -619,7 +631,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
 #, python-format
 msgid "Accept"
@@ -682,7 +693,6 @@ msgstr "Toimingu akna vaade"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #, python-format
 msgid "Actions"
@@ -884,7 +894,6 @@ msgstr "Lisa kasutajad"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reaction_button.xml:0
-#: code:addons/mail/static/src/core/common/message_reaction_button.xml:0
 #, python-format
 msgid "Add a Reaction"
 msgstr "Lisa reaktsioon"
@@ -897,11 +906,11 @@ msgstr "GIF-ide toe aktiveerimiseks lisa Tenor GIF API võti."
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
 msgid ""
-"Add a Tenor GIF API key to enable GIFs support. "
-"https://developers.google.com/tenor/guides/quickstart#setup"
+"Add a Tenor GIF API key to enable GIFs support. https://"
+"developers.google.com/tenor/guides/quickstart#setup"
 msgstr ""
-"GIF-ide toe aktiveerimiseks lisa Tenor GIF API võti. "
-"https://developers.google.com/tenor/guides/quickstart#setup"
+"GIF-ide toe aktiveerimiseks lisa Tenor GIF API võti. https://"
+"developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -970,8 +979,8 @@ msgid ""
 "Adding followers on channels is not possible. Consider adding members "
 "instead."
 msgstr ""
-"Jälgijate lisamine kanalitele ei ole võimalik. Kaaluge selle asemel liikmete"
-" lisamist."
+"Jälgijate lisamine kanalitele ei ole võimalik. Kaaluge selle asemel liikmete "
+"lisamist."
 
 #. module: mail
 #. odoo-python
@@ -1363,7 +1372,6 @@ msgstr "Kellele määratud"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
-#: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid ""
 "Assigned user %s has no access to the document and is not able to handle "
@@ -1392,8 +1400,6 @@ msgstr "Lisa fail"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
-#: code:addons/mail/static/src/core/common/composer.xml:0
-#: code:addons/mail/static/src/core/web/chatter.xml:0
 #: code:addons/mail/static/src/core/web/chatter.xml:0
 #, python-format
 msgid "Attach files"
@@ -1464,8 +1470,8 @@ msgstr "Autor"
 #: model:ir.model.fields,help:mail.field_mail_mail__author_id
 #: model:ir.model.fields,help:mail.field_mail_message__author_id
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that"
-" did not match any partner."
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
 msgstr ""
 "Sõnumi autor. Mittemääratuna võib email_from sisaldada emaili aadressi mis "
 "pole seotud ühegi partneriga."
@@ -1580,8 +1586,6 @@ msgstr "Eemal"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Background blur intensity"
 msgstr "Tausta hägususe intensiivsus"
@@ -1656,10 +1660,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Blur video background"
@@ -1842,7 +1842,6 @@ msgstr "Sõnumit või teatise saajat ei saa värskendada."
 #: code:addons/mail/static/src/core/web/activity.xml:0
 #: code:addons/mail/static/src/core/web/follower_subtype_dialog.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_compose_message_view_form_template_save
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_reset_view_form
@@ -1891,10 +1890,12 @@ msgstr "Salvestatud vastuste otsing"
 msgid ""
 "Canned responses allow you to insert prewritten responses in\n"
 "                your messages by typing <i>:shortcut</i>. The shortcut is\n"
-"                replaced directly in your message, so that you can still edit\n"
+"                replaced directly in your message, so that you can still "
+"edit\n"
 "                it before sending."
 msgstr ""
-"Salvestatud vastused võimaldavad sisestada eelnevalt valmis kirjutatud vastuseid sõnumites\n"
+"Salvestatud vastused võimaldavad sisestada eelnevalt valmis kirjutatud "
+"vastuseid sõnumites\n"
 "kasutamiseks trükkige <i>:lühikood</i>. Lühikood asendatakse\n"
 "otse sõnumis ning seda on võimalik enne saatmist veel muuta."
 
@@ -1944,8 +1945,8 @@ msgid ""
 "Catchall alias %(catchall)s is already used for another domain with same "
 "name. Use another catchall or simply use the other alias domain."
 msgstr ""
-"Catchall alias %(catchall)s on juba kasutusel teisel samanimelisel domeenil."
-" Kasuta teist aliase domeeni."
+"Catchall alias %(catchall)s on juba kasutusel teisel samanimelisel domeenil. "
+"Kasuta teist aliase domeeni."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
@@ -2047,11 +2048,11 @@ msgstr "Vestlus"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_type
 msgid ""
-"Chat is private and unique between 2 persons. Group is private among invited"
-" persons. Channel can be freely joined (depending on its configuration)."
+"Chat is private and unique between 2 persons. Group is private among invited "
+"persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
-"Vestlus on privaatne sõnumite vahetamine 2 inimese vahel. Grupp on privaatne"
-" kutsutud inimeste hulgas. Kanaliga on võimalik vabalt liituda(olenevalt "
+"Vestlus on privaatne sõnumite vahetamine 2 inimese vahel. Grupp on privaatne "
+"kutsutud inimeste hulgas. Kanaliga on võimalik vabalt liituda(olenevalt "
 "kanali seadistustest)."
 
 #. module: mail
@@ -2335,7 +2336,6 @@ msgstr "Ühendus SFU serveriga suletud serveri poolt"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Connection type:"
@@ -2743,7 +2743,6 @@ msgstr "Tere"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
-#: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "Dear Sender"
 msgstr "Hea saatja"
@@ -2805,8 +2804,8 @@ msgstr "Vaikeväärtused"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
 msgid ""
-"Default from when it does not match outgoing server filters. Can be either a"
-" local-part e.g. 'notifications' either a complete email address e.g. "
+"Default from when it does not match outgoing server filters. Can be either a "
+"local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
 
@@ -2848,8 +2847,6 @@ msgstr "Viivituse tüüp"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Delay after releasing push-to-talk"
 msgstr "Viivitus peale push-to-talk nupu lahti laskmist"
@@ -2863,7 +2860,6 @@ msgstr "Viivituse ühikud"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
 #: code:addons/mail/static/src/core/common/message_actions.js:0
-#: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.xml:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_view_form_confirm_delete
@@ -2926,14 +2922,14 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr ""
-"Kirjeldus, mis lisatakse selle alamtüübi kohta postitatud sõnumisse. Kui see"
-" on tühi, lisatakse selle asemel nimi."
+"Kirjeldus, mis lisatakse selle alamtüübi kohta postitatud sõnumisse. Kui see "
+"on tühi, lisatakse selle asemel nimi."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__default_display_mode
 msgid ""
-"Determines how the channel will be displayed by default when opening it from"
-" its invitation link. No value means display text (no voice/video)."
+"Determines how the channel will be displayed by default when opening it from "
+"its invitation link. No value means display text (no voice/video)."
 msgstr ""
 "Määrab, kuidas kanalit kutselingilt avamisel vaikimisi kuvatakse. Väärtuse "
 "puudumine tähendab kuvatud teksti (häält/videot pole)."
@@ -3121,7 +3117,6 @@ msgstr "Domeen"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
-#: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__done
 #, python-format
 msgid "Done"
@@ -3157,7 +3152,6 @@ msgstr "Märgi tehtuks ning ajasta uus"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.js:0
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 #, python-format
@@ -3254,8 +3248,6 @@ msgstr "Dünaamiline kasutaja (põhineb kirjel)"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Edge blur intensity"
 msgstr "Servade hägususe intensiivsus"
@@ -3282,7 +3274,6 @@ msgstr "Muuda tellimust %(name)s"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/follower_list.xml:0
 #: code:addons/mail/static/src/core/web/follower_list.xml:0
 #, python-format
 msgid "Edit subscription"
@@ -3440,8 +3431,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
-"Email address to which replies will be redirected when sending emails in "
-"mass"
+"Email address to which replies will be redirected when sending emails in mass"
 msgstr ""
 "Email aadress kuhu suunatakse vastused kui saata välja massiliselt emaile"
 
@@ -3544,8 +3534,6 @@ msgstr "Tellitud jälgimise lubamine"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Enable Push-to-talk"
@@ -3878,11 +3866,9 @@ msgstr "Väljad"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__template_fs
 #: model:ir.model.fields,help:mail.field_template_reset_mixin__template_fs
-msgid ""
-"File from where the template originates. Used to reset broken template."
+msgid "File from where the template originates. Used to reset broken template."
 msgstr ""
-"Fail, kust mall esialgselt pärineb. Kasutatakse katkise malli "
-"lähtestamiseks."
+"Fail, kust mall esialgselt pärineb. Kasutatakse katkise malli lähtestamiseks."
 
 #. module: mail
 #. odoo-javascript
@@ -4073,7 +4059,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.xml:0
 #: code:addons/mail/static/src/core/common/composer.xml:0
 #, python-format
 msgid "Full composer"
@@ -4483,8 +4468,8 @@ msgstr "ID"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
 "Algse kirje ülem ID, millele kuulub alias (nt: projekt, millele kuulub "
 "ülesande loomise alias)"
@@ -4624,9 +4609,9 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
-"If set, will restrict the template to this specific user."
-"                                                   If not set, shared with "
-"all users."
+"If set, will restrict the template to this specific "
+"user.                                                   If not set, shared "
+"with all users."
 msgstr ""
 "Kui määratud, piirab malli selle kindlale kasutajale. Kui pole määratud, "
 "siis on mall jagatud kõigile kasutajatele."
@@ -4639,8 +4624,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Kui e-posti aadress on mustas nimekirjas, ei saa see kontakt enam ühtegi "
-"e-kirja."
+"Kui e-posti aadress on mustas nimekirjas, ei saa see kontakt enam ühtegi e-"
+"kirja."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__reply_to_force_new
@@ -4657,8 +4642,8 @@ msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
 msgstr ""
-"Kui on seadistatud catchall email domeen ümber suunatud Odoo serverile, siis"
-" sisesta domeeni nimi siia."
+"Kui on seadistatud catchall email domeen ümber suunatud Odoo serverile, siis "
+"sisesta domeeni nimi siia."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -4776,7 +4761,6 @@ msgstr "Näitab, et see tegevus on loodud automaatselt, mitte kasutaja poolt."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
-#: code:addons/mail/static/src/core/web/activity.xml:0
 #, python-format
 msgid "Info"
 msgstr "Info"
@@ -4794,8 +4778,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Input device"
@@ -4857,8 +4839,8 @@ msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
 msgstr ""
-"Vigane avaldis, peab olema python definitsioon, näiteks \"{'field': "
-"'value'}\""
+"Vigane avaldis, peab olema python definitsioon, näiteks \"{'field': 'value'}"
+"\""
 
 #. module: mail
 #. odoo-python
@@ -4875,7 +4857,6 @@ msgstr "Kehtetu aadressilt"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_thread_blacklist.py:0
 #: code:addons/mail/models/mail_thread_blacklist.py:0
 #, python-format
 msgid "Invalid primary email field on model %s"
@@ -4907,8 +4888,7 @@ msgid ""
 "Invalid template or view source %(svalue)s (type %(stype)s), should be a "
 "record or an XMLID"
 msgstr ""
-"Vigane mall või vaade %(svalue)s(tüüp %(stype)s), peaks olema kirja või "
-"XMLID"
+"Vigane mall või vaade %(svalue)s(tüüp %(stype)s), peaks olema kirja või XMLID"
 
 #. module: mail
 #. odoo-python
@@ -4922,8 +4902,7 @@ msgstr "Vigane mall või vaade Xml ID %(source_ref)s ei eksisteeri enam"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
-msgid ""
-"Invalid template or view source record %(svalue)s, is %(model)s instead"
+msgid "Invalid template or view source record %(svalue)s, is %(model)s instead"
 msgstr "Vigane mall või vaate kirje %(svalue)s, on hoopis %(model)s"
 
 #. module: mail
@@ -4964,7 +4943,6 @@ msgstr "Kutsume sind jälgima %(document_model)s: %(document_name)s"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Invite"
@@ -5120,9 +5098,11 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_partner_device__keys
 msgid ""
 "It's refer to browser keys used by the notification: \n"
-"- p256dh: It's the subscription public key generated by the browser. The browser will \n"
+"- p256dh: It's the subscription public key generated by the browser. The "
+"browser will \n"
 "          keep the private key secret and use it for decrypting the payload\n"
-"- auth: The auth value should be treated as a secret and not shared outside of Odoo"
+"- auth: The auth value should be treated as a secret and not shared outside "
+"of Odoo"
 msgstr ""
 
 #. module: mail
@@ -5210,7 +5190,6 @@ msgstr "Võti"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
-#: code:addons/mail/models/mail_alias.py:0
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 #, python-format
 msgid "Kind Regards"
@@ -5218,7 +5197,6 @@ msgstr "Parimate soovidega"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #, python-format
 msgid "LIVE"
@@ -5434,7 +5412,6 @@ msgstr "Lae rohkem"
 #: code:addons/mail/static/src/core/web/follower_list.xml:0
 #: code:addons/mail/static/src/core/web/recipient_list.xml:0
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
-#: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 #, python-format
 msgid "Load more"
 msgstr "Lae rohkem"
@@ -5487,10 +5464,6 @@ msgstr "Logi"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Log RTC events"
@@ -5823,7 +5796,6 @@ msgstr "Märgi mitteloetuks"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
-#: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
 #, python-format
 msgid "Mark as done"
 msgstr "Märgi tehtuks"
@@ -6020,8 +5992,8 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__name
 msgid ""
 "Message subtype gives a more precise type on the message, especially for "
-"system notifications. For example, it can be a notification related to a new"
-" record (New), or to a stage change in a process (Stage change). Message "
+"system notifications. For example, it can be a notification related to a new "
+"record (New), or to a stage change in a process (Stage change). Message "
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
@@ -6042,8 +6014,7 @@ msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
 msgstr ""
-"Jälgitavad sõnumi alamtüübid ehk alamtüübid, mida kuvatakse kasutaja "
-"seinale."
+"Jälgitavad sõnumi alamtüübid ehk alamtüübid, mida kuvatakse kasutaja seinale."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__message_type
@@ -6165,8 +6136,8 @@ msgstr "Jälgitava ressursi mudel"
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
 msgstr ""
-"Mudel, millele alamtüüp kehtib. Kui on määratus vääraks, kehtib see alamtüüp"
-" kõikide mudelite puhul."
+"Mudel, millele alamtüüp kehtib. Kui on määratus vääraks, kehtib see alamtüüp "
+"kõikide mudelite puhul."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model
@@ -6208,7 +6179,6 @@ msgstr "Vaigista"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 #, python-format
 msgid "Mute Channel"
@@ -6467,8 +6437,7 @@ msgstr ""
 #, python-format
 msgid ""
 "No responsible specified for %(activity_type_name)s: %(activity_summary)s."
-msgstr ""
-"Vastutajat pole määratud %(activity_type_name)s: %(activity_summary)s."
+msgstr "Vastutajat pole määratud %(activity_type_name)s: %(activity_summary)s."
 
 #. module: mail
 #. odoo-javascript
@@ -6679,8 +6648,8 @@ msgstr "Tegevuste arv"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_count
 msgid ""
-"Number of days/week/month before executing the action. It allows to plan the"
-" action deadline."
+"Number of days/week/month before executing the action. It allows to plan the "
+"action deadline."
 msgstr ""
 "Päevade/nädala/kuu arv enne toimingu sooritamist. See võimaldab planeerida "
 "tegevuse tähtaega."
@@ -6848,8 +6817,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#: code:addons/mail/models/mail_render_mixin.py:0
-#: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid ""
 "Only users belonging to the \"%(group_name)s\" group can modify dynamic "
@@ -6886,7 +6853,6 @@ msgstr "Ava vormivaade"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #, python-format
 msgid "Open Link"
@@ -6956,23 +6922,26 @@ msgstr ""
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
 "Valikuline tõlkekeel (ISO-kood), mis valitakse meili saatmisel. Kui seda "
 "pole määratud, kasutatakse ingliskeelset versiooni. Tavaliselt peaks see "
-"olema kohahoidja avaldis, mis pakub sobivat keelt, nt. {{ "
-"object.partner_id.lang }}."
+"olema kohahoidja avaldis, mis pakub sobivat keelt, nt. "
+"{{ object.partner_id.lang }}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_mode
 msgid ""
-"Original Discussion: Answers go in the original document discussion thread. \n"
-" Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
+"Original Discussion: Answers go in the original document discussion "
+"thread. \n"
+" Another Email Address: Answers go to the email address mentioned in the "
+"tracking message-id instead of original document discussion thread. \n"
 " This has an impact on the generated message-id."
 msgstr ""
 "Algne vestlus: vastused lähevad algse dokumendi arutelulõime. \n"
-"Lisa meiliaadress: vastused lähevad algse dokumendi arutelulõime asemel jälgimissõnumi ID-le.\n"
+"Lisa meiliaadress: vastused lähevad algse dokumendi arutelulõime asemel "
+"jälgimissõnumi ID-le.\n"
 "See mõjutab loodud sõnumi ID-d."
 
 #. module: mail
@@ -7101,14 +7070,12 @@ msgstr "POP/IMAP serverid"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Packets received:"
 msgstr "Vastuvõetud paketid:"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Packets sent:"
@@ -7139,19 +7106,19 @@ msgstr "Ülemkirje seose ID"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Ülemmudel, millel on alias. Aliase mudeli viide ei pruugi olla mudel, mis on"
-" antud nii: alias_model_id (näide: projekt (ülem_mudel) ja ülesanne (mudel))"
+"Ülemmudel, millel on alias. Aliase mudeli viide ei pruugi olla mudel, mis on "
+"antud nii: alias_model_id (näide: projekt (ülem_mudel) ja ülesanne (mudel))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
 msgid ""
-"Parent subtype, used for automatic subscription. This field is not correctly"
-" named. For example on a project, the parent_id of project subtypes refers "
-"to task-related subtypes."
+"Parent subtype, used for automatic subscription. This field is not correctly "
+"named. For example on a project, the parent_id of project subtypes refers to "
+"task-related subtypes."
 msgstr ""
 
 #. module: mail
@@ -7415,7 +7382,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "Dokumendil sõnumite postitamise reeglid mailgateway'd kasutades.\n"
 "- igaüks: igaüks saab postitada\n"
@@ -7589,8 +7557,6 @@ msgstr "Push-To-Talk otsetee"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Push-to-talk key"
 msgstr "Push-to-talk klahv"
@@ -7640,8 +7606,7 @@ msgstr "Tõsta käsi"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings_volumes__volume
-msgid ""
-"Ranges between 0.0 and 1.0, scale depends on the browser implementation"
+msgid "Ranges between 0.0 and 1.0, scale depends on the browser implementation"
 msgstr "Vahemikus 0.0 kuni 1.0, skaala sõltub brauseri rakendusest"
 
 #. module: mail
@@ -7753,7 +7718,6 @@ msgstr "Kirje seose ID"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_message.py:0
-#: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid "Records:"
 msgstr "Kirjed:"
@@ -7765,7 +7729,6 @@ msgstr "Viited"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
 #, python-format
 msgid "Refuse"
@@ -7779,14 +7742,12 @@ msgstr "Tervitades!"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Register new key"
 msgstr "Salvesta uus klahv"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
 #, python-format
 msgid "Reject"
@@ -7851,7 +7812,6 @@ msgstr "Seose väli"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/link_preview.xml:0
 #: code:addons/mail/static/src/core/common/message_reaction_menu.xml:0
 #, python-format
@@ -7881,7 +7841,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/follower_list.xml:0
 #: code:addons/mail/static/src/core/web/follower_list.xml:0
 #, python-format
 msgid "Remove this follower"
@@ -7920,8 +7879,7 @@ msgstr ""
 #: code:addons/mail/models/mail_composer_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid ""
-"Rendering of %(field_name)s is not possible as not defined on template."
+msgid "Rendering of %(field_name)s is not possible as not defined on template."
 msgstr ""
 
 #. module: mail
@@ -8180,7 +8138,6 @@ msgstr "Ajasta ja märgi tehtuks"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/mail/static/src/core/web/activity_service.js:0
-#: code:addons/mail/static/src/core/web/activity_service.js:0
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "Schedule Activity"
@@ -8287,9 +8244,7 @@ msgstr "Otsi sissetulevad meiliservereid"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
-#: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
-#: code:addons/mail/static/src/core/web/chatter.xml:0
 #: code:addons/mail/static/src/core/web/chatter.xml:0
 #, python-format
 msgid "Search Messages"
@@ -8333,7 +8288,6 @@ msgstr "Otsi kasutajat..."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
-#: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #, python-format
 msgid "Search in progress"
 msgstr "Otsin.."
@@ -8349,8 +8303,6 @@ msgstr "Otsi sõnumeid"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mention_list.js:0
 #: code:addons/mail/static/src/core/web/mention_list.xml:0
-#: code:addons/mail/static/src/core/web/mention_list.xml:0
-#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Search..."
@@ -8655,13 +8607,12 @@ msgid ""
 "use in your messages."
 msgstr ""
 "Otsetee, mis asendatakse teie sõnumites automaatselt pikema sisuga. "
-"Sisestage \":\", millele järgneb sõnumites kasutatava otsetee nimi (nt "
-":tere)."
+"Sisestage \":\", millele järgneb sõnumites kasutatava otsetee nimi "
+"(nt :tere)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
-msgid ""
-"Shortened language code used as the target for the translation request."
+msgid "Shortened language code used as the target for the translation request."
 msgstr "Keele lühikood mida kasutatakse tõlke nõudmisel."
 
 #. module: mail
@@ -8718,8 +8669,7 @@ msgstr "Näita kõik saajad"
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Näita kõiki andmeid, mille järgmise tegevuse kuupäev on ennem tänast "
-"kuupäeva"
+"Näita kõiki andmeid, mille järgmise tegevuse kuupäev on ennem tänast kuupäeva"
 
 #. module: mail
 #. odoo-javascript
@@ -8744,9 +8694,6 @@ msgstr "Näita külgriba"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Show video participants only"
@@ -9246,8 +9193,8 @@ msgstr "Tegevust ei saa käivitada:"
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 #, python-format
 msgid ""
-"The activity type \"%(activity_type_name)s\" is not compatible with the plan"
-" \"%(plan_name)s\" because it is limited to the model "
+"The activity type \"%(activity_type_name)s\" is not compatible with the plan "
+"\"%(plan_name)s\" because it is limited to the model "
 "\"%(activity_type_model)s\"."
 msgstr ""
 "Tegevuse tüüp \"%(activity_type_name)s\" ei ühildu plaaniga "
@@ -9259,8 +9206,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
-"Manust %s ei eksisteeri või teil ei ole õigusi sellele juurde pääseda."
+msgstr "Manust %s ei eksisteeri või teil ei ole õigusi sellele juurde pääseda."
 
 #. module: mail
 #. odoo-python
@@ -9280,11 +9226,6 @@ msgstr "Avatar on uuendatud!"
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr "Kanali UUID peab olema unikaalne"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
-msgid "The channel type cannot be empty"
-msgstr "Kanali tüüp ei tohi olla tühi"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
@@ -9313,10 +9254,12 @@ msgstr "Lõpppunkt peab olema unikaalne!"
 #: code:addons/mail/models/template_reset_mixin.py:0
 #, python-format
 msgid ""
-"The following email templates could not be reset because their related source files could not be found:\n"
+"The following email templates could not be reset because their related "
+"source files could not be found:\n"
 "- %s"
 msgstr ""
-"Järgmisi meilimalle ei saanud lähtestada, kuna nendega seotud lähtefaile ei leitud:\n"
+"Järgmisi meilimalle ei saanud lähtestada, kuna nendega seotud lähtefaile ei "
+"leitud:\n"
 "- %s"
 
 #. module: mail
@@ -9340,35 +9283,43 @@ msgstr "See aadress ei saanud allolevat sõnumit vastu võtta"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid ""
-"The message below could not be accepted by the address %(alias_display_name)s.\n"
-"                 Only %(contact_description)s are allowed to contact it.<br /><br />\n"
-"                 Please make sure you are using the correct address or contact us at %(default_email)s instead."
+"The message below could not be accepted by the address "
+"%(alias_display_name)s.\n"
+"                 Only %(contact_description)s are allowed to contact it.<br /"
+"><br />\n"
+"                 Please make sure you are using the correct address or "
+"contact us at %(default_email)s instead."
 msgstr ""
-"Allolevat sõnumit ei saanud antud aadress %(alias_display_name)svastu võtta. \n"
-"Ainult %(contact_description)s on lubatud selle aadressiga ühendust võtta.<br /><br />\n"
-"Veendu, et kasutas õiget aadressi või võta meiega ühendust aadressil %(default_email)s."
+"Allolevat sõnumit ei saanud antud aadress %(alias_display_name)svastu "
+"võtta. \n"
+"Ainult %(contact_description)s on lubatud selle aadressiga ühendust võtta."
+"<br /><br />\n"
+"Veendu, et kasutas õiget aadressi või võta meiega ühendust aadressil "
+"%(default_email)s."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid ""
-"The message below could not be accepted by the address %(alias_display_name)s.\n"
+"The message below could not be accepted by the address "
+"%(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
-"Allolevat sõnumit ei saanud antud aadress%(alias_display_name)s vastu võtta. \n"
+"Allolevat sõnumit ei saanud antud aadress%(alias_display_name)s vastu "
+"võtta. \n"
 "Proovi hiljem uuesti või võta ühendust %(company_name)s-ga."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
 "Aliasele vastav mudel (Odoo dokumendi laadi). Iga sissetulev kiri, mis ei "
-"vasta olemasolevale kirjele, põhjustab uue mudeli kirje loomise (nt projekti"
-" ülesanne)"
+"vasta olemasolevale kirjele, põhjustab uue mudeli kirje loomise (nt projekti "
+"ülesanne)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -9410,14 +9361,15 @@ msgstr "Kirje peab kuuluma samale ettevõttele."
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_message.py:0
-#: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid ""
-"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
-"Taotletud toimingut ei saa turvapiirangute tõttu lõpule viia. Võtke ühendust oma süsteemiadministraatoriga.\n"
+"Taotletud toimingut ei saa turvapiirangute tõttu lõpule viia. Võtke ühendust "
+"oma süsteemiadministraatoriga.\n"
 "\n"
 "(Dokumendi tüüp: %s , Toiming: %s)"
 
@@ -9534,11 +9486,11 @@ msgstr "Seda välja kasutatakse malli kasutamise sisemiseks kirjeldamiseks."
 #: model:ir.model.fields,help:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,help:mail.field_res_users__email_normalized
 msgid ""
-"This field is used to search on email address as the primary email field can"
-" contain more than strictly an email address."
+"This field is used to search on email address as the primary email field can "
+"contain more than strictly an email address."
 msgstr ""
-"Seda välja kasutatakse e-posti aadressi otsimiseks, kuna esmane e-posti väli"
-" võib sisaldada rohkemat kui ainult e-posti aadressi."
+"Seda välja kasutatakse e-posti aadressi otsimiseks, kuna esmane e-posti väli "
+"võib sisaldada rohkemat kui ainult e-posti aadressi."
 
 #. module: mail
 #. odoo-python
@@ -9860,21 +9812,27 @@ msgid ""
 "- 'Update a Record': update the values of a record\n"
 "- 'Create Activity': create an activity (Discuss)\n"
 "- 'Send Email': post a message, a note or send an email (Discuss)\n"
-"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': add or remove followers to a record (Discuss)\n"
+"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': "
+"add or remove followers to a record (Discuss)\n"
 "- 'Create Record': create a new record with new values\n"
 "- 'Execute Code': a block of Python code that will be executed\n"
-"- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
-"- 'Execute Existing Actions': define an action that triggers several other server actions\n"
+"- 'Send Webhook Notification': send a POST request to an external system, "
+"also known as a Webhook\n"
+"- 'Execute Existing Actions': define an action that triggers several other "
+"server actions\n"
 msgstr ""
 "Serveri toimingu tüüp. Saadaval on järgmised väärtused:\n"
 "- \"Uuenda kirjet\": kirje väärtuste värskendamine\n"
 "- \"Loo tegevus\": loo tegevus (Sõnumid)\n"
 "- \"Saada meil\": postita sõnum, märkus või saada e-kiri (Sõnumid)\n"
-"- \"Saada SMS\": saada SMS-id, logi need dokumentidesse (SMS) - \"Lisa/eemalda jälgijaid\": lisa või eemalda jälgijaid kirjele (Sõnumid)\n"
+"- \"Saada SMS\": saada SMS-id, logi need dokumentidesse (SMS) - \"Lisa/"
+"eemalda jälgijaid\": lisa või eemalda jälgijaid kirjele (Sõnumid)\n"
 "- \"Loo kirje\": loo uus kirje uute väärtustega\n"
 "- \"Käivita kood\": Pythoni koodi plokk, mis käivitatakse\n"
-"- „Saada veebihaagi märguanne”: saada välisele süsteemile POST-i päring, mida tuntakse ka kui veebihaaki\n"
-"- \"Käivita olemasolevad toimingud\": määra toiming, mis käivitab mitu järgnevat serveritoimingut\n"
+"- „Saada veebihaagi märguanne”: saada välisele süsteemile POST-i päring, "
+"mida tuntakse ka kui veebihaaki\n"
+"- \"Käivita olemasolevad toimingud\": määra toiming, mis käivitab mitu "
+"järgnevat serveritoimingut\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -9936,7 +9894,6 @@ msgstr "Tühista määramine"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 #, python-format
 msgid "Unassign from me"
@@ -10120,7 +10077,6 @@ msgstr "Üles laaditud"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #, python-format
 msgid "Uploading"
 msgstr "Üleslaadimine"
@@ -10129,9 +10085,8 @@ msgstr "Üleslaadimine"
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_type
 #: model:ir.model.fields,help:mail.field_ir_cron__activity_user_type
 msgid ""
-"Use 'Specific User' to always assign the same user on the next activity. Use"
-" 'Dynamic User' to specify the field name of the user to choose on the "
-"record."
+"Use 'Specific User' to always assign the same user on the next activity. Use "
+"'Dynamic User' to specify the field name of the user to choose on the record."
 msgstr ""
 "Kasuta valikut „Konkreetne kasutaja”, et määrata järgneval tegevusel alati "
 "sama kasutaja. Kasutage \"Dünaamiline kasutaja\" valikut, et täpsustada "
@@ -10210,7 +10165,8 @@ msgid ""
 "'comment': generated by user input e.g. through discuss or composer\n"
 "'email_outgoing': generated by a mailing\n"
 "'notification': generated by system e.g. tracking messages\n"
-"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'auto_comment': generated by automated notification mechanism e.g. "
+"acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
 
@@ -10313,7 +10269,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_message.py:0
-#: code:addons/mail/models/mail_message.py:0
 #, python-format
 msgid "User:"
 msgstr "Kasutaja:"
@@ -10335,7 +10290,8 @@ msgstr "Kasutajad selles kanalis: %(members)s%(dots)s ja teie."
 #: model:ir.model.fields,help:mail.field_res_config_settings__restrict_template_rendering
 msgid ""
 "Users will still be able to render templates.\n"
-"However only Mail Template Editors will be able to create new dynamic templates or modify existing ones."
+"However only Mail Template Editors will be able to create new dynamic "
+"templates or modify existing ones."
 msgstr ""
 
 #. module: mail
@@ -10359,7 +10315,8 @@ msgstr "Kehtiv"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid ""
-"Value %(allowed_domains)s for `mail.catchall.domain.allowed` cannot be validated.\n"
+"Value %(allowed_domains)s for `mail.catchall.domain.allowed` cannot be "
+"validated.\n"
 "It should be a comma separated list of domains e.g. example.com,example.org."
 msgstr ""
 
@@ -10434,8 +10391,6 @@ msgstr "Hääleseaded"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Voice detection threshold"
@@ -10522,8 +10477,7 @@ msgstr "Tere tulemast ettevõttesse!"
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 #, python-format
 msgid ""
-"Well, nothing lasts forever, but are you sure you want to unpin this "
-"message?"
+"Well, nothing lasts forever, but are you sure you want to unpin this message?"
 msgstr ""
 "Miski ei kesta igavesti, aga kas oled kindel, et soovid selle sõnumi "
 "vabastada?"
@@ -10541,7 +10495,8 @@ msgstr "Mis on sinu nimi?"
 #, python-format
 msgid ""
 "When selecting \"Default user\" assignment, you must specify a responsible."
-msgstr "Kui valid \"Vaikimisi kasutaja\" määramise, pead valima vastutava isiku."
+msgstr ""
+"Kui valid \"Vaikimisi kasutaja\" määramise, pead valima vastutava isiku."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__original
@@ -10550,8 +10505,8 @@ msgid ""
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
-"Kas iga meili täielik originaalkoopia tuleks säilitada viitamiseks ja lisada"
-" igale töödeldud kirjale. Tavaliselt kahekordistab see sõnumite andmebaasi "
+"Kas iga meili täielik originaalkoopia tuleks säilitada viitamiseks ja lisada "
+"igale töödeldud kirjale. Tavaliselt kahekordistab see sõnumite andmebaasi "
 "mahtu."
 
 #. module: mail
@@ -10633,11 +10588,10 @@ msgstr "Eile:"
 #, python-format
 msgid ""
 "You are about to leave this group conversation and will no longer have "
-"access to it unless you are invited again. Are you sure you want to "
-"continue?"
+"access to it unless you are invited again. Are you sure you want to continue?"
 msgstr ""
-"Olete sellest grupivestlusest lahkumas ega pääse sellele enam ligi, kui teid"
-" uuesti ei kutsuta. Kas soovite kindlasti jätkata?"
+"Olete sellest grupivestlusest lahkumas ega pääse sellele enam ligi, kui teid "
+"uuesti ei kutsuta. Kas soovite kindlasti jätkata?"
 
 #. module: mail
 #. odoo-python
@@ -10700,11 +10654,9 @@ msgstr "Olete selle kanali administraator. Kas soovite kindlasti lahkuda?"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 #, python-format
-msgid ""
-"You can mark any message as 'starred', and it shows up in this mailbox."
+msgid "You can mark any message as 'starred', and it shows up in this mailbox."
 msgstr ""
-"Märkige mistahes kiri tärniga tähistatuks ja see kuvatakse selles "
-"postkastis."
+"Märkige mistahes kiri tärniga tähistatuks ja see kuvatakse selles postkastis."
 
 #. module: mail
 #. odoo-python
@@ -10734,11 +10686,27 @@ msgstr "Sa võid ignoreerida sõnumit"
 
 #. module: mail
 #. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+#, python-format
+msgid "You cannot delete %(activity_names)s as it is required in various apps."
+msgstr ""
+
+#. module: mail
+#. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_activity_type.py:0
+#, python-format
+msgid ""
+"You cannot modify %(activities_names)s target model as they are are required "
+"in various apps."
 msgstr ""
 
 #. module: mail
@@ -10814,8 +10782,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 #, python-format
-msgid ""
-"You sure want this message pinned to %(conversation)s forever and ever?"
+msgid "You sure want this message pinned to %(conversation)s forever and ever?"
 msgstr ""
 
 #. module: mail
@@ -10974,7 +10941,8 @@ msgid ""
 "                Please try again later."
 msgstr ""
 "kuna sa oled\n"
-"                sellega ühendust võtnud viimaste minutite jooksul liiga mitu korda.\n"
+"                sellega ühendust võtnud viimaste minutite jooksul liiga mitu "
+"korda.\n"
 "                <br/>\n"
 "                Proovi hiljem uuesti."
 
@@ -11000,7 +10968,8 @@ msgid ""
 "    is used to collect replies and should not be used to directly contact"
 msgstr ""
 "aadressile, ei jõudnud kahjuks kohale. Seda aadressi\n"
-"    kasutatakse, et korjata kokku vastuseid. Sellele aadressile ei tohiks otse kirjutada."
+"    kasutatakse, et korjata kokku vastuseid. Sellele aadressile ei tohiks "
+"otse kirjutada."
 
 #. module: mail
 #. odoo-javascript
@@ -11011,8 +10980,6 @@ msgstr "channels"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "clock rate:"
@@ -11027,8 +10994,6 @@ msgstr "sulge"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "codec:"
@@ -11062,7 +11027,6 @@ msgstr "päeva:"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #, python-format
 msgid "deaf"
@@ -11120,10 +11084,11 @@ msgstr "nt. \"Tervitusmeil\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_compose_message_view_form_template_save
-msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
+msgid ""
+"e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
-"nt. \"Tere tulemast ettevõttesse!\" või \"Meeldiv tutvuda, {{ object.name "
-"}}\""
+"nt. \"Tere tulemast ettevõttesse!\" või \"Meeldiv tutvuda, {{ object.name }}"
+"\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -11255,7 +11220,6 @@ msgstr "kutsuti %s kanalisse"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-#: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "joined the channel"
 msgstr "liitus kanaliga"
@@ -11277,17 +11241,12 @@ msgstr "loend"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
-#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
-#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "list-item"
 msgstr "loend-rida"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #, python-format
 msgid "live"
@@ -11333,7 +11292,6 @@ msgstr "ms"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #, python-format
 msgid "muted"
@@ -11391,7 +11349,6 @@ msgstr "other members."
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #, python-format
 msgid "raising hand"
@@ -11477,8 +11434,6 @@ msgstr "mall"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "toggle push-to-talk"
 msgstr "toggle push-to-talk"
@@ -11558,3 +11513,6 @@ msgstr "{{ object.partner_id.lang }}"
 #, python-format
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” selles kanalis “%(channel_name)s”"
+
+#~ msgid "The channel type cannot be empty"
+#~ msgstr "Kanali tüüp ei tohi olla tühi"

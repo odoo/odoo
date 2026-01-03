@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_picking_batch
-# 
+#
 # Translators:
 # Wichanon Jamwutthipreecha, 2023
 # Rasareeyar Lappiam, 2023
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_picking_batch
@@ -29,11 +29,11 @@ msgstr "2023-08-20"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group "
-"by</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group by</"
+"span>"
 msgstr ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not "
-"auto_batch\">จัดกลุ่มตาม</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">จัดกลุ่มตาม</"
+"span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -73,16 +73,19 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"การโอนย้ายจะไม่ถูกเพิ่มโดยอัตโนมัติไปยังชุดที่จะเกินจำนวนในรายการนี้ หากมีการเพิ่มการโอนย้ายเข้าไป\n"
+"การโอนย้ายจะไม่ถูกเพิ่มโดยอัตโนมัติไปยังชุดที่จะเกินจำนวนในรายการนี้ "
+"หากมีการเพิ่มการโอนย้ายเข้าไป\n"
 "ให้ปล่อยค่านี้เป็น '0' หากไม่มีขีดจำกัดของรายการ"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
 "การโอนย้ายจะไม่ถูกเพิ่มโดยอัตโนมัติไปยังชุดที่จะเกินจำนวนในการโอนย้ายนี้\n"
@@ -465,8 +468,7 @@ msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
 msgstr ""
-"หากเปิดใช้งานคุณสมบัติชุดงานอัตโนมัติ จำเป็นต้องเลือกตัวเลือก 'จัดกลุ่มตาม' "
-"อย่างน้อยหนึ่งตัวเลือก"
+"หากเปิดใช้งานคุณสมบัติชุดงานอัตโนมัติ จำเป็นต้องเลือกตัวเลือก 'จัดกลุ่มตาม' อย่างน้อยหนึ่งตัวเลือก"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -642,8 +644,7 @@ msgstr "ประเภทการรับ"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
-msgid ""
-"Please add 'Done' quantities to the batch picking to create a new pack."
+msgid "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr "โปรดเพิ่มจำนวน 'เสร็จสิ้น' ให้กับการเลือกชุดงาน เพื่อสร้างแพ็คใหม่"
 
 #. module: stock_picking_batch
@@ -729,13 +730,17 @@ msgstr "วันที่ตามกำหนดการ"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "วันที่กำหนดสำหรับการโอนย้ายที่จะดำเนินการ\n"
 "- หากตั้งค่าด้วยตนเอง วันที่กำหนดไว้สำหรับการโอนทั้งหมดในชุดจะอัปเดตเป็นวันที่นี้โดยอัตโนมัติ\n"
-"- หากไม่ได้เปลี่ยนแปลงด้วยตนเองและมีการเพิ่ม/ลบ/อัปเดตการถ่ายโอน จะเป็นวันที่กำหนดไว้เร็วที่สุด\n"
+"- หากไม่ได้เปลี่ยนแปลงด้วยตนเองและมีการเพิ่ม/ลบ/อัปเดตการถ่ายโอน "
+"จะเป็นวันที่กำหนดไว้เร็วที่สุด\n"
 "แต่วันที่กำหนดนี้จะไม่ถูกกำหนดไว้สำหรับการโอนย้ายทั้งหมดในชุด"
 
 #. module: stock_picking_batch
@@ -844,11 +849,13 @@ msgstr "สรุป"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid ""
-"The following transfers cannot be added to batch transfer %s. Please check their states and operation types.\n"
+"The following transfers cannot be added to batch transfer %s. Please check "
+"their states and operation types.\n"
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"ไม่สามารถเพิ่มการถ่ายโอนต่อไปนี้ในการถ่ายโอนแบบชุด %s โปรดตรวจสอบสถานะและประเภทการดำเนินการ\n"
+"ไม่สามารถเพิ่มการถ่ายโอนต่อไปนี้ในการถ่ายโอนแบบชุด %s "
+"โปรดตรวจสอบสถานะและประเภทการดำเนินการ\n"
 "\n"
 "ความไม่เข้ากัน: %s"
 
@@ -856,9 +863,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
 "The goal of the batch transfer is to group operations that may\n"
-"            (needs to) be done together in order to increase their efficiency.\n"
-"            It may also be useful to assign jobs (one person = one batch) or\n"
-"            help the timing management of operations (tasks to be done at 1pm)."
+"            (needs to) be done together in order to increase their "
+"efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) "
+"or\n"
+"            help the timing management of operations (tasks to be done at "
+"1pm)."
 msgstr ""
 "เป้าหมายของการโอนย้ายแบบกลุ่มคือการจัดกลุ่มการปฏิบัติงานที่อาจ\n"
 "             (จำเป็นต้อง) ทำร่วมกันเพื่อเพิ่มประสิทธิภาพการดำเนินการ\n"
@@ -868,10 +878,13 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid ""
-"The goal of the wave transfer is to group operations from different transfer\n"
+"The goal of the wave transfer is to group operations from different "
+"transfer\n"
 "                    together in order to increase their efficiency.\n"
-"                    It may also be useful to assign jobs (one person = one batch) or\n"
-"                    help the timing management of operations (tasks to be done at 1pm)."
+"                    It may also be useful to assign jobs (one person = one "
+"batch) or\n"
+"                    help the timing management of operations (tasks to be "
+"done at 1pm)."
 msgstr ""
 "เป้าหมายของการโอนย้ายเป็นกลุ่มคือการรวมกลุ่มการดำเนินงานจากการโอนย้ายที่แตกต่างกัน\n"
 "                  เข้าด้วยกันเพื่อเพิ่มประสิทธิภาพการดำเนินการ\n"

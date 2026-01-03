@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-11-18 13:55+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-17/"
@@ -37,8 +37,6 @@ msgstr ""
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/stock_rule.py:0
-#: code:addons/purchase_stock/models/stock_rule.py:0
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -61,7 +59,8 @@ msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
+msgid ""
+"<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
 msgstr ""
 
 #. module: purchase_stock
@@ -89,7 +88,8 @@ msgstr "<strong>Διεύθυνση αποστολής:</strong>"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
@@ -159,7 +159,6 @@ msgstr "Δημιουργημένες Γραμμές Εντολής Αγοράς"
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
-#: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Διαφορά συναλλαγματικής ισοτιμίας"
@@ -179,8 +178,8 @@ msgstr "Ημέρες που απαιτούνται για την επιβεβα�
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
 msgid "Days needed to confirm a PO, define when a PO should be validated"
 msgstr ""
-"Ημέρες που απαιτούνται για την επιβεβαίωση μιας Εντολής Αγοράς, ορίζουν πότε"
-" πρέπει να επικυρωθεί η Εντολή Αγοράς."
+"Ημέρες που απαιτούνται για την επιβεβαίωση μιας Εντολής Αγοράς, ορίζουν πότε "
+"πρέπει να επικυρωθεί η Εντολή Αγοράς."
 
 #. module: purchase_stock
 #. odoo-python
@@ -204,8 +203,8 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
-"Ανάλογα με τις εγκατεστημένες εφαρμογές, αυτό θα σας επιτρέψει να ορίσετε τη"
-" διαδρομή του προϊόντος: αν θα αγοραστεί, παραχθεί, ανατροφοδοτηθεί κατά "
+"Ανάλογα με τις εγκατεστημένες εφαρμογές, αυτό θα σας επιτρέψει να ορίσετε τη "
+"διαδρομή του προϊόντος: αν θα αγοραστεί, παραχθεί, ανατροφοδοτηθεί κατά "
 "παραγγελία, κ.λπ."
 
 #. module: purchase_stock
@@ -259,8 +258,8 @@ msgstr "Εξαιρέσεις:"
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 #, python-format
 msgid ""
-"For the product %s, the warehouse of the operation type (%s) is inconsistent"
-" with the location (%s) of the reordering rule (%s). Change the operation "
+"For the product %s, the warehouse of the operation type (%s) is inconsistent "
+"with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
 msgstr ""
 
@@ -357,8 +356,8 @@ msgstr "Μπορεί να χρειαστούν χειροκίνητες ενέρ
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 
 #. module: purchase_stock
@@ -391,8 +390,8 @@ msgstr ""
 #: code:addons/purchase_stock/models/stock_move.py:0
 #, python-format
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
 msgstr ""
 
 #. module: purchase_stock
@@ -434,8 +433,8 @@ msgstr "Σημείο Αναπαραγγελίας"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past x days; the number of products received on time divided by the"
-" number of ordered products.x is either the System Parameter "
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
 
@@ -717,9 +716,9 @@ msgstr ""
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid ""
-"There is no matching vendor price to generate the purchase order for product"
-" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
-" Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
 msgstr ""
 
 #. module: purchase_stock
@@ -741,18 +740,18 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
-"Αυτό προσθέτει μια διαδρομή dropshipping που εφαρμόζεται στα προϊόντα για να"
-" ζητήσετε από τους προμηθευτές σας να παραδώσουν απευθείας στους πελάτες "
-"σας. Ένα προϊόν για dropshipping θα δημιουργήσει αίτημα προσφοράς αγοράς "
-"μόλις επιβεβαιωθεί η παραγγελία πώλησης. Πρόκειται για ροή κατόπιν ζήτησης. "
-"Η ζητούμενη διεύθυνση παράδοσης θα είναι η διεύθυνση παράδοσης του πελάτη "
-"και όχι η αποθήκη σας."
+"Αυτό προσθέτει μια διαδρομή dropshipping που εφαρμόζεται στα προϊόντα για να "
+"ζητήσετε από τους προμηθευτές σας να παραδώσουν απευθείας στους πελάτες σας. "
+"Ένα προϊόν για dropshipping θα δημιουργήσει αίτημα προσφοράς αγοράς μόλις "
+"επιβεβαιωθεί η παραγγελία πώλησης. Πρόκειται για ροή κατόπιν ζήτησης. Η "
+"ζητούμενη διεύθυνση παράδοσης θα είναι η διεύθυνση παράδοσης του πελάτη και "
+"όχι η αποθήκη σας."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -790,8 +789,7 @@ msgstr "Μεταφορά"
 #: code:addons/purchase_stock/models/purchase_order.py:0
 #, python-format
 msgid ""
-"Unable to cancel purchase order %s as some receptions have already been "
-"done."
+"Unable to cancel purchase order %s as some receptions have already been done."
 msgstr ""
 
 #. module: purchase_stock
@@ -853,8 +851,8 @@ msgstr "Όταν αγοράζονται τα είδη, μπορούν να απ�
 #, python-format
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need.<br/>Note: This rule will be used in combination"
-" with the rules<br/>of the reception route(s)"
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
 msgstr ""
 
 #. module: purchase_stock

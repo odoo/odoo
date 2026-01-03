@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_account
-# 
+#
 # Translators:
 # Wil Odoo, 2023
 # Larissa Manderfeld, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_account
@@ -37,7 +37,6 @@ msgstr " [Gebucht am %s]"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
 msgstr ""
@@ -46,7 +45,6 @@ msgstr ""
 
 #. module: stock_account
 #. odoo-python
-#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid ""
@@ -60,10 +58,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid ""
 ")\n"
-"                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
+"                            <small class=\"mx-2 fst-italic\">Use a negative "
+"added value to record a decrease in the product value</small>"
 msgstr ""
 ")\n"
-"                            <small class=\"mx-2 fst-italic\">Verwenden Sie einen negativen hinzugefügten Wert, um eine Verminderung des Produktwerts zu erfassen</small>"
+"                            <small class=\"mx-2 fst-italic\">Verwenden Sie "
+"einen negativen hinzugefügten Wert, um eine Verminderung des Produktwerts zu "
+"erfassen</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -153,8 +154,8 @@ msgstr "Mehrwert"
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
-"Affect landed costs on reception operations and split them among products to"
-" update their cost price."
+"Affect landed costs on reception operations and split them among products to "
+"update their cost price."
 msgstr ""
 "Berücksichtigung der Wareneinstandspreise bei Empfangsvorgängen und deren "
 "Aufteilung auf die Produkte, um deren Selbstkosten zu aktualisieren."
@@ -214,11 +215,11 @@ msgstr "Abbrechen"
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
-"Cannot find a stock input account for the product %s. You must define one on"
-" the product category, or on the location, before processing this operation."
+"Cannot find a stock input account for the product %s. You must define one on "
+"the product category, or on the location, before processing this operation."
 msgstr ""
-"Eine Lagereingangskonto für für das Produkt %s konnte nicht gefunden werden."
-" Sie müssen vor der Bearbeitung dieses Vorgangs eins über die "
+"Eine Lagereingangskonto für für das Produkt %s konnte nicht gefunden werden. "
+"Sie müssen vor der Bearbeitung dieses Vorgangs eins über die "
 "Produktkategorie oder den Lagerort definieren."
 
 #. module: stock_account
@@ -230,8 +231,8 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
-"Eine Lagerausgangskonto für für das Produkt %s konnte nicht gefunden werden."
-" Sie müssen vor der Bearbeitung dieses Vorgangs eins über die "
+"Eine Lagerausgangskonto für für das Produkt %s konnte nicht gefunden werden. "
+"Sie müssen vor der Bearbeitung dieses Vorgangs eins über die "
 "Produktkategorie oder den Lagerort definieren."
 
 #. module: stock_account
@@ -303,11 +304,16 @@ msgstr "Gegenkonto"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid ""
-"Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
-"                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
+"Counterpart journal items for all incoming stock moves will be posted in "
+"this account, unless there is a specific valuation account\n"
+"                set on the source location. This is the default value for "
+"all products in this category. It can also directly be set on each product."
 msgstr ""
-"Die Gegenbuchungen für alle eingehenden Lagerbuchungen werden auf diesem Konto verbucht, es sei denn, es ist ein spezielles Bewertungskonto\n"
-"                für den Ursprungsstandort festgelegt. Dies ist der Standardwert für alle Produkte in dieser Kategorie. Er kann auch direkt für jedes Produkt festgelegt werden."
+"Die Gegenbuchungen für alle eingehenden Lagerbuchungen werden auf diesem "
+"Konto verbucht, es sei denn, es ist ein spezielles Bewertungskonto\n"
+"                für den Ursprungsstandort festgelegt. Dies ist der "
+"Standardwert für alle Produkte in dieser Kategorie. Er kann auch direkt für "
+"jedes Produkt festgelegt werden."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -527,12 +533,17 @@ msgstr "Manuelle Bestandsbewertung: Ohne Angabe von Gründen."
 #: model:ir.model.fields,help:stock_account.field_product_template__valuation
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__property_valuation
 msgid ""
-"Manual: The accounting entries to value the inventory are not posted automatically.\n"
-"        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
+"Manual: The accounting entries to value the inventory are not posted "
+"automatically.\n"
+"        Automated: An accounting entry is automatically created to value the "
+"inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
-"Manuell: Die Buchungen zur Bewertung des Lagerbestands werden nicht automatisch erstellt.\n"
-"Automatisch: Eine Buchung wird automatisch erstellt, um den Lagerbestand zu bewerten, wenn ein Produkt im Unternehmen ankommt oder das Unternehmen verlässt."
+"Manuell: Die Buchungen zur Bewertung des Lagerbestands werden nicht "
+"automatisch erstellt.\n"
+"Automatisch: Eine Buchung wird automatisch erstellt, um den Lagerbestand zu "
+"bewerten, wenn ein Produkt im Unternehmen ankommt oder das Unternehmen "
+"verlässt."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -686,14 +697,21 @@ msgstr "Standardpreis"
 #: model:ir.model.fields,help:stock_account.field_product_template__cost_method
 #: model:ir.model.fields,help:stock_account.field_stock_quant__cost_method
 msgid ""
-"Standard Price: The products are valued at their standard cost defined on the product.\n"
-"        Average Cost (AVCO): The products are valued at weighted average cost.\n"
-"        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
+"Standard Price: The products are valued at their standard cost defined on "
+"the product.\n"
+"        Average Cost (AVCO): The products are valued at weighted average "
+"cost.\n"
+"        First In First Out (FIFO): The products are valued supposing those "
+"that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"Standardpreis: Die Produkte werden nach für das Produkt definierten Standardkosten berechnet.\n"
-"        Durchschnittskosten (AVCO): Die Produkte werden zu gewichteten Durchschnittskosten berechnet.\n"
-"        First In – First Out (FIFO): Die Produkte werden unter der Annahme bewertet, dass die Produkte, die zuerst im Unternehmen ankommen, auch zuerst das Unternehmen verlassen.\n"
+"Standardpreis: Die Produkte werden nach für das Produkt definierten "
+"Standardkosten berechnet.\n"
+"        Durchschnittskosten (AVCO): Die Produkte werden zu gewichteten "
+"Durchschnittskosten berechnet.\n"
+"        First In – First Out (FIFO): Die Produkte werden unter der Annahme "
+"bewertet, dass die Produkte, die zuerst im Unternehmen ankommen, auch zuerst "
+"das Unternehmen verlassen.\n"
 "        "
 
 #. module: stock_account
@@ -809,7 +827,6 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
@@ -918,8 +935,8 @@ msgstr "Transfer"
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,help:stock_account.field_stock_return_picking_line__to_refund
 msgid ""
-"Trigger a decrease of the delivered/received quantity in the associated Sale"
-" Order/Purchase Order"
+"Trigger a decrease of the delivered/received quantity in the associated Sale "
+"Order/Purchase Order"
 msgstr ""
 "Auslösen einer Minderung der gelieferten/erhaltenen Menge im zugehörigen "
 "Verkaufsauftrag bzw. der zugehörigen Bestellung"
@@ -959,8 +976,8 @@ msgstr ""
 "eingestellt (nicht intern), wird der Wert der Produkte, die aus einem "
 "internen Lagerort an diesen Lagerort verschoben werden, auf diesem Konto "
 "verbucht und nicht auf dem für das Produkt festgelegten allgemeinen "
-"Lagerausgangskonto. Bei rein internen Lagerorten hat diese Einstellung keine"
-" Auswirkung."
+"Lagerausgangskonto. Bei rein internen Lagerorten hat diese Einstellung keine "
+"Auswirkung."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -975,8 +992,8 @@ msgstr ""
 "eingestellt (nicht intern), wird der Wert der Produkte, die aus diesem "
 "Lagerort an einen internen Lagerort verschoben werden, auf diesem Konto "
 "verbucht und nicht auf dem für das Produkt festgelegten allgemeinen "
-"Lagerausgangskonto. Bei rein internen Lagerorten hat diese Einstellung keine"
-" Auswirkung."
+"Lagerausgangskonto. Bei rein internen Lagerorten hat diese Einstellung keine "
+"Auswirkung."
 
 #. module: stock_account
 #: model:ir.ui.menu,name:stock_account.menu_valuation
@@ -1045,12 +1062,18 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
 msgid ""
-"When doing automated inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account,\n"
-"                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
+"When doing automated inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account,\n"
+"                unless there is a specific valuation account set on the "
+"destination location. This is the default value for all products in this "
+"category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"Bei der automatischen Bestandsbewertung werden die Gegenbuchungsposten für alle ausgehenden Lagerbuchungen auf diesem Konto gebucht,\n"
-"es sei denn, es ist ein spezielles Bewertungskonto für den Zielort festgelegt. Dies ist der Standardwert für alle Produkte in dieser Kategorie.\n"
+"Bei der automatischen Bestandsbewertung werden die Gegenbuchungsposten für "
+"alle ausgehenden Lagerbuchungen auf diesem Konto gebucht,\n"
+"es sei denn, es ist ein spezielles Bewertungskonto für den Zielort "
+"festgelegt. Dies ist der Standardwert für alle Produkte in dieser "
+"Kategorie.\n"
 "Er kann auch direkt für jedes Produkt eingestellt werden."
 
 #. module: stock_account
@@ -1059,15 +1082,14 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
-"Bei der automatischen Bestandsbewertung ist dies das Buchungsjournal, in dem"
-" automatisch Buchungen vorgenommen werden, wenn Lagerbuchungen verarbeitet "
+"Bei der automatischen Bestandsbewertung ist dies das Buchungsjournal, in dem "
+"automatisch Buchungen vorgenommen werden, wenn Lagerbuchungen verarbeitet "
 "werden."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
-msgstr ""
-"Assistentenmodell zur Neubewertung eines Lagerbestands für ein Produkt"
+msgstr "Assistentenmodell zur Neubewertung eines Lagerbestands für ein Produkt"
 
 #. module: stock_account
 #. odoo-python
@@ -1102,8 +1124,8 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"You don't have any input valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any input valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
 "Sie haben für Ihre Produktkategorie kein Eingangsbewertungskonto definiert. "
 "Sie müssen eines definieren, bevor Sie diesen Vorgang ausführen können."
@@ -1124,8 +1146,8 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"You don't have any stock input account defined on your product category. You"
-" must define one before processing this operation."
+"You don't have any stock input account defined on your product category. You "
+"must define one before processing this operation."
 msgstr ""
 "Sie haben für Ihre Produktkategorie kein Bestandseingangskonto definiert. "
 "Sie müssen eines definieren, bevor Sie diesen Vorgang ausführen können."
@@ -1144,13 +1166,11 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-#: code:addons/stock_account/models/product.py:0
-#: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
-"You don't have any stock valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any stock valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
 "Sie haben keine Lagerbewertungskonto auf Ihrer Produktkategorie. Sie müssen "
 "eines definieren, bevor Sie diesen Vorgang ausführen können."

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_images
-# 
+#
 # Translators:
 # Wil Odoo, 2023
 # Daye Jeong, 2023
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: product_images
@@ -28,18 +28,21 @@ msgid ""
 "%(matching_images_count)s matching images have been found for "
 "%(product_count)s products."
 msgstr ""
-"%(product_count)s 품목에 대해서 일치하는 이미지%(matching_images_count)s 개를 검색하였습니다."
+"%(product_count)s 품목에 대해서 일치하는 이미지%(matching_images_count)s 개"
+"를 검색하였습니다."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid ""
 "<span invisible=\"nb_products_selected &lt;= 10000\">\n"
-"                            As only 10,000 products can be processed per day, the remaining will be\n"
+"                            As only 10,000 products can be processed per "
+"day, the remaining will be\n"
 "                            done tomorrow.\n"
 "                        </span>"
 msgstr ""
 "<span invisible=\"nb_products_selected &lt;= 10000\">\n"
-"                            하루에 처리할 수 있는 품목의 수량은 10,000개이므로 나머지는 내일 완료될 수 \n"
+"                            하루에 처리할 수 있는 품목의 수량은 10,000개이므"
+"로 나머지는 내일 완료될 수 \n"
 "                            있습니다.\n"
 "                        </span>"
 
@@ -50,7 +53,9 @@ msgstr ""
 msgid ""
 "A task to process products in the background is already running. Please try "
 "againlater."
-msgstr "백그라운드에서 품목을 처리하는 작업이 이미 실행 중입니다. 나중에 다시 시도해주십시오."
+msgstr ""
+"백그라운드에서 품목을 처리하는 작업이 이미 실행 중입니다. 나중에 다시 시도해"
+"주십시오."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
@@ -87,7 +92,8 @@ msgstr "표시명"
 msgid ""
 "Fetch product images from Google Images based on the product's barcode "
 "number."
-msgstr "품목의 바코드 번호를 기반으로 Google 이미지에서 품목 이미지를 가져옵니다."
+msgstr ""
+"품목의 바코드 번호를 기반으로 Google 이미지에서 품목 이미지를 가져옵니다."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -178,7 +184,8 @@ msgstr "처리할 품목"
 msgid ""
 "Products are processed in the background. Images will be updated "
 "progressively."
-msgstr "품목은 백그라운드에서 처리됩니다. 이미지가 계속해서 업데이트될 예정입니다."
+msgstr ""
+"품목은 백그라운드에서 처리됩니다. 이미지가 계속해서 업데이트될 예정입니다."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
@@ -201,8 +208,9 @@ msgid ""
 "your Google Cloud Platform project page and enable it, then retry. If you "
 "enabled this API recently, please wait a few minutes and retry."
 msgstr ""
-"Google 프로젝트에서 맞춤 검색 API를 사용할 수 없습니다. Google 클라우드 플랫폼 프로젝트 페이지를 방문하여 활성화한 다음 "
-"다시 시도하십시오. 최근에 이 API를 활성화한 경우에는 몇 분 정도 기다린 후 다시 시도하십시오."
+"Google 프로젝트에서 맞춤 검색 API를 사용할 수 없습니다. Google 클라우드 플랫"
+"폼 프로젝트 페이지를 방문하여 활성화한 다음 다시 시도하십시오. 최근에 이 API"
+"를 활성화한 경우에는 몇 분 정도 기다린 후 다시 시도하십시오."
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_pse_id
@@ -219,15 +227,15 @@ msgstr "기준에 부합하도록 선별된 품목 리스트 (바코드 있으�
 #. module: product_images
 #. odoo-python
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
-#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
 msgid ""
 "The scheduled action \"Product Images: Get product images from Google\" has "
 "been deleted. Please contact your administrator to have the action restored "
 "or to reinstall the module \"product_images\"."
 msgstr ""
-"예약된 작업인 \"품목 이미지: Google에서 품목 이미지 가져오기\"가 삭제되었습니다. 해당 작업을 복원하거나 "
-"\"product_images\" 모듈을 다시 설치하려면 관리자에게 문의하십시오."
+"예약된 작업인 \"품목 이미지: Google에서 품목 이미지 가져오기\"가 삭제되었습니"
+"다. 해당 작업을 복원하거나 \"product_images\" 모듈을 다시 설치하려면 관리자에"
+"게 문의하십시오."
 
 #. module: product_images
 #. odoo-python
@@ -244,7 +252,8 @@ msgstr "진행된 작업"
 #. module: product_images
 #: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
 msgid "Whether an image must be fetched for this product. Handled by a cron."
-msgstr "이 품목에 대한 이미지 가져오기를 실행할 지 여부입니다. 크론에서 처리합니다."
+msgstr ""
+"이 품목에 대한 이미지 가져오기를 실행할 지 여부입니다. 크론에서 처리합니다."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -267,11 +276,13 @@ msgstr "해당 내용이 처리됩니다."
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid ""
 "products will not be\n"
-"                            processed because they either already have an image or their barcode\n"
+"                            processed because they either already have an "
+"image or their barcode\n"
 "                            number is not set."
 msgstr ""
 "품목에 이미 이미지가\n"
-"                           존재하거나 바코드 번호가 설정되어 있지 않기 때문에, 해당 작업이\n"
+"                           존재하거나 바코드 번호가 설정되어 있지 않기 때문"
+"에, 해당 작업이\n"
 "                           처리되지 않았습니다."
 
 #. module: product_images

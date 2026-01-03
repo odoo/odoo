@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_project
-# 
+#
 # Translators:
 # Daye Jeong, 2023
 # Wil Odoo, 2025
 # Sarah Park, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:38+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_project
@@ -30,7 +30,8 @@ msgid ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    No milestones found. Let's create one!\n"
 "                </p><p>\n"
-"                    Track major progress points that must be reached to achieve success.\n"
+"                    Track major progress points that must be reached to "
+"achieve success.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -38,7 +39,8 @@ msgstr ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    마일스톤을 찾을 수 없습니다. 새로 생성해 주세요!\n"
 "                </p><p>\n"
-"                    성공적으로 완료하기 위해 달성해야 하는 주요 진행 포인트를 추적할 수 있습니다.\n"
+"                    성공적으로 완료하기 위해 달성해야 하는 주요 진행 포인트"
+"를 추적할 수 있습니다.\n"
 "                </p>\n"
 "            "
 
@@ -69,14 +71,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span> Sales Order\n"
+"                            <span class=\"o_stat_value\">0</span> Sales "
+"Order\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span> 판매주문서\n"
+"                            <span class=\"o_stat_value\">0</span> 판매주문"
+"서\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            청구 가능\n"
@@ -108,10 +112,13 @@ msgstr "<span>)</span>"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "품목의 환경 설정에 따라, 출고 수량은 자동으로 계산될 수 있습니다:\n"
@@ -271,19 +278,22 @@ msgstr "서비스 판매 즉시 주문 수량에 대해 청구서를 발행하�
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
-"Invoice ordered quantities as soon as this service is sold. Create a project"
-" for the order with a task for each sales order line to track the time "
-"spent."
-msgstr "서비스 판매 즉시 주문 수량에 대해 청구서를 발행하세요 판매주문서 내역별로 작업 프로젝트를 생성하여 소요 시간을 추적합니다."
+"Invoice ordered quantities as soon as this service is sold. Create a project "
+"for the order with a task for each sales order line to track the time spent."
+msgstr ""
+"서비스 판매 즉시 주문 수량에 대해 청구서를 발행하세요 판매주문서 내역별로 작"
+"업 프로젝트를 생성하여 소요 시간을 추적합니다."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
-"Invoice ordered quantities as soon as this service is sold. Create a task in"
-" an existing project to track the time spent."
-msgstr "서비스 판매 즉시 주문 수량에 대해 청구서를 발행하세요. 기존 프로젝트에서 작업을 생성하여 소요 시간을 추적합니다."
+"Invoice ordered quantities as soon as this service is sold. Create a task in "
+"an existing project to track the time spent."
+msgstr ""
+"서비스 판매 즉시 주문 수량에 대해 청구서를 발행하세요. 기존 프로젝트에서 작업"
+"을 생성하여 소요 시간을 추적합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -292,7 +302,9 @@ msgstr "서비스 판매 즉시 주문 수량에 대해 청구서를 발행하�
 msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create an empty "
 "project for the order to track the time spent."
-msgstr "서비스 판매 즉시 주문 수량에 대해 청구서를 발행하세요 주문서에 내용 없는 프로젝트를 생성하여 소요 시간을 추적합니다."
+msgstr ""
+"서비스 판매 즉시 주문 수량에 대해 청구서를 발행하세요 주문서에 내용 없는 프로"
+"젝트를 생성하여 소요 시간을 추적합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -301,7 +313,9 @@ msgstr "서비스 판매 즉시 주문 수량에 대해 청구서를 발행하�
 msgid ""
 "Invoice this service when it is delivered (set the quantity by hand on your "
 "sales order lines). "
-msgstr "이 서비스가 완료되면 청구서를 발행하십시오 (판매주문서 내역에서 직접 수량 설정)."
+msgstr ""
+"이 서비스가 완료되면 청구서를 발행하십시오 (판매주문서 내역에서 직접 수량 설"
+"정)."
 
 #. module: sale_project
 #. odoo-python
@@ -312,8 +326,9 @@ msgid ""
 "sales order lines). Create a project for the order with a task for each "
 "sales order line to track the time spent."
 msgstr ""
-"이 서비스가 완료되면 청구서를 발행하십시오 (판매주문서 내역에서 직접 수량 설정). 각 판매주문서 내역의 작업으로 주문에 대한 프로젝트를"
-" 생성하여 소요 시간을 추적합니다."
+"이 서비스가 완료되면 청구서를 발행하십시오 (판매주문서 내역에서 직접 수량 설"
+"정). 각 판매주문서 내역의 작업으로 주문에 대한 프로젝트를 생성하여 소요 시간"
+"을 추적합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -324,8 +339,8 @@ msgid ""
 "sales order lines). Create a task in an existing project to track the time "
 "spent."
 msgstr ""
-"이 서비스가 완료되면 청구서를 발행하십시오 (판매주문서 내역에서 직접 수량 설정). 기존 프로젝트에서 작업을 생성하여 소요 시간을 "
-"추적합니다."
+"이 서비스가 완료되면 청구서를 발행하십시오 (판매주문서 내역에서 직접 수량 설"
+"정). 기존 프로젝트에서 작업을 생성하여 소요 시간을 추적합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -336,8 +351,8 @@ msgid ""
 "sales order lines). Create an empty project for the order to track the time "
 "spent."
 msgstr ""
-"이 서비스가 완료되면 청구서를 발행하십시오 (판매주문서 내역에서 직접 수량 설정). 주문 관련하여 내용을 비워 둔 프로젝트를 생성하여 "
-"소요 시간을 추적합니다."
+"이 서비스가 완료되면 청구서를 발행하십시오 (판매주문서 내역에서 직접 수량 설"
+"정). 주문 관련하여 내용을 비워 둔 프로젝트를 생성하여 소요 시간을 추적합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -354,7 +369,8 @@ msgid ""
 "Invoice your milestones when they are reached. Create a project for the "
 "order with a task for each sales order line to track the time spent."
 msgstr ""
-"마일스톤에 도달하게 되면 청구서를 발행하십시오. 각 판매주문서 내역의 작업으로 주문에 대한 프로젝트를 생성하여 소요 시간을 추적합니다."
+"마일스톤에 도달하게 되면 청구서를 발행하십시오. 각 판매주문서 내역의 작업으"
+"로 주문에 대한 프로젝트를 생성하여 소요 시간을 추적합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -363,7 +379,9 @@ msgstr ""
 msgid ""
 "Invoice your milestones when they are reached. Create a task in an existing "
 "project to track the time spent."
-msgstr "마일스톤에 도달하게 되면 청구서를 발행하십시오. 기존 프로젝트에서 작업을 생성하여 소요 시간을 추적합니다."
+msgstr ""
+"마일스톤에 도달하게 되면 청구서를 발행하십시오. 기존 프로젝트에서 작업을 생성"
+"하여 소요 시간을 추적합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -372,7 +390,9 @@ msgstr "마일스톤에 도달하게 되면 청구서를 발행하십시오. 기
 msgid ""
 "Invoice your milestones when they are reached. Create an empty project for "
 "the order to track the time spent."
-msgstr "마일스톤에 도달하게 되면 청구서를 발행하십시오. 주문 관련하여 내용을 비워 둔 프로젝트를 생성하여 소요 시간을 추적합니다."
+msgstr ""
+"마일스톤에 도달하게 되면 청구서를 발행하십시오. 주문 관련하여 내용을 비워 둔 "
+"프로젝트를 생성하여 소요 시간을 추적합니다."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
@@ -389,7 +409,6 @@ msgstr "발행 완료된 청구서"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Invoices"
@@ -421,13 +440,18 @@ msgstr "추가 불러오기"
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
 #: model:ir.model.fields,help:sale_project.field_product_template__service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
 msgstr ""
-"주문에서 수량을 수동으로 설정합니다. : 청구서에 자동으로 생성되지 않고, 수동으로 수량을 입력하여 반영합니다. \n"
+"주문에서 수량을 수동으로 설정합니다. : 청구서에 자동으로 생성되지 않고, 수동"
+"으로 수량을 입력하여 반영합니다. \n"
 "연락처의 작업 기록 : 청구서에 관련된 작업 기록에 추적된 시간을 반영합니다. \n"
-"작업 생성 및 시간 추적 : 판매 주문 승인에서 작업을 생성하고 작업 시간을 추적합니다."
+"작업 생성 및 시간 추적 : 판매 주문 승인에서 작업을 생성하고 작업 시간을 추적"
+"합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -493,11 +517,16 @@ msgstr "프로젝트 수"
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,help:sale_project.field_product_template__service_tracking
 msgid ""
-"On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
-"         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
+"On Sales order confirmation, this product can generate a project and/or "
+"task.         From those, you can track the service you are selling.\n"
+"         'In sale order's project': Will use the sale order's configured "
+"project if defined or fallback to         creating a new project based on "
+"the selected template."
 msgstr ""
-"판매주문서를 승인하면 프로젝트 및/또는 작업을 해당 품목에서 생성될 수 있습니다.         여기에서 판매하는 서비스를 추적할 수 있습니다.\n"
-"         '판매 주문서 프로젝트': 지정된 판매주문서를 사용하거나 차선책으로         서식 중에서 선택하여 새로운 프로젝트를 생성합니다."
+"판매주문서를 승인하면 프로젝트 및/또는 작업을 해당 품목에서 생성될 수 있습니"
+"다.         여기에서 판매하는 서비스를 추적할 수 있습니다.\n"
+"         '판매 주문서 프로젝트': 지정된 판매주문서를 사용하거나 차선책으"
+"로         서식 중에서 선택하여 새로운 프로젝트를 생성합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -509,8 +538,8 @@ msgstr "기타 서비스"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
 msgid ""
-"Percentage of the ordered quantity that will automatically be delivered once"
-" the milestone is reached."
+"Percentage of the ordered quantity that will automatically be delivered once "
+"the milestone is reached."
 msgstr "주문 수량 중 마일스톤에 도달할 경우 자동으로 배송되는 백분율입니다."
 
 #. module: sale_project
@@ -668,18 +697,26 @@ msgstr "판매주문서 중 마일스톤에 도달할 경우 업데이트되는 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
 msgid ""
-"Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
-"By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
-"Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
+"Sales Order Item to which the time spent on this task will be added in order "
+"to be invoiced to your customer.\n"
+"By default the sales order item set on the project will be selected. In the "
+"absence of one, the last prepaid sales order item that has time remaining "
+"will be used.\n"
+"Remove the sales order item in order to make this task non billable. You can "
+"also change or remove the sales order item of each timesheet entry "
+"individually."
 msgstr ""
-"이 작업에 소요된 시간을 추가하여 고객에게 청구서를 발행할 판매주문서 항목입니다.\n"
-"프로젝트에 설정되어 있는 판매주문서 항목이 기본값으로 선택됩니다. 해당되는 내용이 없는 경우, 선불 완료된 판매주문서 중 잔여 시간이 남아 있는 항목을 사용합니다.\n"
-"이 작업을 청구하지 않도록 하려면 판매주문서 항목을 삭제하시기 바랍니다. 판매주문서의 작업시간표 입력 내용을 개별적으로 변경하거나 삭제할 수도 있습니다."
+"이 작업에 소요된 시간을 추가하여 고객에게 청구서를 발행할 판매주문서 항목입니"
+"다.\n"
+"프로젝트에 설정되어 있는 판매주문서 항목이 기본값으로 선택됩니다. 해당되는 내"
+"용이 없는 경우, 선불 완료된 판매주문서 중 잔여 시간이 남아 있는 항목을 사용합"
+"니다.\n"
+"이 작업을 청구하지 않도록 하려면 판매주문서 항목을 삭제하시기 바랍니다. 판매"
+"주문서의 작업시간표 입력 내용을 개별적으로 변경하거나 삭제할 수도 있습니다."
 
 #. module: sale_project
 #. odoo-javascript
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
@@ -701,11 +738,17 @@ msgstr "판매 주문"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
 msgid ""
-"Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
-"It can be modified on each task and timesheet entry individually if necessary."
+"Sales order item that will be selected by default on the tasks and "
+"timesheets of this project, except if the employee set on the timesheets is "
+"explicitely linked to another sales order item on the project.\n"
+"It can be modified on each task and timesheet entry individually if "
+"necessary."
 msgstr ""
-"이 프로젝트의 작업 및 작업시간표의 기본값으로 선택되는 판매주문서 항목입니다. 작업시간표에 설정된 담당자가 기록상 명확히 프로젝트의 다른 판매주문서 항목에 연결되어 있는 경우에는 예외로 합니다.\n"
-"필요한 경우 각 작업 및 작업주문서 입력 내용을 개별적으로 변경하거나 삭제할 수 있습니다."
+"이 프로젝트의 작업 및 작업시간표의 기본값으로 선택되는 판매주문서 항목입니"
+"다. 작업시간표에 설정된 담당자가 기록상 명확히 프로젝트의 다른 판매주문서 항"
+"목에 연결되어 있는 경우에는 예외로 합니다.\n"
+"필요한 경우 각 작업 및 작업주문서 입력 내용을 개별적으로 변경하거나 삭제할 "
+"수 있습니다."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -820,7 +863,9 @@ msgstr "%s 상품은 프로젝트를 생성하므로 전역 프로젝트가 있�
 msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
-msgstr "%s 상품은 프로젝트를 생성하지 않으므로 프로젝트나 프로젝트 서식을 가지고 있지 않아야 합니다."
+msgstr ""
+"%s 상품은 프로젝트를 생성하지 않으므로 프로젝트나 프로젝트 서식을 가지고 있"
+"지 않아야 합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -829,14 +874,16 @@ msgstr "%s 상품은 프로젝트를 생성하지 않으므로 프로젝트나 �
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
-msgstr "%s 상품은 전역 프로젝트에서 작업을 생성하므로 프로젝트 서식이 없어야 합니다."
+msgstr ""
+"%s 상품은 전역 프로젝트에서 작업을 생성하므로 프로젝트 서식이 없어야 합니다."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #, python-format
 msgid "This Sales Order must contain at least one product of type \"Service\"."
-msgstr "이 판매주문서에는 \"서비스\" 유형의 품목이 하나 이상 포함되어야 합니다."
+msgstr ""
+"이 판매주문서에는 \"서비스\" 유형의 품목이 하나 이상 포함되어야 합니다."
 
 #. module: sale_project
 #. odoo-python
@@ -883,7 +930,6 @@ msgstr "공급업체 청구서 수"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
-#: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Vendor Bills"
 msgstr "공급업체 청구서"
@@ -901,4 +947,5 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
-"재청구된 비용이므로 이 작업을 위해 %(order_id)s - %(product_id)s 아이템의 주문을 연결할 수 없습니다. "
+"재청구된 비용이므로 이 작업을 위해 %(order_id)s - %(product_id)s 아이템의 주"
+"문을 연결할 수 없습니다. "

@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_demo
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Maitê Dietze, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Maitê Dietze, 2024\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
+"41243/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
@@ -30,7 +32,8 @@ msgid ""
 "                    <option value=\"pending\" title=\"Payment processing\">\n"
 "                        Pending\n"
 "                    </option>\n"
-"                    <option value=\"cancel\" title=\"Payment canceled by customer\">\n"
+"                    <option value=\"cancel\" title=\"Payment canceled by "
+"customer\">\n"
 "                        Canceled\n"
 "                    </option>\n"
 "                    <option value=\"error\" title=\"Processing error\">\n"
@@ -39,13 +42,16 @@ msgid ""
 "                </select>"
 msgstr ""
 "<select id=\"simulated_payment_state\" class=\"form-select\">\n"
-"                        <option value=\"done\" title=\"Successful payment\">\n"
+"                        <option value=\"done\" title=\"Successful "
+"payment\">\n"
 "                            Sucesso\n"
 "                        </option>\n"
-"                        <option value=\"pending\" title=\"Payment processing\">\n"
+"                        <option value=\"pending\" title=\"Payment "
+"processing\">\n"
 "                            Pendente\n"
 "                        </option>\n"
-"                        <option value=\"cancel\" title=\"Payment canceled by customer\">\n"
+"                        <option value=\"cancel\" title=\"Payment canceled by "
+"customer\">\n"
 "                            Cancelado\n"
 "                        </option>\n"
 "                        <option value=\"error\" title=\"Processing error\">\n"
@@ -164,8 +170,7 @@ msgstr "Checkout expresso (demo)"
 #: code:addons/payment_demo/models/payment_provider.py:0
 #, python-format
 msgid "Demo providers should never be enabled."
-msgstr ""
-"Provedores de pagamento de demonstração nunca devem estar habilitados."
+msgstr "Provedores de pagamento de demonstração nunca devem estar habilitados."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
@@ -226,8 +231,7 @@ msgstr "Pagamentos feitos com este método terão <b>sucesso</b>."
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid ""
-"Payments made with this payment method will be automatically "
-"<b>canceled</b>."
+"Payments made with this payment method will be automatically <b>canceled</b>."
 msgstr ""
 "Pagamentos feitos com este método serão <b>cancelados</b> automaticamente."
 
@@ -239,8 +243,8 @@ msgstr "Pagamentos feitos com este método permanecerão <b>pendentes</b>."
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid ""
-"Payments made with this payment method will simulate a processing "
-"<b>error</b>."
+"Payments made with this payment method will simulate a processing <b>error</"
+"b>."
 msgstr ""
 "Pagamentos feitos com esse método simularão um <b>erro</b> de processamento."
 

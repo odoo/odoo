@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2025-08-23 01:40+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -357,13 +357,18 @@ msgstr "建立替代方案"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid ""
-"Create a call for tender by adding alternative requests for quotation to different vendors.\n"
-"                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
-"                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
+"Create a call for tender by adding alternative requests for quotation to "
+"different vendors.\n"
+"                            Make your choice by selecting the best "
+"combination of lead time, OTD and/or total amount.\n"
+"                            By comparing product lines you can also decide "
+"to order some products from one vendor and others from another vendor."
 msgstr ""
 "若要進行招標，你可加入向不同供應商索取的替代報價請求。\n"
-"                            之後，你可按交貨時間、準時交貨率（OTD）及/或入標價總金額，選擇最佳的組合。\n"
-"                            透過比較產品資料行，你也可以決定從一個供應商訂購某些產品，並從另一個供應商訂購其他產品。"
+"                            之後，你可按交貨時間、準時交貨率（OTD）及/或入標"
+"價總金額，選擇最佳的組合。\n"
+"                            透過比較產品資料行，你也可以決定從一個供應商訂購"
+"某些產品，並從另一個供應商訂購其他產品。"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -478,7 +483,8 @@ msgstr "Font awesome 圖示，例如，fa-task"
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specific period\n"
-"            (e.g. a year) and you order products within this agreement to benefit\n"
+"            (e.g. a year) and you order products within this agreement to "
+"benefit\n"
 "            from the negotiated prices."
 msgstr ""
 "對於一攬子訂單，您可以記錄一個特定時期的協議\n"
@@ -542,12 +548,13 @@ msgstr "勾選代表有訊息發生傳送錯誤。"
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
 msgid ""
 "If the chosen vendor or if any of the products in the original PO have a "
-"blocking warning then we prevent creation of alternative PO. This is because"
-" normally these fields are cleared w/warning message within form view, but "
-"we cannot recreate that in this case."
+"blocking warning then we prevent creation of alternative PO. This is because "
+"normally these fields are cleared w/warning message within form view, but we "
+"cannot recreate that in this case."
 msgstr ""
-"如果所選供應商或原始訂單中的任何產品有阻塞警告，則我們將阻止創建替代訂單。這是因為通常這些字段在窗體視圖中會被清除並顯示警告消息，但在這種情況下, "
-"我們無法重新創建它。"
+"如果所選供應商或原始訂單中的任何產品有阻塞警告，則我們將阻止創建替代訂單。這"
+"是因為通常這些字段在窗體視圖中會被清除並顯示警告消息，但在這種情況下, 我們無"
+"法重新創建它。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
@@ -936,13 +943,17 @@ msgstr "僅選擇一個詢價單(獨家)"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__exclusive
 msgid ""
-"Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel the remaining purchase order.\n"
+"Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel "
+"the remaining purchase order.\n"
 "\n"
-"                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
+"                    Select multiple RFQ (non-exclusive): allows multiple "
+"purchase orders. On confirmation of a purchase order it does not cancel the "
+"remaining orders"
 msgstr ""
 "只選擇一個報價請求（排他性）：確認採購訂單後，取消剩餘的採購訂單。\n"
 "\n"
-"                    選擇多個報價請求（非排他性）：允許多個採購訂單。確認採購訂單時, 不會取消其餘訂單"
+"                    選擇多個報價請求（非排他性）：允許多個採購訂單。確認採購"
+"訂單時, 不會取消其餘訂單"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -952,8 +963,7 @@ msgstr "序列號"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
 msgid ""
-"Set active to false to hide the Purchase Agreement Types without removing "
-"it."
+"Set active to false to hide the Purchase Agreement Types without removing it."
 msgstr "將啟動設定設為否, 以隱藏採購協議類型而不刪除它。"
 
 #. module: purchase_requisition
@@ -1051,10 +1061,12 @@ msgstr "正在為其創建此備選採購訂單 的原始採購訂單。"
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid ""
-"The vendor you have selected or at least one of the products you are copying"
-" from the original order has a blocking warning on it and cannot be selected"
-" to create an alternative."
-msgstr "您所選擇的供應商, 或您從原始訂單中複製的至少一種產品上有阻止警告，不能選擇它來創建替代品。"
+"The vendor you have selected or at least one of the products you are copying "
+"from the original order has a blocking warning on it and cannot be selected "
+"to create an alternative."
+msgstr ""
+"您所選擇的供應商, 或您從原始訂單中複製的至少一種產品上有阻止警告，不能選擇它"
+"來創建替代品。"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1070,11 +1082,12 @@ msgstr "不存在需要清理的數量。"
 msgid ""
 "There is already an open blanket order for this supplier. We suggest you "
 "complete this open blanket order, instead of creating a new one."
-msgstr "對該供應商已經有一個開放的一攬子訂單, 我們建議您完成這個開放的一攬子訂單,而不是創建一個新的訂單。"
+msgstr ""
+"對該供應商已經有一個開放的一攬子訂單, 我們建議您完成這個開放的一攬子訂單,而不"
+"是創建一個新的訂單。"
 
 #. module: purchase_requisition
 #. odoo-python
-#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid "This is a blocking warning!\n"
@@ -1087,11 +1100,13 @@ msgstr "這是個阻塞警告.\n"
 msgid ""
 "To close this purchase requisition, cancel related Requests for Quotation.\n"
 "\n"
-"Imagine the mess if someone confirms these duplicates: double the order, double the trouble :)"
+"Imagine the mess if someone confirms these duplicates: double the order, "
+"double the trouble :)"
 msgstr ""
 "要關閉此請購單，請取消相關的詢價單。\n"
 "\n"
-"試想一下，如果有人確認了這些重複的訂單，那將會是多麼混亂：訂單加倍，麻煩也加倍！:)"
+"試想一下，如果有人確認了這些重複的訂單，那將會是多麼混亂：訂單加倍，麻煩也加"
+"倍！:)"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -1204,8 +1219,8 @@ msgstr "替代報價請求又如何？"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
 msgid ""
-"Whether or not this purchase order is linked to another purchase order as an"
-" alternative."
+"Whether or not this purchase order is linked to another purchase order as an "
+"alternative."
 msgstr "此採購訂單是否連結至另一個採購訂單作為替代"
 
 #. module: purchase_requisition
@@ -1234,8 +1249,6 @@ msgstr "無法確認採購協定 \"%s\", 因為沒有產品項目。"
 
 #. module: purchase_requisition
 #. odoo-python
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."

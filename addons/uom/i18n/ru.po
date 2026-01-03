@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* uom
-# 
+#
 # Translators:
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2023
@@ -11,41 +11,47 @@
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Wil Odoo, 2024
 # Ilya Rozhkov, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
+"                                    e.g: 1*(reference unit)=ratio*(this "
+"unit)\n"
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    например: 1*(эталонная единица)=отношение*(данная единица)\n"
+"                                    например: 1*(эталонная "
+"единица)=отношение*(данная единица)\n"
 "                                </span>"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
+"                                    e.g: 1*(this unit)=ratio*(reference "
+"unit)\n"
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    например: 1*(данная единица измерения)=отношение*(эталонная единица измерения)\n"
+"                                    например: 1*(данная единица "
+"измерения)=отношение*(эталонная единица измерения)\n"
 "                                </span>"
 
 #. module: uom
@@ -100,9 +106,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Пересчет между единицами измерения может произойти только в том случае, если"
-" они принадлежат к одной и той же категории. Пересчет будет осуществляться "
-"на основе коэффициентов."
+"Пересчет между единицами измерения может произойти только в том случае, если "
+"они принадлежат к одной и той же категории. Пересчет будет осуществляться на "
+"основе коэффициентов."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -243,18 +249,23 @@ msgid ""
 "Some critical fields have been modified on %s.\n"
 "Note that existing data WON'T be updated by this change.\n"
 "\n"
-"As units of measure impact the whole system, this may cause critical issues.\n"
+"As units of measure impact the whole system, this may cause critical "
+"issues.\n"
 "E.g. modifying the rounding could disturb your inventory balance.\n"
 "\n"
-"Therefore, changing core units of measure in a running database is not recommended."
+"Therefore, changing core units of measure in a running database is not "
+"recommended."
 msgstr ""
 "Некоторые критические поля были изменены на %s.\n"
-"Обратите внимание, что существующие данные не будут обновлены этим изменением.\n"
+"Обратите внимание, что существующие данные не будут обновлены этим "
+"изменением.\n"
 "\n"
-"Поскольку единицы измерения влияют на всю систему, это может привести к критическим проблемам.\n"
+"Поскольку единицы измерения влияют на всю систему, это может привести к "
+"критическим проблемам.\n"
 "Например, изменение округления может нарушить баланс запасов.\n"
 "\n"
-"Поэтому не рекомендуется изменять основные единицы измерения в работающей базе данных."
+"Поэтому не рекомендуется изменять основные единицы измерения в работающей "
+"базе данных."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
@@ -280,10 +291,12 @@ msgstr "Коэффициент пересчета для единицы изме
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
-"The following units of measure are used by the system and cannot be deleted: %s\n"
+"The following units of measure are used by the system and cannot be deleted: "
+"%s\n"
 "You can archive them instead."
 msgstr ""
-"Следующие единицы измерения используются системой и не могут быть удалены: %s\n"
+"Следующие единицы измерения используются системой и не могут быть удалены: "
+"%s\n"
 "Вместо этого их можно заархивировать."
 
 #. module: uom
@@ -303,8 +316,8 @@ msgstr "Точность округления должна быть строго
 msgid ""
 "The unit of measure %s defined on the order line doesn't belong to the same "
 "category as the unit of measure %s defined on the product. Please correct "
-"the unit of measure defined on the order line or on the product, they should"
-" belong to the same category."
+"the unit of measure defined on the order line or on the product, they should "
+"belong to the same category."
 msgstr ""
 "Единица измерения %s, определенная в строке заказа, не принадлежит к той же "
 "категории, что и единица измерения %s, определенная в товаре. Пожалуйста, "
@@ -388,8 +401,7 @@ msgstr ""
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
-msgstr ""
-"Категория ЕИ %s должна иметь хотя бы одну эталонную единицу измерения."
+msgstr "Категория ЕИ %s должна иметь хотя бы одну эталонную единицу измерения."
 
 #. module: uom
 #. odoo-python

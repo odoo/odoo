@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_picking_batch
-# 
+#
 # Translators:
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Wil Odoo, 2024
 # Manon Rondou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_picking_batch
@@ -31,8 +31,8 @@ msgstr "20-08-2023"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group "
-"by</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group by</"
+"span>"
 msgstr ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Groeperen "
 "op</span>"
@@ -75,19 +75,23 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Een verplaatsing wordt niet automatisch toegevoegd aan batches die dit aantal regels overschrijden als de verplaatsing eraan wordt toegevoegd.\n"
+"Een verplaatsing wordt niet automatisch toegevoegd aan batches die dit "
+"aantal regels overschrijden als de verplaatsing eraan wordt toegevoegd.\n"
 "Laat deze waarde op '0' staan als er geen lijnlimiet is."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Een verplaatsing wordt niet automatisch toegevoegd aan batches die dit aantal verplaatsingen overschrijden.\n"
+"Een verplaatsing wordt niet automatisch toegevoegd aan batches die dit "
+"aantal verplaatsingen overschrijden.\n"
 "Laat deze waarde op '0' staan als er geen overdrachtslimiet is."
 
 #. module: stock_picking_batch
@@ -646,11 +650,9 @@ msgstr "Picking type"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
-msgid ""
-"Please add 'Done' quantities to the batch picking to create a new pack."
+msgid "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
-"Voeg 'Gereed'-hoeveelheden toe aan de batch om een nieuw verpakking te "
-"maken."
+"Voeg 'Gereed'-hoeveelheden toe aan de batch om een nieuw verpakking te maken."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -735,14 +737,20 @@ msgstr "Geplande datum"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "Geplande datum waarop de verplaatsing moeten worden verwerkt.\n"
-"- Indien handmatig ingesteld, wordt de geplande datum voor alle verplaatsingen in batch automatisch bijgewerkt naar deze datum.\n"
-"- Indien niet handmatig gewijzigd en verplaatsingen worden toegevoegd / verwijderd / bijgewerkt, is dit de vroegste geplande datum\n"
-"maar deze geplande datum wordt niet ingesteld voor alle verplaatsingen in batch."
+"- Indien handmatig ingesteld, wordt de geplande datum voor alle "
+"verplaatsingen in batch automatisch bijgewerkt naar deze datum.\n"
+"- Indien niet handmatig gewijzigd en verplaatsingen worden toegevoegd / "
+"verwijderd / bijgewerkt, is dit de vroegste geplande datum\n"
+"maar deze geplande datum wordt niet ingesteld voor alle verplaatsingen in "
+"batch."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -850,11 +858,13 @@ msgstr "Samenvatting:"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid ""
-"The following transfers cannot be added to batch transfer %s. Please check their states and operation types.\n"
+"The following transfers cannot be added to batch transfer %s. Please check "
+"their states and operation types.\n"
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"De volgende verplaatsingen kunnen niet worden toegevoegd aan de batch %s. Controleer de statussen en bewerkingssoorten.\n"
+"De volgende verplaatsingen kunnen niet worden toegevoegd aan de batch %s. "
+"Controleer de statussen en bewerkingssoorten.\n"
 "\n"
 "Incompatibiliteiten: %s"
 
@@ -862,9 +872,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
 "The goal of the batch transfer is to group operations that may\n"
-"            (needs to) be done together in order to increase their efficiency.\n"
-"            It may also be useful to assign jobs (one person = one batch) or\n"
-"            help the timing management of operations (tasks to be done at 1pm)."
+"            (needs to) be done together in order to increase their "
+"efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) "
+"or\n"
+"            help the timing management of operations (tasks to be done at "
+"1pm)."
 msgstr ""
 "Het doel van batches is om bewerkingen te groeperen die mogelijk samen "
 "(moeten) gedaan worden om de efficiëntie te verhogen. Het kan ook handig "
@@ -874,15 +887,21 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid ""
-"The goal of the wave transfer is to group operations from different transfer\n"
+"The goal of the wave transfer is to group operations from different "
+"transfer\n"
 "                    together in order to increase their efficiency.\n"
-"                    It may also be useful to assign jobs (one person = one batch) or\n"
-"                    help the timing management of operations (tasks to be done at 1pm)."
+"                    It may also be useful to assign jobs (one person = one "
+"batch) or\n"
+"                    help the timing management of operations (tasks to be "
+"done at 1pm)."
 msgstr ""
-"Het doel van de wavepicking is om operaties van verschillende overdrachten te groeperen\n"
+"Het doel van de wavepicking is om operaties van verschillende overdrachten "
+"te groeperen\n"
 "                    samen om hun efficiëntie te verhogen.\n"
-"                    Het kan ook handig zijn om taken toe te wijzen (één persoon = één batch) of\n"
-"                    helpen bij het beheer van de timing van operaties (taken die om 13.00 uur moeten worden uitgevoerd)."
+"                    Het kan ook handig zijn om taken toe te wijzen (één "
+"persoon = één batch) of\n"
+"                    helpen bij het beheer van de timing van operaties (taken "
+"die om 13.00 uur moeten worden uitgevoerd)."
 
 #. module: stock_picking_batch
 #. odoo-python

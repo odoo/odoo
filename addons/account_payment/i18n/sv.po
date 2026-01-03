@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Patrik Lermon <patrik.lermon@gmail.com>, 2023
 # Daniel Forslund <daniel.forslund@gmail.com>, 2023
@@ -14,19 +14,19 @@
 # Kristoffer Grundström <lovaren@gmail.com>, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment
@@ -90,23 +90,30 @@ msgstr "<span class=\"o_stat_text\">Betalningstransaktion</span>"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
 "<strong>No suitable payment method could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please contact the website\n"
+"                                If you believe that it is an error, please "
+"contact the website\n"
 "                                administrator."
 msgstr ""
 "<strong>Ingen lämplig betalningsmetod kunde hittas.</strong><br/>\n"
-"                                Om du tror att det är ett fel, vänligen kontakta webbplatsens\n"
+"                                Om du tror att det är ett fel, vänligen "
+"kontakta webbplatsens\n"
 "                                administratör."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
-"<strong>Varning!</strong> Det finns en återbetalning som väntar på denna betalning.\n"
-"                        Vänta en stund för att den ska behandlas. Om återbetalningen fortfarande är väntande om\n"
-"                        några minuter, vänligen kontrollera din betalningsleverantörs konfiguration."
+"<strong>Varning!</strong> Det finns en återbetalning som väntar på denna "
+"betalning.\n"
+"                        Vänta en stund för att den ska behandlas. Om "
+"återbetalningen fortfarande är väntande om\n"
+"                        några minuter, vänligen kontrollera din "
+"betalningsleverantörs konfiguration."
 
 #. module: account_payment
 #. odoo-python
@@ -422,7 +429,6 @@ msgstr "Leverantör"
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
-#: code:addons/account_payment/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 #, python-format
@@ -526,7 +532,6 @@ msgstr ""
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
-#: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The provided parameters are invalid."
 msgstr "De angivna parametern är felaktiga."
@@ -593,10 +598,12 @@ msgstr "Ogiltig transaktion"
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Du kan inte ta bort en betalningsmetod som är kopplad till en leverantör i aktiverat eller testat tillstånd.\n"
+"Du kan inte ta bort en betalningsmetod som är kopplad till en leverantör i "
+"aktiverat eller testat tillstånd.\n"
 "Länkade leverantör(er): %s"
 
 #. module: account_payment
@@ -607,8 +614,8 @@ msgid ""
 "You cannot uninstall this module as payments using this payment method "
 "already exist."
 msgstr ""
-"Du kan inte avinstallera denna modul eftersom betalningar som använder denna"
-" betalningsmetod redan finns."
+"Du kan inte avinstallera denna modul eftersom betalningar som använder denna "
+"betalningsmetod redan finns."
 
 #. module: account_payment
 #. odoo-python
@@ -618,5 +625,6 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Du måste först inaktivera en betalningsleverantör innan du kan radera dess journal.\n"
+"Du måste först inaktivera en betalningsleverantör innan du kan radera dess "
+"journal.\n"
 "Länkade leverantörer: %s"

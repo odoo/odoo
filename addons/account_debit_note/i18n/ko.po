@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_debit_note
-# 
+#
 # Translators:
 # Wil Odoo, 2023
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_debit_note
@@ -62,6 +62,9 @@ msgstr "작성일자"
 
 #. module: account_debit_note
 #: model:ir.actions.server,name:account_debit_note.action_move_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_invoice_filter_debit
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_filter_debit
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_line_filter_debit
 msgid "Debit Note"
 msgstr "차변전표"
 
@@ -102,7 +105,9 @@ msgstr "비워둘 경우, 차변 분개할 전표를 사용합니다."
 msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
-msgstr "전체 항목을 수정해야 할 경우, 복사하면 간편하게 사용할 수 있습니다. 차변전표에서 대변전표로는 복사할 수 없습니다."
+msgstr ""
+"전체 항목을 수정해야 할 경우, 복사하면 간편하게 사용할 수 있습니다. 차변전표"
+"에서 대변전표로는 복사할 수 없습니다."
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
@@ -188,7 +193,9 @@ msgstr "특정 전표 사용"
 msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
-msgstr "고객용 청구서/대변전표, 공급업체 청구서/대변전표에만 차변전표를 생성할 수 있습니다."
+msgstr ""
+"고객용 청구서/대변전표, 공급업체 청구서/대변전표에만 차변전표를 생성할 수 있"
+"습니다."
 
 #. module: account_debit_note
 #. odoo-python
@@ -202,6 +209,7 @@ msgstr "승인된 전표만 차변 입력할 수 있습니다."
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid ""
-"You can't make a debit note for an invoice that is already linked to a debit"
-" note."
-msgstr "차변전표를 생성할 수 없습니다. 이미 청구서에 차변전표가 연결되어 있습니다."
+"You can't make a debit note for an invoice that is already linked to a debit "
+"note."
+msgstr ""
+"차변전표를 생성할 수 없습니다. 이미 청구서에 차변전표가 연결되어 있습니다."

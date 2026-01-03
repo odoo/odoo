@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:36+0000\n"
-"PO-Revision-Date: 2025-08-20 01:11+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-12-30 10:00+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-17/pos_self_order/zh_Hant/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -206,7 +206,6 @@ msgstr "取消訂單"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 #, python-format
@@ -260,7 +259,6 @@ msgstr "關閉營業點"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #, python-format
 msgid "Combo"
@@ -405,16 +403,19 @@ msgstr "下載二維碼"
 #: code:addons/pos_self_order/models/pos_config.py:0
 #, python-format
 msgid "Each Order"
-msgstr "整張訂單結賬"
+msgstr "每張訂單"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
-"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
 msgstr ""
 "平面圖中的每張餐桌，都會根據你的配置，編配一個獨特的二維碼。\n"
-"                    基於保安理由，所產生網址內的銷售點資料及餐桌名稱，均已加密，如下例所示:."
+"                    基於保安理由，所產生網址內的銷售點資料及餐桌名稱，均已加"
+"密，如下例所示:."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -445,8 +446,8 @@ msgstr "輸入你的自訂值"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Feel free to use and print this QR code as many times as needed according to"
-" your requirements."
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
 msgstr "請根據您的要求,隨意使用和列印此二維碼。"
 
 #. module: pos_self_order
@@ -492,7 +493,8 @@ msgstr "HTTP 路由"
 msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
-msgstr "咦？您似乎忘記建立產品或將其加入至 pos_config。請在使用自助訂購前加入它們"
+msgstr ""
+"咦？您似乎忘記建立產品或將其加入至 pos_config。請在使用自助訂購前加入它們"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -530,11 +532,14 @@ msgstr "如果自助訂購螢幕上有此產品可用"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
 "若需要自訂的二維碼，請先掃瞄相關二維碼以取得網址，\n"
-"                然後使用二維碼產生器，例如 https://www.qrcode-monkey.com 或 https://www.qr-code-generator.com"
+"                然後使用二維碼產生器，例如 https://www.qrcode-monkey.com 或 "
+"https://www.qr-code-generator.com"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -546,7 +551,6 @@ msgstr "自助訂購螢幕上顯示的圖片"
 
 #. module: pos_self_order
 #. odoo-python
-#: code:addons/pos_self_order/models/res_config_settings.py:0
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -753,8 +757,6 @@ msgstr "以新分頁開啟"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #, python-format
 msgid "Order"
 msgstr "訂單"
@@ -925,7 +927,6 @@ msgstr "自助訂購產品描述"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
-#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 #, python-format
 msgid "Product Information"
 msgstr "產品訊息"
@@ -940,7 +941,6 @@ msgstr "產品款式"
 #: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
 #: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
@@ -1037,13 +1037,14 @@ msgstr "安全金鑰"
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid ""
 "Select for which points of sale you want to display this link. Leave empty "
-"to display it for all points of sale. You have to select among the points of"
-" sale that have the 'QR Code Menu' feature enabled."
-msgstr "選擇您想在哪些銷售點顯示此連結。留空以在所有銷售點上顯示。您必須從啟用了「二維碼餐牌」功能的銷售點中進行選擇。"
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
+msgstr ""
+"選擇您想在哪些銷售點顯示此連結。留空以在所有銷售點上顯示。您必須從啟用了「二"
+"維碼餐牌」功能的銷售點中進行選擇。"
 
 #. module: pos_self_order
 #. odoo-python
-#: code:addons/pos_self_order/models/pos_config.py:0
 #: code:addons/pos_self_order/models/pos_config.py:0
 #, python-format
 msgid "Self Kiosk"
@@ -1235,8 +1236,8 @@ msgstr "用戶必須是 POS 用戶"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_alternative_fp_id
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_alternative_fp_id
 msgid ""
-"This is useful for restaurants with onsite and take-away services that imply"
-" specific tax rates."
+"This is useful for restaurants with onsite and take-away services that imply "
+"specific tax rates."
 msgstr "這對於提供具有特定稅率的上門服務和外賣服務的餐廳十分有用。"
 
 #. module: pos_self_order

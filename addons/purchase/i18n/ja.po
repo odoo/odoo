@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:35+0000\n"
+"POT-Creation-Date: 2025-12-29 18:36+0000\n"
 "PO-Revision-Date: 2025-12-27 08:03+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
@@ -28,11 +28,13 @@ msgstr ""
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
 msgid ""
 "\n"
-"                (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or\n"
+"                (object.state in ('draft', 'sent') and 'Request for "
+"Quotation - %s' % (object.name) or\n"
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or\n"
+"                (object.state in ('draft', 'sent') and 'Request for "
+"Quotation - %s' % (object.name) or\n"
 "                'Purchase Order - %s' % (object.name))"
 
 #. module: purchase
@@ -49,7 +51,6 @@ msgstr "%(amount)sは%(date)sに期限切れます"
 
 #. module: purchase
 #. odoo-python
-#: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
@@ -103,16 +104,20 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Here is a reminder that the delivery of the purchase order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Here is a reminder that the delivery of the purchase order <span "
+"style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref "
+"or ''\">REF_XXX</t>)</span>\n"
 "        </t>\n"
 "        is expected for \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">undefined</span>.\n"
@@ -120,7 +125,8 @@ msgid ""
 "        Could you please confirm it will be delivered on time?\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "        <br><br>\n"
 "    </p>\n"
@@ -130,16 +136,21 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>様\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        リマインダ：購買オーダ<span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>の配送\n"
+"        リマインダ：購買オーダ<span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">P00015</span>の配送\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref "
+"or ''\">REF_XXX</t>)</span>\n"
 "        </t>\n"
 "        は\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>の予定です。\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>の予定で"
+"す。\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">定義されていません</span>。\n"
@@ -147,7 +158,8 @@ msgstr ""
 "        予定通りに配送されるかご確認をお願いいたします。\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "        <br><br>\n"
 "    </p>\n"
@@ -160,24 +172,31 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Here is in attachment a purchase order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Here is in attachment a purchase order <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
-"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            The receipt is expected for <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            The receipt is expected for <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "            <br><br>\n"
 "            Could you please acknowledge the receipt of this order?\n"
 "        </t>\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "        <br><br>\n"
 "    </p>\n"
@@ -187,24 +206,32 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "         <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>様\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        購買オーダ<span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        購買オーダ<span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            参照： <t t-out=\"object.partner_ref or ''\">REF_XXX</t>を添付します。\n"
+"            参照： <t t-out=\"object.partner_ref or ''\">REF_XXX</t>を添付し"
+"ます。\n"
 "        </t>\n"
-"        金額は以下です：<span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        金額は以下です：<span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "        <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            入荷は<span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>を予定しています。\n"
+"            入荷は<span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>を予定してい"
+"ます。\n"
 "            <br><br>\n"
 "            このオーダの受領をご確認頂きますようお願いいたします。\n"
 "        </t>\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "        <br><br>\n"
 "    </p>\n"
@@ -217,12 +244,15 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Here is in attachment a request for quotation <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Here is in attachment a request for quotation <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
@@ -231,7 +261,8 @@ msgid ""
 "        Best regards,\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -240,12 +271,15 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>様\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        見積依頼書 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        見積依頼書 <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            参照：<t t-out=\"object.partner_ref or ''\">REF_XXX</t>を添付にてお送りします。\n"
+"            参照：<t t-out=\"object.partner_ref or ''\">REF_XXX</t>を添付にて"
+"お送りします。\n"
 "        </t>\n"
 "        <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
 "        <br><br>\n"
@@ -254,7 +288,8 @@ msgstr ""
 "        よろしくお願いいたします。\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -300,8 +335,8 @@ msgid ""
 "Waiting for Bill</span>"
 msgstr ""
 "<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Waiting for "
-"Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-"
-"inline\">請求書待ち</span>"
+"Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\">請求書"
+"待ち</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -326,7 +361,8 @@ msgstr "<small class=\"text-muted\">購買担当者</small>"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid ""
 "<span class=\"d-none d-md-inline\">Confirmation Date</span>\n"
-"                          <span class=\"d-block d-md-none\">Confirmation</span>"
+"                          <span class=\"d-block d-md-none\">Confirmation</"
+"span>"
 msgstr ""
 "<span class=\"d-none d-md-inline\">確認日</span>\n"
 "                          <span class=\"d-block d-md-none\">確認</span>"
@@ -352,11 +388,15 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">Request for Quotation </span>\n"
-"                        <span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')\">Purchase Order </span>"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Request for Quotation </span>\n"
+"                        <span class=\"o_form_label\" invisible=\"state in "
+"('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">見積依頼</span>\n"
-"                        <span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')\">購買オーダ</span>"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">見"
+"積依頼</span>\n"
+"                        <span class=\"o_form_label\" invisible=\"state in "
+"('draft', 'sent')\">購買オーダ</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -370,8 +410,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reception_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not "
-"mail_reception_confirmed\">(仕入先承認済)</span>"
+"<span class=\"text-muted\" invisible=\"not mail_reception_confirmed\">(仕入先"
+"承認済)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -379,8 +419,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reminder_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not "
-"mail_reminder_confirmed\">(仕入先承認済)</span>"
+"<span class=\"text-muted\" invisible=\"not mail_reminder_confirmed\">(仕入先"
+"承認済)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -527,7 +567,8 @@ msgstr "サンプルメールが%sに送信されました。"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory "
+"app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
@@ -545,7 +586,9 @@ msgstr "プロダクトまたは取引先に警告設定可(購買)"
 msgid ""
 "Ability to select a package type in purchase orders and to force a quantity "
 "that is a multiple of the number of units per package."
-msgstr "購買オーダで梱包の種類を選択でき、梱包あたりの個数の倍数の数量を強制する機能。"
+msgstr ""
+"購買オーダで梱包の種類を選択でき、梱包あたりの個数の倍数の数量を強制する機"
+"能。"
 
 #. module: purchase
 #. odoo-python
@@ -562,7 +605,8 @@ msgstr "アクセス警告"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
@@ -777,7 +821,9 @@ msgstr "受領日を仕入先に自動的に通知します"
 msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
-msgstr "受領予定日のX日前に確認メールをベンダーに自動的に送信し、正確な日付を確認するように依頼します。"
+msgstr ""
+"受領予定日のX日前に確認メールをベンダーに自動的に送信し、正確な日付を確認する"
+"ように依頼します。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -866,9 +912,11 @@ msgstr "カレンダービュー"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
-"Calls for tenders are when you want to generate requests for quotations with"
-" several vendors for a given set of products to compare offers."
-msgstr "入札募集とは、特定のプロダクト一式について複数の仕入先に見積依頼を出し、オファーを比較検討することです。"
+"Calls for tenders are when you want to generate requests for quotations with "
+"several vendors for a given set of products to compare offers."
+msgstr ""
+"入札募集とは、特定のプロダクト一式について複数の仕入先に見積依頼を出し、オ"
+"ファーを比較検討することです。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -937,7 +985,6 @@ msgstr "会社通貨"
 
 #. module: purchase
 #. odoo-python
-#: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid "Compose Email"
@@ -1017,7 +1064,9 @@ msgstr "管理ポリシー"
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr "単位間の変換は同じカテゴリに属している場合のみ可能です。変換は比率に基づいて行われます。"
+msgstr ""
+"単位間の変換は同じカテゴリに属している場合のみ可能です。変換は比率に基づいて"
+"行われます。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__country_code
@@ -1088,7 +1137,6 @@ msgstr "日付カレンダー開始"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
-#: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid "Date Updated"
 msgstr "更新日"
@@ -1132,14 +1180,18 @@ msgstr "取引条件を定義..."
 msgid ""
 "Delivery date expected from vendor. This date respectively defaults to "
 "vendor pricelist lead time then today's date."
-msgstr "ベンダーからの予想納期です。この日付は、それぞれデフォルトでベンダー価格表のリードタイムになり、次に今日の日付になります。"
+msgstr ""
+"ベンダーからの予想納期です。この日付は、それぞれデフォルトでベンダー価格表の"
+"リードタイムになり、次に今日の日付になります。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
 msgid ""
 "Delivery date promised by vendor. This date is used to determine expected "
 "arrival of products."
-msgstr "仕入先が約束した納期。この日付は、プロダクトの入荷予定日を決定するために使用されます。"
+msgstr ""
+"仕入先が約束した納期。この日付は、プロダクトの入荷予定日を決定するために使用"
+"されます。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -1363,14 +1415,18 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
-msgstr "有効にすると、仕入先請求書の3者間照合が有効になります。請求書を支払うには、アイテムを受け取る必要があります。"
+msgstr ""
+"有効にすると、仕入先請求書の3者間照合が有効になります。請求書を支払うには、ア"
+"イテムを受け取る必要があります。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
-msgstr "インストールされている場合、プロダクトバリアントはグリッドエントリを介して発注書に追加されます。"
+msgstr ""
+"インストールされている場合、プロダクトバリアントはグリッドエントリを介して発"
+"注書に追加されます。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_packaging__purchase
@@ -1408,7 +1464,9 @@ msgstr "注文するプロダクトの数量を指定してください。"
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "国際取引条件は国際間の取り引きで使用する、事前に定義された取引条件をまとめたものです。"
+msgstr ""
+"国際取引条件は国際間の取り引きで使用する、事前に定義された取引条件をまとめた"
+"ものです。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1482,12 +1540,12 @@ msgstr "最初の見積依頼を作成しましょう。"
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
-#: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid ""
-"Let's try the Purchase app to manage the flow from purchase to reception and"
-" invoice control."
-msgstr "購入アプリを試して、購入から受付、請求書管理までの流れを管理してみましょう。"
+"Let's try the Purchase app to manage the flow from purchase to reception and "
+"invoice control."
+msgstr ""
+"購入アプリを試して、購入から受付、請求書管理までの流れを管理してみましょう。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
@@ -1548,20 +1606,23 @@ msgstr "手動受領数量"
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_lead
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for procuring products, they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for procuring products, they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
-"仕入先のリードタイムの "
-"許容誤差。システムがプロダクトを調達するための発注書を生成するとき、予期しない仕入先の遅延に対処するために、それらは何日も前にスケジュールされます。"
+"仕入先のリードタイムの 許容誤差。システムがプロダクトを調達するための発注書を"
+"生成するとき、予期しない仕入先の遅延に対処するために、それらは何日も前にスケ"
+"ジュールされます。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
-"仕入先のリードタイムの​​許容誤差。システムがプロダクトを再オーダするための発注書を生成するとき、予期しない仕入先の遅延に対処するために、それらは何日も前にスケジュールされます。"
+"仕入先のリードタイムの​​許容誤差。システムがプロダクトを再オーダするための発注"
+"書を生成するとき、予期しない仕入先の遅延に対処するために、それらは何日も前に"
+"スケジュールされます。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -1777,7 +1838,9 @@ msgstr "オーダ数量に基づく"
 msgid ""
 "On ordered quantities: Control bills based on ordered quantities.\n"
 "On received quantities: Control bills based on received quantities."
-msgstr "注文数量について:注文数量に基づいて請求書を管理します。入庫数量について：入庫数量に基づいて請求書を管理します。"
+msgstr ""
+"注文数量について:注文数量に基づいて請求書を管理します。入庫数量について：入庫"
+"数量に基づいて請求書を管理します。"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__receive
@@ -1791,14 +1854,16 @@ msgstr "入荷数量に基づく"
 msgid ""
 "Once you get the price from the vendor, you can complete the purchase order "
 "with the right price."
-msgstr "ベンダーから価格を入手したら、適切な価格で注文書を完成させることができます。"
+msgstr ""
+"ベンダーから価格を入手したら、適切な価格で注文書を完成させることができます。"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "Once you ordered your products to your supplier, confirm your request for "
 "quotation and it will turn into a purchase order."
-msgstr "仕入先にプロダクトをオーダして見積依頼を確定すると、購買オーダになります。"
+msgstr ""
+"仕入先にプロダクトをオーダして見積依頼を確定すると、購買オーダになります。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
@@ -2031,7 +2096,6 @@ msgstr "購買履歴"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
-#: code:addons/purchase/models/product.py:0
 #: code:addons/purchase/models/purchase_order_line.py:0
 #, python-format
 msgid "Purchase History for %s"
@@ -2046,7 +2110,6 @@ msgstr "購買リードタイム"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
-#: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/models/purchase_order.py:0
 #: model:ir.actions.report,name:purchase.action_report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
@@ -2235,7 +2298,9 @@ msgstr "Purchases&Bills Union"
 msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
-msgstr "ベンダーから顧客に直接配達する場合は、住所を入力してください。それ以外の場合は、空のままにして自分の会社に配達します。"
+msgstr ""
+"ベンダーから顧客に直接配達する場合は、住所を入力してください。それ以外の場合"
+"は、空のままにして自分の会社に配達します。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_billed
@@ -2407,8 +2472,8 @@ msgstr "基準単位"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__origin
 msgid ""
-"Reference of the document that generated this purchase order request (e.g. a"
-" sales order)"
+"Reference of the document that generated this purchase order request (e.g. a "
+"sales order)"
 msgstr "この購買オーダ要求を生成したドキュメントの参照（例:販売オーダ）"
 
 #. module: purchase
@@ -2418,7 +2483,9 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
-"ベンダーから送信された受注または入札の参照。この参照は通常、ベンダーから送信された配送注文に記載されているため、製品を受け取ったときに照合を行うために使用されます。"
+"ベンダーから送信された受注または入札の参照。この参照は通常、ベンダーから送信"
+"された配送注文に記載されているため、製品を受け取ったときに照合を行うために使"
+"用されます。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reminder_confirmed
@@ -2468,10 +2535,14 @@ msgstr "見積依頼"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
 msgid ""
-"Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.\n"
-"                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
+"Requests for quotation are documents that will be sent to your suppliers to "
+"request prices for different products you consider buying.\n"
+"                Once an agreement has been found with the supplier, they "
+"will be confirmed and turned into purchase orders."
 msgstr ""
-"見積依頼は、購入を検討しているさまざまな製品の価格見積を依頼するためにサプライヤに送られるドキュメントです。サプライヤと合意が取れると、見積依頼は確認され、発注書に変換されます。"
+"見積依頼は、購入を検討しているさまざまな製品の価格見積を依頼するためにサプラ"
+"イヤに送られるドキュメントです。サプライヤと合意が取れると、見積依頼は確認さ"
+"れ、発注書に変換されます。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -2549,7 +2620,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"警告オプションを選択するとユーザにメッセージを通知します。メッセージをブロックを選択するとメッセージとともに例外が発生しその流れがブロックされます。メッセージは次の項目で記述する必要があります。"
+"警告オプションを選択するとユーザにメッセージを通知します。メッセージをブロッ"
+"クを選択するとメッセージとともに例外が発生しその流れがブロックされます。メッ"
+"セージは次の項目で記述する必要があります。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2583,7 +2656,6 @@ msgstr "メッセージ送信"
 
 #. module: purchase
 #. odoo-javascript
-#: code:addons/purchase/static/src/js/tours/purchase.js:0
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Send the request for quotation to your vendor."
@@ -2774,7 +2846,9 @@ msgstr "UXの目的のためのテクニカルフィールド。"
 msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
-msgstr "税法上の居住地国及び会計ポジションによって使用可能な税を絞り込む用の技術フィールド。"
+msgstr ""
+"税法上の居住地国及び会計ポジションによって使用可能な税を絞り込む用の技術"
+"フィールド。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -2806,9 +2880,12 @@ msgstr "オーダ入荷が%sによって確認されました。"
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
-"                    converted into a purchase order, you will be able to control the receipt\n"
+"                    converted into a purchase order, you will be able to "
+"control the receipt\n"
 "                    of the products and the vendor bill."
-msgstr "見積依頼は、購買フローの最初のステップです。購買オーダに変換されると、プロダクトの入荷と仕入先の請求書を管理できるようになります。"
+msgstr ""
+"見積依頼は、購買フローの最初のステップです。購買オーダに変換されると、プロダ"
+"クトの入荷と仕入先の請求書を管理できるようになります。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -2827,13 +2904,17 @@ msgstr "現在、アカウントに見積依頼はありません。"
 msgid ""
 "There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
-msgstr "請求可能な行はありません。プロダクトに入荷数量に基づく管理ポリシーがある場合は、数量が入荷されていることを確認してください。"
+msgstr ""
+"請求可能な行はありません。プロダクトに入荷数量に基づく管理ポリシーがある場合"
+"は、数量が入荷されていることを確認してください。"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
 msgid ""
-"This analysis allows you to easily check and analyse your company purchase history and performance.\n"
-"                You can track your negotiation performance, the delivery performance of your vendors, etc"
+"This analysis allows you to easily check and analyse your company purchase "
+"history and performance.\n"
+"                You can track your negotiation performance, the delivery "
+"performance of your vendors, etc"
 msgstr ""
 "この分析により、貴社の購買履歴や実績を簡単に確認・分析することができます。\n"
 "                交渉の実績や仕入先の配送実績などを追跡することができます。"
@@ -2844,7 +2925,9 @@ msgstr ""
 msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
-msgstr "この通貨は、現在のパートナーからの購入に、デフォルトの通貨の代わりに使用されます"
+msgstr ""
+"この通貨は、現在のパートナーからの購入に、デフォルトの通貨の代わりに使用され"
+"ます"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__default_purchase_method
@@ -2852,7 +2935,9 @@ msgstr "この通貨は、現在のパートナーからの購入に、デフォ
 msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
-msgstr "このデフォルト値は、作成されたすべての新製品に適用されます。これは、製品詳細フォームで変更できます。"
+msgstr ""
+"このデフォルト値は、作成されたすべての新製品に適用されます。これは、製品詳細"
+"フォームで変更できます。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2867,8 +2952,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
 "purchase %(quantity).2f %(unit)s."
 msgstr ""
-"このプロダクトは%(pack_size).2f %(pack_name)sによって梱包されています。 %(quantity).2f "
-"%(unit)sを購買する必要があります。"
+"このプロダクトは%(pack_size).2f %(pack_name)sによって梱包されています。 "
+"%(quantity).2f %(unit)sを購買する必要があります。"
 
 #. module: purchase
 #. odoo-python
@@ -2985,7 +3070,9 @@ msgstr "記録上の例外活動の種類。"
 msgid ""
 "Unable to cancel this purchase order. You must first cancel the related "
 "vendor bills."
-msgstr "この購買オーダを取消できません。最初に、関連する仕入先請求を取消する必要があります。"
+msgstr ""
+"この購買オーダを取消できません。最初に、関連する仕入先請求を取消する必要があ"
+"ります。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
@@ -3131,7 +3218,8 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
-"仕入先請求書は、発注書または領収書に基づいて事前に生成できます。これにより、Odooのドラフト文書に従って、ベンダーから受け取る請求書を管理できます。"
+"仕入先請求書は、発注書または領収書に基づいて事前に生成できます。これにより、"
+"Odooのドラフト文書に従って、ベンダーから受け取る請求書を管理できます。"
 
 #. module: purchase
 #. odoo-python
@@ -3218,11 +3306,15 @@ msgid ""
 "When creating a purchase order, have a look at the vendor's <i>On Time "
 "Delivery</i> rate: the percentage of products shipped on time. If it is too "
 "low, activate the <i>automated reminders</i>. A few days before the due "
-"shipment, Odoo will send the vendor an email to ask confirmation of shipment"
-" dates and keep you informed in case of any delays. To get the vendor's "
+"shipment, Odoo will send the vendor an email to ask confirmation of shipment "
+"dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
-"購買オーダを作成するときは、仕入先の<i>納期厳守</i>率（納期どおりに出荷されたプロダクトの割合）を確認してください。低すぎる場合は、<i>自動リマインダ</i>を有効にします。出荷予定日の数日前にOdooは仕入先にEメールを送信して、出荷日の確認を求め、遅延が発生した場合に通知します。仕入先の実績統計を取得するには、OTDレートをクリックします。"
+"購買オーダを作成するときは、仕入先の<i>納期厳守</i>率（納期どおりに出荷された"
+"プロダクトの割合）を確認してください。低すぎる場合は、<i>自動リマインダ</i>を"
+"有効にします。出荷予定日の数日前にOdooは仕入先にEメールを送信して、出荷日の確"
+"認を求め、遅延が発生した場合に通知します。仕入先の実績統計を取得するには、OTD"
+"レートをクリックします。"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -3232,13 +3324,17 @@ msgid ""
 "clicking on a button in the email, the information is added on the purchase "
 "order. Use filters to track orders that have not been acknowledged."
 msgstr ""
-"電子メールで注文書を送信する場合、Odooはベンダーに注文の受領を確認するように依頼します。ベンダーが電子メールのボタンをクリックして注文を確認すると、その情報が注文書に追加されます。フィルタを使用して、確認されていない注文を追跡します。"
+"電子メールで注文書を送信する場合、Odooはベンダーに注文の受領を確認するように"
+"依頼します。ベンダーが電子メールのボタンをクリックして注文を確認すると、その"
+"情報が注文書に追加されます。フィルタを使用して、確認されていない注文を追跡し"
+"ます。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
-msgstr "ベンダーは、名前、TIN、電子メール、または内部参照で見つけることができます。"
+msgstr ""
+"ベンダーは、名前、TIN、電子メール、または内部参照で見つけることができます。"
 
 #. module: purchase
 #. odoo-python
@@ -3247,7 +3343,9 @@ msgstr "ベンダーは、名前、TIN、電子メール、または内部参照
 msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
-msgstr "注文書行のタイプを変更することはできません。代わりに、現在の行を削除して、適切なタイプの新しい行を作成する必要があります。"
+msgstr ""
+"注文書行のタイプを変更することはできません。代わりに、現在の行を削除して、適"
+"切なタイプの新しい行を作成する必要があります。"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -3272,11 +3370,15 @@ msgstr ""
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
-"見積書には会社%(product_company)sのプロダクトが含まれていますが、見積書は会社%(quote_company)sに属しています。\n"
-"見積書の 会社を変更するか、他の会社からプロダクトを削除してください(%(bad_products)s)。"
+"見積書には会社%(product_company)sのプロダクトが含まれていますが、見積書は会"
+"社%(quote_company)sに属しています。\n"
+"見積書の 会社を変更するか、他の会社からプロダクトを削除してください"
+"(%(bad_products)s)。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order

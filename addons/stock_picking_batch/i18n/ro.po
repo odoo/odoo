@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_picking_batch
-# 
+#
 # Translators:
 # Claudia Baisan, 2024
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2024
@@ -13,20 +13,21 @@
 # Lyall Kindmurr, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2025
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -36,8 +37,8 @@ msgstr "2023-08-20"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group "
-"by</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group by</"
+"span>"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -78,19 +79,23 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Un transfer nu va fi adăugat automat la loturi care vor depăși acest număr de linii dacă transferul este adăugat.\n"
+"Un transfer nu va fi adăugat automat la loturi care vor depăși acest număr "
+"de linii dacă transferul este adăugat.\n"
 "Lăsați această valoare '0' dacă nu există limită de linii."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Un transfer nu va fi adăugat automat la loturi care vor depăși acest număr de transferuri.\n"
+"Un transfer nu va fi adăugat automat la loturi care vor depăși acest număr "
+"de transferuri.\n"
 "Lăsați această valoare '0' dacă nu există limită de transferuri."
 
 #. module: stock_picking_batch
@@ -649,8 +654,7 @@ msgstr "Tip ridicare"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
-msgid ""
-"Please add 'Done' quantities to the batch picking to create a new pack."
+msgid "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
 "Vă rugăm să adăugați cantitățile 'Efectuate' la preluarea în lot pentru a "
 "crea un nou pachet."
@@ -738,13 +742,20 @@ msgstr "Dată planificată"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "Data planificată pentru procesarea transferurilor.\n"
-"- Dacă este setată manual, data planificată pentru toate transferurile în lot se va actualiza automat la această dată.\n"
-"- Dacă nu sunt modificate manual și transferurile sunt adăugate/eliminate/actualizate, aceasta va fi cea mai devreme dată planificată a acestora dar această dată planificată nu va fi stabilită pentru toate transferurile în lot."
+"- Dacă este setată manual, data planificată pentru toate transferurile în "
+"lot se va actualiza automat la această dată.\n"
+"- Dacă nu sunt modificate manual și transferurile sunt adăugate/eliminate/"
+"actualizate, aceasta va fi cea mai devreme dată planificată a acestora dar "
+"această dată planificată nu va fi stabilită pentru toate transferurile în "
+"lot."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -779,8 +790,7 @@ msgstr "Afișare buton setare cantitate"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Afișați toate înregistrările care au data următoarei acțiuni în trecut"
+msgstr "Afișați toate înregistrările care au data următoarei acțiuni în trecut"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
@@ -853,11 +863,13 @@ msgstr "Sumar:"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid ""
-"The following transfers cannot be added to batch transfer %s. Please check their states and operation types.\n"
+"The following transfers cannot be added to batch transfer %s. Please check "
+"their states and operation types.\n"
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"Următoarele transferuri nu pot fi adăugate la transferul în lot %s. Vă rugăm să verificați stările și tipurile de operațiuni.\n"
+"Următoarele transferuri nu pot fi adăugate la transferul în lot %s. Vă rugăm "
+"să verificați stările și tipurile de operațiuni.\n"
 "\n"
 "Incompatibilități: %s"
 
@@ -865,22 +877,30 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
 "The goal of the batch transfer is to group operations that may\n"
-"            (needs to) be done together in order to increase their efficiency.\n"
-"            It may also be useful to assign jobs (one person = one batch) or\n"
-"            help the timing management of operations (tasks to be done at 1pm)."
+"            (needs to) be done together in order to increase their "
+"efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) "
+"or\n"
+"            help the timing management of operations (tasks to be done at "
+"1pm)."
 msgstr ""
 "Scopul acestui transfer de lot este de a grupa operațiile care ar putea\n"
 "(trebuie să) realizate împreună pentru a le spori eficiența.\n"
-"De asemenea, poate fi util să atribuiți locuri de muncă ( o persoană = un lot) sau\n"
-"ajută la gestionarea cronologică a operațiunilor (sarcini să fie făcute la 1pm)"
+"De asemenea, poate fi util să atribuiți locuri de muncă ( o persoană = un "
+"lot) sau\n"
+"ajută la gestionarea cronologică a operațiunilor (sarcini să fie făcute la "
+"1pm)"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid ""
-"The goal of the wave transfer is to group operations from different transfer\n"
+"The goal of the wave transfer is to group operations from different "
+"transfer\n"
 "                    together in order to increase their efficiency.\n"
-"                    It may also be useful to assign jobs (one person = one batch) or\n"
-"                    help the timing management of operations (tasks to be done at 1pm)."
+"                    It may also be useful to assign jobs (one person = one "
+"batch) or\n"
+"                    help the timing management of operations (tasks to be "
+"done at 1pm)."
 msgstr ""
 
 #. module: stock_picking_batch

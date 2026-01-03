@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_project
-# 
+#
 # Translators:
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2023
 # alenafairy, 2023
@@ -14,20 +14,22 @@
 # Nadia Martynova, 2024
 # Wil Odoo, 2025
 # Anastasiia Koroleva, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:38+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: sale_project
 #. odoo-python
@@ -38,7 +40,8 @@ msgid ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    No milestones found. Let's create one!\n"
 "                </p><p>\n"
-"                    Track major progress points that must be reached to achieve success.\n"
+"                    Track major progress points that must be reached to "
+"achieve success.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -46,7 +49,8 @@ msgstr ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Не найдено ни одной вехи. Давайте создадим одну!\n"
 "                </p><p>\n"
-"                    Отслеживайте основные моменты, которые необходимо достичь для достижения успеха.\n"
+"                    Отслеживайте основные моменты, которые необходимо "
+"достичь для достижения успеха.\n"
 "                </p>\n"
 "            "
 
@@ -77,14 +81,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span> Sales Order\n"
+"                            <span class=\"o_stat_value\">0</span> Sales "
+"Order\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                           <span class=\"o_stat_value\">0</span> Заказ на продажу\n"
+"                           <span class=\"o_stat_value\">0</span> Заказ на "
+"продажу\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            Выставить счет\n"
@@ -116,16 +122,22 @@ msgstr "<span>)</span>"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"В соответствии с конфигурацией продукта, количество поставляемого товара может быть автоматически рассчитано механизмом:\n"
+"В соответствии с конфигурацией продукта, количество поставляемого товара "
+"может быть автоматически рассчитано механизмом:\n"
 "  - Ручной: количество задается вручную на линии\n"
-"  - Аналитический из затрат: количество - это сумма количества из размещенных затрат\n"
-"  - Из таймшетов: количество - это сумма часов, записанных в заданиях, связанных с данной линией продаж\n"
+"  - Аналитический из затрат: количество - это сумма количества из "
+"размещенных затрат\n"
+"  - Из таймшетов: количество - это сумма часов, записанных в заданиях, "
+"связанных с данной линией продаж\n"
 "  - Движение запасов: количество берется из подтвержденной выборки\n"
 
 #. module: sale_project
@@ -280,9 +292,8 @@ msgstr ""
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
-"Invoice ordered quantities as soon as this service is sold. Create a project"
-" for the order with a task for each sales order line to track the time "
-"spent."
+"Invoice ordered quantities as soon as this service is sold. Create a project "
+"for the order with a task for each sales order line to track the time spent."
 msgstr ""
 "Выставляйте счета за заказанные объемы, как только услуга будет продана. "
 "Создайте проект для этого заказа с задачей для каждой строки заказа на "
@@ -293,8 +304,8 @@ msgstr ""
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
-"Invoice ordered quantities as soon as this service is sold. Create a task in"
-" an existing project to track the time spent."
+"Invoice ordered quantities as soon as this service is sold. Create a task in "
+"an existing project to track the time spent."
 msgstr ""
 "Выставляйте счета за заказанные объемы, как только услуга будет продана. "
 "Создайте задачу в существующем проекте, чтобы отслеживать потраченное время."
@@ -308,8 +319,7 @@ msgid ""
 "project for the order to track the time spent."
 msgstr ""
 "Выставляйте счета за заказанные объемы, как только услуга будет продана. "
-"Создайте пустой проект для этого заказа, чтобы отслеживать потраченное "
-"время."
+"Создайте пустой проект для этого заказа, чтобы отслеживать потраченное время."
 
 #. module: sale_project
 #. odoo-python
@@ -378,8 +388,8 @@ msgid ""
 "order with a task for each sales order line to track the time spent."
 msgstr ""
 "Выставляйте счета по достижении основных этапов. Создайте проект для заказа "
-"с задачей для каждой строки заказа на продажу, чтобы отслеживать потраченное"
-" время."
+"с задачей для каждой строки заказа на продажу, чтобы отслеживать потраченное "
+"время."
 
 #. module: sale_project
 #. odoo-python
@@ -419,7 +429,6 @@ msgstr "Счёт-фактура выставлена"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
-#: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Invoices"
 msgstr "Счета"
@@ -450,13 +459,19 @@ msgstr "Загрузить больше"
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
 #: model:ir.model.fields,help:sale_project.field_product_template__service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
 msgstr ""
-"Ручная установка количества в заказе: счет-фактура на основе введенного вручную количества, без создания аналитической учетной записи.\n"
-"Расписания по контракту: счет-фактура на основе отслеживаемых часов в соответствующем расписании.\n"
-"Создание задач и отслеживание часов: создание задачи по проверке заказа клиента и отслеживание рабочего времени."
+"Ручная установка количества в заказе: счет-фактура на основе введенного "
+"вручную количества, без создания аналитической учетной записи.\n"
+"Расписания по контракту: счет-фактура на основе отслеживаемых часов в "
+"соответствующем расписании.\n"
+"Создание задач и отслеживание часов: создание задачи по проверке заказа "
+"клиента и отслеживание рабочего времени."
 
 #. module: sale_project
 #. odoo-python
@@ -522,11 +537,17 @@ msgstr "Количество проектов"
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,help:sale_project.field_product_template__service_tracking
 msgid ""
-"On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
-"         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
+"On Sales order confirmation, this product can generate a project and/or "
+"task.         From those, you can track the service you are selling.\n"
+"         'In sale order's project': Will use the sale order's configured "
+"project if defined or fallback to         creating a new project based on "
+"the selected template."
 msgstr ""
-"При подтверждении заказа на продажу этот продукт может генерировать проект и/или задачу.         На их основе вы можете отслеживать продаваемую услугу.\n"
-"         'В проекте заказа на продажу': Будет использовать настроенный проект заказа на продажу, если он определен, или вернется к созданию нового проекта на основе выбранного шаблона."
+"При подтверждении заказа на продажу этот продукт может генерировать проект и/"
+"или задачу.         На их основе вы можете отслеживать продаваемую услугу.\n"
+"         'В проекте заказа на продажу': Будет использовать настроенный "
+"проект заказа на продажу, если он определен, или вернется к созданию нового "
+"проекта на основе выбранного шаблона."
 
 #. module: sale_project
 #. odoo-python
@@ -538,11 +559,11 @@ msgstr "Другие услуги"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
 msgid ""
-"Percentage of the ordered quantity that will automatically be delivered once"
-" the milestone is reached."
+"Percentage of the ordered quantity that will automatically be delivered once "
+"the milestone is reached."
 msgstr ""
-"Процент от заказанного количества, которое будет автоматически доставлено по"
-" достижении контрольной точки."
+"Процент от заказанного количества, которое будет автоматически доставлено по "
+"достижении контрольной точки."
 
 #. module: sale_project
 #. odoo-python
@@ -701,18 +722,27 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
 msgid ""
-"Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
-"By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
-"Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
+"Sales Order Item to which the time spent on this task will be added in order "
+"to be invoiced to your customer.\n"
+"By default the sales order item set on the project will be selected. In the "
+"absence of one, the last prepaid sales order item that has time remaining "
+"will be used.\n"
+"Remove the sales order item in order to make this task non billable. You can "
+"also change or remove the sales order item of each timesheet entry "
+"individually."
 msgstr ""
-"Пункт заказа на продажу, в который будет добавлено время, потраченное на выполнение этой задачи, чтобы выставить счет заказчику.\n"
-"По умолчанию будет выбран пункт заказа на продажу, установленный в проекте. При отсутствии такового будет использован последний предоплаченный элемент заказа на продажу, у которого осталось время.\n"
-"Чтобы сделать эту задачу неоплачиваемой, удалите элемент заказа на продажу. Вы также можете изменить или удалить пункт заказа на продажу для каждой записи табеля учета рабочего времени в отдельности."
+"Пункт заказа на продажу, в который будет добавлено время, потраченное на "
+"выполнение этой задачи, чтобы выставить счет заказчику.\n"
+"По умолчанию будет выбран пункт заказа на продажу, установленный в проекте. "
+"При отсутствии такового будет использован последний предоплаченный элемент "
+"заказа на продажу, у которого осталось время.\n"
+"Чтобы сделать эту задачу неоплачиваемой, удалите элемент заказа на продажу. "
+"Вы также можете изменить или удалить пункт заказа на продажу для каждой "
+"записи табеля учета рабочего времени в отдельности."
 
 #. module: sale_project
 #. odoo-javascript
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
@@ -734,11 +764,18 @@ msgstr "Заказы на продажу"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
 msgid ""
-"Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
-"It can be modified on each task and timesheet entry individually if necessary."
+"Sales order item that will be selected by default on the tasks and "
+"timesheets of this project, except if the employee set on the timesheets is "
+"explicitely linked to another sales order item on the project.\n"
+"It can be modified on each task and timesheet entry individually if "
+"necessary."
 msgstr ""
-"Пункт заказа на продажу, который будет выбран по умолчанию в задачах и табелях учета рабочего времени данного проекта, за исключением случаев, когда сотрудник, указанный в табеле учета рабочего времени, явно связан с другим пунктом заказа на продажу в данном проекте.\n"
-"При необходимости его можно изменить в каждой задаче и табеле учета рабочего времени отдельно."
+"Пункт заказа на продажу, который будет выбран по умолчанию в задачах и "
+"табелях учета рабочего времени данного проекта, за исключением случаев, "
+"когда сотрудник, указанный в табеле учета рабочего времени, явно связан с "
+"другим пунктом заказа на продажу в данном проекте.\n"
+"При необходимости его можно изменить в каждой задаче и табеле учета рабочего "
+"времени отдельно."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -922,7 +959,6 @@ msgstr "Счет поставщика"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Vendor Bills"

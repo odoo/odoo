@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
@@ -34,18 +34,24 @@ msgstr ""
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__badge_ids
-msgid "All employee badges, linked to the employee either directly or through the user"
-msgstr "Ажилтанд шууд эсвэл хэрэглэгчээр дамжин холбогдсон ажилтны бүх медалиуд"
+msgid ""
+"All employee badges, linked to the employee either directly or through the "
+"user"
+msgstr ""
+"Ажилтанд шууд эсвэл хэрэглэгчээр дамжин холбогдсон ажилтны бүх медалиуд"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
-"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
-"                    The goals are created for the specified users or member of the group."
+"                    The challenge can use a period (weekly, monthly...) for "
+"automatic creation of goals.\n"
+"                    The goals are created for the specified users or member "
+"of the group."
 msgstr ""
 "Хэрэглэгчдийг үнэлэх зорилгоор зорилгын жагсаалтыг онооно. \n"
-"Сорилт нь зорилтуудыг автоматаар үүсгэхээр мөчлөгүүдийг (7 хоногоор, сараар...) хэрэглэж болно. \n"
+"Сорилт нь зорилтуудыг автоматаар үүсгэхээр мөчлөгүүдийг (7 хоногоор, "
+"сараар...) хэрэглэж болно. \n"
 "Зорилго нь хэрэглэгчдэд тусгайлан эсвэл бүлгэмд үүсгэгдэж болно."
 
 #. module: hr_gamification
@@ -57,8 +63,11 @@ msgstr "Медаль"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr "Медаль нь ямарваа сайн ажлын шагнал юм. Медалийг хүртэх ёстой гэж үзсэн хүмүүстээ өгнө үү."
+msgid ""
+"Badges are rewards of good work. Give them to people you believe deserve it."
+msgstr ""
+"Медаль нь ямарваа сайн ажлын шагнал юм. Медалийг хүртэх ёстой гэж үзсэн "
+"хүмүүстээ өгнө үү."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
@@ -97,7 +106,9 @@ msgstr ""
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Describe what they did and why it matters (will be public)"
-msgstr "Тэд юу хийсэн болон яагаад хэрэгтэй болох талаар тайлбарла (нийтэд ил байх болно)"
+msgstr ""
+"Тэд юу хийсэн болон яагаад хэрэгтэй болох талаар тайлбарла (нийтэд ил байх "
+"болно)"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__direct_badge_ids
@@ -188,11 +199,6 @@ msgid "Received Badges"
 msgstr "Хүлээн авсан медалиуд"
 
 #. module: hr_gamification
-#: model:ir.model.fields,help:hr_gamification.field_gamification_badge_user_wizard__user_id
-msgid "Related user name for the resource to manage its access."
-msgstr "Нөөцөд хандах эрх бүхий холбогдох хэрэглэгчийн нэр"
-
-#. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee"
@@ -204,6 +210,7 @@ msgid "Reward Employee with"
 msgstr "Ажилтныг шагнах"
 
 #. module: hr_gamification
+#. odoo-python
 #: code:addons/hr_gamification/models/gamification.py:0
 #, python-format
 msgid "The selected employee does not correspond to the selected user."
@@ -221,19 +228,22 @@ msgid "What are you thankful for?"
 msgstr "Та юунд талархаж байгаа вэ?"
 
 #. module: hr_gamification
+#. odoo-python
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can not send a badge to yourself."
 msgstr ""
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
-#, python-format
-msgid "You can send badges only to employees linked to a user."
-msgstr "Та зөвхөн хэрэглэгчтэй холбогдсон ажилчинд л медаль илгээх боломжтой."
-
-#. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "to reward this employee for a good action"
 msgstr "энэ ажилтныг сайн үйлийн төлөө шагнах"
+
+#~ msgid "Related user name for the resource to manage its access."
+#~ msgstr "Нөөцөд хандах эрх бүхий холбогдох хэрэглэгчийн нэр"
+
+#, python-format
+#~ msgid "You can send badges only to employees linked to a user."
+#~ msgstr ""
+#~ "Та зөвхөн хэрэглэгчтэй холбогдсон ажилчинд л медаль илгээх боломжтой."

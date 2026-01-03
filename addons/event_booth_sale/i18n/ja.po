@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_booth_sale
-# 
+#
 # Translators:
 # Wil Odoo, 2023
 # Junko Augias, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: event_booth_sale
@@ -29,12 +29,15 @@ msgstr "<span class=\"o_stat_text\">販売オーダ</span>"
 #: model:ir.model.fields,help:event_booth_sale.field_product_product__detailed_type
 #: model:ir.model.fields,help:event_booth_sale.field_product_template__detailed_type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory "
+"app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"在庫可能品は在庫管理対象のプロダクトです。在庫アプリのインストールが必要です。\n"
-"消耗品は移動処理の対象ではあるものの、厳密な在庫管理対象ではないプロダクトです。\n"
+"在庫可能品は在庫管理対象のプロダクトです。在庫アプリのインストールが必要で"
+"す。\n"
+"消耗品は移動処理の対象ではあるものの、厳密な在庫管理対象ではないプロダクトで"
+"す。\n"
 "サービスは物理的に存在しないプロダクトです。"
 
 #. module: event_booth_sale
@@ -257,7 +260,9 @@ msgstr "保留中ブース"
 msgid ""
 "Please make sure all your event-booth related lines are configured before "
 "confirming this order:%s"
-msgstr "このオーダを確定する前に、イベントブース関連の全ての回線が設定されていることを確認して下さい:%s"
+msgstr ""
+"このオーダを確定する前に、イベントブース関連の全ての回線が設定されていること"
+"を確認して下さい:%s"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__price
@@ -311,7 +316,8 @@ msgstr "参加者"
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
 #, python-format
 msgid "Registrations from the same Order Line must belong to a single event."
-msgstr "同じオーダ明細からの登録は、1つのイベントに属するものである必要があります。"
+msgstr ""
+"同じオーダ明細からの登録は、1つのイベントに属するものである必要があります。"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_line_registration_ids
@@ -384,6 +390,5 @@ msgstr "少なくとも1つのブースを選択して下さい。"
 #: code:addons/event_booth_sale/models/event_booth_registration.py:0
 #, python-format
 msgid ""
-"Your order has been cancelled because the following booths have been "
-"reserved"
+"Your order has been cancelled because the following booths have been reserved"
 msgstr "以下のブースは予約済のため、オーダは取消されました。"

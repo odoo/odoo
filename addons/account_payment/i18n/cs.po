@@ -1,27 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Ivana Bartonkova, 2023
 # Tomáš Píšek, 2023
 # Jakub Smolka, 2024
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -84,23 +85,29 @@ msgstr "<span class=\"o_stat_text\">Platební transakce</span>"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
 "<strong>No suitable payment method could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please contact the website\n"
+"                                If you believe that it is an error, please "
+"contact the website\n"
 "                                administrator."
 msgstr ""
 "<strong>Nelze nalézt žádnou vhodnou platební metodu.</strong><br/>\n"
-"                                Pokud jste přesvědčeni, že se jedná o chybu, kontaktujte prosím správce\n"
+"                                Pokud jste přesvědčeni, že se jedná o chybu, "
+"kontaktujte prosím správce\n"
 "                                webu."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>Varování!</strong> Existuje čekající refundace k této platbě.\n"
-"                        Počkejte chvíli na její zpracování. Pokud bude refundace\n"
-"                       za pár minut stále čekat, zkontrolujte nastavení svého poskytovatele plateb."
+"                        Počkejte chvíli na její zpracování. Pokud bude "
+"refundace\n"
+"                       za pár minut stále čekat, zkontrolujte nastavení "
+"svého poskytovatele plateb."
 
 #. module: account_payment
 #. odoo-python
@@ -232,7 +239,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"V testovacím režimu je zpracována falešná platba v rámci testovacího rozhraní platby.\n"
+"V testovacím režimu je zpracována falešná platba v rámci testovacího "
+"rozhraní platby.\n"
 "Tento režim je doporučen při úvodním nastavování poskytovatele plateb."
 
 #. module: account_payment
@@ -412,7 +420,6 @@ msgstr "Poskytovatel"
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
-#: code:addons/account_payment/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 #, python-format
@@ -513,7 +520,6 @@ msgstr ""
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
-#: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The provided parameters are invalid."
 msgstr "Zadané parametry nejsou platné."
@@ -576,10 +582,12 @@ msgstr "Zrušit transakci"
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Nemůžete odstranit platební metodu, která je napojena na poskytovatele v produkčním nebo testovacím režimu.\n"
+"Nemůžete odstranit platební metodu, která je napojena na poskytovatele v "
+"produkčním nebo testovacím režimu.\n"
 "Související poskytovatel(é): %s"
 
 #. module: account_payment
@@ -601,5 +609,6 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Nejprve musíte deaktivovat poskytovatele plateb, než budete moci odstranit jeho deník.\n"
+"Nejprve musíte deaktivovat poskytovatele plateb, než budete moci odstranit "
+"jeho deník.\n"
 "Související poskytovatelé: %s"

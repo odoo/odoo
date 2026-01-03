@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-22 18:36+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-10-24 00:54+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-17/"
@@ -26,17 +26,24 @@ msgstr ""
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
 "<div>\n"
-"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
-"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br>\n"
-"                    Please, take appropriate measures in order to carry out this work absence.<br>\n"
-"                    Do not hesitate to contact your manager or the human resource department.\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,"
+"<br><br>\n"
+"                    Exception made if there was a mistake of ours, it seems "
+"that you are not at your office and there is not request of time off from "
+"you.<br>\n"
+"                    Please, take appropriate measures in order to carry out "
+"this work absence.<br>\n"
+"                    Do not hesitate to contact your manager or the human "
+"resource department.\n"
 "                    <br>Best Regards,<br><br>\n"
 "                </div>\n"
 "            "
 msgstr ""
 "<div>\n"
-"                    안녕하세요, <t t-out=\"object.name or ''\">Abigail Peterson</t>님.<br><br>\n"
-"                    시스템상의 오류가 발생한 경우가 아니라면, 현재 휴가 요청을 제출하지 않은 상태로 사무실에 무단결근하고 계신 것으로 파악됩니다.<br>\n"
+"                    안녕하세요, <t t-out=\"object.name or ''\">Abigail "
+"Peterson</t>님.<br><br>\n"
+"                    시스템상의 오류가 발생한 경우가 아니라면, 현재 휴가 요청"
+"을 제출하지 않은 상태로 사무실에 무단결근하고 계신 것으로 파악됩니다.<br>\n"
 "                    해당 결근에 대해 적절한 조치를 취해주시기 바랍니다.<br>\n"
 "                    자세한 내용은 관리자 또는 인사팀에 문의하여 주십시오. \n"
 "                    <br>감사합니다.<br><br>\n"
@@ -112,11 +119,13 @@ msgstr "임직원 관리"
 #: model:sms.template,body:hr_presence.sms_template_data_hr_presence
 #, python-format
 msgid ""
-"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.\n"
+"Exception made if there was a mistake of ours, it seems that you are not at "
+"your office and there is not request of time off from you.\n"
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
-"시스템상의 오류가 발생한 경우가 아니라면, 현재 휴가 요청을 제출하지 않은 상태로 결근 중이신 것으로 파악됩니다.\n"
+"시스템상의 오류가 발생한 경우가 아니라면, 현재 휴가 요청을 제출하지 않은 상태"
+"로 결근 중이신 것으로 파악됩니다.\n"
 "해당 결근에 대해 적절한 조치를 취해주시기 바랍니다.\n"
 "자세한 내용은 관리자 또는 인사팀에 문의하여 주십시오."
 
@@ -195,9 +204,11 @@ msgstr "SMS 문자메시지 전송"
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
 msgid ""
-"Sent manually in presence module when an employee wasn't working despite not"
-" being off"
-msgstr "직원이 퇴근 처리하지 않았음에도 불구하고 근무하고 있지 않을 경우 현황 모듈에 수동으로 전송"
+"Sent manually in presence module when an employee wasn't working despite not "
+"being off"
+msgstr ""
+"직원이 퇴근 처리하지 않았음에도 불구하고 근무하고 있지 않을 경우 현황 모듈에 "
+"수동으로 전송"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -247,8 +258,6 @@ msgstr "사용자 로그"
 
 #. module: hr_presence
 #. odoo-python
-#: code:addons/hr_presence/models/hr_employee.py:0
-#: code:addons/hr_presence/models/hr_employee.py:0
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."

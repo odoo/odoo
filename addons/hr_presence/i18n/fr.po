@@ -1,42 +1,52 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_presence
-# 
+#
 # Translators:
 # Manon Rondou, 2024
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-22 18:36+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
 "<div>\n"
-"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
-"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br>\n"
-"                    Please, take appropriate measures in order to carry out this work absence.<br>\n"
-"                    Do not hesitate to contact your manager or the human resource department.\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,"
+"<br><br>\n"
+"                    Exception made if there was a mistake of ours, it seems "
+"that you are not at your office and there is not request of time off from "
+"you.<br>\n"
+"                    Please, take appropriate measures in order to carry out "
+"this work absence.<br>\n"
+"                    Do not hesitate to contact your manager or the human "
+"resource department.\n"
 "                    <br>Best Regards,<br><br>\n"
 "                </div>\n"
 "            "
 msgstr ""
 "<div>\n"
-"                    Chère <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
-"                    Sauf erreur de notre part, il semble que vous n'êtes pas au bureau et qu'il n'y a pas de demande de congé de votre part.<br>\n"
-"                    Veuillez prendre les mesures appropriées afin de remédier à cette absence.<br>\n"
-"                    N'hésitez pas à contacter votre manager ou le service des ressources humaines.\n"
+"                    Chère <t t-out=\"object.name or ''\">Abigail Peterson</"
+"t>,<br><br>\n"
+"                    Sauf erreur de notre part, il semble que vous n'êtes pas "
+"au bureau et qu'il n'y a pas de demande de congé de votre part.<br>\n"
+"                    Veuillez prendre les mesures appropriées afin de "
+"remédier à cette absence.<br>\n"
+"                    N'hésitez pas à contacter votre manager ou le service "
+"des ressources humaines.\n"
 "                    <br>Cordialement,<br><br>\n"
 "                </div>\n"
 "            "
@@ -110,13 +120,16 @@ msgstr "Employés"
 #: model:sms.template,body:hr_presence.sms_template_data_hr_presence
 #, python-format
 msgid ""
-"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.\n"
+"Exception made if there was a mistake of ours, it seems that you are not at "
+"your office and there is not request of time off from you.\n"
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
-"Sauf erreur de notre part, il semble que vous n'êtes pas à votre bureau et qu'il n'y a pas de demande de congé de votre part.\n"
+"Sauf erreur de notre part, il semble que vous n'êtes pas à votre bureau et "
+"qu'il n'y a pas de demande de congé de votre part.\n"
 "Veuillez prendre les mesures appropriées afin de remédier à cette absence.\n"
-"N'hésitez pas à contacter votre manager ou le service des ressources humaines."
+"N'hésitez pas à contacter votre manager ou le service des ressources "
+"humaines."
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
@@ -193,8 +206,8 @@ msgstr "Envoyer un SMS"
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
 msgid ""
-"Sent manually in presence module when an employee wasn't working despite not"
-" being off"
+"Sent manually in presence module when an employee wasn't working despite not "
+"being off"
 msgstr ""
 "Envoyé manuellement dans le module des présences quand un employé n'est pas "
 "au travail alors qu'il n'est pas en congé"
@@ -248,13 +261,10 @@ msgstr "Journal des utilisateurs"
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
-#: code:addons/hr_presence/models/hr_employee.py:0
-#: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
 msgstr ""
-"Vous n'avez pas le droit de faire ceci. Veuillez contacter un "
-"administrateur."
+"Vous n'avez pas le droit de faire ceci. Veuillez contacter un administrateur."
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_ir_websocket

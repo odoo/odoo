@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_picking_batch
-# 
+#
 # Translators:
 # Jolien De Paepe, 2023
 # Wil Odoo, 2024
 # Manon Rondou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -29,8 +30,8 @@ msgstr "20-08-2023"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group "
-"by</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group by</"
+"span>"
 msgstr ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Regrouper "
 "par</span>"
@@ -73,19 +74,23 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Un transfert ne sera pas ajouté automatiquement aux lots qui dépasseront ce nombre de lignes si le transfert y est ajouté.\n"
+"Un transfert ne sera pas ajouté automatiquement aux lots qui dépasseront ce "
+"nombre de lignes si le transfert y est ajouté.\n"
 "Laissez cette valeur à '0' s'il n'y a pas de limite de ligne."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Un transfert ne sera pas automatiquement ajouté aux lots qui dépasseront ce nombre de transferts.\n"
+"Un transfert ne sera pas automatiquement ajouté aux lots qui dépasseront ce "
+"nombre de transferts.\n"
 "Laissez cette valeur à '0' s'il n'y a pas de limite de transfert."
 
 #. module: stock_picking_batch
@@ -203,8 +208,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
 msgid "Automatically group batches by their source location."
 msgstr ""
-"Regroupez automatiquement les lots en fonction de leur emplacement "
-"d'origine."
+"Regroupez automatiquement les lots en fonction de leur emplacement d'origine."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
@@ -647,8 +651,7 @@ msgstr "Type de transfert"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
-msgid ""
-"Please add 'Done' quantities to the batch picking to create a new pack."
+msgid "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
 "Ajoutez les quantités 'faites' au transfert par lot pour créer un nouveau "
 "colis."
@@ -736,14 +739,22 @@ msgstr "Date planifiée"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "Date prévue pour les transferts à traiter.\n"
-"               - Si elle est définie manuellement, la date prévue pour tous les transferts du lot sera modifiée automatiquement mise à jour à cette date.\n"
-"               - Si elle n'est pas modifiée manuellement et que des transferts sont ajoutés/retirés/mis à jour, il s'agira de la date prévue la plus proche\n"
-"                mais cette date prévue ne sera pas appliquée à tous les transferts du lot."
+"               - Si elle est définie manuellement, la date prévue pour tous "
+"les transferts du lot sera modifiée automatiquement mise à jour à cette "
+"date.\n"
+"               - Si elle n'est pas modifiée manuellement et que des "
+"transferts sont ajoutés/retirés/mis à jour, il s'agira de la date prévue la "
+"plus proche\n"
+"                mais cette date prévue ne sera pas appliquée à tous les "
+"transferts du lot."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -853,11 +864,13 @@ msgstr "Résumé :"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid ""
-"The following transfers cannot be added to batch transfer %s. Please check their states and operation types.\n"
+"The following transfers cannot be added to batch transfer %s. Please check "
+"their states and operation types.\n"
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"Les transferts suivants ne peuvent pas être ajoutés au transfert par lot %s. Veuillez vérifier leurs statuts et types d'opération.\n"
+"Les transferts suivants ne peuvent pas être ajoutés au transfert par lot %s. "
+"Veuillez vérifier leurs statuts et types d'opération.\n"
 "\n"
 "Incompatibilités : %s"
 
@@ -865,27 +878,39 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
 "The goal of the batch transfer is to group operations that may\n"
-"            (needs to) be done together in order to increase their efficiency.\n"
-"            It may also be useful to assign jobs (one person = one batch) or\n"
-"            help the timing management of operations (tasks to be done at 1pm)."
+"            (needs to) be done together in order to increase their "
+"efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) "
+"or\n"
+"            help the timing management of operations (tasks to be done at "
+"1pm)."
 msgstr ""
-"L'objectif des transferts par lot est de regrouper les opérations qui peuvent\n"
+"L'objectif des transferts par lot est de regrouper les opérations qui "
+"peuvent\n"
 "            (doivent) être faites ensemble afin d'améliorer l'efficacité.\n"
-"           Cela peut aussi être utile pour assigner les tâches (une personne = un lot) ou\n"
-"            améliorer la gestion du temps des opérations (les tâches qui doivent être faites à 13h00)."
+"           Cela peut aussi être utile pour assigner les tâches (une personne "
+"= un lot) ou\n"
+"            améliorer la gestion du temps des opérations (les tâches qui "
+"doivent être faites à 13h00)."
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid ""
-"The goal of the wave transfer is to group operations from different transfer\n"
+"The goal of the wave transfer is to group operations from different "
+"transfer\n"
 "                    together in order to increase their efficiency.\n"
-"                    It may also be useful to assign jobs (one person = one batch) or\n"
-"                    help the timing management of operations (tasks to be done at 1pm)."
+"                    It may also be useful to assign jobs (one person = one "
+"batch) or\n"
+"                    help the timing management of operations (tasks to be "
+"done at 1pm)."
 msgstr ""
-"L'objectif des transferts par vague est de regrouper les opérations de différents transferts \n"
+"L'objectif des transferts par vague est de regrouper les opérations de "
+"différents transferts \n"
 "ensemble afin d'augmenter l'efficacité. \n"
-"Il pourrait être utile aussi pour assigner les tâches (une personne = un lot) \n"
-"ou améliorer la gestion du temps des opérations (les tâches qui doivent être faites à 13h00)."
+"Il pourrait être utile aussi pour assigner les tâches (une personne = un "
+"lot) \n"
+"ou améliorer la gestion du temps des opérations (les tâches qui doivent être "
+"faites à 13h00)."
 
 #. module: stock_picking_batch
 #. odoo-python

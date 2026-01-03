@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Tony Ng, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: delivery
@@ -56,7 +57,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">測試</span>\n"
 "                                <span class=\"o_stat_text\">環境</span>"
@@ -75,7 +77,8 @@ msgstr "<span class=\"text-success\">測試需求</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">正式運行</span>\n"
 "                                <span class=\"o_stat_text\">環境</span>"
@@ -91,7 +94,9 @@ msgid ""
 "A description of the delivery method that you want to communicate to your "
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
-msgstr "您希望在銷售訂單和銷售確認電子郵件中與客戶溝通的交貨方式的描述，例如，客戶要遵循的指示。"
+msgstr ""
+"您希望在銷售訂單和銷售確認電子郵件中與客戶溝通的交貨方式的描述，例如，客戶要"
+"遵循的指示。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -363,7 +368,6 @@ msgstr "環境"
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
-#: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
 msgstr "錯誤：此傳遞方法不適用於此地址。"
@@ -378,8 +382,10 @@ msgstr "錯誤：此送貨方式不可用。"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "預計成本：客戶將收到預估運費的發票。\n"
 "實際費用：客戶將收到實際運費的發票，運費將在發貨後更新到銷售訂單上。"
@@ -593,8 +599,9 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
-"該承運商適用的郵編前綴。請注意，正則表達式可用於支持不同國家/地區的不同郵編長度，例如，可將「$」添加至郵編前綴的末尾，以匹配具體郵編（例如，「100$」"
-" 只匹配「100」，而不匹配 「1000」）"
+"該承運商適用的郵編前綴。請注意，正則表達式可用於支持不同國家/地區的不同郵編長"
+"度，例如，可將「$」添加至郵編前綴的末尾，以匹配具體郵編（例如，「100$」 只匹"
+"配「100」，而不匹配 「1000」）"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -713,7 +720,9 @@ msgstr "運輸保險服務，可為貨件在運輸途中丟失、被盜和/或�
 msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
-msgstr "送貨方式詳細資料將包含在底部銷售訂單及其確認電子郵件中。例如，客戶要遵循的指示。"
+msgstr ""
+"送貨方式詳細資料將包含在底部銷售訂單及其確認電子郵件中。例如，客戶要遵循的指"
+"示。"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -837,9 +846,11 @@ msgstr "重量單位名稱"
 #: code:addons/delivery/models/sale_order.py:0
 #, python-format
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
 "您無法更新已開具應收憑單的訂單的運費!\n"
