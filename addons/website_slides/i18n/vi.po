@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
 "PO-Revision-Date: 2025-11-25 04:14+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -192,8 +192,8 @@ msgid ""
 "<a href=\"/contactus\" class=\"btn btn-primary rounded-circle "
 "o_translate_inline\">Contact us</a>"
 msgstr ""
-"<a href=\"/contactus\" class="
-"\"btn btn-primary rounded-circle o_translate_inline\">Liên hệ</a>"
+"<a href=\"/contactus\" class=\"btn btn-primary rounded-circle "
+"o_translate_inline\">Liên hệ</a>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.profile_access_denied
@@ -251,8 +251,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Xin chào<br/><br/>\n"
-"        Bạn đã tham gia một khóa học mới: <t t-out="
-"\"object.channel_id.name or ''\">Nhập môn Làm vườn</t>.\n"
+"        Bạn đã tham gia một khóa học mới: <t t-out=\"object.channel_id.name "
+"or ''\">Nhập môn Làm vườn</t>.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -272,8 +272,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Xin chào<br/><br/>\n"
-"        Bạn đã được mời tham khảo khóa học mới: <t t-out="
-"\"object.channel_id.name or ''\">Nhập môn Làm vườn</t>.\n"
+"        Bạn đã được mời tham khảo khóa học mới: <t t-"
+"out=\"object.channel_id.name or ''\">Nhập môn Làm vườn</t>.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -458,36 +458,36 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">"
-"\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
+"\">\n"
 "                        Xin chào<br/><br/>\n"
 "                        <t t-out=\"user.name or ''\">Mitchell Admin</t> đã "
-"chia sẻ <t t-out=\"object.slide_category or ''\">tài liệu</t> <strong t-out="
-"\"object.name or ''\">Cây cối</strong> với bạn!\n"
-"                       </p><div style="
-"\"margin: 16px 8px 16px 8px; text-align: center;\"> \n"
-"                            <a t-att-href=\"(object.website_share_url + "
-"'?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\""
-"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" "
-"style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"chia sẻ <t t-out=\"object.slide_category or ''\">tài liệu</t> <strong t-"
+"out=\"object.name or ''\">Cây cối</strong> với bạn!\n"
+"                       </p><div style=\"margin: 16px 8px 16px 8px; text-"
+"align: center;\"> \n"
+"                            <a t-att-href=\"(object.website_share_url + '?"
+"fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-"
+"src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/"
+"image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        <div style="
-"\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"(object.website_share_url + "
-"'?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" t"
-"-attf-style=\"background-color: {{user.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
-"user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + '?"
+"fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" t-"
+"attf-style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
 "\">Xem <strong t-out=\"object.name or ''\">Cây cối</strong></a>\n"
 "                        </div>\n"
 "                       <t t-if=\"user.signature\" data-o-mail-quote-"
 "container=\"1\"> \n"
 "                            <br/>\n"
 "                            <div data-o-mail-quote=\"1\">--<br data-o-mail-"
-"quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\""
-">Mitchell Admin</t></div>\n"
+"quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "                        </t>\n"
 "                    \n"
 "                </div>\n"
@@ -910,8 +910,8 @@ msgid ""
 "<small><span class=\"badge text-bg-success fw-normal\"><i class=\"fa fa-"
 "check\"/> Completed</span></small>"
 msgstr ""
-"<small><span class=\"badge text-bg-success fw-normal\"><i class="
-"\"fa fa-check\"/> Đã hoàn thành</span></small>"
+"<small><span class=\"badge text-bg-success fw-normal\"><i class=\"fa fa-"
+"check\"/> Đã hoàn thành</span></small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -937,8 +937,8 @@ msgid ""
 "<span class=\"badge text-bg-primary badge-hide fw-normal m-1\">Add Quiz</"
 "span>"
 msgstr ""
-"<span class=\"badge text-bg-primary badge-hide fw-normal m-1\">Thêm "
-"quiz</span>"
+"<span class=\"badge text-bg-primary badge-hide fw-normal m-1\">Thêm quiz</"
+"span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -946,8 +946,8 @@ msgid ""
 "<span class=\"badge text-bg-success fw-normal m-1\"><span>Preview</span></"
 "span>"
 msgstr ""
-"<span class=\"badge text-bg-success fw-normal m-1\"><span>Xem "
-"trước</span></span>"
+"<span class=\"badge text-bg-success fw-normal m-1\"><span>Xem trước</span></"
+"span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -1059,8 +1059,8 @@ msgid ""
 "<span class=\"text-muted text-truncate mw-100\" title=\"Invited\">Invited</"
 "span>"
 msgstr ""
-"<span class=\"text-muted text-truncate mw-100\" title=\"Đã mời\">Đã "
-"mời</span>"
+"<span class=\"text-muted text-truncate mw-100\" title=\"Đã mời\">Đã mời</"
+"span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -1148,13 +1148,13 @@ msgid ""
 msgstr ""
 "<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Thu nhỏ\" aria-"
 "label=\"Thu nhỏ\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-minus\"/>"
-"\n"
+"                                            <i class=\"fa fa-search-minus\"/"
+">\n"
 "                                        </span>\n"
-"                                        <span id=\"zoomin\" class="
-"\"d-inline\" title=\"Phóng to\" aria-label=\"Phóng to\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-plus\"/>"
-"\n"
+"                                        <span id=\"zoomin\" class=\"d-"
+"inline\" title=\"Phóng to\" aria-label=\"Phóng to\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-plus\"/"
+">\n"
 "                                        </span>"
 
 #. module: website_slides
@@ -1163,8 +1163,8 @@ msgid ""
 "<span name=\"done_members_count_label\" class=\"text-muted text-truncate "
 "mw-100\" title=\"Finished\">Finished</span>"
 msgstr ""
-"<span name=\"done_members_count_label\" class=\"text-muted text-truncate mw-"
-"100\" title=\"Đã kết thúc\">Đã kết thúc</span>"
+"<span name=\"done_members_count_label\" class=\"text-muted text-truncate "
+"mw-100\" title=\"Đã kết thúc\">Đã kết thúc</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1184,8 +1184,8 @@ msgstr "<span> giờ</span>"
 #: model_terms:web_tour.tour,rainbow_man_message:website_slides.slides_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Tốt lắm!</b> Bạn đã xem qua tất cả các bước của tour hướng dẫn "
-"này.</span>"
+"<span><b>Tốt lắm!</b> Bạn đã xem qua tất cả các bước của tour hướng dẫn này."
+"</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
@@ -3744,8 +3744,8 @@ msgid ""
 "Impossible to send emails. Select a \"Channel Share Template\" for courses %"
 "(course_names)s first"
 msgstr ""
-"Không thể gửi email. Trước tiên, hãy chọn \"Mẫu chia sẻ kênh\" cho khóa học "
-"%(course_names)s"
+"Không thể gửi email. Trước tiên, hãy chọn \"Mẫu chia sẻ kênh\" cho khóa học %"
+"(course_names)s"
 
 #. module: website_slides
 #. odoo-python
@@ -3754,8 +3754,8 @@ msgid ""
 "Impossible to send emails. Select a \"Share Template\" for courses %"
 "(course_names)s first"
 msgstr ""
-"Không thể gửi email. Trước tiên, hãy chọn \"Mẫu chia sẻ\" cho khóa học "
-"%(course_names)s"
+"Không thể gửi email. Trước tiên, hãy chọn \"Mẫu chia sẻ\" cho khóa học %"
+"(course_names)s"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_1
@@ -4747,8 +4747,8 @@ msgid ""
 msgstr ""
 "Ngôn ngữ dịch thuật tùy chọn (mã ISO) cần chọn khi gửi email. Nếu không được "
 "thiết lập, ngôn ngữ của đối tác chính sẽ được sử dụng. Đây thường là một "
-"biểu thức giữ chỗ cung cấp ngôn ngữ phù hợp, ví dụ: {{ "
-"object.partner_id.lang }}."
+"biểu thức giữ chỗ cung cấp ngôn ngữ phù hợp, ví dụ: "
+"{{ object.partner_id.lang }}."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -5426,7 +5426,7 @@ msgstr "Chọn thủ công"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Select or create a category"
 msgstr "Chọn hoặc tạo một danh mục"
 
@@ -5444,7 +5444,7 @@ msgstr "Chọn hoặc tạo một nhóm thẻ"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_select_tags.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Select or create tags"
 msgstr "Chọn hoặc tạo thẻ"
 
@@ -6388,7 +6388,8 @@ msgstr "Đang tải nhóm"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Upload a PDF file from your computer or share a Google Drive link."
-msgstr "Tải lên tệp PDF từ máy tính của mình hoặc chia sẻ liên kết Google Drive"
+msgstr ""
+"Tải lên tệp PDF từ máy tính của mình hoặc chia sẻ liên kết Google Drive"
 
 #. module: website_slides
 #. odoo-javascript
