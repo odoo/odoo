@@ -1,30 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_adyen
-# 
+#
 # Translators:
 # Tony Ng, 2024
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid ""
-"<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
-"                    the Capture Delay to manual on your Adyen account settings."
+"<strong>Warning:</strong> To capture the amount manually, you also need to "
+"set\n"
+"                    the Capture Delay to manual on your Adyen account "
+"settings."
 msgstr ""
 "<strong>警告：</strong> 要手動捕捉金額，你仍需要在 \n"
 "                    Adyen 帳戶設定中，將捕捉延遲設為手動。"
@@ -33,8 +36,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid ""
-"A request was sent to void the transaction with reference %(reference)s "
-"(%(provider)s)."
+"A request was sent to void the transaction with reference %(reference)s (%"
+"(provider)s)."
 msgstr "已發送交易作廢請求，參考：%(reference)s（%(provider)s）。"
 
 #. module: payment_adyen
@@ -190,7 +193,8 @@ msgstr "網絡鈎子 HMAC 密鑰"
 msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
-msgstr "Adyen 處理交易 %s 的金額，與所請求金額不同。已建立金額正確的另一項交易。"
+msgstr ""
+"Adyen 處理交易 %s 的金額，與所請求金額不同。已建立金額正確的另一項交易。"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_url_prefix
@@ -216,8 +220,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid ""
-"The capture request of %(amount)s for the transaction with reference %(ref)s"
-" has been requested (%(provider_name)s)."
+"The capture request of %(amount)s for the transaction with reference %(ref)s "
+"has been requested (%(provider_name)s)."
 msgstr "已請求捕捉金額 %(amount)s（交易參考：%(ref)s）(%(provider_name)s)。"
 
 #. module: payment_adyen

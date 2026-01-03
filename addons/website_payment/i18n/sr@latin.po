@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2025-08-08 07:47+0000\n"
 "Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
@@ -74,15 +74,29 @@ msgid "<option value=\"\">Country...</option>"
 msgstr "<option value=\"\">Zemlja...</option>"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
-msgid ""
-"<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please "
-"contact the website administrator."
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>"
 msgstr ""
-"<strong>Nije moguće pronaći odgovarajuću opciju plaćanja.</strong><br/>\n"
-"                                Ukoliko smatrate da je u pitanju greška, "
-"molimo vas da kontaktirate administratora website-a."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>10"
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>100"
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>25"
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "<span class=\"s_donation_currency pe-1\">$</span>50"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -106,7 +120,6 @@ msgid "Activate Payments"
 msgstr "Aktivirajte plaćanja"
 
 #. module: website_payment
-#: model:ir.actions.server,name:website_payment.action_activate_stripe
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Stripe"
 msgstr "Aktiviraj Stripe"
@@ -126,6 +139,7 @@ msgstr "Dodajte novu unapred popunjenu opciju"
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "Amount"
 msgstr "Iznos"
 
@@ -164,7 +178,6 @@ msgstr "Podesi %s"
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/js/payment_form.js:0
-#: model:ir.model,name:website_payment.model_res_country
 msgid "Country"
 msgstr "Zemlja"
 
@@ -187,6 +200,7 @@ msgstr "Zemlja je obavezna."
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Custom Amount"
 msgstr "Prilagođeni iznos"
@@ -301,7 +315,6 @@ msgstr "Je donacija"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
-#: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
 msgstr "Da li je zemlja podržana od strane Stripe provajdera"
 
@@ -477,8 +490,8 @@ msgstr "Zahvaljujemo se na vašoj donaciji od"
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
-msgid "The minimum donation amount is %s%s%s"
-msgstr "Minimalan iznos donacije je %s%s%s"
+msgid "The minimum donation amount is %(amount)s"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -519,6 +532,18 @@ msgstr "Vaš komentar"
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "made on"
 msgstr "napravljeno dana"
+
+#~ msgid ""
+#~ "<strong>No suitable payment option could be found.</strong><br/>\n"
+#~ "                                If you believe that it is an error, "
+#~ "please contact the website administrator."
+#~ msgstr ""
+#~ "<strong>Nije moguće pronaći odgovarajuću opciju plaćanja.</strong><br/>\n"
+#~ "                                Ukoliko smatrate da je u pitanju greška, "
+#~ "molimo vas da kontaktirate administratora website-a."
+
+#~ msgid "The minimum donation amount is %s%s%s"
+#~ msgstr "Minimalan iznos donacije je %s%s%s"
 
 #~ msgid "Connect to Stripe"
 #~ msgstr "Poveži se na Stripe"

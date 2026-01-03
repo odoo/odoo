@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* google_gmail
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: google_gmail
@@ -39,22 +39,26 @@ msgstr ""
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
 msgid ""
-"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" "
+"class=\"badge text-bg-success\">\n"
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" "
+"class=\"badge text-bg-success\">\n"
 "                        โทเค็น Gmail ถูกต้อง\n"
 "                    </span>"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid ""
-"<span invisible=\"smtp_authentication != 'gmail' or not google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'gmail' or not "
+"google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span invisible=\"smtp_authentication != 'gmail' or not google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'gmail' or not "
+"google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        โทเค็น Gmail ถูกต้อง\n"
 "                    </span>"
 
@@ -106,7 +110,8 @@ msgstr "ตั้งค่าการกำหนดค่า"
 #: code:addons/google_gmail/models/fetchmail_server.py:0
 msgid ""
 "Connect your Gmail account with the OAuth Authentication process. \n"
-"You will be redirected to the Gmail login page where you will need to accept the permission."
+"You will be redirected to the Gmail login page where you will need to accept "
+"the permission."
 msgstr ""
 "เชื่อมต่อบัญชี Gmail ของคุณกับกระบวนการยืนยันตัวตนด้วย OAuth\n"
 "คุณจะถูกนำไปยังหน้าเข้าสู่ระบบ Gmail ซึ่งคุณจะต้องยอมรับการอนุญาต"
@@ -116,10 +121,13 @@ msgstr ""
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 msgid ""
 "Connect your Gmail account with the OAuth Authentication process.  \n"
-"By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
+"By default, only a user with a matching email address will be able to use "
+"this server. To extend its use, you should set a \"mail.default.from\" "
+"system parameter."
 msgstr ""
 "เชื่อมต่อบัญชี Gmail ของคุณกับกระบวนการยืนยันตัวตน OAuth\n"
-"ตามค่าเริ่มต้น เฉพาะผู้ใช้ที่มีที่อยู่อีเมลตรงกันเท่านั้นที่จะสามารถใช้เซิร์ฟเวอร์นี้ได้ หากต้องการขยายการใช้งาน คุณควรตั้งค่าพารามิเตอร์ระบบ \"mail.default.from\""
+"ตามค่าเริ่มต้น เฉพาะผู้ใช้ที่มีที่อยู่อีเมลตรงกันเท่านั้นที่จะสามารถใช้เซิร์ฟเวอร์นี้ได้ "
+"หากต้องการขยายการใช้งาน คุณควรตั้งค่าพารามิเตอร์ระบบ \"mail.default.from\""
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
@@ -164,8 +172,8 @@ msgid ""
 "Incorrect Connection Security for Gmail mail server “%s”. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
-"การรักษาความปลอดภัยการเชื่อมต่อสำหรับเซิร์ฟเวอร์อีเมล Gmail “%s” ไม่ถูกต้อง "
-"โปรดตั้งค่าเป็น \"TLS (STARTTLS)\""
+"การรักษาความปลอดภัยการเชื่อมต่อสำหรับเซิร์ฟเวอร์อีเมล Gmail “%s” ไม่ถูกต้อง โปรดตั้งค่าเป็น "
+"\"TLS (STARTTLS)\""
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_ir_mail_server
@@ -192,9 +200,8 @@ msgid ""
 "address). This should be the same account as the one used for the Gmail "
 "OAuthentication Token."
 msgstr ""
-"กรุณากรอกข้อมูลในช่อง \"ชื่อผู้ใช้\" ด้วยชื่อผู้ใช้ Gmail ของคุณ "
-"(ที่อยู่อีเมลของคุณ) นี่ควรเป็นบัญชีเดียวกับบัญชีที่ใช้สำหรับโทเค็น "
-"OAuthentication ของ Gmail"
+"กรุณากรอกข้อมูลในช่อง \"ชื่อผู้ใช้\" ด้วยชื่อผู้ใช้ Gmail ของคุณ (ที่อยู่อีเมลของคุณ) "
+"นี่ควรเป็นบัญชีเดียวกับบัญชีที่ใช้สำหรับโทเค็น OAuthentication ของ Gmail"
 
 #. module: google_gmail
 #. odoo-python
@@ -203,8 +210,8 @@ msgid ""
 "Please leave the password field empty for Gmail mail server “%s”. The OAuth "
 "process does not require it"
 msgstr ""
-"โปรดเว้นฟิลด์รหัสผ่านว่างไว้สำหรับเซิร์ฟเวอร์อีเมล Gmail “%s” กระบวนการ "
-"OAuth ไม่จำเป็นต้องใช้"
+"โปรดเว้นฟิลด์รหัสผ่านว่างไว้สำหรับเซิร์ฟเวอร์อีเมล Gmail “%s” กระบวนการ OAuth "
+"ไม่จำเป็นต้องใช้"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
@@ -239,9 +246,7 @@ msgstr "ประเภทเซิร์ฟเวอร์"
 msgid ""
 "Setup your Gmail API credentials in the general settings to link a Gmail "
 "account."
-msgstr ""
-"ตั้งค่าข้อมูลรับรอง Gmail API ของคุณในการตั้งค่าทั่วไปเพื่อเชื่อมโยงบัญชี "
-"Gmail"
+msgstr "ตั้งค่าข้อมูลรับรอง Gmail API ของคุณในการตั้งค่าทั่วไปเพื่อเชื่อมโยงบัญชี Gmail"
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri

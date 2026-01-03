@@ -1,33 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_sms
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: stock_sms
 #: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
 msgid ""
 "\n"
-"                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"                {{ (object.company_id.name + ': We are glad to inform you "
+"that your order n° ' + object.origin + ' has been shipped.' if object.origin "
+"else object.company_id.name + ': We are glad to inform you that your order "
+"has been shipped.') + (' Your tracking reference is ' + "
+"(object.carrier_tracking_ref) + '.' if hasattr(object, "
+"'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 msgstr ""
 "\n"
-"                {{ (object.company_id.name + ': يسرنا إعلامك بأن طلبك n° ' + object.origin + ' قد تم شحنه.' if object.origin else object.company_id.name + ': يسرنا إعلامك بأن طلبك قد تم شحنه.') + (' مرجع التتبع الخاص بك هو ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"                {{ (object.company_id.name + ': يسرنا إعلامك بأن طلبك n° ' + "
+"object.origin + ' قد تم شحنه.' if object.origin else object.company_id.name "
+"+ ': يسرنا إعلامك بأن طلبك قد تم شحنه.') + (' مرجع التتبع الخاص بك هو ' + "
+"(object.carrier_tracking_ref) + '.' if hasattr(object, "
+"'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 
 #. module: stock_sms
@@ -145,7 +155,9 @@ msgstr "تحويل "
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
-"                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
+"                This feature can easily be disabled from the Settings of "
+"Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
 "أنت على وشك تأكيد أمر التوصيل هذا عن طريق رسالة نصية قصيرة.<br/>\n"
-"                يمكن تعطيل هذه الخاصية بسهولة من إعدادات المخزون أو عن طريق الضغط على \"تعطيل الرسائل النصية القصيرة\".<br/> "
+"                يمكن تعطيل هذه الخاصية بسهولة من إعدادات المخزون أو عن طريق "
+"الضغط على \"تعطيل الرسائل النصية القصيرة\".<br/> "

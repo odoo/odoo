@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-12-02 17:06+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/"
@@ -77,11 +77,11 @@ msgstr "%(name)s की टाइमशीट"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"'%(missing_plan_names)s' analytic plan(s) required on the project "
-"'%(project_name)s' linked to the timesheet."
+"'%(missing_plan_names)s' analytic plan(s) required on the project '%"
+"(project_name)s' linked to the timesheet."
 msgstr ""
-"टाइमशीट से जुड़े प्रोजेक्ट '%(project_name)s' के लिए '%(missing_plan_names)s' विश्लेषणात्मक "
-"योजना की ज़रूरत है।"
+"टाइमशीट से जुड़े प्रोजेक्ट '%(project_name)s' के लिए '%(missing_plan_names)s' "
+"विश्लेषणात्मक योजना की ज़रूरत है।"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -123,7 +123,9 @@ msgstr "<b class=\"tip_title\">सलाह: अपनी टाइमशीट 
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
-msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
 msgstr ""
 
 #. module: hr_timesheet
@@ -148,9 +150,11 @@ msgid ""
 "<span invisible=\"not has_timesheet\">\n"
 "                        You cannot delete employees who have timesheets.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            You can either archive these employees or first delete all of their timesheets.\n"
+"                            You can either archive these employees or first "
+"delete all of their timesheets.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Please first delete all of their timesheets.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -161,11 +165,11 @@ msgstr ""
 "<span invisible=\"not has_timesheet\">\n"
 "                        आप उन कर्मचारियों को हटा नहीं सकते जिनकी टाइमशीट है.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            आप या तो इन कर्मचारियों को संग्रहीत कर सकते हैं या पहले उनकी सभी "
-"टाइमशीट हटा सकते हैं.\n"
+"                            आप या तो इन कर्मचारियों को संग्रहीत कर सकते हैं या पहले "
+"उनकी सभी टाइमशीट हटा सकते हैं.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups="
-"\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            कृपया पहले उनकी सभी टाइमशीट हटा दें.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -288,7 +292,8 @@ msgstr "एनालिटिक प्लान की ऐप्लिकेब
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid ""
-"Analyze the projects and tasks on which your employees spend their time.<br>\n"
+"Analyze the projects and tasks on which your employees spend their time."
+"<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
 "कर्मचारी किस प्रोजेक्ट और टास्क पर समय लगाते हैं, उसका विश्लेषण करें.<br>\n"
@@ -432,8 +437,7 @@ msgstr "कर्मचारी हटाएं"
 msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
-msgstr ""
-"माइलस्टोन पूरा होने पर, सेल्स ऑर्डर आइटम से लिंक करके सेवाएं अपने-आप वितरित करें।"
+msgstr "माइलस्टोन पूरा होने पर, सेल्स ऑर्डर आइटम से लिंक करके सेवाएं अपने-आप वितरित करें।"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
@@ -527,8 +531,7 @@ msgstr "अतिरिक्त समय"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid ""
-"Generate timesheets for validated time off requests and public holidays"
+msgid "Generate timesheets for validated time off requests and public holidays"
 msgstr "अप्रूव्ड छुट्टी और छुट्टियों के लिए अपने-आप टाइमशीट जनरेट करें"
 
 #. module: hr_timesheet
@@ -796,7 +799,8 @@ msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
 msgstr ""
-"अपने प्रोजेक्ट्स में 15 मिनट जोड़ने के लिए संबंधित हॉटकी के साथ Shift दबाकर तुरंत अपनी टाइमशीट रिकॉर्ड करें।"
+"अपने प्रोजेक्ट्स में 15 मिनट जोड़ने के लिए संबंधित हॉटकी के साथ Shift दबाकर तुरंत अपनी "
+"टाइमशीट रिकॉर्ड करें।"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
@@ -865,16 +869,14 @@ msgstr "टाइमशीट की एंट्रीज़ देखें"
 msgid ""
 "Send a periodical email reminder to timesheets approvers that still have "
 "timesheets to validate"
-msgstr ""
-"जिन अप्रूवर को टाइमशीट अप्रूव करनी है, उन्हें नियमित रूप से ईमेल रिमाइंडर भेजें"
+msgstr "जिन अप्रूवर को टाइमशीट अप्रूव करनी है, उन्हें नियमित रूप से ईमेल रिमाइंडर भेजें"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid ""
 "Send a periodical email reminder to timesheets users that still have "
 "timesheets to encode"
-msgstr ""
-"जिन कर्मचारियों को टाइमशीट भरनी है, उन्हें नियमित रूप से ईमेल रिमाइंडर भेजें"
+msgstr "जिन कर्मचारियों को टाइमशीट भरनी है, उन्हें नियमित रूप से ईमेल रिमाइंडर भेजें"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -924,8 +926,8 @@ msgstr "किसी कंपनी का इंटरनल प्रोज�
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"The project, the task and the analytic accounts of the timesheet must belong"
-" to the same company."
+"The project, the task and the analytic accounts of the timesheet must belong "
+"to the same company."
 msgstr ""
 "टाइमशीट का प्रोजेक्ट, टास्क और विश्लेषणात्मक खाते एक ही कंपनी से संबंधित होने चाहिए।"
 
@@ -938,10 +940,11 @@ msgstr "कोई टाइमशीट नहीं है।"
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"These projects have some timesheet entries referencing them. Before removing"
-" these projects, you have to remove these timesheet entries."
+"These projects have some timesheet entries referencing them. Before removing "
+"these projects, you have to remove these timesheet entries."
 msgstr ""
-"इन प्रोजेक्ट्स से जुड़ी टाइमशीट एंट्री हैं. इन्हें हटाने से पहले, आपको टाइमशीट एंट्री हटानी होगी।"
+"इन प्रोजेक्ट्स से जुड़ी टाइमशीट एंट्री हैं. इन्हें हटाने से पहले, आपको टाइमशीट एंट्री हटानी "
+"होगी।"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -987,11 +990,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"This project has some timesheet entries referencing it. Before removing this"
-" project, you have to remove these timesheet entries."
+"This project has some timesheet entries referencing it. Before removing this "
+"project, you have to remove these timesheet entries."
 msgstr ""
-"इस प्रोजेक्ट में कुछ टाइमशीट एंट्रीज़ हैं जो इसका उल्लेख करती हैं. इस प्रोजेक्ट को हटाने से पहले, आपको इन "
-"टाइमशीट एंट्रीज़ को हटाना होगा।"
+"इस प्रोजेक्ट में कुछ टाइमशीट एंट्रीज़ हैं जो इसका उल्लेख करती हैं. इस प्रोजेक्ट को हटाने से पहले, "
+"आपको इन टाइमशीट एंट्रीज़ को हटाना होगा।"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1007,19 +1010,20 @@ msgid ""
 "This task has some timesheet entries referencing it. Before removing this "
 "task, you have to remove these timesheet entries."
 msgstr ""
-"इस टास्क में कुछ टाइमशीट एंट्रीज़ हैं जो इसका उल्लेख करती हैं. इस टास्क को हटाने से पहले, आपको इन टाइमशीट "
-"एंट्रीज़ को हटाना होगा।"
+"इस टास्क में कुछ टाइमशीट एंट्रीज़ हैं जो इसका उल्लेख करती हैं. इस टास्क को हटाने से पहले, "
+"आपको इन टाइमशीट एंट्रीज़ को हटाना होगा।"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__project_time_mode_id
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects, don't forget to setup the right "
+"unit of measure in your employees."
 msgstr ""
 "यह प्रोजेक्ट और टास्क में इस्तेमाल की जाने वाली माप की इकाई को सेट करेगा. \n"
-"अगर आप प्रोजेक्ट से जुड़ी टाइमशीट का इस्तेमाल करते हैं, तो अपने कर्मचारियों में सही माप की इकाई सेट करना न "
-"भूलें।"
+"अगर आप प्रोजेक्ट से जुड़ी टाइमशीट का इस्तेमाल करते हैं, तो अपने कर्मचारियों में सही माप की "
+"इकाई सेट करना न भूलें।"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -1248,10 +1252,8 @@ msgstr "प्राइवेट टास्क पर टाइमशीट �
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"Timesheets must be created with an active employee in the selected "
-"companies."
-msgstr ""
-"टाइमशीट, चुनी गई कंपनियों में एक सक्रिय कर्मचारी के साथ बनाई जानी चाहिए।"
+"Timesheets must be created with an active employee in the selected companies."
+msgstr "टाइमशीट, चुनी गई कंपनियों में एक सक्रिय कर्मचारी के साथ बनाई जानी चाहिए।"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1260,8 +1262,8 @@ msgid ""
 "Timesheets must be created with at least an active analytic account defined "
 "in the plan '%(plan_name)s'."
 msgstr ""
-"टाइमशीट कम से कम एक सक्रिय विश्लेषणात्मक खाते के साथ बनाई जानी चाहिए जो प्लान '%(plan_name)s' में "
-"परिभाषित है।"
+"टाइमशीट कम से कम एक सक्रिय विश्लेषणात्मक खाते के साथ बनाई जानी चाहिए जो प्लान '%"
+"(plan_name)s' में परिभाषित है।"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1282,8 +1284,9 @@ msgid ""
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
 msgstr ""
-"टाइमशीट सुविधा का उपयोग करने के लिए, आपको अपने प्रोजेक्ट के लिए एक विश्लेषणात्मक खाते की ज़रूरत है. कृपया प्ला"
-"न '%(plan_name)s' में एक खाता सेट करें या टाइमशीट सुविधा को बंद कर दें।"
+"टाइमशीट सुविधा का उपयोग करने के लिए, आपको अपने प्रोजेक्ट के लिए एक विश्लेषणात्मक खाते की "
+"ज़रूरत है. कृपया प्लान '%(plan_name)s' में एक खाता सेट करें या टाइमशीट सुविधा को बंद कर "
+"दें।"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1328,10 +1331,11 @@ msgstr "कुल:"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
-"Track your working hours by projects every day and invoice this time to your"
-" customers."
+"Track your working hours by projects every day and invoice this time to your "
+"customers."
 msgstr ""
-"हर दिन प्रोजेक्ट के अनुसार अपने काम के घंटों को ट्रैक करें और इस समय का इनवॉइस अपने ग्राहकों को भेजें।"
+"हर दिन प्रोजेक्ट के अनुसार अपने काम के घंटों को ट्रैक करें और इस समय का इनवॉइस अपने ग्राहकों "
+"को भेजें।"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1349,7 +1353,8 @@ msgid ""
 "        @user Assign the task to a user\n"
 "        ! Set the task a high priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
 
 #. module: hr_timesheet
@@ -1377,12 +1382,13 @@ msgstr "जानकारी देखें"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_from_employee
 msgid ""
 "You can register and track your workings hours by project every\n"
-"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    day. Every time spent on a project will become a cost "
+"and can be re-invoiced to\n"
 "                    customers if required."
 msgstr ""
 "आप हर रोज़, प्रोजेक्ट के हिसाब से अपने काम के घंटे दर्ज और ट्रैक करें.\n"
-"                    प्रोजेक्ट पर खर्च किया गया हर समय एक लागत बन जाएगा और ज़रूरत पड़ने पर इसे"
-" ग्राहकों को\n"
+"                    प्रोजेक्ट पर खर्च किया गया हर समय एक लागत बन जाएगा और ज़रूरत "
+"पड़ने पर इसे ग्राहकों को\n"
 "                    फिर से बिल किया जा सकता है।"
 
 #. module: hr_timesheet
@@ -1400,29 +1406,32 @@ msgstr "आप उन कर्मचारियों को नहीं म�
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid ""
-"You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/>\n"
-"                            Please switch to another account, or reactivate the current one to timesheet on the project."
+"You cannot log timesheets on this project since it is linked to an inactive "
+"analytic account.<br/>\n"
+"                            Please switch to another account, or reactivate "
+"the current one to timesheet on the project."
 msgstr ""
-"आप इस प्रोजेक्ट पर टाइमशीट दर्ज नहीं कर सकते हैं, क्योंकि यह एक निष्क्रिय एनालिटिक खाते से जुड़ा है.<br/>\n"
-"                            कृपया दूसरे खाते पर स्विच करें या प्रोजेक्ट पर टाइमशीट दर्ज करने के लि"
-"ए मौजूदा खाते को फिर से सक्रिय करें।"
+"आप इस प्रोजेक्ट पर टाइमशीट दर्ज नहीं कर सकते हैं, क्योंकि यह एक निष्क्रिय एनालिटिक खाते से "
+"जुड़ा है.<br/>\n"
+"                            कृपया दूसरे खाते पर स्विच करें या प्रोजेक्ट पर टाइमशीट दर्ज "
+"करने के लिए मौजूदा खाते को फिर से सक्रिय करें।"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive "
-"analytic account.<br/> Please change this account, or reactivate the current"
-" one to timesheet on the project."
+"analytic account.<br/> Please change this account, or reactivate the current "
+"one to timesheet on the project."
 msgstr ""
-"आप इस प्रोजेक्ट पर टाइमशीट दर्ज नहीं कर सकते हैं, क्योंकि यह एक निष्क्रिय एनालिटिक खाते से जुड़ा है.<br/"
-">कृपया इस खाते को बदलें, या प्रोजेक्ट पर टाइमशीट दर्ज करने के लिए मौजूदा खाते को फिर से सक्रिय करें।"
+"आप इस प्रोजेक्ट पर टाइमशीट दर्ज नहीं कर सकते हैं, क्योंकि यह एक निष्क्रिय एनालिटिक खाते से "
+"जुड़ा है.<br/>कृपया इस खाते को बदलें, या प्रोजेक्ट पर टाइमशीट दर्ज करने के लिए मौजूदा खाते "
+"को फिर से सक्रिय करें।"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "You cannot set an archived employee on existing timesheets."
-msgstr ""
-"आप मौजूदा टाइमशीट पर संग्रहित (आर्काइव किए गए) कर्मचारी को सेट नहीं कर सकते हैं।"
+msgstr "आप मौजूदा टाइमशीट पर संग्रहित (आर्काइव किए गए) कर्मचारी को सेट नहीं कर सकते हैं।"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task
@@ -1438,7 +1447,8 @@ msgstr "के लिए"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "on\n"
-"                            <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
+"                            <span class=\"fw-bold text-dark\"> Sub-tasks</"
+"span>)"
 msgstr "<span class=\"fw-bold text-dark\"> सब-टास्क</span>)"
 
 #. module: hr_timesheet

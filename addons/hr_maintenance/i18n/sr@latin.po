@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
-"PO-Revision-Date: 2025-11-21 06:40+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-12-31 16:35+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
 "odoo-18/hr_maintenance/sr_Latn/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__assign_date
@@ -63,6 +63,11 @@ msgid "Department"
 msgstr "Odeljenje"
 
 #. module: hr_maintenance
+#: model:ir.model,name:hr_maintenance.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "Čarobnjak odlazaka"
+
+#. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__employee_id
 #: model:ir.model.fields.selection,name:hr_maintenance.selection__maintenance_equipment__equipment_assign_to__employee
@@ -75,12 +80,18 @@ msgstr "Zaposleni"
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_ids
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__equipment_id
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_departure_wizard_view_form
 msgid "Equipment"
 msgstr ""
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_count
 msgid "Equipment Count"
+msgstr ""
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_departure_wizard__unassign_equipment
+msgid "Free Equiments"
 msgstr ""
 
 #. module: hr_maintenance
@@ -112,6 +123,11 @@ msgstr "Ostalo"
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__owner_user_id
 msgid "Owner"
 msgstr "Vlasnik"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,help:hr_maintenance.field_hr_departure_wizard__unassign_equipment
+msgid "Unassign Employee from Equipments"
+msgstr ""
 
 #. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_kanban_inherit_hr

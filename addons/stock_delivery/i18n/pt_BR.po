@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_delivery
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Maitê Dietze, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
+"41243/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -105,8 +107,7 @@ msgstr "Cancelar"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
 "O cancelamento de uma entrega pode não ser possível. Tem certeza de que "
 "deseja continuar?"
@@ -199,11 +200,15 @@ msgstr "Exibir links de rastreamento"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
-"Custo estimado: o cliente receberá uma fatura com o custo estimado do frete.\n"
-"Custo real: o cliente receberá uma fatura com o custo real do frete, o custo do frete será atualizado no PV após a entrega."
+"Custo estimado: o cliente receberá uma fatura com o custo estimado do "
+"frete.\n"
+"Custo real: o cliente receberá uma fatura com o custo real do frete, o custo "
+"do frete será atualizado no PV após a entrega."
 
 #. module: stock_delivery
 #. odoo-python
@@ -355,11 +360,15 @@ msgstr "Rotas"
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
-"As regras de origem determinam a origem das mercadorias, ou seja, não de onde foram enviadas, mas onde foram produzidas ou fabricadas.\n"
-"Como tal, a 'origem' é a 'nacionalidade econômica' dos bens negociados no comércio."
+"As regras de origem determinam a origem das mercadorias, ou seja, não de "
+"onde foram enviadas, mas onde foram produzidas ou fabricadas.\n"
+"Como tal, a 'origem' é a 'nacionalidade econômica' dos bens negociados no "
+"comércio."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
@@ -390,8 +399,8 @@ msgstr "Enviar à transportadora"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
+"(ref)s"
 msgstr ""
 "Remessa enviada à transportadora %(carrier_name)s para envio com número de "
 "rastreamento %(ref)s"
@@ -447,8 +456,7 @@ msgstr "Campo técnico que indica o número de casas decimais do peso"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
-msgstr ""
-"Campo técnico que indica se a unidade de peso é kg ou não (ex.: libra)"
+msgstr "Campo técnico que indica se a unidade de peso é kg ou não (ex.: libra)"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
@@ -568,8 +576,8 @@ msgstr "Peso:"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
 "Não é possível embalar produtos no mesmo pacote quando eles têm "
 "transportadoras diferentes (ou seja, verifique se todas as transferências "
@@ -579,8 +587,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
-"Você tem múltiplos links de rastreamento e eles estão disponíveis no "
-"chatter."
+"Você tem múltiplos links de rastreamento e eles estão disponíveis no chatter."
 
 #. module: stock_delivery
 #. odoo-python

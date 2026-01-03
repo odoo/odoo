@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_work_entry_contract
-# 
+#
 # Translators:
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
 # Maria Muntean, 2025
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,help:hr_work_entry_contract.field_hr_contract__work_entry_source
@@ -29,17 +30,23 @@ msgid ""
 "\n"
 "        Defines the source for work entries generation\n"
 "\n"
-"        Working Schedule: Work entries will be generated from the working hours below.\n"
-"        Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)\n"
-"        Planning: Work entries will be generated from the employee's planning. (requires Planning app)\n"
+"        Working Schedule: Work entries will be generated from the working "
+"hours below.\n"
+"        Attendances: Work entries will be generated from the employee's "
+"attendances. (requires Attendance app)\n"
+"        Planning: Work entries will be generated from the employee's "
+"planning. (requires Planning app)\n"
 "    "
 msgstr ""
 "\n"
 "        Definește sursa pentru generarea intrărilor de lucru\n"
 "\n"
-"        Program de lucru: Intrările de muncă vor fi generate din orele de lucru de mai jos.\n"
-"        Prezențe: Intrările de muncă vor fi generate din prezențele angajatului. (necesită aplicația Attendance)\n"
-"        Planificare: Intrările de muncă vor fi generate din planificarea angajatului. (necesită aplicația Planning)\n"
+"        Program de lucru: Intrările de muncă vor fi generate din orele de "
+"lucru de mai jos.\n"
+"        Prezențe: Intrările de muncă vor fi generate din prezențele "
+"angajatului. (necesită aplicația Attendance)\n"
+"        Planificare: Intrările de muncă vor fi generate din planificarea "
+"angajatului. (necesită aplicația Planning)\n"
 "    "
 
 #. module: hr_work_entry_contract
@@ -57,8 +64,8 @@ msgid ""
 "%(employee)s has multiple contracts from %(date_start)s to %(date_end)s. A "
 "work entry cannot overlap multiple contracts."
 msgstr ""
-"%(employee)s are contracte multiple de la %(date_start)s până la "
-"%(date_end)s. O intrare de muncă nu se poate suprapune peste mai multe "
+"%(employee)s are contracte multiple de la %(date_start)s până la %"
+"(date_end)s. O intrare de muncă nu se poate suprapune peste mai multe "
 "contracte."
 
 #. module: hr_work_entry_contract
@@ -211,8 +218,8 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 msgid ""
-"In order to regenerate the work entries, you need to provide the wizard with"
-" an employee_id, a date_from and a date_to. In addition to that, the time "
+"In order to regenerate the work entries, you need to provide the wizard with "
+"an employee_id, a date_from and a date_to. In addition to that, the time "
 "interval defined by date_from and date_to must not contain any validated "
 "work entries."
 msgstr ""
@@ -297,8 +304,7 @@ msgstr "Concediu medical"
 #. module: hr_work_entry_contract
 #. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_contract.py:0
-msgid ""
-"Sorry, generating work entries from cancelled contracts is not allowed."
+msgid "Sorry, generating work entries from cancelled contracts is not allowed."
 msgstr ""
 "Ne pare rău, generarea de intrări de lucru din contracte anulate nu este "
 "permisă."

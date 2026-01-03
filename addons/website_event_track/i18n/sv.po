@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_track
-# 
+#
 # Translators:
 # Victor Ekström, 2024
 # Björn Hayer, 2024
@@ -17,31 +17,38 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:41+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_track
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
-"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br/>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name "
+"or ''\">What This Event Is All About</t> has been accepted and confirmed for "
+"the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online "
+"Reveal</t>.\n"
 "    <br/>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
@@ -49,7 +56,8 @@ msgid ""
 "    Thank you,\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-"
+"o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "    </t>\n"
 msgstr ""
 
@@ -164,13 +172,17 @@ msgstr "<span class=\"fa fa-plus me-1\"/> Schema Spår"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                    <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                    <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                    <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                    <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                </span>"
 msgstr ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                    <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Fel\"/>\n"
-"                                    <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                    <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Fel\"/>\n"
+"                                    <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                </span>"
 
 #. module: website_event_track
@@ -388,14 +400,20 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
 msgid ""
-"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
-"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
-"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"As you may have heard before, making your own furniture is actually not as "
+"difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete "
+"them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee "
+"table you can easily put one together using\n"
 "    wood crates."
 msgstr ""
-"Som du kanske har hört tidigare är det faktiskt inte så svårt eller komplicerat som du tror att göra dina egna möbler.\n"
-"    Faktum är att vissa projekt är så enkla att vem som helst kan slutföra dem framgångsrikt. Till exempel att göra en söt pall av\n"
-"    ett gammalt däck är en riktig bit av kakan och om du behöver ett soffbord kan du enkelt sätta ihop ett med hjälp av\n"
+"Som du kanske har hört tidigare är det faktiskt inte så svårt eller "
+"komplicerat som du tror att göra dina egna möbler.\n"
+"    Faktum är att vissa projekt är så enkla att vem som helst kan slutföra "
+"dem framgångsrikt. Till exempel att göra en söt pall av\n"
+"    ett gammalt däck är en riktig bit av kakan och om du behöver ett "
+"soffbord kan du enkelt sätta ihop ett med hjälp av\n"
 "    trälådor."
 
 #. module: website_event_track
@@ -662,8 +680,8 @@ msgid ""
 "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES "
 "OF ALL EVENTS"
 msgstr ""
-"LÄGG BYGGKLOSSAR HÄR FÖR ATT GÖRA DEM TILLGÄNGLIGA PÅ ALLA FÖRSLAGSSIDOR FÖR"
-" ALLA HÄNDELSER"
+"LÄGG BYGGKLOSSAR HÄR FÖR ATT GÖRA DEM TILLGÄNGLIGA PÅ ALLA FÖRSLAGSSIDOR FÖR "
+"ALLA HÄNDELSER"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -756,8 +774,7 @@ msgid ""
 "Display a Call to Action button to your Attendees while they watch your "
 "Track."
 msgstr ""
-"Visa en Call to Action-knapp för dina deltagare medan de tittar på din "
-"Track."
+"Visa en Call to Action-knapp för dina deltagare medan de tittar på din Track."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
@@ -1084,8 +1101,7 @@ msgstr "Så här integrerar du hårdvarumaterial i dina möbler"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track8
 msgid "How to optimize your sales, from leads to sales orders"
-msgstr ""
-"Så här optimerar du din försäljning, från leads till försäljningsorder"
+msgstr "Så här optimerar du din försäljning, från leads till försäljningsorder"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__id
@@ -1144,8 +1160,8 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
 msgid ""
-"If set, the talk will be set as favorite for each attendee registered to the"
-" event."
+"If set, the talk will be set as favorite for each attendee registered to the "
+"event."
 msgstr ""
 "Om den är inställd kommer föreläsningen att anges som favorit för varje "
 "deltagare som är registrerad för evenemanget."
@@ -1658,8 +1674,8 @@ msgid ""
 "furniture!"
 msgstr ""
 "Förmodligen en av de mest ställda frågorna jag har fått är hur jag började "
-"träbearbetning! I den här videon delar jag med mig av hur/varför jag började"
-" bygga möbler!"
+"träbearbetning! I den här videon delar jag med mig av hur/varför jag började "
+"bygga möbler!"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage0
@@ -1989,8 +2005,7 @@ msgstr "Pågående aktivitet. Klicka för att blockera eller ange som utförd."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Task is blocked. Click to unblock or set as done."
-msgstr ""
-"Aktiviteten är blockerad. Klicka för avblockering eller klarmarkering."
+msgstr "Aktiviteten är blockerad. Klicka för avblockering eller klarmarkering."
 
 #. module: website_event_track
 #. odoo-javascript
@@ -2026,11 +2041,15 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"There are several variants of wood is available in the world but we are talking about most expensive\n"
-"    ones in the world and keeping to the point we have arranged ten most expensive wood."
+"There are several variants of wood is available in the world but we are "
+"talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most "
+"expensive wood."
 msgstr ""
-"Det finns flera varianter av trä i världen men vi pratar om de dyraste i världen och för att\n"
-"    i världen och för att hålla oss till den punkten har vi ordnat tio dyraste träslag."
+"Det finns flera varianter av trä i världen men vi pratar om de dyraste i "
+"världen och för att\n"
+"    i världen och för att hålla oss till den punkten har vi ordnat tio "
+"dyraste träslag."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2049,8 +2068,7 @@ msgstr "Det är standardföreläsningar med bilder, fördelade på 60 minuter."
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid ""
-"They will be created automatically once attendees start browsing your "
-"events."
+"They will be created automatically once attendees start browsing your events."
 msgstr ""
 "De kommer att skapas automatiskt när deltagarna börjar bläddra i dina "
 "evenemang."
@@ -2130,11 +2148,15 @@ msgstr "Topp 10 dyraste träslagen i världen"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
-"    that there are hundreds of wood types exist around the globe following different properties and use."
+"Top most expensive wood in the world is quite interesting topic and several "
+"people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following "
+"different properties and use."
 msgstr ""
-"Topp dyraste trä i världen är ganska intressant ämne och flera människor kan bli förvånade över\n"
-"    att det finns hundratals olika träslag runt om i världen med olika egenskaper och användningsområden."
+"Topp dyraste trä i världen är ganska intressant ämne och flera människor kan "
+"bli förvånade över\n"
+"    att det finns hundratals olika träslag runt om i världen med olika "
+"egenskaper och användningsområden."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
@@ -2281,8 +2303,8 @@ msgid ""
 "Tracks define your event schedule. They can be talks, workshops or any "
 "similar activity."
 msgstr ""
-"Spår definierar ditt evenemangsschema. Det kan vara föreläsningar, workshops"
-" eller andra liknande aktiviteter."
+"Spår definierar ditt evenemangsschema. Det kan vara föreläsningar, workshops "
+"eller andra liknande aktiviteter."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
@@ -2313,24 +2335,41 @@ msgid "Unread Messages"
 msgstr "Olästa meddelanden"
 
 #. module: website_event_track
-#: model_terms:event.track,description:website_event_track.event_7_track_6
-msgid ""
-"Use these simple steps to easily haul LONG lumber in a short box pickup truck.  A dose of carpenter's\n"
-"    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
-"    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#: code:addons/website_event_track/models/website_visitor.py:0
+msgid "Unsupported 'Not In' operation on track wishlist visitors"
 msgstr ""
-"Använd dessa enkla steg för att enkelt transportera LÅNGT virke i en pickup med kort lastutrymme.  En dos av snickarens\n"
-"    uppfinningsrikedom tillsammans med ett par brädor, en robust rem och några skruvar är allt jag använder för att enkelt transportera\n"
-"    långa brädor från timmergården till Next Level Carpentry-verkstaden eller arbetsplatsen."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
-"    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
+"Use these simple steps to easily haul LONG lumber in a short box pickup "
+"truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws "
+"are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or "
+"jobsite."
 msgstr ""
-"Genom att använda en unik förpackningsmetod för en fästrem (INTE Bungee-snören!!!) kan timmer\n"
-"    fästas säkert UTAN att behöva knyta och lossa knepiga eller komplicerade knutar."
+"Använd dessa enkla steg för att enkelt transportera LÅNGT virke i en pickup "
+"med kort lastutrymme.  En dos av snickarens\n"
+"    uppfinningsrikedom tillsammans med ett par brädor, en robust rem och "
+"några skruvar är allt jag använder för att enkelt transportera\n"
+"    långa brädor från timmergården till Next Level Carpentry-verkstaden "
+"eller arbetsplatsen."
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_6
+msgid ""
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) "
+"allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated "
+"knots."
+msgstr ""
+"Genom att använda en unik förpackningsmetod för en fästrem (INTE Bungee-"
+"snören!!!) kan timmer\n"
+"    fästas säkert UTAN att behöva knyta och lossa knepiga eller komplicerade "
+"knutar."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -2402,10 +2441,13 @@ msgid ""
 "                                inclusion in the programme."
 msgstr ""
 "Vi kommer att acceptera ett brett spektrum av\n"
-"                                presentationer, från rapporter om akademiska och kommersiella\n"
-"                                kommersiella projekt till handledning och fallstudier\n"
+"                                presentationer, från rapporter om akademiska "
+"och kommersiella\n"
+"                                kommersiella projekt till handledning och "
+"fallstudier\n"
 "                                fallstudier. Så länge presentationen är\n"
-"                                intressant och potentiellt användbar för publiken\n"
+"                                intressant och potentiellt användbar för "
+"publiken\n"
 "                                publiken, kommer den att övervägas för\n"
 "                                att ingå i programmet."
 
@@ -2413,8 +2455,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
 msgid "We will evaluate your proposition and get back to you shortly."
-msgstr ""
-"Vi kommer att utvärdera ditt förslag och återkomma till dig inom kort."
+msgstr "Vi kommer att utvärdera ditt förslag och återkomma till dig inom kort."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal

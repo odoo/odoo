@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_totp_mail
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Marta Wacławek, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: auth_totp_mail
 #: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
@@ -26,13 +28,19 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor authentication to protect your account.<br/><br/>\n"
-"        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
-"        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
-"        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.\n"
+"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor "
+"authentication to protect your account.<br/><br/>\n"
+"        Two-factor Authentication (\"2FA\") is a system of double "
+"authentication.\n"
+"        The first one is done with your password and the second one with a "
+"code you get from a dedicated mobile app.\n"
+"        Popular ones include Authy, Google Authenticator or the Microsoft "
+"Authenticator.\n"
 "\n"
 "        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" "
+"style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px;\">\n"
 "                Activate my two-factor Authentication\n"
 "            </a>\n"
 "        </p>\n"
@@ -43,13 +51,19 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Drogi/-a <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> poprosił/-a, abyś aktywował/-a uwierzytelnianie dwuetapowe, aby chronić Twoje konto.<br/><br/>\n"
-"        Uwierzytelnianie dwuetapowe (\"2FA\") jest systemem podwójnej weryfikacji logowania.\n"
-"        Pierwszym etapem jest Twoje hasło, a drugim jest kod z dedykowanej aplikacji z urządzenia mobilnego.\n"
-"        Popularnymi aplikacjami są Authy, Google Authenticator oraz Microsoft Authenticator.\n"
+"        <t t-out=\"user.name  or ''\"/> poprosił/-a, abyś aktywował/-a "
+"uwierzytelnianie dwuetapowe, aby chronić Twoje konto.<br/><br/>\n"
+"        Uwierzytelnianie dwuetapowe (\"2FA\") jest systemem podwójnej "
+"weryfikacji logowania.\n"
+"        Pierwszym etapem jest Twoje hasło, a drugim jest kod z dedykowanej "
+"aplikacji z urządzenia mobilnego.\n"
+"        Popularnymi aplikacjami są Authy, Google Authenticator oraz "
+"Microsoft Authenticator.\n"
 "\n"
 "        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" "
+"style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px;\">\n"
 "                Aktywuj uwierzytelnianie dwuetapowe\n"
 "            </a>\n"
 "        </p>\n"
@@ -101,8 +115,8 @@ msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
 msgstr ""
-"Zaproszenie do użycia uwierzytelniania dwuetapowego wysłane do następujących"
-" użytkowników: %s"
+"Zaproszenie do użycia uwierzytelniania dwuetapowego wysłane do następujących "
+"użytkowników: %s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
@@ -163,8 +177,7 @@ msgstr "Uwierzytelnianie dwuskładnikowe zostało aktywowane na Twoim koncie"
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Two-factor authentication has been deactivated on your account"
-msgstr ""
-"Uwierzytelnianie dwuskładnikowe zostało zdezaktywowane na Twoim koncie"
+msgstr "Uwierzytelnianie dwuskładnikowe zostało zdezaktywowane na Twoim koncie"
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users

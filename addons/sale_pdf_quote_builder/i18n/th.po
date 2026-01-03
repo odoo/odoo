@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-11-21 02:35+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-18/"
@@ -30,8 +30,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state ใน ('ร่าง', 'ส่ง') และ 'ใบเสนอราคา - %s' % (object.name)) หรือ"
-" 'สั่งซื้อ - %s' % (object.name)"
+"(object.state ใน ('ร่าง', 'ส่ง') และ 'ใบเสนอราคา - %s' % (object.name)) หรือ "
+"'สั่งซื้อ - %s' % (object.name)"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -47,19 +47,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in product documents can't be linked to a quotation"
-" document."
-msgstr ""
-"ฟิลด์ฟอร์มที่ใช้ในเอกสารผลิตภัณฑ์ไม่สามารถเชื่อมโยงกับเอกสารใบเสนอราคาได้"
+"A form field set as used in product documents can't be linked to a quotation "
+"document."
+msgstr "ฟิลด์ฟอร์มที่ใช้ในเอกสารผลิตภัณฑ์ไม่สามารถเชื่อมโยงกับเอกสารใบเสนอราคาได้"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in quotation documents can't be linked to a product"
-" document."
-msgstr ""
-"ฟิลด์ฟอร์มที่ใช้ในเอกสารใบเสนอราคาไม่สามารถเชื่อมโยงกับเอกสารผลิตภัณฑ์ได้"
+"A form field set as used in quotation documents can't be linked to a product "
+"document."
+msgstr "ฟิลด์ฟอร์มที่ใช้ในเอกสารใบเสนอราคาไม่สามารถเชื่อมโยงกับเอกสารผลิตภัณฑ์ได้"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__access_token
@@ -86,12 +84,17 @@ msgstr "อัปโหลดไฟล์ทั้งหมด"
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
-"Leave it empty if you don't want to share this document with sales customer.\n"
-"On quote: the document will be sent to and accessible by customers at any time.\n"
+"Leave it empty if you don't want to share this document with sales "
+"customer.\n"
+"On quote: the document will be sent to and accessible by customers at any "
+"time.\n"
 "e.g. this option can be useful to share Product description files.\n"
-"On order confirmation: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
+"On order confirmation: the document will be sent to and accessible by "
+"customers.\n"
+"e.g. this option can be useful to share User Manual or digital content "
+"bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation and "
+"sale order between the header pages and the quote table. "
 msgstr ""
 "ช่วยให้คุณสามารถแชร์เอกสารกับลูกค้าของคุณภายในการขาย\n"
 "ปล่อยว่างไว้หากคุณไม่ต้องการแชร์เอกสารนี้กับลูกค้าฝ่ายขาย\n"
@@ -99,7 +102,8 @@ msgstr ""
 "เช่น ตัวเลือกนี้อาจมีประโยชน์ในการแชร์ไฟล์คำอธิบายผลิตภัณฑ์\n"
 "ในการยืนยันคำสั่งซื้อ: เอกสารจะถูกส่งถึงและลูกค้าสามารถเข้าถึงได้\n"
 "เช่น ตัวเลือกนี้อาจมีประโยชน์ในการแชร์คู่มือผู้ใช้หรือเนื้อหาดิจิทัลที่ซื้อจากอีคอมเมิร์ซ\n"
-"ในใบเสนอราคา: เอกสารจะรวมอยู่ใน pdf ของใบเสนอราคาและใบสั่งขายระหว่างหน้าส่วนหัวและตารางใบเสนอราคา"
+"ในใบเสนอราคา: เอกสารจะรวมอยู่ใน pdf "
+"ของใบเสนอราคาและใบสั่งขายระหว่างหน้าส่วนหัวและตารางใบเสนอราคา"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -354,8 +358,8 @@ msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
 msgstr ""
-"ชื่อฟิลด์ฟอร์มไม่ถูกต้อง %(field_name)s "
-"ชื่อฟิลด์ฟอร์มในส่วนหัวหรือส่วนท้ายไม่สามารถเริ่มต้นด้วย \"sol_id_\" ได้"
+"ชื่อฟิลด์ฟอร์มไม่ถูกต้อง %(field_name)s ชื่อฟิลด์ฟอร์มในส่วนหัวหรือส่วนท้ายไม่สามารถเริ่มต้นด้วย "
+"\"sol_id_\" ได้"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -364,8 +368,8 @@ msgid ""
 "Invalid form field name %(field_name)s. It should only contain "
 "alphanumerics, hyphens or underscores."
 msgstr ""
-"ชื่อฟิลด์ฟอร์มไม่ถูกต้อง %(field_name)s ควรประกอบด้วยตัวอักษรและตัวเลข "
-"เครื่องหมายขีดกลาง หรือเครื่องหมายขีดล่างเท่านั้น"
+"ชื่อฟิลด์ฟอร์มไม่ถูกต้อง %(field_name)s ควรประกอบด้วยตัวอักษรและตัวเลข เครื่องหมายขีดกลาง "
+"หรือเครื่องหมายขีดล่างเท่านั้น"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -374,8 +378,8 @@ msgid ""
 "Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
 "underscores or points."
 msgstr ""
-"เส้นทาง %(path)s ไม่ถูกต้อง ควรประกอบด้วยตัวอักษรและตัวเลข "
-"เครื่องหมายยัติภังค์ เครื่องหมายขีดล่าง หรือจุดเท่านั้น"
+"เส้นทาง %(path)s ไม่ถูกต้อง ควรประกอบด้วยตัวอักษรและตัวเลข เครื่องหมายยัติภังค์ "
+"เครื่องหมายขีดล่าง หรือจุดเท่านั้น"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__is_pdf_quote_builder_available
@@ -495,15 +499,21 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid ""
-"Provide header pages and footer pages to compose an attractive quotation with more information\n"
-"                        about your company, your products and you services. <br/>\n"
-"                        The pdf of your quotes will be built by putting together header pages, product descriptions,\n"
-"                        details of the quote and then the footer pages. <br/>\n"
-"                        If empty, it will use those define in the company settings. <br/>"
+"Provide header pages and footer pages to compose an attractive quotation "
+"with more information\n"
+"                        about your company, your products and you services. "
+"<br/>\n"
+"                        The pdf of your quotes will be built by putting "
+"together header pages, product descriptions,\n"
+"                        details of the quote and then the footer pages. <br/"
+">\n"
+"                        If empty, it will use those define in the company "
+"settings. <br/>"
 msgstr ""
 "จัดเตรียมหน้าส่วนหัวและหน้าส่วนท้ายเพื่อเขียนใบเสนอราคาที่น่าสนใจพร้อมข้อมูลเพิ่มเติม\n"
 "                        เกี่ยวกับบริษัท ผลิตภัณฑ์ และบริการของคุณ<br/>\n"
-"                        PDF ของใบเสนอราคาของคุณจะถูกสร้างขึ้นโดยการรวมหน้าส่วนหัว คำอธิบายผลิตภัณฑ์\n"
+"                        PDF ของใบเสนอราคาของคุณจะถูกสร้างขึ้นโดยการรวมหน้าส่วนหัว "
+"คำอธิบายผลิตภัณฑ์\n"
 "                        รายละเอียดของใบเสนอราคา และหน้าส่วนท้ายเข้าด้วยกัน <br/>\n"
 "                        หากว่างเปล่า จะใช้สิ่งที่กำหนดไว้ในการตั้งค่าบริษัท <br/>"
 
@@ -583,8 +593,7 @@ msgstr "การขาย : มองเห็นได้ที่"
 #: model:ir.actions.server,name:sale_pdf_quote_builder.cron_post_upgrade_assign_missing_form_fields_ir_actions_server
 msgid "Sale Pdf Quote Builder: assign form fields to documents post upgrade"
 msgstr ""
-"โปรแกรมสร้างใบเสนอราคา PDF สำหรับการขาย: "
-"กำหนดฟิลด์ฟอร์มให้กับเอกสารหลังการอัปเกรด"
+"โปรแกรมสร้างใบเสนอราคา PDF สำหรับการขาย: กำหนดฟิลด์ฟอร์มให้กับเอกสารหลังการอัปเกรด"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
@@ -691,8 +700,7 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
-"คุณสามารถอัปโหลดไฟล์จากคอมพิวเตอร์ของคุณ "
-"หรือคัดลอก/วางอินเตอร์เน็ตลิงก์ไปยังไฟล์ของคุณ"
+"คุณสามารถอัปโหลดไฟล์จากคอมพิวเตอร์ของคุณ หรือคัดลอก/วางอินเตอร์เน็ตลิงก์ไปยังไฟล์ของคุณ"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form

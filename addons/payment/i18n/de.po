@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment
-# 
+#
 # Translators:
 # Martin Trigaux, 2024
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
 # Larissa Manderfeld, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment
@@ -42,42 +42,51 @@ msgstr "7Eleven"
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %(bank)s</li><li>Account "
-"Number: %(account_number)s</li><li>Account Holder: "
-"%(account_holder)s</li></ul>"
+"Number: %(account_number)s</li><li>Account Holder: %(account_holder)s</li></"
+"ul>"
 msgstr ""
-"<h3>Bitte überweisen Sie an: </h3><ul><li>Bank %(bank)s</li><li>Kontonummer "
-"%(account_number)s</li><li>Kontoinhaber %(account_holder)s</li></ul>"
+"<h3>Bitte überweisen Sie an: </h3><ul><li>Bank %(bank)s</li><li>Kontonummer %"
+"(account_number)s</li><li>Kontoinhaber %(account_holder)s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
-"                                match the behavior of providers and that of their integration with\n"
-"                                Odoo regarding this payment method. Any change may result in errors\n"
-"                                and should be tested on a test database first."
+"                                match the behavior of providers and that of "
+"their integration with\n"
+"                                Odoo regarding this payment method. Any "
+"change may result in errors\n"
+"                                and should be tested on a test database "
+"first."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/> Diese Eigenschaften sind so eingestellt, dass\n"
-"                                sie der Vorgehensweise der Anbieter und der Integration mit\n"
-"                                Odoo in Bezug auf diese Zahlungsmethode entsprechen. jegliche Änderungen können zu Fehlern führen\n"
-"                                und sollten zuerst auf einer Testdatenbank getestet werden."
+"<i class=\"fa fa-exclamation-triangle\"/> Diese Eigenschaften sind so "
+"eingestellt, dass\n"
+"                                sie der Vorgehensweise der Anbieter und der "
+"Integration mit\n"
+"                                Odoo in Bezug auf diese Zahlungsmethode "
+"entsprechen. jegliche Änderungen können zu Fehlern führen\n"
+"                                und sollten zuerst auf einer Testdatenbank "
+"getestet werden."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
-msgid "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgid ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgstr ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
-" != 'full_only'\" title=\"Some of the transactions you intend to capture can"
-" only be captured in full. Handle the transactions individually to capture a"
-" partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
-" != 'full_only'\" title=\"Some of the transactions you intend to capture can"
-" only be captured in full. Handle the transactions individually to capture a"
-" partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -92,8 +101,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
 msgstr ""
-"<i class=\"oi oi-arrow-right me-1\"></i> Einen Zahlungsanbieter "
-"konfigurieren"
+"<i class=\"oi oi-arrow-right me-1\"></i> Einen Zahlungsanbieter konfigurieren"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -154,10 +162,11 @@ msgstr "<span><i class=\"fa fa-lock\"/> Gesichert durch</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
+msgid ""
+"<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
 msgstr ""
-"<strong><i class=\"fa fa-file-text\"/> Verfügbarkeitsbericht "
-"anzeigen</strong>"
+"<strong><i class=\"fa fa-file-text\"/> Verfügbarkeitsbericht anzeigen</"
+"strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -178,12 +187,16 @@ msgstr "<strong>Keine Zahlungsmethode verfügbar</strong>"
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a partial capture pending. Please wait a\n"
-"                    moment for it to be processed. Check your payment provider configuration if\n"
+"                    moment for it to be processed. Check your payment "
+"provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
-"<strong>Warnung!</strong> Es gibt eine ausstehende Teilerfassung. Bitte warten Sie einen\n"
-"                    Moment, bis sie verarbeitet ist. Überprüfen Sie die Konfiguration Ihres Zahlungsanbieters, wenn\n"
-"                    die Erfassung nach einigen Minuten immer noch nicht abgeschlossen ist."
+"<strong>Warnung!</strong> Es gibt eine ausstehende Teilerfassung. Bitte "
+"warten Sie einen\n"
+"                    Moment, bis sie verarbeitet ist. Überprüfen Sie die "
+"Konfiguration Ihres Zahlungsanbieters, wenn\n"
+"                    die Erfassung nach einigen Minuten immer noch nicht "
+"abgeschlossen ist."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -197,20 +210,25 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid ""
-"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
+"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</"
+"em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Warnung</strong> Das Erstellen eines Zahlungsanbieters über die Schaltfläche <em>ERSTELLEN</em> wird nicht unterstützt.\n"
-"                        Bitte verwenden Sie stattdessen die Aktion <em>Duplizieren</em>."
+"<strong>Warnung</strong> Das Erstellen eines Zahlungsanbieters über die "
+"Schaltfläche <em>ERSTELLEN</em> wird nicht unterstützt.\n"
+"                        Bitte verwenden Sie stattdessen die Aktion "
+"<em>Duplizieren</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid ""
 "<strong>Warning</strong> Make sure you are logged in as the\n"
-"                                    correct partner before making this payment."
+"                                    correct partner before making this "
+"payment."
 msgstr ""
 "<strong>Warnung</strong> Stellen Sie sicher, dass Sie als der\n"
-"                                     richtige Partner angemeldet sind, bevor Sie diese Zahlung tätigen."
+"                                     richtige Partner angemeldet sind, bevor "
+"Sie diese Zahlung tätigen."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -231,8 +249,8 @@ msgid ""
 "soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
 msgstr ""
 "Ein Erstattungsantrag über %(amount)s wurde versendet. Die Zahlung wird in "
-"Kürze veranlasst. Referenz der Erstattungstransaktion: %(ref)s "
-"(%(provider_name)s)."
+"Kürze veranlasst. Referenz der Erstattungstransaktion: %(ref)s (%"
+"(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -240,8 +258,8 @@ msgstr ""
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(provider_name)s)."
 msgstr ""
-"Die Transaktion mit der Referenz %(ref)s wurde eingeleitet "
-"(%(provider_name)s). "
+"Die Transaktion mit der Referenz %(ref)s wurde eingeleitet (%"
+"(provider_name)s). "
 
 #. module: payment
 #. odoo-python
@@ -260,8 +278,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
 msgstr ""
-"Die Transaktion mit der Referenz %(ref)s wurde mit der Zahlungsmethode "
-"%(token)s (%(provider_name)s) eingeleitet."
+"Die Transaktion mit der Referenz %(ref)s wurde mit der Zahlungsmethode %"
+"(token)s (%(provider_name)s) eingeleitet."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ach_direct_debit
@@ -750,7 +768,9 @@ msgid ""
 "you are sure you can ship the goods to them."
 msgstr ""
 "Erfassen Sie den Betrag von Odoo, wenn die Lieferung abgeschlossen ist.\n"
-"Verwenden Sie diese Funktion, wenn Sie die Karten Ihrer Kunden nur dann belasten möchten, wenn Sie sicher sind, dass Sie die Lieferung durchführen können."
+"Verwenden Sie diese Funktion, wenn Sie die Karten Ihrer Kunden nur dann "
+"belasten möchten, wenn Sie sicher sind, dass Sie die Lieferung durchführen "
+"können."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_card
@@ -1132,8 +1152,8 @@ msgid ""
 "to skip the checkout process."
 msgstr ""
 "Der Express-Kassiervorgang ermöglicht es Kunden, schneller zu bezahlen, "
-"indem sie eine Zahlungsmethode verwenden, die alle erforderlichen Rechnungs-"
-" und Versandinformationen bereitstellt, sodass der Kassierprozess "
+"indem sie eine Zahlungsmethode verwenden, die alle erforderlichen Rechnungs- "
+"und Versandinformationen bereitstellt, sodass der Kassierprozess "
 "übersprungen werden kann."
 
 #. module: payment
@@ -1295,8 +1315,7 @@ msgstr "ID"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid ""
-"If you believe that it is an error, please contact the website "
-"administrator."
+"If you believe that it is an error, please contact the website administrator."
 msgstr ""
 "Wenn Sie glauben, dass es sich um einen Fehler handelt, wenden Sie sich "
 "bitte an den Administrator der Website."
@@ -1313,7 +1332,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"Im Testmodus wird eine Zahlung über eine Testzahlungsschnittstelle simuliert.\n"
+"Im Testmodus wird eine Zahlung über eine Testzahlungsschnittstelle "
+"simuliert.\n"
 "Dieser Modus wird für die Einrichtung des Anbieters empfohlen."
 
 #. module: payment
@@ -2431,8 +2451,8 @@ msgstr "Sofort"
 #. odoo-python
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 msgid ""
-"Some of the transactions you intend to capture can only be captured in full."
-" Handle the transactions individually to capture a partial amount."
+"Some of the transactions you intend to capture can only be captured in full. "
+"Handle the transactions individually to capture a partial amount."
 msgstr ""
 "Einige der Transaktionen, die Sie erfassen möchten, können nur vollständig "
 "erfasst werden. Verarbeiten Sie die Transaktionen einzeln, um einen "
@@ -2557,8 +2577,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
 msgid ""
-"The brands of the payment methods that will be displayed on the payment "
-"form."
+"The brands of the payment methods that will be displayed on the payment form."
 msgstr ""
 "Die Marken der Zahlungsmethoden, die auf dem Zahlungsformular angezeigt "
 "werden sollen."
@@ -2632,9 +2651,9 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
 msgid ""
-"The list of currencies for that are supported by this payment method (if the"
-" provider allows it). When paying with another currency, this payment method"
-" is not available to customers."
+"The list of currencies for that are supported by this payment method (if the "
+"provider allows it). When paying with another currency, this payment method "
+"is not available to customers."
 msgstr ""
 "Die Liste der Währungen, dir von dieser Zahlungsmethode unterstützt werden "
 "(wenn der Anbieter dies erlaubt). Wenn Sie in einer anderen Währung "
@@ -2709,10 +2728,13 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
 msgid ""
-"The primary payment method of the current payment method, if the latter is a brand.\n"
-"For example, \"Card\" is the primary payment method of the card brand \"VISA\"."
+"The primary payment method of the current payment method, if the latter is a "
+"brand.\n"
+"For example, \"Card\" is the primary payment method of the card brand "
+"\"VISA\"."
 msgstr ""
-"Die primäre Zahlungsmethode der aktuellen Zahlungsmethode, wenn letztere eine Marke ist.\n"
+"Die primäre Zahlungsmethode der aktuellen Zahlungsmethode, wenn letztere "
+"eine Marke ist.\n"
 "Zum Beispiel ist „Karte“ die primäre Zahlungsmethode der Kartenmarke „VISA“."
 
 #. module: payment
@@ -2795,8 +2817,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s encountered an error "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s encountered an error (%"
+"(provider_name)s)."
 msgstr ""
 "Bei der Transaktion mit der Referenz %(ref)s über %(amount)s ist ein Fehler "
 "aufgetreten (%(provider_name)s)."
@@ -2805,21 +2827,21 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been authorized "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s has been authorized (%"
+"(provider_name)s)."
 msgstr ""
-"Die Transaktion mit der Referenz %(ref)s über %(amount)s wurde autorisiert "
-"(%(provider_name)s). "
+"Die Transaktion mit der Referenz %(ref)s über %(amount)s wurde autorisiert (%"
+"(provider_name)s). "
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been confirmed "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s has been confirmed (%"
+"(provider_name)s)."
 msgstr ""
-"Die Transaktion mit der Referenz %(ref)s über %(amount)s wurde bestätigt "
-"(%(provider_name)s). "
+"Die Transaktion mit der Referenz %(ref)s über %(amount)s wurde bestätigt (%"
+"(provider_name)s). "
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -2865,12 +2887,17 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
 msgid ""
-"This controls whether customers can save their payment methods as payment tokens.\n"
-"A payment token is an anonymous link to the payment method details saved in the\n"
+"This controls whether customers can save their payment methods as payment "
+"tokens.\n"
+"A payment token is an anonymous link to the payment method details saved in "
+"the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
-"Dies steuert, ob Kunden ihre Zahlungsmethoden als Zahlungstoken speichern können.\n"
-"Ein Zahlungstoken ist ein anonymer Link zu den in der Datenbank des Anbieters gespeicherten Zahlungsinformationen, sodass der Kunde sie bei seinem nächsten Einkauf wieder verwenden kann."
+"Dies steuert, ob Kunden ihre Zahlungsmethoden als Zahlungstoken speichern "
+"können.\n"
+"Ein Zahlungstoken ist ein anonymer Link zu den in der Datenbank des "
+"Anbieters gespeicherten Zahlungsinformationen, sodass der Kunde sie bei "
+"seinem nächsten Einkauf wieder verwenden kann."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2880,17 +2907,20 @@ msgid ""
 "address information is collected at payment."
 msgstr ""
 "Dies steuert, ob Kunden Express-Zahlungsmethoden verwenden können. Der "
-"Express-Kassiervorgang ermöglicht es Kunden, mit Google Pay und Apple Pay zu"
-" bezahlen, wovon Adressdaten bei der Zahlung erfasst werden."
+"Express-Kassiervorgang ermöglicht es Kunden, mit Google Pay und Apple Pay zu "
+"bezahlen, wovon Adressdaten bei der Zahlung erfasst werden."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid ""
-"This partner has no email, which may cause issues with some payment providers.\n"
+"This partner has no email, which may cause issues with some payment "
+"providers.\n"
 "                     Setting an email for this partner is advised."
 msgstr ""
-"Dieser Partner hat keine E-Mail, was bei einigen Zahlungsanbietern zu Problemen führen kann.\n"
-"                     Es wird empfohlen, eine E-Mail für diesen Partner einzurichten."
+"Dieser Partner hat keine E-Mail, was bei einigen Zahlungsanbietern zu "
+"Problemen führen kann.\n"
+"                     Es wird empfohlen, eine E-Mail für diesen Partner "
+"einzurichten."
 
 #. module: payment
 #. odoo-python
@@ -3114,8 +3144,8 @@ msgid ""
 "Whether a payment token should be created when post-processing the "
 "transaction"
 msgstr ""
-"Ob bei der Nachbearbeitung der Transaktion ein Zahlungstoken erstellt werden"
-" soll"
+"Ob bei der Nachbearbeitung der Transaktion ein Zahlungstoken erstellt werden "
+"soll"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_capture_wizard__support_partial_capture

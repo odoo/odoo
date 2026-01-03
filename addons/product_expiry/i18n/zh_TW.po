@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_expiry
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Tony Ng, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: product_expiry
@@ -26,8 +27,8 @@ msgid ""
 "<span class=\"badge text-bg-danger\" invisible=\"not "
 "product_expiry_alert\">Expiration Alert</span>"
 msgstr ""
-"<span class=\"badge text-bg-danger\" invisible=\"not "
-"product_expiry_alert\">過期警報</span>"
+"<span class=\"badge text-bg-danger\" invisible=\"not product_expiry_alert\">"
+"過期警報</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
@@ -227,7 +228,9 @@ msgid ""
 "Number of days after the receipt of the products (from the vendor or in "
 "stock after production) after which the goods may become dangerous and must "
 "not be consumed. It will be computed on the lot/serial number."
-msgstr "收到產品（來自供應商或生產後的庫存）後，貨物可能變得危險且不得食用的天數。它將根據批次/序號計算。"
+msgstr ""
+"收到產品（來自供應商或生產後的庫存）後，貨物可能變得危險且不得食用的天數。它"
+"將根據批次/序號計算。"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -244,15 +247,16 @@ msgstr "到期日之前的天數，之後應在批次/序號上發出警報。�
 msgid ""
 "Number of days before the Expiration Date after which the goods should be "
 "removed from the stock. It will be computed on the lot/serial number."
-msgstr "在到期日之前的天數，在此之後應將貨物從庫存中移除。它將根據批次/序號計算。"
+msgstr ""
+"在到期日之前的天數，在此之後應將貨物從庫存中移除。它將根據批次/序號計算。"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_time
 msgid ""
 "Number of days before the Expiration Date after which the goods starts "
-"deteriorating, without being dangerous yet. It will be computed on the "
-"lot/serial number."
+"deteriorating, without being dangerous yet. It will be computed on the lot/"
+"serial number."
 msgstr "在到期日之前，貨物開始變質但尚未危險的天數。它將根據批次/序號計算。"
 
 #. module: product_expiry
@@ -378,8 +382,8 @@ msgstr "使用到期日"
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
 msgid ""
-"When this box is ticked, you have the possibility to specify dates to manage"
-" product expiration, on the product and on the corresponding lot/serial "
+"When this box is ticked, you have the possibility to specify dates to manage "
+"product expiration, on the product and on the corresponding lot/serial "
 "numbers"
 msgstr "勾選後，您可以在產品和相應的批號/序號上指定管理產品過期的日期"
 
@@ -397,7 +401,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
 msgid ""
-"You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is "
+"expired.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
 "你要交付的產品 %(product_name)s，%(lot_name)s 已經過期。\n"

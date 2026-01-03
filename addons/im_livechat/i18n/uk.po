@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* im_livechat
-# 
+#
 # Translators:
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:02+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: im_livechat
 #. odoo-python
@@ -67,8 +70,7 @@ msgstr "%s (копія)"
 #: code:addons/im_livechat/models/chatbot_script.py:0
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid ""
-"'%(input_email)s' does not look like a valid email. Can you please try "
-"again?"
+"'%(input_email)s' does not look like a valid email. Can you please try again?"
 msgstr ""
 "'%(input_email)s' виглядає як недійсний email. Можете спробувати знову?"
 
@@ -76,13 +78,17 @@ msgstr ""
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__action
 msgid ""
 "* 'Show' displays the chat button on the pages.\n"
-"* 'Show with notification' is 'Show' in addition to a floating text just next to the button.\n"
-"* 'Open automatically' displays the button and automatically opens the conversation pane.\n"
+"* 'Show with notification' is 'Show' in addition to a floating text just "
+"next to the button.\n"
+"* 'Open automatically' displays the button and automatically opens the "
+"conversation pane.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
 "* «Показати» відображає кнопку чату на сторінках.\n"
-"* «Показати зі сповіщенням» — це «Показати» додатково до плаваючого тексту поруч із кнопкою.\n"
-"* «Відкрити автоматично» відображає кнопку та автоматично відкриває панель розмови.\n"
+"* «Показати зі сповіщенням» — це «Показати» додатково до плаваючого тексту "
+"поруч із кнопкою.\n"
+"* «Відкрити автоматично» відображає кнопку та автоматично відкриває панель "
+"розмови.\n"
 "* «Сховати» приховує кнопку чату на сторінках.\n"
 
 #. module: im_livechat
@@ -107,7 +113,8 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Back to edit mode"
-msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Повернутися до режиму редагування"
+msgstr ""
+"<i class=\"oi oi-fw oi-arrow-right\"/>Повернутися до режиму редагування"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -137,27 +144,34 @@ msgstr "<span>Вітаємо,</span><br/>Це копія вашої розмов
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
 msgid ""
-"<span>Reminder: This step will only be played if no operator is "
-"available.</span>"
+"<span>Reminder: This step will only be played if no operator is available.</"
+"span>"
 msgstr ""
-"<span>Нагадування: Цей крок буде відтворено, лише якщо оператор "
-"недоступний.</span>"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
-msgid ""
-"<span>Tip: At least one interaction (Question, Email, ...) is needed before the Bot can perform more complex actions (Forward to an Operator, ...). </span>\n"
-"                    <span>Use Channel Rules if you want the Bot to interact with visitors only when no operator is available.</span>"
-msgstr ""
-"<span>Порада: Потрібна принаймні одна взаємодія (запитання, електронна пошта, ...), перш ніж бот зможе виконувати більш складні дії (переадресувати оператору, ...). </span>\n"
-"                    <span>Використовуйте правила каналу, якщо ви хочете, щоб бот взаємодіяв з відвідувачами лише тоді, коли немає доступного оператора.</span>"
+"<span>Нагадування: Цей крок буде відтворено, лише якщо оператор недоступний."
+"</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
 msgid ""
 "<span>Tip: At least one interaction (Question, Email, ...) is needed before "
-"the Bot can perform more complex actions (Forward to an Operator, "
-"...).</span>"
+"the Bot can perform more complex actions (Forward to an Operator, ...). </"
+"span>\n"
+"                    <span>Use Channel Rules if you want the Bot to interact "
+"with visitors only when no operator is available.</span>"
+msgstr ""
+"<span>Порада: Потрібна принаймні одна взаємодія (запитання, електронна "
+"пошта, ...), перш ніж бот зможе виконувати більш складні дії (переадресувати "
+"оператору, ...). </span>\n"
+"                    <span>Використовуйте правила каналу, якщо ви хочете, щоб "
+"бот взаємодіяв з відвідувачами лише тоді, коли немає доступного оператора.</"
+"span>"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
+msgid ""
+"<span>Tip: At least one interaction (Question, Email, ...) is needed before "
+"the Bot can perform more complex actions (Forward to an Operator, ...).</"
+"span>"
 msgstr ""
 "<span>Порада: Потрібна принаймні одна взаємодія (запитання, електронна "
 "пошта, ...), перш ніж бот зможе виконувати більш складні дії (пересилання "
@@ -166,8 +180,8 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
 msgid ""
-"<span>Tip: Plan further steps for the Bot in case no operator is "
-"available.</span>"
+"<span>Tip: Plan further steps for the Bot in case no operator is available.</"
+"span>"
 msgstr ""
 "<span>Порада: Сплануйте подальші кроки для бота, якщо немає доступного "
 "оператора.</span>"
@@ -186,10 +200,12 @@ msgstr "mail.message може бути пов'язаним лише з єдин�
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__is_without_answer
 msgid ""
 "A session is without answer if the operator did not answer. \n"
-"                                       If the visitor is also the operator, the session will always be answered."
+"                                       If the visitor is also the operator, "
+"the session will always be answered."
 msgstr ""
 "Сесія не відповідає, якщо оператор не відповів.\n"
-"                                      Якщо відвідувач також є оператором, то сесія завжди буде відповідати."
+"                                      Якщо відвідувач також є оператором, то "
+"сесія завжди буде відповідати."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction
@@ -389,8 +405,8 @@ msgstr "Наповнювач поля вводу"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__channel_type
 msgid ""
-"Chat is private and unique between 2 persons. Group is private among invited"
-" persons. Channel can be freely joined (depending on its configuration)."
+"Chat is private and unique between 2 persons. Group is private among invited "
+"persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
 "Чат приватний та унікальний між 2 особами. Група є приватною серед "
 "запрошених осіб. Канал можна вільно приєднувати (залежно від його "
@@ -630,8 +646,8 @@ msgid ""
 "taken into account."
 msgstr ""
 "Визначте правила для свого каналу підтримки в режимі реального часу. Ви "
-"можете застосувати дію для вказаної URL-адреси та для кожної країни.<br/>Для"
-" визначення країни на вашому сервері має бути встановлено GeoIP, інакше "
+"можете застосувати дію для вказаної URL-адреси та для кожної країни.<br/>Для "
+"визначення країни на вашому сервері має бути встановлено GeoIP, інакше "
 "країни правила не враховуватимуться."
 
 #. module: im_livechat
@@ -1498,8 +1514,7 @@ msgstr "Посилання перенаправлення"
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
 msgstr ""
-"Регулярний вираз зі зазначенням веб-сторінок буде застосований на це "
-"правило."
+"Регулярний вираз зі зазначенням веб-сторінок буде застосований на це правило."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__mail_message_id
@@ -1750,8 +1765,8 @@ msgstr "Розмову було надіслано."
 msgid ""
 "The rule will only be applied for these countries. Example: if you select "
 "'Belgium' and 'United States' and that you set the action to 'Hide', the "
-"chat button will be hidden on the specified URL from the visitors located in"
-" these 2 countries. This feature requires GeoIP installed on your server."
+"chat button will be hidden on the specified URL from the visitors located in "
+"these 2 countries. This feature requires GeoIP installed on your server."
 msgstr ""
 "Це правило застосовуватиметься лише до цих країн. Приклад: якщо ви вибрали "
 "«Бельгію» та «Сполучені Штати» та встановили дію «Приховати», кнопка чату "
@@ -1789,8 +1804,8 @@ msgid ""
 "These languages, in addition to your main language, will be used to assign "
 "you to Live Chat sessions."
 msgstr ""
-"Ці мови, в додаток до вашої основної мови, буде використана, щоби призначити"
-" вас до сесій живого чату."
+"Ці мови, в додаток до вашої основної мови, буде використана, щоби призначити "
+"вас до сесій живого чату."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
@@ -1810,8 +1825,8 @@ msgid ""
 "This is an automated 'welcome' message that your visitor will see when they "
 "initiate a new conversation."
 msgstr ""
-"Це автоматичне повідомлення \"ласкаво просимо\", яке ваш відвідувач побачить"
-" під час ініціації нової бесіди."
+"Це автоматичне повідомлення \"ласкаво просимо\", яке ваш відвідувач побачить "
+"під час ініціації нової бесіди."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
@@ -1884,12 +1899,11 @@ msgstr "Без рейтингу"
 #. module: im_livechat
 #: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
 msgid ""
-"Use canned responses to define templates of messages in the livechat app. To"
-" load a canned response, start your sentence with ':' and select the "
-"template."
+"Use canned responses to define templates of messages in the livechat app. To "
+"load a canned response, start your sentence with ':' and select the template."
 msgstr ""
-"Використовуйте готові відповіді для визначення шаблонів повідомлень у модулі"
-" живого чату. Щоби завантажити готову відповідь, почніть ваше речення з ':' "
+"Використовуйте готові відповіді для визначення шаблонів повідомлень у модулі "
+"живого чату. Щоби завантажити готову відповідь, почніть ваше речення з ':' "
 "та оберіть шаблон."
 
 #. module: im_livechat
@@ -1990,8 +2004,7 @@ msgstr "Віджет"
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
 msgstr ""
-"Ви б не були проти залишити вашу електронну адресу, щоб ми зв'язалися з "
-"вами?"
+"Ви б не були проти залишити вашу електронну адресу, щоб ми зв'язалися з вами?"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2023,11 +2036,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 msgid ""
 "You can create channels for each website on which you want\n"
-"                to integrate the website live chat widget, allowing your website\n"
+"                to integrate the website live chat widget, allowing your "
+"website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
 "Ви можете створювати канали для кожного веб-сайту, на якому ви хочете\n"
-"інтегрувати віджет живого чату веб-сайту, дозволяючи вашим відвідувачам веб-сайту\n"
+"інтегрувати віджет живого чату веб-сайту, дозволяючи вашим відвідувачам веб-"
+"сайту\n"
 "спілкуватися в режимі реального часу з вашими операторами."
 
 #. module: im_livechat

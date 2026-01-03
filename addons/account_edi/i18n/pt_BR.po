@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_edi
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Maitê Dietze, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
+"41243/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: account_edi
 #. odoo-python
@@ -78,14 +80,20 @@ msgstr "Nível de bloqueio"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
 msgid ""
-"Blocks the current operation of the document depending on the error severity:\n"
-"  * Info: the document is not blocked and everything is working as it should.\n"
-"  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
-"  * Error: there is an error that blocks the current Electronic Invoicing operation."
+"Blocks the current operation of the document depending on the error "
+"severity:\n"
+"  * Info: the document is not blocked and everything is working as it "
+"should.\n"
+"  * Warning: there is an error that doesn't prevent the current Electronic "
+"Invoicing operation to succeed.\n"
+"  * Error: there is an error that blocks the current Electronic Invoicing "
+"operation."
 msgstr ""
 "Bloqueia a operação atual do documento dependendo da gravidade do erro:\n"
-"* Info: o documento não está bloqueado e tudo está funcionando como deveria.\n"
-"* Aviso: há um erro que não impede que a operação atual de faturamento eletrônico seja bem-sucedida.\n"
+"* Info: o documento não está bloqueado e tudo está funcionando como "
+"deveria.\n"
+"* Aviso: há um erro que não impede que a operação atual de faturamento "
+"eletrônico seja bem-sucedida.\n"
 "* Erro: há um erro que bloqueia a operação de faturamento eletrônico atual."
 
 #. module: account_edi
@@ -400,8 +408,7 @@ msgstr "A fatura será enviada em breve para"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
 msgid ""
-"The text of the last error that happened during Electronic Invoice "
-"operation."
+"The text of the last error that happened during Electronic Invoice operation."
 msgstr ""
 "O texto do último erro ocorrido durante a operação da fatura eletrônica."
 
@@ -420,11 +427,11 @@ msgstr "Este documento já está sendo enviado por outro processo."
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid ""
-"This invoice was canceled while the EDIs %s still had a pending cancellation"
-" request."
+"This invoice was canceled while the EDIs %s still had a pending cancellation "
+"request."
 msgstr ""
-"This invoice was canceled while the EDIs %s still had a pending cancellation"
-" request."
+"This invoice was canceled while the EDIs %s still had a pending cancellation "
+"request."
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
@@ -448,12 +455,12 @@ msgstr "Aviso"
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid ""
-"You can't edit the following journal entry %s because an electronic document"
-" has already been sent. Please use the 'Request EDI Cancellation' button "
+"You can't edit the following journal entry %s because an electronic document "
+"has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
-"Não é possível editar o seguinte lançamento de diário %s porque um documento"
-" eletrônico já foi enviado. Em vez disso, use o botão \"Solicitar "
+"Não é possível editar o seguinte lançamento de diário %s porque um documento "
+"eletrônico já foi enviado. Em vez disso, use o botão \"Solicitar "
 "cancelamento de EDI\"."
 
 #. module: account_edi

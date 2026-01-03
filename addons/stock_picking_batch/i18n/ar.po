@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2025-11-21 02:37+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/"
@@ -40,8 +40,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
 "style=\"white-space: nowrap;\">Wave Grouping</span>"
 msgstr ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" style"
-"=\"white-space: nowrap;\">تجميع الموجات</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
+"style=\"white-space: nowrap;\">تجميع الموجات</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
@@ -90,19 +90,23 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"لن تتم إضافة الشحنة تلقائياً إلى الدفعات التي تتخطى هذا العدد من البنود في حال تمت إضافة الشحنة إليها. \n"
+"لن تتم إضافة الشحنة تلقائياً إلى الدفعات التي تتخطى هذا العدد من البنود في "
+"حال تمت إضافة الشحنة إليها. \n"
 "قم بتعيين القيمة كـ \"0\" إذا لم يكن هناك حد لعدد البنود. "
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"لن تتم إضافة الشحنة تلقائياً إلى الدفعات التي تتخطى هذا العدد من الشحنات في حال تمت إضافة الشحنة إليها. \n"
+"لن تتم إضافة الشحنة تلقائياً إلى الدفعات التي تتخطى هذا العدد من الشحنات في "
+"حال تمت إضافة الشحنة إليها. \n"
 "قم بتعيين القيمة كـ \"0\" إذا لم يكن هناك حد لعدد الشحنات. "
 
 #. module: stock_picking_batch
@@ -724,8 +728,7 @@ msgstr "نوع الانتقاء "
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
-msgid ""
-"Please add 'Done' quantities to the batch picking to create a new pack."
+msgid "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr "يرجى إضافة الكميات \"المنتهية\" إلى انتقاء الدفعة لإنشاء طرد جديد. "
 
 #. module: stock_picking_batch
@@ -807,8 +810,7 @@ msgstr "التقييمات "
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
-"Regroup multiple orders into one picking and consolidate at the packing "
-"zone."
+"Regroup multiple orders into one picking and consolidate at the packing zone."
 msgstr ""
 "قم بإعادة تجميع الطلبات المتعددة في عملية انتقاء واحدة ودمجها في منطقة "
 "التعبئة. "
@@ -846,14 +848,20 @@ msgstr "التاريخ المجدول"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "التاريخ المجدول لمعالجة عمليات النقل.\n"
-"              - إذا تم تعيينه يدوياً، فسيتم تحديث التاريخ المجدول لكافة عمليات النقل على دفعات لهذا التاريخ.\n"
-"              - إذا لم يتم تغييره يدوياً، وتمت إضافة/إزالة/تحديث عمليات النقل، فسيكون ذلك أقرب تاريخ مجدول\n"
-"                ولكن لن يتم تعيين هذا التاريخ المجدول لكافة عمليات النقل على دفعات. "
+"              - إذا تم تعيينه يدوياً، فسيتم تحديث التاريخ المجدول لكافة "
+"عمليات النقل على دفعات لهذا التاريخ.\n"
+"              - إذا لم يتم تغييره يدوياً، وتمت إضافة/إزالة/تحديث عمليات "
+"النقل، فسيكون ذلك أقرب تاريخ مجدول\n"
+"                ولكن لن يتم تعيين هذا التاريخ المجدول لكافة عمليات النقل على "
+"دفعات. "
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -911,8 +919,8 @@ msgstr "قم بتقسيم الشحنات حسب المواقع المحددة، 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
 msgid ""
-"Split transfers by product category, then group transfers that have the same"
-" product category."
+"Split transfers by product category, then group transfers that have the same "
+"product category."
 msgstr ""
 "قم بتقسيم الشحنات حسب فئة المنتج، ثم قم بتجميع الشحنات التي لها نفس فئة "
 "المنتج. "
@@ -990,11 +998,13 @@ msgstr "الملخص:"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid ""
-"The following transfers cannot be added to batch transfer %(batch)s. Please check their states and operation types.\n"
+"The following transfers cannot be added to batch transfer %(batch)s. Please "
+"check their states and operation types.\n"
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
-"عمليات النقل التالية لا يمكن إضافتها إلى عملية النقل على دفعات %(batch)s. يرجى التحقق من حالاتها وأنواع العمليات. \n"
+"عمليات النقل التالية لا يمكن إضافتها إلى عملية النقل على دفعات %(batch)s. "
+"يرجى التحقق من حالاتها وأنواع العمليات. \n"
 "\n"
 "أوجه التعارض: %(incompatible_transfers)s "
 

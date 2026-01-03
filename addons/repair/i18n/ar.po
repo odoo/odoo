@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* repair
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: repair
 #. odoo-python
@@ -50,7 +51,8 @@ msgstr "(<i>إزالة</i>)"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__state
 msgid ""
-"* The 'New' status is used when a user is encoding a new and unconfirmed repair order.\n"
+"* The 'New' status is used when a user is encoding a new and unconfirmed "
+"repair order.\n"
 "* The 'Confirmed' status is used when a user confirms the repair order.\n"
 "* The 'Under Repair' status is used when the repair is ongoing.\n"
 "* The 'Repaired' status is set when repairing is completed.\n"
@@ -551,8 +553,8 @@ msgid ""
 "If ticked, the sales price will be set to 0 for all products transferred "
 "from the repair order."
 msgstr ""
-"إذا كان محدداً، سيتم تعيين سعر البيع كـ 0 لكافة المنتجات التي تم نقلها من "
-"أمر الإصلاح. "
+"إذا كان محدداً، سيتم تعيين سعر البيع كـ 0 لكافة المنتجات التي تم نقلها من أمر "
+"الإصلاح. "
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__is_repairable
@@ -564,11 +566,13 @@ msgstr "إذا كان محدداً، ستتمكن من إنشاء أوامر ت�
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
 "في أمر الإصلاح، يمكنك تفصيل المكونات التي تقوم بإزالتها،\n"
-"                أو إضافتها أو استبدالها، كما بوسعك تسجيل الوقت المستغرق على العمليات\n"
+"                أو إضافتها أو استبدالها، كما بوسعك تسجيل الوقت المستغرق على "
+"العمليات\n"
 "                المختلفة. "
 
 #. module: repair
@@ -657,8 +661,8 @@ msgid ""
 "Latest parts availability status for this RO. If green, then the RO's "
 "readiness status is ready."
 msgstr ""
-"حالة آخر توافر للأجزاء لأمر الإصلاح هذا. إذا كان لونه أخضر، هذا يعني أن حالة"
-" توافر أمر الإصلاح هي  \"جاهز\". "
+"حالة آخر توافر للأجزاء لأمر الإصلاح هذا. إذا كان لونه أخضر، هذا يعني أن حالة "
+"توافر أمر الإصلاح هي  \"جاهز\". "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
@@ -804,8 +808,7 @@ msgstr "نوع العملية"
 
 #. module: repair
 #. odoo-python
-#: code:addons/repair/models/product.py:0
-#: code:addons/repair/models/repair.py:0
+#: code:addons/repair/models/product.py:0 code:addons/repair/models/repair.py:0
 msgid "Operation not supported"
 msgstr "العملية غير مدعومة "
 
@@ -1353,8 +1356,8 @@ msgid ""
 "This is the default recycle destination location when you create a repair "
 "order with this operation type."
 msgstr ""
-"هذا هو موقع الوجهة الافتراضي لإعادة التدوير عندما تقوم بإنشاء أمر تصليح بنوع"
-" العملية هذا. "
+"هذا هو موقع الوجهة الافتراضي لإعادة التدوير عندما تقوم بإنشاء أمر تصليح بنوع "
+"العملية هذا. "
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_remove_location_dest_id
@@ -1368,8 +1371,8 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_src_id
 msgid ""
-"This is the default source location for the product to be repaired in repair"
-" orders with this operation type."
+"This is the default source location for the product to be repaired in repair "
+"orders with this operation type."
 msgstr ""
 "هذا هو موقع المصدر الافتراضي للمنتج المراد إصلاحه في أوامر التصليح مع هذا "
 "النوع من العمليات. "
@@ -1539,7 +1542,8 @@ msgstr "لا يمكنك إلغاء أمر تصليح قد تم إكماله با
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid ""
-"You cannot create a quotation for a repair order that is already linked to an existing sale order.\n"
+"You cannot create a quotation for a repair order that is already linked to "
+"an existing sale order.\n"
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
@@ -1551,7 +1555,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid ""
-"You need to define a customer for a repair order in order to create an associated quotation.\n"
+"You need to define a customer for a repair order in order to create an "
+"associated quotation.\n"
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""

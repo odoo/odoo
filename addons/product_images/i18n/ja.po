@@ -1,43 +1,47 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_images
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Junko Augias, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: product_images
 #. odoo-python
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 msgid ""
-"%(matching_images_count)s matching images have been found for "
-"%(product_count)s products."
-msgstr "%(matching_images_count)sの一致する画像が%(product_count)s のプロダクト用に見つかりました。"
+"%(matching_images_count)s matching images have been found for %"
+"(product_count)s products."
+msgstr ""
+"%(matching_images_count)sの一致する画像が%(product_count)s のプロダクト用に見"
+"つかりました。"
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid ""
 "<span invisible=\"nb_products_selected &lt;= 10000\">\n"
-"                            As only 10,000 products can be processed per day, the remaining will be\n"
+"                            As only 10,000 products can be processed per "
+"day, the remaining will be\n"
 "                            done tomorrow.\n"
 "                        </span>"
 msgstr ""
 "<span invisible=\"nb_products_selected &lt;= 10000\">\n"
-"                            一日に一万プロダクトしか処理されないため、残りは\n"
+"                            一日に一万プロダクトしか処理されないため、残り"
+"は\n"
 "                            明日処理されます。\n"
 "                        </span>"
 
@@ -47,7 +51,9 @@ msgstr ""
 msgid ""
 "A task to process products in the background is already running. Please try "
 "againlater."
-msgstr "バックグラウンドでプロダクトを処理するタスクがすでに実行されています。後でもう一度お試し下さい。"
+msgstr ""
+"バックグラウンドでプロダクトを処理するタスクがすでに実行されています。後でも"
+"う一度お試し下さい。"
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
@@ -84,7 +90,9 @@ msgstr "表示名"
 msgid ""
 "Fetch product images from Google Images based on the product's barcode "
 "number."
-msgstr "プロダクトのバーコード番号に基づき、Google画像からプロダクト画像を取得します。"
+msgstr ""
+"プロダクトのバーコード番号に基づき、Google画像からプロダクト画像を取得しま"
+"す。"
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -195,7 +203,8 @@ msgid ""
 "enabled this API recently, please wait a few minutes and retry."
 msgstr ""
 "Googleプロジェクトでカスタム検索APIが有効になっていません。Google Cloud "
-"Platformのプロジェクトページにアクセスし、有効にしてから再試行して下さい。このAPIを有効にしてすぐの場合は、数分待ってから再試行して下さい。"
+"Platformのプロジェクトページにアクセスし、有効にしてから再試行して下さい。こ"
+"のAPIを有効にしてすぐの場合は、数分待ってから再試行して下さい。"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_pse_id
@@ -207,7 +216,8 @@ msgstr "Googleプログラム可能な検索エンジンの識別子"
 msgid ""
 "The list of selected products that meet the criteria (have a barcode and no "
 "image)"
-msgstr "条件（バーコードがあり、画像がない）を満たす、選択されたプロダクトのリスト"
+msgstr ""
+"条件（バーコードがあり、画像がない）を満たす、選択されたプロダクトのリスト"
 
 #. module: product_images
 #. odoo-python
@@ -217,14 +227,16 @@ msgid ""
 "been deleted. Please contact your administrator to have the action restored "
 "or to reinstall the module \"product_images\"."
 msgstr ""
-"スケジュールされていたアクション「プロダクト画像： Googleからプロダクト画像を取得 "
-"」が削除されました。管理者に連絡して、アクションを復元するか、モジュール\"product_images\"を再インストールして下さい。"
+"スケジュールされていたアクション「プロダクト画像： Googleからプロダクト画像を"
+"取得 」が削除されました。管理者に連絡して、アクションを復元するか、モジュール"
+"\"product_images\"を再インストールして下さい。"
 
 #. module: product_images
 #. odoo-python
 #: code:addons/product_images/models/ir_cron_trigger.py:0
 msgid "This action is already scheduled. Please try again later."
-msgstr "このアクションはすでにスケジュールされています。後でもう一度試して下さい。"
+msgstr ""
+"このアクションはすでにスケジュールされています。後でもう一度試して下さい。"
 
 #. module: product_images
 #: model:ir.model,name:product_images.model_ir_cron_trigger
@@ -234,7 +246,9 @@ msgstr "トリガーされたアクション"
 #. module: product_images
 #: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
 msgid "Whether an image must be fetched for this product. Handled by a cron."
-msgstr "このプロダクト用に画像を取得しなければならないかどうか。cronによって処理されます。"
+msgstr ""
+"このプロダクト用に画像を取得しなければならないかどうか。cronによって処理され"
+"ます。"
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -256,7 +270,8 @@ msgstr "処理されます。"
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid ""
 "products will not be\n"
-"                            processed because they either already have an image or their barcode\n"
+"                            processed because they either already have an "
+"image or their barcode\n"
 "                            number is not set."
 msgstr ""
 "プロダクトは\n"
