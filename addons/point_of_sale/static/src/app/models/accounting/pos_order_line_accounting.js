@@ -158,9 +158,7 @@ export class PosOrderlineAccounting extends Base {
         };
         if (order?.fiscal_position_id && product !== this.config.discount_product_id) {
             // Recompute taxes based on product and fiscal position.
-            values.tax_ids = order.fiscal_position_id.getTaxesAfterFiscalPosition(
-                values.product_id.taxes_id
-            );
+            values.tax_ids = order.fiscal_position_id.getTaxesAfterFiscalPosition(values.tax_ids);
         }
         return values;
     }
@@ -172,7 +170,7 @@ export class PosOrderlineAccounting extends Base {
         return accountTaxHelpers.prepare_base_line_for_taxes_computation(
             this,
             this.prepareBaseLineForTaxesComputationExtraValues({
-                price_unit: this.productProductPrice,
+                price_unit: this.price_unit,
                 quantity: this.getQuantity(),
                 tax_ids: this.tax_ids,
                 ...opts,

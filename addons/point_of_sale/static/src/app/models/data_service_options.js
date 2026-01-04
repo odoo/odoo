@@ -92,7 +92,7 @@ export class DataServiceOptions {
     }
 
     get cleanupModels() {
-        return ["product.template"];
+        return ["product.template", "product.product"];
     }
 
     get prohibitedAutoLoadedFields() {

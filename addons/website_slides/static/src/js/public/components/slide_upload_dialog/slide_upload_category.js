@@ -6,10 +6,9 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { _t } from "@web/core/l10n/translation";
 import { SlideUploadSourceTypes } from "./slide_upload_source_types";
-import { SlideUploadSelectTags } from "./slide_upload_select_tags";
 
 export class SlideUploadCategory extends Component {
-    static components = { DropdownItem, SelectMenu, SlideUploadSelectTags, SlideUploadSourceTypes };
+    static components = { DropdownItem, SelectMenu, SlideUploadSourceTypes };
     static props = {
         alertMsg: { type: String, optional: true },
         channelId: Number,
@@ -98,13 +97,6 @@ export class SlideUploadCategory extends Component {
      */
     choiceExists(input, choices) {
         return choices.some((choice) => input.toLowerCase() === choice.label.toLowerCase());
-    }
-
-    get displayCategoryValue() {
-        return this.state.choices.categoryId
-            ? this.state.choices.categories.find((c) => c.value === this.state.choices.categoryId)
-                  .label
-            : _t("Select or create a category");
     }
 
     //--------------------------------------------------------------------------

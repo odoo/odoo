@@ -551,12 +551,25 @@ export class PosStore extends WithLazyGetterTrap {
                 return false;
             }
         }
+        const refundedOrderLines = order.lines
+            .filter((line) => line.refunded_orderline_id?.order_id)
+            .map((line) => ({
+                order: line.refunded_orderline_id.order_id,
+                uuid: line.refunded_orderline_id.uuid,
+            }));
+
         const orderIsDeleted = await this.deleteOrders([order]);
-        if (orderIsDeleted) {
-            order.uiState.displayed = false;
-            await this.afterOrderDeletion();
+        if (!orderIsDeleted) {
+            return false;
         }
-        return orderIsDeleted;
+        order.uiState.displayed = false;
+        // Delete refunded lines linked to the current order
+        for (const refundedLine of refundedOrderLines) {
+            delete refundedLine.order?.uiState?.lineToRefund[refundedLine.uuid];
+        }
+
+        await this.afterOrderDeletion();
+        return true;
     }
     async afterOrderDeletion() {
         this.setOrder(this.getOpenOrders().at(-1) || this.addNewOrder());
@@ -667,10 +680,6 @@ export class PosStore extends WithLazyGetterTrap {
         if (paidUnsyncedOrderIds.length > 0) {
             this.addPendingOrder(paidUnsyncedOrderIds);
         }
-
-        this.data.models["pos.order"]
-            .filter((order) => order._isResidual)
-            .forEach((order) => (order.state = "cancel"));
 
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
         await this.syncAllOrders();
@@ -927,7 +936,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (configure) {
             this.numberBuffer.reset();
         }
-        const selectedOrderline = order.getSelectedOrderline();
+        let selectedOrderline = order.getSelectedOrderline();
         if (options.draftPackLotLines && configure) {
             selectedOrderline.setPackLotLines({
                 ...options.draftPackLotLines,
@@ -938,6 +947,7 @@ export class PosStore extends WithLazyGetterTrap {
         // Merge orderline if needed
         this.tryMergeOrderline(order, line, merge, selectedOrderline);
 
+        selectedOrderline = order.getSelectedOrderline();
         if (values.product_id.tracking === "lot") {
             const productTemplate = values.product_id.product_tmpl_id;
             const related_lines = [];
@@ -947,7 +957,7 @@ export class PosStore extends WithLazyGetterTrap {
                 values.price_extra,
                 false,
                 values.product_id,
-                line,
+                selectedOrderline,
                 related_lines
             );
             related_lines.forEach((line) => line.setUnitPrice(price));
@@ -2144,6 +2154,7 @@ export class PosStore extends WithLazyGetterTrap {
      * @param {import("@point_of_sale/app/models/product_product").ProductProduct?} product leave undefined to create a new product
      */
     async editProduct(product) {
+        const orderContainsProduct = product && this.orderContainsProduct(product);
         this.action.doAction(
             product
                 ? "point_of_sale.product_template_action_edit_pos"
@@ -2160,6 +2171,9 @@ export class PosStore extends WithLazyGetterTrap {
                             type: "ir.actions.act_window_close",
                         });
                     },
+                },
+                additionalContext: {
+                    taxes_readonly: orderContainsProduct,
                 },
             }
         );
@@ -2191,6 +2205,9 @@ export class PosStore extends WithLazyGetterTrap {
         return {
             resModel: "pos.order",
             resId: order.id,
+            context: {
+                from_frontend: true,
+            },
             onRecordSaved: async (record) => {
                 await this.data.loadServerOrders([["id", "=", record.evalContext.id]]);
                 this.action.doAction({
@@ -2268,6 +2285,8 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (preset) {
+            order.setPreset(preset);
+
             if (preset.needsPartner) {
                 const partner = order.partner_id || (await this.selectPartner(order));
                 if (!partner) {
@@ -2281,7 +2300,7 @@ export class PosStore extends WithLazyGetterTrap {
                     }
                 }
             }
-            order.setPreset(preset);
+
             if (preset.identification === "name") {
                 await this.handleSelectNamePreset(order);
             }
@@ -2714,18 +2733,41 @@ export class PosStore extends WithLazyGetterTrap {
     get productToDisplayByCateg() {
         const sortedProducts = this.productsToDisplay;
         if (!this.config.iface_group_by_categ) {
-            return sortedProducts.length ? [[0, sortedProducts]] : [];
+            return sortedProducts.length ? [["0", sortedProducts]] : [];
         } else {
             const groupedByCategory = {};
             for (const product of sortedProducts) {
-                for (const categ of product.pos_categ_ids) {
-                    if (!groupedByCategory[categ.id]) {
-                        groupedByCategory[categ.id] = [];
+                if (product.pos_categ_ids.length === 0) {
+                    if (!groupedByCategory[0]) {
+                        groupedByCategory[0] = [];
                     }
-                    groupedByCategory[categ.id].push(product);
+                    groupedByCategory[0].push(product);
+                    continue;
+                }
+                const category_ids = this.selectedCategory
+                    ? [this.selectedCategory.id]
+                    : product.pos_categ_ids.map((c) => c.id);
+                for (const categ_id of category_ids) {
+                    if (!groupedByCategory[categ_id]) {
+                        groupedByCategory[categ_id] = [];
+                    }
+                    groupedByCategory[categ_id].push(product);
                 }
             }
             const res = Object.entries(groupedByCategory).sort(([a], [b]) => {
+                // None category goes last
+                const aNoneCategory = a === "0";
+                const bNoneCategory = b === "0";
+                if (aNoneCategory && bNoneCategory) {
+                    return 0;
+                }
+                if (aNoneCategory) {
+                    return 1;
+                }
+                if (bNoneCategory) {
+                    return -1;
+                }
+
                 const catA = this.models["pos.category"].get(a);
                 const catB = this.models["pos.category"].get(b);
 
@@ -2836,6 +2878,10 @@ export class PosStore extends WithLazyGetterTrap {
 
     get showSaveOrderButton() {
         return this.config.raw.trusted_config_ids.length > 0;
+    }
+
+    canEditPayment(order) {
+        return order.nb_print === 0;
     }
 }
 

@@ -99,6 +99,8 @@ class TestHolidaysOvertime(TransactionCase):
 
             overtime_leave_data = self.leave_type_no_alloc.get_allocation_data(self.employee)
             self.assertEqual(overtime_leave_data[self.employee][0][1]['virtual_remaining_leaves'], 8.0)
+            # `employee_company` must be present to avoid traceback when opening the Time Off Type
+            self.assertTrue(overtime_leave_data[self.employee][0][1].get('employee_company'))
 
     def test_leave_adjust_overtime(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
@@ -231,8 +233,27 @@ class TestHolidaysOvertime(TransactionCase):
             .action_cancel_leave()
         self._check_deductible(16)
 
-    def test_public_leave_overtime(self):
-        leave = self.env['resource.calendar.leaves'].create([{
+    def test_public_leave_overtime_with_timing_rule(self):
+        ruleset_with_timing_rule = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Ruleset schedule quantity',
+            'rule_ids': [
+                Command.create({
+                    'name': 'Rule schedule quantity',
+                    'base_off': 'quantity',
+                    'expected_hours_from_contract': True,
+                    'quantity_period': 'day',
+                    'compensable_as_leave': True,
+                }),
+                Command.create({
+                    'name': 'Rule employee is off',
+                    'base_off': 'timing',
+                    'timing_type': 'leave',
+                }),
+            ],
+        })
+        (self.employee.version_ids + self.manager.version_ids).ruleset_id = ruleset_with_timing_rule
+        self.manager.company_id = self.env.company
+        leave = self.env['resource.calendar.leaves'].with_company(self.manager.company_id).create([{
             'name': 'Public Holiday',
             'date_from': datetime(2022, 5, 5, 6),
             'date_to': datetime(2022, 5, 5, 18),
@@ -241,9 +262,6 @@ class TestHolidaysOvertime(TransactionCase):
         leave.company_id.write({
             'attendance_overtime_validation': 'no_validation',
         })
-        self.assertNotEqual(leave.company_id, self.employee.company_id)
-        self.manager.company_id = leave.company_id.id
-
         for emp in [self.employee, self.manager]:
             self.env['hr.attendance'].create({
                 'employee_id': emp.id,
@@ -252,7 +270,28 @@ class TestHolidaysOvertime(TransactionCase):
             })
 
         self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime')
-        self.assertEqual(self.manager.total_overtime, 8, 'Should have 8 hours of overtime (there is one hour of lunch)')
+        self.assertEqual(self.manager.total_overtime, 9, "Should have 9 hours of overtime")
+
+    def test_public_leave_overtime_without_timing_rule(self):
+        self.manager.company_id = self.env.company
+        leave = self.env['resource.calendar.leaves'].with_company(self.manager.company_id).create([{
+            'name': 'Public Holiday',
+            'date_from': datetime(2022, 5, 5, 6),
+            'date_to': datetime(2022, 5, 5, 18),
+        }])
+
+        leave.company_id.write({
+            'attendance_overtime_validation': 'no_validation',
+        })
+        for emp in [self.employee, self.manager]:
+            self.env['hr.attendance'].create({
+                'employee_id': emp.id,
+                'check_in': datetime(2022, 5, 5, 8),
+                'check_out': datetime(2022, 5, 5, 17),
+            })
+
+        self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime')
+        self.assertEqual(self.manager.total_overtime, 0, "Should have 0 hours of overtime (because the employee ruleset doesn't have any timing rule)")
 
     def test_worked_leave_type_overtime(self):
         """ Test that an attendance during a worked time off doesn't count as overtime. """

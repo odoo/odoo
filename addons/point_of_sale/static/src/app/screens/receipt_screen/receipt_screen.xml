@@ -15,7 +15,7 @@
                                 </span>
                                 <div class="fs-4 fw-bold d-flex justify-content-center align-items-center gap-2">
                                     <span t-esc="orderAmountPlusTip" />
-                                    <span t-if="this.currentOrder.nb_print === 0" class="edit-order-payment badge bg-success text-white rounded cursor-pointer pt-1" t-on-click="() => this.pos.orderDetails(this.currentOrder)">Edit Payment</span>
+                                    <span t-if="this.pos.canEditPayment(currentOrder)" class="edit-order-payment badge bg-success text-white rounded cursor-pointer pt-1" t-on-click="() => this.pos.orderDetails(this.currentOrder)">Edit Payment</span>
                                 </div>
                             </div>
                             <div class="receipt-options d-flex flex-column gap-2">

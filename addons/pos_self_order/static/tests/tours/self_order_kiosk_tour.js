@@ -209,6 +209,17 @@ registry.category("web_tour.tours").add("test_self_order_pricelist", {
     ],
 });
 
+registry.category("web_tour.tours").add("test_self_order_kiosk_unpaid", {
+    steps: () => [
+        Utils.clickBtn("Order now"),
+        ProductPage.clickCategory("Miscellaneous"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        Utils.clickBtn("Order"),
+        ConfirmationPage.orderNumberShown(),
+    ],
+});
+
 registry.category("web_tour.tours").add("test_self_order_kiosk_product_availability", {
     steps: () => [
         Utils.clickBtn("Order Now"),

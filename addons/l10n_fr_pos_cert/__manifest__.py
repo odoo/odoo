@@ -36,11 +36,14 @@ The module adds following features:
     ],
     'post_init_hook': '_setup_inalterability',
     'assets': {
+        'web.assets_unit_tests': [
+            'l10n_fr_pos_cert/static/tests/unit/**/*',
+        ],
         'point_of_sale._assets_pos': [
             'l10n_fr_pos_cert/static/src/**/*',
         ],
         'web.assets_tests': [
-            'l10n_fr_pos_cert/static/tests/**/*',
+            'l10n_fr_pos_cert/static/tests/tours/**/*',
         ],
     },
     'author': 'Odoo S.A.',

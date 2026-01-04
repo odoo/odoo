@@ -20,8 +20,8 @@
 
     <t t-if="this.isActiveItem('scroll_button_opt')">
         <BuilderRow label.translate="Colors" level="1" applyTo="':scope > .o_scroll_button'">
-            <BuilderColorPicker styleAction="'background-color'"/>
-            <BuilderColorPicker styleAction="'color'"/>
+            <BuilderColorPicker styleAction="'background-color'" title.translate="Apply a background color"/>
+            <BuilderColorPicker styleAction="'color'" title.translate="Apply an icon color"/>
         </BuilderRow>
         <BuilderRow label.translate="Spacing" level="1" applyTo="':scope > .o_scroll_button'">
             <BuilderSelect>

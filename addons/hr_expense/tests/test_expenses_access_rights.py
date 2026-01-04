@@ -25,7 +25,6 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
                 'employee_id': expense_employee_2.id,
                 'product_id': self.product_a.id,
                 'quantity': 1,
-                'price_unit': 1,
             })
 
         expense = self.env['hr.expense'].with_user(self.expense_user_employee).create({
@@ -39,6 +38,7 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         # The expense employee shouldn't be able to bypass the submit state.
         with self.assertRaises(UserError):
             expense.with_user(self.expense_user_employee).state = 'approved'
+        expense.with_user(self.expense_user_employee).state = 'draft'  # Should not raise
 
         expense.with_user(self.expense_user_employee).action_submit()
         self.assertEqual(expense.state, 'submitted')

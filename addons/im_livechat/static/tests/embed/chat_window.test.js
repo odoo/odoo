@@ -3,6 +3,7 @@ import {
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
 import {
+    assertChatBubbleAndWindowImStatus,
     click,
     contains,
     inputFiles,
@@ -153,4 +154,30 @@ test("can close confirm livechat with keyboard", async () => {
     await triggerHotkey("Enter");
     await waitForSteps(["/im_livechat/visitor_leave_session"]);
     await contains(".o-mail-ChatWindow", { text: "Did we correctly answer your question?" });
+});
+
+test("Should not show IM status of agents", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    await loadDefaultEmbedConfig();
+    const joelUid = pyEnv["res.users"].create({
+        name: "Joel",
+        share: true,
+        login: "joel",
+        password: "joel",
+    });
+    pyEnv["res.partner"].create({ name: "Joel", user_ids: [joelUid] });
+    pyEnv["res.partner"].write(serverState.partnerId, {
+        im_status: "online",
+        user_livechat_username: "MitchellOp",
+    });
+    await start({ authenticateAs: { login: "joel", password: "joel" } });
+    await click(".o-livechat-LivechatButton");
+    await contains(".o-mail-ChatWindow-header:text('MitchellOp')");
+    await insertText(".o-mail-Composer-input", "Hello MitchellOp!");
+    await triggerHotkey("Enter");
+    await contains(".o-mail-Message[data-persistent]:contains('Hello MitchellOp!')");
+    await click(".o-mail-ChatWindow-header");
+    await contains(".o-mail-ChatBubble");
+    await assertChatBubbleAndWindowImStatus("MitchellOp", 0);
 });

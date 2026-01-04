@@ -39,14 +39,14 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-12-20 09:38+0000\n"
+"PO-Revision-Date: 2026-01-02 15:04+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/base/fi/>"
 "\n"
@@ -849,6 +849,32 @@ msgid ""
 "Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"* Lisää ALV-kirjan raportti, joka on Argentiinassa lakisääteinen vaatimus. "
+"Se sisältää yksityiskohtaiset ALV-tiedot ajanjakson aikana tehdyistä "
+"myynneistä ja ostoista.\n"
+"* Lisää ALV-yhteenvetoraportti, jota käytetään laskutuksen analysointiin\n"
+"* Lisää digitaalinen ALV-kirjan toiminto, joka mahdollistaa TXT-tiedostojen "
+"luomisen ARCA:n lataamiseksi. Käyttämämme muodot ovat:\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"Virallinen ARCA-dokumentaatio\n"
+"\n"
+"* Digitaalinen ALV-kirja - tietueen malli https://www.afip.gob.ar/"
+"libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - tietueen malli (sama kuin digitaalisessa ALV-kirjassa): https://"
+"www.afip.gob.ar/comprasyventas/documentos/"
+"RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI - määrittely (tarjoaa lisätietoja numeroiden muodosta sekä "
+"numeeristen/aakkosnumeeristen kenttien täytöstä): https://www.afip.gob.ar/"
+"comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-"
+"Especificaciones.doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports_simple
@@ -856,6 +882,8 @@ msgid ""
 "\n"
 "* Add export of IVA Simple Tax Report.\n"
 msgstr ""
+"\n"
+"* Lisää yksinkertaisen IVA-veroilmoituksen vienti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_app
@@ -931,6 +959,9 @@ msgid ""
 "\n"
 "- Send and receive documents via Nemhandel network in OIOUBL 2.1 format\n"
 msgstr ""
+"\n"
+"- Lähetä ja vastaanota asiakirjoja Nemhandel-verkon kautta OIOUBL 2.1 -"
+"muodossa\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -11088,7 +11119,7 @@ msgid ""
 "module.\n"
 msgstr ""
 "\n"
-"Tämä yhdysmoduuli mahdollistaa alihankinnan hallinnan suoratoimitusmoduulin "
+"Tämä siltamoduuli mahdollistaa alihankinnan hallinnan suoratoimitusmoduulin "
 "kanssa.\n"
 
 #. module: base

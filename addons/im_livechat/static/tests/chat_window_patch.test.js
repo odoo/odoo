@@ -193,3 +193,22 @@ test("Show livechats with new message in chat hub even when in discuss app)", as
     await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-ChatWindow-header:contains('Visitor 11')");
 });
+
+test("livechat: non-member can close immediately", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor ABC" });
+    const PartnerId = pyEnv["res.partner"].create({ name: "Agent" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: PartnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        livechat_operator_id: PartnerId,
+        channel_type: "livechat",
+    });
+    await start();
+    setupChatHub({ opened: [channelId] });
+    await contains(".o-mail-ChatWindow");
+    await click("[title*='Close Chat Window']");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+});

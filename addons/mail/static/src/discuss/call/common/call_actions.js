@@ -36,7 +36,7 @@ export const muteAction = {
     badge: ({ owner, store }) =>
         !owner.env.inCallMenu && store.rtc.microphonePermission !== "granted",
     badgeIcon: "fa fa-exclamation",
-    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
+    condition: ({ thread }) => thread?.isSelfInCall,
     name: ({ store }) => (store.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
     isActive: ({ store }) =>
         (store.rtc.selfSession?.isMute && store.rtc.microphonePermission === "granted") ||
@@ -65,8 +65,7 @@ export const muteAction = {
 };
 registerCallAction("mute", muteAction);
 export const quickActionSettings = {
-    condition: ({ owner, store, thread }) =>
-        !owner.env.inCallMenu && thread?.eq(store.rtc?.channel),
+    condition: ({ owner, thread }) => !owner.env.inCallMenu && thread?.isSelfInCall,
     dropdown: true,
     dropdownComponent: QuickVoiceSettings,
     dropdownMenuClass: "p-2",
@@ -78,7 +77,7 @@ export const quickActionSettings = {
 };
 registerCallAction("quick-voice-settings", quickActionSettings);
 registerCallAction("deafen", {
-    condition: ({ owner }) => owner.env.inCallMenu,
+    condition: ({ owner, thread }) => owner.env.inCallMenu && thread?.isSelfInCall,
     name: ({ store }) => (store.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
     isTracked: true,
@@ -92,7 +91,7 @@ registerCallAction("deafen", {
 export const cameraOnAction = {
     badge: ({ owner, store }) => !owner.env.inCallMenu && store.rtc.cameraPermission !== "granted",
     badgeIcon: "fa fa-exclamation",
-    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
+    condition: ({ thread }) => thread?.isSelfInCall,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.isRemote
@@ -119,8 +118,7 @@ export const cameraOnAction = {
 };
 registerCallAction("camera-on", cameraOnAction);
 export const quickVideoSettings = {
-    condition: ({ owner, store, thread }) =>
-        !owner.env.inCallMenu && thread?.eq(store.rtc?.channel),
+    condition: ({ owner, thread }) => !owner.env.inCallMenu && thread?.isSelfInCall,
     dropdown: true,
     dropdownComponent: QuickVideoSettings,
     dropdownMenuClass: "p-2",
@@ -133,7 +131,7 @@ export const quickVideoSettings = {
 registerCallAction("quick-video-settings", quickVideoSettings);
 export const switchCameraAction = {
     condition: ({ store, thread }) =>
-        thread?.eq(store.rtc?.channel) && isMobileOS() && store.rtc.selfSession?.is_camera_on,
+        thread?.isSelfInCall && isMobileOS() && store.rtc.selfSession?.is_camera_on,
     name: _t("Switch Camera"),
     isActive: false,
     icon: "fa fa-refresh",
@@ -143,7 +141,7 @@ export const switchCameraAction = {
 };
 registerCallAction("switch-camera", switchCameraAction);
 registerCallAction("raise-hand", {
-    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
+    condition: ({ thread }) => thread?.isSelfInCall,
     name: ({ store }) => (store.rtc.selfSession.raisingHand ? _t("Lower Hand") : _t("Raise Hand")),
     isActive: ({ store }) => store.rtc.selfSession?.raisingHand,
     isTracked: true,
@@ -153,7 +151,7 @@ registerCallAction("raise-hand", {
     sequenceGroup: 200,
 });
 registerCallAction("share-screen", {
-    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel) && !isMobileOS(),
+    condition: ({ thread }) => thread?.isSelfInCall && !isMobileOS(),
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.isRemote
@@ -170,8 +168,7 @@ registerCallAction("share-screen", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.SUCCESS : undefined),
 });
 registerCallAction("auto-focus", {
-    condition: ({ owner, store, thread }) =>
-        !owner.env.inCallMenu && thread?.eq(store.rtc?.channel),
+    condition: ({ owner, thread }) => !owner.env.inCallMenu && thread?.isSelfInCall,
     name: ({ store }) =>
         store.settings.useCallAutoFocus ? _t("Disable speaker autofocus") : _t("Autofocus speaker"),
     isActive: ({ store }) => store.settings?.useCallAutoFocus,
@@ -197,7 +194,7 @@ registerCallAction("fullscreen", {
                 !owner.env.pipWindow && thread.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
             ),
         }),
-    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
+    condition: ({ thread }) => thread?.isSelfInCall,
     name: ({ store }) => (store.rtc.state.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
     isActive: ({ store }) => store.rtc.state.isFullscreen,
     icon: ({ action }) => (action.isActive ? "fa fa-compress" : "fa fa-expand"),
@@ -215,7 +212,7 @@ registerCallAction("fullscreen", {
 registerCallAction("picture-in-picture", {
     condition: ({ owner, store, thread }) =>
         !owner.env.inCallMenu &&
-        thread?.eq(store.rtc?.channel) &&
+        thread?.isSelfInCall &&
         store.env.services["discuss.pip_service"] &&
         !store.env?.isSmall,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
@@ -253,8 +250,8 @@ registerCallAction("join-back", {
             "text-nowrap pe-2 rounded-pill": true,
             "mx-1": !owner.env.inCallInvitation,
         }),
-    condition: ({ store, thread }) =>
-        !thread?.eq(store.rtc?.channel) && typeof thread?.useCameraByDefault === "boolean",
+    condition: ({ thread }) =>
+        !thread?.isSelfInCall && typeof thread?.useCameraByDefault === "boolean",
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     icon: ({ thread }) => (thread.useCameraByDefault ? "fa fa-video-camera" : "fa fa-phone"),
     inlineName: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
@@ -267,8 +264,8 @@ registerCallAction("join-back", {
 });
 registerCallAction("join-with-camera", {
     btnClass: "text-nowrap",
-    condition: ({ store, thread }) =>
-        !thread?.eq(store.rtc?.channel) &&
+    condition: ({ thread }) =>
+        !thread?.isSelfInCall &&
         !thread?.self_member_id?.rtc_inviting_session_id &&
         typeof thread?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
@@ -280,8 +277,8 @@ registerCallAction("join-with-camera", {
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
 });
 export const joinAction = {
-    condition: ({ store, thread }) =>
-        !thread?.eq(store.rtc?.channel) && typeof thread?.useCameraByDefault !== "boolean",
+    condition: ({ thread }) =>
+        !thread?.isSelfInCall && typeof thread?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     name: _t("Join Call"),
     icon: "fa fa-phone",
@@ -317,8 +314,8 @@ export const rejectAction = {
 };
 registerCallAction("reject", rejectAction);
 registerCallAction("disconnect", {
-    condition: ({ store, thread }) =>
-        thread?.eq(store.rtc?.channel) && !thread?.self_member_id?.rtc_inviting_session_id,
+    condition: ({ thread }) =>
+        thread?.isSelfInCall && !thread?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     name: _t("Disconnect"),
     icon: "fa fa-phone",

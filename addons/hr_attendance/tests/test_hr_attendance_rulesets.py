@@ -115,13 +115,12 @@ class TestHrAttendanceOvertime(TransactionCase):
             # Week: Mon-Fri, 10 hours/day = 50 hours total (40 expected + 10 overtime at 200%)
             [
                 self.env['hr.attendance'].create({
-                    'employee_id': self.employee.id,
+                    'employee_id': self.employee.id,  # This employee have a calendar with no lunch
                     'check_in': datetime(2021, 1, day, 8, 0),
                     'check_out': datetime(2021, 1, day, 18, 0)
                 }) for day in range(4, 9)  # Monday to Friday
             ]
-            # todo : Fixme weekly overtime is being double counted
-            self.assertAlmostEqual(self.employee.total_overtime, 18, 2, msg="10 hours weekly overtime at 200% should yield 18 hours total overtime")
+            self.assertAlmostEqual(self.employee.total_overtime, 10, 2, msg="He should work from 8-16h so each day he did 2 hours of overtime")
 
     def test_multiple_attendances_same_day(self):
         """ Test multiple attendances in one day """
