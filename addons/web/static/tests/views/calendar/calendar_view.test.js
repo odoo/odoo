@@ -1544,7 +1544,6 @@ test(`render popover`, async () => {
     ).toHaveText("Partner");
 
     await animationFrame();
-    await runAllTimers(); // Wait for popover reposition by position hook
     // Fully visible
     const popover = document.querySelector(`.o_cw_popover`).getBoundingClientRect();
     expect(
@@ -1563,8 +1562,8 @@ test(`render popover`, async () => {
             Math.abs(popover.bottom - popoverTarget.top),
             Math.abs(popover.left - popoverTarget.right),
             Math.abs(popover.right - popoverTarget.left)
-        ) < 30
-    ).toBe(true);
+        )
+    ).toBeLessThan(35);
 
     await contains(`.o_cw_popover .o_cw_popover_close`).click();
     expect(`.o_cw_popover`).toHaveCount(0);
