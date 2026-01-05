@@ -941,13 +941,52 @@ test("Embed video by pasting video URL", async () => {
     // trigger another selectionchange that removes selection placeholder.
     // So we must wait for the o-we-hint.
     await waitFor(".o-we-hint");
-    const videoIframe = queryOne("div.media_iframe_video");
+    await animationFrame();
+    const videoIframe = queryOne("div[data-embedded='video']");
     expect(videoIframe.nextElementSibling).toHaveOuterHTML(
         `<div class="o-paragraph o-we-hint" o-we-hint-text="Type &quot;/&quot; for commands"><br></div>`
     );
     expect(
-        `div.media_iframe_video iframe[data-src="https://www.youtube.com/embed/${videoId}"]`
+        `div[data-embedded='video'] iframe[data-src="https://www.youtube.com/embed/${videoId}"]`
     ).toHaveCount(1);
+});
+
+test("Embedded video shouldn't have the 'media_iframe_video' class", async () => {
+    const videoId = "qxb74CMR748";
+    const videoURL = `https://www.youtube.com/watch?v=${videoId}`;
+
+    onRpc("/html_editor/video_url/data", async () => ({
+        platform: "youtube",
+        video_id: videoId,
+        embed_url: `https://www.youtube.com/embed/${videoId}`,
+    }));
+
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+
+    setSelectionInHtmlField();
+
+    // Open the video tab of the media dialog
+    await insertText(htmlEditor, "/video");
+    await waitFor(".o-we-powerbox");
+    await press("Enter");
+    await waitFor(".o_select_media_dialog");
+    expect(".o_select_media_dialog .nav-link:contains('Videos')").toHaveClass("active");
+    await animationFrame();
+
+    await contains(".o_video_dialog_form textarea").edit(videoURL);
+    await waitFor(".modal-dialog .modal-footer .btn-primary:not(:disabled)", { timeout: 2000 });
+    await contains(".modal-dialog .modal-footer .btn-primary").click();
+    await animationFrame();
+
+    expect("div[data-embedded='video']").not.toHaveClass(".media_iframe_video");
 });
 
 test("isDirty should be false when the content is being transformed by the editor", async () => {

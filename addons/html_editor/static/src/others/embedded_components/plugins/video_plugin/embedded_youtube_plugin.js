@@ -6,6 +6,9 @@ export class EmbeddedYoutubePlugin extends YoutubePlugin {
     static dependencies = [...super.dependencies, "embeddedComponents"];
 
     /** @override */
+    mediaSpecificClasses = EmbeddedVideoSelector.mediaSpecificClasses;
+
+    /** @override */
     createVideoElement(videoData) {
         const { video_id: videoId, platform, params } = videoData;
         return EmbeddedVideoSelector.createElements([{ videoId, platform, params }])[0];
