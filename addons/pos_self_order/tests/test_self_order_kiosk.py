@@ -53,7 +53,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         })
 
         # With preset location choices
-        self.start_tour(self_route, "self_kiosk_each_counter_takeaway_in")
+        self.start_tour(self.pos_config._get_self_order_route(), "self_kiosk_each_counter_takeaway_in")
         self.start_tour(self_route, "self_kiosk_each_counter_takeaway_out")
 
         self.pos_config.write({

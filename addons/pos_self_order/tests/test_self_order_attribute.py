@@ -121,11 +121,19 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         self.assertEqual(order.lines[1].price_unit, 15.0)
 
     def test_self_order_product_info(self):
+        floor = self.env["restaurant.floor"].create({
+            "name": 'Main Floor',
+            "table_ids": [(0, 0, {
+                "table_number": 1,
+            })],
+        })
+
         self.pos_config.write({
             'self_ordering_default_user_id': self.pos_admin.id,
             'self_ordering_mode': 'mobile',
             'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'counter',
+            "floor_ids": [(6, 0, [floor.id])],
         })
 
         pos_categ_misc = self.env['pos.category'].create({
@@ -142,7 +150,7 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         self.pos_config.limit_categories = True
         self.pos_config.iface_available_categ_ids = [(4, pos_categ_misc.id)]
         self.pos_config.with_user(self.pos_user).open_ui()
-        self_route = self.pos_config._get_self_order_route()
+        self_route = self.pos_config._get_self_order_route(floor.table_ids[0].id)
 
         self.start_tour(self_route, "self_order_product_info")
 
