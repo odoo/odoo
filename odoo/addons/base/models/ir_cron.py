@@ -605,6 +605,7 @@ class IrCron(models.Model):
         and exception handling. Note that the user running the server action
         is the user calling this method. """
         self.ensure_one()
+        cr = self.env.cr
         try:
             if self.pool != self.pool.check_signaling():
                 # the registry has changed, reload self in the new registry
@@ -612,18 +613,16 @@ class IrCron(models.Model):
 
             _logger.debug(
                 "cron.object.execute(%r, %d, '*', %r, %d)",
-                self.env.cr.dbname,
+                cr.dbname,
                 self.env.uid,
                 cron_name,
                 server_action_id,
             )
             self.env['ir.actions.server'].browse(server_action_id).run()
             self.env.flush_all()
-            self.pool.signal_changes()
-            self.env.cr.commit()
+            cr.commit()
         except Exception:
-            self.pool.reset_changes()
-            self.env.cr.rollback()
+            cr.rollback()
             raise
 
     def write(self, vals):

@@ -128,6 +128,7 @@ endpoint
 """
 
 import odoo.init  # import first for core setup  # noqa: I001
+import odoo.api
 
 import base64
 import collections.abc
@@ -519,7 +520,6 @@ def retrying(func, env):
                     raise
                 env.cr.rollback()
                 env.transaction.reset()
-                env.registry.reset_changes()
                 if request:
                     request.session = request._get_session_and_dbname()[0]
                     # Rewind files in case of failure
@@ -561,12 +561,10 @@ def retrying(func, env):
 
     except Exception:
         env.transaction.reset()
-        env.registry.reset_changes()
         raise
 
     if not env.cr.closed:
         env.cr.commit()  # effectively commits and execute post-commits
-    env.registry.signal_changes()
     return result
 
 

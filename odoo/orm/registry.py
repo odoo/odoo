@@ -1090,15 +1090,15 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 _logger.debug("Multiprocess signaling check: %s", changes)
         return self
 
-    def signal_changes(self) -> None:
+    def signal_changes(self, cr: BaseCursor | None = None) -> None:
         """ Notifies other processes if registry or cache has been invalidated. """
-        if not self.ready:
-            _logger.warning('Calling signal_changes when registry is not ready is not suported')
-            return
+        if not self.ready and self.registry_invalidated:
+            _logger.warning('Skip signal_changes for registry because it is not ready')
 
-        if self.registry_invalidated:
+        has_cr = cr is not None
+        if self.registry_invalidated and self.ready:
             _logger.info("Registry changed, signaling through the database")
-            with self.cursor() as cr:
+            with nullcontext(cr) if has_cr else self.cursor() as cr:
                 cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
                 # If another process concurrently updates the registry,
                 # self.registry_sequence will actually be out-of-date,
@@ -1110,7 +1110,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # because reloading the registry implies starting with an empty cache
         elif self.cache_invalidated:
             _logger.info("Caches invalidated, signaling through the database: %s", sorted(self.cache_invalidated))
-            with self.cursor() as cr:
+            with nullcontext(cr) if has_cr else self.cursor() as cr:
                 for cache_name in self.cache_invalidated:
                     cr.execute(SQL("INSERT INTO %s DEFAULT VALUES", SQL.identifier(f'orm_signaling_{cache_name}')))
                     # If another process concurrently updates the cache,

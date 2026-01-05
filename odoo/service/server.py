@@ -990,8 +990,7 @@ class PreforkServer(CommonServer):
             if not registries:
                 return
             for registry in registries.values():
-                with registry.cursor() as cr:
-                    registry.check_signaling(cr)
+                registry.check_signaling()
             registries.clear()
             # Close all opened cursors
             sql_db.close_all()

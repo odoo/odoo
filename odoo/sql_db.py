@@ -546,6 +546,8 @@ class Cursor(BaseCursor):
     def commit(self) -> None:
         """ Perform an SQL `COMMIT` """
         self.flush()
+        if self.transaction and (registry := self.transaction.registry).ready:
+            registry.signal_changes(self)
         self._cnx.commit()
         self.clear()
         self._now = None
@@ -559,6 +561,8 @@ class Cursor(BaseCursor):
         self.postcommit.clear()
         self.prerollback.run()
         self._cnx.rollback()
+        if self.transaction:
+            self.transaction.registry.reset_changes()
         self._now = None
         self.postrollback.run()
 

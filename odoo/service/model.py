@@ -73,27 +73,22 @@ def dispatch(method, params):
     # access checked once we open a cursor
 
     threading.current_thread().uid = uid
-    registry = Registry(db).check_signaling()
-    try:
-        if method == 'execute':
+    registry = Registry(db)
+    if method == 'execute':
+        kw = {}
+    elif method == 'execute_kw':
+        # accept: (args, kw=None)
+        if len(args) == 1:
+            args += ({},)
+        args, kw = args
+        if kw is None:
             kw = {}
-        elif method == 'execute_kw':
-            # accept: (args, kw=None)
-            if len(args) == 1:
-                args += ({},)
-            args, kw = args
-            if kw is None:
-                kw = {}
-        else:
-            raise NameError(f"Method not available {method}")  # noqa: TRY301
-        with registry.cursor() as cr:
-            api.Environment(cr, api.SUPERUSER_ID, {})['res.users']._check_uid_passwd(uid, passwd)
-            res = execute_cr(cr, uid, model, method_, args, kw)
-        registry.signal_changes()
-    except Exception:
-        registry.reset_changes()
-        raise
-    return res
+    else:
+        raise NameError(f"Method not available {method}")  # noqa: TRY301
+    with registry.cursor() as cr:
+        registry.check_signaling(cr)
+        api.Environment(cr, api.SUPERUSER_ID, {})['res.users']._check_uid_passwd(uid, passwd)
+        return execute_cr(cr, uid, model, method_, args, kw)
 
 
 def execute_cr(cr, uid, obj, method, args, kw):
