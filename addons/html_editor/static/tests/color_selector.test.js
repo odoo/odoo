@@ -56,6 +56,24 @@ test("can set background color", async () => {
     );
 });
 
+test("should not create font tags for invisible text nodes", async () => {
+    // Invisible spaces between elements in snippets
+    const { el } = await setupEditor("<p>[test</p>\n\u0020<p>test]</p>");
+
+    await expandToolbar();
+    await expectElementCount(".o_font_color_selector", 0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await expectElementCount(".o_font_color_selector", 1);
+
+    await click(".o_color_button[data-color='#6BADDE']");
+    await expectElementCount(".o-we-toolbar", 1);
+    await expectElementCount(".o_font_color_selector", 0); // selector closed
+    expect(getContent(el)).toBe(
+        `<p><font style="color: rgb(107, 173, 222);">[test</font></p>\n\u0020<p><font style="color: rgb(107, 173, 222);">test]</font></p>`
+    );
+});
+
 test("should add opacity to custom background colors but not to theme colors", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
 

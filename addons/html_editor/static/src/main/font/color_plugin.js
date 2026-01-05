@@ -12,6 +12,7 @@ import {
     isEmptyBlock,
     isRedundantElement,
     isTextNode,
+    isVisibleTextNode,
     isWhitespace,
     isZwnbsp,
 } from "@html_editor/utils/dom_info";
@@ -329,7 +330,9 @@ export class ColorPlugin extends Plugin {
                         font = [];
                     }
                 } else if (
-                    (node.nodeType === Node.TEXT_NODE && !isZwnbsp(node)) ||
+                    (node.nodeType === Node.TEXT_NODE &&
+                        !isZwnbsp(node) &&
+                        isVisibleTextNode(node)) ||
                     (node.nodeName === "BR" && isEmptyBlock(node.parentNode)) ||
                     (node.nodeType === Node.ELEMENT_NODE &&
                         ["inline", "inline-block"].includes(getComputedStyle(node).display) &&
