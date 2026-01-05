@@ -832,7 +832,7 @@ test(
 test(
     "max height to prevent container overflow - right-start",
     shrinkPopperTest("right-start", 0, ({ c, p, t }) => {
-        expect(p.top).toBe(t.top);
+        expect(p.top).toBe(c.top);
         expect(p.bottom).toBe(c.bottom);
     })
 );
@@ -846,8 +846,8 @@ test(
 test(
     "max height to prevent container overflow - right-end",
     shrinkPopperTest("right-end", 0, ({ c, p, t }) => {
-        expect(p.bottom).toBe(t.bottom);
         expect(p.top).toBe(c.top);
+        expect(p.bottom).toBe(c.bottom);
     })
 );
 test(
