@@ -394,7 +394,7 @@ export class Store extends BaseStore {
                 const isInbox =
                     this.store.self.main_user_id?.notification_type === "inbox" &&
                     model !== "discuss.channel";
-                if ((isTabFocused && thread?.isDisplayed) || isInbox) {
+                if ((isTabFocused && thread?.channel?.isDisplayed) || isInbox) {
                     navigator.serviceWorker.controller?.postMessage({
                         type: "notification-display-response",
                         payload: { correlationId },
