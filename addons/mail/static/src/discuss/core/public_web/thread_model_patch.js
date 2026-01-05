@@ -4,9 +4,6 @@ import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Thread} */
 const threadPatch = {
-    setup() {
-        super.setup(...arguments);
-    },
     get isEmpty() {
         return !this.channel?.from_message_id && super.isEmpty;
     },
