@@ -23,7 +23,7 @@
     .o_icons_side_to_bottom {
         --accordion-btn-icon-transform: rotate(0deg);
 
-        .accordion-button.collapsed {
+        > .accordion-item > .accordion-button.collapsed {
             &.o_icons_position_reversed:after {
                 transform: rotate(-90deg);
             }
@@ -40,7 +40,7 @@
     }
 
     .o_icons_plus_to_minus {
-        .o_custom_icons_wrap {
+        > .accordion-item > .accordion-header > .o_custom_icons_wrap {
             &:before, &:after {
                 content: '';
                 position: absolute;
@@ -53,34 +53,34 @@
             }
         }
 
-        .accordion-button.collapsed .o_custom_icons_wrap:after {
+        > .accordion-item > .accordion-button.collapsed .o_custom_icons_wrap:after {
             transform: rotate(90deg);
         }
     }
 
     .o_custom_icons {
-        .accordion-button:after {
+        > .accordion-item > .accordion-button:after {
             display: none;
         }
 
-        &.o_transition .o_custom_icons_wrap > span {
+        &.o_transition > .accordion-item > .accordion-button > .o_custom_icons_wrap > span {
             transition: opacity nth($transition-base, 2) nth($transition-base, 3), transform nth($transition-base, 2) nth($transition-base, 3);
         }
 
-        .accordion-button {
+        > .accordion-item > .accordion-button {
             &.collapsed .o_custom_icon_active, &:not(.collapsed) .o_custom_icon_inactive {
                 opacity: 0;
             }
         }
 
-        &.o_transition_scale .accordion-button {
+        &.o_transition_scale > .accordion-item > .accordion-button {
             &.collapsed .o_custom_icon_active, &:not(.collapsed) .o_custom_icon_inactive {
                 transform: scale(0);
                 opacity: 1;
             }
         }
 
-        &.o_transition_translate .accordion-button {
+        &.o_transition_translate > .accordion-item > .accordion-button {
             &.collapsed .o_custom_icon_active, &:not(.collapsed) .o_custom_icon_inactive {
                 opacity: 1;
             }
@@ -96,13 +96,13 @@
     }
 
     .s_accordion_highlight {
-        .accordion-item {
+        > .accordion-item {
             border: 0;
             border-radius: var(--#{$prefix}accordion-border-radius);
             overflow: hidden;
 
             // This removes the bg color when the item isn't displayed.
-            &:has(.collapsed) {
+            &:has(> .collapsed) {
                 background: transparent !important;
                 color: inherit;
             }
@@ -112,7 +112,7 @@
             // replaced by a color preset or a custom color.
             // This avoids color conflicts and preserves the colors
             // selected by the user when changing the accordion template.
-            &:not(:has(.collapsed))::before {
+            &:not(:has(> .collapsed))::before {
                 position: absolute;
                 inset: 0;
                 display: block;
