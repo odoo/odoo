@@ -1807,7 +1807,7 @@ class MailThread(models.AbstractModel):
                 }
         """
         if not isinstance(message, EmailMessage):
-            raise ValueError(_('Message should be a valid EmailMessage instance'))
+            raise TypeError(self.env._('Message should be a valid EmailMessage instance'))
         msg_dict = {'message_type': 'email'}
 
         message_id = message.get('Message-Id')
