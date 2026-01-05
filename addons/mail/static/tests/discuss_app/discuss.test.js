@@ -179,9 +179,7 @@ test("can change the thread description of #general", async () => {
     await insertText(
         "input.o-mail-DiscussContent-threadDescription:enabled",
         "I want a burger today!",
-        {
-            replace: true,
-        }
+        { replace: true }
     );
     triggerHotkey("Enter");
     await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_change_description"]);
