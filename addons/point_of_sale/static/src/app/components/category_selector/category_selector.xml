@@ -4,6 +4,7 @@
         <div t-attf-class="{{this.pos.config.show_category_images ? 'category-list' : 'product-list'}} d-grid gap-1 gap-lg-2 p-2">
             <t t-foreach="this.getCategoriesAndSub()" t-as="category" t-key="category.id">
                 <button t-on-click="() => this.pos.setSelectedCategory(category.id)"
+<<<<<<< b6d6d129bf284c7cf5f48fa130a7b4522f639401
                     t-attf-class="o_colorlist_item_color_{{category.color or 'none'}}"
                     t-att-class="{
                         'border-0': category.isChildren and !this.isAncestorOrSelected(category), 
@@ -18,6 +19,31 @@
                     <span t-if="category.name"
                           t-att-class="{'px-2': category.imgSrc, 'px-3': !category.imgSrc and this.pos.config.show_category_images}"
                           class="text-center text-wrap-categ fs-5" t-esc="category.name" />
+||||||| 2a28bd94667758c87379dc79cfa559337a90a3ac
+                    t-attf-class="o_colorlist_item_color_{{!category.isSelected and !category.isChildren ? 'transparent_': ''}}{{category.color or 'none'}}"
+                    t-att-class="{'opacity-50': !category.isChildren and !category.isSelected, 'justify-content-center': ui.isSmall}"
+                    class="category-button p-1 btn btn-light d-flex justify-content-center align-items-center rounded-3">
+                    <img t-if="category.imgSrc and !ui.isSmall" t-att-src="category.imgSrc"
+                        class="category-img-thumb h-100 rounded-3 object-fit-cover"
+                        alt="Category"
+                    />
+                    <span t-if="category.name"
+                          t-att-class="{'px-2': category.imgSrc, 'px-3': !category.imgSrc and this.pos.config.show_category_images}"
+                          class="text-center text-wrap-categ fs-5" t-esc="category.name" />
+=======
+                    t-attf-class="o_colorlist_item_color_{{!category.isSelected and !category.isChildren ? 'transparent_': ''}}{{category.color or 'none'}}"
+                    t-att-class="{'opacity-50': !category.isChildren and !category.isSelected, 'justify-content-center': ui.isSmall}"
+                    class="category-button p-1 btn btn-light d-flex justify-content-center align-items-center rounded-3 gap-2">
+                    <div t-if="showCategoryImg(category)" class="overflow-hidden flex-shrink-0 ratio ratio-1x1" style="width:33%;">
+                        <img t-if="category.imgSrc and !ui.isSmall" t-att-src="category.imgSrc"
+                            class="category-img-thumb h-100 rounded-3 object-fit-cover"
+                            alt="Category"
+                        />
+                    </div>
+                    <div class="line-clamp-3" t-att-class="{'w-100': !showCategoryImg(category)}" t-att-style="{'width: 67%;': showCategoryImg(category)}">
+                        <span t-if="category.name" class="text-center" t-esc="category.name" />
+                    </div>
+>>>>>>> 8d424a081f1b1e02fdecb36864af2636aa934d8c
                 </button>
             </t>
         </div>
