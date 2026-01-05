@@ -12,6 +12,7 @@ export class CopyButton extends Component {
         successText: { type: String, optional: true },
         icon: { type: String, optional: true },
         content: { type: [String, Object, Function], optional: true },
+        isLink: { type: Boolean, optional: true },
     };
 
     setup() {

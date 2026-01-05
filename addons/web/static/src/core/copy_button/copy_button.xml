@@ -9,7 +9,8 @@
             t-attf-class="btn o_clipboard_button {{ props.className || '' }}"
             t-on-click.stop="onClick"
         >
-            <span class="mx-1" t-attf-class="fa {{ props.icon || 'fa-clipboard' }}"/>
+            <span t-if="!props.isLink" class="mx-1" t-attf-class="fa {{ props.icon || 'fa-clipboard' }}"/>
+            <i t-else="" class="mx-1" t-attf-class="fa {{ props.icon || 'fa-clipboard' }}"></i>
             <span t-if="props.copyText" t-esc="props.copyText"/>
         </button>
     </t>

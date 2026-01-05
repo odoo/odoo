@@ -1,23 +1,36 @@
-import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
-import { stepUtils } from "@web_tour/tour_utils";
+import { registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
-function fillSelectMenu(inputID, search) {
+function fillSelectMenu(fieldName, search) {
     return [
         {
-            content: "Click selectMenu form item",
-            trigger: `.o_website_links_utm_forms div#${inputID} .o_select_menu_toggler`,
-            run: "click",
-        },
-        ...stepUtils.editSelectMenuInput(`.o_website_links_utm_forms div#${inputID} .o_select_menu_input`, search),
-        {
-            content: "Select found selectMenu item",
-            trigger: `.o_popover .o_select_menu_item:contains("${search}")`,
-            run: "click",
+            content: `Select field name ${fieldName}`,
+            trigger: `.o_field_widget[name=${fieldName}] input`,
+            run: `edit ${search}`,
         },
         {
-            content: "Check that selectMenu is properly filled",
-            trigger: `#${inputID} .o_select_menu_toggler:value('${search}')`,
+            trigger: `ul.ui-autocomplete > li > a:contains("${search}")`,
+            run: "click",
+        },
+    ];
+}
+
+function ClickOnMenus() {
+    return [
+        {
+            content: "Click on the reporting menu",
+            trigger: "button[data-menu-xmlid='website.menu_reporting']",
+            run: "click",
+        },
+        {
+            content: "Click on the Tracked links menu",
+            trigger: "a[data-menu-xmlid='website_links.menu_tracked_links_view_menu']",
+            run: "click",
+        },
+        {
+            content: "Click on cell to open chart",
+            trigger: "tr td.o_data_cell.o_field_cell",
+            run: "click",
+            expectUnloadPage: true,
         },
     ];
 }
@@ -26,87 +39,78 @@ const campaignValue = 'Super Specific Campaign';
 const mediumValue = 'Super Specific Medium';
 const sourceValue = 'Super Specific Source';
 
-registry.category("web_tour.tours").add('website_links_tour', {
-    url: '/r',
-    steps: () => [
+registerWebsitePreviewTour("website_links_tour", {
+        url: "/",
+    },
+    () => [
         // 1. Create a tracked URL
         {
-            content: "check that existing links are shown",
-            trigger: '#o_website_links_recent_links .btn_shorten_url_clipboard',
+            content: "Wait for page",
+            trigger: 'button[data-menu-xmlid="website.menu_site"]',
         },
         {
-            content: "fill the URL form input",
-            trigger: '#o_website_links_link_tracker_form input#url',
+            content: "Click on the site menu",
+            trigger: "button[data-menu-xmlid='website.menu_site']",
+            run: "click",
+        },
+        {
+            content: "Click on the link_tracker menu",
+            trigger: "a[data-menu-xmlid='website_links.menu_link_tracker']",
+            run: "click",
+        },
+        {
+            content: "Add page URL",
+            trigger: "div.o_field_widget[name='url'] .o_input",
             run: function () {
-                var url = window.location.host + '/contactus';
-                document.querySelector("#o_website_links_link_tracker_form input#url").value = url;
+                const url = window.location.host + "/contactus";
+                document.querySelector("div.o_field_widget[name='url'] .o_input").value = url;
             },
         },
         // First try to create a new UTM campaign from the UI
-        ...fillSelectMenu("campaign-select-wrapper", "Some new campaign"),
+        ...fillSelectMenu("campaign_id", "Some new campaign"),
         // Then proceed by using existing ones
-        ...fillSelectMenu("campaign-select-wrapper", campaignValue),
-        ...fillSelectMenu("channel-select-wrapper", mediumValue),
-        ...fillSelectMenu("source-select-wrapper", sourceValue),
+        ...fillSelectMenu("campaign_id", campaignValue),
+        ...fillSelectMenu("medium_id", mediumValue),
+        ...fillSelectMenu("source_id", sourceValue),
         {
-            content: "Copy tracker link",
-            trigger: '#btn_shorten_url',
-            run: function () {
-                // Patch and ignore write on clipboard in tour as we don't have permissions
-                const oldWriteText = browser.navigator.clipboard.writeText;
-                browser.navigator.clipboard.writeText = () => {
-                    console.info("Copy in clipboard ignored!");
-                };
-                browser.navigator.clipboard.writeText = oldWriteText;
-            },
-        },
-        {
-            content: "Generate Link Tracker",
-            trigger: "#btn_shorten_url",
+            content: "Click on the 'Create & Copy' button",
+            trigger: "button.o_form_button_save",
             run: "click",
         },
+        {
+            content: "Wait until the modal is closed",
+            trigger: "body:not(.modal-open)",
+        },
+        ...ClickOnMenus(),
         // 2. Visit it
         {
-            trigger: '#o_website_links_recent_links .o_website_links_title:first():contains("Contact Us")',
-        },
-        {
-            content: "check that link was created and visit it",
-            trigger: '.o_website_links_create_tracked_url #generated_tracked_link .o_website_links_short_url:contains("/r/")',
-            run: function () {
-                window.location.href = $('#generated_tracked_link .o_website_links_short_url').text();
+            content: "Check that link was created and visit it",
+            trigger: ".o_website_links_chart .o_website_links_short_url:contains('/r/')",
+            run() {
+                const url = document.querySelector(
+                    "div.o_website_links_chart .o_website_links_short_url"
+                ).textContent;
+                window.location.href = url;
             },
             expectUnloadPage: true,
         },
         {
-            content: "check that we landed on correct page with correct query strings",
+            content: "Check that we landed on correct page with correct query strings",
             trigger: ".s_form_aside h1:text(Contact us)",
             run: function () {
-                const enc = c => encodeURIComponent(c).replace(/%20/g, '+');
-                const expectedUrl = `/contactus?utm_campaign=${enc(campaignValue)}&utm_source=${enc(sourceValue)}&utm_medium=${enc(mediumValue)}`;
+                const enc = (c) => encodeURIComponent(c).replace(/%20/g, "+");
+                const expectedUrl = `/contactus?utm_campaign=${enc(campaignValue)}&utm_source=${enc(
+                    sourceValue
+                )}&utm_medium=${enc(mediumValue)}`;
                 if (window.location.pathname + window.location.search !== expectedUrl) {
                     console.error("The link was not correctly created. " + window.location.search);
                 }
-                window.location.href = '/r';
+                window.location.href = "/odoo/website";
             },
             expectUnloadPage: true,
         },
         // 3. Check that counter got incremented and charts are correctly displayed
-        {
-            content: "Sort the recent links",
-            trigger: ".o_website_links_sort_by",
-            run: "click",
-        },
-        {
-            content: "Sort by last clicked links",
-            trigger: "#recent_links_sort_by a[data-filter='recently-used']",
-            run: "click",
-        },
-        {
-            content: "visit link stats page",
-            trigger: ".o_website_links_card",
-            run: "click",
-            expectUnloadPage: true,
-        },
+        ...ClickOnMenus(),
         {
             trigger: '.website_links_click_chart .title:contains("1 clicks")',
         },
@@ -132,4 +136,4 @@ registry.category("web_tour.tours").add('website_links_tour', {
             },
         },
     ]
-});
+);
