@@ -423,7 +423,7 @@ class Repair(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_confirmed(self):
-        repairs_to_cancel = self.filtered(lambda ro: ro.state not in ('draft', 'cancel'))
+        repairs_to_cancel = self.filtered(lambda ro: ro.state != 'cancel')
         repairs_to_cancel.action_repair_cancel()
 
     def action_assign(self):
