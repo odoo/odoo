@@ -35,6 +35,43 @@ registerWebsitePreviewTour(
             trigger: ".o_colorpicker_section [data-color='o-color-1']",
             run: "click",
         },
+        {
+            content: "Click on any image in the snippet",
+            trigger: ":iframe .s_company_team img",
+            run: "click",
+        },
+        {
+            content: "Open the shape selection dropdown under the image options tab",
+            trigger: "[data-label='Shape'] .hb-row-content .dropdown",
+            run: "click",
+        },
+        {
+            content: "Click on devices tab",
+            trigger: "[data-group-id='devices']",
+            run: "click",
+        },
+        {
+            content: "Choose the 'iPhone Front Portrait' shape",
+            trigger: "[data-action-value='html_builder/devices/iphone_front_portrait']",
+            run: "click",
+        },
+        {
+            content: "Open the color picker",
+            trigger: "[data-container-title='Image'] [data-label='Colors'] .o_we_color_preview",
+            run: "click",
+        },
+        {
+            content: "Set the shape color to theme color 1",
+            trigger: ".o_colorpicker_section [data-color='o-color-1']",
+            run: "click",
+        },
+        {
+            content: "Store the shape svg URL in a variable",
+            trigger: ":iframe .s_company_team img[data-shape]",
+            run() {
+                this.initialShapeURL = this.anchor.src;
+            },
+        },
         ...goToTheme(),
         {
             content: "Open the color picker for theme preset 1",
@@ -59,6 +96,29 @@ registerWebsitePreviewTour(
                 if (!backgroundImageUrl.includes("1AEF74")) {
                     throw new Error(
                         "Updating the theme color should also update the background shape color."
+                    );
+                }
+                const updatedShapeURL = this.anchor.querySelector("img[data-shape]").src;
+                if (this.initialShapeURL === updatedShapeURL) {
+                    throw new Error(
+                        "Updating the theme color should also update the image shape color."
+                    );
+                }
+            },
+        },
+        {
+            content: "Click on any image in the snippet",
+            trigger: ":iframe .s_company_team img",
+            run: "click",
+        },
+        {
+            content: "Check that the color picker icon has changed",
+            trigger: "[data-container-title='Image'] [data-label='Colors'] .o_we_color_preview",
+            run() {
+                // The RGB value of the color #1AEF74 is rgb(26, 239, 116)
+                if (this.anchor.style.backgroundColor !== "rgb(26, 239, 116)") {
+                    throw new Error(
+                        "Updating the theme color should also update the color shown in the color picker"
                     );
                 }
             },
