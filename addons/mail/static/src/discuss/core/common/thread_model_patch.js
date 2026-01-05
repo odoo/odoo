@@ -33,9 +33,6 @@ const threadPatch = {
         this.channel_name_member_ids = fields.Many("discuss.channel.member");
         this.scrollUnread = true;
     },
-    get showCorrespondentCountry() {
-        return false;
-    },
     /** @override */
     async checkReadAccess() {
         const res = await super.checkReadAccess();
