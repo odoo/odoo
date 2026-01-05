@@ -162,9 +162,6 @@ const threadPatch = {
         }
         return super.post(...arguments);
     },
-    get showUnreadBanner() {
-        return this.channel?.self_member_id?.message_unread_counter_ui > 0;
-    },
     async executeCommand(command, body = "") {
         await command.onExecute?.(this.channel);
         if (command.methodName) {

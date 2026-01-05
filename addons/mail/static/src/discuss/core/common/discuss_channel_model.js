@@ -399,6 +399,9 @@ export class DiscussChannel extends Record {
             (this.channel_type === "group" && this.hasOtherMembersTyping)
         );
     }
+    get showUnreadBanner() {
+        return this.self_member_id?.message_unread_counter_ui > 0;
+    }
     sub_channel_ids = fields.Many("discuss.channel", {
         inverse: "parent_channel_id",
         sort: (a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id,
