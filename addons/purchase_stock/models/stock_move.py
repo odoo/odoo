@@ -191,6 +191,8 @@ class StockMove(models.Model):
 
         other_candidates_qty = 0
         for move in self.purchase_line_id.move_ids:
+            if move == self:
+                continue
             if move.product_id != self.product_id:
                 continue
             if move.date > self.date or (move.date == self.date and move.id > self.id):
