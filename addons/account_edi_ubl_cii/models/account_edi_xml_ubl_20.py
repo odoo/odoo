@@ -1091,8 +1091,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'vat': self._find_value(f'.//cac:{role}Party//cbc:CompanyID[string-length(text()) > 5]', tree),
             'phone': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Telephone', tree),
             'email': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:ElectronicMail', tree),
-            'name': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Name', tree) or
-                    self._find_value(f'.//cac:{role}Party//cbc:RegistrationName', tree),
+            'name': self._find_value(f'.//cac:{role}Party//cbc:RegistrationName', tree) or
+                    self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Name', tree),
             'postal_address': self._get_postal_address(tree, role),
         }
 
