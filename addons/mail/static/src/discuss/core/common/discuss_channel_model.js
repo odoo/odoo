@@ -86,11 +86,11 @@ export class DiscussChannel extends Record {
             (this.channel_type === "channel" && !this.group_public_id)
         );
     }
-    get allowDescriptionsTypes() {
+    get allowDescriptionTypes() {
         return ["channel", "group"];
     }
     get allowDescription() {
-        return this.allowDescriptionsTypes.includes(this.channel_type);
+        return this.allowDescriptionTypes.includes(this.channel_type);
     }
     get allowedToLeaveChannelTypes() {
         return ["channel", "group"];
