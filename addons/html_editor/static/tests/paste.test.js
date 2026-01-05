@@ -4619,7 +4619,7 @@ describe("onDrop", () => {
         await animationFrame();
 
         expect(getContent(el)).toBe(
-            `<p>ab<img class="img-fluid" data-file-name="image.png" src="${base64Image}">[]c</p>`
+            `<p>ab<img src="${base64Image}" data-file-name="image.png" class="img-fluid">[]c</p>`
         );
     });
     test("should drag and drop an image after another image", async () => {
@@ -4660,7 +4660,7 @@ describe("onDrop", () => {
         await animationFrame();
 
         expect(getContent(el)).toBe(
-            `<p><img class="img-fluid" data-file-name="image.png" src="${base64Image2}"><img class="img-fluid" data-file-name="image.png" src="${base64Image}">[]</p>`
+            `<p><img class="img-fluid" data-file-name="image.png" src="${base64Image2}"><img src="${base64Image}" data-file-name="image.png" class="img-fluid">[]</p>`
         );
     });
     test("should drag and drop third image after first image", async () => {
@@ -4700,7 +4700,7 @@ describe("onDrop", () => {
         await animationFrame();
 
         expect(getContent(el)).toBe(
-            `<p><img class="img-fluid" data-file-name="image.png" src="${base64Image1}"><img class="img-fluid" data-file-name="image.png" src="${base64Image3}">[]<img class="img-fluid" data-file-name="image.png" src="${base64Image2}"></p>`
+            `<p><img class="img-fluid" data-file-name="image.png" src="${base64Image1}"><img src="${base64Image3}" data-file-name="image.png" class="img-fluid">[]<img class="img-fluid" data-file-name="image.png" src="${base64Image2}"></p>`
         );
     });
     test("should drag and drop multiple images after another image", async () => {
@@ -4743,7 +4743,7 @@ describe("onDrop", () => {
         await animationFrame();
 
         expect(getContent(el)).toBe(
-            `<p><img class="img-fluid" data-file-name="image.png" src="${base64Image3}"><img class="img-fluid" data-file-name="image.png" src="${base64Image1}"><img class="img-fluid" data-file-name="image.png" src="${base64Image2}">[]</p>`
+            `<p><img class="img-fluid" data-file-name="image.png" src="${base64Image3}"><img src="${base64Image1}" data-file-name="image.png" class="img-fluid"><img src="${base64Image2}" data-file-name="image.png" class="img-fluid">[]</p>`
         );
     });
     test("should drag and drop banner", async () => {
@@ -4782,9 +4782,9 @@ describe("onDrop", () => {
 
         expect(getContent(el)).toBe(
             `<p><br></p><p>ca
-            </p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
-                <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
-                <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
+            </p><div role="status" contenteditable="false" data-oe-role="status" class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3">
+                <i aria-label="Banner Info" data-oe-aria-label="Banner Info" class="o_editor_banner_icon mb-3 fst-normal">💡</i>
+                <div contenteditable="true" class="o_editor_banner_content o-contenteditable-true w-100 px-3">
                     <p>Test</p>
                 </div>
             </div><p>b[]</p>`
