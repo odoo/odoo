@@ -4,10 +4,10 @@
         <xpath
             expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]"
             position="before">
-            <button t-if="pos.config.module_pos_restaurant"
+            <button t-if="this.showPrintOrderQrTicketButton"
                 t-att-class="buttonClass"
-                t-att-disabled="!this.showPrintOrderQrTicketButton"
-                t-on-click.stop="onClickPrintOrderQrTicket">
+                t-att-disabled="!this.currentOrder.table_id"
+                t-on-click.stop="clickPrintQrMenu">
                 <i class="fa fa-qrcode me-1" /> QR Menu
             </button>
         </xpath>

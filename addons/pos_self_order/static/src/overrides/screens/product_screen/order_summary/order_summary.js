@@ -5,9 +5,7 @@ import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_su
 patch(OrderSummary.prototype, {
     setup() {
         super.setup();
-        this.onClickPrintOrderQrTicket = useAsyncLockedMethod(
-            async () => await this.pos.printOrderQrTicket()
-        );
+        this.clickPrintQrMenu = useAsyncLockedMethod(this.clickPrintQrMenu);
     },
     get showPrintOrderQrTicketButton() {
         return (
@@ -15,5 +13,8 @@ patch(OrderSummary.prototype, {
             this.pos.config.self_ordering_mode === "mobile" &&
             this.pos.selectedOrder.table_id
         );
+    },
+    async clickPrintQrMenu() {
+        this.pos.printOrderQrTicket();
     },
 });
