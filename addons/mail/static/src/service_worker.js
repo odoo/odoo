@@ -16,6 +16,9 @@ self.addEventListener("push", (event) => {
     self.registration.showNotification(notification.title, notification.options || {});
 });
 self.addEventListener("pushsubscriptionchange", async (event) => {
+    if (!event.oldSubscription) {
+        return;
+    }
     const subscription = await self.registration.pushManager.subscribe(
         event.oldSubscription.options
     );
