@@ -49,6 +49,10 @@ class NavTabsStyleOptionPlugin extends Plugin {
                 return false;
             }
         },
+        dropzone_selector: {
+            selector: ".s_tabs, .s_tabs_images",
+            excludeAncestor: ".s_table_of_content, .s_tabs, .s_tabs_images",
+        },
     };
 
     setup() {
