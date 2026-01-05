@@ -35,8 +35,402 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # To be overriden by custom format if required
         pass
 
+<<<<<<< dea5a1d28a1935c2b4d87c3c6e8c07cd874c7d6b
     def _export_invoice(self, invoice):
         """ Generates an UBL 2.0 xml for a given invoice. """
+||||||| c88a7adfc84dbe226c90a563300ee4456f447bc6
+    # -------------------------------------------------------------------------
+    # IMPORT
+    # -------------------------------------------------------------------------
+
+    def _import_retrieve_partner_vals(self, tree, role):
+        """ Returns a dict of values that will be used to retrieve the partner """
+        return {
+            'vat': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree),
+            'phone': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Telephone', tree),
+            'email': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:ElectronicMail', tree),
+            'name': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Name', tree) or
+                    self._find_value(f'.//cac:{role}Party/cac:Party//cbc:RegistrationName', tree),
+            'postal_address': self._get_postal_address(tree, role),
+        }
+
+    def _get_postal_address(self, tree, role):
+        return {
+            'country_code': self._find_value(f'.//cac:{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree),
+            'street': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:StreetName', tree),
+            'additional_street': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName', tree),
+            'city': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:CityName', tree),
+            'zip': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:PostalZone', tree),
+            'state_code': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:CountrySubentityCode', tree),
+        }
+
+    def _import_fill_invoice(self, invoice, tree, qty_factor):
+        logs = []
+        invoice_values = {}
+        if qty_factor == -1:
+            logs.append(_("The invoice has been converted into a credit note and the quantities have been reverted."))
+        role = "AccountingCustomer" if invoice.journal_id.type == 'sale' else "AccountingSupplier"
+        partner, partner_logs = self._import_partner(invoice.company_id, **self._import_retrieve_partner_vals(tree, role))
+        # Need to set partner before to compute bank and lines properly
+        invoice.partner_id = partner.id
+        invoice_values['currency_id'], currency_logs = self._import_currency(tree, './/{*}DocumentCurrencyCode')
+        invoice_values['invoice_date'] = tree.findtext('./{*}IssueDate')
+        invoice_values['invoice_date_due'] = self._find_value(('./cbc:DueDate', './/cbc:PaymentDueDate'), tree)
+        # ==== partner_bank_id ====
+        bank_detail_nodes = tree.findall('.//{*}PaymentMeans')
+        bank_details = [bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID') for bank_detail_node in bank_detail_nodes]
+        if bank_details:
+            self._import_partner_bank(invoice, bank_details)
+
+        # ==== ref, invoice_origin, narration, payment_reference ====
+        ref = tree.findtext('./{*}ID')
+        if ref and invoice.is_sale_document(include_receipts=True) and invoice.quick_edit_mode:
+            invoice_values['name'] = ref
+        elif ref:
+            invoice_values['ref'] = ref
+        invoice_values['invoice_origin'] = tree.findtext('./{*}OrderReference/{*}ID')
+        invoice_values['narration'] = self._import_description(tree, xpaths=['./{*}Note', './{*}PaymentTerms/{*}Note'])
+        invoice_values['payment_reference'] = tree.findtext('./{*}PaymentMeans/{*}PaymentID')
+
+        # ==== Delivery ====
+        delivery_date = tree.find('.//{*}Delivery/{*}ActualDeliveryDate')
+        invoice.delivery_date = delivery_date is not None and delivery_date.text
+
+        # ==== invoice_incoterm_id ====
+        incoterm_code = tree.findtext('./{*}TransportExecutionTerms/{*}DeliveryTerms/{*}ID')
+        if incoterm_code:
+            incoterm = self.env['account.incoterms'].search([('code', '=', incoterm_code)], limit=1)
+            if incoterm:
+                invoice_values['invoice_incoterm_id'] = incoterm.id
+
+        # ==== Document level AllowanceCharge, Prepaid Amounts, Invoice Lines, Payable Rounding Amount ====
+        allowance_charges_line_vals, allowance_charges_logs = self._import_document_allowance_charges(tree, invoice, invoice.journal_id.type, qty_factor)
+        logs += self._import_prepaid_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PrepaidAmount', qty_factor)
+        line_tag = (
+            'InvoiceLine'
+            if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1
+            else 'CreditNoteLine'
+        )
+        invoice_line_vals, line_logs = self._import_invoice_lines(invoice, tree, './{*}' + line_tag, qty_factor)
+        rounding_line_vals, rounding_logs = self._import_rounding_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PayableRoundingAmount', qty_factor)
+        line_vals = allowance_charges_line_vals + invoice_line_vals + rounding_line_vals
+
+        invoice_values = {
+            **invoice_values,
+            'invoice_line_ids': [Command.create(line_value) for line_value in line_vals],
+        }
+        invoice.write(invoice_values)
+        logs += partner_logs + currency_logs + line_logs + allowance_charges_logs + rounding_logs
+        return logs
+
+    def _get_tax_nodes(self, tree):
+        tax_nodes = tree.findall('.//{*}Item/{*}ClassifiedTaxCategory/{*}Percent')
+        if not tax_nodes:
+            for elem in tree.findall('.//{*}TaxTotal'):
+                percentage_nodes = elem.findall('.//{*}TaxSubtotal/{*}TaxCategory/{*}Percent')
+                if not percentage_nodes:
+                    percentage_nodes = elem.findall('.//{*}TaxSubtotal/{*}Percent')
+                tax_nodes += percentage_nodes
+        return tax_nodes
+
+    def _get_document_allowance_charge_xpaths(self):
+        return {
+            'root': './{*}AllowanceCharge',
+            'charge_indicator': './{*}ChargeIndicator',
+            'base_amount': './{*}BaseAmount',
+            'amount': './{*}Amount',
+            'reason': './{*}AllowanceChargeReason',
+            'percentage': './{*}MultiplierFactorNumeric',
+            'tax_percentage': './{*}TaxCategory/{*}Percent',
+        }
+
+    def _get_invoice_line_xpaths(self, document_type=False, qty_factor=1):
+        return {
+            'deferred_start_date': './{*}InvoicePeriod/{*}StartDate',
+            'deferred_end_date': './{*}InvoicePeriod/{*}EndDate',
+            'date_format': '%Y-%m-%d',
+        }
+
+    def _get_line_xpaths(self, document_type=False, qty_factor=1):
+        return {
+            'basis_qty': './cac:Price/cbc:BaseQuantity',
+            'gross_price_unit': './{*}Price/{*}AllowanceCharge/{*}BaseAmount',
+            'rebate': './{*}Price/{*}AllowanceCharge/{*}Amount',
+            'net_price_unit': './{*}Price/{*}PriceAmount',
+            'delivered_qty': (
+                './{*}InvoicedQuantity'
+                if document_type and document_type in ('in_invoice', 'out_invoice') or qty_factor == -1
+                else './{*}CreditedQuantity'
+            ),
+            'allowance_charge': './/{*}AllowanceCharge',
+            'allowance_charge_indicator': './{*}ChargeIndicator',
+            'allowance_charge_amount': './{*}Amount',
+            'allowance_charge_reason': './{*}AllowanceChargeReason',
+            'allowance_charge_reason_code': './{*}AllowanceChargeReasonCode',
+            'line_total_amount': './{*}LineExtensionAmount',
+            'name': [
+                './cac:Item/cbc:Description',
+                './cac:Item/cbc:Name',
+            ],
+            'product': {
+                'default_code': './cac:Item/cac:SellersItemIdentification/cbc:ID',
+                'name': './cac:Item/cbc:Name',
+                'barcode': './cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID="0160"]',
+            },
+        }
+
+    def _correct_invoice_tax_amount(self, tree, invoice):
+        """ The tax total may have been modified for rounding purpose, if so we should use the imported tax and not
+         the computed one """
+        currency = invoice.currency_id
+        # For each tax in our tax total, get the amount as well as the total in the xml.
+        # Negative tax amounts may appear in invoices; they have to be inverted (since they are credit notes).
+        document_amount_sign = self._get_import_document_amount_sign(tree)[1] or 1
+        # We only search for `TaxTotal/TaxSubtotal` in the "root" element (i.e. not in `InvoiceLine` elements).
+        for elem in tree.findall('./{*}TaxTotal/{*}TaxSubtotal'):
+            percentage = elem.find('.//{*}TaxCategory/{*}Percent')
+            if percentage is None:
+                percentage = elem.find('.//{*}Percent')
+            amount = elem.find('.//{*}TaxAmount')
+            if (percentage is not None and percentage.text is not None) and (amount is not None and amount.text is not None):
+                tax_percent = float(percentage.text)
+                # Compare the result with our tax total on the invoice, and apply correction if needed.
+                # First look for taxes matching the percentage in the xml.
+                taxes = invoice.line_ids.tax_line_id.filtered(lambda tax: tax.amount == tax_percent)
+                # If we found taxes with the correct amount, look for a tax line using it, and correct it as needed.
+                if taxes:
+                    tax_total = document_amount_sign * float(amount.text)
+                    # Sometimes we have multiple lines for the same tax.
+                    tax_lines = invoice.line_ids.filtered(lambda line: line.tax_line_id in taxes)
+                    if tax_lines:
+                        sign = -1 if invoice.is_inbound(include_receipts=True) else 1
+                        tax_lines_total = currency.round(sign * sum(tax_lines.mapped('amount_currency')))
+                        difference = currency.round(tax_total - tax_lines_total)
+                        if not currency.is_zero(difference):
+                            tax_lines[0].amount_currency += sign * difference
+
+    # -------------------------------------------------------------------------
+    # IMPORT : helpers
+    # -------------------------------------------------------------------------
+
+    def _get_import_document_amount_sign(self, tree):
+        """
+        In UBL, an invoice has tag 'Invoice' and a credit note has tag 'CreditNote'. However, a credit note can be
+        expressed as an invoice with negative amounts. For this case, we need a factor to take the opposite
+        of each quantity in the invoice.
+        """
+        if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice':
+            amount_node = tree.find('.//{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')
+            if amount_node is not None and float(amount_node.text) < 0:
+                return 'refund', -1
+            return 'invoice', 1
+        if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2}CreditNote':
+            return 'refund', 1
+        return None, None
+
+    # -------------------------------------------------------------------------
+    # EXPORT: New (dict_to_xml) helpers
+    # -------------------------------------------------------------------------
+
+    def _export_invoice_new(self, invoice):
+        """ Generates an UBL 2.0 xml for a given invoice, using the new dict_to_xml helpers. """
+=======
+    # -------------------------------------------------------------------------
+    # IMPORT
+    # -------------------------------------------------------------------------
+
+    def _import_retrieve_partner_vals(self, tree, role):
+        """ Returns a dict of values that will be used to retrieve the partner """
+        return {
+            'vat': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree),
+            'phone': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Telephone', tree),
+            'email': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:ElectronicMail', tree),
+            'name': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:RegistrationName', tree) or
+                    self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Name', tree),
+            'postal_address': self._get_postal_address(tree, role),
+        }
+
+    def _get_postal_address(self, tree, role):
+        return {
+            'country_code': self._find_value(f'.//cac:{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree),
+            'street': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:StreetName', tree),
+            'additional_street': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName', tree),
+            'city': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:CityName', tree),
+            'zip': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:PostalZone', tree),
+            'state_code': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:CountrySubentityCode', tree),
+        }
+
+    def _import_fill_invoice(self, invoice, tree, qty_factor):
+        logs = []
+        invoice_values = {}
+        if qty_factor == -1:
+            logs.append(_("The invoice has been converted into a credit note and the quantities have been reverted."))
+        role = "AccountingCustomer" if invoice.journal_id.type == 'sale' else "AccountingSupplier"
+        partner, partner_logs = self._import_partner(invoice.company_id, **self._import_retrieve_partner_vals(tree, role))
+        # Need to set partner before to compute bank and lines properly
+        invoice.partner_id = partner.id
+        invoice_values['currency_id'], currency_logs = self._import_currency(tree, './/{*}DocumentCurrencyCode')
+        invoice_values['invoice_date'] = tree.findtext('./{*}IssueDate')
+        invoice_values['invoice_date_due'] = self._find_value(('./cbc:DueDate', './/cbc:PaymentDueDate'), tree)
+        # ==== partner_bank_id ====
+        bank_detail_nodes = tree.findall('.//{*}PaymentMeans')
+        bank_details = [bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID') for bank_detail_node in bank_detail_nodes]
+        if bank_details:
+            self._import_partner_bank(invoice, bank_details)
+
+        # ==== ref, invoice_origin, narration, payment_reference ====
+        ref = tree.findtext('./{*}ID')
+        if ref and invoice.is_sale_document(include_receipts=True) and invoice.quick_edit_mode:
+            invoice_values['name'] = ref
+        elif ref:
+            invoice_values['ref'] = ref
+        invoice_values['invoice_origin'] = tree.findtext('./{*}OrderReference/{*}ID')
+        invoice_values['narration'] = self._import_description(tree, xpaths=['./{*}Note', './{*}PaymentTerms/{*}Note'])
+        invoice_values['payment_reference'] = tree.findtext('./{*}PaymentMeans/{*}PaymentID')
+
+        # ==== Delivery ====
+        delivery_date = tree.find('.//{*}Delivery/{*}ActualDeliveryDate')
+        invoice.delivery_date = delivery_date is not None and delivery_date.text
+
+        # ==== invoice_incoterm_id ====
+        incoterm_code = tree.findtext('./{*}TransportExecutionTerms/{*}DeliveryTerms/{*}ID')
+        if incoterm_code:
+            incoterm = self.env['account.incoterms'].search([('code', '=', incoterm_code)], limit=1)
+            if incoterm:
+                invoice_values['invoice_incoterm_id'] = incoterm.id
+
+        # ==== Document level AllowanceCharge, Prepaid Amounts, Invoice Lines, Payable Rounding Amount ====
+        allowance_charges_line_vals, allowance_charges_logs = self._import_document_allowance_charges(tree, invoice, invoice.journal_id.type, qty_factor)
+        logs += self._import_prepaid_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PrepaidAmount', qty_factor)
+        line_tag = (
+            'InvoiceLine'
+            if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1
+            else 'CreditNoteLine'
+        )
+        invoice_line_vals, line_logs = self._import_invoice_lines(invoice, tree, './{*}' + line_tag, qty_factor)
+        rounding_line_vals, rounding_logs = self._import_rounding_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PayableRoundingAmount', qty_factor)
+        line_vals = allowance_charges_line_vals + invoice_line_vals + rounding_line_vals
+
+        invoice_values = {
+            **invoice_values,
+            'invoice_line_ids': [Command.create(line_value) for line_value in line_vals],
+        }
+        invoice.write(invoice_values)
+        logs += partner_logs + currency_logs + line_logs + allowance_charges_logs + rounding_logs
+        return logs
+
+    def _get_tax_nodes(self, tree):
+        tax_nodes = tree.findall('.//{*}Item/{*}ClassifiedTaxCategory/{*}Percent')
+        if not tax_nodes:
+            for elem in tree.findall('.//{*}TaxTotal'):
+                percentage_nodes = elem.findall('.//{*}TaxSubtotal/{*}TaxCategory/{*}Percent')
+                if not percentage_nodes:
+                    percentage_nodes = elem.findall('.//{*}TaxSubtotal/{*}Percent')
+                tax_nodes += percentage_nodes
+        return tax_nodes
+
+    def _get_document_allowance_charge_xpaths(self):
+        return {
+            'root': './{*}AllowanceCharge',
+            'charge_indicator': './{*}ChargeIndicator',
+            'base_amount': './{*}BaseAmount',
+            'amount': './{*}Amount',
+            'reason': './{*}AllowanceChargeReason',
+            'percentage': './{*}MultiplierFactorNumeric',
+            'tax_percentage': './{*}TaxCategory/{*}Percent',
+        }
+
+    def _get_invoice_line_xpaths(self, document_type=False, qty_factor=1):
+        return {
+            'deferred_start_date': './{*}InvoicePeriod/{*}StartDate',
+            'deferred_end_date': './{*}InvoicePeriod/{*}EndDate',
+            'date_format': '%Y-%m-%d',
+        }
+
+    def _get_line_xpaths(self, document_type=False, qty_factor=1):
+        return {
+            'basis_qty': './cac:Price/cbc:BaseQuantity',
+            'gross_price_unit': './{*}Price/{*}AllowanceCharge/{*}BaseAmount',
+            'rebate': './{*}Price/{*}AllowanceCharge/{*}Amount',
+            'net_price_unit': './{*}Price/{*}PriceAmount',
+            'delivered_qty': (
+                './{*}InvoicedQuantity'
+                if document_type and document_type in ('in_invoice', 'out_invoice') or qty_factor == -1
+                else './{*}CreditedQuantity'
+            ),
+            'allowance_charge': './/{*}AllowanceCharge',
+            'allowance_charge_indicator': './{*}ChargeIndicator',
+            'allowance_charge_amount': './{*}Amount',
+            'allowance_charge_reason': './{*}AllowanceChargeReason',
+            'allowance_charge_reason_code': './{*}AllowanceChargeReasonCode',
+            'line_total_amount': './{*}LineExtensionAmount',
+            'name': [
+                './cac:Item/cbc:Description',
+                './cac:Item/cbc:Name',
+            ],
+            'product': {
+                'default_code': './cac:Item/cac:SellersItemIdentification/cbc:ID',
+                'name': './cac:Item/cbc:Name',
+                'barcode': './cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID="0160"]',
+            },
+        }
+
+    def _correct_invoice_tax_amount(self, tree, invoice):
+        """ The tax total may have been modified for rounding purpose, if so we should use the imported tax and not
+         the computed one """
+        currency = invoice.currency_id
+        # For each tax in our tax total, get the amount as well as the total in the xml.
+        # Negative tax amounts may appear in invoices; they have to be inverted (since they are credit notes).
+        document_amount_sign = self._get_import_document_amount_sign(tree)[1] or 1
+        # We only search for `TaxTotal/TaxSubtotal` in the "root" element (i.e. not in `InvoiceLine` elements).
+        for elem in tree.findall('./{*}TaxTotal/{*}TaxSubtotal'):
+            percentage = elem.find('.//{*}TaxCategory/{*}Percent')
+            if percentage is None:
+                percentage = elem.find('.//{*}Percent')
+            amount = elem.find('.//{*}TaxAmount')
+            if (percentage is not None and percentage.text is not None) and (amount is not None and amount.text is not None):
+                tax_percent = float(percentage.text)
+                # Compare the result with our tax total on the invoice, and apply correction if needed.
+                # First look for taxes matching the percentage in the xml.
+                taxes = invoice.line_ids.tax_line_id.filtered(lambda tax: tax.amount == tax_percent)
+                # If we found taxes with the correct amount, look for a tax line using it, and correct it as needed.
+                if taxes:
+                    tax_total = document_amount_sign * float(amount.text)
+                    # Sometimes we have multiple lines for the same tax.
+                    tax_lines = invoice.line_ids.filtered(lambda line: line.tax_line_id in taxes)
+                    if tax_lines:
+                        sign = -1 if invoice.is_inbound(include_receipts=True) else 1
+                        tax_lines_total = currency.round(sign * sum(tax_lines.mapped('amount_currency')))
+                        difference = currency.round(tax_total - tax_lines_total)
+                        if not currency.is_zero(difference):
+                            tax_lines[0].amount_currency += sign * difference
+
+    # -------------------------------------------------------------------------
+    # IMPORT : helpers
+    # -------------------------------------------------------------------------
+
+    def _get_import_document_amount_sign(self, tree):
+        """
+        In UBL, an invoice has tag 'Invoice' and a credit note has tag 'CreditNote'. However, a credit note can be
+        expressed as an invoice with negative amounts. For this case, we need a factor to take the opposite
+        of each quantity in the invoice.
+        """
+        if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice':
+            amount_node = tree.find('.//{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')
+            if amount_node is not None and float(amount_node.text) < 0:
+                return 'refund', -1
+            return 'invoice', 1
+        if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2}CreditNote':
+            return 'refund', 1
+        return None, None
+
+    # -------------------------------------------------------------------------
+    # EXPORT: New (dict_to_xml) helpers
+    # -------------------------------------------------------------------------
+
+    def _export_invoice_new(self, invoice):
+        """ Generates an UBL 2.0 xml for a given invoice, using the new dict_to_xml helpers. """
+>>>>>>> 1e28f44d5f9ee8e7ec81909837baa5dc471a4bbd
         # 1. Validate the structure of the taxes
         self._validate_taxes(invoice.invoice_line_ids.tax_ids)
 
