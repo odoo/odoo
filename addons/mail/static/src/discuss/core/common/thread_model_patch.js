@@ -63,17 +63,6 @@ const threadPatch = {
         return super.importantCounter;
     },
     /** @override */
-    isDisplayedOnUpdate() {
-        super.isDisplayedOnUpdate(...arguments);
-        if (!this.channel?.self_member_id) {
-            return;
-        }
-        if (!this.isDisplayed) {
-            this.channel.self_member_id.new_message_separator_ui =
-                this.channel?.self_member_id.new_message_separator;
-            this.markedAsUnread = false;
-        }
-    },
     get isUnread() {
         return this.channel?.self_member_id?.message_unread_counter > 0 || super.isUnread;
     },

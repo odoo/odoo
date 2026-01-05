@@ -17,21 +17,9 @@ const threadPatch = {
             onDelete: (r) => r?.remove(),
         });
         /** @type {boolean} */
-        this.isDisplayedInDiscussAppDesktop = fields.Attr(undefined, {
-            /** @this {import("models").Thread} */
-            compute() {
-                if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
-                    return Boolean(this.discussAppAsThread);
-                }
-                return false;
-            },
-        });
     },
     get recipientsFullyLoaded() {
         return this.recipientsCount === this.recipients.length;
-    },
-    computeIsDisplayed() {
-        return this.isDisplayedInDiscussAppDesktop || super.computeIsDisplayed();
     },
     async loadMoreFollowers() {
         const data = await this.store.env.services.orm.call(this.model, "message_get_followers", [
