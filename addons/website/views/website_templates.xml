@@ -1720,7 +1720,7 @@
 
 <template id="header_hoverable_dropdown" inherit_id="website.layout" name="Header Hoverable Dropdown" active="False">
     <xpath expr="//header" position="attributes">
-        <attribute name="t-attf-class" add="o_hoverable_dropdown" separator=" "/>
+        <attribute name="t-attf-class" add="#{'' if is_view_active('website.template_header_hamburger') else 'o_hoverable_dropdown'}" separator=" "/>
     </xpath>
 </template>
 
