@@ -201,7 +201,10 @@ class HrEmployeeBase(models.AbstractModel):
                         allocations_with_date_to |= leave_allocation
                     else:
                         allocations_without_date_to |= leave_allocation
-                sorted_leave_allocations = allocations_with_date_to.sorted(key='date_to') + allocations_without_date_to
+                sorted_leave_allocations = (
+                    allocations_with_date_to.sorted(key='date_to') +
+                    allocations_without_date_to.filtered(lambda alloc: alloc.allocation_type == 'accrual') +
+                    allocations_without_date_to.filtered(lambda alloc: alloc.allocation_type == 'regular'))
 
                 if leave_type.request_unit in ['day', 'half_day']:
                     leave_duration_field = 'number_of_days'
