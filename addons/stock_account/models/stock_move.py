@@ -169,9 +169,9 @@ class StockMove(models.Model):
         # Use _is_out() instead of is_out since the move is not done
         # It's called before action_done since we need the current fifo
         # stack. Limitation when validating at same time out and ins
-        moves_out = self.filtered(lambda m: m._is_out())
-        moves_out._set_value()
         moves = super()._action_done(cancel_backorder=cancel_backorder)
+        moves_out = moves.filtered(lambda m: m._is_out())
+        moves_out._set_value()
         moves_in = moves.filtered(lambda m: m.is_in or m.is_dropship)
         moves_in._set_value()
         moves._create_account_move()
