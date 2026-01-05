@@ -235,7 +235,7 @@ class SwedishBlackBoxDriver(SerialDriver):
         retries = 0
         while ACK != "ACK" and retries < retry:
             connection.write(packet)
-            response = connection.readline().decode().split("#")
+            response = connection.readline().decode(errors="ignore").split("#")
 
             try:
                 if response[3] != "NAK":
