@@ -76,7 +76,9 @@ export class DefineCustomIconAction extends BuilderAction {
 export class CustomAccordionIconAction extends BuilderAction {
     static id = "customAccordionIcon";
     apply({ editingElement, params, value }) {
-        const accordionButtonEls = editingElement.querySelectorAll(".accordion-button");
+        const accordionButtonEls = editingElement.querySelectorAll(
+            ":scope > .accordion-item > .accordion-button"
+        );
         const activeCustomIcon = editingElement.dataset.activeCustomIcon || "fa fa-arrow-up";
         const inactiveCustomIcon = editingElement.dataset.inactiveCustomIcon || "fa fa-arrow-down";
         if (value) {
