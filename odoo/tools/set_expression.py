@@ -120,6 +120,7 @@ class SetDefinitions:
         if keep_subsets:
             ids = set(ids)
             ids = [leaf_id for leaf_id in ids if not any((self.__leaves[leaf_id].subsets - {leaf_id}) & ids)]
+
         return Union(Inter([self.__leaves[leaf_id]]) for leaf_id in ids)
 
     def from_key(self, key: str) -> SetExpression:

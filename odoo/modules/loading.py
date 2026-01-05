@@ -264,6 +264,11 @@ def load_module_graph(
             package.state = 'installed'
             module.env.flush_all()
             module.env.cr.commit()
+            if module_name == 'project':
+                # sleep to allow to reproduce issue
+                print('pausing install after project commit')
+                time.sleep(30)
+
 
         test_time = 0.0
         test_queries = 0

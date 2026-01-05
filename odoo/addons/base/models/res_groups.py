@@ -386,6 +386,7 @@ class ResGroups(models.Model):
     @tools.ormcache(cache='groups')
     def _get_group_definitions(self):
         """ Return the definition of all the groups as a :class:`~odoo.tools.SetDefinitions`. """
+        print('_get_group_definitions')
         groups = self.sudo().search([], order='id')
         id_to_ref = groups.get_external_id()
         data = {

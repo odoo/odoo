@@ -2069,8 +2069,12 @@ class IrModelAccess(models.Model):
         """, [lang, lang, model_name])
         return [('%s/%s' % x) if x[0] else x[1] for x in self.env.cr.fetchall()]
 
+    # make method public for debug to avoid to have to call get_views
+    def get_access_groups(self, model_name, access_mode='read'):
+        return self._get_access_groups(model_name, access_mode)
+
     @api.model
-    @tools.ormcache('model_name', 'access_mode', cache='stable')
+    #@tools.ormcache('model_name', 'access_mode', cache='stable')
     def _get_access_groups(self, model_name, access_mode='read'):
         """ Return the group expression object that represents the users who
         have ``access_mode`` to the model ``model_name``.
