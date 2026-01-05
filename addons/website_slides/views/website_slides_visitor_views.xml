@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--slide history-->
+    <record id="website_slide_visitor_page_view_tree" model="ir.ui.view">
+        <field name="name">website.track.view.list</field>
+        <field name="model">website.track</field>
+        <field name="arch" type="xml">
+            <list string="Visitor Slide Views History" create="0" sample="1">
+                <field name="visitor_id"/>
+                <field name="slide_channel_id"/>
+                <field name="visit_datetime"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="website_slide_visitor_page_view_graph" model="ir.ui.view">
+        <field name="name">website.track.view.graph</field>
+        <field name="model">website.track</field>
+        <field name="arch" type="xml">
+            <graph string="Visitor Slide Views" sample="1">
+                <field name="slide_channel_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="website_slide_visitor_slide_action" model="ir.actions.act_window">
+        <field name="name">Slide Views History</field>
+        <field name="res_model">website.track</field>
+        <field name="view_mode">list</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('website_slide_visitor_page_view_tree')}),
+            (0, 0, {'view_mode': 'graph', 'view_id': ref('website_slide_visitor_page_view_graph')}),
+        ]"/>
+        <field name="domain">[('visitor_id', '=', active_id), ('slide_channel_id', '!=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No slide views yet for this visitor
+            </p>
+        </field>
+    </record>
+
+    <!-- website visitor views -->
+    <record id="website_visitor_view_form" model="ir.ui.view">
+        <field name="name">website.visitor.view.form.inherit.slide</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Add stat button near product views -->
+            <xpath expr="//button[@name='%(website.website_visitor_page_action)d']" position="after">
+                <button name="%(website_slides.website_slide_visitor_slide_action)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-sliders">
+                    <field name="visitor_slide_count" widget="statinfo" string="Slide Views"/>
+                </button>
+            </xpath>
+
+            <!-- Show viewed slides in tag list -->
+            <xpath expr="//group[@id='visits']/field[@name='page_ids']" position="after">
+                <field name="slide_channel_ids" string="Slides" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="website_slide_visitor_view_tree" model="ir.ui.view">
+        <field name="name">website.visitor.view.list</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="page_ids" position="after">
+                <field name="slide_channel_ids" widget="many2many_tags" string="Slides"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="website_slide_visitor_view_kanban" model="ir.ui.view">
+        <field name="name">website.visitor.view.kanban</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
+        <field name="arch" type="xml">
+            <field name="country_id" position="after">
+                <field name="slide_channel_ids"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

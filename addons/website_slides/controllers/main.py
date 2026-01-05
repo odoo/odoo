@@ -586,6 +586,9 @@ class WebsiteSlides(WebsiteProfile):
         if not channel.has_access('read'):
             return self._redirect_to_slides_main('no_rights')
 
+        visitor = request.env['website.visitor']._get_visitor_from_request()
+        if visitor:
+            visitor._add_viewed_slide(channel.id)
         if category_id and not category:
             category = channel.slide_category_ids.filtered(lambda category: category.id == category_id)
 
