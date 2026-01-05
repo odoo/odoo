@@ -32,6 +32,7 @@ def post_init_hook(env):
         website.language_ids = lang_ids
         website.company_id._compute_website_id()
         website._bootstrap_homepage()
+        website._bootstrap_contactus()
 
     if not env.user.has_group('website.group_multi_website') and len(websites) > 1:
         all_user_groups = 'base.group_portal,base.group_user,base.group_public'
