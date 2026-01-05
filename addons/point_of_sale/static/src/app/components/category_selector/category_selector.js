@@ -65,4 +65,8 @@ export class CategorySelector extends Component {
             ? [...selectedCategory.child_ids]
             : this.pos.models["pos.category"].filter((category) => !category.parent_id);
     }
+
+    showCategoryImg(category) {
+        return this.pos.config.show_category_images && category.imgSrc && !this.ui.isSmall;
+    }
 }
