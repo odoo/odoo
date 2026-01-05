@@ -5,6 +5,7 @@ import {
     isProtected,
     isProtecting,
     isUnprotecting,
+    selfClosingHtmlTags,
 } from "@html_editor/utils/dom_info";
 import {
     childNodes,
@@ -70,27 +71,8 @@ import { weakMemoize } from "@html_editor/utils/functions";
  * @property {number} offset
  */
 
-// https://developer.mozilla.org/en-US/docs/Glossary/Void_element
-const VOID_ELEMENT_NAMES = [
-    "AREA",
-    "BASE",
-    "BR",
-    "COL",
-    "EMBED",
-    "HR",
-    "IMG",
-    "INPUT",
-    "KEYGEN",
-    "LINK",
-    "META",
-    "PARAM",
-    "SOURCE",
-    "TRACK",
-    "WBR",
-];
-
 export function isNotAllowedContent(node) {
-    return isMediaElement(node) || VOID_ELEMENT_NAMES.includes(node.nodeName);
+    return isMediaElement(node) || selfClosingHtmlTags.includes(node.nodeName);
 }
 
 export const isHtmlContentSupported = weakMemoize(

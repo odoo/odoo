@@ -1,3 +1,4 @@
+import { selfClosingHtmlTags } from "@html_editor/utils/dom_info";
 import { manuallyDispatchProgrammaticEvent, animationFrame } from "@odoo/hoot-dom";
 
 /**
@@ -38,8 +39,6 @@ function getTextContent(node, selection, options) {
     }
     return text.replace(/\u00a0/g, "&nbsp;");
 }
-
-const VOID_ELEMS = new Set(["BR", "IMG", "INPUT", "HR"]);
 
 function _getElemContent(el, selection, options) {
     let result = "";
@@ -85,7 +84,7 @@ function getElemContent(el, selection, options) {
         attrs.push(`${attr.name}=${valueLimiter}${attr.value}${valueLimiter}`);
     }
     const attrStr = (attrs.length ? " " : "") + attrs.join(" ");
-    return VOID_ELEMS.has(el.tagName)
+    return selfClosingHtmlTags.includes(el.tagName)
         ? `<${tag + attrStr}>`
         : `<${tag + attrStr}>${_getElemContent(el, selection, options)}</${tag}>`;
 }

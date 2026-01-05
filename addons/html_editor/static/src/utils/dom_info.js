@@ -261,7 +261,26 @@ export function isVisibleTextNode(testedNode) {
  * @param {Node} node
  * @returns {boolean}
  */
-const selfClosingElementTags = ["BR", "IMG", "INPUT", "T", "HR"];
+// https://developer.mozilla.org/en-US/docs/Glossary/Void_element
+export const selfClosingHtmlTags = [
+    "AREA",
+    "BASE",
+    "BR",
+    "COL",
+    "EMBED",
+    "HR",
+    "IMG",
+    "INPUT",
+    "KEYGEN",
+    "LINK",
+    "META",
+    "PARAM",
+    "SOURCE",
+    "TRACK",
+    "WBR",
+];
+export const selfClosingXmlTags = ["T"];
+export const selfClosingElementTags = [...selfClosingHtmlTags, ...selfClosingXmlTags];
 export function isSelfClosingElement(node) {
     return node && selfClosingElementTags.includes(node.nodeName);
 }
