@@ -745,6 +745,7 @@ class TestSaleOrder(SaleCommon):
                              'Test Product 1 - Highly corrosive',
                              'Test Product 2 - Toxic pollutant')
         expected_warnings_for_sale_order2 = ('Test Partner, Invoice - Slightly infectious disease',
+                                             'Test Partner - Highly infectious disease',
                                              'Test Product 1 - Highly corrosive',
                                              'Test Product 2 - Toxic pollutant')
         self.assertEqual(sale_order.sale_warning_text, '\n'.join(expected_warnings))
