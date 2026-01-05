@@ -34,7 +34,8 @@ export const TABLE_ATTRIBUTES = {
 };
 // Cancel tables default styles.
 export const TABLE_STYLES = {
-    'border-collapse': 'collapse',
+    'border-collapse': 'separate',
+    'border-spacing': '0px',
     'text-align': 'inherit',
     'font-size': 'unset',
     'line-height': 'inherit',
@@ -358,7 +359,6 @@ function bootstrapToTable(editable) {
 function cardToTable(editable) {
     for (const card of editable.querySelectorAll('.card')) {
         const table = _createTable(card.attributes);
-        table.style.removeProperty('overflow');
         const cardImgTopSuperRows = [];
         for (const child of [...card.childNodes]) {
             const row = document.createElement('tr');
@@ -381,6 +381,7 @@ function cardToTable(editable) {
                 col.append(child);
             }
             const subTable = _createTable();
+            subTable.setAttribute('height', '100%');
             const superRow = document.createElement('tr');
             const superCol = document.createElement('td');
             row.append(col);

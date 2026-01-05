@@ -308,21 +308,21 @@ QUnit.module('convert_inline', {}, function () {
                 .replace(/<td[^>]*>\(0, 0\)<\/td>/,
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
-                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
+                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: separate; border-spacing: 0px; text-align: inherit; ` +
                         `font-size: unset; line-height: inherit;\"><tr>` +
                             `<td class="card-header"><span>HEADER</span></td>` +
                         `</tr></table></td>`)
                 .replace(/<td[^>]*>\(1, 0\)<\/td>/,
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
-                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
+                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: separate; border-spacing: 0px; text-align: inherit; ` +
                         `font-size: unset; line-height: inherit;\"><tr>` +
                             `<td class="card-body"><h2 class="card-title">TITLE</h2><small>BODY <img></small></td>` +
                         `</tr></table></td>`)
                 .replace(/<td[^>]*>\(2, 0\)<\/td>/,
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
-                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
+                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: separate; border-spacing: 0px; text-align: inherit; ` +
                         `font-size: unset; line-height: inherit;\"><tr>` +
                             `<td class="card-footer"><a href="#" class="btn">FOOTER</a></td>` +
                         `</tr></table></td>`),
@@ -1105,7 +1105,7 @@ QUnit.module('convert_inline', {}, function () {
         container.firstChild.innerHTML = `<div class="col-sm">a</div><div class="col-1">b</div><div class="col-sm">c</div>`;
         convertInline.bootstrapToTable(editable);
         assert.strictEqual(editable.innerHTML,
-            unformat(`<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; font-size: unset; line-height: inherit;\">
+            unformat(`<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" role=\"presentation\" style=\"width: 100% !important; border-collapse: separate; border-spacing: 0px; text-align: inherit; font-size: unset; line-height: inherit;\">
                 <tr>
                     <td colspan=\"5\" class=\"o_converted_col\" style=\"max-width: 0px;\">a</td>
                     <td colspan=\"1\" class=\"o_converted_col\" style=\"max-width: 0px;\">b</td>
