@@ -210,6 +210,12 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         return !!record.data.combo_item_id;
     }
 
+    isSortable(column) {
+        const { hasLabel, name, options } = column;
+        const { sortable } = this.fields[name];
+        return (sortable || options.allow_order) && hasLabel;
+    }
+
     shouldDuplicateSectionItem(record) {
         return !this.isCombo(record) && !this.isComboItem(record);
     }
