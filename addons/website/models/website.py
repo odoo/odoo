@@ -346,6 +346,7 @@ class Website(models.CachedModel):
         websites.company_id._compute_website_id()
         for website in websites:
             website._bootstrap_homepage()
+            website._bootstrap_contactus()
 
         if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
             all_user_groups = 'base.group_portal,base.group_user,base.group_public'
@@ -1188,6 +1189,31 @@ class Website(models.CachedModel):
         self.copy_menu_hierarchy(default_menu)
         home_menu = self.env['website.menu'].search([('website_id', '=', self.id), ('url', '=', '/')])
         home_menu.page_id = homepage_page
+
+    def _bootstrap_contactus(self):
+        Page = self.env['website.page']
+        standard_contactus = self.env.ref('website.contactus', raise_if_not_found=False)
+        if not standard_contactus:
+            return
+
+        new_contactus_view = self.env.ref('website.contactus').arch_db
+        standard_contactus.with_context(website_id=self.id).arch_db = new_contactus_view
+
+        contactus_page = Page.search([
+            ('website_id', '=', self.id),
+            ('key', '=', standard_contactus.key),
+        ], limit=1)
+        if not contactus_page:
+            contactus_page = Page.create({
+                'website_published': True,
+                'url': '/contactus',
+                'view_id': self.with_context(website_id=self.id).viewref('website.contactus').id,
+            })
+
+        contactus_page.url = '/contactus'
+
+        home_menu = self.env['website.menu'].search([('website_id', '=', self.id), ('url', '=', '/contactus')])
+        home_menu.page_id = contactus_page
 
     def copy_menu_hierarchy(self, top_menu):
         def copy_menu(menu, t_menu):
