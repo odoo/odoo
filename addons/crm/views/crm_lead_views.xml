@@ -726,6 +726,24 @@
             </field>
         </record>
 
+        <record id="crm_lead_view_list_simplified" model="ir.ui.view">
+            <field name="name">crm.lead.view.list.simplified</field>
+            <field name="model">crm.lead</field>
+            <field name="priority">64</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name" string="Title"/>
+                    <field name="contact_name" optional="show"/>
+                    <field name="email_from" optional="show"/>
+                    <field name="user_id" widget="many2one_avatar_user"/>
+                    <field name="expected_revenue" optional="show"/>
+                    <field name="stage_id_color" column_invisible="True"/>
+                    <field name="stage_id" widget="badge" options="{'color_field': 'stage_id_color'}" optional="show"/>
+                    <field name="team_id" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
         <record id="crm_lead_view_list_activities" model="ir.ui.view">
             <field name="name">crm.lead.list.activities</field>
             <field name="model">crm.lead</field>
