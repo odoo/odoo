@@ -627,7 +627,7 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
 });
 
 publicWidget.registry.hoverableDropdown = animations.Animation.extend({
-    selector: 'header.o_hoverable_dropdown',
+    selector: 'header.o_hoverable_dropdown:not(:has(.o_header_hamburger_right_col))',
     disabledInEditableMode: false,
     effects: [{
         startEvents: 'resize',
