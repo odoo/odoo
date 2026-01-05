@@ -6,7 +6,7 @@ patch(DataServiceOptions.prototype, {
         return {
             ...super.databaseTable,
             "loyalty.card": {
-                key: "id",
+                key: "uuid",
                 condition: (record) =>
                     record
                         .backLink("<-pos.order.line.coupon_id")
@@ -24,5 +24,8 @@ patch(DataServiceOptions.prototype, {
     },
     get cleanupModels() {
         return [...super.cleanupModels, "loyalty.program"];
+    },
+    get dynamicModels() {
+        return [...super.dynamicModels, "loyalty.card"];
     },
 });

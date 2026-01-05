@@ -13,6 +13,7 @@ class LoyaltyCard(models.Model):
     source_pos_order_partner_id = fields.Many2one(
         'res.partner', "PoS Order Customer",
         related="source_pos_order_id.partner_id")
+    uuid = fields.Char("UUID", help="Unique identifier for this loyalty card across different systems.")
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -20,7 +21,7 @@ class LoyaltyCard(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['partner_id', 'code', 'points', 'program_id', 'expiration_date', 'write_date']
+        return ['partner_id', 'code', 'points', 'program_id', 'expiration_date', 'write_date', 'uuid', 'source_pos_order_id']
 
     def _has_source_order(self):
         return super()._has_source_order() or bool(self.source_pos_order_id)

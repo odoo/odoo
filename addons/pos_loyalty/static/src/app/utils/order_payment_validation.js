@@ -8,15 +8,15 @@ patch(OrderPaymentValidation.prototype, {
         const pointChanges = {};
         const newCodes = [];
         for (const pe of Object.values(this.order.uiState.couponPointChanges)) {
-            if (pe.coupon_id > 0) {
+            if (!(pe.barcode && pe.code) && typeof pe.coupon_id === "number") {
                 pointChanges[pe.coupon_id] = pe.points;
-            } else if (pe.barcode && !pe.giftCardId) {
+            } else if ((pe.barcode || pe.code) && typeof pe.coupon_id === "number") {
                 // New coupon with a specific code, validate that it does not exist
-                newCodes.push(pe.barcode);
+                newCodes.push(pe.barcode || pe.code);
             }
         }
         for (const line of this.order._get_reward_lines()) {
-            if (line.coupon_id.id < 1) {
+            if (typeof line.coupon_id.id === "string") {
                 continue;
             }
             if (!pointChanges[line.coupon_id.id]) {
@@ -29,10 +29,7 @@ patch(OrderPaymentValidation.prototype, {
             return;
         }
         // No need to do an rpc if no existing coupon is being used.
-        if (
-            this.order.state != "paid" &&
-            (Object.keys(pointChanges || {}).length > 0 || newCodes.length)
-        ) {
+        if (this.order.state != "paid" && Object.keys(pointChanges || {}).length > 0) {
             try {
                 const { successful, payload } = await this.pos.data.call(
                     "pos.order",
@@ -49,9 +46,21 @@ patch(OrderPaymentValidation.prototype, {
                     }
                 }
                 if (payload && payload.removed_coupons) {
+                    const orderLinesToRemove = [];
                     for (const couponId of payload.removed_coupons) {
                         const coupon = this.pos.models["loyalty.card"].get(couponId);
                         coupon && coupon.delete();
+                        const relatedRewardLine = this.order.lines.find(
+                            (line) => line.coupon_id.id === couponId
+                        );
+                        if (relatedRewardLine) {
+                            orderLinesToRemove.push(relatedRewardLine);
+                        }
+                    }
+                    if (orderLinesToRemove.length > 0) {
+                        for (const line of orderLinesToRemove) {
+                            this.order.removeOrderline(line);
+                        }
                     }
                 }
                 if (!successful) {

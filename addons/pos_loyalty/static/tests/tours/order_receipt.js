@@ -23,7 +23,6 @@ registry.category("web_tour.tours").add("test_receipt_data_pos_loyalty", {
                 trigger: "body",
                 run: async () => {
                     const order = posmodel.models["pos.order"].find((o) => o.finalized);
-                    await posmodel.postProcessLoyalty(order);
                     const generator = posmodel.getOrderReceiptGenerator(order);
                     const data = generator.generateData();
                     try {

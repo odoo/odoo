@@ -1,4 +1,6 @@
 import * as ProductScreenPos from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util";
@@ -41,5 +43,21 @@ registry.category("web_tour.tours").add("test_loyalty_reward_with_courses", {
             ProductScreen.clickCourseButton(),
             PosLoyalty.hasRewardLine("10% on your order", "-0.22", "1"),
             Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            PosLoyalty.hasRewardLine("10% on your order", "-0.22", "1"),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
+            FloorScreen.clickTable("2"),
+            PosLoyalty.hasRewardLine("10% on your order", "-0.22", "1"),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });

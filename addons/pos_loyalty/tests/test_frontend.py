@@ -3496,23 +3496,6 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_customer_display_loyalty_points(self):
         self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}", 'test_customer_display_loyalty_points', login="pos_user")
 
-    def test_confirm_coupon_programs_one_by_one(self):
-        """
-        Sync from UI is now syncing orders one by one.
-        confirm_coupon_programs should be called 6 times in this tour (6 orders created).
-        """
-        self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
-        pos_order = self.env.registry.models['pos.order']
-        sync_counter = {'count': 0}
-
-        def confirm_coupon_programs_patch(self, coupon_data):
-            sync_counter['count'] += 1
-            return super(pos_order, self).confirm_coupon_programs(coupon_data)
-
-        with patch.object(pos_order, "confirm_coupon_programs", confirm_coupon_programs_patch):
-            self.start_pos_tour("test_confirm_coupon_programs_one_by_one", login="pos_user")
-            self.assertEqual(sync_counter['count'], 6)
-
     def test_specific_reward_product_tax_included_excluded(self):
         """This test makes sure that the value of a reward applied on a specific product is
         the same whether the tax is included or excluded in the product price.
