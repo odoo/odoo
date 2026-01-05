@@ -239,7 +239,7 @@ export class MassMailingHtmlField extends HtmlField {
             ...config,
             record: this.props.record,
             mobileBreakpoint: "md",
-            defaultImageMimetype: "image/jpeg",
+            defaultImageMimetype: "image/png",
             onEditorReady: () => this.commitChanges(),
         };
     }
