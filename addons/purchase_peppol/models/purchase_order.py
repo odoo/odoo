@@ -93,8 +93,6 @@ class PurchaseOrder(models.Model):
     # -------------------------------------------------------------------------
 
     def _on_peppol_order_confirm(self):
-        self.state = 'purchase'
-
         order_tracker = self.edi_tracker_ids[0]
         order_tracker.state = 'accepted'
 
@@ -102,54 +100,65 @@ class PurchaseOrder(models.Model):
             self.write({'state': 'purchase', 'date_approve': fields.Datetime.now()})
         if self.lock_confirmed_po == 'lock':
             self.write({'locked': True})
-        self.message_post(body=self.env._("Received confirmation of order via PEPPOL"))
+        self.message_post(body=self.env._("Order is accepted by the seller."))
 
     def _on_peppol_order_reject(self):
+        order_tracker = self.edi_tracker_ids[0]
+        order_tracker.state = 'rejected'
+
         if any(move.state not in ('cancel', 'draft') for move in self.invoice_ids):
             self.message_post(body=self.env._(
                 "Received order rejection via PEPPOL but was unable to cancel this order. You must"
                 " first cancel their related vendor bills and manually cancel this order.",
             ))
             return
-        self.message_post(body=self.env._("Received order rejection via PEPPOL"))
+        self.message_post(body=self.env._("Order is rejected by the seller."))
         self.write({'state': 'cancel'})
 
     def _on_peppol_order_change_confirm(self):
-        self.message_post(body=self.env._("Received confirmation of order change via PEPPOL"))
+        order_tracker = self.edi_tracker_ids[0]
+        order_tracker.state = 'accepted'
+
+        self.message_post(body=self.env._("Order change request is accepted by the seller."))
 
     def _on_peppol_order_change_reject(self):
+        order_tracker = self.edi_tracker_ids[0]
+        order_tracker.state = 'rejected'
+
         self.message_post(body=self.env._("Order change request is rejected by the seller."))
 
+        # Revert the changes back to the last applied EDI order document
+        # TODO: Implement reverting logic
         last_applied_order = next(t for t in self.edi_tracker_ids if t.state == 'accepted')
         if last_applied_order.document_type == 'order':
-            #
             xml_tree = self._to_files_data(last_applied_order.attachment_id)[0]['xml_tree']
             order_vals, logs = self.env['purchase.edi.xml.ubl_bis3_order']._retrieve_order_vals(self, xml_tree)
-            pass
         elif last_applied_order.document_type == 'order_change':
             xml_tree = self._to_files_data(last_applied_order.attachment_id)
             self.env['purchase.edi.xml.ubl_bis3_order_change']._retrieve_order_vals(self, xml_tree)
-            pass
 
     def _on_peppol_order_cancel_confirm(self):
+        order_tracker = self.edi_tracker_ids[0]
+        order_tracker.state = 'accepted'
+
         if any(move.state not in ('cancel', 'draft') for move in self.invoice_ids):
             self.message_post(body=self.env._(
                 "Received order rejection via PEPPOL but was unable to cancel this order. You must"
                 " first cancel their related vendor bills and manually cancel this order.",
             ))
             return
-        self.message_post(body=self.env._("Received confirmation of order cancel via PEPPOL"))
+        self.message_post(body=self.env._("Order cancellation request is accepted by the seller."))
         self.write({'state': 'cancel'})
 
     def _on_peppol_order_cancel_reject(self):
-        """
-        Handles order cancellation request rejection.
-        """
+        order_tracker = self.edi_tracker_ids[0]
+        order_tracker.state = 'rejected'
+
         if self.state in ['draft', 'sent']:
             self.write({'state': 'purchase', 'date_approve': fields.Datetime.now()})
         if self.lock_confirmed_po == 'lock':
             self.write({'locked': True})
-        self.message_post(body=self.env._("Received confirmation of order cancellation request via PEPPOL"))
+        self.message_post(body=self.env._("Order cancellation request is rejected by the seller."))
 
     def action_send_advanced_order(self):
         self.process_event(Event.SEND_ORDER)

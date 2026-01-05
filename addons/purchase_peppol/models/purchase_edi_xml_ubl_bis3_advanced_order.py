@@ -167,7 +167,18 @@ class PurchaseEdiXmlUbl_Bis3_OrderChange(models.AbstractModel):
         last_applied_order = next(t for t in order.edi_tracker_ids if t.state == 'accepted')
         tree = self.env['account.move']._to_files_data(last_applied_order.attachment_id)[0]['xml_tree']
         document_type = last_applied_order.document_type
-        lines_vals, _ = self._import_lines(order, tree, './{*}OrderLine/{*}LineItem', document_type=document_type, tax_type='purchase')
+
+        if document_type == 'order':
+            edi_parser = self.env['purchase.edi.xml.ubl_bis3_order']
+        elif document_type == 'order_change':
+            edi_parser = self.env['purchase.edi.xml.ubl_bis3_order_change']
+
+        lines_vals = []
+        for line_tree in tree.iterfind('./{*}OrderLine/{*}LineItem'):
+            line_vals = edi_parser._retrieve_line_vals(line_tree, document_type)
+            if document_type == 'order_change' and line_vals['line_status_code'] == '2':
+                continue  # The imported line is deleted line; ignore the line
+            lines_vals.append(line_vals)
 
         # TODO: In `purchase.edi.xml.ubl_bis3` I wish we could use a hook that generates a order
         # line dict instead of using multiple fixed hooks. That way, adding elements to order line
@@ -207,11 +218,33 @@ class PurchaseEdiXmlUbl_Bis3_OrderChange(models.AbstractModel):
                     'cbc:ID': {'_text': line_vals['line_item_id']},
                     'cbc:LineStatusCode': {'_text': '2'},
                     'cbc:Quantity': {'_text': line_vals['quantity']},
+                    'cac:Price': {  # Importing XML throws error if no price information is provided.
+                        'cbc:PriceAmount': {'_text': 0},
+                    },
                     'cac:Item': {
                         'cbc:Name': {'_text': line_vals['name']},
                     },
                 },
             })
+
+    # -------------------------------------------------------------------------
+    # Import from XML
+    # -------------------------------------------------------------------------
+
+    def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
+        """
+        EXTENDS `purchase.edi.xml.ubl_bis3_order` to add 'line_status_code' value to the line
+        values. This method is used to filter out deleted lines (code: 2) when importing the order
+        lines for comparison.
+        """
+        line_status_code_node = tree.find('./{*}LineStatusCode')
+        if line_status_code_node is not None:
+            line_status_code = line_status_code_node.text
+
+        return {
+            'line_status_code': line_status_code,
+            **super()._retrieve_line_vals(tree, document_type, qty_factor),
+        }
 
     def build_order_change_xml(self, purchase_order):
         # order_change_seq = (
