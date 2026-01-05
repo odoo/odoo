@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, _, api, fields, models
@@ -66,6 +67,7 @@ class ResCompany(models.Model):
         moves_vals = {
             'journal_id': self.account_stock_journal_id.id,
             'date': at_date or fields.Date.today(),
+            'closing_datetime': datetime.combine(at_date, time.max) if at_date else fields.Datetime.now(),
             'ref': _('Stock Closing'),
             'inventory_closing': True,
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
@@ -326,12 +328,10 @@ class ResCompany(models.Model):
             ('inventory_closing', '=', True),
             ('state', '=', 'posted'),
             ('company_id', '=', self.id),
-        ], ['date'], limit=1, order='date desc, id desc')
+        ], ['closing_datetime'], limit=1, order='closing_datetime desc, id desc')
         if not closing:
             return False
-        am_state_field = self.env['ir.model.fields'].search([('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
-        state_tracking = closing.message_ids.tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
-        return state_tracking[-1:].create_date or fields.Datetime.to_datetime(closing.date)
+        return closing.closing_datetime
 
     def _set_category_defaults(self):
         for company in self:
