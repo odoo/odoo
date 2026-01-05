@@ -819,3 +819,21 @@ export function changeImageShape(shape = "html_builder/geometric/geo_shuriken") 
         },
     ];
 }
+
+/**
+ * Asserts that an SVG image contains all specified color values.
+ *
+ * @param {HTMLImageElement} img - The image element containing the SVG.
+ * @param {String} errorMessage - The error message to throw if assertion fails.
+ * @param {String[]} colors - The color values to check for in the SVG.
+ */
+export async function assertSvgColors(img, errorMessage, colors) {
+    if (!img || !img.src) {
+        throw new Error("Invalid image element or missing src.");
+    }
+    const response = await fetch(img.src);
+    const svg = await response.text();
+    if (!colors.every((color) => svg.includes(color))) {
+        throw new Error(errorMessage);
+    }
+}

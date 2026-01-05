@@ -1,5 +1,8 @@
 import {
+    assertCssVariable,
+    assertSvgColors,
     changeBackgroundShape,
+    changeImageShape,
     clickOnElement,
     clickOnSnippet,
     goBackToBlocks,
@@ -14,7 +17,7 @@ function verifyShapeColorsUpdated(trigger) {
     return {
         content: "Verify that the shape colors are updated",
         trigger,
-        run() {
+        async run() {
             const backgroundImageUrl =
                 this.anchor.querySelector(".o_we_shape").style.backgroundImage;
             if (!backgroundImageUrl.includes(TEST_COLOR_HEX)) {
@@ -22,6 +25,11 @@ function verifyShapeColorsUpdated(trigger) {
                     "Updating the theme color should also update the background shape color."
                 );
             }
+            await assertSvgColors(
+                this.anchor.querySelector("img[data-shape]"),
+                "Updating the theme color should update the image shape SVG color.",
+                [`#${TEST_COLOR_HEX}`]
+            );
         },
     };
 }
@@ -43,6 +51,8 @@ registerWebsitePreviewTour(
         // Ensure shape is transformed so it generates a dynamic SVG URL. It is
         // required because the bug only occurs when the shape is URL-based.
         clickOnElement("flip shape horizontal option", "[data-action-id='flipShape'] .oi-arrows-h"),
+        clickOnElement("any image in the snippet", ":iframe .s_company_team img"),
+        ...changeImageShape("html_builder/solid/solid_square_3"),
         clickOnElement(
             "custom snippet save button",
             "[data-container-title='Team'] .oe_snippet_save"
@@ -62,6 +72,12 @@ registerWebsitePreviewTour(
             trigger: "body:not(:has(.o_we_ui_loading)) :iframe body:not(:has(.o_we_ui_loading))",
         },
         verifyShapeColorsUpdated(":iframe .s_company_team"),
+        clickOnElement("any image in the snippet", ":iframe .s_company_team img[data-shape]"),
+        assertCssVariable(
+            "background-color",
+            "rgb(26, 239, 116)",
+            "[data-container-title='Image'] [data-label='Colors'] .o_we_color_preview"
+        ),
         goBackToBlocks(),
         clickOnElement(
             "custom category block",
