@@ -478,6 +478,27 @@
         </record>
 
         <!-- account.move (Journal Entry) -->
+        <record id="view_account_move_graph_invoice" model="ir.ui.view">
+            <field name="name">account.move.graph</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <graph string="Invoices Analysis" type="line" sample="1">
+                    <field name="invoice_date" interval="month"/>
+                    <field name="amount_untaxed" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_account_move_pivot_invoice" model="ir.ui.view">
+            <field name="name">account.move.pivot</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <pivot string="Invoices Analysis" sample="1">
+                    <field name="invoice_date" type="row"/>
+                    <field name="amount_untaxed" type="measure"/>
+                </pivot>
+            </field>
+        </record>
 
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">account.move.list</field>
@@ -1938,7 +1959,7 @@
             <field name="name">Journal Entries</field>
             <field name="res_model">account.move</field>
             <field name="path">entries</field>
-            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="view_mode">list,kanban,form,pivot,graph,activity</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
             <field name="context">{'default_move_type': 'entry', 'search_default_posted':1, 'view_no_maturity': True}</field>
@@ -1973,7 +1994,7 @@
             <field name="name">Invoices</field>
             <field name="path">invoicing</field>
             <field name="res_model">account.move</field>
-            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="view_mode">list,kanban,form,pivot,graph,activity</field>
             <field name="view_id" ref="view_out_invoice_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund', 'out_receipt'])]</field>
@@ -1992,7 +2013,7 @@
             <field name="name">Invoices</field>
             <field name="path">customer-invoices</field>
             <field name="res_model">account.move</field>
-            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="view_mode">list,kanban,form,pivot,graph,activity</field>
             <field name="view_id" ref="view_out_invoice_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund', 'out_receipt'])]</field>
@@ -2010,7 +2031,7 @@
             <field name="name">Credit Notes</field>
             <field name="res_model">account.move</field>
             <field name="path">customer-credit-notes</field>
-            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="view_mode">list,kanban,form,pivot,graph,activity</field>
             <field name="view_id" ref="view_out_credit_note_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
@@ -2029,7 +2050,7 @@
             <field name="name">Bills</field>
             <field name="res_model">account.move</field>
             <field name="path">bills</field>
-            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="view_mode">list,kanban,form,pivot,graph,activity</field>
             <field name="view_id" ref="view_in_invoice_bill_tree"/>
             <field name="search_view_id" ref="view_account_bill_filter"/>
             <field name="domain">[('move_type', 'in', ['in_invoice', 'in_refund', 'in_receipt'])]</field>
@@ -2049,7 +2070,7 @@
             <field name="name">Bills</field>
             <field name="res_model">account.move</field>
             <field name="path">vendor-bills</field>
-            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="view_mode">list,kanban,form,pivot,graph,activity</field>
             <field name="view_id" ref="view_in_invoice_bill_tree"/>
             <field name="search_view_id" ref="view_account_bill_filter"/>
             <field name="domain">[('move_type', 'in', ['in_invoice', 'in_refund', 'in_receipt'])]</field>
@@ -2068,7 +2089,7 @@
             <field name="name">Refunds</field>
             <field name="res_model">account.move</field>
             <field name="path">vendor-refunds</field>
-            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="view_mode">list,kanban,form,pivot,graph,activity</field>
             <field name="view_id" ref="view_in_invoice_refund_tree"/>
             <field name="search_view_id" ref="view_account_bill_filter"/>
             <field name="domain">[('move_type', 'in', ['in_invoice', 'in_refund'])]</field>
@@ -2168,7 +2189,7 @@ if records:
             <field name="name">Credit Notes</field>
             <field name="res_model">account.move</field>
             <field name="path">credit-notes</field>
-            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="view_mode">list,kanban,form,pivot,graph,activity</field>
             <field name="view_id" ref="view_out_credit_note_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
