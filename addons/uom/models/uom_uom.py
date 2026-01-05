@@ -79,27 +79,26 @@ class UomUom(models.Model):
             ))
 
     def round(self, value: float, rounding_method: RoundingMethod = 'HALF-UP') -> float:
-        """Round the value using the 'Product Unit' precision"""
+        """Round the value using the uom rounding precision."""
         self.ensure_one()
-        digits = self.env['decimal.precision'].precision_get('Product Unit')
-        return tools.float_round(value, precision_digits=digits, rounding_method=rounding_method)
+        return tools.float_round(
+            value, precision_rounding=self.rounding, rounding_method=rounding_method,
+        )
 
     def compare(self, value1: float, value2: float) -> Literal[-1, 0, 1]:
-        """Compare two measures after rounding them with the 'Product Unit' precision
+        """Compare two measures after rounding them according to the uom configuration.
 
         :param value1: origin value to compare
         :param value2: value to compare to
         :return: -1, 0 or 1, if ``value1`` is lower than, equal to, or greater than ``value2``.
         """
         self.ensure_one()
-        digits = self.env['decimal.precision'].precision_get('Product Unit')
-        return tools.float_compare(value1, value2, precision_digits=digits)
+        return tools.float_compare(value1, value2, precision_rounding=self.rounding)
 
     def is_zero(self, value: float) -> bool:
-        """Check if the value is zero after rounding with the 'Product Unit' precision"""
+        """Check if the value is zero according to the uom configuration."""
         self.ensure_one()
-        digits = self.env['decimal.precision'].precision_get('Product Unit')
-        return tools.float_is_zero(value, precision_digits=digits)
+        return tools.float_is_zero(value, precision_rounding=self.rounding)
 
     @api.depends('name', 'relative_factor', 'relative_uom_id')
     @api.depends_context('formatted_display_name')
