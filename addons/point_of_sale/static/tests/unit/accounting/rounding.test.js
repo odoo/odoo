@@ -47,6 +47,14 @@ test("Rounding sale HALF-UP 0.05 (all methods)", async () => {
     expect(order.canBeValidated()).toBe(true);
     expect(order.appliedRounding).toBe(0.01);
     expect(order.change).toBe(0);
+
+    order.payment_ids[0].delete();
+    order.addPaymentline(cashPm);
+    order.payment_ids[0].setAmount(52.5);
+    expect(order.payment_ids[0].amount).toBe(52.5);
+    expect(order.appliedRounding).toBe(0);
+    expect(order.remainingDue).toBe(0.05);
+    expect(order.canBeValidated()).toBe(false);
 });
 
 test("Rounding sale UP 10  (cash only)", async () => {
