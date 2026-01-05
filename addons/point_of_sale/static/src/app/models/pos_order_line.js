@@ -352,8 +352,8 @@ export class PosOrderline extends PosOrderlineAccounting {
             orderline.getNote() === this.getNote() &&
             this.getProduct().id === orderline.getProduct().id &&
             this.isPosGroupable() &&
-            // don't merge discounted orderlines
-            this.getDiscount() === 0 &&
+            this.getDiscount() === orderline.getDiscount() &&
+            this.price_type === orderline.price_type &&
             this.currency.isZero(price - order_line_price - orderline.getPriceExtra()) &&
             (!this.isLotTracked() || getLotName(this) === getLotName(orderline)) &&
             this.full_product_name === orderline.full_product_name &&
