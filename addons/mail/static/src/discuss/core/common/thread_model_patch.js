@@ -27,7 +27,6 @@ const threadPatch = {
             inverse: "threadAsFirstUnread",
         });
         this.markReadSequential = useSequential();
-        this.markedAsUnread = false;
         this.markingAsRead = false;
         this.scrollUnread = true;
     },
@@ -80,20 +79,6 @@ const threadPatch = {
         return this.channel?.isChatChannel
             ? this.channel.self_member_id?.message_unread_counter ?? 0
             : super.needactionCounter;
-    },
-    /** @override */
-    onNewSelfMessage(message) {
-        if (
-            !this.channel?.self_member_id ||
-            message.id < this.channel?.self_member_id.seen_message_id?.id
-        ) {
-            return;
-        }
-        this.channel.self_member_id.seen_message_id = message;
-        this.channel.self_member_id.new_message_separator = message.id + 1;
-        this.channel.self_member_id.new_message_separator_ui =
-            this.channel?.self_member_id.new_message_separator;
-        this.markedAsUnread = false;
     },
     /** @override */
     open(options) {

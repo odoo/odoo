@@ -657,7 +657,9 @@ export class Thread extends Record {
     }
 
     /** @param {import("models").Message} message */
-    onNewSelfMessage(message) {}
+    onNewSelfMessage(message) {
+        this.channel?.onNewSelfMessage(message);
+    }
 
     /**
      * @param {Object} [options]
@@ -765,6 +767,10 @@ export class Thread extends Record {
             message_id: message.id,
             pinned,
         });
+    }
+
+    get shouldMarkAsReadOnFocus() {
+        return this.scrollTop === "bottom" && !this.scrollUnread && !this.channel?.markedAsUnread;
     }
 
     /**

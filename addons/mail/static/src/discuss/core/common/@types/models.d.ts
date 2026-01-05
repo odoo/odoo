@@ -39,7 +39,6 @@ declare module "models" {
     export interface Thread {
         channel: DiscussChannel;
         firstUnreadMessage: Message;
-        markedAsUnread: boolean;
         markingAsRead: boolean;
         markReadSequential: () => Promise<any>;
         scrollUnread: boolean;
