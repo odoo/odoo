@@ -15,7 +15,6 @@ registry.category("web_tour.tours").add("self_order_preset_dine_in_tour", {
         Utils.clickBtn("Checkout"),
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
         Utils.clickBtn("Order"),
-        ...CartPage.selectTable("1"),
         Utils.clickBtn("Ok"),
     ],
 });
