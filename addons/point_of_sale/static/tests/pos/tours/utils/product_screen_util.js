@@ -763,7 +763,7 @@ export function checkTotalAmount(amount) {
 export function selectCategoryAndAddProduct(categoryName, productName) {
     return [
         {
-            trigger: `.category-button > span:contains(${categoryName})`,
+            trigger: `.category-button > div span:contains(${categoryName})`,
             run: "click",
         },
         ...addOrderline(productName, "1"),
@@ -773,7 +773,7 @@ export function selectCategoryAndAddProduct(categoryName, productName) {
 export function verifyCategorySequence(categories) {
     return categories.map((category, index) => ({
         content: `Verify '${category}' category has sequence number ${index + 1}`,
-        trigger: `.category-button > span:contains("${category}")`,
+        trigger: `.category-button > div span:contains("${category}")`,
     }));
 }
 

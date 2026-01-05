@@ -586,19 +586,19 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             Dialog.confirm("Open Register"),
             ProductScreen.verifyCategorySequence(["AAA", "AAB", "AAC"]),
             {
-                trigger: '.category-button:eq(1) > span:contains("AAB")',
+                trigger: '.category-button:eq(1) > div span:contains("AAB")',
                 run: "click",
             },
             ProductScreen.productIsDisplayed("Product in AAB and AAX", 0),
             {
-                trigger: '.category-button:eq(-1) > span:contains("AAX")',
+                trigger: '.category-button:eq(-1) > div span:contains("AAX")',
             },
             {
-                trigger: '.category-button:eq(-1) > span:contains("AAX")',
+                trigger: '.category-button:eq(-1) > div span:contains("AAX")',
                 run: "click",
             },
             {
-                trigger: '.category-button:eq(-1) > span:contains("AAY")',
+                trigger: '.category-button:eq(-1) > div span:contains("AAY")',
             },
         ].flat(),
 });

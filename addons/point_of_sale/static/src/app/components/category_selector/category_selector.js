@@ -34,4 +34,8 @@ export class CategorySelector extends Component {
         // This method is kept for backward compatibility
         return [];
     }
+
+    showCategoryImg(category) {
+        return this.pos.config.show_category_images && category.imgSrc && !this.ui.isSmall;
+    }
 }
