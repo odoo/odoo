@@ -235,18 +235,13 @@ function computePosition(popper, target, { container, flip, margin, position, sh
             result.top -= directionOverflow;
             return { result, malus: 0 };
         } else if (shrink) {
-            const minTop = Math.floor(!vertical && v[0] === "s" ? targetBox.top : contBox.top);
-            result.top = Math.max(minTop, result.top);
+            result.top = Math.max(Math.floor(contBox.top), result.top);
 
             let height;
             if (vertical) {
                 height = Math.abs(targetBox[direction] - (d === "t" ? directionMin : directionMax));
             } else {
-                height = {
-                    s: variantMax - targetBox.top,
-                    m: variantMax - variantMin,
-                    e: targetBox.bottom - variantMin,
-                }[v[0]];
+                height = variantMax - variantMin;
             }
             result.maxHeight = Math.floor(height);
         }
