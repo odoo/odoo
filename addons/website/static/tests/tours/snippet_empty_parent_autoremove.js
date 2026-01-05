@@ -70,6 +70,10 @@ registerWebsitePreviewTour(
             content: "Check that the shape element is present",
             trigger: ":iframe #wrap .s_cover .o_we_shape",
         },
+        {
+            trigger: "button[data-action-id='setColumnLayout']:contains(Column)",
+            run: "click",
+        },
         // Add a column
         ...changeOptionInPopover("Cover", "Layout", "[data-action-value='1']"),
         {
