@@ -4,7 +4,7 @@ import logging
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
-from odoo.cli.populate import Populate
+from odoo.cli.duplicate import Duplicate
 from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
@@ -27,7 +27,7 @@ class TestPosPerformance(TestPointOfSaleHttpCommon):
         if not before_count:
             return False
         populate_count = round(total_count / before_count) - 1
-        Populate.populate(self.env, {model_name: populate_count}, 1)
+        Duplicate.duplicate(self.env, {model_name: populate_count}, 1)
 
         after_count = self.env[model_name].search_count([])
         _logger.info("\n\nBefore %s Count: %s\nAfter %s Count: %s\n\n", model_name, before_count, model_name, after_count)
