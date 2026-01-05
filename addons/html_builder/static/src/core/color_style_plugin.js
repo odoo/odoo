@@ -12,19 +12,33 @@ class ColorStylePlugin extends Plugin {
     static dependencies = ["color"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        apply_color_style_overrides: withSequence(5, (element, cssProp, color) => {
-            applyNeededCss(element, cssProp, color);
+        apply_color_style_overrides: withSequence(5, (element, cssProp, color, params = {}) => {
+            applyNeededCss(
+                element,
+                cssProp,
+                color,
+                element.ownerDocument.defaultView.getComputedStyle(element),
+                params
+            );
             return true;
         }),
         apply_custom_css_style: withSequence(20, this.applyColorStyle.bind(this)),
     };
-    applyColorStyle({ editingElement, params: { mainParam: styleName = "" }, value }) {
+    /**
+     * @param {Object} context
+     * @param {Element} context.editingElement element being edited
+     * @param {string} context.styleName CSS style name
+     * @param {string} context.value CSS style value
+     * @param {Object} context.params additional parameters
+     * @returns {boolean} whether the color style was applied
+     */
+    applyColorStyle({ editingElement, styleName, value, params = {} }) {
         if (styleName === "background-color") {
             const match = value.match(/var\(--([a-zA-Z0-9-_]+)\)/);
             if (match) {
                 value = `bg-${match[1]}`;
             }
-            this.dependencies.color.colorElement(editingElement, value, "backgroundColor");
+            this.dependencies.color.colorElement(editingElement, value, "backgroundColor", params);
             this.dispatchTo("on_bg_color_updated_handlers", editingElement);
             return true;
         } else if (styleName === "color") {
@@ -32,7 +46,7 @@ class ColorStylePlugin extends Plugin {
             if (match) {
                 value = `text-${match[1]}`;
             }
-            this.dependencies.color.colorElement(editingElement, value, "color");
+            this.dependencies.color.colorElement(editingElement, value, "color", params);
             return true;
         }
         return false;

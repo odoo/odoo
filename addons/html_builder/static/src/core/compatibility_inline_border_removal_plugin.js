@@ -24,10 +24,9 @@ export class CompatibilityInlineBorderRemovalPlugin extends Plugin {
     // variables is done at class level using "border" and "rounded" classes, so
     // eventual border-width/radius styles must be removed because they would
     // otherwise take precedence.
-    removeInlineBorderIfNecessary({ editingElement, params }) {
+    removeInlineBorderIfNecessary({ editingElement, styleName }) {
         const newStyleBeingEdited = NEW_STYLES.find(
-            (style) =>
-                params.mainParam === style || CSS_SHORTHANDS[style].includes(params.mainParam)
+            (style) => styleName === style || CSS_SHORTHANDS[style].includes(styleName)
         );
         if (newStyleBeingEdited && OLD_STYLES.some((style) => editingElement.style[style])) {
             // Remove all old inline styles related to border-width/radius as

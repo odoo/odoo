@@ -2,6 +2,7 @@ import {
     addBuilderAction,
     addBuilderOption,
     setupHTMLBuilder,
+    waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
@@ -442,4 +443,35 @@ test("the color picker opens on click after it has been remounted", async () => 
     await contains(".o_we_color_preview").click();
     await waitSidebarUpdated();
     expect(".o-hb-colorpicker-popover").toHaveCount(1);
+});
+
+test("should work with force and allowImportant params", async () => {
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderColorPicker styleAction="{ mainParam: 'color', force: true, allowImportant: false }" enabledTabs="['custom']"/>`;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderColorPicker styleAction="{ mainParam: 'background-color', force: true, allowImportant: true }" enabledTabs="['custom']"/>`;
+        }
+    );
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+
+    await contains(":iframe .test-options-target").click();
+
+    await contains(".we-bg-options-container .o_we_color_preview:nth-child(1)").click();
+    await contains(".o_colorpicker_widget .o_hex_input").edit("#0000FF");
+    await waitForEndOfOperation();
+    expect(":iframe .test-options-target").toHaveStyle("color: rgb(0, 0, 255)", { inline: true });
+
+    await contains(".we-bg-options-container .o_we_color_preview:nth-child(2)").click();
+    await contains(".o_colorpicker_widget .o_hex_input").edit("#0000FF");
+    await waitForEndOfOperation();
+    expect(":iframe .test-options-target").toHaveStyle(
+        "background-color: rgb(0, 0, 255) !important",
+        { inline: true }
+    );
 });
