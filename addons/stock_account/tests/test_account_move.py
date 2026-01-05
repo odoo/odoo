@@ -320,19 +320,7 @@ class TestAccountMove(TestStockValuationCommon):
         self._use_inventory_location_accounting()
         with freeze_time(fields.Datetime.now() - timedelta(seconds=10)):
             self._make_in_move(product, 10, location_id=self.inventory_location.id)
-            mail_context = {
-                'tracking_disable': False,
-                'mail_create_nolog': False,
-                'mail_create_nosubscribe': False,
-                'mail_notrack': False,
-            }
-            action = self.company.with_context(mail_context).action_close_stock_valuation()
-            closing = self.env['account.move'].with_context(mail_context).browse(action['res_id'])
-            # First flush to clean precommit data
-            self.env.cr.flush()
-            closing._post()
-            # Second flush to post the tracking values
-            self.env.cr.flush()
+            closing = self._close()
             self.assertRecordValues(closing.line_ids, [
                 {'account_id': self.account_inventory.id, 'debit': 0.0, 'credit': 100.0},
                 {'account_id': self.account_stock_valuation.id, 'debit': 100.0, 'credit': 0.0},
