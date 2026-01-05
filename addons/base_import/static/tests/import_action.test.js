@@ -1558,6 +1558,46 @@ describe("Import view", () => {
         expect(browser.location.href).toBe("https://www.hoot.test/odoo/import?active_model=team");
     });
 
+    test("model in params is the main model (retrocompatibility)", async () => {
+        class Team extends models.Model {
+            name = fields.Char();
+            _records = [];
+        }
+        defineModels([Team]);
+
+        const templateURL = "/myTemplateURL.xlsx";
+        onRpc("team", "get_import_templates", ({ route }) => {
+            expect.step(route);
+            return [{ label: "Some Import Template", template: templateURL }];
+        });
+        onRpc("base_import.import", "create", ({ route }) => expect.step(route));
+
+        await mountWebClient();
+        await getService("action").doAction({
+            name: "Import Teams",
+            tag: "import",
+            type: "ir.actions.client",
+            params: {
+                model: "team",
+            },
+        });
+
+        expect(".o_import_action").toHaveCount(1);
+        expect(".o_nocontent_help .btn-outline-primary").toHaveText("Some Import Template");
+        expect(".o_nocontent_help .btn-outline-primary").toHaveProperty(
+            "href",
+            "https://www.hoot.test" + templateURL
+        );
+        expect(".o_control_panel button:visible").toHaveCount(2);
+        expect.verifySteps([
+            "/web/dataset/call_kw/team/get_import_templates",
+            "/web/dataset/call_kw/base_import.import/create",
+        ]);
+
+        await runAllTimers(); // wait for router pushState
+        expect(browser.location.href).toBe("https://www.hoot.test/odoo/import?active_model=team");
+    });
+
     test.tags("desktop");
     test("batched import doesn't exit when a failure occurs", async () => {
         defineActions([
