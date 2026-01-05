@@ -1,4 +1,4 @@
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { getContent } from "./_helpers/selection";
 import { animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { insertText, splitBlock } from "./_helpers/user_actions";
@@ -1132,5 +1132,98 @@ test("can write in a highlighted code block within a nested list", async () => {
             </ul>
             <p>b</p>`
         ),
+    });
+});
+
+describe("Arrow navigation (up/down) across syntax-highlighted code blocks", () => {
+    test("ArrowUp from start of paragraph moves caret to end of previous code block", async () => {
+        await testEditorWithHighlightedContent({
+            contentBefore: "<p>before</p><pre>a<br>b</pre><p>[]<br><br>after</p>",
+            contentBeforeEdit:
+                "<p>before</p>" + highlightedPre({ value: "a\nb" }) + "<p>[]<br><br>after</p>",
+            stepFunction: async () => {
+                await pressAndWait("ArrowUp");
+            },
+            contentAfterEdit:
+                "<p>before</p>" +
+                highlightedPre({
+                    value: "a\nb",
+                    // cursor at end of code block: ("a\nb[]")
+                    textareaRange: 3,
+                }) +
+                "<p><br><br>after</p>",
+            contentAfter:
+                "<p>before</p>" +
+                `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a<br>b</pre>[]` +
+                "<p><br><br>after</p>",
+        });
+    });
+
+    test("ArrowDown from end of paragraph moves caret to start of next code block", async () => {
+        await testEditorWithHighlightedContent({
+            contentBefore:
+                "<p>before<br><strong>abcd<br>[]<br></strong></p><pre>a<br>b</pre><p>after</p>",
+            contentBeforeEdit:
+                "<p>before<br><strong>abcd<br>[]<br></strong></p>" +
+                highlightedPre({ value: "a\nb" }) +
+                "<p>after</p>",
+            stepFunction: async () => {
+                await pressAndWait("ArrowDown");
+            },
+            contentAfterEdit:
+                "<p>before<br><strong>abcd<br><br></strong></p>" +
+                highlightedPre({
+                    value: "a\nb",
+                    // cursor at start of code block: ("[]a\nb")
+                    textareaRange: 0,
+                }) +
+                "<p>after</p>",
+            contentAfter:
+                "<p>before<br><strong>abcd<br><br></strong></p>" +
+                `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a<br>b</pre>[]` +
+                "<p>after</p>",
+        });
+    });
+
+    test("ArrowUp from start of code block moves caret to end of previous paragraph", async () => {
+        await testEditorWithHighlightedContent({
+            contentBefore: "<p>before</p><pre><br><br>abcd</pre><p>after</p>",
+            contentBeforeEdit:
+                "<p>before</p>" + highlightedPre({ value: "\n\nabcd" }) + "<p>after</p>",
+            stepFunction: async () => {
+                await click("textarea");
+                const textarea = queryOne("textarea");
+                // Cursor at start of code block: "[]\n\nabcd"
+                textarea.setSelectionRange(0, 0);
+                await pressAndWait("ArrowUp");
+            },
+            contentAfterEdit:
+                "<p>before[]</p>" + highlightedPre({ value: "\n\nabcd" }) + "<p>after</p>",
+            contentAfter:
+                "<p>before[]</p>" +
+                `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br><br>abcd</pre>` +
+                "<p>after</p>",
+        });
+    });
+
+    test("ArrowDown from end of code block moves caret to start of next paragraph", async () => {
+        await testEditorWithHighlightedContent({
+            contentBefore: "<p>before</p><pre>a<br>bc<br>d</pre><p>after</p>",
+            contentBeforeEdit:
+                "<p>before</p>" + highlightedPre({ value: "a\nbc\nd" }) + "<p>after</p>",
+            stepFunction: async () => {
+                await click("textarea");
+                const textarea = queryOne("textarea");
+                // Cursor at end of code block: "a\nbc\nd[]"
+                textarea.setSelectionRange(6, 6);
+                await pressAndWait("ArrowDown");
+            },
+            contentAfterEdit:
+                "<p>before</p>" + highlightedPre({ value: "a\nbc\nd" }) + "<p>[]after</p>",
+            contentAfter:
+                "<p>before</p>" +
+                `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a<br>bc<br>d</pre>` +
+                "<p>[]after</p>",
+        });
     });
 });
