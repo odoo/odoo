@@ -71,7 +71,7 @@ export class ProductScreen extends Component {
 
         onWillRender(() => {
             // If its a shared order it can be paid from another POS
-            if (this.currentOrder?.state !== "draft") {
+            if (this.currentOrder?.state !== "draft" && !this.isValidatingOrder) {
                 this.pos.addNewOrder();
             }
         });
@@ -353,7 +353,12 @@ export class ProductScreen extends Component {
     }
 
     async fastValidate(paymentMethod) {
-        await this.pos.validateOrderFast(paymentMethod);
+        try {
+            this.isValidatingOrder = true;
+            await this.pos.validateOrderFast(paymentMethod);
+        } finally {
+            this.isValidatingOrder = false;
+        }
     }
 }
 

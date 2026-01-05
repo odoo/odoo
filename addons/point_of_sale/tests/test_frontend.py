@@ -2877,9 +2877,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
     def test_fast_payment_validation_from_product_screen_without_automatic_receipt_printing(self):
+        self.preset_delivery = self.env['pos.preset'].create({
+            'name': 'Delivery',
+            'identification': 'address',
+        })
         self.main_pos_config.write({
             'use_fast_payment': True,
+            'use_presets': True,
             'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
+            'default_preset_id': self.preset_delivery.id,
+            'available_preset_ids': [(6, 0, [self.preset_delivery.id])],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_fast_payment_validation_from_product_screen_without_automatic_receipt_printing')
