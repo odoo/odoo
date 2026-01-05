@@ -1,4 +1,4 @@
-import { containsAnyInline } from "./dom_info";
+import { containsAnyInline, selfClosingHtmlTags } from "./dom_info";
 import { wrapInlinesInBlocks } from "./dom";
 import { markup } from "@odoo/owl";
 import { htmlReplace } from "@web/core/utils/html";
@@ -43,10 +43,18 @@ export function fixInvalidHTML(content) {
         return content;
     }
     // Match self-closing tags EXCEPT HTML void elements.
-    // We do not use selfClosingElementTags because it includes XML-only tags
-    // such as <t>, which must not be treated as void in HTML.
-    const regex =
-        /<\s*(?!area\b|base\b|br\b|col\b|embed\b|hr\b|img\b|input\b|link\b|meta\b|param\b|source\b|track\b|wbr\b)([a-zA-Z0-9:-]+)\s*((?:(?:\s+[\w:-]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?)*))\s*\/>/g;
+    // We use selfClosingHtmlTags over selfClosingElementTags because the
+    // latter includes XML-only tags such as <t>, which must not be treated as
+    // void in HTML.
+    const voidPattern = selfClosingHtmlTags.map((t) => `${t.toLowerCase()}\\b`).join("|");
+    const regex = new RegExp(
+        `<\\s*(?!${voidPattern})` +
+            `([a-zA-Z0-9:-]+)` + // tag name
+            `\\s*` +
+            `((?:(?:\\s+[\\w:-]+(?:\\s*=\\s*(?:"[^"]*"|'[^']*'|[^\\s"'=<>\\\`]+))?)*))` + // attributes
+            `\\s*\\/>`,
+        "g"
+    );
     return htmlReplace(content, regex, (match, tag, attributes) => {
         // markup: content is either already markup or escaped in htmlReplace
         attributes = markup(attributes);
