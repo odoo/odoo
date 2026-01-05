@@ -56,16 +56,6 @@ export class ActivityMenu extends Component {
             force_search_count: 1,
             search_default_filter_activities_my: 1,
         };
-        if (group.model === "mail.activity") {
-            this.action.doAction("mail.mail_activity_without_access_action", {
-                newWindow,
-                additionalContext: {
-                    active_ids: group.activity_ids,
-                    active_model: "mail.activity",
-                },
-            });
-            return;
-        }
 
         if (filter === "all") {
             context["search_default_activities_overdue"] = 1;
@@ -76,6 +66,18 @@ export class ActivityMenu extends Component {
             context["search_default_activities_today"] = 1;
         } else if (filter === "upcoming_all") {
             context["search_default_activities_upcoming_all"] = 1;
+        }
+
+        if (group.model === "mail.activity") {
+            this.action.doAction("mail.mail_activity_without_access_action", {
+                newWindow,
+                additionalContext: {
+                    ...context,
+                    active_ids: group.activity_ids,
+                    active_model: "mail.activity",
+                },
+            });
+            return;
         }
 
         let domain = [];
