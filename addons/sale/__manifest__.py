@@ -7,6 +7,7 @@
     'version': '1.2',
     'category': 'Sales/Sales',
     'summary': 'Sales internal machinery',
+    'sequence': 5,
     'description': """
 This module contains all the common features of Sales Management and eCommerce.
     """,
