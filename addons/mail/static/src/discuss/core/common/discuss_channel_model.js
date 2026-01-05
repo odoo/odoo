@@ -394,6 +394,9 @@ export class DiscussChannel extends Record {
     });
     /** @type {"loaded"|"loading"|"error"|undefined} */
     pinnedMessagesState = undefined;
+    get showCorrespondentCountry() {
+        return false;
+    }
     get showImStatus() {
         return (
             (this.channel_type === "chat" && this.correspondent) ||

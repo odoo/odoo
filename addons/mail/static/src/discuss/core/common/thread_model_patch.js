@@ -32,9 +32,6 @@ const threadPatch = {
         this.markingAsRead = false;
         this.scrollUnread = true;
     },
-    get showCorrespondentCountry() {
-        return false;
-    },
     /** @override */
     async checkReadAccess() {
         const res = await super.checkReadAccess();
