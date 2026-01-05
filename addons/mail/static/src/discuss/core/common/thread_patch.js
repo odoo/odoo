@@ -48,7 +48,7 @@ const threadPatch = {
                 this.setScroll(scrollTop);
             }
             thread.scrollUnread = false;
-            if (this.isAtBottom && !thread.markedAsUnread && thread.isFocused) {
+            if (this.shouldMarkAsReadOnScroll(thread)) {
                 thread.markAsRead();
             }
         } else {

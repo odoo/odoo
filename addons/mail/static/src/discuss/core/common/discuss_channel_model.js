@@ -243,6 +243,7 @@ export class DiscussChannel extends Record {
                 : this.last_interest_dt;
         },
     });
+    markedAsUnread = false;
     onlineMembers = fields.Many("discuss.channel.member", {
         /** @this {import("models").DiscussChannel} */
         compute() {
@@ -623,6 +624,17 @@ export class DiscussChannel extends Record {
     }
 
     onPinStateUpdated() {}
+
+    /** @param {import("models").Message} message */
+    onNewSelfMessage(message) {
+        if (!this.self_member_id || message.id < this.self_member_id.seen_message_id?.id) {
+            return;
+        }
+        this.self_member_id.seen_message_id = message;
+        this.self_member_id.new_message_separator = message.id + 1;
+        this.self_member_id.new_message_separator_ui = this.self_member_id.new_message_separator;
+        this.markedAsUnread = false;
+    }
 
     /** @returns {boolean} true if the channel was opened, false otherwise */
     openChannel() {
