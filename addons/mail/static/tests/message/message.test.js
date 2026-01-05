@@ -22,7 +22,15 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, leave, pointerDown, press, queryFirst, waitFor } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    leave,
+    pointerDown,
+    press,
+    queryFirst,
+    rightClick,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { advanceTime, mockDate, mockTouch, mockUserAgent, tick } from "@odoo/hoot-mock";
 import {
     contains as webContains,
@@ -2020,6 +2028,32 @@ test("Click on view reactions shows the reactions on the message", async () => {
     await contains(".o-mail-MessageReaction:text('😅 1')");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('View Reactions')");
+    await contains(".o-mail-MessageReactionMenu:has(:text('😅 1'))");
+});
+
+test("Click on view reactions from right-click on message shows the reactions", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+        reaction_ids: [
+            pyEnv["mail.message.reaction"].create({
+                content: "😅",
+                partner_id: serverState.partnerId,
+            }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await rightClick(".o-mail-Message");
+    await click(".o-dropdown-item:contains('View Reactions')");
     await contains(".o-mail-MessageReactionMenu:has(:text('😅 1'))");
 });
 

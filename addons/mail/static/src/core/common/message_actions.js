@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
+import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { rpc } from "@web/core/network/rpc";
 
@@ -126,7 +127,13 @@ registerMessageAction("reactions", {
     condition: ({ message }) => message.reactions.length,
     icon: "fa fa-smile-o",
     name: _t("View Reactions"),
-    onSelected: ({ owner }) => owner.openReactionMenu(),
+    onSelected: ({ message, owner, store }) => {
+        store.env.services.dialog.add(
+            MessageReactionMenu,
+            { message: toRaw(message) },
+            { context: owner }
+        );
+    },
     sequence: 50,
 });
 registerMessageAction("unfollow", {
