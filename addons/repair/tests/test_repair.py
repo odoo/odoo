@@ -976,6 +976,20 @@ class TestRepair(TestRepairCommon):
         repair_order.under_warranty = True
         self.assertEqual(invoice.invoice_line_ids[0].price_unit, 30.0)
 
+    def test_delete_repair_resets_outgoing_stock_moves(self):
+        """
+        Test that deleting draft repair order clears its outgoing stock quantities and
+        related moves are unlinked
+        """
+        repair = self._create_simple_repair_order()
+        self._create_simple_part_move(repair.id, 1.0)
+        moves = repair.move_ids
+        self.assertEqual(repair.state, 'draft')
+        self.assertEqual(moves.state, 'draft')
+        repair.unlink()
+        self.assertFalse(repair.exists())
+        self.assertFalse(moves.exists())
+
 
 @tagged('post_install', '-at_install')
 class TestRepairHttp(HttpCase):
