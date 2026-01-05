@@ -615,11 +615,8 @@ class Task(models.Model):
     def _compute_access_warning(self):
         super(Task, self)._compute_access_warning()
         for task in self.filtered(lambda x: x.project_id.privacy_visibility != 'portal'):
-            visibility_field = self.env['ir.model.fields'].search([('model', '=', 'project.project'), ('name', '=', 'privacy_visibility')], limit=1)
-            visibility_public = self.env['ir.model.fields.selection'].search([('field_id', '=', visibility_field.id), ('value', '=', 'portal')])
             task.access_warning = _(
-                "The task cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy of the project to '%(visibility)s' in order to make it accessible by the recipient(s).",
-                visibility=visibility_public.name,
+                "You can only share this task by copying the link and sending it, because the privacy of the project is too restricted. This link is not revokable once it has been shared."
             )
 
     @api.depends('child_ids.allocated_hours')
