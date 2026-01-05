@@ -113,6 +113,26 @@ class TestCustomSnippet(TransactionCase):
             'Texte Francais',
             view2.with_context(lang=parseltongue.code).arch)
 
+        # 4b. Simulate snippet being dropped in a generic view (e.g. the
+        #     /contactus page) and ensure the COW'd view is translated
+        generic_view = View.create({
+            'name': 'Generic View Test Translation',
+            'type': 'qweb',
+            'arch': '<body><div/></body>',
+            'key': 'test.generic_view_test_translation',
+        })
+        generic_view.with_context(website_id=website.id).save(
+            f"<div>{snippet_arch}</div>", xpath='/body[1]/div[1]')
+        specific_view = View.search([
+            ('key', '=', generic_view.key),
+            ('website_id', '=', website.id),
+        ])
+        self.assertTrue(specific_view, "The generic view should have been COW'd")
+        self.assertIn(
+            'Texte Francais',
+            specific_view.with_context(lang=parseltongue.code).arch)
+        self.assertNotIn('English Text', generic_view.arch)
+
         # 5. Simulate snippet being dropped in another model field and ensure
         #    it is translated
         mega_menu = self.env['website.menu'].create({
