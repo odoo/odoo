@@ -3,6 +3,14 @@ import { patch } from "@web/core/utils/patch";
 import { OrderQrTicket } from "@pos_self_order/overrides/components/order_qr_ticket/order_qr_ticket";
 
 patch(PosStore.prototype, {
+    async initServerData() {
+        const process = await super.initServerData(...arguments);
+        this.data.connectWebSocket(
+            "SEND_ORDER_IN_PREPARATION",
+            this.orderUpdateFromSelfOrdering.bind(this)
+        );
+        return process;
+    },
     async getServerOrders() {
         if (this.session._self_ordering) {
             await this.data.loadServerOrders([
@@ -14,6 +22,14 @@ patch(PosStore.prototype, {
         }
 
         return await super.getServerOrders(...arguments);
+    },
+    async orderUpdateFromSelfOrdering(data) {
+        for (const order_id of data.order_ids) {
+            const order = this.models["pos.order"].get(order_id);
+            if (order) {
+                await this.sendOrderInPreparation(order);
+            }
+        }
     },
     async redirectToQrForm() {
         const user_data = await this.data.call("pos.config", "get_pos_qr_order_data", [

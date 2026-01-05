@@ -66,6 +66,10 @@ class PosSelfOrderController(http.Controller):
         if preset_id and preset_id.mail_template_id:
             order_ids._send_self_order_receipt()
 
+        pos_config._notify('SEND_ORDER_IN_PREPARATION', {
+            'order_ids': order_ids.ids,
+        })
+
         return self._generate_return_values(order_ids, pos_config)
 
     def _generate_return_values(self, order, config):
