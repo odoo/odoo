@@ -294,6 +294,25 @@ test("Can edit message comment in chatter", async () => {
     await contains(".o-mail-Message-content", { text: "edited again (edited)" });
 });
 
+test("Basic list of edit message actions in chatter", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "original message",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Message [title='Edit']");
+    await contains(".o-mail-Message .o-mail-Composer.o-focused");
+    await click(".o-mail-Message .o-mail-Composer button[title='More Actions']");
+    await contains(".dropdown-menu .dropdown-item", { count: 1 });
+    await contains(".dropdown-menu .dropdown-item:has(:text('Attach Files'))");
+});
+
 test("Cursor is at end of composer input on edit", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
