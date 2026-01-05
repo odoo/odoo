@@ -671,6 +671,7 @@ export class ClipboardPlugin extends Plugin {
         }
         if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);
+            this.dependencies.sanitize.sanitize(fragment);
             if (fragment.hasChildNodes()) {
                 this.dependencies.dom.insert(fragment);
                 this.dependencies.history.addStep();

@@ -1015,8 +1015,8 @@ test("should drag and drop image with its caption(1)", async () => {
             <p>a</p>
             <p>b</p>
             <figure contenteditable="false">
-                <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="${caption}">
-                <figcaption ${getFigcaptionAttributes(captionId, caption)}>
+                <img data-caption="${caption}" data-caption-id="${captionId}" src="${base64Img}" class="img-fluid test-image o_editable_media">
+                <figcaption placeholder="${caption}" data-embedded-props='{"id":"${captionId}","focusInput":false}' class="mt-2" contenteditable="false" data-oe-protected="true" data-embedded="caption">
                     <input ${CAPTION_INPUT_ATTRIBUTES}>
                 </figcaption>
             </figure>
@@ -1068,8 +1068,8 @@ test("should drag and drop image with its caption(2)", async () => {
             <p>a</p>
             <p>b</p>
             <figure contenteditable="false">
-                <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="${caption}">
-                <figcaption ${getFigcaptionAttributes(captionId, caption)}>
+                <img data-caption="${caption}" data-caption-id="${captionId}" src="${base64Img}" class="img-fluid test-image o_editable_media">
+                <figcaption placeholder="${caption}" data-embedded-props='{"id":"${captionId}","focusInput":false}' class="mt-2" contenteditable="false" data-oe-protected="true" data-embedded="caption">
                     <input ${CAPTION_INPUT_ATTRIBUTES}>
                 </figcaption>
             </figure>
@@ -1118,8 +1118,8 @@ test("should drag and drop image with caption along with selected text", async (
             <p><br></p>
             <p>ca</p>
             <figure contenteditable="false">
-                <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="${caption}">
-                <figcaption ${getFigcaptionAttributes(captionId, caption)}>
+                <img data-caption="${caption}" data-caption-id="${captionId}" src="${base64Img}" class="img-fluid test-image o_editable_media">
+                <figcaption placeholder="${caption}" data-embedded-props='{"id":"${captionId}","focusInput":false}' class="mt-2" contenteditable="false" data-oe-protected="true" data-embedded="caption">
                     <input ${CAPTION_INPUT_ATTRIBUTES}>
                 </figcaption>
             </figure>
