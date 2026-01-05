@@ -6,7 +6,7 @@ def migrate(cr, version):
     env = api.Environment(cr, SUPERUSER_ID, {"lang": "en_US"})
 
     ChartTemplate = env["account.chart.template"]
-    companies = env["res.company"].search([("chart_template", "=", "id")], order="parent_path")
+    companies = env["res.company"].search([("chart_template", "=", "id"), ("parent_id", "=", False)], order="parent_path")
 
     new_tax_groups = ["l10n_id_tax_group_stlg", "l10n_id_tax_group_non_luxury_goods", "l10n_id_tax_group_luxury_goods", "l10n_id_tax_group_0"]
     new_taxes = [
@@ -31,7 +31,7 @@ def migrate(cr, version):
     for company in companies:
         new_tax_group_data = {}
         if (tax_group_data):
-            new_tax_group_data = {g: data for g, data in tax_group_data.items() if not env.ref(f"account._{company.id}_{g}", raise_if_not_found=False)}
+            new_tax_group_data = {g: data for g, data in tax_group_data.items() if not env.ref(f"account.{company.id}_{g}", raise_if_not_found=False)}
 
         # =============================
         # Load new tax data
