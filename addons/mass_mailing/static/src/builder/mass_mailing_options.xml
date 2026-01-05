@@ -50,9 +50,10 @@
         </xpath>
 
         <xpath expr="//width_option" position="attributes">
-            <attribute name="t-att-selector">
-                widthOptionSelector + ', .s_mail_alert .s_alert, .s_mail_blockquote, .s_mail_text_highlight'
-            </attribute>
+            <attribute
+                name="selector"
+                add=".s_mail_alert .s_alert, .s_mail_blockquote, .s_mail_text_highlight"
+                separator=", "/>
         </xpath>
         <xpath expr="//width_option" position="after">
             <border_option
@@ -65,9 +66,7 @@
         </xpath>
 
         <xpath expr="//vertical_alignment_option" position="attributes">
-            <attribute name="t-att-selector">
-                verticalAlignmentOptionSelector + ', .s_mail_block_event'
-            </attribute>
+            <attribute name="selector" add=".s_mail_block_event" separator=", "/>
         </xpath>
 
         <xpath expr="//cta_badge_option" position="after">
