@@ -50,13 +50,23 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
             'self_ordering_service_mode': 'table',
             'self_order_online_payment_method_id': self.online_payment_method.id,
         })
+        floor = self.env["restaurant.floor"].create({
+            "name": 'Main Floor',
+            "table_ids": [(0, 0, {
+                "table_number": 1,
+            })],
+        })
         self.pos_config.write({
             'self_ordering_pay_after': 'meal',
+            'self_ordering_mode': 'mobile',
+            'floor_ids': [(6, 0, [floor.id])],
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "self_mobile_online_payment_meal_table")
+        self.start_tour(self_route, "self_mobile_online_payment_meal")
+        self_route_table = self.pos_config._get_self_order_route(floor.table_ids[0].id)
+        self.start_tour(self_route_table, "self_mobile_online_payment_meal_table")
 
     def test_online_payment_kiosk_qr_code(self):
         """
