@@ -912,7 +912,8 @@ class TestPurchase(AccountTestInvoicingCommon):
                              'Test Product 1 - Highly corrosive',
                              'Test Product 2 - Toxic pollutant')
         expected_warnings_for_purchase_order2 = ('Test Partner, Invoice - Slightly infectious disease',
-                                             'Test Product 2 - Toxic pollutant')
+                                                 'Test Partner - Highly infectious disease',
+                                                 'Test Product 2 - Toxic pollutant')
         self.assertEqual(purchase_order.purchase_warning_text, '\n'.join(expected_warnings))
         self.assertEqual(purchase_order2.purchase_warning_text, '\n'.join(expected_warnings_for_purchase_order2))
         self.assertEqual(invoice.purchase_warning_text, '\n'.join(expected_warnings_for_purchase_order2))
