@@ -891,7 +891,7 @@ class SlideChannel(models.Model):
                     ['mail.mail_activity_data_todo'],
                     user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)],
                     only_automated=False,
-                ).action_feedback(feedback=self.env._('Access Granted'))
+                ).action_feedback(feedback=self.user_id.env._('Access Granted'))
 
     def action_refuse_access(self, partner_id):
         partner = self.env['res.partner'].browse(partner_id).exists()
@@ -900,7 +900,7 @@ class SlideChannel(models.Model):
                 ['mail.mail_activity_data_todo'],
                 user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)],
                 only_automated=False,
-            ).action_feedback(feedback=self.env._('Access Refused'))
+            ).action_feedback(feedback=self.user_id.env._('Access Refused'))
 
     # ---------------------------------------------------------
     # Mailing Mixin API

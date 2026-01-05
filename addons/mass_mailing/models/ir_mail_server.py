@@ -28,7 +28,7 @@ class IrMail_Server(models.Model):
         for record in self:
             usages = []
             if default_mail_server_id == record.id:
-                usages.append(self.env._('Email Marketing uses it as its default mail server to send mass mailings'))
+                usages.append(record.env._('Email Marketing uses it as its default mail server to send mass mailings'))
             usages.extend(map(format_usage, record.active_mailing_ids))
             if usages:
                 usages_super.setdefault(record.id, []).extend(usages)

@@ -222,7 +222,7 @@ class MailController(http.Controller):
     def mail_action_unfollow(self, model, res_id, pid, token, **kwargs):
         comparison, record, __ = MailController._check_token_and_record_or_redirect(model, int(res_id), token)
         if not comparison or not record:
-            raise AccessError(self.env._('Non existing record or wrong token.'))
+            raise AccessError(request.env._('Non existing record or wrong token.'))
 
         pid = int(pid)
         record_sudo = record.sudo()

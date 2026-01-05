@@ -146,7 +146,7 @@ class ThreadController(http.Controller):
         if (attachment_ids := post_data.get("attachment_ids")) is not None:
             attachments = request.env["ir.attachment"].browse(map(int, attachment_ids))
             if not attachments._has_attachments_ownership(post_data.get("attachment_tokens")):
-                msg = self.env._(
+                msg = request.env._(
                     "One or more attachments do not exist, or you do not have the rights to access them.",
                 )
                 raise UserError(msg)

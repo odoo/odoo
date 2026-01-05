@@ -39,14 +39,14 @@ class MailPluginController(http.Controller):
         partner = request.env['res.partner'].browse(partner_id).exists()
 
         if not partner:
-            return {'error': self.env._("This partner does not exist")}
+            return {'error': request.env._("This partner does not exist")}
 
         if partner.parent_id:
-            return {'error': self.env._("The partner already has a company related to him")}
+            return {'error': request.env._("The partner already has a company related to him")}
 
         normalized_email = partner.email_normalized
         if not normalized_email:
-            return {'error': self.env._('The email of this contact is not valid and we can not enrich it')}
+            return {'error': request.env._('The email of this contact is not valid and we can not enrich it')}
 
         company, enrichment_info = self._create_company_from_iap(normalized_email)
 
@@ -66,7 +66,7 @@ class MailPluginController(http.Controller):
         partner = request.env['res.partner'].browse(partner_id).exists()
 
         if not partner:
-            return {'error': self.env._("This partner does not exist")}
+            return {'error': request.env._("This partner does not exist")}
 
         if not partner.is_company:
             return {'error': 'Contact must be a company'}
@@ -144,7 +144,7 @@ class MailPluginController(http.Controller):
         """
 
         if not (partner_id or (name and email)):
-            return {'error': self.env._('You need to specify at least the partner_id or the name and the email')}
+            return {'error': request.env._('You need to specify at least the partner_id or the name and the email')}
 
         if partner_id:
             partner = request.env['res.partner'].browse(partner_id).exists()
@@ -152,16 +152,16 @@ class MailPluginController(http.Controller):
 
         normalized_email = tools.email_normalize(email)
         if not normalized_email:
-            return {'error': self.env._('Bad Email.')}
+            return {'error': request.env._('Bad Email.')}
 
         notification_emails = request.env['mail.alias.domain'].sudo().search([]).mapped('default_from_email')
         if normalized_email in notification_emails:
             return {
                 'partner': {
-                    'name': self.env._('Notification'),
+                    'name': request.env._('Notification'),
                     'email': normalized_email,
                     'enrichment_info': {
-                        'type': 'odoo_custom_error', 'info': self.env._('This is your notification address. Search the Contact manually to link this email to a record.'),
+                        'type': 'odoo_custom_error', 'info': request.env._('This is your notification address. Search the Contact manually to link this email to a record.'),
                     },
                 },
             }
@@ -317,7 +317,7 @@ class MailPluginController(http.Controller):
         try:
             company.check_access('read')
         except AccessError:
-            return {'id': company.id, 'name': self.env._('No Access')}
+            return {'id': company.id, 'name': request.env._('No Access')}
 
         fields_list = ['id', 'name', 'phone', 'email', 'website']
 

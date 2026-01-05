@@ -1524,7 +1524,7 @@ class ProjectTask(models.Model):
             values['partner_name'] = partner.name
             assignation_msg = self.env['ir.qweb']._render('project.task_invitation_follower', values, minimal_qcontext=True)
             self.message_notify(
-                subject=self.env._('You have been invited to follow %s', self.display_name),
+                subject=partner.env._('You have been invited to follow %s', self.display_name),
                 body=assignation_msg,
                 partner_ids=partner.ids,
                 email_layout_xmlid='mail.mail_notification_layout',
@@ -1554,7 +1554,7 @@ class ProjectTask(models.Model):
                 assignation_msg = self.env['ir.qweb']._render('project.project_message_user_assigned', values, minimal_qcontext=True)
                 assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
                 task.message_notify(
-                    subject=self.env._('You have been assigned to %s', task.display_name),
+                    subject=user.env._('You have been assigned to %s', task.display_name),
                     body=assignation_msg,
                     partner_ids=user.partner_id.ids,
                     email_layout_xmlid='mail.mail_notification_layout',

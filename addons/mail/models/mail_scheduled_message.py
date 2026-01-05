@@ -210,8 +210,8 @@ class MailScheduledMessage(models.Model):
                 try:
                     self.env['mail.thread'].message_notify(
                         partner_ids=[message_creator.partner_id.id],
-                        subject=self.env._("A scheduled message could not be sent"),
-                        body=self.env._("The message scheduled on %(model)s(%(id)s) with the following content could not be sent:%(original_message)s",
+                        subject=message_creator.env._("A scheduled message could not be sent"),
+                        body=message_creator.env._("The message scheduled on %(model)s(%(id)s) with the following content could not be sent:%(original_message)s",
                             model=scheduled_message.model,
                             id=scheduled_message.res_id,
                             original_message=Markup("<br>-----<br>%s<br>-----<br>") % scheduled_message.body,

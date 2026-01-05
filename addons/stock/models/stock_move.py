@@ -362,7 +362,7 @@ class StockMove(models.Model):
                 if move.inventory_name:
                     move.reference = move.inventory_name
                 else:
-                    move.reference = self.env._('Product Quantity Confirmed') if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding) else self.env._('Product Quantity Updated')
+                    move.reference = self.env._('Product Quantity Confirmed') if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding) else move.env._('Product Quantity Updated')
                     if move.create_uid and move.create_uid.id != SUPERUSER_ID:
                         move.reference += f' ({move.create_uid.display_name})'
             else:

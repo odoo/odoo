@@ -70,9 +70,9 @@ class MailingSMSController(http.Controller):
         # otherwise: generate error message, loop on same page
         unsubscribe_error = False
         if sms_number and not sanitized_number:
-            unsubscribe_error = self.env._('Oops! The phone number seems to be incorrect. Please make sure to include the country code.')
+            unsubscribe_error = request.env._('Oops! The phone number seems to be incorrect. Please make sure to include the country code.')
         if sanitized_number and not valid_trace:
-            unsubscribe_error = self.env._('Oops! Number not found')
+            unsubscribe_error = request.env._('Oops! Number not found')
         return request.render('mass_mailing_sms.blacklist_main', {
             'mailing_id': mailing_id,
             'sms_number': sms_number,
@@ -107,7 +107,7 @@ class MailingSMSController(http.Controller):
             else:
                 blacklist_rec = request.env['phone.blacklist'].sudo().add(tocheck_number)
                 blacklist_rec._message_log(
-                    body=self.env._('Blacklist through SMS Marketing unsubscribe (mailing ID: %(mailing_id)s - model: %(model)s)',
+                    body=request.env._('Blacklist through SMS Marketing unsubscribe (mailing ID: %(mailing_id)s - model: %(model)s)',
                            mailing_id=trace.mass_mailing_id.id, model=trace.mass_mailing_id.mailing_model_id.display_name))
             lists_optin = request.env['mailing.subscription'].sudo().search([
                 ('contact_id.phone_sanitized', '=', tocheck_number),

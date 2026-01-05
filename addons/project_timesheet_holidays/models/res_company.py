@@ -18,7 +18,7 @@ class ResCompany(models.Model):
             company = company.with_company(company)
             if not company.leave_timesheet_task_id:
                 task = company.env['project.task'].sudo().create({
-                    'name': self.env._('Time Off'),
+                    'name': company.env._('Time Off'),
                     'project_id': company.internal_project_id.id,
                     'active': True,
                     'company_id': company.id,

@@ -44,7 +44,7 @@ class ResPartner(models.Model):
             return data_list
         for partner in self.filtered('opportunity_count'):
             data_list[partner.id].append(
-                {'iconClass': 'fa-star', 'value': partner.opportunity_count, 'label': self.env._('Opportunities')}
+                {'iconClass': 'fa-star', 'value': partner.opportunity_count, 'label': partner.env._('Opportunities')}
             )
         return data_list
 

@@ -22,7 +22,7 @@ class ResCompany(models.Model):
     def _create_subcontracting_location(self):
         for company in self:
             subcontracting_location = self.env['stock.location'].create({
-                'name': self.env._('Subcontracting'),
+                'name': company.env._('Subcontracting'),
                 'usage': 'internal',
                 'company_id': company.id,
             })

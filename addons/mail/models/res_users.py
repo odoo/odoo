@@ -222,8 +222,8 @@ class ResUsers(models.Model):
             # when the email is modified, we want notify the previous address (and not the new one)
             for user, previous_email in previous_email_by_user.items():
                 self._notify_security_setting_update(
-                    self.env._("Security Update: Email Changed"),
-                    self.env._(
+                    user.env._("Security Update: Email Changed"),
+                    user.env._(
                         "Your account email has been changed from %(old_email)s to %(new_email)s.",
                         old_email=previous_email,
                         new_email=user.email,
@@ -268,7 +268,7 @@ class ResUsers(models.Model):
                 'mail.mail_notification_light',
                 body_html,
                 add_context={
-                    'model_description': self.env._('Account'),
+                    'model_description': user.env._('Account'),
                 },
                 context_record=user,
             )
@@ -346,7 +346,7 @@ class ResUsers(models.Model):
         current_user = self.env.user
         for user in self:
             user.partner_id._message_log(
-                body=self.env._('Archived because %(user_name)s (#%(user_id)s) deleted the portal account',
+                body=user.env._('Archived because %(user_name)s (#%(user_id)s) deleted the portal account',
                        user_name=current_user.name, user_id=current_user.id)
             )
 
@@ -361,7 +361,7 @@ class ResUsers(models.Model):
         for user, user_email in users_to_blacklist:
             self.env['mail.blacklist']._add(
                 user_email,
-                message=self.env._('Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)',
+                message=user.env._('Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)',
                           user_name=current_user.name, user_id=current_user.id,
                           portal_user_name=user.name)
             )

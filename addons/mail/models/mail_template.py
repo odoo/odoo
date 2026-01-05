@@ -301,7 +301,7 @@ class MailTemplate(models.Model):
                 'default_model': template.model,
                 'default_template_id' : template.id,
             }
-            button_name = self.env._('Send Mail (%s)', template.name)
+            button_name = template.env._('Send Mail (%s)', template.name)
             action = ActWindow.create({
                 'name': button_name,
                 'type': 'ir.actions.act_window',

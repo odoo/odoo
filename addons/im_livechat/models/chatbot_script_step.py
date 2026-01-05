@@ -52,7 +52,7 @@ class ChatbotScriptStep(models.Model):
     @api.depends_context('lang')
     def _compute_name(self):
         for step in self:
-            step.name = self.env._(
+            step.name = step.env._(
                 "%(title)s - Step %(sequence)d",
                 title=step.chatbot_script_id.title,
                 sequence=step.sequence,

@@ -501,7 +501,7 @@ class ResUsers(models.Model):
                 # Prevent using reload actions.
                 action = self.env["ir.actions.client"].browse(user.action_id.id)  # magic
                 if action.tag == "reload":
-                    raise ValidationError(self.env._('The "%s" action cannot be selected as home action.', action.name))
+                    raise ValidationError(user.env._('The "%s" action cannot be selected as home action.', action.name))
 
             elif user.action_id.type == "ir.actions.act_window":
                 # Restrict actions that include 'active_id' in their context.
@@ -510,7 +510,7 @@ class ResUsers(models.Model):
                     continue
                 if "active_id" in action.context:
                     raise ValidationError(
-                        self.env._('The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.', action.name)
+                        user.env._('The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.', action.name)
                     )
 
     @api.constrains('group_ids')
@@ -650,9 +650,9 @@ class ResUsers(models.Model):
         vals_list = super().copy_data(default=default)
         for user, vals in zip(self, vals_list):
             if ('name' not in default) and ('partner_id' not in default):
-                vals['name'] = self.env._("%s (copy)", user.name)
+                vals['name'] = user.env._("%s (copy)", user.name)
             if 'login' not in default:
-                vals['login'] = self.env._("%s (copy)", user.login)
+                vals['login'] = user.env._("%s (copy)", user.login)
         return vals_list
 
     @api.model

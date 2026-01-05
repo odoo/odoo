@@ -78,10 +78,10 @@ class AuthSignupHome(Home):
                 User = request.env['res.users']
                 if User.sudo().with_context(active_test=False).\
                         search_count(User._get_login_domain(qcontext.get('login')), limit=1):
-                    qcontext["error"] = self.env._("Another user is already registered using this email address.")
+                    qcontext["error"] = request.env._("Another user is already registered using this email address.")
                 else:
                     _logger.warning("%s", e)
-                    qcontext['error'] = self.env._("Could not create a new account.") + Markup('<br/>') + str(e)
+                    qcontext['error'] = request.env._("Could not create a new account.") + Markup('<br/>') + str(e)
 
         elif 'signup_email' in qcontext:
             user = request.env['res.users'].sudo().search([('email', '=', qcontext.get('signup_email')), ('state', '!=', 'new')], limit=1)
@@ -105,19 +105,19 @@ class AuthSignupHome(Home):
                 if qcontext.get('token'):
                     self.do_signup(qcontext, do_login=False)
                     request.update_context(skip_captcha_login=SKIP_CAPTCHA_LOGIN)
-                    qcontext['message'] = self.env._("Your password has been reset successfully.")
+                    qcontext['message'] = request.env._("Your password has been reset successfully.")
                 else:
                     login = qcontext.get('login')
-                    assert login, self.env._("No login provided.")
+                    assert login, request.env._("No login provided.")
                     _logger.info(
                         "Password reset attempt for <%s> by user <%s> from %s",
                         login, request.env.user.login, request.httprequest.remote_addr)
                     request.env['res.users'].sudo().reset_password(login)
-                    qcontext['message'] = self.env._("Password reset instructions sent to your email address.")
+                    qcontext['message'] = request.env._("Password reset instructions sent to your email address.")
             except UserError as e:
                 qcontext['error'] = e.args[0]
             except SignupError:
-                qcontext['error'] = self.env._("Could not reset your password")
+                qcontext['error'] = request.env._("Could not reset your password")
                 _logger.exception('error when resetting password')
             except Exception as e:
                 qcontext['error'] = str(e)
@@ -154,16 +154,16 @@ class AuthSignupHome(Home):
                 for k, v in token_infos.items():
                     qcontext.setdefault(k, v)
             except:
-                qcontext['error'] = self.env._("Invalid signup token")
+                qcontext['error'] = request.env._("Invalid signup token")
                 qcontext['invalid_token'] = True
         return qcontext
 
     def _prepare_signup_values(self, qcontext):
         values = { key: qcontext.get(key) for key in ('login', 'name', 'password') }
         if not values:
-            raise UserError(self.env._("The form was not properly filled in."))
+            raise UserError(request.env._("The form was not properly filled in."))
         if values.get('password') != qcontext.get('confirm_password'):
-            raise UserError(self.env._("Passwords do not match; please retype them."))
+            raise UserError(request.env._("Passwords do not match; please retype them."))
         supported_lang_codes = [code for code, _ in request.env['res.lang'].get_installed()]
         lang = request.env.context.get('lang', '')
         if lang in supported_lang_codes:

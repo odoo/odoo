@@ -44,7 +44,7 @@ class GamificationBadgeUser(models.Model):
                 res_id=badge_user.id,
                 body=body_html,
                 partner_ids=[badge_user.user_partner_id.id],
-                subject=self.env._("🎉 You've earned the %(badge)s badge!", badge=badge_user.badge_name),
+                subject=badge_user.env._("🎉 You've earned the %(badge)s badge!", badge=badge_user.badge_name),
                 subtype_xmlid='mail.mt_comment',
                 email_layout_xmlid='mail.mail_notification_layout',
                 subtitles=[_lt('Your Badge'), badge_user.badge_id.name or ''],

@@ -9,4 +9,4 @@ class WebsiteLivechat(LivechatController):
 
     def _get_guest_name(self):
         visitor_sudo = request.env["website.visitor"]._get_visitor_from_request()
-        return self.env._('Visitor #%d', visitor_sudo.id) if visitor_sudo else super()._get_guest_name()
+        return request.env._('Visitor #%d', visitor_sudo.id) if visitor_sudo else super()._get_guest_name()

@@ -33,7 +33,7 @@ class Data_RecycleRecord(models.Model):
         for record in self:
             original_record = original_records.get((record.res_model_name, record.res_id))
             if original_record:
-                record.name = original_record.display_name or self.env._('Undefined Name')
+                record.name = original_record.display_name or record.env._('Undefined Name')
             else:
                 record.name = self.env._('**Record Deleted**')
 

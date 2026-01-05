@@ -4473,7 +4473,7 @@ class MailThread(models.AbstractModel):
                 notify_skip_followers=True,
                 outgoing_email_to=email_to,
                 partner_ids=recipient.ids,
-                subject=self.env._('Auto: %(subject)s', subject=(original_subject or self.display_name)),
+                subject=recipient.env._('Auto: %(subject)s', subject=(original_subject or self.display_name)),
                 subtype_id=self.env.ref('mail.mt_comment').id,  # TDE check: note ? but what about portal / internal ?
             )
         return ooo_messages

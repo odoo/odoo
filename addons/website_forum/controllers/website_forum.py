@@ -233,7 +233,7 @@ class WebsiteForum(WebsiteProfile):
         """
         if not isinstance(tag_char, str) or len(tag_char) > 1 or (tag_char and not tag_char.isalpha()):
             # So that further development does not miss this. Users shouldn't see it with normal usage.
-            raise werkzeug.exceptions.BadRequest(self.env._('Bad "tag_char" value "%(tag_char)s"', tag_char=tag_char))
+            raise werkzeug.exceptions.BadRequest(request.env._('Bad "tag_char" value "%(tag_char)s"', tag_char=tag_char))
 
         domain = [('forum_id', '=', forum.id), ('posts_count', '=' if filters == "unused" else '>', 0)]
         if filters == 'followed' and not request.env.user._is_public():
@@ -260,11 +260,11 @@ class WebsiteForum(WebsiteProfile):
             if not search:
                 tags = request.env['forum.tag'].search(domain, limit=None, order=order)
         else:
-            raise werkzeug.exceptions.BadRequest(self.env._('Bad "filters" value "%(filters)s".', filters=filters))
+            raise werkzeug.exceptions.BadRequest(request.env._('Bad "filters" value "%(filters)s".', filters=filters))
 
         first_char_tag = forum._get_tags_first_char(tags=tags)
         first_char_list = [(t, t.lower()) for t in first_char_tag if t.isalnum()]
-        first_char_list.insert(0, (self.env._('All'), ''))
+        first_char_list.insert(0, (request.env._('All'), ''))
         if tag_char:
             tags = tags.filtered(lambda t: t.name.startswith((tag_char.lower(), tag_char.upper())))
 
@@ -423,8 +423,8 @@ class WebsiteForum(WebsiteProfile):
     def post_create(self, forum, post_parent=None, **post):
         if is_html_empty(post.get('content', '')):
             return request.render('http_routing.http_error', {
-                'status_code': self.env._('Bad Request'),
-                'status_message': post_parent and self.env._('Reply should not be empty.') or self.env._('Question should not be empty.')
+                'status_code': request.env._('Bad Request'),
+                'status_message': post_parent and request.env._('Reply should not be empty.') or request.env._('Question should not be empty.')
             })
 
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
@@ -503,8 +503,8 @@ class WebsiteForum(WebsiteProfile):
         if 'post_name' in kwargs:
             if not kwargs.get('post_name').strip():
                 return request.render('http_routing.http_error', {
-                    'status_code': self.env._('Bad Request'),
-                    'status_message': self.env._('Title should not be empty.')
+                    'status_code': request.env._('Bad Request'),
+                    'status_message': request.env._('Title should not be empty.')
                 })
 
             vals['name'] = kwargs.get('post_name')
@@ -634,14 +634,14 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.post"):post>/ask_for_mark_as_offensive', type='jsonrpc', auth="user", website=True)
     def post_json_ask_for_mark_as_offensive(self, post, **kwargs):
         if not post.can_moderate:
-            raise AccessError(self.env._('%d karma required to mark a post as offensive.', post.forum_id.karma_moderate))
+            raise AccessError(request.env._('%d karma required to mark a post as offensive.', post.forum_id.karma_moderate))
         values = self._prepare_mark_as_offensive_values(post, **kwargs)
         return request.env['ir.ui.view']._render_template('website_forum.mark_as_offensive', values)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/ask_for_mark_as_offensive', type='http', auth="user", methods=['GET'], website=True)
     def post_http_ask_for_mark_as_offensive(self, forum, post, **kwargs):
         if not post.can_moderate:
-            raise AccessError(self.env._('%d karma required to mark a post as offensive.', forum.karma_moderate))
+            raise AccessError(request.env._('%d karma required to mark a post as offensive.', forum.karma_moderate))
         values = self._prepare_mark_as_offensive_values(post, **kwargs)
         return request.render("website_forum.close_post", values)
 

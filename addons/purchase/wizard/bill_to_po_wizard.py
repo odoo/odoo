@@ -43,7 +43,6 @@ class BillToPoWizard(models.TransientModel):
     def action_add_downpayment(self):
         aml_ids = [abs(record_id) for record_id in self.env.context.get('active_ids') if record_id < 0]
         lines_to_convert = self.env['account.move.line'].browse(aml_ids)
-        context = {'lang': lines_to_convert.partner_id.lang}
         if not self.purchase_order_id:
             self.purchase_order_id = self.env['purchase.order'].create({
                 'partner_id': lines_to_convert.partner_id.id,
@@ -53,7 +52,7 @@ class BillToPoWizard(models.TransientModel):
         date = self.purchase_order_id.date_order or fields.Date.today()
         line_vals = [
             {
-                'name': self.env._("Down Payment (ref: %(ref)s)", ref=aml.display_name),
+                'name': self.with_context(lang=lines_to_convert.partner_id.lang).env._("Down Payment (ref: %(ref)s)", ref=aml.display_name),
                 'product_qty': 0.0,
                 'product_uom_id': aml.product_uom_id.id,
                 'is_downpayment': True,
@@ -63,7 +62,6 @@ class BillToPoWizard(models.TransientModel):
             }
             for aml in lines_to_convert
         ]
-        del context
 
         downpayment_lines = self.purchase_order_id._create_downpayments(line_vals)
         for aml, dpl in zip(lines_to_convert, downpayment_lines):

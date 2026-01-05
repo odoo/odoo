@@ -209,7 +209,7 @@ class ResPartner(models.Model):
 
             if exc:
                 if partner._origin.id:
-                    partner_msg = self.env._("Error while checking the VAT number '%s' against the VIES service.", partner.vat)
+                    partner_msg = partner.env._("Error while checking the VAT number '%s' against the VIES service.", partner.vat)
                     partner._origin.message_post(body=partner_msg)
                 _logger.warning("Error while checking the VAT number '%s' against the VIES service: %s - %s", partner.vat, msg, exc)
 

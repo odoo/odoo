@@ -24,26 +24,26 @@ class TimesheetCustomerPortal(CustomerPortal):
 
     def _get_searchbar_inputs(self):
         return {
-            'name': {'input': 'name', 'label': self.env._('Search in Description'), 'sequence': 10},
-            'employee_id': {'input': 'employee_id', 'label': self.env._('Search in Employee'), 'sequence': 20},
-            'project_id': {'input': 'project_id', 'label': self.env._('Search in Project'), 'sequence': 30},
-            'task_id': {'input': 'task_id', 'label': self.env._('Search in Task'), 'sequence': 40},
-            'parent_task_id': {'input': 'parent_task_id', 'label': self.env._('Search in Parent Task'), 'sequence': 70},
+            'name': {'input': 'name', 'label': request.env._('Search in Description'), 'sequence': 10},
+            'employee_id': {'input': 'employee_id', 'label': request.env._('Search in Employee'), 'sequence': 20},
+            'project_id': {'input': 'project_id', 'label': request.env._('Search in Project'), 'sequence': 30},
+            'task_id': {'input': 'task_id', 'label': request.env._('Search in Task'), 'sequence': 40},
+            'parent_task_id': {'input': 'parent_task_id', 'label': request.env._('Search in Parent Task'), 'sequence': 70},
         }
 
     def _task_get_searchbar_sortings(self, milestones_allowed, project=False):
         return super()._task_get_searchbar_sortings(milestones_allowed, project) | {
-            'progress asc': {'label': self.env._('Progress'), 'order': 'progress asc', 'sequence': 100},
+            'progress asc': {'label': request.env._('Progress'), 'order': 'progress asc', 'sequence': 100},
         }
 
     def _get_searchbar_groupby(self):
         return {
-            'none': {'label': self.env._('None'), 'sequence': 10},
-            'date': {'label': self.env._('Date'), 'sequence': 20},
-            'project_id': {'label': self.env._('Project'), 'sequence': 30},
-            'parent_task_id': {'label': self.env._('Parent Task'), 'sequence': 40},
-            'task_id': {'label': self.env._('Task'), 'sequence': 50},
-            'employee_id': {'label': self.env._('Employee'), 'sequence': 70},
+            'none': {'label': request.env._('None'), 'sequence': 10},
+            'date': {'label': request.env._('Date'), 'sequence': 20},
+            'project_id': {'label': request.env._('Project'), 'sequence': 30},
+            'parent_task_id': {'label': request.env._('Parent Task'), 'sequence': 40},
+            'task_id': {'label': request.env._('Task'), 'sequence': 50},
+            'employee_id': {'label': request.env._('Employee'), 'sequence': 70},
         }
 
     def _get_search_domain(self, search_in, search):
@@ -54,11 +54,11 @@ class TimesheetCustomerPortal(CustomerPortal):
 
     def _get_searchbar_sortings(self):
         return {
-            'date desc': {'label': self.env._('Newest')},
-            'employee_id': {'label': self.env._('Employee')},
-            'project_id': {'label': self.env._('Project')},
-            'task_id': {'label': self.env._('Task')},
-            'name': {'label': self.env._('Description')},
+            'date desc': {'label': request.env._('Newest')},
+            'employee_id': {'label': request.env._('Employee')},
+            'project_id': {'label': request.env._('Project')},
+            'task_id': {'label': request.env._('Task')},
+            'name': {'label': request.env._('Description')},
         }
 
     def _project_get_page_view_values(self, project, access_token, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, **kwargs):
@@ -90,16 +90,16 @@ class TimesheetCustomerPortal(CustomerPortal):
         last_year = today + relativedelta(years=-1)
 
         searchbar_filters = {
-            'all': {'label': self.env._('All'), 'domain': []},
-            'last_year': {'label': self.env._('Last Year'), 'domain': [('date', '>=', date_utils.start_of(last_year, 'year')), ('date', '<=', date_utils.end_of(last_year, 'year'))]},
-            'last_quarter': {'label': self.env._('Last Quarter'), 'domain': [('date', '>=', last_quarter_start), ('date', '<=', last_quarter_end)]},
-            'last_month': {'label': self.env._('Last Month'), 'domain': [('date', '>=', date_utils.start_of(last_month, 'month')), ('date', '<=', date_utils.end_of(last_month, 'month'))]},
-            'last_week': {'label': self.env._('Last Week'), 'domain': [('date', '>=', date_utils.start_of(last_week, "week")), ('date', '<=', date_utils.end_of(last_week, 'week'))]},
-            'today': {'label': self.env._('Today'), 'domain': [("date", "=", today)]},
-            'week': {'label': self.env._('This Week'), 'domain': [('date', '>=', date_utils.start_of(today, "week")), ('date', '<=', date_utils.end_of(today, 'week'))]},
-            'month': {'label': self.env._('This Month'), 'domain': [('date', '>=', date_utils.start_of(today, 'month')), ('date', '<=', date_utils.end_of(today, 'month'))]},
-            'quarter': {'label': self.env._('This Quarter'), 'domain': [('date', '>=', quarter_start), ('date', '<=', quarter_end)]},
-            'year': {'label': self.env._('This Year'), 'domain': [('date', '>=', date_utils.start_of(today, 'year')), ('date', '<=', date_utils.end_of(today, 'year'))]},
+            'all': {'label': request.env._('All'), 'domain': []},
+            'last_year': {'label': request.env._('Last Year'), 'domain': [('date', '>=', date_utils.start_of(last_year, 'year')), ('date', '<=', date_utils.end_of(last_year, 'year'))]},
+            'last_quarter': {'label': request.env._('Last Quarter'), 'domain': [('date', '>=', last_quarter_start), ('date', '<=', last_quarter_end)]},
+            'last_month': {'label': request.env._('Last Month'), 'domain': [('date', '>=', date_utils.start_of(last_month, 'month')), ('date', '<=', date_utils.end_of(last_month, 'month'))]},
+            'last_week': {'label': request.env._('Last Week'), 'domain': [('date', '>=', date_utils.start_of(last_week, "week")), ('date', '<=', date_utils.end_of(last_week, 'week'))]},
+            'today': {'label': request.env._('Today'), 'domain': [("date", "=", today)]},
+            'week': {'label': request.env._('This Week'), 'domain': [('date', '>=', date_utils.start_of(today, "week")), ('date', '<=', date_utils.end_of(today, 'week'))]},
+            'month': {'label': request.env._('This Month'), 'domain': [('date', '>=', date_utils.start_of(today, 'month')), ('date', '<=', date_utils.end_of(today, 'month'))]},
+            'quarter': {'label': request.env._('This Quarter'), 'domain': [('date', '>=', quarter_start), ('date', '<=', quarter_end)]},
+            'year': {'label': request.env._('This Year'), 'domain': [('date', '>=', date_utils.start_of(today, 'year')), ('date', '<=', date_utils.end_of(today, 'year'))]},
         }
         # default sort by value
         if not sortby:

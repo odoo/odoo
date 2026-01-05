@@ -317,7 +317,7 @@ class WebsiteEventController(http.Controller):
         return [{
             'id': tid if ticket_dict.get(tid) else 0,
             'ticket': ticket_dict.get(tid),
-            'name': ticket_dict[tid]['name'] if ticket_dict.get(tid) else self.env._('Registration'),
+            'name': ticket_dict[tid]['name'] if ticket_dict.get(tid) else request.env._('Registration'),
             'quantity': count,
             'current_limit_per_order': tickets_limits.get(tid, next(iter(tickets_limits.values()))),  # next is used if the ticket id isn't known (alone event case)
         } for tid, count in ticket_order.items() if count]
@@ -401,7 +401,7 @@ class WebsiteEventController(http.Controller):
         registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
         for ticket_id in list(filter(lambda x: x is not None, [form_details[field] if 'event_ticket_id' in field else None for field in form_details.keys()])):
             if int(ticket_id) not in event.event_ticket_ids.ids and len(event.event_ticket_ids.ids) > 0:
-                raise UserError(self.env._("This ticket is not available for sale for this event"))
+                raise UserError(request.env._("This ticket is not available for sale for this event"))
         registrations = {}
         general_answer_ids = []
         general_identification_answers = {}

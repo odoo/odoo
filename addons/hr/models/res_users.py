@@ -197,8 +197,8 @@ class ResUsers(models.Model):
                 if partner_ids:
                     employee.message_notify(
                         body=Markup("<p>%s</p><p>%s</p><ul>%s</ul><p><em>%s</em></p>") % (
-                            self.env._('Personal information update.'),
-                            self.env._("The following fields were modified by %s", employee.name),
+                            employee.env._('Personal information update.'),
+                            employee.env._("The following fields were modified by %s", employee.name),
                             field_names,
                             reason_message,
                         ),

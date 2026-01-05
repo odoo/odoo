@@ -13,8 +13,8 @@ class Auth_TotpDevice(models.Model):
         removed_devices_by_user = self._classify_by_user()
         for user, removed_devices in removed_devices_by_user.items():
             user._notify_security_setting_update(
-                self.env._("Security Update: Device Removed"),
-                self.env._(
+                user.env._("Security Update: Device Removed"),
+                user.env._(
                     "A trusted device has just been removed from your account: %(device_names)s",
                     device_names=', '.join([device.name for device in removed_devices])
                 ),

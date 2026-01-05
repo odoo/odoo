@@ -84,7 +84,7 @@ class TableExporter(http.Controller):
 
         workbook.close()
         xlsx_data = output.getvalue()
-        filename = osutil.clean_filename(self.env._("Pivot %(title)s (%(model_name)s)", title=jdata['title'], model_name=jdata['model']))
+        filename = osutil.clean_filename(request.env._("Pivot %(title)s (%(model_name)s)", title=jdata['title'], model_name=jdata['model']))
         response = request.make_response(xlsx_data,
             headers=[('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
                     ('Content-Disposition', content_disposition(filename + '.xlsx'))],

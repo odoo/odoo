@@ -417,11 +417,11 @@ class Cart(PaymentPortal):
             # Group lines by date.
             days_ago = (fields.Date.today() - line_sudo.order_id.date_order.date()).days
             if days_ago == 0:
-                line_group_label = self.env._("Today")
+                line_group_label = request.env._("Today")
             elif days_ago == 1:
-                line_group_label = self.env._("Yesterday")
+                line_group_label = request.env._("Yesterday")
             else:
-                line_group_label = self.env._("%s days ago", days_ago)
+                line_group_label = request.env._("%s days ago", days_ago)
             lines_per_order_date.setdefault(line_group_label, SaleOrderLineSudo)
             lines_per_order_date[line_group_label] |= line_sudo
 

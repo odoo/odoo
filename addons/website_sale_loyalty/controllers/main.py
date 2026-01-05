@@ -50,7 +50,7 @@ class WebsiteSale(main.WebsiteSale):
             else:
                 url_query['notify_coupon'] = code
         else:
-            url_query['coupon_error'] = self.env._("The coupon will be automatically applied when you add something in your cart.")
+            url_query['coupon_error'] = request.env._("The coupon will be automatically applied when you add something in your cart.")
             url_query['coupon_error_type'] = 'warning'
         redirect = url_parts.replace(query=url_encode(url_query))
         return request.redirect(redirect.to_url())

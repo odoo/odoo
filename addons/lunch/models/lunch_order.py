@@ -303,7 +303,7 @@ class LunchOrder(models.Model):
             _key = (order.company_id, user.lang)
             if _key not in translate_cache:
                 context = {'lang': user.lang}
-                translate_cache[_key] = (self.env._('Lunch notification'), order.company_id.with_context(lang=user.lang).lunch_notify_message)
+                translate_cache[_key] = (order.with_context(context).env._('Lunch notification'), order.company_id.with_context(lang=user.lang).lunch_notify_message)
                 del context
             subject, body = translate_cache[_key]
             user.partner_id.message_notify(

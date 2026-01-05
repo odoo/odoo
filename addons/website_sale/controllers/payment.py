@@ -44,12 +44,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except MissingError:
             raise
         except AccessError as e:
-            raise ValidationError(self.env._("The access token is invalid.")) from e
+            raise ValidationError(request.env._("The access token is invalid.")) from e
         except LockNotAvailable:
-            raise UserError(self.env._("Payment is already being processed."))
+            raise UserError(request.env._("Payment is already being processed."))
 
         if order_sudo.state == "cancel":
-            raise ValidationError(self.env._("The order has been cancelled."))
+            raise ValidationError(request.env._("The order has been cancelled."))
 
         order_sudo._check_cart_is_ready_to_be_paid()
 
@@ -64,9 +64,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         compare_amounts = order_sudo.currency_id.compare_amounts
         if compare_amounts(kwargs['amount'], order_sudo.amount_total):
-            raise ValidationError(self.env._("The cart has been updated. Please refresh the page."))
+            raise ValidationError(request.env._("The cart has been updated. Please refresh the page."))
         if compare_amounts(order_sudo.amount_paid, order_sudo.amount_total) == 0:
-            raise UserError(self.env._("The cart has already been paid. Please refresh the page."))
+            raise UserError(request.env._("The cart has already been paid. Please refresh the page."))
 
         if delay_token_charge := kwargs.get('flow') == 'token':
             request.update_context(delay_token_charge=True)  # wait until after tx validation

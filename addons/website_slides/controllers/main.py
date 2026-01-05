@@ -94,14 +94,14 @@ class WebsiteSlides(WebsiteProfile):
     def _slide_mark_completed(self, slide):
         # quiz use their specific mechanism to be marked as done
         if slide.slide_category == 'quiz' or slide.question_ids:
-            raise UserError(self.env._("Slide with questions must be marked as done when submitting all good answers "))
+            raise UserError(request.env._("Slide with questions must be marked as done when submitting all good answers "))
         if not slide.can_self_mark_completed:
-            raise werkzeug.exceptions.Forbidden(self.env._("This slide can not be marked as completed."))
+            raise werkzeug.exceptions.Forbidden(request.env._("This slide can not be marked as completed."))
         slide.action_mark_completed()
 
     def _slide_mark_uncompleted(self, slide):
         if not slide.can_self_mark_uncompleted:
-            raise werkzeug.exceptions.Forbidden(self.env._("This slide can not be marked as uncompleted."))
+            raise werkzeug.exceptions.Forbidden(request.env._("This slide can not be marked as uncompleted."))
         slide.action_mark_uncompleted()
 
     def _get_slide_detail(self, slide):
@@ -315,7 +315,7 @@ class WebsiteSlides(WebsiteProfile):
         if tag_id[0] == 0:
             group_id = self._create_or_get_channel_tag_group_id(group_id)
             if not group_id:
-                return {'error': self.env._('Missing "Tag Group" for creating a new "Tag".')}
+                return {'error': request.env._('Missing "Tag Group" for creating a new "Tag".')}
 
             return request.env['slide.channel.tag'].create({
                 'name': tag_id[1]['name'],
@@ -708,7 +708,7 @@ class WebsiteSlides(WebsiteProfile):
                 render_values['modules_to_install'] = json.dumps([{
                     'id': module.id,
                     'name': module.shortdesc,
-                    'motivational': self.env._('Want to test and certify your students?'),
+                    'motivational': request.env._('Want to test and certify your students?'),
                     'default_slide_category': 'certification',
                 }])
 
@@ -938,7 +938,7 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': e.args[0]}
         else:
             if not can_upload or not can_publish:
-                return {'error': self.env._('You cannot add tags to this course.')}
+                return {'error': request.env._('You cannot add tags to this course.')}
 
         tag = self._create_or_get_channel_tag(tag_id, group_id)
         tag.write({'channel_ids': [(4, channel.id, 0)]})
@@ -1406,7 +1406,7 @@ class WebsiteSlides(WebsiteProfile):
 
             if not slide.video_source_type:
                 slide.unlink()
-                return {'error': self.env._("Could not find your video. Please check if your link is correct and if the video can be accessed.")}
+                return {'error': request.env._("Could not find your video. Please check if your link is correct and if the video can be accessed.")}
 
             if slide.video_source_type == 'youtube':
                 identical_video = existing_videos.filtered(
@@ -1419,7 +1419,7 @@ class WebsiteSlides(WebsiteProfile):
                     lambda existing_video: slide.vimeo_id == existing_video.vimeo_id)
             if identical_video:
                 identical_video_name = identical_video[0].name
-                additional_values['info'] = self.env._('This video already exists in this channel on the following content: %s', identical_video_name)
+                additional_values['info'] = request.env._('This video already exists in this channel on the following content: %s', identical_video_name)
         elif slide_category in ['document', 'infographic']:
             slide = Slide.new({
                 'channel_id': int(channel_id),
@@ -1430,7 +1430,7 @@ class WebsiteSlides(WebsiteProfile):
             })
 
             if not slide.google_drive_id:
-                return {'error': self.env._('Please enter valid Google Drive Link')}
+                return {'error': request.env._('Please enter valid Google Drive Link')}
 
         slide_values, error = slide._fetch_external_metadata(image_url_only=True)
         if error:
@@ -1447,7 +1447,7 @@ class WebsiteSlides(WebsiteProfile):
         if post.get('binary_content'):
             file_size = len(post['binary_content']) * 3 / 4  # base64
             if (file_size / 1024.0 / 1024.0) > 25:
-                return {'error': self.env._('File is too big. File size cannot exceed 25MB')}
+                return {'error': request.env._('File is too big. File size cannot exceed 25MB')}
 
         values = dict((fname, post[fname]) for fname in self._get_valid_slide_post_values() if post.get(fname))
 
@@ -1462,7 +1462,7 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': e.args[0]}
         else:
             if not can_upload:
-                return {'error': self.env._('You cannot upload on this channel.')}
+                return {'error': request.env._('You cannot upload on this channel.')}
 
         if post.get('duration'):
             # minutes to hours conversion
@@ -1490,7 +1490,7 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': e.args[0]}
         except Exception as e:
             _logger.error(e)
-            return {'error': self.env._('Internal server error, please try again later or contact administrator.\nHere is the error message: %s', e)}
+            return {'error': request.env._('Internal server error, please try again later or contact administrator.\nHere is the error message: %s', e)}
 
         # ensure correct ordering by re sequencing slides in front-end (backend should be ok thanks to list view)
         channel._resequence_slides(slide, force_category=category)

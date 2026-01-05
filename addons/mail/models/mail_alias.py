@@ -236,7 +236,7 @@ class MailAlias(models.Model):
             elif record.alias_name:
                 record.display_name = record.alias_name
             else:
-                record.display_name = self.env._("Inactive Alias")
+                record.display_name = record.env._("Inactive Alias")
 
     @api.depends('alias_contact', 'alias_defaults', 'alias_model_id')
     def _compute_alias_status(self):

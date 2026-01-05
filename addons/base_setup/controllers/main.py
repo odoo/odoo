@@ -10,7 +10,7 @@ class BaseSetup(http.Controller):
     @http.route('/base_setup/data', type='jsonrpc', auth='user')
     def base_setup_data(self, **kw):
         if not request.env.user.has_group('base.group_erp_manager'):
-            raise AccessError(self.env._("Access Denied"))
+            raise AccessError(request.env._("Access Denied"))
 
         cr = self.env.cr
         cr.execute("""

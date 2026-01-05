@@ -230,7 +230,7 @@ class CalendarAttendee(models.Model):
         for attendee in self:
             attendee.event_id.message_post(
                 author_id=attendee.partner_id.id,
-                body=self.env._("%s has accepted the invitation", attendee.common_name),
+                body=attendee.env._("%s has accepted the invitation", attendee.common_name),
                 subtype_xmlid="calendar.subtype_invitation",
             )
         return self.write({'state': 'accepted'})
@@ -240,7 +240,7 @@ class CalendarAttendee(models.Model):
         for attendee in self:
             attendee.event_id.message_post(
                 author_id=attendee.partner_id.id,
-                body=self.env._("%s has declined the invitation", attendee.common_name),
+                body=attendee.env._("%s has declined the invitation", attendee.common_name),
                 subtype_xmlid="calendar.subtype_invitation",
             )
         return self.write({'state': 'declined'})

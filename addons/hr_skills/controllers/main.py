@@ -35,9 +35,9 @@ class HrEmployeeCV(Controller):
         })
 
         if len(employees) == 1:
-            report_name = self.env._('Resume %s', employees.name)
+            report_name = request.env._('Resume %s', employees.name)
         else:
-            report_name = self.env._('Resumes')
+            report_name = request.env._('Resumes')
 
         pdfhttpheaders = [
             ('Content-Type', 'application/pdf'),

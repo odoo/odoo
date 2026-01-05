@@ -83,17 +83,17 @@ class CrmIapLeadMiningRequest(models.Model):
             company_credits = CREDIT_PER_COMPANY * record.lead_number
             contact_credits = CREDIT_PER_CONTACT * record.contact_number
             total_contact_credits = contact_credits * record.lead_number
-            record.lead_contacts_credits = self.env._(
+            record.lead_contacts_credits = record.env._(
                 "Up to %(credit_count)d additional credits will be consumed to identify %(contact_count)d contacts per company.",
                 credit_count=contact_credits * company_credits,
                 contact_count=record.contact_number,
             )
-            record.lead_credits = self.env._(
+            record.lead_credits = record.env._(
                 "%(credit_count)d credits will be consumed to find %(company_count)d companies.",
                 credit_count=company_credits,
                 company_count=record.lead_number,
             )
-            record.lead_total_credits = self.env._("This makes a total of %d credits for this request.", total_contact_credits + company_credits)
+            record.lead_total_credits = record.env._("This makes a total of %d credits for this request.", total_contact_credits + company_credits)
 
     @api.depends('lead_ids.lead_mining_request_id')
     def _compute_lead_count(self):

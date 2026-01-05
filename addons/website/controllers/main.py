@@ -418,8 +418,8 @@ class Website(Home):
         return {
             'matching_pages': sorted(matching_pages, key=lambda o: o['label']),
             'others': [
-                dict(title=self.env._('Last modified pages'), values=matching_last_modified),
-                dict(title=self.env._('Apps url'), values=suggested_controllers),
+                dict(title=request.env._('Last modified pages'), values=matching_last_modified),
+                dict(title=request.env._('Apps url'), values=suggested_controllers),
             ]
         }
 
@@ -1260,7 +1260,7 @@ class Website(Home):
             with zipfile.ZipFile(readable_data, "r") as zip_file:
                 for entry in zip_file.infolist():
                     if entry.file_size > MAX_FONT_FILE_SIZE:
-                        raise UserError(self.env._("File '%s' exceeds maximum allowed file size", entry.filename))
+                        raise UserError(request.env._("File '%s' exceeds maximum allowed file size", entry.filename))
                     if entry.filename.rsplit('.', 1)[-1].lower() not in SUPPORTED_FONT_EXTENSIONS \
                             or entry.filename.startswith('__MACOSX') \
                             or '/.' in entry.filename:
@@ -1276,7 +1276,7 @@ class Website(Home):
                 'name': name,
             }, binary_data))
         if not result:
-            raise UserError(self.env._("File '%s' is not recognized as a font", name))
+            raise UserError(request.env._("File '%s' is not recognized as a font", name))
         return result
 
     @http.route([

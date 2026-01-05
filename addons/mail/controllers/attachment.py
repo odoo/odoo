@@ -81,7 +81,7 @@ class AttachmentController(ThreadController):
             )
             res = {"data": {"store_data": store.get_result(), "attachment_id": attachment.id}}
         except AccessError:
-            res = {"error": self.env._("You are not allowed to upload an attachment here.")}
+            res = {"error": request.env._("You are not allowed to upload an attachment here.")}
         return request.make_json_response(res)
 
     @http.route("/mail/attachment/delete", methods=["POST"], type="jsonrpc", auth="public")

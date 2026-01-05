@@ -118,7 +118,7 @@ class ChatbotScriptStep(models.Model):
             user = next(user for user in users if user.partner_id == discuss_channel.livechat_operator_id)
             lead.user_id = user
             lead.team_id = next(team for team in teams if user in team.crm_team_member_ids.user_id)
-            msg = self.env._("Created a new lead: %s", lead._get_html_link())
+            msg = user.env._("Created a new lead: %s", lead._get_html_link())
             user._bus_send_transient_message(discuss_channel, msg)
             # Call flush_recordset() now (as sudo), otherwise flush_all() is called at the end of
             # the request with a non-sudo env, which fails (as public user) to compute some crm.lead

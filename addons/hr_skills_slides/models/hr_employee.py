@@ -21,7 +21,7 @@ class HrEmployee(models.Model):
                 continue
             total_completed_courses = len(employee.user_partner_id.slide_channel_completed_ids)
             total = len(employee.subscribed_courses)
-            employee.courses_completion_text = self.env._("%(completed)s / %(total)s",
+            employee.courses_completion_text = employee.env._("%(completed)s / %(total)s",
                 completed=total_completed_courses,
                 total=total)
             employee.has_subscribed_courses = total > 0

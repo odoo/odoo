@@ -48,7 +48,7 @@ class Delivery(WebsiteSale):
         if dm_id != order_sudo.carrier_id.id:
             for tx_sudo in order_sudo.transaction_ids:
                 if tx_sudo.state not in ('draft', 'cancel', 'error'):
-                    raise UserError(self.env._(
+                    raise UserError(request.env._(
                         "It seems that there is already a transaction for your order; you can't"
                         " change the delivery method anymore."
                     ))
@@ -94,10 +94,10 @@ class Delivery(WebsiteSale):
         :rtype: dict
         """
         if not (order_sudo := request.cart):
-            raise ValidationError(self.env._("Your cart is empty."))
+            raise ValidationError(request.env._("Your cart is empty."))
 
         if int(dm_id) not in order_sudo._get_delivery_methods().ids:
-            raise UserError(self.env._(
+            raise UserError(request.env._(
                 "It seems that a delivery method is not compatible with your address. Please"
                 " refresh the page and try again."
             ))
@@ -162,7 +162,7 @@ class Delivery(WebsiteSale):
             # The partner_shipping_id and partner_invoice_id will be automatically computed when
             # changing the partner_id of the SO. This allows website_sale to avoid creating
             # duplicates.
-            partial_delivery_address['name'] = self.env._(
+            partial_delivery_address['name'] = request.env._(
                 'Anonymous express checkout partner for order %s',
                 order_sudo.name,
             )
@@ -192,7 +192,7 @@ class Delivery(WebsiteSale):
             child_partner_id = self._find_child_partner(
                 order_sudo.partner_id.commercial_partner_id.id, partial_delivery_address
             )
-            partial_delivery_address['name'] = self.env._(
+            partial_delivery_address['name'] = request.env._(
                 'Anonymous express checkout partner for order %s',
                 order_sudo.name,
             )

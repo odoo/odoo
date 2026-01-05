@@ -171,7 +171,7 @@ class WebsiteHrRecruitment(WebsiteForm):
     def jobs_add(self, **kwargs):
         # avoid branding of website_description by setting rendering_bundle in context
         job = request.env['hr.job'].with_context(rendering_bundle=True).create({
-            'name': self.env._('Job Title'),
+            'name': request.env._('Job Title'),
         })
         return f"/jobs/{request.env['ir.http']._slug(job)}"
 
@@ -234,7 +234,7 @@ class WebsiteHrRecruitment(WebsiteForm):
         refused_applicants = applications_by_status.get('refused', http.request.env['hr.applicant'])
         if any(applicant for applicant in refused_applicants if refused_applicants_condition(applicant)):
             return {
-                'message':  self.env._(
+                'message':  request.env._(
                     'We\'ve found a previous closed application in our system within the last 6 months.'
                     ' Please consider before applying in order not to duplicate efforts.'
                 )
@@ -245,13 +245,13 @@ class WebsiteHrRecruitment(WebsiteForm):
 
         ongoing_application = applications_by_status.get('ongoing')[0]
         if ongoing_application.job_id.id == int(job_id):
-            recruiter_contact = "" if not ongoing_application.user_id else self.env._(
+            recruiter_contact = "" if not ongoing_application.user_id else request.env._(
                 ' In case of issue, contact %(contact_infos)s',
                 contact_infos=", ".join(
                     [value for value in itemgetter('name', 'email', 'phone')(ongoing_application.user_id) if value]
                 ))
             return {
-                'message':  self.env._(
+                'message':  request.env._(
                     'An application already exists for %(value)s.'
                     ' Duplicates might be rejected. %(recruiter_contact)s',
                     value=value,
@@ -260,7 +260,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             }
 
         return {
-            'message':  self.env._(
+            'message':  request.env._(
                 'We found a recent application with a similar name, email, phone number.'
                 ' You can continue if it\'s not a mistake.'
             )
@@ -270,7 +270,7 @@ class WebsiteHrRecruitment(WebsiteForm):
         short_introduction = values.get("short_introduction", None)
         data = super().extract_data(model_sudo, values)
         if short_introduction:
-            introduction_label = self.env._("Short introduction from applicant")
+            introduction_label = request.env._("Short introduction from applicant")
             data["custom"] = data["custom"].replace("short_introduction", introduction_label)
         return data
 

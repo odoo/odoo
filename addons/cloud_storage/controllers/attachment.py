@@ -13,7 +13,7 @@ class CloudAttachmentController(AttachmentController):
         is_cloud_storage = kwargs.get('cloud_storage')
         if (is_cloud_storage and not request.env['ir.config_parameter'].sudo().get_str('cloud_storage_provider')):
             return request.make_json_response({
-                'error': self.env._('Cloud storage configuration has been changed. Please refresh the page.')
+                'error': request.env._('Cloud storage configuration has been changed. Please refresh the page.')
             })
 
         response = super().mail_attachment_upload(ufile, thread_id, thread_model, is_pending, **kwargs)

@@ -71,7 +71,7 @@ class ResUsers(models.Model):
         super()._compute_display_name()
         for user in self:
             if user.env.context.get("formatted_display_name") and user.leave_date_to:
-                name = "%s \t ✈ --%s %s--" % (user.display_name or user.name, self.env._("Back on"), format_date(self.env, user.leave_date_to, self.env.user.lang, "medium"))
+                name = "%s \t ✈ --%s %s--" % (user.display_name or user.name, user.env._("Back on"), format_date(self.env, user.leave_date_to, self.env.user.lang, "medium"))
                 user.display_name = name.strip()
 
     def _store_main_user_fields(self, res: Store.FieldList):

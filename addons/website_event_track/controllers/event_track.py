@@ -146,7 +146,7 @@ class EventTrackController(http.Controller):
             tracks_by_day.append({'date': display_date, 'name': display_date, 'tracks': matching_tracks})
         if tracks_announced:
             tracks_announced = tracks_announced.sorted('wishlisted_by_default', reverse=True)
-            tracks_by_day.append({'date': False, 'name': self.env._('Coming soon'), 'tracks': tracks_announced})
+            tracks_by_day.append({'date': False, 'name': request.env._('Coming soon'), 'tracks': tracks_announced})
         # Check if there are any ongoing or upcoming tracks
         has_upcoming_or_ongoing = any(track for track in tracks_sudo if not track.is_track_done)
 
@@ -438,13 +438,13 @@ class EventTrackController(http.Controller):
         valid_email_to = tools.email_normalize(email_to if request.env.user._is_public() else request.env.user.email)
         error_message = ''
         if not track:
-            error_message = self.env._('Invalid data.')
+            error_message = request.env._('Invalid data.')
         elif not valid_email_to:
-            error_message = self.env._('Invalid email.')
+            error_message = request.env._('Invalid email.')
         elif track.is_track_done or track.event_id.is_finished:
-            error_message = self.env._('The talk is already finished.')
+            error_message = request.env._('The talk is already finished.')
         elif not track.is_track_upcoming:
-            error_message = self.env._('The talk has already begun.')
+            error_message = request.env._('The talk has already begun.')
         if error_message:
             return {'success': False, 'message': error_message}
 

@@ -421,7 +421,7 @@ class SaleOrder(models.Model):
             if order.terms_type == 'html' and order.env.company.invoice_terms_html:
                 baseurl = html_keep_url(order._get_note_url() + '/terms')
                 context = {'lang': order.partner_id.lang or self.env.user.lang}
-                order.note = self.env._('Terms & Conditions: %s', baseurl)
+                order.note = order.with_context(context).env._('Terms & Conditions: %s', baseurl)
                 del context
             elif not is_html_empty(order.env.company.invoice_terms):
                 if order.partner_id.lang:
@@ -881,9 +881,9 @@ class SaleOrder(models.Model):
     def _compute_type_name(self):
         for record in self:
             if record.state in ('draft', 'sent', 'cancel'):
-                record.type_name = self.env._("Quotation")
+                record.type_name = record.env._("Quotation")
             else:
-                record.type_name = self.env._("Sales Order")
+                record.type_name = record.env._("Sales Order")
 
     # portal.mixin override
     def _compute_access_url(self):
@@ -2083,10 +2083,11 @@ class SaleOrder(models.Model):
         for order in self:
             order_ref = order._get_html_link()
             customer_ref = order.partner_id._get_html_link()
+            user_id = order.user_id or order.partner_id.user_id
             order.activity_schedule(
                 'mail.mail_activity_data_todo',
-                user_id=order.user_id.id or order.partner_id.user_id.id,
-                note=self.env._("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
+                user_id=user_id.id,
+                note=order.with_context(lang=user_id.lang).env._("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
 
     def _prepare_analytic_account_data(self, prefix=None):
         """ Prepare SO analytic account creation values.
@@ -2118,7 +2119,7 @@ class SaleOrder(models.Model):
         context = {'lang': self.partner_id.lang}
         down_payments_section_line = {
             'display_type': 'line_section',
-            'name': self.env._("Down Payments"),
+            'name': self.with_context(context).env._("Down Payments"),
             'product_id': False,
             'product_uom_id': False,
             'quantity': 0,

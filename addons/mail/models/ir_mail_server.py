@@ -35,7 +35,7 @@ class IrMail_Server(models.Model):
         usages_super = super()._active_usages_compute()
         for record in self.filtered('mail_template_ids'):
             usages_super.setdefault(record.id, []).extend(
-                self.env._('%s (Email Template)', t.display_name)
+                record.env._('%s (Email Template)', t.display_name)
                 for t in record.mail_template_ids
             )
         return usages_super

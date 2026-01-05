@@ -223,7 +223,7 @@ class SaleOrder(models.Model):
             'is_delivery': True,
         }
         if carrier.free_over and self.currency_id.is_zero(price_unit) :
-            values['name'] = self.env._('%s\nFree Shipping', values['name'])
+            values['name'] = carrier.env._('%s\nFree Shipping', values['name'])
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
         del context

@@ -16,7 +16,7 @@ class DomainController(Controller):
         """
         Model = request.env.get(model)
         if Model is None:
-            raise ValidationError(self.env._('Invalid model: %s', model))
+            raise ValidationError(request.env._('Invalid model: %s', model))
         try:
             Domain(domain).validate(Model.sudo())
             return True

@@ -99,7 +99,7 @@ class PublicPageController(http.Controller):
         with replace_exceptions(UserError, by=NotFound()):
             # sudo: mail.guest - creating a guest and its member inside a channel of which they have the token
             __, guest = channel.sudo()._find_or_create_persona_for_channel(
-                guest_name=guest_email if guest_email else self.env._("Guest"),
+                guest_name=guest_email if guest_email else request.env._("Guest"),
                 country_code=request.geoip.country_code,
                 timezone=request.env["mail.guest"]._get_timezone_from_request(request),
             )

@@ -515,7 +515,7 @@ class MailGroup(models.Model):
                 email_from = moderator.company_id.catchall_formatted or moderator.company_id.email_formatted
                 MailThread.message_notify(
                     partner_ids=moderator.partner_id.ids,
-                    subject=self.env._('Messages are pending moderation'),
+                    subject=moderator.env._('Messages are pending moderation'),
                     body=body,
                     email_from=email_from,
                     model='mail.group',

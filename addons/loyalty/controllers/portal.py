@@ -30,10 +30,10 @@ class CustomerPortalLoyalty(CustomerPortal):
 
     def _get_loyalty_searchbar_sortings(self):
         return {
-            'date': {'label': self.env._("Date"), 'order': 'create_date desc'},
-            'used': {'label': self.env._("Used"), 'order': 'used desc'},
-            'description': {'label': self.env._("Description"), 'order': 'description desc'},
-            'issued': {'label': self.env._("Issued"), 'order': 'issued desc'},
+            'date': {'label': request.env._("Date"), 'order': 'create_date desc'},
+            'used': {'label': request.env._("Used"), 'order': 'used desc'},
+            'description': {'label': request.env._("Description"), 'order': 'description desc'},
+            'issued': {'label': request.env._("Issued"), 'order': 'issued desc'},
         }
 
     @route(

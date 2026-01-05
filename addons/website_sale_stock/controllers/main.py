@@ -12,7 +12,7 @@ class WebsiteSaleStock(Controller):
     def add_stock_email_notification(self, email, product_id):
         # TDE FIXME: seems a bit open
         if not email_re.match(email):
-            raise BadRequest(self.env._("Invalid Email"))
+            raise BadRequest(request.env._("Invalid Email"))
 
         product = request.env['product.product'].browse(int(product_id))
         partner = request.env['mail.thread'].sudo()._partner_find_from_emails_single([email])

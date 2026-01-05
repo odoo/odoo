@@ -287,14 +287,14 @@ class ChannelController(http.Controller):
         # sudo: discuss.channel.member - reading channel role of is considered allowed
         self_channel_role = channel.self_member_id.sudo().channel_role
         if not self_channel_role == "owner" and not request.env.user.has_group("base.group_system"):
-            raise AccessError(self.env._("Only the channel owner or DB admins can modify member roles."))
+            raise AccessError(request.env._("Only the channel owner or DB admins can modify member roles."))
         if (
             channel_member.sudo().channel_role == "owner"
             and channel_member != channel.self_member_id
             and not request.env.user.has_group("base.group_system")
         ):
             raise AccessError(
-                self.env._("Removing ownership from an owner is not allowed. Please contact your DB administrator.")
+                request.env._("Removing ownership from an owner is not allowed. Please contact your DB administrator.")
             )
         # sudo: discuss.channel.member - writing channel role of a member is considered allowed
         channel_member.sudo().channel_role = channel_role

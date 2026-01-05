@@ -14,7 +14,7 @@ class PortalRating(http.Controller):
             ['publisher_comment', 'publisher_id', 'publisher_datetime'],
         )
         if not rating:
-            return {'error': self.env._('Invalid rating')}
+            return {'error': request.env._('Invalid rating')}
         rating.write({'publisher_comment': publisher_comment})
         # return to the front-end the created/updated publisher comment
         return request.env['mail.message']._portal_message_format_rating(

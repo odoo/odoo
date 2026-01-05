@@ -1215,7 +1215,7 @@ class MailingMailing(models.Model):
                 'body_html': full_mail,
                 'reply_to': mail_company.email_formatted or mail_user.email_formatted,
                 'state': 'outgoing',
-                'subject': self.env._('24H Stats of %(mailing_type)s "%(mailing_name)s"',
+                'subject': mailing.env._('24H Stats of %(mailing_type)s "%(mailing_name)s"',
                              mailing_type=mailing._get_pretty_mailing_type(),
                              mailing_name=mailing.subject
                             ),

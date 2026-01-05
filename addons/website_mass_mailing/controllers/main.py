@@ -48,7 +48,7 @@ class MassMailController(main.MassMailController):
         self.subscribe_to_newsletter(subscription_type, value, list_id, fname)
         return {
             'toast_type': 'success',
-            'toast_content': self.env._("Thanks for subscribing!"),
+            'toast_content': request.env._("Thanks for subscribing!"),
         }
 
     @staticmethod

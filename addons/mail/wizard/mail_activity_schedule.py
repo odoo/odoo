@@ -329,7 +329,7 @@ class MailActivitySchedule(models.TransientModel):
             raise ValueError(self.env._('Plan-based scheduling are available only on documents.'))
         applied_on = self._get_applied_on_records()
         for record in applied_on:
-            body = self.env._('The plan "%(plan_name)s" has been started', plan_name=self.plan_id.name)
+            body = record.env._('The plan "%(plan_name)s" has been started', plan_name=self.plan_id.name)
             activity_descriptions = []
             for template in self._plan_filter_activity_templates_to_schedule():
                 if template.responsible_type == 'on_demand':
@@ -347,7 +347,7 @@ class MailActivitySchedule(models.TransientModel):
                     user_id=responsible.id,
                 )
                 activity_descriptions.append(
-                    self.env._('%(activity)s, assigned to %(name)s, due on the %(deadline)s',
+                    record.env._('%(activity)s, assigned to %(name)s, due on the %(deadline)s',
                       activity=template.summary or template.activity_type_id.name,
                       name=responsible.name, deadline=format_date(self.env, date_deadline)))
 

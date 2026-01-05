@@ -759,7 +759,7 @@ class PurchaseOrder(models.Model):
             'display_type': 'line_section',
             'is_downpayment': True,
             'sequence': (self.order_line[-1:].sequence or 9) + 1,
-            'name': self.env._("Down Payments"),
+            'name': self.with_context(context).env._("Down Payments"),
         }
         del context
         return res

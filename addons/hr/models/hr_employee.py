@@ -1646,7 +1646,7 @@ class HrEmployee(models.Model):
             ])._subscribe_users_automatically()
         if vals.get('departure_description'):
             for employee in self:
-                employee.message_post(body=self.env._(
+                employee.message_post(body=employee.env._(
                     'Additional Information: \n %(description)s',
                     description=vals.get('departure_description')))
         # Only one write call for all the fields from hr.version
@@ -1669,7 +1669,7 @@ class HrEmployee(models.Model):
             self.version_id.write(version_vals)
 
             for employee in self:
-                employee._track_set_log_message(Markup("<b>%s</b>") % self.env._("Modified on the Employee Record '%s'") % employee.version_id.display_name)
+                employee._track_set_log_message(Markup("<b>%s</b>") % employee.env._("Modified on the Employee Record '%s'") % employee.version_id.display_name)
         if res and 'resource_calendar_id' in vals:
             resources_per_calendar_id = defaultdict(lambda: self.env['resource.resource'])
             for employee in self:

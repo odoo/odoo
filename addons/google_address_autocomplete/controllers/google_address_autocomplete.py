@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from pprint import pformat
-
 import requests
+from pprint import pformat
 
 from odoo import http
 from odoo.exceptions import AccessError
@@ -203,6 +202,6 @@ class AutoCompleteController(http.Controller):
         try:
             api_key = self._get_api_key(use_employees_key)
         except AssertionError:
-            raise AccessError(self.env._("You don't have access to the full autocomplete feature."))
+            raise AccessError(request.env._("You don't have access to the full autocomplete feature."))
         return self._perform_complete_place_search(address, google_place_id=google_place_id,
                                                    session_id=session_id, api_key=api_key, **kwargs)

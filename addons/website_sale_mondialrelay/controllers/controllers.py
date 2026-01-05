@@ -15,11 +15,11 @@ class MondialRelay(http.Controller):
         order_sudo = request.cart
 
         if order_sudo._is_anonymous_cart():
-            raise AccessDenied(self.env._('Customer of the order cannot be the public user at this step.'))
+            raise AccessDenied(request.env._('Customer of the order cannot be the public user at this step.'))
 
         if order_sudo.carrier_id.country_ids:
             country_is_allowed = data['Pays'][:2].upper() in order_sudo.carrier_id.country_ids.mapped(lambda c: c.code.upper())
-            assert country_is_allowed, self.env._("%s is not allowed for this delivery method.", data['Pays'])
+            assert country_is_allowed, request.env._("%s is not allowed for this delivery method.", data['Pays'])
 
         partner_shipping = order_sudo.partner_id.sudo()._mondialrelay_search_or_create({
             'id': data['ID'],
@@ -50,7 +50,7 @@ class WebsiteSaleMondialrelay(WebsiteSale):
         partner_sudo, _address_type = super()._prepare_address_update(*args, **kwargs)
 
         if partner_sudo and partner_sudo.is_mondialrelay:
-            raise UserError(self.env._('You cannot edit the address of a Point Relais®.'))
+            raise UserError(request.env._('You cannot edit the address of a Point Relais®.'))
 
         return partner_sudo, _address_type
 

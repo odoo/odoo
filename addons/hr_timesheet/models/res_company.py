@@ -50,14 +50,14 @@ class ResCompany(models.Model):
         for company in self:
             company = company.with_company(company)
             results += [{
-                'name': self.env._('Internal'),
+                'name': company.env._('Internal'),
                 'allow_timesheets': True,
                 'company_id': company.id,
                 'type_ids': type_ids,
                 'task_ids': [(0, 0, {
                     'name': name,
                     'company_id': company.id,
-                }) for name in [self.env._('Training'), self.env._('Meeting')]]
+                }) for name in [company.env._('Training'), company.env._('Meeting')]]
             }]
         project_ids = self.env['project.project'].create(results)
         projects_by_company = {project.company_id.id: project for project in project_ids}

@@ -134,9 +134,9 @@ class PosController(PortalAccount):
                     form_values[field] = kwargs.get(field)
 
             if errors:
-                errors['generic'] = self.env._("Please fill all the required fields.")
+                errors['generic'] = request.env._("Please fill all the required fields.")
             elif len(form_values['pos_reference']) < 12:
-                errors['pos_reference'] = self.env._("The Ticket Number should be at least 12 characters long.")
+                errors['pos_reference'] = request.env._("The Ticket Number should be at least 12 characters long.")
             else:
                 date_order = datetime(*[int(i) for i in form_values['date_order'].split('-')])
                 order = request.env['pos.order'].sudo().search([
@@ -148,7 +148,7 @@ class PosController(PortalAccount):
                 if order:
                     return request.redirect('/pos/ticket/validate?access_token=%s' % (order.access_token))
                 else:
-                    errors['generic'] = self.env._("No sale order found.")
+                    errors['generic'] = request.env._("No sale order found.")
 
         elif request.httprequest.method == 'GET':
             if kwargs.get('order_uuid'):
@@ -256,7 +256,7 @@ class PosController(PortalAccount):
             'invoice_required_fields': additional_invoice_fields,
             'partner_required_fields': additional_partner_fields,
             'access_token': access_token,
-            'invoice_sending_methods': {'email': self.env._("by Email")},
+            'invoice_sending_methods': {'email': request.env._("by Email")},
             **form_values,
         })
 
@@ -267,7 +267,7 @@ class PosController(PortalAccount):
         for field in additional_required_fields:
             if field.name not in addtional_form_values or not addtional_form_values[field.name]:
                 missing_fields.add(field.name)
-                error_messages.append(self.env._("The field %s must be filled.", field.field_description.lower()))
+                error_messages.append(request.env._("The field %s must be filled.", field.field_description.lower()))
         return missing_fields, error_messages
 
     def _get_invoice(self, partner, invoice_values, pos_order, additional_invoice_fields, kwargs):

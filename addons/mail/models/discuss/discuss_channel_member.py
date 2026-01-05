@@ -191,7 +191,7 @@ class DiscussChannelMember(models.Model):
     @api.depends("partner_id.name", "guest_id.name", "channel_id.display_name")
     def _compute_display_name(self):
         for member in self:
-            member.display_name = self.env._(
+            member.display_name = member.env._(
                 "“%(member_name)s” in “%(channel_name)s”",
                 member_name=member.partner_id.name or member.guest_id.name,
                 channel_name=member.channel_id.display_name,

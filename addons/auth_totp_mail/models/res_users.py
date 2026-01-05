@@ -60,8 +60,8 @@ class ResUsers(models.Model):
                     scope="browser", key=key, uid=user.id):
                 # 2FA enabled but not a trusted device
                 user._notify_security_setting_update(
-                    subject=self.env._('New Connection to your Account'),
-                    content=self.env._('A new device was used to sign in to your account.'),
+                    subject=user.env._('New Connection to your Account'),
+                    content=user.env._('A new device was used to sign in to your account.'),
                 )
                 _logger.info("New device alert email sent for user <%s> to <%s>", user.login, user.email)
 

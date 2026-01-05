@@ -234,9 +234,9 @@ class Binary(http.Controller):
                 })
                 attachment._post_add_create()
             except AccessError:
-                args.append({'error': self.env._("You are not allowed to upload an attachment here.")})
+                args.append({'error': request.env._("You are not allowed to upload an attachment here.")})
             except Exception:
-                args.append({'error': self.env._("Something horrible happened")})
+                args.append({'error': request.env._("Something horrible happened")})
                 _logger.exception("Fail to upload attachment %s", ufile.filename)
             else:
                 args.append({

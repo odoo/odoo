@@ -17,11 +17,11 @@ class ProductPricelistExportController(Controller):
         quantities = report_data['quantities']
         products = report_data['products']
         headers = [
-            self.env._("Product"),
-            self.env._("Internal Reference"),
-            self.env._("Barcode"),
-            self.env._("UOM"),
-        ] + [self.env._("Quantity (%s UoM)", qty) for qty in quantities]
+            request.env._("Product"),
+            request.env._("Internal Reference"),
+            request.env._("Barcode"),
+            request.env._("UOM"),
+        ] + [request.env._("Quantity (%s UoM)", qty) for qty in quantities]
         date = report_data['date']
         if export_format == 'csv':
             return self._generate_csv(pricelist_name, quantities, products, headers, date)

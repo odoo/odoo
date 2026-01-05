@@ -1740,7 +1740,7 @@ class PosSession(models.Model):
                 session.activity_schedule(
                     'point_of_sale.mail_activity_old_session',
                     user_id=session.user_id.id,
-                    note=self.env._(
+                    note=session.user_id.env._(
                         "Your PoS Session is open since %(date)s, we advise you to close it and to create a new one.",
                         date=session.start_at,
                     )

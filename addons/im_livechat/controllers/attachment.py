@@ -22,5 +22,5 @@ class LivechatAttachmentController(AttachmentController):
             and thread.livechat_end_dt
             and not request.env.user._is_internal()
         ):
-            raise AccessError(self.env._("You are not allowed to upload attachments on this channel."))
+            raise AccessError(request.env._("You are not allowed to upload attachments on this channel."))
         return super().mail_attachment_upload(ufile, thread_id, thread_model, is_pending, **kwargs)

@@ -151,10 +151,10 @@ class PosSelfOrderController(http.Controller):
         pos_order = pos_config.env['pos.order'].browse(order_id)
 
         if not pos_order.exists() or not consteq(pos_order.access_token, order_access_token):
-            raise MissingError(self.env._("Your order does not exist or has been removed"))
+            raise MissingError(request.env._("Your order does not exist or has been removed"))
 
         if pos_order.state != 'draft':
-            raise Unauthorized(self.env._("You are not authorized to remove this order"))
+            raise Unauthorized(request.env._("You are not authorized to remove this order"))
 
         pos_order.remove_from_ui([pos_order.id])
 
@@ -230,7 +230,7 @@ class PosSelfOrderController(http.Controller):
         pos_order = pos_config.env['pos.order'].browse(order_id)
 
         if not pos_order.exists() or not consteq(pos_order.access_token, order_access_token):
-            raise MissingError(self.env._("Your order does not exist or has been removed"))
+            raise MissingError(request.env._("Your order does not exist or has been removed"))
 
         pos_order.write({
             'nb_print': 1,

@@ -1,9 +1,9 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
 def selection_fn(self):
-    return [(str(key), val) for key, val in enumerate([_("Corge"), _("Grault"), _("Wheee"), _("Moog")])]
+    return [(str(key), val) for key, val in enumerate([self.env._("Corge"), self.env._("Grault"), self.env._("Wheee"), self.env._("Moog")])]
 
 
 def compute_fn(records):
