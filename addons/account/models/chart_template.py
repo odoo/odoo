@@ -157,6 +157,9 @@ class AccountChartTemplate(models.AbstractModel):
         :param install_demo: whether or not we should load demo data right after loading the
             chart template.
         :type install_demo: bool
+        :param force_create: Determines the loading behavior. If True, forces the creation of new entries;
+            if False, prevents new creations and performs updates on existing data where applicable.
+        :type force_create: bool
         """
         if not company:
             return
