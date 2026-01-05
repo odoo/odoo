@@ -14,8 +14,9 @@ import { getValueFromVar } from "@html_builder/utils/utils";
 /**
  * @typedef {((
  *      editingElement: HTMLElement,
- *      params: ActionParams,
+ *      styleName: string,
  *      value: ActionValue,
+ *      params?: ActionParams,
  * ) => boolean)[]} apply_custom_css_style
  */
 
@@ -301,7 +302,15 @@ export class StyleAction extends BuilderAction {
         return currentValue === value;
     }
     apply({ editingElement, params = {}, value }) {
-        if (!this.delegateTo("apply_custom_css_style", { editingElement, params, value })) {
+        const { mainParam: styleName, ...styleParams } = params;
+        if (
+            !this.delegateTo("apply_custom_css_style", {
+                editingElement,
+                styleName,
+                value,
+                params: styleParams,
+            })
+        ) {
             this.applyCssStyle({ editingElement, params, value });
         }
     }

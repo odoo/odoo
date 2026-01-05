@@ -34,7 +34,7 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
  */
 
 /**
- * @typedef {((element: HTMLElement, cssProp: string, color: string) => boolean)[]} apply_color_style_overrides
+ * @typedef {((element: HTMLElement, cssProp: string, color: string, params: Object) => boolean)[]} apply_color_style_overrides
  * @typedef {((color: string, mode: "color" | "backgroundColor") => void)[]} color_apply_overrides
  * @typedef {((color: string, mode: "color" | "backgroundColor") => string)[]} apply_background_color_processors
  * @typedef {((color: string) => string)[]} get_background_color_processors
@@ -361,8 +361,9 @@ export class ColorPlugin extends Plugin {
      * @param {Element} element
      * @param {string} color hexadecimal or bg-name/text-name class
      * @param {'color'|'backgroundColor'} mode 'color' or 'backgroundColor'
+     * @param {Object} params additional parameters
      */
-    colorElement(element, color, mode) {
+    colorElement(element, color, mode, params = {}) {
         let parts = backgroundImageCssToParts(element.style["background-image"]);
         const oldClassName = element.getAttribute("class") || "";
 
@@ -412,7 +413,12 @@ export class ColorPlugin extends Plugin {
                 element.style["background-color"] = "";
                 element.classList.add("text-gradient");
             }
-            this.applyColorStyle(element, "background-image", backgroundImagePartsToCss(parts));
+            this.applyColorStyle(
+                element,
+                "background-image",
+                backgroundImagePartsToCss(parts),
+                params
+            );
         } else {
             delete parts.gradient;
             if (hasGradientStyle && !backgroundImagePartsToCss(parts)) {
@@ -420,7 +426,7 @@ export class ColorPlugin extends Plugin {
             }
             // Change camelCase to kebab-case.
             mode = mode.replace("backgroundColor", "background-color");
-            this.applyColorStyle(element, mode, color);
+            this.applyColorStyle(element, mode, color, params);
         }
 
         // It was decided that applying a color combination removes any "color"
@@ -481,11 +487,12 @@ export class ColorPlugin extends Plugin {
 
     /**
      * @param {Element} element
-     * @param {string} cssProp
-     * @param {string} cssValue
+     * @param {string} mode
+     * @param {string} color
+     * @param {Object} params additional parameters
      */
-    applyColorStyle(element, mode, color) {
-        if (this.delegateTo("apply_color_style_overrides", element, mode, color)) {
+    applyColorStyle(element, mode, color, params = {}) {
+        if (this.delegateTo("apply_color_style_overrides", element, mode, color, params)) {
             return;
         }
         element.style[mode] = color;
