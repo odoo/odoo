@@ -769,6 +769,10 @@
     <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="attributes">
         <attribute name="_div_class.f">mt-2 text-center</attribute>
     </xpath>
+    <xpath expr="//t[@t-call='website.submenu']" position="attributes">
+        <attribute name="dropdown_toggler_classes.f"/>
+        <attribute name="dropdown_menu_classes.f" add="text-center" separator=" "/>
+    </xpath>
 </template>
 
 <template id="template_header_hamburger_mobile_align_right" inherit_id="website.template_header_hamburger" active="False">
@@ -780,6 +784,10 @@
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="attributes">
         <attribute name="_div_class.f">mt-2 text-end</attribute>
+    </xpath>
+    <xpath expr="//t[@t-call='website.submenu']" position="attributes">
+        <attribute name="dropdown_toggler_classes.f"/>
+        <attribute name="dropdown_menu_classes.f" add="text-end" separator=" "/>
     </xpath>
 </template>
 
