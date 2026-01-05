@@ -2,7 +2,6 @@ import {
     clickOnSnippet,
     insertSnippet,
     registerWebsitePreviewTour,
-    changeOptionInPopover,
     changeBackgroundShape,
 } from "@website/js/tours/tour_utils";
 
@@ -66,10 +65,8 @@ registerWebsitePreviewTour(
             content: "Check that the shape element is present",
             trigger: ":iframe #wrap .s_cover .o_we_shape",
         },
-        // Add a column
-        ...changeOptionInPopover("Cover", "Layout", "[data-action-value='1']"),
         {
-            content: "Click on the created column",
+            content: "Click on the column",
             trigger: ":iframe #wrap .s_cover .row > :first-child",
             run: "click",
         },

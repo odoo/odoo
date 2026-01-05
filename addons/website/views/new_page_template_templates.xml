@@ -592,7 +592,10 @@ overridden by modules), because:
 
 <template id="new_page_template_about_s_cover" inherit_id="website.new_page_template_s_cover" primary="True">
     <xpath expr="//section" position="attributes">
-        <attribute name="class" add="pt40 pb40" remove="pt232 pb232" separator=" "/>
+        <attribute name="class" add="pt40 pb40" remove="pt72 pb72" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div" position="attributes">
+        <attribute name="class" remove="pt160 pb160" separator=" "/>
     </xpath>
     <xpath expr="//h1" position="replace">
         <h1 style="text-align: center;">About Us</h1>
@@ -602,8 +605,8 @@ overridden by modules), because:
 <template id="new_page_template_landing_s_cover" inherit_id="website.new_page_template_s_cover" primary="True"/>
 
 <template id="new_page_template_landing_0_s_cover" inherit_id="website.new_page_template_landing_s_cover" primary="True">
-    <xpath expr="//section" position="attributes">
-        <attribute name="class" add="pt256 pb256" remove="pt232 pb232" separator=" "/>
+    <xpath expr="//div[hasclass('row')]/div" position="attributes">
+        <attribute name="class" add="pt184 pb184" remove="pt160 pb160" separator=" "/>
     </xpath>
     <xpath expr="//h1" position="replace">
         <h1 style="text-align: center;">Coming Soon</h1>
@@ -619,6 +622,9 @@ overridden by modules), because:
 <template id="new_page_template_landing_4_s_cover" inherit_id="website.new_page_template_landing_s_cover" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="class" add="o_three_quarter_height" remove="o_full_screen_height" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div" position="attributes">
+        <attribute name="class" add="pt40 pb40" remove="pt160 pb160" separator=" "/>
     </xpath>
     <xpath expr="//h1" position="replace">
         <h1 style="text-align: center;">We Are Coming Soon</h1>
