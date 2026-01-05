@@ -89,25 +89,14 @@ class SaleEdiXmlUbl_Bis3_OrderChange(models.AbstractModel):
     def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
         """Override of `account.edi.common` to adapt dictionary keys from the base method to be
         compatible with the `sale.order.line` model."""
-        xpath_dict = self._get_line_xpaths(document_type, qty_factor)
-
         line_status_code = None
-        line_status_code_node = tree.find(xpath_dict['line_status_code'])
+        line_status_code_node = tree.find('./{*}LineStatusCode')
         if line_status_code_node is not None:
             line_status_code = line_status_code_node.text
 
         return {
             'line_status_code': line_status_code,
             **super()._retrieve_line_vals(tree, document_type, qty_factor),
-        }
-
-    def _get_line_xpaths(self, document_type=False, qty_factor=1):
-        """OVERRIDE of `sale.edi.xml.ubl_bis3_advanced_order` to update dictionary key used for
-        extracting order change lines' status code
-        """
-        return {
-            **super()._get_line_xpaths(document_type=document_type, qty_factor=qty_factor),
-            'line_status_code': './{*}LineStatusCode',
         }
 
     def process_peppol_order_change(self, order):
