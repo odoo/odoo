@@ -47,7 +47,6 @@ declare module "models" {
         markReadSequential: () => Promise<any>;
         scrollUnread: boolean;
         showCorrespondentCountry: Readonly<boolean>;
-        showUnreadBanner: Readonly<boolean>;
     }
 
     export interface Models {
