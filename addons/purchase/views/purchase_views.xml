@@ -176,6 +176,7 @@
                         </button>
                         <button type="object"  name="action_view_invoice"
                             class="oe_stat_button"
+                            groups="account.group_account_invoice"
                             icon="fa-pencil-square-o" invisible="invoice_count == 0 or state in ('draft', 'sent', 'to approve')">
                             <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
                             <field name='invoice_ids' invisible="1"/>
