@@ -129,6 +129,7 @@ registerComposerAction("upload-files", {
 });
 registerComposerAction("open-full-composer", {
     condition: ({ composer, owner }) =>
+        !composer.message &&
         owner.props.showFullComposer &&
         composer.targetThread &&
         composer.targetThread.model !== "discuss.channel" &&
