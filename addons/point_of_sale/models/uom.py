@@ -9,4 +9,6 @@ class UomUom(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'factor', 'is_pos_groupable', 'parent_path', 'rounding']
+        taxes = self.env['account.tax'].search(self.env['account.tax']._check_company_domain(config.company_id.id))
+        product_uom_fields = taxes._eval_taxes_computation_prepare_product_uom_fields()
+        return list(product_uom_fields.union({'id', 'name', 'factor', 'is_pos_groupable', 'parent_path', 'rounding'}))

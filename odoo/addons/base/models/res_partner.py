@@ -866,6 +866,11 @@ class ResPartner(models.Model):
             vals['website'] = self._clean_website(vals['website'])
         if vals.get('parent_id'):
             vals['company_name'] = False
+        if vals.get('name'):
+            for partner in self:
+                for bank in partner.bank_ids:
+                    if bank.acc_holder_name == partner.name:
+                        bank.acc_holder_name = vals['name']
 
         # filter to keep only really updated values -> field synchronize goes through
         # partner tree and we should avoid infinite loops in case same value is
@@ -897,8 +902,8 @@ class ResPartner(models.Model):
             del vals['is_company']
         result = result and super().write(vals)
         for partner, pre_values in zip(self, pre_values_list, strict=True):
-            if any(u._is_internal() for u in partner.user_ids if u != self.env.user):
-                self.env['res.users'].check_access('write')
+            if internal_users := partner.user_ids.filtered(lambda u: u._is_internal() and u != self.env.user):
+                internal_users.check_access('write')
             updated = {fname: fvalue for fname, fvalue in vals.items() if partner[fname] != pre_values[fname]}
             if updated:
                 partner._fields_sync(updated)

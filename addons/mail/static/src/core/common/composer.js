@@ -357,7 +357,7 @@ export class Composer extends Component {
     }
 
     get thread() {
-        return this.props.composer.replyToMessage?.thread ?? this.props.composer.thread ?? null;
+        return this.props.composer.targetThread;
     }
 
     get allowUpload() {
@@ -423,7 +423,8 @@ export class Composer extends Component {
                             };
                         } else {
                             return {
-                                label: suggestion.name,
+                                label: this.thread?.getPersonaName(suggestion) ?? suggestion.name,
+                                thread: this.thread,
                                 partner: suggestion,
                                 classList: "o-mail-Composer-suggestion",
                             };

@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 from odoo import models
 from odoo.tools import float_round, float_is_zero
-from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import FloatFmt
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
 JO_MAX_DP = 9
 

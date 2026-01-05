@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
 "PO-Revision-Date: 2025-11-28 12:47+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -105,9 +105,8 @@ msgid ""
 "<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type not "
 "in ['work_days', 'non_work_days']\">Between</span>"
 msgstr ""
-"<span class=\"fw-bold\" invisible="
-"\"base_off != 'timing' or timing_type not in ['work_days', 'non_work_days']\""
-">Arasında</span>"
+"<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type not "
+"in ['work_days', 'non_work_days']\">Arasında</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -531,8 +530,8 @@ msgid ""
 "Use 'Timing' when overtime hours happen on specific days or at specific times"
 msgstr ""
 "Fazla mesai hesaplaması için baz.\n"
-"Fazla mesai saatleri günlük/haftalık belirli bir miktarı aştığında \"Miktar\""
-"'ı kullanın.\n"
+"Fazla mesai saatleri günlük/haftalık belirli bir miktarı aştığında "
+"\"Miktar\"'ı kullanın.\n"
 "Fazla mesai saatleri belirli günlerde veya belirli zamanlarda "
 "gerçekleştiğinde \"Zamanlama\"'yı kullanın"
 
@@ -736,8 +735,8 @@ msgid ""
 msgstr ""
 "Uygulanan farklı kurallardan gelen oranların nasıl birleştirileceğini "
 "kontrol eder.\n"
-"  Maksimum: en yüksek oranı kullanın. "
-"(örneğin: 150% ve 120 = 150% için birleştirilir)\n"
+"  Maksimum: en yüksek oranı kullanın. (örneğin: 150% ve 120 = 150% için "
+"birleştirilir)\n"
 "  Toplam: *ekstra* ödemeyi toplayın (yani 100'ün üzerinde%).\n"
 "    örneğin: 150% ve 120% için birleşik oran = 100% (baz) + (150-100)% + "
 "(120-100)% = 170%\n"
@@ -2004,6 +2003,14 @@ msgid "Technical"
 msgstr "Teknik"
 
 #. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_rule__expected_hours_from_contract
+msgid ""
+"The attendance can go into negative extra hours to represent the missing "
+"hours compared to what is expected if the Absence Management setting is "
+"enabled."
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "The attendance records of your employees will be displayed here."
@@ -2244,6 +2251,11 @@ msgstr "Çalışan izinli olduğunda"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "With a tolerance in favor of the employee of"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "With a tolerance in favor of the employer of"
 msgstr "İşveren lehine bir tolerans ile"
 
@@ -2299,11 +2311,6 @@ msgstr "Bu işlemi gerçekleştirmek için gerekli haklara sahip değilsiniz."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-msgid "a specific duration"
-msgstr "belirli bir süre"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "and"
 msgstr "ve"
 
@@ -2326,6 +2333,11 @@ msgid "day"
 msgstr "gün"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "differs"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
 msgid "e.g. John Doe"
@@ -2343,8 +2355,13 @@ msgstr "örn. günde 8 saatten fazla"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-msgid "exceed"
-msgstr "aşmak"
+msgid "from a specific duration"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "from the amount defined on the contract"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -2364,11 +2381,6 @@ msgid "or"
 msgstr "veya"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-msgid "the amount defined on the contract"
-msgstr "sözleşmede tanımlanan tutar"
-
-#. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
 msgid "week"
@@ -2384,6 +2396,15 @@ msgstr "oranıyla"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "isteğe bağlı PIN kodu ile"
+
+#~ msgid "a specific duration"
+#~ msgstr "belirli bir süre"
+
+#~ msgid "exceed"
+#~ msgstr "aşmak"
+
+#~ msgid "the amount defined on the contract"
+#~ msgstr "sözleşmede tanımlanan tutar"
 
 #~ msgid "Departement"
 #~ msgstr "Departman"

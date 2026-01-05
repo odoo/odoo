@@ -12,7 +12,7 @@ import {
 } from "@web/../lib/hoot-dom/helpers/time";
 import { interactor } from "../../hoot-dom/hoot_dom_utils";
 import { MockEventTarget, strictEqual, waitForDocument } from "../hoot_utils";
-import { getRunner } from "../main_runner";
+import { ensureTest, getRunner } from "../main_runner";
 import {
     MockAnimation,
     mockedAnimate,
@@ -600,6 +600,7 @@ export function isPrevented(event) {
  * @param {Record<string, string>} name
  */
 export function mockMatchMedia(values) {
+    ensureTest("mockMatchMedia");
     $assign(mockMediaValues, values);
 
     callMediaQueryChanges($keys(values));
@@ -618,6 +619,7 @@ export function mockPreventDefault(event) {
  * @param {boolean} setTouch
  */
 export function mockTouch(setTouch) {
+    ensureTest("mockTouch");
     const objects = getTouchTargets(getWindow());
     if (setTouch) {
         for (const object of objects) {

@@ -3,7 +3,7 @@
     'name': 'Saudi Arabia - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['sa'],
-    'version': '2.1',
+    'version': '2.2',
     'author': 'Odoo S.A.',
     'category': 'Accounting/Localizations/Account Charts',
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/saudi_arabia.html',

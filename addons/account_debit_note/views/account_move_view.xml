@@ -19,7 +19,7 @@
             <button name="action_reverse" position="after">
                 <button name="action_debit_note" string='Debit Note'
                     type='object' groups="account.group_account_invoice"
-                    invisible="move_type not in ('out_invoice', 'in_invoice') or state != 'posted'"
+                    invisible="move_type not in ('out_invoice', 'in_invoice', 'out_refund', 'in_refund') or state != 'posted'"
                     data-hotkey="shift+d"/>
             </button>
         </field>

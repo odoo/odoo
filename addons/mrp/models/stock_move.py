@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from odoo import _, api, Command, fields, models
-from odoo.tools import OrderedSet
+from odoo.tools import OrderedSet, float_is_zero
 from odoo.exceptions import ValidationError
 
 
@@ -124,6 +124,8 @@ class StockMove(models.Model):
 
         for move in self:
             if not move.description_picking_manual and move.bom_line_id.id in bom_line_description:
+                if move.description_picking == move.product_id.display_name:
+                    move.description_picking = ''
                 move.description_picking += ('\n' if move.description_picking else '') + bom_line_description.get(move.bom_line_id.id)
 
     @api.depends('raw_material_production_id.priority')
@@ -211,14 +213,16 @@ class StockMove(models.Model):
 
     @api.onchange('product_uom_qty', 'product_uom')
     def _onchange_product_uom_qty(self):
-        if self.product_uom and self.raw_material_production_id and self.has_tracking == 'none':
+        if self.product_uom and self.raw_material_production_id and self.has_tracking == 'none'\
+            and self.state not in ('draft', 'cancel', 'done'):
             mo = self.raw_material_production_id
             new_qty = self.product_uom.round((mo.qty_producing - mo.qty_produced) * self.unit_factor)
             self.quantity = new_qty
 
     @api.onchange('quantity', 'product_uom', 'picked')
     def _onchange_quantity(self):
-        if self.raw_material_production_id and self.product_uom and self.product_uom.compare(self.product_uom_qty, self.quantity) != 0:
+        if self.raw_material_production_id and self.product_uom and \
+            not float_is_zero(self.quantity, precision_rounding=self.product_uom.rounding) and self.product_uom.compare(self.product_uom_qty, self.quantity) != 0:
             self.manual_consumption = True
             self.picked = True
 

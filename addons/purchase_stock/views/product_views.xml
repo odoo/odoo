@@ -28,11 +28,13 @@
                     <span class="text-muted small me-1">Monthly Demand:</span>
                     <span class="fw-bold ms-1" t-esc="Math.round(record.monthly_demand.raw_value *100)/100" name="kanban_monthly_demand_qty"/>
                     <field name="uom_id" class="text-muted small ms-1" groups="uom.group_uom"/>
+                    <span class="text-muted small ms-1" groups="!uom.group_uom">Units</span>
                 </div>
                 <div name="kanban_purchase_suggest" t-if="record.suggested_qty.raw_value != 0">
                     <span class="text-info fw-bold fs-5 me-1">Suggest</span>
                     <span class="text-info fw-bold fs-5 me-1" t-out="record.suggested_qty.raw_value or 0" name="kanban_purchase_suggest_qty" />
-                    <span class="text-info fw-bold fs-5 me-1">units</span>
+                    <field name="uom_id" class="text-info fw-bold fs-5 me-1" groups="uom.group_uom"/>
+                    <span class="text-info fw-bold fs-5 me-1" groups="!uom.group_uom">Units</span>
                 </div>
             </div>
         </field>

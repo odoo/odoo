@@ -627,6 +627,74 @@ class TestTraceability(TestMrpCommon):
         mo.action_generate_serial()
         self.assertIn(datetime.now().strftime('%j'), mo.lot_producing_ids.name)
 
+    def test_use_customized_serial_sequence(self):
+        """
+        Test that serial numbers are generated with the correct prefix and sequence,
+        that manually provided serial numbers are correctly applied, and that
+        serial numbering remains consistent across multiple manufacturing orders.
+        """
+        mo, bom, final_product, _comp_1, _comp_2 = self.generate_mo(
+            tracking_final='serial',
+            qty_base_1=1,
+            qty_base_2=1,
+            qty_final=2,
+        )
+        final_product.lot_sequence_id.prefix = 'TEST'
+        final_product.lot_sequence_id.number_next_actual = 1
+        serials_wizard = Form.from_action(self.env, mo.action_generate_serial())
+        self.assertEqual(serials_wizard.lot_name, 'TEST0000001')
+        serials_wizard.save().action_generate_serial_numbers()
+        serials_wizard.save().action_apply()
+        self.assertRecordValues(mo.lot_producing_ids.sorted('name'), [
+            {'name': 'TEST0000001'},
+            {'name': 'TEST0000002'},
+        ])
+        mo.button_mark_done()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(final_product, self.stock_location), 2)
+        self.assertRecordValues(self.env['stock.lot'].search([('product_id', '=', final_product.id)]).sorted('name'), [
+            {'name': 'TEST0000001'},
+            {'name': 'TEST0000002'},
+        ])
+        self.assertEqual(final_product.serial_prefix_format + final_product.next_serial, 'TEST0000003')
+
+        second_mo = self.env['mrp.production'].create({
+            'product_id': final_product.id,
+            'bom_id': bom.id,
+            'product_qty': 5,
+        })
+        second_mo.action_confirm()
+        second_serials_wizard = Form.from_action(self.env, second_mo.action_generate_serial())
+        self.assertEqual(second_serials_wizard.lot_name, 'TEST0000003')
+        second_serials_wizard.serial_numbers = 'TEST0000005\nLOREM002\nTEST0000003\nIPSUM101\nTEST0000004'
+        second_serials_wizard.save().action_apply()
+        self.assertRecordValues(second_mo.lot_producing_ids.sorted('name'), [
+            {'name': 'IPSUM101'},
+            {'name': 'LOREM002'},
+            {'name': 'TEST0000003'},
+            {'name': 'TEST0000004'},
+            {'name': 'TEST0000005'},
+        ])
+        second_mo.button_mark_done()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(final_product, self.stock_location), 2 + 5)
+        self.assertRecordValues(self.env['stock.lot'].search([('product_id', '=', final_product.id)]).sorted('name'), [
+            {'name': 'IPSUM101'},
+            {'name': 'LOREM002'},
+            {'name': 'TEST0000001'},
+            {'name': 'TEST0000002'},
+            {'name': 'TEST0000003'},
+            {'name': 'TEST0000004'},
+            {'name': 'TEST0000005'},
+        ])
+
+        third_mo = self.env['mrp.production'].create({
+            'product_id': final_product.id,
+            'bom_id': bom.id,
+            'product_qty': 2,
+        })
+        third_mo.action_confirm()
+        third_serials_wizard = Form.from_action(self.env, third_mo.action_generate_serial())
+        self.assertEqual(third_serials_wizard.lot_name, 'TEST0000006')
+
     def test_assign_stock_move_date_on_mark_done(self):
         product_final = self.env['product.product'].create({
             'name': 'Finished Product',

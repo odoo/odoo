@@ -35,9 +35,11 @@ export class ShapeSelector extends BaseOptionComponent {
         return `o_${shapePath.replaceAll("/", "_")}`;
     }
     scrollToShapes(id) {
-        this.rootRef.el
-            ?.querySelector(`[data-shape-group-id="${id}"]`)
-            ?.scrollIntoView({ behavior: "smooth" });
+        const container = this.rootRef.el;
+        const selectedElement = container?.querySelector(`[data-shape-group-id="${id}"]`);
+        if (container && selectedElement) {
+            container.scrollTop = selectedElement.offsetTop - container.offsetTop;
+        }
     }
 
     _onScroll() {

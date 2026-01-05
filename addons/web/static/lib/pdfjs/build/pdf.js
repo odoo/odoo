@@ -53,7 +53,6 @@ __webpack_require__.d(__webpack_exports__, {
   AnnotationEditorUIManager: () => (/* reexport */ AnnotationEditorUIManager),
   AnnotationLayer: () => (/* reexport */ AnnotationLayer),
   AnnotationMode: () => (/* reexport */ AnnotationMode),
-  CMapCompressionType: () => (/* reexport */ CMapCompressionType),
   ColorPicker: () => (/* reexport */ ColorPicker),
   DOMSVGFactory: () => (/* reexport */ DOMSVGFactory),
   DrawLayer: () => (/* reexport */ DrawLayer),
@@ -271,10 +270,6 @@ const VerbosityLevel = {
   ERRORS: 0,
   WARNINGS: 1,
   INFOS: 5
-};
-const CMapCompressionType = {
-  NONE: 0,
-  BINARY: 1
 };
 const OPS = {
   dependency: 1,
@@ -539,8 +534,8 @@ function isLittleEndian() {
   const view32 = new Uint32Array(buffer8.buffer, 0, 1);
   return view32[0] === 1;
 }
-// Odoo: don't support scripting
 function isEvalSupported() {
+  // Odoo: don't support scripting
   return false;
 }
 class util_FeatureTest {
@@ -827,487 +822,32 @@ const FontRenderOps = {
   TRANSFORM: 7,
   TRANSLATE: 8
 };
-
-;// ./src/display/base_factory.js
-
-class BaseFilterFactory {
-  addFilter(maps) {
-    return "none";
+function toHexUtil(arr) {
+  if (Uint8Array.prototype.toHex) {
+    return arr.toHex();
   }
-  addHCMFilter(fgColor, bgColor) {
-    return "none";
-  }
-  addAlphaFilter(map) {
-    return "none";
-  }
-  addLuminosityFilter(map) {
-    return "none";
-  }
-  addHighlightHCMFilter(filterName, fgColor, bgColor, newFgColor, newBgColor) {
-    return "none";
-  }
-  destroy(keepHCM = false) {}
+  return Array.from(arr, num => hexNumbers[num]).join("");
 }
-class BaseCanvasFactory {
-  #enableHWA = false;
-  constructor({
-    enableHWA = false
-  }) {
-    this.#enableHWA = enableHWA;
+function toBase64Util(arr) {
+  if (Uint8Array.prototype.toBase64) {
+    return arr.toBase64();
   }
-  create(width, height) {
-    if (width <= 0 || height <= 0) {
-      throw new Error("Invalid canvas size");
-    }
-    const canvas = this._createCanvas(width, height);
-    return {
-      canvas,
-      context: canvas.getContext("2d", {
-        willReadFrequently: !this.#enableHWA
-      })
-    };
-  }
-  reset(canvasAndContext, width, height) {
-    if (!canvasAndContext.canvas) {
-      throw new Error("Canvas is not specified");
-    }
-    if (width <= 0 || height <= 0) {
-      throw new Error("Invalid canvas size");
-    }
-    canvasAndContext.canvas.width = width;
-    canvasAndContext.canvas.height = height;
-  }
-  destroy(canvasAndContext) {
-    if (!canvasAndContext.canvas) {
-      throw new Error("Canvas is not specified");
-    }
-    canvasAndContext.canvas.width = 0;
-    canvasAndContext.canvas.height = 0;
-    canvasAndContext.canvas = null;
-    canvasAndContext.context = null;
-  }
-  _createCanvas(width, height) {
-    unreachable("Abstract method `_createCanvas` called.");
-  }
+  return btoa(bytesToString(arr));
 }
-class BaseCMapReaderFactory {
-  constructor({
-    baseUrl = null,
-    isCompressed = true
-  }) {
-    this.baseUrl = baseUrl;
-    this.isCompressed = isCompressed;
+function fromBase64Util(str) {
+  if (Uint8Array.fromBase64) {
+    return Uint8Array.fromBase64(str);
   }
-  async fetch({
-    name
-  }) {
-    if (!this.baseUrl) {
-      throw new Error("Ensure that the `cMapUrl` and `cMapPacked` API parameters are provided.");
-    }
-    if (!name) {
-      throw new Error("CMap name must be specified.");
-    }
-    const url = this.baseUrl + name + (this.isCompressed ? ".bcmap" : "");
-    const compressionType = this.isCompressed ? CMapCompressionType.BINARY : CMapCompressionType.NONE;
-    return this._fetchData(url, compressionType).catch(reason => {
-      throw new Error(`Unable to load ${this.isCompressed ? "binary " : ""}CMap at: ${url}`);
-    });
-  }
-  _fetchData(url, compressionType) {
-    unreachable("Abstract method `_fetchData` called.");
-  }
-}
-class BaseStandardFontDataFactory {
-  constructor({
-    baseUrl = null
-  }) {
-    this.baseUrl = baseUrl;
-  }
-  async fetch({
-    filename
-  }) {
-    if (!this.baseUrl) {
-      throw new Error("Ensure that the `standardFontDataUrl` API parameter is provided.");
-    }
-    if (!filename) {
-      throw new Error("Font filename must be specified.");
-    }
-    const url = `${this.baseUrl}${filename}`;
-    return this._fetchData(url).catch(reason => {
-      throw new Error(`Unable to load font data at: ${url}`);
-    });
-  }
-  _fetchData(url) {
-    unreachable("Abstract method `_fetchData` called.");
-  }
-}
-class BaseSVGFactory {
-  create(width, height, skipDimensions = false) {
-    if (width <= 0 || height <= 0) {
-      throw new Error("Invalid SVG dimensions");
-    }
-    const svg = this._createSVG("svg:svg");
-    svg.setAttribute("version", "1.1");
-    if (!skipDimensions) {
-      svg.setAttribute("width", `${width}px`);
-      svg.setAttribute("height", `${height}px`);
-    }
-    svg.setAttribute("preserveAspectRatio", "none");
-    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-    return svg;
-  }
-  createElement(type) {
-    if (typeof type !== "string") {
-      throw new Error("Invalid SVG element type");
-    }
-    return this._createSVG(type);
-  }
-  _createSVG(type) {
-    unreachable("Abstract method `_createSVG` called.");
-  }
+  return stringToBytes(atob(str));
 }
 
 ;// ./src/display/display_utils.js
-
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 class PixelsPerInch {
   static CSS = 96.0;
   static PDF = 72.0;
   static PDF_TO_CSS_UNITS = this.CSS / this.PDF;
-}
-class DOMFilterFactory extends BaseFilterFactory {
-  #baseUrl;
-  #_cache;
-  #_defs;
-  #docId;
-  #document;
-  #_hcmCache;
-  #id = 0;
-  constructor({
-    docId,
-    ownerDocument = globalThis.document
-  }) {
-    super();
-    this.#docId = docId;
-    this.#document = ownerDocument;
-  }
-  get #cache() {
-    return this.#_cache ||= new Map();
-  }
-  get #hcmCache() {
-    return this.#_hcmCache ||= new Map();
-  }
-  get #defs() {
-    if (!this.#_defs) {
-      const div = this.#document.createElement("div");
-      const {
-        style
-      } = div;
-      style.visibility = "hidden";
-      style.contain = "strict";
-      style.width = style.height = 0;
-      style.position = "absolute";
-      style.top = style.left = 0;
-      style.zIndex = -1;
-      const svg = this.#document.createElementNS(SVG_NS, "svg");
-      svg.setAttribute("width", 0);
-      svg.setAttribute("height", 0);
-      this.#_defs = this.#document.createElementNS(SVG_NS, "defs");
-      div.append(svg);
-      svg.append(this.#_defs);
-      this.#document.body.append(div);
-    }
-    return this.#_defs;
-  }
-  #createTables(maps) {
-    if (maps.length === 1) {
-      const mapR = maps[0];
-      const buffer = new Array(256);
-      for (let i = 0; i < 256; i++) {
-        buffer[i] = mapR[i] / 255;
-      }
-      const table = buffer.join(",");
-      return [table, table, table];
-    }
-    const [mapR, mapG, mapB] = maps;
-    const bufferR = new Array(256);
-    const bufferG = new Array(256);
-    const bufferB = new Array(256);
-    for (let i = 0; i < 256; i++) {
-      bufferR[i] = mapR[i] / 255;
-      bufferG[i] = mapG[i] / 255;
-      bufferB[i] = mapB[i] / 255;
-    }
-    return [bufferR.join(","), bufferG.join(","), bufferB.join(",")];
-  }
-  #createUrl(id) {
-    if (this.#baseUrl === undefined) {
-      this.#baseUrl = "";
-      const url = this.#document.URL;
-      if (url !== this.#document.baseURI) {
-        if (isDataScheme(url)) {
-          warn('#createUrl: ignore "data:"-URL for performance reasons.');
-        } else {
-          this.#baseUrl = url.split("#", 1)[0];
-        }
-      }
-    }
-    return `url(${this.#baseUrl}#${id})`;
-  }
-  addFilter(maps) {
-    if (!maps) {
-      return "none";
-    }
-    let value = this.#cache.get(maps);
-    if (value) {
-      return value;
-    }
-    const [tableR, tableG, tableB] = this.#createTables(maps);
-    const key = maps.length === 1 ? tableR : `${tableR}${tableG}${tableB}`;
-    value = this.#cache.get(key);
-    if (value) {
-      this.#cache.set(maps, value);
-      return value;
-    }
-    const id = `g_${this.#docId}_transfer_map_${this.#id++}`;
-    const url = this.#createUrl(id);
-    this.#cache.set(maps, url);
-    this.#cache.set(key, url);
-    const filter = this.#createFilter(id);
-    this.#addTransferMapConversion(tableR, tableG, tableB, filter);
-    return url;
-  }
-  addHCMFilter(fgColor, bgColor) {
-    const key = `${fgColor}-${bgColor}`;
-    const filterName = "base";
-    let info = this.#hcmCache.get(filterName);
-    if (info?.key === key) {
-      return info.url;
-    }
-    if (info) {
-      info.filter?.remove();
-      info.key = key;
-      info.url = "none";
-      info.filter = null;
-    } else {
-      info = {
-        key,
-        url: "none",
-        filter: null
-      };
-      this.#hcmCache.set(filterName, info);
-    }
-    if (!fgColor || !bgColor) {
-      return info.url;
-    }
-    const fgRGB = this.#getRGB(fgColor);
-    fgColor = Util.makeHexColor(...fgRGB);
-    const bgRGB = this.#getRGB(bgColor);
-    bgColor = Util.makeHexColor(...bgRGB);
-    this.#defs.style.color = "";
-    if (fgColor === "#000000" && bgColor === "#ffffff" || fgColor === bgColor) {
-      return info.url;
-    }
-    const map = new Array(256);
-    for (let i = 0; i <= 255; i++) {
-      const x = i / 255;
-      map[i] = x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
-    }
-    const table = map.join(",");
-    const id = `g_${this.#docId}_hcm_filter`;
-    const filter = info.filter = this.#createFilter(id);
-    this.#addTransferMapConversion(table, table, table, filter);
-    this.#addGrayConversion(filter);
-    const getSteps = (c, n) => {
-      const start = fgRGB[c] / 255;
-      const end = bgRGB[c] / 255;
-      const arr = new Array(n + 1);
-      for (let i = 0; i <= n; i++) {
-        arr[i] = start + i / n * (end - start);
-      }
-      return arr.join(",");
-    };
-    this.#addTransferMapConversion(getSteps(0, 5), getSteps(1, 5), getSteps(2, 5), filter);
-    info.url = this.#createUrl(id);
-    return info.url;
-  }
-  addAlphaFilter(map) {
-    let value = this.#cache.get(map);
-    if (value) {
-      return value;
-    }
-    const [tableA] = this.#createTables([map]);
-    const key = `alpha_${tableA}`;
-    value = this.#cache.get(key);
-    if (value) {
-      this.#cache.set(map, value);
-      return value;
-    }
-    const id = `g_${this.#docId}_alpha_map_${this.#id++}`;
-    const url = this.#createUrl(id);
-    this.#cache.set(map, url);
-    this.#cache.set(key, url);
-    const filter = this.#createFilter(id);
-    this.#addTransferMapAlphaConversion(tableA, filter);
-    return url;
-  }
-  addLuminosityFilter(map) {
-    let value = this.#cache.get(map || "luminosity");
-    if (value) {
-      return value;
-    }
-    let tableA, key;
-    if (map) {
-      [tableA] = this.#createTables([map]);
-      key = `luminosity_${tableA}`;
-    } else {
-      key = "luminosity";
-    }
-    value = this.#cache.get(key);
-    if (value) {
-      this.#cache.set(map, value);
-      return value;
-    }
-    const id = `g_${this.#docId}_luminosity_map_${this.#id++}`;
-    const url = this.#createUrl(id);
-    this.#cache.set(map, url);
-    this.#cache.set(key, url);
-    const filter = this.#createFilter(id);
-    this.#addLuminosityConversion(filter);
-    if (map) {
-      this.#addTransferMapAlphaConversion(tableA, filter);
-    }
-    return url;
-  }
-  addHighlightHCMFilter(filterName, fgColor, bgColor, newFgColor, newBgColor) {
-    const key = `${fgColor}-${bgColor}-${newFgColor}-${newBgColor}`;
-    let info = this.#hcmCache.get(filterName);
-    if (info?.key === key) {
-      return info.url;
-    }
-    if (info) {
-      info.filter?.remove();
-      info.key = key;
-      info.url = "none";
-      info.filter = null;
-    } else {
-      info = {
-        key,
-        url: "none",
-        filter: null
-      };
-      this.#hcmCache.set(filterName, info);
-    }
-    if (!fgColor || !bgColor) {
-      return info.url;
-    }
-    const [fgRGB, bgRGB] = [fgColor, bgColor].map(this.#getRGB.bind(this));
-    let fgGray = Math.round(0.2126 * fgRGB[0] + 0.7152 * fgRGB[1] + 0.0722 * fgRGB[2]);
-    let bgGray = Math.round(0.2126 * bgRGB[0] + 0.7152 * bgRGB[1] + 0.0722 * bgRGB[2]);
-    let [newFgRGB, newBgRGB] = [newFgColor, newBgColor].map(this.#getRGB.bind(this));
-    if (bgGray < fgGray) {
-      [fgGray, bgGray, newFgRGB, newBgRGB] = [bgGray, fgGray, newBgRGB, newFgRGB];
-    }
-    this.#defs.style.color = "";
-    const getSteps = (fg, bg, n) => {
-      const arr = new Array(256);
-      const step = (bgGray - fgGray) / n;
-      const newStart = fg / 255;
-      const newStep = (bg - fg) / (255 * n);
-      let prev = 0;
-      for (let i = 0; i <= n; i++) {
-        const k = Math.round(fgGray + i * step);
-        const value = newStart + i * newStep;
-        for (let j = prev; j <= k; j++) {
-          arr[j] = value;
-        }
-        prev = k + 1;
-      }
-      for (let i = prev; i < 256; i++) {
-        arr[i] = arr[prev - 1];
-      }
-      return arr.join(",");
-    };
-    const id = `g_${this.#docId}_hcm_${filterName}_filter`;
-    const filter = info.filter = this.#createFilter(id);
-    this.#addGrayConversion(filter);
-    this.#addTransferMapConversion(getSteps(newFgRGB[0], newBgRGB[0], 5), getSteps(newFgRGB[1], newBgRGB[1], 5), getSteps(newFgRGB[2], newBgRGB[2], 5), filter);
-    info.url = this.#createUrl(id);
-    return info.url;
-  }
-  destroy(keepHCM = false) {
-    if (keepHCM && this.#hcmCache.size !== 0) {
-      return;
-    }
-    if (this.#_defs) {
-      this.#_defs.parentNode.parentNode.remove();
-      this.#_defs = null;
-    }
-    if (this.#_cache) {
-      this.#_cache.clear();
-      this.#_cache = null;
-    }
-    this.#id = 0;
-  }
-  #addLuminosityConversion(filter) {
-    const feColorMatrix = this.#document.createElementNS(SVG_NS, "feColorMatrix");
-    feColorMatrix.setAttribute("type", "matrix");
-    feColorMatrix.setAttribute("values", "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0.59 0.11 0 0");
-    filter.append(feColorMatrix);
-  }
-  #addGrayConversion(filter) {
-    const feColorMatrix = this.#document.createElementNS(SVG_NS, "feColorMatrix");
-    feColorMatrix.setAttribute("type", "matrix");
-    feColorMatrix.setAttribute("values", "0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0");
-    filter.append(feColorMatrix);
-  }
-  #createFilter(id) {
-    const filter = this.#document.createElementNS(SVG_NS, "filter");
-    filter.setAttribute("color-interpolation-filters", "sRGB");
-    filter.setAttribute("id", id);
-    this.#defs.append(filter);
-    return filter;
-  }
-  #appendFeFunc(feComponentTransfer, func, table) {
-    const feFunc = this.#document.createElementNS(SVG_NS, func);
-    feFunc.setAttribute("type", "discrete");
-    feFunc.setAttribute("tableValues", table);
-    feComponentTransfer.append(feFunc);
-  }
-  #addTransferMapConversion(rTable, gTable, bTable, filter) {
-    const feComponentTransfer = this.#document.createElementNS(SVG_NS, "feComponentTransfer");
-    filter.append(feComponentTransfer);
-    this.#appendFeFunc(feComponentTransfer, "feFuncR", rTable);
-    this.#appendFeFunc(feComponentTransfer, "feFuncG", gTable);
-    this.#appendFeFunc(feComponentTransfer, "feFuncB", bTable);
-  }
-  #addTransferMapAlphaConversion(aTable, filter) {
-    const feComponentTransfer = this.#document.createElementNS(SVG_NS, "feComponentTransfer");
-    filter.append(feComponentTransfer);
-    this.#appendFeFunc(feComponentTransfer, "feFuncA", aTable);
-  }
-  #getRGB(color) {
-    this.#defs.style.color = color;
-    return getRGB(getComputedStyle(this.#defs).getPropertyValue("color"));
-  }
-}
-class DOMCanvasFactory extends BaseCanvasFactory {
-  constructor({
-    ownerDocument = globalThis.document,
-    enableHWA = false
-  }) {
-    super({
-      enableHWA
-    });
-    this._document = ownerDocument;
-  }
-  _createCanvas(width, height) {
-    const canvas = this._document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    return canvas;
-  }
 }
 async function fetchData(url, type = "text") {
   if (isValidFetchUrl(url, document.baseURI)) {
@@ -1348,24 +888,6 @@ async function fetchData(url, type = "text") {
     };
     request.send(null);
   });
-}
-class DOMCMapReaderFactory extends BaseCMapReaderFactory {
-  _fetchData(url, compressionType) {
-    return fetchData(url, this.isCompressed ? "arraybuffer" : "text").then(data => ({
-      cMapData: data instanceof ArrayBuffer ? new Uint8Array(data) : stringToBytes(data),
-      compressionType
-    }));
-  }
-}
-class DOMStandardFontDataFactory extends BaseStandardFontDataFactory {
-  _fetchData(url) {
-    return fetchData(url, "arraybuffer").then(data => new Uint8Array(data));
-  }
-}
-class DOMSVGFactory extends BaseSVGFactory {
-  _createSVG(type) {
-    return document.createElementNS(SVG_NS, type);
-  }
 }
 class PageViewport {
   constructor({
@@ -1573,14 +1095,14 @@ function noContextMenu(e) {
 function deprecated(details) {
   console.log("Deprecated API usage: " + details);
 }
-let pdfDateStringRegex;
 class PDFDateString {
+  static #regex;
   static toDateObject(input) {
     if (!input || typeof input !== "string") {
       return null;
     }
-    pdfDateStringRegex ||= new RegExp("^D:" + "(\\d{4})" + "(\\d{2})?" + "(\\d{2})?" + "(\\d{2})?" + "(\\d{2})?" + "(\\d{2})?" + "([Z|+|-])?" + "(\\d{2})?" + "'?" + "(\\d{2})?" + "'?");
-    const matches = pdfDateStringRegex.exec(input);
+    this.#regex ||= new RegExp("^D:" + "(\\d{4})" + "(\\d{2})?" + "(\\d{2})?" + "(\\d{2})?" + "(\\d{2})?" + "(\\d{2})?" + "([Z|+|-])?" + "(\\d{2})?" + "'?" + "(\\d{2})?" + "'?");
+    const matches = this.#regex.exec(input);
     if (!matches) {
       return null;
     }
@@ -3653,6 +3175,7 @@ class AltText {
   #altText = null;
   #altTextDecorative = false;
   #altTextButton = null;
+  #altTextButtonLabel = null;
   #altTextTooltip = null;
   #altTextTooltipTimeout = null;
   #altTextWasFromKeyBoard = false;
@@ -3662,32 +3185,36 @@ class AltText {
   #textWithDisclaimer = null;
   #useNewAltTextFlow = false;
   static #l10nNewButton = null;
-  static _l10nPromise = null;
+  static _l10n = null;
   constructor(editor) {
     this.#editor = editor;
     this.#useNewAltTextFlow = editor._uiManager.useNewAltTextFlow;
     AltText.#l10nNewButton ||= Object.freeze({
-      added: "pdfjs-editor-new-alt-text-added-button-label",
-      missing: "pdfjs-editor-new-alt-text-missing-button-label",
-      review: "pdfjs-editor-new-alt-text-to-review-button-label"
+      added: "pdfjs-editor-new-alt-text-added-button",
+      "added-label": "pdfjs-editor-new-alt-text-added-button-label",
+      missing: "pdfjs-editor-new-alt-text-missing-button",
+      "missing-label": "pdfjs-editor-new-alt-text-missing-button-label",
+      review: "pdfjs-editor-new-alt-text-to-review-button",
+      "review-label": "pdfjs-editor-new-alt-text-to-review-button-label"
     });
   }
-  static initialize(l10nPromise) {
-    AltText._l10nPromise ||= l10nPromise;
+  static initialize(l10n) {
+    AltText._l10n ??= l10n;
   }
   async render() {
     const altText = this.#altTextButton = document.createElement("button");
     altText.className = "altText";
-    let msg;
+    altText.tabIndex = "0";
+    const label = this.#altTextButtonLabel = document.createElement("span");
+    altText.append(label);
     if (this.#useNewAltTextFlow) {
       altText.classList.add("new");
-      msg = await AltText._l10nPromise.get(AltText.#l10nNewButton.missing);
+      altText.setAttribute("data-l10n-id", AltText.#l10nNewButton.missing);
+      label.setAttribute("data-l10n-id", AltText.#l10nNewButton["missing-label"]);
     } else {
-      msg = await AltText._l10nPromise.get("pdfjs-editor-alt-text-button-label");
+      altText.setAttribute("data-l10n-id", "pdfjs-editor-alt-text-button");
+      label.setAttribute("data-l10n-id", "pdfjs-editor-alt-text-button-label");
     }
-    altText.textContent = msg;
-    altText.setAttribute("aria-label", msg);
-    altText.tabIndex = "0";
     const signal = this.#editor._uiManager._signal;
     altText.addEventListener("contextmenu", noContextMenu, {
       signal
@@ -3754,7 +3281,7 @@ class AltText {
       return;
     }
     this.#guessedText = guessedText;
-    this.#textWithDisclaimer = await AltText._l10nPromise.get("pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer")({
+    this.#textWithDisclaimer = await AltText._l10n.get("pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer", {
       generatedAltText: guessedText
     });
     this.#setState();
@@ -3831,6 +3358,7 @@ class AltText {
   destroy() {
     this.#altTextButton?.remove();
     this.#altTextButton = null;
+    this.#altTextButtonLabel = null;
     this.#altTextTooltip = null;
     this.#badge?.remove();
     this.#badge = null;
@@ -3842,15 +3370,8 @@ class AltText {
     }
     if (this.#useNewAltTextFlow) {
       button.classList.toggle("done", !!this.#altText);
-      AltText._l10nPromise.get(AltText.#l10nNewButton[this.#label]).then(msg => {
-        button.setAttribute("aria-label", msg);
-        for (const child of button.childNodes) {
-          if (child.nodeType === Node.TEXT_NODE) {
-            child.textContent = msg;
-            break;
-          }
-        }
-      });
+      button.setAttribute("data-l10n-id", AltText.#l10nNewButton[this.#label]);
+      this.#altTextButtonLabel?.setAttribute("data-l10n-id", AltText.#l10nNewButton[`${this.#label}-label`]);
       if (!this.#altText) {
         this.#altTextTooltip?.remove();
         return;
@@ -3862,9 +3383,7 @@ class AltText {
         return;
       }
       button.classList.add("done");
-      AltText._l10nPromise.get("pdfjs-editor-alt-text-edit-button-label").then(msg => {
-        button.setAttribute("aria-label", msg);
-      });
+      button.setAttribute("data-l10n-id", "pdfjs-editor-alt-text-edit-button");
     }
     let tooltip = this.#altTextTooltip;
     if (!tooltip) {
@@ -3901,7 +3420,12 @@ class AltText {
         signal
       });
     }
-    tooltip.innerText = this.#altTextDecorative ? await AltText._l10nPromise.get("pdfjs-editor-alt-text-decorative-tooltip") : this.#altText;
+    if (this.#altTextDecorative) {
+      tooltip.setAttribute("data-l10n-id", "pdfjs-editor-alt-text-decorative-tooltip");
+    } else {
+      tooltip.removeAttribute("data-l10n-id");
+      tooltip.textContent = this.#altText;
+    }
     if (!tooltip.parentNode) {
       button.append(tooltip);
     }
@@ -3941,7 +3465,7 @@ class AnnotationEditor {
   _isVisible = true;
   _uiManager = null;
   _focusEventsAllowed = true;
-  static _l10nPromise = null;
+  static _l10n = null;
   static _l10nResizer = null;
   #isDraggable = false;
   #zIndex = AnnotationEditor._zIndex++;
@@ -4018,7 +3542,8 @@ class AnnotationEditor {
     fakeEditor.deleted = true;
     fakeEditor._uiManager.addToAnnotationStorage(fakeEditor);
   }
-  static initialize(l10n, _uiManager, options) {
+  static initialize(l10n, _uiManager) {
+    AnnotationEditor._l10n ??= l10n;
     AnnotationEditor._l10nResizer ||= Object.freeze({
       topLeft: "pdfjs-editor-resizer-top-left",
       topMiddle: "pdfjs-editor-resizer-top-middle",
@@ -4029,12 +3554,6 @@ class AnnotationEditor {
       bottomLeft: "pdfjs-editor-resizer-bottom-left",
       middleLeft: "pdfjs-editor-resizer-middle-left"
     });
-    AnnotationEditor._l10nPromise ||= new Map([...["pdfjs-editor-alt-text-button-label", "pdfjs-editor-alt-text-edit-button-label", "pdfjs-editor-alt-text-decorative-tooltip", "pdfjs-editor-new-alt-text-added-button-label", "pdfjs-editor-new-alt-text-missing-button-label", "pdfjs-editor-new-alt-text-to-review-button-label"].map(str => [str, l10n.get(str)]), ...["pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer"].map(str => [str, l10n.get.bind(l10n, str)])]);
-    if (options?.strings) {
-      for (const str of options.strings) {
-        AnnotationEditor._l10nPromise.set(str, l10n.get(str));
-      }
-    }
     if (AnnotationEditor._borderLineWidth !== -1) {
       return;
     }
@@ -4566,7 +4085,7 @@ class AnnotationEditor {
     if (this.#altText) {
       return;
     }
-    AltText.initialize(AnnotationEditor._l10nPromise);
+    AltText.initialize(AnnotationEditor._l10n);
     this.#altText = new AltText(this);
     if (this.#accessibilityData) {
       this.#altText.data = this.#accessibilityData;
@@ -4634,6 +4153,9 @@ class AnnotationEditor {
     }
     this.#selectOnPointerEvent(event);
   }
+  get isSelected() {
+    return this._uiManager.isSelected(this);
+  }
   #selectOnPointerEvent(event) {
     const {
       isMac
@@ -4645,7 +4167,9 @@ class AnnotationEditor {
     }
   }
   #setUpDragSession(event) {
-    const isSelected = this._uiManager.isSelected(this);
+    const {
+      isSelected
+    } = this;
     this._uiManager.setUpDragSession();
     const ac = new AbortController();
     const signal = this._uiManager.combinedSignal(ac);
@@ -5658,8 +5182,7 @@ class FontFaceObject {
     if (!this.data || this.disableFontFace) {
       return null;
     }
-    const data = bytesToString(this.data);
-    const url = `url(data:${this.mimetype};base64,${btoa(data)});`;
+    const url = `url(data:${this.mimetype};base64,${toBase64Util(this.data)});`;
     let rule;
     if (!this.cssFontInfo) {
       rule = `@font-face {font-family:"${this.loadedName}";src:${url}}`;
@@ -5753,7 +5276,483 @@ class FontFaceObject {
   }
 }
 
+;// ./src/display/canvas_factory.js
+
+class BaseCanvasFactory {
+  #enableHWA = false;
+  constructor({
+    enableHWA = false
+  }) {
+    this.#enableHWA = enableHWA;
+  }
+  create(width, height) {
+    if (width <= 0 || height <= 0) {
+      throw new Error("Invalid canvas size");
+    }
+    const canvas = this._createCanvas(width, height);
+    return {
+      canvas,
+      context: canvas.getContext("2d", {
+        willReadFrequently: !this.#enableHWA
+      })
+    };
+  }
+  reset(canvasAndContext, width, height) {
+    if (!canvasAndContext.canvas) {
+      throw new Error("Canvas is not specified");
+    }
+    if (width <= 0 || height <= 0) {
+      throw new Error("Invalid canvas size");
+    }
+    canvasAndContext.canvas.width = width;
+    canvasAndContext.canvas.height = height;
+  }
+  destroy(canvasAndContext) {
+    if (!canvasAndContext.canvas) {
+      throw new Error("Canvas is not specified");
+    }
+    canvasAndContext.canvas.width = 0;
+    canvasAndContext.canvas.height = 0;
+    canvasAndContext.canvas = null;
+    canvasAndContext.context = null;
+  }
+  _createCanvas(width, height) {
+    unreachable("Abstract method `_createCanvas` called.");
+  }
+}
+class DOMCanvasFactory extends BaseCanvasFactory {
+  constructor({
+    ownerDocument = globalThis.document,
+    enableHWA = false
+  }) {
+    super({
+      enableHWA
+    });
+    this._document = ownerDocument;
+  }
+  _createCanvas(width, height) {
+    const canvas = this._document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    return canvas;
+  }
+}
+
+;// ./src/display/cmap_reader_factory.js
+
+
+class BaseCMapReaderFactory {
+  constructor({
+    baseUrl = null,
+    isCompressed = true
+  }) {
+    this.baseUrl = baseUrl;
+    this.isCompressed = isCompressed;
+  }
+  async fetch({
+    name
+  }) {
+    if (!this.baseUrl) {
+      throw new Error("Ensure that the `cMapUrl` and `cMapPacked` API parameters are provided.");
+    }
+    if (!name) {
+      throw new Error("CMap name must be specified.");
+    }
+    const url = this.baseUrl + name + (this.isCompressed ? ".bcmap" : "");
+    return this._fetch(url).then(cMapData => ({
+      cMapData,
+      isCompressed: this.isCompressed
+    })).catch(reason => {
+      throw new Error(`Unable to load ${this.isCompressed ? "binary " : ""}CMap at: ${url}`);
+    });
+  }
+  async _fetch(url) {
+    unreachable("Abstract method `_fetch` called.");
+  }
+}
+class DOMCMapReaderFactory extends BaseCMapReaderFactory {
+  async _fetch(url) {
+    const data = await fetchData(url, this.isCompressed ? "arraybuffer" : "text");
+    return data instanceof ArrayBuffer ? new Uint8Array(data) : stringToBytes(data);
+  }
+}
+
+;// ./src/display/filter_factory.js
+
+
+class BaseFilterFactory {
+  addFilter(maps) {
+    return "none";
+  }
+  addHCMFilter(fgColor, bgColor) {
+    return "none";
+  }
+  addAlphaFilter(map) {
+    return "none";
+  }
+  addLuminosityFilter(map) {
+    return "none";
+  }
+  addHighlightHCMFilter(filterName, fgColor, bgColor, newFgColor, newBgColor) {
+    return "none";
+  }
+  destroy(keepHCM = false) {}
+}
+class DOMFilterFactory extends BaseFilterFactory {
+  #baseUrl;
+  #_cache;
+  #_defs;
+  #docId;
+  #document;
+  #_hcmCache;
+  #id = 0;
+  constructor({
+    docId,
+    ownerDocument = globalThis.document
+  }) {
+    super();
+    this.#docId = docId;
+    this.#document = ownerDocument;
+  }
+  get #cache() {
+    return this.#_cache ||= new Map();
+  }
+  get #hcmCache() {
+    return this.#_hcmCache ||= new Map();
+  }
+  get #defs() {
+    if (!this.#_defs) {
+      const div = this.#document.createElement("div");
+      const {
+        style
+      } = div;
+      style.visibility = "hidden";
+      style.contain = "strict";
+      style.width = style.height = 0;
+      style.position = "absolute";
+      style.top = style.left = 0;
+      style.zIndex = -1;
+      const svg = this.#document.createElementNS(SVG_NS, "svg");
+      svg.setAttribute("width", 0);
+      svg.setAttribute("height", 0);
+      this.#_defs = this.#document.createElementNS(SVG_NS, "defs");
+      div.append(svg);
+      svg.append(this.#_defs);
+      this.#document.body.append(div);
+    }
+    return this.#_defs;
+  }
+  #createTables(maps) {
+    if (maps.length === 1) {
+      const mapR = maps[0];
+      const buffer = new Array(256);
+      for (let i = 0; i < 256; i++) {
+        buffer[i] = mapR[i] / 255;
+      }
+      const table = buffer.join(",");
+      return [table, table, table];
+    }
+    const [mapR, mapG, mapB] = maps;
+    const bufferR = new Array(256);
+    const bufferG = new Array(256);
+    const bufferB = new Array(256);
+    for (let i = 0; i < 256; i++) {
+      bufferR[i] = mapR[i] / 255;
+      bufferG[i] = mapG[i] / 255;
+      bufferB[i] = mapB[i] / 255;
+    }
+    return [bufferR.join(","), bufferG.join(","), bufferB.join(",")];
+  }
+  #createUrl(id) {
+    if (this.#baseUrl === undefined) {
+      this.#baseUrl = "";
+      const url = this.#document.URL;
+      if (url !== this.#document.baseURI) {
+        if (isDataScheme(url)) {
+          warn('#createUrl: ignore "data:"-URL for performance reasons.');
+        } else {
+          this.#baseUrl = url.split("#", 1)[0];
+        }
+      }
+    }
+    return `url(${this.#baseUrl}#${id})`;
+  }
+  addFilter(maps) {
+    if (!maps) {
+      return "none";
+    }
+    let value = this.#cache.get(maps);
+    if (value) {
+      return value;
+    }
+    const [tableR, tableG, tableB] = this.#createTables(maps);
+    const key = maps.length === 1 ? tableR : `${tableR}${tableG}${tableB}`;
+    value = this.#cache.get(key);
+    if (value) {
+      this.#cache.set(maps, value);
+      return value;
+    }
+    const id = `g_${this.#docId}_transfer_map_${this.#id++}`;
+    const url = this.#createUrl(id);
+    this.#cache.set(maps, url);
+    this.#cache.set(key, url);
+    const filter = this.#createFilter(id);
+    this.#addTransferMapConversion(tableR, tableG, tableB, filter);
+    return url;
+  }
+  addHCMFilter(fgColor, bgColor) {
+    const key = `${fgColor}-${bgColor}`;
+    const filterName = "base";
+    let info = this.#hcmCache.get(filterName);
+    if (info?.key === key) {
+      return info.url;
+    }
+    if (info) {
+      info.filter?.remove();
+      info.key = key;
+      info.url = "none";
+      info.filter = null;
+    } else {
+      info = {
+        key,
+        url: "none",
+        filter: null
+      };
+      this.#hcmCache.set(filterName, info);
+    }
+    if (!fgColor || !bgColor) {
+      return info.url;
+    }
+    const fgRGB = this.#getRGB(fgColor);
+    fgColor = Util.makeHexColor(...fgRGB);
+    const bgRGB = this.#getRGB(bgColor);
+    bgColor = Util.makeHexColor(...bgRGB);
+    this.#defs.style.color = "";
+    if (fgColor === "#000000" && bgColor === "#ffffff" || fgColor === bgColor) {
+      return info.url;
+    }
+    const map = new Array(256);
+    for (let i = 0; i <= 255; i++) {
+      const x = i / 255;
+      map[i] = x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+    }
+    const table = map.join(",");
+    const id = `g_${this.#docId}_hcm_filter`;
+    const filter = info.filter = this.#createFilter(id);
+    this.#addTransferMapConversion(table, table, table, filter);
+    this.#addGrayConversion(filter);
+    const getSteps = (c, n) => {
+      const start = fgRGB[c] / 255;
+      const end = bgRGB[c] / 255;
+      const arr = new Array(n + 1);
+      for (let i = 0; i <= n; i++) {
+        arr[i] = start + i / n * (end - start);
+      }
+      return arr.join(",");
+    };
+    this.#addTransferMapConversion(getSteps(0, 5), getSteps(1, 5), getSteps(2, 5), filter);
+    info.url = this.#createUrl(id);
+    return info.url;
+  }
+  addAlphaFilter(map) {
+    let value = this.#cache.get(map);
+    if (value) {
+      return value;
+    }
+    const [tableA] = this.#createTables([map]);
+    const key = `alpha_${tableA}`;
+    value = this.#cache.get(key);
+    if (value) {
+      this.#cache.set(map, value);
+      return value;
+    }
+    const id = `g_${this.#docId}_alpha_map_${this.#id++}`;
+    const url = this.#createUrl(id);
+    this.#cache.set(map, url);
+    this.#cache.set(key, url);
+    const filter = this.#createFilter(id);
+    this.#addTransferMapAlphaConversion(tableA, filter);
+    return url;
+  }
+  addLuminosityFilter(map) {
+    let value = this.#cache.get(map || "luminosity");
+    if (value) {
+      return value;
+    }
+    let tableA, key;
+    if (map) {
+      [tableA] = this.#createTables([map]);
+      key = `luminosity_${tableA}`;
+    } else {
+      key = "luminosity";
+    }
+    value = this.#cache.get(key);
+    if (value) {
+      this.#cache.set(map, value);
+      return value;
+    }
+    const id = `g_${this.#docId}_luminosity_map_${this.#id++}`;
+    const url = this.#createUrl(id);
+    this.#cache.set(map, url);
+    this.#cache.set(key, url);
+    const filter = this.#createFilter(id);
+    this.#addLuminosityConversion(filter);
+    if (map) {
+      this.#addTransferMapAlphaConversion(tableA, filter);
+    }
+    return url;
+  }
+  addHighlightHCMFilter(filterName, fgColor, bgColor, newFgColor, newBgColor) {
+    const key = `${fgColor}-${bgColor}-${newFgColor}-${newBgColor}`;
+    let info = this.#hcmCache.get(filterName);
+    if (info?.key === key) {
+      return info.url;
+    }
+    if (info) {
+      info.filter?.remove();
+      info.key = key;
+      info.url = "none";
+      info.filter = null;
+    } else {
+      info = {
+        key,
+        url: "none",
+        filter: null
+      };
+      this.#hcmCache.set(filterName, info);
+    }
+    if (!fgColor || !bgColor) {
+      return info.url;
+    }
+    const [fgRGB, bgRGB] = [fgColor, bgColor].map(this.#getRGB.bind(this));
+    let fgGray = Math.round(0.2126 * fgRGB[0] + 0.7152 * fgRGB[1] + 0.0722 * fgRGB[2]);
+    let bgGray = Math.round(0.2126 * bgRGB[0] + 0.7152 * bgRGB[1] + 0.0722 * bgRGB[2]);
+    let [newFgRGB, newBgRGB] = [newFgColor, newBgColor].map(this.#getRGB.bind(this));
+    if (bgGray < fgGray) {
+      [fgGray, bgGray, newFgRGB, newBgRGB] = [bgGray, fgGray, newBgRGB, newFgRGB];
+    }
+    this.#defs.style.color = "";
+    const getSteps = (fg, bg, n) => {
+      const arr = new Array(256);
+      const step = (bgGray - fgGray) / n;
+      const newStart = fg / 255;
+      const newStep = (bg - fg) / (255 * n);
+      let prev = 0;
+      for (let i = 0; i <= n; i++) {
+        const k = Math.round(fgGray + i * step);
+        const value = newStart + i * newStep;
+        for (let j = prev; j <= k; j++) {
+          arr[j] = value;
+        }
+        prev = k + 1;
+      }
+      for (let i = prev; i < 256; i++) {
+        arr[i] = arr[prev - 1];
+      }
+      return arr.join(",");
+    };
+    const id = `g_${this.#docId}_hcm_${filterName}_filter`;
+    const filter = info.filter = this.#createFilter(id);
+    this.#addGrayConversion(filter);
+    this.#addTransferMapConversion(getSteps(newFgRGB[0], newBgRGB[0], 5), getSteps(newFgRGB[1], newBgRGB[1], 5), getSteps(newFgRGB[2], newBgRGB[2], 5), filter);
+    info.url = this.#createUrl(id);
+    return info.url;
+  }
+  destroy(keepHCM = false) {
+    if (keepHCM && this.#hcmCache.size !== 0) {
+      return;
+    }
+    if (this.#_defs) {
+      this.#_defs.parentNode.parentNode.remove();
+      this.#_defs = null;
+    }
+    if (this.#_cache) {
+      this.#_cache.clear();
+      this.#_cache = null;
+    }
+    this.#id = 0;
+  }
+  #addLuminosityConversion(filter) {
+    const feColorMatrix = this.#document.createElementNS(SVG_NS, "feColorMatrix");
+    feColorMatrix.setAttribute("type", "matrix");
+    feColorMatrix.setAttribute("values", "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0.59 0.11 0 0");
+    filter.append(feColorMatrix);
+  }
+  #addGrayConversion(filter) {
+    const feColorMatrix = this.#document.createElementNS(SVG_NS, "feColorMatrix");
+    feColorMatrix.setAttribute("type", "matrix");
+    feColorMatrix.setAttribute("values", "0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0");
+    filter.append(feColorMatrix);
+  }
+  #createFilter(id) {
+    const filter = this.#document.createElementNS(SVG_NS, "filter");
+    filter.setAttribute("color-interpolation-filters", "sRGB");
+    filter.setAttribute("id", id);
+    this.#defs.append(filter);
+    return filter;
+  }
+  #appendFeFunc(feComponentTransfer, func, table) {
+    const feFunc = this.#document.createElementNS(SVG_NS, func);
+    feFunc.setAttribute("type", "discrete");
+    feFunc.setAttribute("tableValues", table);
+    feComponentTransfer.append(feFunc);
+  }
+  #addTransferMapConversion(rTable, gTable, bTable, filter) {
+    const feComponentTransfer = this.#document.createElementNS(SVG_NS, "feComponentTransfer");
+    filter.append(feComponentTransfer);
+    this.#appendFeFunc(feComponentTransfer, "feFuncR", rTable);
+    this.#appendFeFunc(feComponentTransfer, "feFuncG", gTable);
+    this.#appendFeFunc(feComponentTransfer, "feFuncB", bTable);
+  }
+  #addTransferMapAlphaConversion(aTable, filter) {
+    const feComponentTransfer = this.#document.createElementNS(SVG_NS, "feComponentTransfer");
+    filter.append(feComponentTransfer);
+    this.#appendFeFunc(feComponentTransfer, "feFuncA", aTable);
+  }
+  #getRGB(color) {
+    this.#defs.style.color = color;
+    return getRGB(getComputedStyle(this.#defs).getPropertyValue("color"));
+  }
+}
+
+;// ./src/display/standard_fontdata_factory.js
+
+
+class BaseStandardFontDataFactory {
+  constructor({
+    baseUrl = null
+  }) {
+    this.baseUrl = baseUrl;
+  }
+  async fetch({
+    filename
+  }) {
+    if (!this.baseUrl) {
+      throw new Error("Ensure that the `standardFontDataUrl` API parameter is provided.");
+    }
+    if (!filename) {
+      throw new Error("Font filename must be specified.");
+    }
+    const url = `${this.baseUrl}${filename}`;
+    return this._fetch(url).catch(reason => {
+      throw new Error(`Unable to load font data at: ${url}`);
+    });
+  }
+  async _fetch(url) {
+    unreachable("Abstract method `_fetch` called.");
+  }
+}
+class DOMStandardFontDataFactory extends BaseStandardFontDataFactory {
+  async _fetch(url) {
+    const data = await fetchData(url, "arraybuffer");
+    return new Uint8Array(data);
+  }
+}
+
 ;// ./src/display/node_utils.js
+
+
+
 
 
 if (isNodeJS) {
@@ -5791,10 +5790,11 @@ class NodePackages {
     return packageMap?.get(name);
   }
 }
-const node_utils_fetchData = function (url) {
+async function node_utils_fetchData(url) {
   const fs = NodePackages.get("fs");
-  return fs.promises.readFile(url).then(data => new Uint8Array(data));
-};
+  const data = await fs.promises.readFile(url);
+  return new Uint8Array(data);
+}
 class NodeFilterFactory extends BaseFilterFactory {}
 class NodeCanvasFactory extends BaseCanvasFactory {
   _createCanvas(width, height) {
@@ -5803,15 +5803,12 @@ class NodeCanvasFactory extends BaseCanvasFactory {
   }
 }
 class NodeCMapReaderFactory extends BaseCMapReaderFactory {
-  _fetchData(url, compressionType) {
-    return node_utils_fetchData(url).then(data => ({
-      cMapData: data,
-      compressionType
-    }));
+  async _fetch(url) {
+    return node_utils_fetchData(url);
   }
 }
 class NodeStandardFontDataFactory extends BaseStandardFontDataFactory {
-  _fetchData(url) {
+  async _fetch(url) {
     return node_utils_fetchData(url);
   }
 }
@@ -7138,8 +7135,8 @@ class CanvasGraphics {
     }
   }
   _scaleImage(img, inverseTransform) {
-    const width = img.width;
-    const height = img.height;
+    const width = img.width ?? img.displayWidth;
+    const height = img.height ?? img.displayHeight;
     let widthScale = Math.max(Math.hypot(inverseTransform[0], inverseTransform[1]), 1);
     let heightScale = Math.max(Math.hypot(inverseTransform[2], inverseTransform[3]), 1);
     let paintWidth = width,
@@ -7390,19 +7387,18 @@ class CanvasGraphics {
     let maskX = layerOffsetX - maskOffsetX;
     let maskY = layerOffsetY - maskOffsetY;
     if (backdrop) {
+      const backdropRGB = Util.makeHexColor(...backdrop);
       if (maskX < 0 || maskY < 0 || maskX + width > maskCanvas.width || maskY + height > maskCanvas.height) {
         const canvas = this.cachedCanvases.getCanvas("maskExtension", width, height);
         const ctx = canvas.context;
         ctx.drawImage(maskCanvas, -maskX, -maskY);
-        if (backdrop.some(c => c !== 0)) {
-          ctx.globalCompositeOperation = "destination-atop";
-          ctx.fillStyle = Util.makeHexColor(...backdrop);
-          ctx.fillRect(0, 0, width, height);
-          ctx.globalCompositeOperation = "source-over";
-        }
+        ctx.globalCompositeOperation = "destination-atop";
+        ctx.fillStyle = backdropRGB;
+        ctx.fillRect(0, 0, width, height);
+        ctx.globalCompositeOperation = "source-over";
         maskCanvas = canvas.canvas;
         maskX = maskY = 0;
-      } else if (backdrop.some(c => c !== 0)) {
+      } else {
         maskCtx.save();
         maskCtx.globalAlpha = 1;
         maskCtx.setTransform(1, 0, 0, 1, 0, 0);
@@ -7410,7 +7406,7 @@ class CanvasGraphics {
         clip.rect(maskX, maskY, width, height);
         maskCtx.clip(clip);
         maskCtx.globalCompositeOperation = "destination-atop";
-        maskCtx.fillStyle = Util.makeHexColor(...backdrop);
+        maskCtx.fillStyle = backdropRGB;
         maskCtx.fillRect(maskX, maskY, width, height);
         maskCtx.restore();
       }
@@ -8644,6 +8640,7 @@ function wrapReason(reason) {
   }
 }
 class MessageHandler {
+  #messageAC = new AbortController();
   constructor(sourceName, targetName, comObj) {
     this.sourceName = sourceName;
     this.targetName = targetName;
@@ -8654,66 +8651,70 @@ class MessageHandler {
     this.streamControllers = Object.create(null);
     this.callbackCapabilities = Object.create(null);
     this.actionHandler = Object.create(null);
-    this._onComObjOnMessage = event => {
-      const data = event.data;
-      if (data.targetName !== this.sourceName) {
-        return;
+    comObj.addEventListener("message", this.#onMessage.bind(this), {
+      signal: this.#messageAC.signal
+    });
+  }
+  #onMessage({
+    data
+  }) {
+    if (data.targetName !== this.sourceName) {
+      return;
+    }
+    if (data.stream) {
+      this.#processStreamMessage(data);
+      return;
+    }
+    if (data.callback) {
+      const callbackId = data.callbackId;
+      const capability = this.callbackCapabilities[callbackId];
+      if (!capability) {
+        throw new Error(`Cannot resolve callback ${callbackId}`);
       }
-      if (data.stream) {
-        this.#processStreamMessage(data);
-        return;
+      delete this.callbackCapabilities[callbackId];
+      if (data.callback === CallbackKind.DATA) {
+        capability.resolve(data.data);
+      } else if (data.callback === CallbackKind.ERROR) {
+        capability.reject(wrapReason(data.reason));
+      } else {
+        throw new Error("Unexpected callback case");
       }
-      if (data.callback) {
-        const callbackId = data.callbackId;
-        const capability = this.callbackCapabilities[callbackId];
-        if (!capability) {
-          throw new Error(`Cannot resolve callback ${callbackId}`);
-        }
-        delete this.callbackCapabilities[callbackId];
-        if (data.callback === CallbackKind.DATA) {
-          capability.resolve(data.data);
-        } else if (data.callback === CallbackKind.ERROR) {
-          capability.reject(wrapReason(data.reason));
-        } else {
-          throw new Error("Unexpected callback case");
-        }
-        return;
-      }
-      const action = this.actionHandler[data.action];
-      if (!action) {
-        throw new Error(`Unknown action from worker: ${data.action}`);
-      }
-      if (data.callbackId) {
-        const cbSourceName = this.sourceName;
-        const cbTargetName = data.sourceName;
-        new Promise(function (resolve) {
-          resolve(action(data.data));
-        }).then(function (result) {
-          comObj.postMessage({
-            sourceName: cbSourceName,
-            targetName: cbTargetName,
-            callback: CallbackKind.DATA,
-            callbackId: data.callbackId,
-            data: result
-          });
-        }, function (reason) {
-          comObj.postMessage({
-            sourceName: cbSourceName,
-            targetName: cbTargetName,
-            callback: CallbackKind.ERROR,
-            callbackId: data.callbackId,
-            reason: wrapReason(reason)
-          });
+      return;
+    }
+    const action = this.actionHandler[data.action];
+    if (!action) {
+      throw new Error(`Unknown action from worker: ${data.action}`);
+    }
+    if (data.callbackId) {
+      const sourceName = this.sourceName,
+        targetName = data.sourceName,
+        comObj = this.comObj;
+      new Promise(function (resolve) {
+        resolve(action(data.data));
+      }).then(function (result) {
+        comObj.postMessage({
+          sourceName,
+          targetName,
+          callback: CallbackKind.DATA,
+          callbackId: data.callbackId,
+          data: result
         });
-        return;
-      }
-      if (data.streamId) {
-        this.#createStreamSink(data);
-        return;
-      }
-      action(data.data);
-    };
-    comObj.addEventListener("message", this._onComObjOnMessage);
+      }, function (reason) {
+        comObj.postMessage({
+          sourceName,
+          targetName,
+          callback: CallbackKind.ERROR,
+          callbackId: data.callbackId,
+          reason: wrapReason(reason)
+        });
+      });
+      return;
+    }
+    if (data.streamId) {
+      this.#createStreamSink(data);
+      return;
+    }
+    action(data.data);
   }
   on(actionName, handler) {
     const ah = this.actionHandler;
@@ -9005,7 +9006,8 @@ class MessageHandler {
     delete this.streamControllers[streamId];
   }
   destroy() {
-    this.comObj.removeEventListener("message", this._onComObjOnMessage);
+    this.#messageAC?.abort();
+    this.#messageAC = null;
   }
 }
 
@@ -9047,13 +9049,15 @@ class OptionalContentGroup {
   constructor(renderingIntent, {
     name,
     intent,
-    usage
+    usage,
+    rbGroups
   }) {
     this.#isDisplay = !!(renderingIntent & RenderingIntentFlag.DISPLAY);
     this.#isPrint = !!(renderingIntent & RenderingIntentFlag.PRINT);
     this.name = name;
     this.intent = intent;
     this.usage = usage;
+    this.rbGroups = rbGroups;
   }
   get visible() {
     if (this.#userSet) {
@@ -9217,11 +9221,20 @@ class OptionalContentConfig {
     warn(`Unknown group type ${group.type}.`);
     return true;
   }
-  setVisibility(id, visible = true) {
+  setVisibility(id, visible = true, preserveRB = true) {
     const group = this.#groups.get(id);
     if (!group) {
       warn(`Optional content group not found: ${id}`);
       return;
+    }
+    if (preserveRB && visible && group.rbGroups.length) {
+      for (const rbGroup of group.rbGroups) {
+        for (const otherId of rbGroup) {
+          if (otherId !== id) {
+            this.#groups.get(otherId)?._setVisible(INTERNAL, false, true);
+          }
+        }
+      }
     }
     group._setVisible(INTERNAL, !!visible, true);
     this.#cachedGetHash = null;
@@ -9245,13 +9258,13 @@ class OptionalContentConfig {
       }
       switch (operator) {
         case "ON":
-          group._setVisible(INTERNAL, true);
+          this.setVisibility(elem, true, preserveRB);
           break;
         case "OFF":
-          group._setVisible(INTERNAL, false);
+          this.setVisibility(elem, false, preserveRB);
           break;
         case "Toggle":
-          group._setVisible(INTERNAL, !group.visible);
+          this.setVisibility(elem, !group.visible, preserveRB);
           break;
       }
     }
@@ -11104,6 +11117,10 @@ class XfaText {
 
 
 
+
+
+
+
 const DEFAULT_RANGE_CHUNK_SIZE = 65536;
 const RENDERING_CANCELLED_TIMEOUT = 100;
 const DELAYED_CLEANUP_TIMEOUT = 5000;
@@ -11144,6 +11161,7 @@ function getDocument(src = {}) {
   const maxImageSize = Number.isInteger(src.maxImageSize) && src.maxImageSize > -1 ? src.maxImageSize : -1;
   const isEvalSupported = src.isEvalSupported !== false;
   const isOffscreenCanvasSupported = typeof src.isOffscreenCanvasSupported === "boolean" ? src.isOffscreenCanvasSupported : !isNodeJS;
+  const isChrome = typeof src.isChrome === "boolean" ? src.isChrome : !util_FeatureTest.platform.isFirefox && typeof window !== "undefined" && !!window?.chrome;
   const canvasMaxAreaInBytes = Number.isInteger(src.canvasMaxAreaInBytes) ? src.canvasMaxAreaInBytes : -1;
   const disableFontFace = typeof src.disableFontFace === "boolean" ? src.disableFontFace : isNodeJS;
   const fontExtraProperties = src.fontExtraProperties === true;
@@ -11194,7 +11212,7 @@ function getDocument(src = {}) {
   }
   const docParams = {
     docId,
-    apiVersion: "4.7.76",
+    apiVersion: "4.8.69",
     data,
     password,
     disableAutoFetch,
@@ -11208,6 +11226,7 @@ function getDocument(src = {}) {
       ignoreErrors,
       isEvalSupported,
       isOffscreenCanvasSupported,
+      isChrome,
       canvasMaxAreaInBytes,
       fontExtraProperties,
       useSystemFonts,
@@ -11956,7 +11975,7 @@ class PDFPageProxy {
   }
 }
 class LoopbackPort {
-  #listeners = new Set();
+  #listeners = new Map();
   #deferred = Promise.resolve();
   postMessage(obj, transfer) {
     const event = {
@@ -11965,18 +11984,36 @@ class LoopbackPort {
       } : null)
     };
     this.#deferred.then(() => {
-      for (const listener of this.#listeners) {
+      for (const [listener] of this.#listeners) {
         listener.call(this, event);
       }
     });
   }
-  addEventListener(name, listener) {
-    this.#listeners.add(listener);
+  addEventListener(name, listener, options = null) {
+    let rmAbort = null;
+    if (options?.signal instanceof AbortSignal) {
+      const {
+        signal
+      } = options;
+      if (signal.aborted) {
+        warn("LoopbackPort - cannot use an `aborted` signal.");
+        return;
+      }
+      const onAbort = () => this.removeEventListener(name, listener);
+      rmAbort = () => signal.removeEventListener("abort", onAbort);
+      signal.addEventListener("abort", onAbort);
+    }
+    this.#listeners.set(listener, rmAbort);
   }
   removeEventListener(name, listener) {
+    const rmAbort = this.#listeners.get(listener);
+    rmAbort?.();
     this.#listeners.delete(listener);
   }
   terminate() {
+    for (const [, rmAbort] of this.#listeners) {
+      rmAbort?.();
+    }
     this.#listeners.clear();
   }
 }
@@ -12357,28 +12394,29 @@ class WorkerTransport {
         });
       };
     });
-    messageHandler.on("ReaderHeadersReady", data => {
-      const headersCapability = Promise.withResolvers();
-      const fullReader = this._fullReader;
-      fullReader.headersReady.then(() => {
-        if (!fullReader.isStreamingSupported || !fullReader.isRangeSupported) {
-          if (this._lastProgress) {
-            loadingTask.onProgress?.(this._lastProgress);
-          }
-          fullReader.onProgress = evt => {
-            loadingTask.onProgress?.({
-              loaded: evt.loaded,
-              total: evt.total
-            });
-          };
+    messageHandler.on("ReaderHeadersReady", async data => {
+      await this._fullReader.headersReady;
+      const {
+        isStreamingSupported,
+        isRangeSupported,
+        contentLength
+      } = this._fullReader;
+      if (!isStreamingSupported || !isRangeSupported) {
+        if (this._lastProgress) {
+          loadingTask.onProgress?.(this._lastProgress);
         }
-        headersCapability.resolve({
-          isStreamingSupported: fullReader.isStreamingSupported,
-          isRangeSupported: fullReader.isRangeSupported,
-          contentLength: fullReader.contentLength
-        });
-      }, headersCapability.reject);
-      return headersCapability.promise;
+        this._fullReader.onProgress = evt => {
+          loadingTask.onProgress?.({
+            loaded: evt.loaded,
+            total: evt.total
+          });
+        };
+      }
+      return {
+        isStreamingSupported,
+        isRangeSupported,
+        contentLength
+      };
     });
     messageHandler.on("GetRangeReader", (data, sink) => {
       assert(this._networkStream, "GetRangeReader - no `IPDFStream` instance available.");
@@ -12576,21 +12614,21 @@ class WorkerTransport {
         total: data.total
       });
     });
-    messageHandler.on("FetchBuiltInCMap", data => {
+    messageHandler.on("FetchBuiltInCMap", async data => {
       if (this.destroyed) {
-        return Promise.reject(new Error("Worker was destroyed."));
+        throw new Error("Worker was destroyed.");
       }
       if (!this.cMapReaderFactory) {
-        return Promise.reject(new Error("CMapReaderFactory not initialized, see the `useWorkerFetch` parameter."));
+        throw new Error("CMapReaderFactory not initialized, see the `useWorkerFetch` parameter.");
       }
       return this.cMapReaderFactory.fetch(data);
     });
-    messageHandler.on("FetchStandardFontData", data => {
+    messageHandler.on("FetchStandardFontData", async data => {
       if (this.destroyed) {
-        return Promise.reject(new Error("Worker was destroyed."));
+        throw new Error("Worker was destroyed.");
       }
       if (!this.standardFontDataFactory) {
-        return Promise.reject(new Error("StandardFontDataFactory not initialized, see the `useWorkerFetch` parameter."));
+        throw new Error("StandardFontDataFactory not initialized, see the `useWorkerFetch` parameter.");
       }
       return this.standardFontDataFactory.fetch(data);
     });
@@ -12976,8 +13014,8 @@ class InternalRenderTask {
     }
   }
 }
-const version = "4.7.76";
-const build = "8b73b828b";
+const version = "4.8.69";
+const build = "3634dab10";
 
 ;// ./src/shared/scripting_utils.js
 function makeColorComp(n) {
@@ -13035,6 +13073,40 @@ class ColorConverters {
     const y = 1 - b;
     const k = Math.min(c, m, y);
     return ["CMYK", c, m, y, k];
+  }
+}
+
+;// ./src/display/svg_factory.js
+
+
+class BaseSVGFactory {
+  create(width, height, skipDimensions = false) {
+    if (width <= 0 || height <= 0) {
+      throw new Error("Invalid SVG dimensions");
+    }
+    const svg = this._createSVG("svg:svg");
+    svg.setAttribute("version", "1.1");
+    if (!skipDimensions) {
+      svg.setAttribute("width", `${width}px`);
+      svg.setAttribute("height", `${height}px`);
+    }
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    return svg;
+  }
+  createElement(type) {
+    if (typeof type !== "string") {
+      throw new Error("Invalid SVG element type");
+    }
+    return this._createSVG(type);
+  }
+  _createSVG(type) {
+    unreachable("Abstract method `_createSVG` called.");
+  }
+}
+class DOMSVGFactory extends BaseSVGFactory {
+  _createSVG(type) {
+    return document.createElementNS(SVG_NS, type);
   }
 }
 
@@ -13255,6 +13327,7 @@ class XfaLayer {
 
 
 
+
 const DEFAULT_TAB_INDEX = 1000;
 const annotation_layer_DEFAULT_FONT_SIZE = 9;
 const GetElementsByNameSet = new WeakSet();
@@ -13441,9 +13514,6 @@ class AnnotationElement {
       style
     } = container;
     style.zIndex = this.parent.zIndex++;
-    if (data.popupRef) {
-      container.setAttribute("aria-haspopup", "dialog");
-    }
     if (data.alternativeText) {
       container.title = data.alternativeText;
     }
@@ -13725,10 +13795,8 @@ class AnnotationElement {
   }
   _createPopup() {
     const {
-      container,
       data
     } = this;
-    container.setAttribute("aria-haspopup", "dialog");
     const popup = this.#popupElement = new PopupAnnotationElement({
       data: {
         color: data.color,
@@ -14948,6 +15016,7 @@ class PopupAnnotationElement extends AnnotationElement {
     const elementIds = [];
     for (const element of this.elements) {
       element.popup = popup;
+      element.container.ariaHasPopup = "dialog";
       elementIds.push(element.data.id);
       element.addHighlightArea();
     }
@@ -15513,10 +15582,10 @@ class InkAnnotationElement extends AnnotationElement {
       polyline.setAttribute("stroke-width", borderStyle.width || 1);
       polyline.setAttribute("stroke", "transparent");
       polyline.setAttribute("fill", "transparent");
-      if (!popupRef && this.hasPopupData) {
-        this._createPopup();
-      }
       svg.append(polyline);
+    }
+    if (!popupRef && this.hasPopupData) {
+      this._createPopup();
     }
     this.container.append(svg);
     this._editOnDoubleClick();
@@ -15883,9 +15952,7 @@ class FreeTextEditor extends AnnotationEditor {
     this.#fontSize = params.fontSize || FreeTextEditor._defaultFontSize;
   }
   static initialize(l10n, uiManager) {
-    AnnotationEditor.initialize(l10n, uiManager, {
-      strings: ["pdfjs-free-text-default-content"]
-    });
+    AnnotationEditor.initialize(l10n, uiManager);
     const style = getComputedStyle(document.documentElement);
     this._internalPadding = parseFloat(style.getPropertyValue("--freetext-padding"));
   }
@@ -16168,9 +16235,9 @@ class FreeTextEditor extends AnnotationEditor {
     this.editorDiv = document.createElement("div");
     this.editorDiv.className = "internal";
     this.editorDiv.setAttribute("id", this.#editorDivId);
-    this.editorDiv.setAttribute("data-l10n-id", "pdfjs-free-text");
+    this.editorDiv.setAttribute("data-l10n-id", "pdfjs-free-text2");
+    this.editorDiv.setAttribute("data-l10n-attrs", "default-content");
     this.enableEditing();
-    AnnotationEditor._l10nPromise.get("pdfjs-free-text-default-content").then(msg => this.editorDiv?.setAttribute("default-content", msg));
     this.editorDiv.contentEditable = true;
     const {
       style
@@ -16440,9 +16507,419 @@ class FreeTextEditor extends AnnotationEditor {
   }
 }
 
-;// ./src/display/editor/outliner.js
+;// ./src/display/editor/drawers/outline.js
 
-class Outliner {
+class Outline {
+  toSVGPath() {
+    unreachable("Abstract method `toSVGPath` must be implemented.");
+  }
+  get box() {
+    unreachable("Abstract getter `box` must be implemented.");
+  }
+  serialize(_bbox, _rotation) {
+    unreachable("Abstract method `serialize` must be implemented.");
+  }
+  get classNamesForDrawing() {
+    unreachable("Abstract getter `classNamesForDrawing` must be implemented.");
+  }
+  get classNamesForOutlining() {
+    unreachable("Abstract getter `classNamesForOutlining` must be implemented.");
+  }
+  get mustRemoveSelfIntersections() {
+    return false;
+  }
+}
+
+;// ./src/display/editor/drawers/freedraw.js
+
+
+class FreeDrawOutliner {
+  #box;
+  #bottom = [];
+  #innerMargin;
+  #isLTR;
+  #top = [];
+  #last = new Float64Array(18);
+  #lastX;
+  #lastY;
+  #min;
+  #min_dist;
+  #scaleFactor;
+  #thickness;
+  #points = [];
+  static #MIN_DIST = 8;
+  static #MIN_DIFF = 2;
+  static #MIN = FreeDrawOutliner.#MIN_DIST + FreeDrawOutliner.#MIN_DIFF;
+  constructor({
+    x,
+    y
+  }, box, scaleFactor, thickness, isLTR, innerMargin = 0) {
+    this.#box = box;
+    this.#thickness = thickness * scaleFactor;
+    this.#isLTR = isLTR;
+    this.#last.set([NaN, NaN, NaN, NaN, x, y], 6);
+    this.#innerMargin = innerMargin;
+    this.#min_dist = FreeDrawOutliner.#MIN_DIST * scaleFactor;
+    this.#min = FreeDrawOutliner.#MIN * scaleFactor;
+    this.#scaleFactor = scaleFactor;
+    this.#points.push(x, y);
+  }
+  isEmpty() {
+    return isNaN(this.#last[8]);
+  }
+  #getLastCoords() {
+    const lastTop = this.#last.subarray(4, 6);
+    const lastBottom = this.#last.subarray(16, 18);
+    const [x, y, width, height] = this.#box;
+    return [(this.#lastX + (lastTop[0] - lastBottom[0]) / 2 - x) / width, (this.#lastY + (lastTop[1] - lastBottom[1]) / 2 - y) / height, (this.#lastX + (lastBottom[0] - lastTop[0]) / 2 - x) / width, (this.#lastY + (lastBottom[1] - lastTop[1]) / 2 - y) / height];
+  }
+  add({
+    x,
+    y
+  }) {
+    this.#lastX = x;
+    this.#lastY = y;
+    const [layerX, layerY, layerWidth, layerHeight] = this.#box;
+    let [x1, y1, x2, y2] = this.#last.subarray(8, 12);
+    const diffX = x - x2;
+    const diffY = y - y2;
+    const d = Math.hypot(diffX, diffY);
+    if (d < this.#min) {
+      return false;
+    }
+    const diffD = d - this.#min_dist;
+    const K = diffD / d;
+    const shiftX = K * diffX;
+    const shiftY = K * diffY;
+    let x0 = x1;
+    let y0 = y1;
+    x1 = x2;
+    y1 = y2;
+    x2 += shiftX;
+    y2 += shiftY;
+    this.#points?.push(x, y);
+    const nX = -shiftY / diffD;
+    const nY = shiftX / diffD;
+    const thX = nX * this.#thickness;
+    const thY = nY * this.#thickness;
+    this.#last.set(this.#last.subarray(2, 8), 0);
+    this.#last.set([x2 + thX, y2 + thY], 4);
+    this.#last.set(this.#last.subarray(14, 18), 12);
+    this.#last.set([x2 - thX, y2 - thY], 16);
+    if (isNaN(this.#last[6])) {
+      if (this.#top.length === 0) {
+        this.#last.set([x1 + thX, y1 + thY], 2);
+        this.#top.push(NaN, NaN, NaN, NaN, (x1 + thX - layerX) / layerWidth, (y1 + thY - layerY) / layerHeight);
+        this.#last.set([x1 - thX, y1 - thY], 14);
+        this.#bottom.push(NaN, NaN, NaN, NaN, (x1 - thX - layerX) / layerWidth, (y1 - thY - layerY) / layerHeight);
+      }
+      this.#last.set([x0, y0, x1, y1, x2, y2], 6);
+      return !this.isEmpty();
+    }
+    this.#last.set([x0, y0, x1, y1, x2, y2], 6);
+    const angle = Math.abs(Math.atan2(y0 - y1, x0 - x1) - Math.atan2(shiftY, shiftX));
+    if (angle < Math.PI / 2) {
+      [x1, y1, x2, y2] = this.#last.subarray(2, 6);
+      this.#top.push(NaN, NaN, NaN, NaN, ((x1 + x2) / 2 - layerX) / layerWidth, ((y1 + y2) / 2 - layerY) / layerHeight);
+      [x1, y1, x0, y0] = this.#last.subarray(14, 18);
+      this.#bottom.push(NaN, NaN, NaN, NaN, ((x0 + x1) / 2 - layerX) / layerWidth, ((y0 + y1) / 2 - layerY) / layerHeight);
+      return true;
+    }
+    [x0, y0, x1, y1, x2, y2] = this.#last.subarray(0, 6);
+    this.#top.push(((x0 + 5 * x1) / 6 - layerX) / layerWidth, ((y0 + 5 * y1) / 6 - layerY) / layerHeight, ((5 * x1 + x2) / 6 - layerX) / layerWidth, ((5 * y1 + y2) / 6 - layerY) / layerHeight, ((x1 + x2) / 2 - layerX) / layerWidth, ((y1 + y2) / 2 - layerY) / layerHeight);
+    [x2, y2, x1, y1, x0, y0] = this.#last.subarray(12, 18);
+    this.#bottom.push(((x0 + 5 * x1) / 6 - layerX) / layerWidth, ((y0 + 5 * y1) / 6 - layerY) / layerHeight, ((5 * x1 + x2) / 6 - layerX) / layerWidth, ((5 * y1 + y2) / 6 - layerY) / layerHeight, ((x1 + x2) / 2 - layerX) / layerWidth, ((y1 + y2) / 2 - layerY) / layerHeight);
+    return true;
+  }
+  toSVGPath() {
+    if (this.isEmpty()) {
+      return "";
+    }
+    const top = this.#top;
+    const bottom = this.#bottom;
+    if (isNaN(this.#last[6]) && !this.isEmpty()) {
+      return this.#toSVGPathTwoPoints();
+    }
+    const buffer = [];
+    buffer.push(`M${top[4]} ${top[5]}`);
+    for (let i = 6; i < top.length; i += 6) {
+      if (isNaN(top[i])) {
+        buffer.push(`L${top[i + 4]} ${top[i + 5]}`);
+      } else {
+        buffer.push(`C${top[i]} ${top[i + 1]} ${top[i + 2]} ${top[i + 3]} ${top[i + 4]} ${top[i + 5]}`);
+      }
+    }
+    this.#toSVGPathEnd(buffer);
+    for (let i = bottom.length - 6; i >= 6; i -= 6) {
+      if (isNaN(bottom[i])) {
+        buffer.push(`L${bottom[i + 4]} ${bottom[i + 5]}`);
+      } else {
+        buffer.push(`C${bottom[i]} ${bottom[i + 1]} ${bottom[i + 2]} ${bottom[i + 3]} ${bottom[i + 4]} ${bottom[i + 5]}`);
+      }
+    }
+    this.#toSVGPathStart(buffer);
+    return buffer.join(" ");
+  }
+  #toSVGPathTwoPoints() {
+    const [x, y, width, height] = this.#box;
+    const [lastTopX, lastTopY, lastBottomX, lastBottomY] = this.#getLastCoords();
+    return `M${(this.#last[2] - x) / width} ${(this.#last[3] - y) / height} L${(this.#last[4] - x) / width} ${(this.#last[5] - y) / height} L${lastTopX} ${lastTopY} L${lastBottomX} ${lastBottomY} L${(this.#last[16] - x) / width} ${(this.#last[17] - y) / height} L${(this.#last[14] - x) / width} ${(this.#last[15] - y) / height} Z`;
+  }
+  #toSVGPathStart(buffer) {
+    const bottom = this.#bottom;
+    buffer.push(`L${bottom[4]} ${bottom[5]} Z`);
+  }
+  #toSVGPathEnd(buffer) {
+    const [x, y, width, height] = this.#box;
+    const lastTop = this.#last.subarray(4, 6);
+    const lastBottom = this.#last.subarray(16, 18);
+    const [lastTopX, lastTopY, lastBottomX, lastBottomY] = this.#getLastCoords();
+    buffer.push(`L${(lastTop[0] - x) / width} ${(lastTop[1] - y) / height} L${lastTopX} ${lastTopY} L${lastBottomX} ${lastBottomY} L${(lastBottom[0] - x) / width} ${(lastBottom[1] - y) / height}`);
+  }
+  newFreeDrawOutline(outline, points, box, scaleFactor, innerMargin, isLTR) {
+    return new FreeDrawOutline(outline, points, box, scaleFactor, innerMargin, isLTR);
+  }
+  getOutlines() {
+    const top = this.#top;
+    const bottom = this.#bottom;
+    const last = this.#last;
+    const [layerX, layerY, layerWidth, layerHeight] = this.#box;
+    const points = new Float64Array((this.#points?.length ?? 0) + 2);
+    for (let i = 0, ii = points.length - 2; i < ii; i += 2) {
+      points[i] = (this.#points[i] - layerX) / layerWidth;
+      points[i + 1] = (this.#points[i + 1] - layerY) / layerHeight;
+    }
+    points[points.length - 2] = (this.#lastX - layerX) / layerWidth;
+    points[points.length - 1] = (this.#lastY - layerY) / layerHeight;
+    if (isNaN(last[6]) && !this.isEmpty()) {
+      return this.#getOutlineTwoPoints(points);
+    }
+    const outline = new Float64Array(this.#top.length + 24 + this.#bottom.length);
+    let N = top.length;
+    for (let i = 0; i < N; i += 2) {
+      if (isNaN(top[i])) {
+        outline[i] = outline[i + 1] = NaN;
+        continue;
+      }
+      outline[i] = top[i];
+      outline[i + 1] = top[i + 1];
+    }
+    N = this.#getOutlineEnd(outline, N);
+    for (let i = bottom.length - 6; i >= 6; i -= 6) {
+      for (let j = 0; j < 6; j += 2) {
+        if (isNaN(bottom[i + j])) {
+          outline[N] = outline[N + 1] = NaN;
+          N += 2;
+          continue;
+        }
+        outline[N] = bottom[i + j];
+        outline[N + 1] = bottom[i + j + 1];
+        N += 2;
+      }
+    }
+    this.#getOutlineStart(outline, N);
+    return this.newFreeDrawOutline(outline, points, this.#box, this.#scaleFactor, this.#innerMargin, this.#isLTR);
+  }
+  #getOutlineTwoPoints(points) {
+    const last = this.#last;
+    const [layerX, layerY, layerWidth, layerHeight] = this.#box;
+    const [lastTopX, lastTopY, lastBottomX, lastBottomY] = this.#getLastCoords();
+    const outline = new Float64Array(36);
+    outline.set([NaN, NaN, NaN, NaN, (last[2] - layerX) / layerWidth, (last[3] - layerY) / layerHeight, NaN, NaN, NaN, NaN, (last[4] - layerX) / layerWidth, (last[5] - layerY) / layerHeight, NaN, NaN, NaN, NaN, lastTopX, lastTopY, NaN, NaN, NaN, NaN, lastBottomX, lastBottomY, NaN, NaN, NaN, NaN, (last[16] - layerX) / layerWidth, (last[17] - layerY) / layerHeight, NaN, NaN, NaN, NaN, (last[14] - layerX) / layerWidth, (last[15] - layerY) / layerHeight], 0);
+    return this.newFreeDrawOutline(outline, points, this.#box, this.#scaleFactor, this.#innerMargin, this.#isLTR);
+  }
+  #getOutlineStart(outline, pos) {
+    const bottom = this.#bottom;
+    outline.set([NaN, NaN, NaN, NaN, bottom[4], bottom[5]], pos);
+    return pos += 6;
+  }
+  #getOutlineEnd(outline, pos) {
+    const lastTop = this.#last.subarray(4, 6);
+    const lastBottom = this.#last.subarray(16, 18);
+    const [layerX, layerY, layerWidth, layerHeight] = this.#box;
+    const [lastTopX, lastTopY, lastBottomX, lastBottomY] = this.#getLastCoords();
+    outline.set([NaN, NaN, NaN, NaN, (lastTop[0] - layerX) / layerWidth, (lastTop[1] - layerY) / layerHeight, NaN, NaN, NaN, NaN, lastTopX, lastTopY, NaN, NaN, NaN, NaN, lastBottomX, lastBottomY, NaN, NaN, NaN, NaN, (lastBottom[0] - layerX) / layerWidth, (lastBottom[1] - layerY) / layerHeight], pos);
+    return pos += 24;
+  }
+}
+class FreeDrawOutline extends Outline {
+  #box;
+  #bbox = null;
+  #innerMargin;
+  #isLTR;
+  #points;
+  #scaleFactor;
+  #outline;
+  constructor(outline, points, box, scaleFactor, innerMargin, isLTR) {
+    super();
+    this.#outline = outline;
+    this.#points = points;
+    this.#box = box;
+    this.#scaleFactor = scaleFactor;
+    this.#innerMargin = innerMargin;
+    this.#isLTR = isLTR;
+    this.#computeMinMax(isLTR);
+    const {
+      x,
+      y,
+      width,
+      height
+    } = this.#bbox;
+    for (let i = 0, ii = outline.length; i < ii; i += 2) {
+      outline[i] = (outline[i] - x) / width;
+      outline[i + 1] = (outline[i + 1] - y) / height;
+    }
+    for (let i = 0, ii = points.length; i < ii; i += 2) {
+      points[i] = (points[i] - x) / width;
+      points[i + 1] = (points[i + 1] - y) / height;
+    }
+  }
+  toSVGPath() {
+    const buffer = [`M${this.#outline[4]} ${this.#outline[5]}`];
+    for (let i = 6, ii = this.#outline.length; i < ii; i += 6) {
+      if (isNaN(this.#outline[i])) {
+        buffer.push(`L${this.#outline[i + 4]} ${this.#outline[i + 5]}`);
+        continue;
+      }
+      buffer.push(`C${this.#outline[i]} ${this.#outline[i + 1]} ${this.#outline[i + 2]} ${this.#outline[i + 3]} ${this.#outline[i + 4]} ${this.#outline[i + 5]}`);
+    }
+    buffer.push("Z");
+    return buffer.join(" ");
+  }
+  serialize([blX, blY, trX, trY], rotation) {
+    const width = trX - blX;
+    const height = trY - blY;
+    let outline;
+    let points;
+    switch (rotation) {
+      case 0:
+        outline = this.#rescale(this.#outline, blX, trY, width, -height);
+        points = this.#rescale(this.#points, blX, trY, width, -height);
+        break;
+      case 90:
+        outline = this.#rescaleAndSwap(this.#outline, blX, blY, width, height);
+        points = this.#rescaleAndSwap(this.#points, blX, blY, width, height);
+        break;
+      case 180:
+        outline = this.#rescale(this.#outline, trX, blY, -width, height);
+        points = this.#rescale(this.#points, trX, blY, -width, height);
+        break;
+      case 270:
+        outline = this.#rescaleAndSwap(this.#outline, trX, trY, -width, -height);
+        points = this.#rescaleAndSwap(this.#points, trX, trY, -width, -height);
+        break;
+    }
+    return {
+      outline: Array.from(outline),
+      points: [Array.from(points)]
+    };
+  }
+  #rescale(src, tx, ty, sx, sy) {
+    const dest = new Float64Array(src.length);
+    for (let i = 0, ii = src.length; i < ii; i += 2) {
+      dest[i] = tx + src[i] * sx;
+      dest[i + 1] = ty + src[i + 1] * sy;
+    }
+    return dest;
+  }
+  #rescaleAndSwap(src, tx, ty, sx, sy) {
+    const dest = new Float64Array(src.length);
+    for (let i = 0, ii = src.length; i < ii; i += 2) {
+      dest[i] = tx + src[i + 1] * sx;
+      dest[i + 1] = ty + src[i] * sy;
+    }
+    return dest;
+  }
+  #computeMinMax(isLTR) {
+    const outline = this.#outline;
+    let lastX = outline[4];
+    let lastY = outline[5];
+    let minX = lastX;
+    let minY = lastY;
+    let maxX = lastX;
+    let maxY = lastY;
+    let lastPointX = lastX;
+    let lastPointY = lastY;
+    const ltrCallback = isLTR ? Math.max : Math.min;
+    for (let i = 6, ii = outline.length; i < ii; i += 6) {
+      if (isNaN(outline[i])) {
+        minX = Math.min(minX, outline[i + 4]);
+        minY = Math.min(minY, outline[i + 5]);
+        maxX = Math.max(maxX, outline[i + 4]);
+        maxY = Math.max(maxY, outline[i + 5]);
+        if (lastPointY < outline[i + 5]) {
+          lastPointX = outline[i + 4];
+          lastPointY = outline[i + 5];
+        } else if (lastPointY === outline[i + 5]) {
+          lastPointX = ltrCallback(lastPointX, outline[i + 4]);
+        }
+      } else {
+        const bbox = Util.bezierBoundingBox(lastX, lastY, ...outline.slice(i, i + 6));
+        minX = Math.min(minX, bbox[0]);
+        minY = Math.min(minY, bbox[1]);
+        maxX = Math.max(maxX, bbox[2]);
+        maxY = Math.max(maxY, bbox[3]);
+        if (lastPointY < bbox[3]) {
+          lastPointX = bbox[2];
+          lastPointY = bbox[3];
+        } else if (lastPointY === bbox[3]) {
+          lastPointX = ltrCallback(lastPointX, bbox[2]);
+        }
+      }
+      lastX = outline[i + 4];
+      lastY = outline[i + 5];
+    }
+    const x = minX - this.#innerMargin,
+      y = minY - this.#innerMargin,
+      width = maxX - minX + 2 * this.#innerMargin,
+      height = maxY - minY + 2 * this.#innerMargin;
+    this.#bbox = {
+      x,
+      y,
+      width,
+      height,
+      lastPoint: [lastPointX, lastPointY]
+    };
+  }
+  get box() {
+    return this.#bbox;
+  }
+  newOutliner(point, box, scaleFactor, thickness, isLTR, innerMargin = 0) {
+    return new FreeDrawOutliner(point, box, scaleFactor, thickness, isLTR, innerMargin);
+  }
+  getNewOutline(thickness, innerMargin) {
+    const {
+      x,
+      y,
+      width,
+      height
+    } = this.#bbox;
+    const [layerX, layerY, layerWidth, layerHeight] = this.#box;
+    const sx = width * layerWidth;
+    const sy = height * layerHeight;
+    const tx = x * layerWidth + layerX;
+    const ty = y * layerHeight + layerY;
+    const outliner = this.newOutliner({
+      x: this.#points[0] * sx + tx,
+      y: this.#points[1] * sy + ty
+    }, this.#box, this.#scaleFactor, thickness, this.#isLTR, innerMargin ?? this.#innerMargin);
+    for (let i = 2; i < this.#points.length; i += 2) {
+      outliner.add({
+        x: this.#points[i] * sx + tx,
+        y: this.#points[i + 1] * sy + ty
+      });
+    }
+    return outliner.getOutlines();
+  }
+  get mustRemoveSelfIntersections() {
+    return true;
+  }
+}
+
+;// ./src/display/editor/drawers/highlight.js
+
+
+class HighlightOutliner {
   #box;
   #verticalEdges = [];
   #intervals = [];
@@ -16630,20 +17107,6 @@ class Outliner {
     return results;
   }
 }
-class Outline {
-  toSVGPath() {
-    throw new Error("Abstract method `toSVGPath` must be implemented.");
-  }
-  get box() {
-    throw new Error("Abstract getter `box` must be implemented.");
-  }
-  serialize(_bbox, _rotation) {
-    throw new Error("Abstract method `serialize` must be implemented.");
-  }
-  get free() {
-    return this instanceof FreeHighlightOutline;
-  }
-}
 class HighlightOutline extends Outline {
   #box;
   #outlines;
@@ -16689,354 +17152,30 @@ class HighlightOutline extends Outline {
   get box() {
     return this.#box;
   }
-}
-class FreeOutliner {
-  #box;
-  #bottom = [];
-  #innerMargin;
-  #isLTR;
-  #top = [];
-  #last = new Float64Array(18);
-  #lastX;
-  #lastY;
-  #min;
-  #min_dist;
-  #scaleFactor;
-  #thickness;
-  #points = [];
-  static #MIN_DIST = 8;
-  static #MIN_DIFF = 2;
-  static #MIN = FreeOutliner.#MIN_DIST + FreeOutliner.#MIN_DIFF;
-  constructor({
-    x,
-    y
-  }, box, scaleFactor, thickness, isLTR, innerMargin = 0) {
-    this.#box = box;
-    this.#thickness = thickness * scaleFactor;
-    this.#isLTR = isLTR;
-    this.#last.set([NaN, NaN, NaN, NaN, x, y], 6);
-    this.#innerMargin = innerMargin;
-    this.#min_dist = FreeOutliner.#MIN_DIST * scaleFactor;
-    this.#min = FreeOutliner.#MIN * scaleFactor;
-    this.#scaleFactor = scaleFactor;
-    this.#points.push(x, y);
+  get classNamesForDrawing() {
+    return ["highlight"];
   }
-  get free() {
-    return true;
-  }
-  isEmpty() {
-    return isNaN(this.#last[8]);
-  }
-  #getLastCoords() {
-    const lastTop = this.#last.subarray(4, 6);
-    const lastBottom = this.#last.subarray(16, 18);
-    const [x, y, width, height] = this.#box;
-    return [(this.#lastX + (lastTop[0] - lastBottom[0]) / 2 - x) / width, (this.#lastY + (lastTop[1] - lastBottom[1]) / 2 - y) / height, (this.#lastX + (lastBottom[0] - lastTop[0]) / 2 - x) / width, (this.#lastY + (lastBottom[1] - lastTop[1]) / 2 - y) / height];
-  }
-  add({
-    x,
-    y
-  }) {
-    this.#lastX = x;
-    this.#lastY = y;
-    const [layerX, layerY, layerWidth, layerHeight] = this.#box;
-    let [x1, y1, x2, y2] = this.#last.subarray(8, 12);
-    const diffX = x - x2;
-    const diffY = y - y2;
-    const d = Math.hypot(diffX, diffY);
-    if (d < this.#min) {
-      return false;
-    }
-    const diffD = d - this.#min_dist;
-    const K = diffD / d;
-    const shiftX = K * diffX;
-    const shiftY = K * diffY;
-    let x0 = x1;
-    let y0 = y1;
-    x1 = x2;
-    y1 = y2;
-    x2 += shiftX;
-    y2 += shiftY;
-    this.#points?.push(x, y);
-    const nX = -shiftY / diffD;
-    const nY = shiftX / diffD;
-    const thX = nX * this.#thickness;
-    const thY = nY * this.#thickness;
-    this.#last.set(this.#last.subarray(2, 8), 0);
-    this.#last.set([x2 + thX, y2 + thY], 4);
-    this.#last.set(this.#last.subarray(14, 18), 12);
-    this.#last.set([x2 - thX, y2 - thY], 16);
-    if (isNaN(this.#last[6])) {
-      if (this.#top.length === 0) {
-        this.#last.set([x1 + thX, y1 + thY], 2);
-        this.#top.push(NaN, NaN, NaN, NaN, (x1 + thX - layerX) / layerWidth, (y1 + thY - layerY) / layerHeight);
-        this.#last.set([x1 - thX, y1 - thY], 14);
-        this.#bottom.push(NaN, NaN, NaN, NaN, (x1 - thX - layerX) / layerWidth, (y1 - thY - layerY) / layerHeight);
-      }
-      this.#last.set([x0, y0, x1, y1, x2, y2], 6);
-      return !this.isEmpty();
-    }
-    this.#last.set([x0, y0, x1, y1, x2, y2], 6);
-    const angle = Math.abs(Math.atan2(y0 - y1, x0 - x1) - Math.atan2(shiftY, shiftX));
-    if (angle < Math.PI / 2) {
-      [x1, y1, x2, y2] = this.#last.subarray(2, 6);
-      this.#top.push(NaN, NaN, NaN, NaN, ((x1 + x2) / 2 - layerX) / layerWidth, ((y1 + y2) / 2 - layerY) / layerHeight);
-      [x1, y1, x0, y0] = this.#last.subarray(14, 18);
-      this.#bottom.push(NaN, NaN, NaN, NaN, ((x0 + x1) / 2 - layerX) / layerWidth, ((y0 + y1) / 2 - layerY) / layerHeight);
-      return true;
-    }
-    [x0, y0, x1, y1, x2, y2] = this.#last.subarray(0, 6);
-    this.#top.push(((x0 + 5 * x1) / 6 - layerX) / layerWidth, ((y0 + 5 * y1) / 6 - layerY) / layerHeight, ((5 * x1 + x2) / 6 - layerX) / layerWidth, ((5 * y1 + y2) / 6 - layerY) / layerHeight, ((x1 + x2) / 2 - layerX) / layerWidth, ((y1 + y2) / 2 - layerY) / layerHeight);
-    [x2, y2, x1, y1, x0, y0] = this.#last.subarray(12, 18);
-    this.#bottom.push(((x0 + 5 * x1) / 6 - layerX) / layerWidth, ((y0 + 5 * y1) / 6 - layerY) / layerHeight, ((5 * x1 + x2) / 6 - layerX) / layerWidth, ((5 * y1 + y2) / 6 - layerY) / layerHeight, ((x1 + x2) / 2 - layerX) / layerWidth, ((y1 + y2) / 2 - layerY) / layerHeight);
-    return true;
-  }
-  toSVGPath() {
-    if (this.isEmpty()) {
-      return "";
-    }
-    const top = this.#top;
-    const bottom = this.#bottom;
-    const lastTop = this.#last.subarray(4, 6);
-    const lastBottom = this.#last.subarray(16, 18);
-    const [x, y, width, height] = this.#box;
-    const [lastTopX, lastTopY, lastBottomX, lastBottomY] = this.#getLastCoords();
-    if (isNaN(this.#last[6]) && !this.isEmpty()) {
-      return `M${(this.#last[2] - x) / width} ${(this.#last[3] - y) / height} L${(this.#last[4] - x) / width} ${(this.#last[5] - y) / height} L${lastTopX} ${lastTopY} L${lastBottomX} ${lastBottomY} L${(this.#last[16] - x) / width} ${(this.#last[17] - y) / height} L${(this.#last[14] - x) / width} ${(this.#last[15] - y) / height} Z`;
-    }
-    const buffer = [];
-    buffer.push(`M${top[4]} ${top[5]}`);
-    for (let i = 6; i < top.length; i += 6) {
-      if (isNaN(top[i])) {
-        buffer.push(`L${top[i + 4]} ${top[i + 5]}`);
-      } else {
-        buffer.push(`C${top[i]} ${top[i + 1]} ${top[i + 2]} ${top[i + 3]} ${top[i + 4]} ${top[i + 5]}`);
-      }
-    }
-    buffer.push(`L${(lastTop[0] - x) / width} ${(lastTop[1] - y) / height} L${lastTopX} ${lastTopY} L${lastBottomX} ${lastBottomY} L${(lastBottom[0] - x) / width} ${(lastBottom[1] - y) / height}`);
-    for (let i = bottom.length - 6; i >= 6; i -= 6) {
-      if (isNaN(bottom[i])) {
-        buffer.push(`L${bottom[i + 4]} ${bottom[i + 5]}`);
-      } else {
-        buffer.push(`C${bottom[i]} ${bottom[i + 1]} ${bottom[i + 2]} ${bottom[i + 3]} ${bottom[i + 4]} ${bottom[i + 5]}`);
-      }
-    }
-    buffer.push(`L${bottom[4]} ${bottom[5]} Z`);
-    return buffer.join(" ");
-  }
-  getOutlines() {
-    const top = this.#top;
-    const bottom = this.#bottom;
-    const last = this.#last;
-    const lastTop = last.subarray(4, 6);
-    const lastBottom = last.subarray(16, 18);
-    const [layerX, layerY, layerWidth, layerHeight] = this.#box;
-    const points = new Float64Array((this.#points?.length ?? 0) + 2);
-    for (let i = 0, ii = points.length - 2; i < ii; i += 2) {
-      points[i] = (this.#points[i] - layerX) / layerWidth;
-      points[i + 1] = (this.#points[i + 1] - layerY) / layerHeight;
-    }
-    points[points.length - 2] = (this.#lastX - layerX) / layerWidth;
-    points[points.length - 1] = (this.#lastY - layerY) / layerHeight;
-    const [lastTopX, lastTopY, lastBottomX, lastBottomY] = this.#getLastCoords();
-    if (isNaN(last[6]) && !this.isEmpty()) {
-      const outline = new Float64Array(36);
-      outline.set([NaN, NaN, NaN, NaN, (last[2] - layerX) / layerWidth, (last[3] - layerY) / layerHeight, NaN, NaN, NaN, NaN, (last[4] - layerX) / layerWidth, (last[5] - layerY) / layerHeight, NaN, NaN, NaN, NaN, lastTopX, lastTopY, NaN, NaN, NaN, NaN, lastBottomX, lastBottomY, NaN, NaN, NaN, NaN, (last[16] - layerX) / layerWidth, (last[17] - layerY) / layerHeight, NaN, NaN, NaN, NaN, (last[14] - layerX) / layerWidth, (last[15] - layerY) / layerHeight], 0);
-      return new FreeHighlightOutline(outline, points, this.#box, this.#scaleFactor, this.#innerMargin, this.#isLTR);
-    }
-    const outline = new Float64Array(this.#top.length + 24 + this.#bottom.length);
-    let N = top.length;
-    for (let i = 0; i < N; i += 2) {
-      if (isNaN(top[i])) {
-        outline[i] = outline[i + 1] = NaN;
-        continue;
-      }
-      outline[i] = top[i];
-      outline[i + 1] = top[i + 1];
-    }
-    outline.set([NaN, NaN, NaN, NaN, (lastTop[0] - layerX) / layerWidth, (lastTop[1] - layerY) / layerHeight, NaN, NaN, NaN, NaN, lastTopX, lastTopY, NaN, NaN, NaN, NaN, lastBottomX, lastBottomY, NaN, NaN, NaN, NaN, (lastBottom[0] - layerX) / layerWidth, (lastBottom[1] - layerY) / layerHeight], N);
-    N += 24;
-    for (let i = bottom.length - 6; i >= 6; i -= 6) {
-      for (let j = 0; j < 6; j += 2) {
-        if (isNaN(bottom[i + j])) {
-          outline[N] = outline[N + 1] = NaN;
-          N += 2;
-          continue;
-        }
-        outline[N] = bottom[i + j];
-        outline[N + 1] = bottom[i + j + 1];
-        N += 2;
-      }
-    }
-    outline.set([NaN, NaN, NaN, NaN, bottom[4], bottom[5]], N);
-    return new FreeHighlightOutline(outline, points, this.#box, this.#scaleFactor, this.#innerMargin, this.#isLTR);
+  get classNamesForOutlining() {
+    return ["highlightOutline"];
   }
 }
-class FreeHighlightOutline extends Outline {
-  #box;
-  #bbox = null;
-  #innerMargin;
-  #isLTR;
-  #points;
-  #scaleFactor;
-  #outline;
-  constructor(outline, points, box, scaleFactor, innerMargin, isLTR) {
-    super();
-    this.#outline = outline;
-    this.#points = points;
-    this.#box = box;
-    this.#scaleFactor = scaleFactor;
-    this.#innerMargin = innerMargin;
-    this.#isLTR = isLTR;
-    this.#computeMinMax(isLTR);
-    const {
-      x,
-      y,
-      width,
-      height
-    } = this.#bbox;
-    for (let i = 0, ii = outline.length; i < ii; i += 2) {
-      outline[i] = (outline[i] - x) / width;
-      outline[i + 1] = (outline[i + 1] - y) / height;
-    }
-    for (let i = 0, ii = points.length; i < ii; i += 2) {
-      points[i] = (points[i] - x) / width;
-      points[i + 1] = (points[i + 1] - y) / height;
-    }
+class FreeHighlightOutliner extends FreeDrawOutliner {
+  newFreeDrawOutline(outline, points, box, scaleFactor, innerMargin, isLTR) {
+    return new FreeHighlightOutline(outline, points, box, scaleFactor, innerMargin, isLTR);
   }
-  toSVGPath() {
-    const buffer = [`M${this.#outline[4]} ${this.#outline[5]}`];
-    for (let i = 6, ii = this.#outline.length; i < ii; i += 6) {
-      if (isNaN(this.#outline[i])) {
-        buffer.push(`L${this.#outline[i + 4]} ${this.#outline[i + 5]}`);
-        continue;
-      }
-      buffer.push(`C${this.#outline[i]} ${this.#outline[i + 1]} ${this.#outline[i + 2]} ${this.#outline[i + 3]} ${this.#outline[i + 4]} ${this.#outline[i + 5]}`);
-    }
-    buffer.push("Z");
-    return buffer.join(" ");
+  get classNamesForDrawing() {
+    return ["highlight", "free"];
   }
-  serialize([blX, blY, trX, trY], rotation) {
-    const width = trX - blX;
-    const height = trY - blY;
-    let outline;
-    let points;
-    switch (rotation) {
-      case 0:
-        outline = this.#rescale(this.#outline, blX, trY, width, -height);
-        points = this.#rescale(this.#points, blX, trY, width, -height);
-        break;
-      case 90:
-        outline = this.#rescaleAndSwap(this.#outline, blX, blY, width, height);
-        points = this.#rescaleAndSwap(this.#points, blX, blY, width, height);
-        break;
-      case 180:
-        outline = this.#rescale(this.#outline, trX, blY, -width, height);
-        points = this.#rescale(this.#points, trX, blY, -width, height);
-        break;
-      case 270:
-        outline = this.#rescaleAndSwap(this.#outline, trX, trY, -width, -height);
-        points = this.#rescaleAndSwap(this.#points, trX, trY, -width, -height);
-        break;
-    }
-    return {
-      outline: Array.from(outline),
-      points: [Array.from(points)]
-    };
+}
+class FreeHighlightOutline extends FreeDrawOutline {
+  get classNamesForDrawing() {
+    return ["highlight", "free"];
   }
-  #rescale(src, tx, ty, sx, sy) {
-    const dest = new Float64Array(src.length);
-    for (let i = 0, ii = src.length; i < ii; i += 2) {
-      dest[i] = tx + src[i] * sx;
-      dest[i + 1] = ty + src[i + 1] * sy;
-    }
-    return dest;
+  get classNamesForOutlining() {
+    return ["highlightOutline", "free"];
   }
-  #rescaleAndSwap(src, tx, ty, sx, sy) {
-    const dest = new Float64Array(src.length);
-    for (let i = 0, ii = src.length; i < ii; i += 2) {
-      dest[i] = tx + src[i + 1] * sx;
-      dest[i + 1] = ty + src[i] * sy;
-    }
-    return dest;
-  }
-  #computeMinMax(isLTR) {
-    const outline = this.#outline;
-    let lastX = outline[4];
-    let lastY = outline[5];
-    let minX = lastX;
-    let minY = lastY;
-    let maxX = lastX;
-    let maxY = lastY;
-    let lastPointX = lastX;
-    let lastPointY = lastY;
-    const ltrCallback = isLTR ? Math.max : Math.min;
-    for (let i = 6, ii = outline.length; i < ii; i += 6) {
-      if (isNaN(outline[i])) {
-        minX = Math.min(minX, outline[i + 4]);
-        minY = Math.min(minY, outline[i + 5]);
-        maxX = Math.max(maxX, outline[i + 4]);
-        maxY = Math.max(maxY, outline[i + 5]);
-        if (lastPointY < outline[i + 5]) {
-          lastPointX = outline[i + 4];
-          lastPointY = outline[i + 5];
-        } else if (lastPointY === outline[i + 5]) {
-          lastPointX = ltrCallback(lastPointX, outline[i + 4]);
-        }
-      } else {
-        const bbox = Util.bezierBoundingBox(lastX, lastY, ...outline.slice(i, i + 6));
-        minX = Math.min(minX, bbox[0]);
-        minY = Math.min(minY, bbox[1]);
-        maxX = Math.max(maxX, bbox[2]);
-        maxY = Math.max(maxY, bbox[3]);
-        if (lastPointY < bbox[3]) {
-          lastPointX = bbox[2];
-          lastPointY = bbox[3];
-        } else if (lastPointY === bbox[3]) {
-          lastPointX = ltrCallback(lastPointX, bbox[2]);
-        }
-      }
-      lastX = outline[i + 4];
-      lastY = outline[i + 5];
-    }
-    const x = minX - this.#innerMargin,
-      y = minY - this.#innerMargin,
-      width = maxX - minX + 2 * this.#innerMargin,
-      height = maxY - minY + 2 * this.#innerMargin;
-    this.#bbox = {
-      x,
-      y,
-      width,
-      height,
-      lastPoint: [lastPointX, lastPointY]
-    };
-  }
-  get box() {
-    return this.#bbox;
-  }
-  getNewOutline(thickness, innerMargin) {
-    const {
-      x,
-      y,
-      width,
-      height
-    } = this.#bbox;
-    const [layerX, layerY, layerWidth, layerHeight] = this.#box;
-    const sx = width * layerWidth;
-    const sy = height * layerHeight;
-    const tx = x * layerWidth + layerX;
-    const ty = y * layerHeight + layerY;
-    const outliner = new FreeOutliner({
-      x: this.#points[0] * sx + tx,
-      y: this.#points[1] * sy + ty
-    }, this.#box, this.#scaleFactor, thickness, this.#isLTR, innerMargin ?? this.#innerMargin);
-    for (let i = 2; i < this.#points.length; i += 2) {
-      outliner.add({
-        x: this.#points[i] * sx + tx,
-        y: this.#points[i + 1] * sy + ty
-      });
-    }
-    return outliner.getOutlines();
+  newOutliner(point, box, scaleFactor, thickness, isLTR, innerMargin = 0) {
+    return new FreeHighlightOutliner(point, box, scaleFactor, thickness, isLTR, innerMargin);
   }
 }
 
@@ -17045,8 +17184,6 @@ class FreeHighlightOutline extends Outline {
 
 
 class ColorPicker {
-  #boundKeyDown = this.#keyDown.bind(this);
-  #boundPointerDown = this.#pointerDown.bind(this);
   #button = null;
   #buttonSwatch = null;
   #defaultColor;
@@ -17055,6 +17192,7 @@ class ColorPicker {
   #isMainColorPicker = false;
   #editor = null;
   #eventBus;
+  #openDropdownAC = null;
   #uiManager = null;
   #type;
   static #l10nColor = null;
@@ -17094,7 +17232,7 @@ class ColorPicker {
     button.addEventListener("click", this.#openDropdown.bind(this), {
       signal
     });
-    button.addEventListener("keydown", this.#boundKeyDown, {
+    button.addEventListener("keydown", this.#keyDown.bind(this), {
       signal
     });
     const swatch = this.#buttonSwatch = document.createElement("span");
@@ -17138,7 +17276,7 @@ class ColorPicker {
       });
       div.append(button);
     }
-    div.addEventListener("keydown", this.#boundKeyDown, {
+    div.addEventListener("keydown", this.#keyDown.bind(this), {
       signal
     });
     return div;
@@ -17208,9 +17346,12 @@ class ColorPicker {
       return;
     }
     this.#dropdownWasFromKeyboard = event.detail === 0;
-    window.addEventListener("pointerdown", this.#boundPointerDown, {
-      signal: this.#uiManager._signal
-    });
+    if (!this.#openDropdownAC) {
+      this.#openDropdownAC = new AbortController();
+      window.addEventListener("pointerdown", this.#pointerDown.bind(this), {
+        signal: this.#uiManager.combinedSignal(this.#openDropdownAC)
+      });
+    }
     if (this.#dropdown) {
       this.#dropdown.classList.remove("hidden");
       return;
@@ -17226,7 +17367,8 @@ class ColorPicker {
   }
   hideDropdown() {
     this.#dropdown?.classList.add("hidden");
-    window.removeEventListener("pointerdown", this.#boundPointerDown);
+    this.#openDropdownAC?.abort();
+    this.#openDropdownAC = null;
   }
   get #isDropdownVisible() {
     return this.#dropdown && !this.#dropdown.classList.contains("hidden");
@@ -17360,7 +17502,7 @@ class HighlightEditor extends AnnotationEditor {
     };
   }
   #createOutlines() {
-    const outliner = new Outliner(this.#boxes, 0.001);
+    const outliner = new HighlightOutliner(this.#boxes, 0.001);
     this.#highlightOutlines = outliner.getOutlines();
     ({
       x: this.x,
@@ -17368,7 +17510,7 @@ class HighlightEditor extends AnnotationEditor {
       width: this.width,
       height: this.height
     } = this.#highlightOutlines.box);
-    const outlinerForOutline = new Outliner(this.#boxes, 0.0025, 0.001, this._uiManager.direction === "ltr");
+    const outlinerForOutline = new HighlightOutliner(this.#boxes, 0.0025, 0.001, this._uiManager.direction === "ltr");
     this.#focusOutlines = outlinerForOutline.getOutlines();
     const {
       lastPoint
@@ -17387,7 +17529,7 @@ class HighlightEditor extends AnnotationEditor {
       this.#id = highlightId;
       this.#clipPathId = clipPathId;
       this.parent.drawLayer.finalizeLine(highlightId, highlightOutlines);
-      this.#outlineId = this.parent.drawLayer.highlightOutline(this.#focusOutlines);
+      this.#outlineId = this.parent.drawLayer.drawOutline(this.#focusOutlines);
     } else if (this.parent) {
       const angle = this.parent.viewport.rotation;
       this.parent.drawLayer.updateLine(this.#id, highlightOutlines);
@@ -17613,8 +17755,8 @@ class HighlightEditor extends AnnotationEditor {
     ({
       id: this.#id,
       clipPathId: this.#clipPathId
-    } = parent.drawLayer.highlight(this.#highlightOutlines, this.color, this.#opacity));
-    this.#outlineId = parent.drawLayer.highlightOutline(this.#focusOutlines);
+    } = parent.drawLayer.draw(this.#highlightOutlines, this.color, this.#opacity));
+    this.#outlineId = parent.drawLayer.drawOutline(this.#focusOutlines);
     if (this.#highlightDiv) {
       this.#highlightDiv.style.clipPath = this.#clipPathId;
     }
@@ -17699,10 +17841,14 @@ class HighlightEditor extends AnnotationEditor {
     return div;
   }
   pointerover() {
-    this.parent.drawLayer.addClass(this.#outlineId, "hovered");
+    if (!this.isSelected) {
+      this.parent.drawLayer.addClass(this.#outlineId, "hovered");
+    }
   }
   pointerleave() {
-    this.parent.drawLayer.removeClass(this.#outlineId, "hovered");
+    if (!this.isSelected) {
+      this.parent.drawLayer.removeClass(this.#outlineId, "hovered");
+    }
   }
   #keydown(event) {
     HighlightEditor._keyboardManager.exec(this, event);
@@ -17828,14 +17974,14 @@ class HighlightEditor extends AnnotationEditor {
     textLayer.addEventListener("pointermove", this.#highlightMove.bind(this, parent), {
       signal
     });
-    this._freeHighlight = new FreeOutliner({
+    this._freeHighlight = new FreeHighlightOutliner({
       x,
       y
     }, [layerX, layerY, parentWidth, parentHeight], parent.scale, this._defaultThickness / 2, isLTR, 0.001);
     ({
       id: this._freeHighlightId,
       clipPathId: this._freeHighlightClipId
-    } = parent.drawLayer.highlight(this._freeHighlight, this._defaultColor, this._defaultOpacity, true));
+    } = parent.drawLayer.draw(this._freeHighlight, this._defaultColor, this._defaultOpacity, true));
   }
   static #highlightMove(parent, event) {
     if (this._freeHighlight.add(event)) {
@@ -17851,7 +17997,7 @@ class HighlightEditor extends AnnotationEditor {
         methodOfCreation: "main_toolbar"
       });
     } else {
-      parent.drawLayer.removeFreeHighlight(this._freeHighlightId);
+      parent.drawLayer.remove(this._freeHighlightId);
     }
     this._freeHighlightId = -1;
     this._freeHighlight = null;
@@ -17958,7 +18104,7 @@ class HighlightEditor extends AnnotationEditor {
         x: points[0] - pageX,
         y: pageHeight - (points[1] - pageY)
       };
-      const outliner = new FreeOutliner(point, [0, 0, pageWidth, pageHeight], 1, editor.#thickness / 2, true, 0.001);
+      const outliner = new FreeHighlightOutliner(point, [0, 0, pageWidth, pageHeight], 1, editor.#thickness / 2, true, 0.001);
       for (let i = 0, ii = points.length; i < ii; i += 2) {
         point.x = points[i] - pageX;
         point.y = pageHeight - (points[i + 1] - pageY);
@@ -17967,7 +18113,7 @@ class HighlightEditor extends AnnotationEditor {
       const {
         id,
         clipPathId
-      } = parent.drawLayer.highlight(outliner, editor.color, editor._defaultOpacity, true);
+      } = parent.drawLayer.draw(outliner, editor.color, editor._defaultOpacity, true);
       editor.#createFreeOutlines({
         highlightOutlines: outliner.getOutlines(),
         highlightId: id,
@@ -19994,9 +20140,6 @@ class AnnotationEditorLayer {
   toggleSelected(editor) {
     this.#uiManager.toggleSelected(editor);
   }
-  isSelected(editor) {
-    return this.#uiManager.isSelected(editor);
-  }
   unselect(editor) {
     this.#uiManager.unselect(editor);
   }
@@ -20186,13 +20329,10 @@ class DrawLayer {
     clipPathUse.classList.add("clip");
     return clipPathId;
   }
-  highlight(outlines, color, opacity, isPathUpdatable = false) {
+  draw(outlines, color, opacity, isPathUpdatable = false) {
     const id = this.#id++;
     const root = this.#createSVG(outlines.box);
-    root.classList.add("highlight");
-    if (outlines.free) {
-      root.classList.add("free");
-    }
+    root.classList.add(...outlines.classNamesForDrawing);
     const defs = DrawLayer._svgFactory.createElement("defs");
     root.append(defs);
     const path = DrawLayer._svgFactory.createElement("path");
@@ -20215,10 +20355,10 @@ class DrawLayer {
       clipPathId: `url(#${clipPathId})`
     };
   }
-  highlightOutline(outlines) {
+  drawOutline(outlines) {
     const id = this.#id++;
     const root = this.#createSVG(outlines.box);
-    root.classList.add("highlightOutline");
+    root.classList.add(...outlines.classNamesForOutlining);
     const defs = DrawLayer._svgFactory.createElement("defs");
     root.append(defs);
     const path = DrawLayer._svgFactory.createElement("path");
@@ -20228,8 +20368,7 @@ class DrawLayer {
     path.setAttribute("d", outlines.toSVGPath());
     path.setAttribute("vector-effect", "non-scaling-stroke");
     let maskId;
-    if (outlines.free) {
-      root.classList.add("free");
+    if (outlines.mustRemoveSelfIntersections) {
       const mask = DrawLayer._svgFactory.createElement("mask");
       defs.append(mask);
       maskId = `mask_p${this.pageIndex}_${id}`;
@@ -20273,10 +20412,6 @@ class DrawLayer {
     const path = defs.firstChild;
     path.setAttribute("d", line.toSVGPath());
   }
-  removeFreeHighlight(id) {
-    this.remove(id);
-    this.#toUpdate.delete(id);
-  }
   updatePath(id, line) {
     this.#toUpdate.get(id).setAttribute("d", line.toSVGPath());
   }
@@ -20305,6 +20440,7 @@ class DrawLayer {
     return this.#mapping.get(id);
   }
   remove(id) {
+    this.#toUpdate.delete(id);
     if (this.#parent === null) {
       return;
     }
@@ -20317,6 +20453,7 @@ class DrawLayer {
       root.remove();
     }
     this.#mapping.clear();
+    this.#toUpdate.clear();
   }
 }
 
@@ -20333,8 +20470,9 @@ class DrawLayer {
 
 
 
-const pdfjsVersion = "4.7.76";
-const pdfjsBuild = "8b73b828b";
+
+const pdfjsVersion = "4.8.69";
+const pdfjsBuild = "3634dab10";
 
 var __webpack_exports__AbortException = __webpack_exports__.AbortException;
 var __webpack_exports__AnnotationEditorLayer = __webpack_exports__.AnnotationEditorLayer;
@@ -20343,7 +20481,6 @@ var __webpack_exports__AnnotationEditorType = __webpack_exports__.AnnotationEdit
 var __webpack_exports__AnnotationEditorUIManager = __webpack_exports__.AnnotationEditorUIManager;
 var __webpack_exports__AnnotationLayer = __webpack_exports__.AnnotationLayer;
 var __webpack_exports__AnnotationMode = __webpack_exports__.AnnotationMode;
-var __webpack_exports__CMapCompressionType = __webpack_exports__.CMapCompressionType;
 var __webpack_exports__ColorPicker = __webpack_exports__.ColorPicker;
 var __webpack_exports__DOMSVGFactory = __webpack_exports__.DOMSVGFactory;
 var __webpack_exports__DrawLayer = __webpack_exports__.DrawLayer;
@@ -20380,6 +20517,6 @@ var __webpack_exports__normalizeUnicode = __webpack_exports__.normalizeUnicode;
 var __webpack_exports__setLayerDimensions = __webpack_exports__.setLayerDimensions;
 var __webpack_exports__shadow = __webpack_exports__.shadow;
 var __webpack_exports__version = __webpack_exports__.version;
-export { __webpack_exports__AbortException as AbortException, __webpack_exports__AnnotationEditorLayer as AnnotationEditorLayer, __webpack_exports__AnnotationEditorParamsType as AnnotationEditorParamsType, __webpack_exports__AnnotationEditorType as AnnotationEditorType, __webpack_exports__AnnotationEditorUIManager as AnnotationEditorUIManager, __webpack_exports__AnnotationLayer as AnnotationLayer, __webpack_exports__AnnotationMode as AnnotationMode, __webpack_exports__CMapCompressionType as CMapCompressionType, __webpack_exports__ColorPicker as ColorPicker, __webpack_exports__DOMSVGFactory as DOMSVGFactory, __webpack_exports__DrawLayer as DrawLayer, __webpack_exports__FeatureTest as FeatureTest, __webpack_exports__GlobalWorkerOptions as GlobalWorkerOptions, __webpack_exports__ImageKind as ImageKind, __webpack_exports__InvalidPDFException as InvalidPDFException, __webpack_exports__MissingPDFException as MissingPDFException, __webpack_exports__OPS as OPS, __webpack_exports__OutputScale as OutputScale, __webpack_exports__PDFDataRangeTransport as PDFDataRangeTransport, __webpack_exports__PDFDateString as PDFDateString, __webpack_exports__PDFWorker as PDFWorker, __webpack_exports__PasswordResponses as PasswordResponses, __webpack_exports__PermissionFlag as PermissionFlag, __webpack_exports__PixelsPerInch as PixelsPerInch, __webpack_exports__RenderingCancelledException as RenderingCancelledException, __webpack_exports__TextLayer as TextLayer, __webpack_exports__UnexpectedResponseException as UnexpectedResponseException, __webpack_exports__Util as Util, __webpack_exports__VerbosityLevel as VerbosityLevel, __webpack_exports__XfaLayer as XfaLayer, __webpack_exports__build as build, __webpack_exports__createValidAbsoluteUrl as createValidAbsoluteUrl, __webpack_exports__fetchData as fetchData, __webpack_exports__getDocument as getDocument, __webpack_exports__getFilenameFromUrl as getFilenameFromUrl, __webpack_exports__getPdfFilenameFromUrl as getPdfFilenameFromUrl, __webpack_exports__getXfaPageViewport as getXfaPageViewport, __webpack_exports__isDataScheme as isDataScheme, __webpack_exports__isPdfFile as isPdfFile, __webpack_exports__noContextMenu as noContextMenu, __webpack_exports__normalizeUnicode as normalizeUnicode, __webpack_exports__setLayerDimensions as setLayerDimensions, __webpack_exports__shadow as shadow, __webpack_exports__version as version };
+export { __webpack_exports__AbortException as AbortException, __webpack_exports__AnnotationEditorLayer as AnnotationEditorLayer, __webpack_exports__AnnotationEditorParamsType as AnnotationEditorParamsType, __webpack_exports__AnnotationEditorType as AnnotationEditorType, __webpack_exports__AnnotationEditorUIManager as AnnotationEditorUIManager, __webpack_exports__AnnotationLayer as AnnotationLayer, __webpack_exports__AnnotationMode as AnnotationMode, __webpack_exports__ColorPicker as ColorPicker, __webpack_exports__DOMSVGFactory as DOMSVGFactory, __webpack_exports__DrawLayer as DrawLayer, __webpack_exports__FeatureTest as FeatureTest, __webpack_exports__GlobalWorkerOptions as GlobalWorkerOptions, __webpack_exports__ImageKind as ImageKind, __webpack_exports__InvalidPDFException as InvalidPDFException, __webpack_exports__MissingPDFException as MissingPDFException, __webpack_exports__OPS as OPS, __webpack_exports__OutputScale as OutputScale, __webpack_exports__PDFDataRangeTransport as PDFDataRangeTransport, __webpack_exports__PDFDateString as PDFDateString, __webpack_exports__PDFWorker as PDFWorker, __webpack_exports__PasswordResponses as PasswordResponses, __webpack_exports__PermissionFlag as PermissionFlag, __webpack_exports__PixelsPerInch as PixelsPerInch, __webpack_exports__RenderingCancelledException as RenderingCancelledException, __webpack_exports__TextLayer as TextLayer, __webpack_exports__UnexpectedResponseException as UnexpectedResponseException, __webpack_exports__Util as Util, __webpack_exports__VerbosityLevel as VerbosityLevel, __webpack_exports__XfaLayer as XfaLayer, __webpack_exports__build as build, __webpack_exports__createValidAbsoluteUrl as createValidAbsoluteUrl, __webpack_exports__fetchData as fetchData, __webpack_exports__getDocument as getDocument, __webpack_exports__getFilenameFromUrl as getFilenameFromUrl, __webpack_exports__getPdfFilenameFromUrl as getPdfFilenameFromUrl, __webpack_exports__getXfaPageViewport as getXfaPageViewport, __webpack_exports__isDataScheme as isDataScheme, __webpack_exports__isPdfFile as isPdfFile, __webpack_exports__noContextMenu as noContextMenu, __webpack_exports__normalizeUnicode as normalizeUnicode, __webpack_exports__setLayerDimensions as setLayerDimensions, __webpack_exports__shadow as shadow, __webpack_exports__version as version };
 
 //# sourceMappingURL=pdf.mjs.map

@@ -24,7 +24,7 @@ const changeFirstAndSecondColumnsMobileOrder = (snippetRowSelector, snippetName)
     },
     {
         content: "Change the orders of the 1st and 2nd columns",
-        trigger: "body .o_overlay_options button[title='Move right']",
+        trigger: "body .o_overlay_options button[title='Move down']",
         run: "click",
     },
 ];

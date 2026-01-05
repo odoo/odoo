@@ -434,7 +434,7 @@ Versions:
                 holiday.date_from = False
                 continue
 
-            if not holiday.request_unit_half and not holiday.request_unit_hours and not holiday.request_date_to:
+            if not holiday.request_date_to:
                 holiday.date_to = False
                 continue
 
@@ -588,7 +588,7 @@ Versions:
             if leave.employee_id:
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 # sudo as is_flexible is on version model and employee does not have access to it.
-                if leave.employee_id.sudo().is_flexible and leave.date_to.date() == leave.date_from.date():
+                if leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from:
                     public_holidays = self.env['resource.calendar.leaves'].search([
                         ('resource_id', '=', False),
                         ('date_from', '<', leave.date_to),
@@ -606,7 +606,7 @@ Versions:
                     else:
                         hours = (leave.date_to - leave.date_from).total_seconds() / 3600
                     if not leave.request_unit_hours and not public_holidays:
-                        days = 1 if not leave.request_unit_half else 0.5
+                        days = 1 if not leave.request_unit_half or leave.request_date_from_period != leave.request_date_to_period else 0.5
                     else:
                         days = hours / 24
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:

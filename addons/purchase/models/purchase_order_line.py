@@ -139,6 +139,7 @@ class PurchaseOrderLine(models.Model):
             partner_id=self.order_id.partner_id,
             currency_id=self.order_id.currency_id or company.currency_id,
             rate=self.order_id.currency_rate,
+            name=self.name,
         )
 
     def _compute_tax_id(self):
@@ -157,7 +158,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_uom_id', 'price_unit')
     def _compute_price_unit_product_uom(self):
         for line in self:
-            line.price_unit_product_uom = line.product_uom_id._compute_price(line.price_unit, line.product_id.uom_id)
+            line.price_unit_product_uom = not line.display_type and line.product_uom_id._compute_price(line.price_unit, line.product_id.uom_id)
 
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'qty_received', 'product_uom_qty', 'order_id.state')
     def _compute_qty_invoiced(self):

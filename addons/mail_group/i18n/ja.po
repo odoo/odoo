@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-12-04 14:04+0000\n"
+"POT-Creation-Date: 2025-12-30 18:37+0000\n"
+"PO-Revision-Date: 2025-12-20 09:50+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "mail_group/ja/>\n"
@@ -73,15 +73,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                こんにちは。<br/><br/>\n"
-"                メーリングリスト <strong t-out=\"object.name or ''\""
-"/>へのご登録のご希望を受付いたしました。\n"
+"                メーリングリスト <strong t-out=\"object.name or ''\"/>へのご"
+"登録のご希望を受付いたしました。\n"
 "                <br/><br/>\n"
-"                確定するには以下のリンクをご確認下さい: <strong t-if="
-"\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out="
-"\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                確定するには以下のリンクをご確認下さい: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>\n"
 "                <br/><br/>\n"
-"                "
-"間違い、またはこの要求をされていない場合、このメッセージは無視して下さい。\n"
+"                間違い、またはこの要求をされていない場合、このメッセージは無"
+"視して下さい。\n"
 "            </div>\n"
 "        "
 
@@ -104,15 +104,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                <br/><br/>\n"
-"                メーリングリストの配信停止をリクエストしました。 <strong "
-"t-out=\"object.name or ''\"/>.\n"
+"                メーリングリストの配信停止をリクエストしました。 <strong t-"
+"out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                確認するには、以下のリンクにアクセスしてください: <strong "
-"t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out="
-"\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                確認するには、以下のリンクにアクセスしてください: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
 "                <br/><br/>\n"
-"                "
-"この操作に心当たりがない場合は、このメッセージは無視してください。\n"
+"                この操作に心当たりがない場合は、このメッセージは無視してくだ"
+"さい。\n"
 "            </div>\n"
 "        "
 
@@ -130,11 +130,10 @@ msgid ""
 msgstr ""
 "<div>\n"
 "                <p><t t-out=\"object.partner_id.name or ''\"/>様</p>\n"
-"                <p>以下に、<t t-out=\"object.mail_group_id.name\""
-"/>メーリングリストのガイドラインをお送りします。よろしくおねがいいたします。<"
-"/p>\n"
-"                <p><t t-out="
-"\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"                <p>以下に、<t t-out=\"object.mail_group_id.name\"/>メーリング"
+"リストのガイドラインをお送りします。よろしくおねがいいたします。</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p>\n"
 "            </div>\n"
 "        "
 
@@ -498,7 +497,8 @@ msgstr "閉鎖済"
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
 msgid ""
 "Closed groups might still be accessed, but emails sent to it will bounce"
-msgstr "閉鎖されているグループには引き続きアクセスできますが、そのグループ宛に送信さ"
+msgstr ""
+"閉鎖されているグループには引き続きアクセスできますが、そのグループ宛に送信さ"
 "れたメールはエラー(バウンス)になります"
 
 #. module: mail_group
@@ -702,9 +702,8 @@ msgid ""
 "    Kind Regards,"
 msgstr ""
 "<br/><br/>\n"
-"    "
-"お客様が送信しようとしているメーリングリストはすでに閉鎖されており、新しいメ"
-"ッセージは受け付けておりません。\n"
+"    お客様が送信しようとしているメーリングリストはすでに閉鎖されており、新し"
+"いメッセージは受け付けておりません。\n"
 "    <br/><br/>\n"
 "    よろしくお願いいたします。"
 
@@ -960,7 +959,7 @@ msgstr "アクションが必要なメッセージ"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
 msgid "Moderate"
-msgstr ""
+msgstr "中程度"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1123,7 +1122,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "Oops, there are no messages here."
-msgstr ""
+msgstr "おっと、ここにはメッセージがありません。"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1290,7 +1289,7 @@ msgstr "説明付きのメッセージを削除する"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Responsibles"
-msgstr ""
+msgstr "責任者"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1315,7 +1314,7 @@ msgstr "モデレーションリストを検索"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Select users"
-msgstr ""
+msgstr "ユーザを選択"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
@@ -1351,12 +1350,12 @@ msgstr "メッセージの著作者にEメールを送信"
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
 msgid "Send email"
-msgstr ""
+msgstr "メールを送信"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
 msgid "Send guidelines to new members"
-msgstr ""
+msgstr "新しいメンバーにガイドラインを送る"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
@@ -1607,7 +1606,7 @@ msgstr "例: \"ニュースレター\""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"This group is about ...\""
-msgstr ""
+msgstr "例: \"このグループのテーマは...\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1617,7 +1616,7 @@ msgstr "例: mycompany.com"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g.\"Please be polite and ...\""
-msgstr ""
+msgstr "例: \"マナーを守って ...\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1632,7 +1631,7 @@ msgstr "これまで"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "members<br/>"
-msgstr ""
+msgstr "メンバ<br/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -1642,12 +1641,12 @@ msgstr "メッセージ/月"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "messages to review"
-msgstr ""
+msgstr "確認が必要なメッセージ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "more replies"
-msgstr "さらなる返信"
+msgstr "さらに返信を表示"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short

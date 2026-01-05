@@ -180,7 +180,13 @@ export function changeOptionInPopover(blockName, optionName, elementName, search
     steps.push(
         clickOnElement(
             `${elementName} in the ${optionName} option`,
-            `.o_popover div.o-dropdown-item:contains("${elementName}"), .o_popover span.o-dropdown-item:contains("${elementName}"), .o_popover ${elementName}`
+            [
+                `.o_popover div.o-dropdown-item:contains("${elementName}")`,
+                `.o_popover span.o-dropdown-item:contains("${elementName}")`,
+                `.o_popover div.o-dropdown-item[title="${elementName}"]`,
+                `.o_popover span.o-dropdown-item[title="${elementName}"]`,
+                `.o_popover ${elementName}`,
+            ].join(", ")
         )
     );
     return steps;
@@ -745,7 +751,7 @@ export function clickToolbarButton(elementName, selector, button, expand = false
         selectFullText(`${elementName}`, selector),
         {
             content: `Click on the ${button} from toolbar`,
-            trigger: `.o-we-toolbar button[title="${button}"]`,
+            trigger: `.o-we-toolbar button[title="${button}"], .o-we-toolbar button[name="${button}"]`,
             run: "click",
         },
     ];

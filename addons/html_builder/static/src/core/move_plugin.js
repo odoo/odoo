@@ -102,6 +102,26 @@ export class MovePlugin extends Plugin {
         );
     }
 
+    /**
+     * Returns true if the element is a column visually spanning the full row
+     * (including offsets).
+     *
+     * @param {HTMLElement} el
+     * @returns {boolean}
+     */
+    isFullWidthColumn(el) {
+        const rowEl = el.parentElement;
+        if (!rowEl || !rowEl.classList.contains("row")) {
+            return false;
+        }
+        const rowRect = rowEl.getBoundingClientRect();
+        const columnRect = el.getBoundingClientRect();
+        const { marginLeft, marginRight } = getComputedStyle(el);
+        const totalWidth = columnRect.width + parseFloat(marginLeft) + parseFloat(marginRight);
+        // Allow a small margin to cope with rounding.
+        return totalWidth >= rowRect.width - 1;
+    }
+
     getActiveOverlayButtons(target) {
         if (!this.isMovable(target)) {
             this.overlayTarget = null;
@@ -115,8 +135,9 @@ export class MovePlugin extends Plugin {
 
         if (!this.areArrowsHidden()) {
             const isVertical =
-                this.overlayTarget.matches(this.verticalMove.selector) &&
-                !this.overlayTarget.matches(this.verticalMove.exclude);
+                (this.overlayTarget.matches(this.verticalMove.selector) &&
+                    !this.overlayTarget.matches(this.verticalMove.exclude)) ||
+                this.isFullWidthColumn(this.overlayTarget);
             const previousSiblingEl = this.dependencies.visibility.getVisibleSibling(
                 this.overlayTarget,
                 "prev"

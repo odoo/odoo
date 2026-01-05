@@ -758,8 +758,8 @@ msgstr ""
 "\n"
 "    खाता जर्नल के नाम के तौर पर सूची में दिखेगा.\n"
 "\n"
-"    एडिट करने पर **खाता संख्या** दिखेगी.  यह ज़रूरी है, क्योंकि यह एबीए (ABA) प्रक्रिया"
-"\n"
+"    एडिट करने पर **खाता संख्या** दिखेगी.  यह ज़रूरी है, क्योंकि यह एबीए (ABA) "
+"प्रक्रिया\n"
 "     में इस्तेमाल होती है.\n"
 "\n"
 "    **बैंक** वैकल्पिक है.\n"
@@ -12535,8 +12535,7 @@ msgstr ""
 msgid ""
 "All the emails and documents sent to this contact will be translated in this "
 "language."
-msgstr ""
-"इस संपर्क को भेजे गए सभी ईमेल और दस्तावेज़ों का इस भाषा में अनुवाद किया जाएगा।"
+msgstr "इस संपर्क को भेजे गए सभी ईमेल और दस्तावेज़ों का इस भाषा में अनुवाद किया जाएगा।"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_form
@@ -15466,8 +15465,7 @@ msgstr "बैंक खाता"
 #: model:ir.model.fields,help:base.field_res_partner_bank__acc_type
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
-msgstr ""
-"बैंक अकाउंट टाइप: सामान्य या IBAN. यह आपके खाते के नंबर से पता चल जाता है।"
+msgstr "बैंक अकाउंट टाइप: सामान्य या IBAN. यह आपके खाते के नंबर से पता चल जाता है।"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_bank_form
@@ -18462,10 +18460,10 @@ msgid ""
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
 msgstr ""
-"उन सभी लोगों का रिकॉर्ड बनाएं और मैनेज करें जो इस सिस्टम का इस्तेमाल करेंगे. अगर कोई व्यक्ति"
-" कुछ समय के लिए सिस्टम का उपयोग नहीं करता है, तो आप उसे निष्क्रिय (डिएक्टिवेट) कर सकते "
-"हैं। आप उन्हें अलग-अलग ग्रुप में शामिल कर सकते हैं, ताकि वे सिस्टम में सिर्फ़ उन ऐप्लिकेशन का "
-"इस्तेमाल कर सकें जिनकी उन्हें ज़रूरत है।"
+"उन सभी लोगों का रिकॉर्ड बनाएं और मैनेज करें जो इस सिस्टम का इस्तेमाल करेंगे. अगर कोई "
+"व्यक्ति कुछ समय के लिए सिस्टम का उपयोग नहीं करता है, तो आप उसे निष्क्रिय (डिएक्टिवेट) कर "
+"सकते हैं। आप उन्हें अलग-अलग ग्रुप में शामिल कर सकते हैं, ताकि वे सिस्टम में सिर्फ़ उन ऐप्लिकेशन "
+"का इस्तेमाल कर सकें जिनकी उन्हें ज़रूरत है।"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_approvals
@@ -22078,8 +22076,7 @@ msgstr ""
 msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
-msgstr ""
-"सीमित ऐक्सेस वाला बाहरी यूज़र, जो सिर्फ़ डेटा शेयर करने के उद्देश्य से बनाया गया है।"
+msgstr "सीमित ऐक्सेस वाला बाहरी यूज़र, जो सिर्फ़ डेटा शेयर करने के उद्देश्य से बनाया गया है।"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
@@ -25523,6 +25520,15 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value in Default Value field. Expected type '%(field_type)s' for "
+"'%(model_name)s.%(field_name)s'."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Invalid attributes %s in element <attribute>"
 msgstr ""
@@ -26885,8 +26891,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_hr_referral
 #: model:ir.module.module,summary:base.module_hr_referral
 msgid "Let your employees share job positions and refer their friends"
-msgstr ""
-"अपने कर्मचारियों को नौकरी के बारे में शेयर करने दें और दोस्तों को रेफ़र करने दें"
+msgstr "अपने कर्मचारियों को नौकरी के बारे में शेयर करने दें और दोस्तों को रेफ़र करने दें"
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_hr_referral
@@ -35910,9 +35915,9 @@ msgid ""
 "money."
 msgstr ""
 "गलत अकाउंट नंबर वाले झूठे इनवॉइस भेजना फ़िशिंग का एक आम तरीका है. खुद को बचाने के लिए, "
-"हमेशा नए बैंक अकाउंट नंबर की जांच करें, हो सके तो सीधे वेंडर को फ़ोन करके. ऐसा इसलिए होता है"
-", क्योंकि अक्सर धोखेबाज उनके ईमेल को हैक कर लेते हैं. एक बार जब आप नंबर की पुष्टि कर लें, तभी"
-" पैसे भेजने की सुविधा चालू करें।"
+"हमेशा नए बैंक अकाउंट नंबर की जांच करें, हो सके तो सीधे वेंडर को फ़ोन करके. ऐसा इसलिए होता "
+"है, क्योंकि अक्सर धोखेबाज उनके ईमेल को हैक कर लेते हैं. एक बार जब आप नंबर की पुष्टि कर लें, "
+"तभी पैसे भेजने की सुविधा चालू करें।"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.WST
@@ -41853,8 +41858,8 @@ msgid ""
 "Anywhere else, time values are computed according to the time offset of your "
 "web client."
 msgstr ""
-"दस्तावेज़ प्रिंट करते समय और डेटा को एक्सपोर्ट या इंपोर्ट करते समय, समय की वैल्यू को टाइमज़ो"
-"न के हिसाब से कैलकुलेट किया जाता है.\n"
+"दस्तावेज़ प्रिंट करते समय और डेटा को एक्सपोर्ट या इंपोर्ट करते समय, समय की वैल्यू को "
+"टाइमज़ोन के हिसाब से कैलकुलेट किया जाता है.\n"
 "अगर टाइमज़ोन सेट नहीं है, तो यूटीसी (कोऑर्डिनेटेड यूनिवर्सल टाइम) का इस्तेमाल किया जाता "
 "है.\n"
 "इसके अलावा और किसी जगह समय की वैल्यू को आपके वेब क्लाइंट के टाइम ऑफ़सेट के हिसाब से कैलकुलेट "

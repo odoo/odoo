@@ -191,6 +191,7 @@ export class ListPlugin extends Plugin {
         node_to_insert_processors: this.processNodeToInsert.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         before_insert_within_pre_processors: this.insertListWithinPre.bind(this),
+        triple_click_overrides: this.handleTripleClick.bind(this),
 
         fully_selected_node_predicates: (node, selection, range) => {
             if (node.nodeName === "LI") {
@@ -1062,6 +1063,16 @@ export class ListPlugin extends Plugin {
         }
     }
 
+    handleTripleClick(ev) {
+        const node = ev.target;
+        const isChecklistItem =
+            node.tagName === "LI" && this.getListMode(node.parentElement) === "CL";
+        if (isChecklistItem && this.isPointerInsideCheckbox(node, ev.offsetX, ev.offsetY)) {
+            // If pointer is inside checkbox, prevent tripleclick selection.
+            return true;
+        }
+    }
+
     /**
      * @param {MouseEvent} ev
      * @param {HTMLLIElement} li - LI element inside a checklist.
@@ -1239,7 +1250,7 @@ export class ListPlugin extends Plugin {
                 const markerWidth = parseFloat(this.window.getComputedStyle(li, "::marker").width);
                 return isNaN(markerWidth) ? 0 : markerWidth;
             })
-            .reduce(Math.max);
+            .reduce((accumulator, currentValue) => Math.max(accumulator, currentValue));
         // For `UL` with large font size the marker width is so big that more padding is needed.
         const largestMarkerPadding = Math.round(largestMarker) * (list.nodeName === "UL" ? 2 : 1);
 

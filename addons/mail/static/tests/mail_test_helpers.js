@@ -23,7 +23,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
-import { contains } from "./mail_test_helpers_contains";
+import { click, contains } from "./mail_test_helpers_contains";
 
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
@@ -978,4 +978,26 @@ export function patchVoiceMessageAudio() {
         });
     });
     return res;
+}
+
+/**
+ * Assert IM status on chat bubble and chat window of given `conversationName` with `count`.
+ * The conversation should be present as a bubble initially, becomes open and folded again
+ * after calling function.
+ *
+ * This is made as a function so that negative assertion on ImStatus can use this function and
+ * ensure using correct selector and await properly like the positive assertions.
+ *
+ * @param {string} conversationName
+ * @param {Number} count
+ */
+export async function assertChatBubbleAndWindowImStatus(conversationName, count) {
+    await contains(`.o-mail-ChatBubble[name=${conversationName}]`);
+    expect(`.o-mail-ChatBubble[name=${conversationName}] .o-mail-ImStatus`).toHaveCount(count);
+    await click(`.o-mail-ChatBubble[name=${conversationName}]`);
+    await contains(`.o-mail-ChatWindow-header:has(:text(${conversationName}))`);
+    expect(
+        `.o-mail-ChatWindow-header:has(:text(${conversationName})) .o-mail-ImStatus`
+    ).toHaveCount(count);
+    await click(`.o-mail-ChatWindow-header:has(:text(${conversationName}))`);
 }

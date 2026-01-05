@@ -70,6 +70,10 @@ def _mock_call_peppol_proxy(func, self, endpoint, params=None):
             } for i in params['documents']],
         }
 
+    def _mock_unregister_to_sender(user):
+        user.company_id.account_peppol_proxy_state = 'sender'
+        return True
+
     endpoint = endpoint.rsplit('/', 1)[-1]
     params = params or {}
     return {
@@ -79,6 +83,7 @@ def _mock_call_peppol_proxy(func, self, endpoint, params=None):
         'register_sender_as_receiver': lambda _user: {},
         'update_user': lambda _user: {},
         'cancel_peppol_registration': lambda _user: {},
+        'unregister_to_sender': _mock_unregister_to_sender,
         'migrate_peppol_registration': lambda _user: {'migration_key': 'demo_migration_key'},
         'participant_status': lambda _user: {'peppol_state': 'receiver'},
         'set_webhook': lambda _user: {},

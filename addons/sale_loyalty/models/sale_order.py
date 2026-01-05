@@ -420,7 +420,7 @@ class SaleOrder(models.Model):
         discountable = 0
         discountable_per_tax = defaultdict(int)
         for line in cheapest_line:
-            discountable += line.price_total
+            discountable += line.price_total / line.product_uom_qty
             taxes = line.tax_ids.filtered(lambda t: t.amount_type != 'fixed')
             discountable_per_tax[taxes] += line.price_unit * (1 - (line.discount or 0) / 100)
 

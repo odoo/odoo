@@ -174,6 +174,25 @@ class StockMove(models.Model):
 
         if aml_quantity <= 0:
             return valuation_data
+
+        other_candidates_qty = 0
+        for move in self.purchase_line_id.move_ids:
+            if move.product_id != self.product_id:
+                continue
+            if move.date > self.date or (move.date == self.date and move.id > self.id):
+                continue
+            if move.is_in or move.is_dropship:
+                other_candidates_qty += move._get_valued_qty()
+            elif move.is_out:
+                other_candidates_qty -= -move._get_valued_qty()
+
+        if self.product_uom.compare(aml_quantity, other_candidates_qty) <= 0:
+            return valuation_data
+
+        # Remove quantity from prior moves.
+        value = value * ((aml_quantity - other_candidates_qty) / aml_quantity)
+        aml_quantity = aml_quantity - other_candidates_qty
+
         if quantity >= aml_quantity:
             valuation_data['quantity'] = aml_quantity
             valuation_data['value'] = value
@@ -190,7 +209,7 @@ class StockMove(models.Model):
         # TODO: Start from global value
         if not self.purchase_line_id:
             return super()._get_value_from_quotation(quantity, at_date)
-        price_unit = self.purchase_line_id._get_stock_move_price_unit()
+        price_unit = self.purchase_line_id.with_context(conversion_date=self.date)._get_stock_move_price_unit()
         uom_quantity = self.product_uom._compute_quantity(quantity, self.product_id.uom_id)
         quantity = min(quantity, uom_quantity)
         value = price_unit * quantity

@@ -98,7 +98,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
             self.assertEqual(file_names, attachment_names)
 
     def test_download_moves_attachments_with_bills(self):
-        bill = self.init_invoice('in_invoice', products=self.product_a)
+        bill = self.init_invoice('in_invoice', products=self.product_a, post=True)
         bill.message_main_attachment_id = self.env['ir.attachment'].create({'name': "Attachment", 'mimetype': 'text/plain', 'res_model': 'account.move', 'datas': "test_bill"})
         attachment_names = [bill.message_main_attachment_id.name]
         self.authenticate(self.env.user.login, self.env.user.login)
@@ -110,9 +110,9 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
             self.assertEqual(file_names, attachment_names)
 
     def test_download_moves_attachments_with_duplicate_names(self):
-        bill_1 = self.init_invoice('in_invoice', products=self.product_a)
-        bill_2 = self.init_invoice('in_invoice', products=self.product_a)
-        bill_3 = self.init_invoice('in_invoice', products=self.product_a)
+        bill_1 = self.init_invoice('in_invoice', products=self.product_a, post=True)
+        bill_2 = self.init_invoice('in_invoice', products=self.product_a, post=True)
+        bill_3 = self.init_invoice('in_invoice', products=self.product_a, post=True)
         att_name = "Attachment"
         bill_1.message_main_attachment_id = self.env['ir.attachment'].create({'name': att_name, 'mimetype': 'text/plain', 'res_model': 'account.move', 'datas': "test_bill"})
         bill_2.message_main_attachment_id = self.env['ir.attachment'].create({'name': att_name, 'mimetype': 'text/plain', 'res_model': 'account.move', 'datas': "test_bill"})

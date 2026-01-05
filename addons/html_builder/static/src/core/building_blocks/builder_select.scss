@@ -49,6 +49,20 @@
     }
 }
 
+// The following code handles the case where a select and a group of buttons are
+// on the same row. In this situation, we want to show as much of the buttons’
+// text as possible. (For Animation: "onScroll" or Layout: "Column")
+.hb-row-content {
+    &:has(.o-hb-button-group) > .o-hb-select-wrapper {
+        flex: 1 0 auto;
+        max-width: 50%;
+    }
+
+    &:has(.o-hb-select-wrapper) > .o-hb-button-group .o-hb-btn {
+        min-width: 6ch;
+    }
+}
+
 // Image format badge.
 .o-hb-select-toggle.dropdown-toggle, .o-hb-select-dropdown-item {
     > div > .badge {

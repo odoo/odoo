@@ -44,7 +44,6 @@ import {
     secondClick,
     thirdClick,
 } from "./_helpers/selection";
-import { strong } from "./_helpers/tags";
 import { insertText } from "./_helpers/user_actions";
 import { expandToolbar } from "./_helpers/toolbar";
 import { nodeSize } from "@html_editor/utils/position";
@@ -1232,6 +1231,13 @@ test("toolbar should open with image namespace the selection spans an image and 
     expect(queryAll(".o-we-toolbar .btn-group[name='decoration']").length).toBe(0);
 });
 
+test.tags("desktop");
+test("toolbar should not be visible for collapsed selection after image", async () => {
+    await setupEditor(`<p><img class="img-fluid" src="/web/static/img/logo.png">[]</p>`);
+    await animationFrame();
+    await expectElementCount(".o-we-toolbar", 0);
+});
+
 test("plugins can create buttons with text in toolbar", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
@@ -1398,15 +1404,17 @@ test("toolbar should close on edit link from preview", async () => {
 
 test.tags("desktop");
 test("close the toolbar if the selection contains any nodes (traverseNode = [], ignore zws)", async () => {
-    const { el } = await setupEditor(`<p>ab${strong("\u200B", "first")}cd</p>`);
+    const { el } = await setupEditor(
+        `<p>ab<strong data-oe-zws-empty-inline="">\u200B</strong>cd</p>`
+    );
     await expectElementCount(".o-we-toolbar", 0);
 
-    setContent(el, `<p>a[b${strong("\u200B", "first")}c]d</p>`);
+    setContent(el, `<p>a[b<strong data-oe-zws-empty-inline="">\u200B</strong>c]d</p>`);
     await tick(); // selectionChange
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
 
-    setContent(el, `<p>ab${strong("[\u200B]", "first")}cd</p>`);
+    setContent(el, `<p>ab<strong data-oe-zws-empty-inline="">[\u200B]</strong>cd</p>`);
     await tick(); // selectionChange
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 0);

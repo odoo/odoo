@@ -556,6 +556,18 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
             ],
         }
 
+    def _add_document_line_price_nodes(self, line_node, vals):
+        """
+        Use 10 decimal places for PriceAmount to satisfy ZATCA validation BR-KSA-EN16931-11
+        """
+        currency_suffix = vals['currency_suffix']
+        line_node['cac:Price'] = {
+            'cbc:PriceAmount': {
+                '_text': round(vals[f'gross_price_unit{currency_suffix}'], 10),
+                'currencyID': vals['currency_name'],
+            },
+        }
+
     # -------------------------------------------------------------------------
     # EXPORT: Helpers for hash generation
     # -------------------------------------------------------------------------

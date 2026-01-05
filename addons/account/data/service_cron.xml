@@ -14,7 +14,7 @@
         <field name="name">Send invoices automatically</field>
         <field name="model_id" ref="model_account_move"/>
         <field name="state">code</field>
-        <field name="code">model._cron_account_move_send(job_count=20)</field>
+        <field name="code">model._cron_account_move_send()</field>
         <field name="user_id" ref="base.user_root"/>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>

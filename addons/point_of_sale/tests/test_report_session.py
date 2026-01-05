@@ -2,6 +2,7 @@
 import odoo
 
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.exceptions import UserError
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestReportSession(TestPoSCommon):
@@ -18,8 +19,13 @@ class TestReportSession(TestPoSCommon):
             'price_include_override': 'tax_included',
         })
         self.product1 = self.create_product('Product A', self.categ_basic, 110, self.tax1.id)
+        product_to_archive = self.create_product('Product to archive', self.categ_basic, 100, self.tax1.id)
 
         self.config.open_ui()
+        # check that an unsed product can be archived by any user with archive rights
+        self.res_users_stock_user.group_ids |= self.env.ref('product.group_product_manager')
+        product_to_archive.with_user(self.res_users_stock_user).action_archive()
+
         session_id = self.config.current_session_id.id
         order = self.env['pos.order'].create({
             'company_id': self.env.company.id,
@@ -43,6 +49,9 @@ class TestReportSession(TestPoSCommon):
             'last_order_preparation_change': '{}',
             'to_invoice': False,
         })
+        # check that an used product can not be archived
+        with self.assertRaisesRegex(UserError, "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\nMake sure to close all sessions first to avoid any issues."):
+            self.product1.with_user(self.res_users_stock_user).action_archive()
 
         self.make_payment(order, self.bank_split_pm1, 60)
         self.make_payment(order, self.bank_pm1, 50)

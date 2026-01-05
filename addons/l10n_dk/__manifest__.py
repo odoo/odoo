@@ -19,74 +19,71 @@ This is the module to manage the **accounting chart for Denmark**. Cover both on
 - **Dansk kontoplan**
 
 - Dansk moms
-        - 25% moms
-        - Resturationsmoms 6,25%
+        - 25 % moms
+        - Restaurationsmoms 6,25 %
         - Omvendt betalingspligt
 
 - Konteringsgrupper
         - EU (Virksomhed)
         - EU (Privat)
-        - 3.lande
+        - Tredjelande
 
-- Finans raporter
-        - Resulttopgørelse
+- Finansrapporter
+        - Resultatopgørelse
         - Balance
         - Momsafregning
             - Afregning
             - Rubrik A, B og C
 
-- **Anglo-Saxon regnskabsmetode**
+- **Anglo-saksisk regnskabsmetode**
 
 .
 
-Produkt setup:
-==============
+Produktopsætning:
+=================
 
 **Vare**
 
-**Salgsmoms:**      Salgmoms 25%
+**Salgsmoms:**      Salgsmoms 25 %
 
-**Salgskonto:**     1010 Salg af vare, m/moms
+**Salgskonto:**     1.010 Salg af varer inkl. moms
 
-**Købsmoms:**       Købsmoms 25%
+**Købsmoms:**       Købsmoms 25 %
 
-**Købskonto:**      2010 Direkte omkostninger vare, m/moms
+**Købskonto:**      2.010 Direkte vareomkostninger inkl. moms
 
 .
 
 **Ydelse**
 
-**Salgsmoms:**      Salgmoms 25%, ydelser
+**Salgsmoms:**      Salgsmoms 25 %, ydelser
 
-**Salgskonto:**     1011 Salg af ydelser, m/moms
+**Salgskonto:**     1.011 Salg af ydelser inkl. moms
 
-**Købsmoms:**       Købsmoms 25%, ydelser
+**Købsmoms:**       Købsmoms 25 %, ydelser
 
-**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms
+**Købskonto:**      2.011 Direkte omkostninger ydelser inkl. moms
 
 .
 
 **Vare med omvendt betalingspligt**
 
-**Salgsmoms:**      Salg omvendt betalingspligt
+**Salgsmoms:**      Salg med omvendt betalingspligt
 
-**Salgskonto:**     1012 Salg af vare, u/moms
+**Salgskonto:**     1.012 Salg af varer ekskl. moms
 
-**Købsmoms:**       Køb omvendt betalingspligt
+**Købsmoms:**       Køb med omvendt betalingspligt
 
-**Købskonto:**      2012 Direkte omkostninger vare, u/moms
+**Købskonto:**      2.012 Direkte vareomkostninger ekskl. moms
 
 
 .
 
 **Restauration**
 
-**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms
+**Købsmoms:**       Restaurationsmoms 6,25 %, købsmoms
 
 **Købskonto:**      4010 Restaurationsbesøg
-
-.
-
     """,
     'depends': [
         'base_iban',

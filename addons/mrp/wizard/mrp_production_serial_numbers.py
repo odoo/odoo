@@ -56,15 +56,13 @@ class MrpProductionSerials(models.TransientModel):
         ])
         existing_lot_names = existing_lots.mapped('name')
         new_lots = []
-        for lot_name in lots:
+        for lot_name in sorted(lots):
             if lot_name in existing_lot_names:
                 continue
 
-            if self.lot_name == self.production_id.product_id.serial_prefix_format + self.production_id.product_id.next_serial:
+            if lot_name == self.production_id.product_id.serial_prefix_format + self.production_id.product_id.next_serial:
                 if self.production_id.product_id.lot_sequence_id:
-                    lot_name = self.production_id.product_id.lot_sequence_id.next_by_id()
-                else:
-                    lot_name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
+                    self.production_id.product_id.lot_sequence_id.number_next_actual += 1
             new_lots.append({
                 'name': lot_name,
                 'product_id': self.production_id.product_id.id
@@ -73,3 +71,14 @@ class MrpProductionSerials(models.TransientModel):
         if self.production_id.qty_producing != len(self.production_id.lot_producing_ids):
             self.production_id.qty_producing = len(self.production_id.lot_producing_ids)
         (self.workorder_id or self.production_id).set_qty_producing()
+
+        print_actions = self.production_id._autoprint_mass_generated_lots()
+        if print_actions:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'do_multi_print',
+                'context': {},
+                'params': {
+                    'reports': print_actions,
+                }
+            }

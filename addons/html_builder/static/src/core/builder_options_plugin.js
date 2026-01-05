@@ -241,6 +241,9 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         const newContainers = this.computeContainers(this.target);
+        if (newContainers.length === 0 && this.lastContainers.length === 0) {
+            return;
+        }
         // Do not update the containers if they did not change and are not
         // forced to update.
         if (

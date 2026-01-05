@@ -78,9 +78,9 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          * (monthly demand, suggested_qty, forecasted + record ordering)
          * ------------------------------------------------------------------
          */
-        ...catalogSuggestion.setParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }), // 1 order of 12
+        ...catalogSuggestion.setParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }), // 1 order of 12 used in computation of demand // 28 days --> forecast uses both 50 delivery
         { trigger: "span[name='suggest_total']:visible:contains('480')" },
-        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 52, suggest: 24 }),
+        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 52, suggest: 24, forecast: 100 }),
         ...catalogSuggestion.checkKanbanRecordPosition("test_product", 0),
 
         ...catalogSuggestion.setParameters({ basedOn: "Last 30 days", factor: 10 }), // 2 orders of 12
@@ -92,9 +92,9 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 8, suggest: 37 }),
 
         // --- Check with Forecasted quantities
-        ...catalogSuggestion.setParameters({ basedOn: "Forecasted", factor: 100 }),
-        { trigger: "span[name='suggest_total']:visible:contains('2,000')" },
-        ...catalogSuggestion.assertCatalogRecord("test_product", { forecast: 100, suggest: 100 }),
+        ...catalogSuggestion.setParameters({ basedOn: "Forecasted", nbDays: 18, factor: 100 }),
+        { trigger: "span[name='suggest_total']:visible:contains('1,000')", pause: true },
+        ...catalogSuggestion.assertCatalogRecord("test_product", { forecast: 50, suggest: 50 }), // 18 days --> forecast uses only one 50 delivery
 
         ...catalogSuggestion.setParameters({ nbDays: 7 }),
         { trigger: "span[name='suggest_total']:visible:contains('$ 0.00')" }, // Move out of 100 in 20days, so no suggest for 7 days

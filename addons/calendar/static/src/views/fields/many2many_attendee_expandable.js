@@ -1,7 +1,6 @@
-import { useState, useEffect } from "@odoo/owl";
-import { registry } from "@web/core/registry";
-import { reposition } from "@web/core/position/utils";
 import { Many2ManyAttendee, many2ManyAttendee } from "@calendar/views/fields/many2many_attendee";
+import { useState } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 
 export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
     static template = "calendar.Many2ManyAttendeeExpandable";
@@ -13,21 +12,6 @@ export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
         this.acceptedCount = this.props.record.data.accepted_count;
         this.declinedCount = this.props.record.data.declined_count;
         this.uncertainCount = this.attendeesCount - this.acceptedCount - this.declinedCount;
-
-        if (!this.env.isSmall) {
-            useEffect(
-                () => {
-                    const popover = document
-                        .querySelector(".o_field_many2manyattendeeexpandable")
-                        .closest(".o_popover");
-                    const target = document.querySelector(
-                        `.fc-event[data-event-id="${this.props.record.resId}"]`
-                    );
-                    reposition(popover, target, { position: "right", margin: 0 });
-                },
-                () => [this.state.expanded]
-            );
-        }
     }
 
     onExpanderClick() {

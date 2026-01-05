@@ -377,7 +377,7 @@
                                     <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
                                         context="{'selection': 'mercado_pago', 'config_ids': [pos_config_id], 'provider_name': 'Mercado Pago'}" invisible="not module_pos_mercado_pago" />
                                 </setting>
-                                <setting title="The transactions are processed by Pine Labs on the terminal." string="Pine Labs" help="Accept payments with a Pine Labs payment terminal">
+                                <setting title="The transactions are processed by Pine Labs on the terminal." string="Pine Labs" help="Accept payments with a Pine Labs payment terminal" documentation="/applications/sales/point_of_sale/payment_methods/terminals/pine_labs.html">
                                     <field name="module_pos_pine_labs"/>
                                     <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
                                         context="{'selection': 'pine_labs', 'config_ids': [pos_config_id], 'provider_name': 'Pine Labs'}" invisible="not module_pos_pine_labs" />

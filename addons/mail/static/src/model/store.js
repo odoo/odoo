@@ -149,20 +149,20 @@ export class Store extends Record {
                     RD_QUEUE.delete(record);
                     for (const [localId, names] of record._.uses.data.entries()) {
                         for (const [name2, count] of names.entries()) {
-                            const usingRecord2 =
-                                toRaw(this.recordByLocalId).get(localId) ||
+                            const existingRecordProxyInternal = toRaw(this.recordByLocalId).get(
+                                localId
+                            );
+                            const usingRecord =
+                                (existingRecordProxyInternal &&
+                                    toRaw(existingRecordProxyInternal)?._raw) ||
                                 deletingRecordsByLocalId.get(localId);
-                            if (!usingRecord2) {
+                            if (!usingRecord) {
                                 // record already deleted, clean inverses
                                 record._.uses.data.delete(localId);
                                 continue;
                             }
-                            if (usingRecord2.Model._.fieldsMany.get(name2)) {
-                                for (let c = 0; c < count; c++) {
-                                    usingRecord2[name2].delete(record);
-                                }
-                            } else {
-                                usingRecord2[name2] = undefined;
+                            for (let c = 0; c < count; c++) {
+                                usingRecord[name2].delete(record);
                             }
                         }
                     }

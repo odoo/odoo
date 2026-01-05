@@ -1,10 +1,12 @@
 import ast
 
+from collections import defaultdict
+
 from odoo.exceptions import ValidationError
 
 
 _ALLOWED_FUNCS = ('min', 'max')
-_ALLOWED_NAMES = ('price_unit', 'quantity', 'base', 'product')
+_ALLOWED_NAMES = ('price_unit', 'quantity', 'base', 'product', 'uom')
 _ALLOWED_CONSTANT_T = (int, float, type(None))
 
 
@@ -18,28 +20,29 @@ _NODE_WHITELIST = (
 )
 
 
-class ProductFieldRewriter(ast.NodeTransformer):
+class ProductUomFieldRewriter(ast.NodeTransformer):
     """
     - Rewrites  product.foo -> product['foo']
     - Collects every field name accessed (through product.foo or product['foo'])
+    (Same logic for 'uom')
     """
 
-    FIELD_NAME = "product"
+    SUB_ENTITIES = (("product.product", "product"), ("uom.uom", "uom"))
 
     def __init__(self) -> None:
         super().__init__()
-        self.accessed_fields: set[str] = set()
+        self.accessed_fields = defaultdict(set)
 
     def visit_Attribute(self, node: ast.Attribute):
         node = self.generic_visit(node)
-        if (
-            isinstance(node.value, ast.Name)
-            and node.value.id == self.FIELD_NAME
-        ):
-            # fail early if AST specs ever change
-            assert isinstance(node.attr, str), "Attribute name must be a string"
+        if isinstance(node.value, ast.Name):
+            for model, alias in self.SUB_ENTITIES:
+                if node.value.id == alias:
+                    # fail early if AST specs ever change
+                    assert isinstance(node.attr, str), "Attribute name must be a string"
 
-            self.accessed_fields.add(node.attr)
+                    self.accessed_fields[model].add(node.attr)
+
             return ast.Subscript(
                 value=node.value,
                 slice=ast.Constant(node.attr),
@@ -51,11 +54,12 @@ class ProductFieldRewriter(ast.NodeTransformer):
         node = self.generic_visit(node)
         if (
             isinstance(node.value, ast.Name)
-            and node.value.id == self.FIELD_NAME
             and isinstance(node.slice, ast.Constant)
             and isinstance(node.slice.value, str)
         ):
-            self.accessed_fields.add(node.slice.value)
+            for model, alias in self.SUB_ENTITIES:
+                if node.value.id == alias:
+                    self.accessed_fields[model].add(node.slice.value)
         return node
 
 
@@ -63,7 +67,7 @@ class TaxFormulaValidator(ast.NodeVisitor):
     """
     Walks AST and rejects anything that is not needed or not reproducible in pyjs.
 
-    The ast must be transformed by ProductFieldRewriter before being passed to this validator as
+    The ast must be transformed by ProductUomFieldRewriter before being passed to this validator as
     this visitor does not whitelist Attribute nodes
     """
     def __init__(self, env):
@@ -103,12 +107,12 @@ class TaxFormulaValidator(ast.NodeVisitor):
         # They are not allowed elsewhere in the formula
         if not (
             isinstance(node.value, ast.Name)
-            and node.value.id == "product"
+            and node.value.id in ("product", "uom")
             and isinstance(node.slice, ast.Constant)
             and isinstance(node.slice.value, str)
             and isinstance(node.ctx, ast.Load)
         ):
-            raise ValidationError(self.env._("Only product['string'] read-access is allowed"))
+            raise ValidationError(self.env._("Only product['string'] or uom['string'] read-access is allowed"))
 
         self.visit(node.value)
 
@@ -148,13 +152,14 @@ def normalize_formula(env, formula: str, field_predicate=None) -> tuple[str, set
     except (SyntaxError, ValueError):
         raise ValidationError(env._("Invalid formula"))
 
-    transformer = ProductFieldRewriter()
+    transformer = ProductUomFieldRewriter()
     transformed_tree = transformer.visit(tree)
     ast.fix_missing_locations(transformed_tree)  # puts back lineno/col_offset for safe_eval's compile
 
     if callable(field_predicate):
-        for field in transformer.accessed_fields:
-            if not field_predicate(field):
-                raise ValidationError(env._("Field '%s' is not accessible", field))
+        for model, fields in transformer.accessed_fields.items():
+            for field in fields:
+                if not field_predicate(model, field):
+                    raise ValidationError(env._("Field '%s' is not accessible", field))
 
     return ast.unparse(transformed_tree), transformer.accessed_fields

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import _, api, models, release
 from odoo.tools import format_amount
 
 from odoo.addons.payment import utils as payment_utils
@@ -59,6 +59,13 @@ class PaymentTransaction(models.Model):
             'amount': {
                 'value': converted_amount,
                 'currency': self.currency_id.name,
+            },
+            'applicationInfo': {
+                'externalPlatform': {
+                    'name': 'Odoo',
+                    'version': release.version,
+                    'integrator': 'Odoo SA',
+                }
             },
             'countryCode': partner_country_code,
             'reference': self.reference,

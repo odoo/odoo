@@ -66,8 +66,10 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
             },
             defaultLinkAttributes: { rel: "ugc" },
             dropImageAsAttachment: true,
-            allowImageTransform: this.props.fullEdit,
+            allowImageTransform: false,
             height: this.props.height,
+            allowImageResize: false,
+            allowFontFamily: false,
         };
     }
 
@@ -89,6 +91,7 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
 
     onSubmitButtonClick(ev) {
         if (this.readyToSubmit) {
+            this.readyToSubmit = false;
             return;
         }
         ev.preventDefault();

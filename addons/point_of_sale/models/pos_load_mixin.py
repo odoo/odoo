@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, models
 from odoo.fields import Domain
+from odoo.exceptions import AccessError
 
 
 class PosLoadMixin(models.AbstractModel):
@@ -51,7 +52,15 @@ class PosLoadMixin(models.AbstractModel):
         return records or []
 
     def _unrelevant_records(self, config):
-        return self.filtered(lambda record: not record.active).ids
+        unrelevant_record_ids = []
+        for record in self:
+            try:
+                if not record.active:
+                    unrelevant_record_ids.append(record.id)
+            except AccessError:
+                # If the user has no read access, consider the record as unrelevant
+                unrelevant_record_ids.append(record.id)
+        return unrelevant_record_ids
 
     @api.model
     def _load_pos_data_fields(self, config):

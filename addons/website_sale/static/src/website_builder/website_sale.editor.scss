@@ -14,8 +14,8 @@
 }
 
 .options-container:has(.o_wsale_products_list_page_options) {
-    div[data-label="Style"].hb-row-sublevel-1:after {
-        height: calc(#{$o-hb-row-min-height} * 0.5);
+    div[data-label="Style"].hb-row-sublevel-1 .hb-row-label::after {
+        height: $o-hb-row-min-height * 1.5;
     }
 }
 

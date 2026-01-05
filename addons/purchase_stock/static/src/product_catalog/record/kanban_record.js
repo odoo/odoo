@@ -20,6 +20,10 @@ export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKan
     /** Add suggested_qty or pricelist_min_qty (the greater one) if positive, otherwise add 1. */
     addProduct() {
         const { min_qty = 1, suggested_qty = 0 } = this.productCatalogData;
-        super.addProduct(Math.max(min_qty, suggested_qty, 1));
+        let quantity_to_add = Math.max(min_qty, suggested_qty, 1);
+        if (this.productCatalogData.uomFactor) {
+            quantity_to_add = Math.ceil(quantity_to_add / this.productCatalogData.uomFactor);
+        }
+        super.addProduct(quantity_to_add);
     }
 }

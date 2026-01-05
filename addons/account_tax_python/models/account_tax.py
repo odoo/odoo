@@ -33,12 +33,18 @@ class AccountTax(models.Model):
             if tax.amount_type == 'code':
                 self._check_and_normalize_formula(tax.formula)
 
-    @api.model
     def _eval_taxes_computation_prepare_product_fields(self):
         # EXTENDS 'account'
         field_names = super()._eval_taxes_computation_prepare_product_fields()
         for tax in self.filtered(lambda tax: tax.amount_type == 'code'):
             field_names.update(tax.formula_decoded_info['product_fields'])
+        return field_names
+
+    def _eval_taxes_computation_prepare_product_uom_fields(self):
+        # EXTENDS 'account'
+        field_names = super()._eval_taxes_computation_prepare_product_uom_fields()
+        for tax in self.filtered(lambda tax: tax.amount_type == 'code'):
+            field_names.update(tax.formula_decoded_info['product_uom_fields'])
         return field_names
 
     @api.depends('formula')
@@ -53,7 +59,8 @@ class AccountTax(models.Model):
             tax.formula_decoded_info = {
                 'js_formula': py_formula,
                 'py_formula': py_formula,
-                'product_fields': list(accessed_fields),
+                'product_fields': list(accessed_fields['product.product']),
+                'product_uom_fields': list(accessed_fields['uom.uom']),
             }
 
     @api.model
@@ -62,9 +69,9 @@ class AccountTax(models.Model):
         in python & javascript.
         """
 
-        def is_field_serializable(field_name):
+        def is_field_serializable(model, field_name):
             assert isinstance(field_name, str), "Field name must be a string"
-            field = self.env['product.product']._fields.get(field_name)
+            field = self.env[model]._fields.get(field_name)
             return isinstance(field, fields.Field) and not field.relational
 
         transformed_formula, accessed_fields = normalize_formula(
@@ -92,9 +99,11 @@ class AccountTax(models.Model):
             'price_unit': evaluation_context['price_unit'],
             'quantity': evaluation_context['quantity'],
             'product': evaluation_context['product'],
+            'uom': evaluation_context['uom'],
             'base': raw_base,
         }
-        assert accessed_fields <= formula_context['product'].keys(), "product fields used in formula must be present in the product dict"
+        assert accessed_fields['product'] <= formula_context['product'].keys(), "product fields used in formula must be present in the product dict"
+        assert accessed_fields['uom'] <= formula_context['uom'].keys(), "uom fields used in formula must be present in the product dict"
         try:
             formula_context = json.loads(json.dumps(formula_context))
         except TypeError:
