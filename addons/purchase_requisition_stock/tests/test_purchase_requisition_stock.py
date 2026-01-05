@@ -259,7 +259,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         wh.reception_steps = 'two_steps'
 
         # Create a reordering rule for the product and
-        self.env['stock.warehouse.orderpoint'].create({
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'name': 'RR for %s' % product.name,
             'warehouse_id': wh.id,
             'location_id': wh.lot_stock_id.id,
@@ -267,6 +267,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'product_min_qty': 1,
             'product_max_qty': 10,
         })
+        orderpoint.invalidate_recordset()
         # Run scheduler to create internal transfer from Input -> Stock and generate the Purchase Order
         self.env['stock.rule'].run_scheduler()
         # The internal move (Input -> Stock) shouldn't have been generated yet

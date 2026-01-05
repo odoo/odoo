@@ -991,6 +991,7 @@ class TestReorderingRule(TransactionCase):
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
 
         orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', self.product_01.id)])
+        orderpoint.invalidate_recordset()
         self.assertRecordValues(orderpoint, [
             {'qty_forecast': -1, 'qty_to_order': 1},
         ])
@@ -1198,6 +1199,7 @@ class TestReorderingRule(TransactionCase):
         })
         out_today._action_confirm()
 
+        orderpoint.invalidate_recordset()
         # Horizon days should be used something is found within lead times
         replenishment_info = loads(self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id}).json_lead_days)
         self.assertEqual(replenishment_info['lead_horizon_date'], format_date(orderpoint.env, today + td(days=3) + td(days=1)))
@@ -1221,7 +1223,7 @@ class TestReorderingRule(TransactionCase):
             'seller_ids': [(0, 0, {'partner_id': self.partner.id})],
         })
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        self.env['stock.warehouse.orderpoint'].create({
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'warehouse_id': warehouse.id,
             'location_id': warehouse.lot_stock_id.id,
             'product_id': product.id,
@@ -1229,6 +1231,7 @@ class TestReorderingRule(TransactionCase):
             'product_max_qty': 5,
         })
         # run the scheduler
+        orderpoint.invalidate_recordset()
         self.env['stock.rule'].run_scheduler()
         # check that the PO line is created
         po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
