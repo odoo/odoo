@@ -948,7 +948,9 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
             );
         }
         setBuilderCSSVariables(getHtmlStyle(this.document));
-        this.dispatchTo("on_website_color_updated_handlers", color);
+        await Promise.allSettled(
+            this.getResource("on_website_color_updated_handlers").map((handler) => handler(color))
+        );
     }
 }
 
