@@ -26,7 +26,7 @@ Key Features:
    - Indexes are temporarily dropped during record creation and restored afterward to improve performance.
    - Foreign key checks are disabled temporarily to prevent constraint violations during record insertion.
 
-5. **Dependency Management**: Ensures proper population order of models with dependencies (e.g., `_inherits` fields)
+5. **Dependency Management**: Ensures proper duplication order of models with dependencies (e.g., `_inherits` fields)
    by resolving dependencies before duplicating records.
 
 6. **Dynamic SQL Generation**: Uses SQL queries to manipulate and duplicate data directly at the database level,
@@ -110,7 +110,7 @@ def get_field_variation_char(field: Field, postfix: str | SQL | None = None) -> 
         """, field=SQL.identifier(field.name), postfix=postfix)
 
 
-class PopulateContext:
+class DuplicateContext:
     def __init__(self):
         self.has_session_replication_role = True
 
@@ -151,7 +151,7 @@ class PopulateContext:
                 model.env.cr.execute('RESET session_replication_role')
             except InsufficientPrivilege:
                 _logger.warning("Cannot ignore Fkey constraints during insertion due to insufficient privileges for current pg_role. "
-                                "Resetting transaction and retrying to populate without dropping the check on Fkey constraints. "
+                                "Resetting transaction and retrying to duplicate without dropping the check on Fkey constraints. "
                                 "The bulk insertion will be vastly slower than anticipated.")
                 model.env.cr.rollback()
                 self.has_session_replication_role = False
@@ -227,12 +227,12 @@ def fetch_last_id(model: Model) -> int:
     return model.env.execute_query(query)[0][0]
 
 
-def populate_field(model: Model, field: Field, populated: dict[Model, int], factors: dict[Model, int],
+def duplicate_field(model: Model, field: Field, duplicated: dict[Model, int], factors: dict[Model, int],
                    table_alias: str = 't', series_alias: str = 's') -> SQL | None:
     """
     Returns the source expression for copying the field (SQL(identifier|expression|subquery) | None)
     `table_alias` and `series_alias` are the identifiers used to reference
-    the currently being populated table and it's series, respectively.
+    the currently being duplicated table and it's series, respectively.
     """
     def copy_noop():
         return None
@@ -248,13 +248,13 @@ def populate_field(model: Model, field: Field, populated: dict[Model, int], fact
 
     def copy_id():
         last_id = fetch_last_id(model)
-        populated[model] = last_id  # this adds the model in the populated dict
+        duplicated[model] = last_id  # this adds the model in the duplicated dict
         return SQL('id + %(last_id)s * %(series_alias)s', last_id=last_id, series_alias=SQL.identifier(series_alias))
 
     def copy_many2one(field_):
-        # if the comodel was priorly populated, remap the many2one to the new copies
-        if (comodel := model.env[field_.comodel_name]) in populated:
-            comodel_max_id = populated[comodel]
+        # if the comodel was priorly duplicated, remap the many2one to the new copies
+        if (comodel := model.env[field_.comodel_name]) in duplicated:
+            comodel_max_id = duplicated[comodel]
             # we use MOD() instead of %, because % cannot be correctly escaped, it's a limitation of the SQL wrapper
             return SQL("%(table_alias)s.%(field_name)s + %(comodel_max_id)s * (MOD(%(series_alias)s - 1, %(factor)s) + 1)",
                         table_alias=SQL.identifier(table_alias),
@@ -279,8 +279,8 @@ def populate_field(model: Model, field: Field, populated: dict[Model, int], fact
             # TODO: in the case of a reference field, there is no comodel,
             #  but it's specified as the value of the field specified by model_field.
             #  Not really sure how to handle this, as it involves reading the content pointed by model_field
-            #  to check on-the-fly if it's populated or not python-side, so for now we raw-copy it.
-            #  If we need to read on-the-fly, the populated structure needs to be in DB (via a new Model?)
+            #  to check on-the-fly if it's duplicated or not python-side, so for now we raw-copy it.
+            #  If we need to read on-the-fly, the duplicated structure needs to be in DB (via a new Model?)
             return copy(field)
         case 'binary':
             # copy only binary field that are inlined in the table
@@ -289,7 +289,7 @@ def populate_field(model: Model, field: Field, populated: dict[Model, int], fact
             return copy(field)
 
 
-def populate_model(model: Model, populated: dict[Model, int], factors: dict[Model, int], separator_code: str) -> None:
+def duplicate_model(model: Model, duplicated: dict[Model, int], factors: dict[Model, int], separator_code: str) -> None:
 
     def update_sequence(model_):
         model_.env.execute_query(SQL("SELECT SETVAL(%(sequence)s, %(last_id)s, TRUE)",
@@ -298,8 +298,8 @@ def populate_model(model: Model, populated: dict[Model, int], factors: dict[Mode
     def has_column(field_):
         return field_.store and field_.column_type
 
-    assert model not in populated, f"We do not populate a model ({model}) that has already been populated."
-    _logger.info('Populating model %s %s times...', model._name, factors[model])
+    assert model not in duplicated, f"We do not duplicate a model ({model}) that has already been duplicated."
+    _logger.info('Duplicating model %s %s times...', model._name, factors[model])
     dest_fields = []
     src_fields = []
     update_fields = []
@@ -310,7 +310,7 @@ def populate_model(model: Model, populated: dict[Model, int], factors: dict[Mode
         if has_column(field):
             if field_needs_variation(model, field) and field.type in ('char', 'text'):
                 update_fields.append(field)
-            if src := populate_field(model, field, populated, factors, table_alias, series_alias):
+            if src := duplicate_field(model, field, duplicated, factors, table_alias, series_alias):
                 dest_fields.append(SQL.identifier(field.name))
                 src_fields.append(src)
     # Update char/text fields for existing rows, to allow re-entrance
@@ -330,11 +330,11 @@ def populate_model(model: Model, populated: dict[Model, int], factors: dict[Mode
          dest_columns=SQL(', ').join(dest_fields), src_columns=SQL(', ').join(src_fields),
          table_alias=SQL.identifier(table_alias), series_alias=SQL.identifier(series_alias))
     model.env.cr.execute(query)
-    # normally copying the 'id' will set the model entry in the populated dict,
+    # normally copying the 'id' will set the model entry in the duplicated dict,
     # but for the case of a table with no 'id' (ex: Many2many), we add manually,
     # by reading the key and having the defaultdict do the insertion, with a default value of 0
-    if populated[model]:
-        # in case we populated a model with an 'id', we update the sequence
+    if duplicated[model]:
+        # in case we duplicated a model with an 'id', we update the sequence
         update_sequence(model)
 
 
@@ -376,7 +376,7 @@ def infer_many2many_model(env: Environment, field: Field) -> Model | Many2manyMo
     Returns the relation model used for the m2m:
     - If it's a custom model, return the model
     - If it's an implicite table generated by the ORM,
-      return a wrapped model that behaves like a fake duck-typed model for the population algorithm
+      return a wrapped model that behaves like a fake duck-typed model for the duplication algorithm
     """
     # check if the relation is an existing model
     for model_name, model_class in env.registry.items():
@@ -386,7 +386,7 @@ def infer_many2many_model(env: Environment, field: Field) -> Model | Many2manyMo
     return Many2manyModelWrapper(env, field)
 
 
-def populate_models(model_factors: dict[Model, int], separator_code: int) -> None:
+def duplicate_models(model_factors: dict[Model, int], separator_code: int) -> None:
     """
     Create factors new records using existing records as templates.
 
@@ -398,24 +398,24 @@ def populate_models(model_factors: dict[Model, int], separator_code: int) -> Non
         query = SQL('SELECT EXISTS (SELECT 1 FROM %s)', SQL.identifier(model_._table))
         return model_.env.execute_query(query)[0][0]
 
-    populated: dict[Model, int] = defaultdict(int)
-    ctx: PopulateContext = PopulateContext()
+    duplicated: dict[Model, int] = defaultdict(int)
+    ctx: DuplicateContext = DuplicateContext()
 
     def process(model_):
-        if model_ in populated:
+        if model_ in duplicated:
             return
-        if not has_records(model_):  # if there are no records, there is nothing to populate
-            populated[model_] = 0
+        if not has_records(model_):  # if there are no records, there is nothing to duplicate
+            duplicated[model_] = 0
             return
 
-        # if the model has _inherits, the delegated models need to have been populated before the current one
+        # if the model has _inherits, the delegated models need to have been duplicated before the current one
         for model_name in model_._inherits:
             process(model_.env[model_name])
 
         with ctx.ignore_fkey_constraints(model_), ctx.ignore_indexes(model_):
-            populate_model(model_, populated, model_factors, separator_code)
+            duplicate_model(model_, duplicated, model_factors, separator_code)
 
-        # models on the other end of X2many relation should also be populated (ex: to avoid SO with no SOL)
+        # models on the other end of X2many relation should also be duplicated (ex: to avoid SO with no SOL)
         for field in model_._fields.values():
             if field.store and field.copy:
                 match field.type:

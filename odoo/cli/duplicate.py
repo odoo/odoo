@@ -6,7 +6,7 @@ import time
 from odoo import api
 from odoo.modules.registry import Registry
 from odoo.tools import config
-from odoo.tools.populate import populate_models
+from odoo.tools.duplicate import duplicate_models
 
 from . import Command
 
@@ -17,13 +17,13 @@ DEFAULT_MODELS = 'res.partner,product.template,account.move,sale.order,crm.lead,
 _logger = logging.getLogger(__name__)
 
 
-class Populate(Command):
+class Duplicate(Command):
     """Populate database via duplication of existing data for testing/demo purposes"""
 
     def run(self, cmdargs):
         parser = config.parser
         parser.prog = self.prog
-        group = optparse.OptionGroup(parser, "Populate Configuration")
+        group = optparse.OptionGroup(parser, "Duplicate Configuration")
         group.add_option("--factors", dest="factors",
                          help="Comma separated list of factors for each model, or just a single factor."
                               "(Ex: a factor of 3 means the given model will be copied 3 times, reaching 4x it's original size)"
@@ -58,10 +58,10 @@ class Populate(Command):
         registry = Registry(dbnames[0])
         with registry.cursor() as cr:
             env = api.Environment(cr, api.SUPERUSER_ID, {'active_test': False})
-            self.populate(env, model_factors, separator_code)
+            self.duplicate(env, model_factors, separator_code)
 
     @classmethod
-    def populate(cls, env: api.Environment, modelname_factors: dict[str, int], separator_code: int):
+    def duplicate(cls, env: api.Environment, modelname_factors: dict[str, int], separator_code: int):
         model_factors = {
             model: factor
             for model_name, factor in modelname_factors.items()
@@ -69,7 +69,7 @@ class Populate(Command):
         }
         _logger.log(25, 'Populating models %s', list(model_factors))
         t0 = time.time()
-        populate_models(model_factors, separator_code)
+        duplicate_models(model_factors, separator_code)
         env.flush_all()
         model_time = time.time() - t0
         _logger.info('Populated models %s (total: %fs)', list(model_factors), model_time)
