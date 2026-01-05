@@ -81,6 +81,7 @@ export class WithSearch extends Component {
             const config = { ...toRaw(this.props) };
             if (config.globalState && config.globalState.searchModel) {
                 config.state = JSON.parse(config.globalState.searchModel);
+                config.activateSearchDefaults = config.globalState.activateSearchDefaults;
                 delete config.globalState;
             }
             await this.searchModel.load(config);
