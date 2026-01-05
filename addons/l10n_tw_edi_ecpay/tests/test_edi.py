@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from unittest.mock import patch
 from urllib.parse import urljoin
 
@@ -63,6 +63,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         with patch(CALL_API_METHOD, new=self._test_01_mock):
             json_data = self.basic_invoice._l10n_tw_edi_generate_invoice_json()
         self.assertTrue(json_data)
+        self.assertNotIn("InvoiceRemark", json_data)
 
         # Validate the customer data
         self.assertEqual(json_data.get("MerchantID"), "1234")
@@ -71,6 +72,10 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         self.assertEqual(json_data.get("CustomerPhone"), "0123456789")
         self.assertEqual(json_data.get("SalesAmount"), 1050.0)
         self.assertEqual(json_data.get("CustomerAddr"), "street七美, 中正區 TPC, Taiwan")
+
+        self.basic_invoice.write({'ref': 'Test Reference'})
+        json_data_with_ref = self.basic_invoice._l10n_tw_edi_generate_invoice_json()
+        self.assertEqual(json_data_with_ref.get("InvoiceRemark"), "Test Reference")
 
     @freeze_time("2025-01-06 15:00:00")
     def test_02_basic_submission(self):
@@ -394,6 +399,48 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         with patch(CALL_API_METHOD, new=self._test_12_mock):
             with self.assertRaises(UserError):
                 send_and_print.action_send_and_print()
+
+    @freeze_time("2025-01-13 15:00:00")
+    def test_13_b2b_refund_upload_deadline_restriction(self):
+        """Test B2B Refund compliance with ECPay's upload deadline restriction.
+
+        Context:
+        - Government Rule: Allowances must be uploaded within 7 days of creation.
+        - ECPay Restriction: The API rejects allowances where 'AllowanceDate' is older
+          than 6 days from the current upload time.
+
+        Scenario:
+        We simulate a refund for an ECPay-submitted invoice created 7 days ago.
+        We verify that 'AllowanceDate' is OMITTED from the JSON payload.
+        By omitting it, ECPay defaults the date to 'Now', ensuring the request
+        passes validation regardless of the gap. (not covered here)
+        """
+        seven_days_ago = datetime.now() - timedelta(days=7)
+        invoice = self.init_invoice("out_invoice", partner=self.partner_b, products=self.product_a)
+        invoice.write({
+            "invoice_date": seven_days_ago.date(),
+            "l10n_tw_edi_invoice_create_date": seven_days_ago,
+            "l10n_tw_edi_ecpay_invoice_id": "AB11100099"  # simulate it was already sent
+        })
+        invoice.action_post()
+
+        wizard_vals = {
+            "journal_id": invoice.journal_id.id,
+            "reason": "Refund 7 days later",
+            "l10n_tw_edi_refund_agreement_type": "offline",
+        }
+        wizard = self.env["account.move.reversal"].with_context(
+            active_ids=invoice.ids,
+            active_model="account.move"
+        ).create(wizard_vals)
+        wizard.reverse_moves()
+        credit_note = wizard.new_move_ids
+        credit_note.action_post()
+
+        json_data = credit_note._l10n_tw_edi_generate_issue_allowance_json()
+        self.assertNotIn("AllowanceDate", json_data,
+            "B2B Allowances should not include AllowanceDate to avoid >6 day limit errors."
+        )
 
     # -------------------------------------------------------------------------
     # Patched methods

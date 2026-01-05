@@ -580,9 +580,10 @@ class AccountMove(models.Model):
             "CustomerPhone": formatted_phone,
             "InvType": self.l10n_tw_edi_invoice_type,
             "TaxType": tax_type,
-            "InvoiceRemark": self.ref,
         }
 
+        if self.ref:
+            json_data["InvoiceRemark"] = self.ref
         if special_tax_type:
             json_data["SpecialTaxType"] = special_tax_type
 
@@ -651,7 +652,6 @@ class AccountMove(models.Model):
             })
         else:
             json_data.update({
-                "AllowanceDate": self.l10n_tw_edi_invoice_create_date.strftime("%Y-%m-%d %H:%M:%S"),
                 "CustomerEmail": self.partner_id.email,
             })
 
