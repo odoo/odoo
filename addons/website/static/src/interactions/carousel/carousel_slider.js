@@ -34,6 +34,7 @@ export class CarouselSlider extends Interaction {
                     this.prefetchImages([toLoadEl]);
                 }
             },
+            "t-att-tabindex": (el) => (el.classList.contains("active") ? undefined : "-1"),
         },
     };
     carouselOptions = undefined;
@@ -45,6 +46,9 @@ export class CarouselSlider extends Interaction {
         if (this.carouselInnerEl) {
             this.carouselItemEls = [...this.carouselInnerEl.querySelectorAll(".carousel-item")];
         }
+        this.carouselIndicatorEls = this.el.querySelectorAll(
+            ".carousel-indicators > :is(button, li)"
+        );
 
         this.hasInterval = ![undefined, "false", "0"].includes(this.el.dataset.bsInterval);
         if (!["true", "carousel", "false"].includes(this.el.dataset.bsRide)) {
@@ -124,6 +128,24 @@ export class CarouselSlider extends Interaction {
         }
         if (this.options.scrollMode === "single") {
             this.onSlideSingleScroll(ev);
+        }
+        this.focusNextIndicator(ev.to);
+    }
+
+    /**
+     * @param {number} nextItemIndex
+     */
+    focusNextIndicator(nextItemIndex) {
+        const nextActiveIndicatorEl = this.carouselIndicatorEls.item(nextItemIndex);
+        // If before the slide, the focused element was another indicator, move
+        // the focus to the newly active indicator.
+        if (
+            this.el.contains(document.activeElement) &&
+            document.activeElement.matches(
+                `.carousel-indicators > :is(button, li):not([data-bs-slide-to="${nextItemIndex}"])`
+            )
+        ) {
+            nextActiveIndicatorEl.focus();
         }
     }
 
