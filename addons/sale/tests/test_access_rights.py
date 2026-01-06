@@ -2,7 +2,7 @@
 
 from odoo import Command
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.mail.tests.common import MailCommon
@@ -109,6 +109,9 @@ class TestAccessRights(SaleCommon, MailCommon):
         # Salesperson can send & print
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer.action_send_and_print()
+
+        # Salesperson should be able to create an invoice form
+        Form(move_as_salesperson)
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     def test_access_portal_user(self):
