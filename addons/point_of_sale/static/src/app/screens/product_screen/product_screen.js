@@ -202,6 +202,7 @@ export class ProductScreen extends Component {
             false
         );
     }
+
     getProductName(product) {
         return product.name;
     }

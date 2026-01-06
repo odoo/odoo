@@ -116,6 +116,10 @@ export class ProductListPage extends Component {
         );
     }
 
+    isProductSnoozed(product) {
+        return this.selfOrder.isProductSnoozed(product);
+    }
+
     isProductAvailable(product) {
         if (product.pos_categ_ids.length === 0) {
             return true;
