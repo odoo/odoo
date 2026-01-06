@@ -55,12 +55,17 @@
         'views/pos_session_sales_details.xml',
         'views/product_tag_views.xml',
         'views/stock_reference_views.xml',
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
         'receipt/pos_receipt_common.xml',  # needed in the backend and frontend
         'receipt/pos_order_receipt.xml',  # needed in the backend and frontend
         'receipt/pos_order_change_receipt.xml',  # needed in the backend and frontend
         'receipt/pos_tip_receipt.xml',  # needed in the backend and frontend
         'receipt/pos_cash_move_receipt.xml',  # needed in the backend and frontend
         'receipt/pos_sale_details_receipt.xml',  # needed in the backend and frontend
+||||||| c330b5247e6507bf2cb2865fe707a498b72e370d
+=======
+        'data/ir_cron_data.xml',
+>>>>>>> e1b8b9025f73116174b0b21fe36f25343424584b
     ],
     'demo': [
         'data/demo_data.xml',

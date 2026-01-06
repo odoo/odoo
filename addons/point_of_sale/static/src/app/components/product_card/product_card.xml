@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.ProductCard">
         <article tabindex="0"
-            t-attf-class="{{props.class}} {{props.color ? `o_colorlist_item_color_transparent_${props.color}` : ''}} product position-relative btn btn-light d-flex align-items-stretch p-0 rounded-3 text-start cursor-pointer {{ props.imgUrl ? 'd-flex align-items-stretch' : ''}}"
+            t-attf-class="{{props.class}} {{props.color ? `o_colorlist_item_color_transparent_${props.color}` : ''}} product position-relative btn btn-light d-flex align-items-stretch p-0 rounded-3 text-start cursor-pointer {{ props.imgUrl ? 'd-flex align-items-stretch' : ''}} {{ props.available ? '' : 'opacity-50' }}"
             t-on-keypress="(event) => event.code === 'Space' ? props.onClick(event) : ()=>{}"
             t-on-click.stop="props.onClick"
             t-att-data-product-id="props.productId"

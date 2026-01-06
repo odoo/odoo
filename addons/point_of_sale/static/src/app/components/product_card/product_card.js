@@ -5,6 +5,7 @@ export class ProductCard extends Component {
     static props = {
         class: { String, optional: true },
         name: String,
+        available: { Boolean, optional: true },
         product: Object,
         productId: Number | String,
         comboExtraPrice: { String, optional: true },
@@ -21,6 +22,7 @@ export class ProductCard extends Component {
         class: "",
         showWarning: false,
         isComboPopup: false,
+        available: true,
     };
 
     get productQty() {
