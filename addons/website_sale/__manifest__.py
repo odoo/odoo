@@ -37,6 +37,7 @@
         'templates/shop_page_templates.xml',
         'templates/svg_templates.xml',
         'templates/website_templates.xml',
+        'templates/wishlist_templates.xml',
 
         # Qweb templates -> checkout
         'templates/checkout/checkout_templates.xml',  # Shared templates first
@@ -102,6 +103,8 @@
             'website_sale/static/src/scss/website_sale.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
             'website_sale/static/src/scss/website_sale_delivery.scss',
+            'website_sale/static/src/scss/website_sale_wishlist.scss',
+            'website_sale/static/src/scss/website_sale_wishlist.options.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.xml',
             'website/static/lib/multirange/multirange_custom.scss',
@@ -112,6 +115,7 @@
             'website_sale/static/src/js/cart_service.js',
             'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/js/website_sale_utils.js',
+            'website_sale/static/src/js/wishlist_utils.js',
             'website_sale/static/src/xml/website_sale_utils.xml',
             'website/static/lib/multirange/multirange_custom.js',
             'website/static/src/interactions/multirange_input.js',
@@ -179,6 +183,7 @@
         'web.assets_tests': [
             'website_sale/static/tests/tours/**/*',
             'website_sale/static/src/js/tours/product_configurator_tour_utils.js',
+            'website_sale/static/src/js/tours/wishlist_tour_utils.js',
         ],
         'web.assets_unit_tests': [
             'website_sale/static/tests/interactions/**/*',
@@ -188,6 +193,7 @@
             'delivery/static/src/js/location_selector/**/*',
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/dynamic_snippet_products.js',
+            'website_sale/static/src/js/wishlist_utils.js',
             'website_sale/static/src/js/website_sale_utils.js',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
             # TODO Find out why these do not work:

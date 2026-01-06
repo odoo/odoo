@@ -235,3 +235,7 @@ class ProductProduct(models.Model):
                 ('order_id', 'any', [('website_id', '!=', False)]),
             ]).unlink()
         return super().write(vals)
+
+    def _is_in_wishlist(self):
+        self.ensure_one()
+        return self in self.env['product.wishlist'].current().mapped('product_id')

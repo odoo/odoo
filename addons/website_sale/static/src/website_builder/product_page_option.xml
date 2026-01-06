@@ -363,7 +363,13 @@
         </BuilderButton>
     </BuilderRow>
     <BuilderRow id="'o_we_actions_opt'" label.translate="Actions">
-        <!-- Filled by other modules -->
+        <BuilderButton title.translate="Wishlist"
+            action="'websiteConfig'"
+            actionParam="{views:['website_sale.product_add_to_wishlist']}"
+        >
+            <i class="fa fa-fw fa-heart"/>
+            Wishlist
+        </BuilderButton>
     </BuilderRow>
     <BuilderRow label.translate="Separators">
         <BuilderCheckbox

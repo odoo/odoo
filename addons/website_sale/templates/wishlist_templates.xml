@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="website_sale_wishlist.product_wishlist" name="Wishlist Page">
+    <template id="website_sale.product_wishlist" name="Wishlist Page">
         <t t-call="website.layout" additional_title.translate="Shop Wishlist">
             <div id="wrap" class="o_wsale_wishlist_page">
                 <div class="oe_structure" id="oe_structure_website_sale_wishlist_product_wishlist_1"/>
@@ -15,7 +15,7 @@
                             t-attf-class="w-100 #{'d-none' if wishes else ''}"
                         >
                             <div class="mt-5 mb-3">
-                                <t t-call="website_sale_wishlist.empty_wishlist_svg"/>
+                                <t t-call="website_sale.empty_wishlist_svg"/>
                             </div>
                             <h5 class="mb-3" style="text-align: center;">
                                 Your wishlist is empty!

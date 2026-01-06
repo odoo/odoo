@@ -1113,3 +1113,7 @@ class ProductTemplate(models.Model):
             url = f'{url}?{urls.url_encode(query_params)}'
 
         return url
+
+    def _is_in_wishlist(self):
+        self.ensure_one()
+        return self in self.env['product.wishlist'].current().mapped('product_id.product_tmpl_id')
