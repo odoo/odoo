@@ -6,9 +6,9 @@ from datetime import datetime, timezone
 from escpos import printer
 import escpos.exceptions
 import io
+import subprocess
 import win32print
 import pywintypes
-import ghostscript
 
 from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
@@ -78,30 +78,32 @@ class PrinterDriver(PrinterDriverBase):
         with win32print_lock:
             file_name = system.path_file('document.pdf')
             file_name.write_bytes(data)
-            printer = self.device_name
+            sumatra_pdf_path = system.path_file("SumatraPDF") / "SumatraPDF.exe"
 
-            args = [
-                "-dPrinted", "-dBATCH", "-dNOPAUSE", "-dNOPROMPT",
-                "-q",
-                "-sDEVICE#mswinpr2",
-                f'-sOutputFile#%printer%{printer}',
-                f'{file_name}'
+            sumatra_pdf_args = [
+                str(sumatra_pdf_path),
+                "-print-to",
+                self.device_name,
+                str(file_name),
+                "-silent",
+                "-print-settings",
+                "duplex"
             ]
 
-            _logger.debug("Printing report with ghostscript using %s", args)
+            _logger.debug("Printing report with SumatraPDF using %s", sumatra_pdf_args)
             stderr_buf = io.BytesIO()
             stdout_buf = io.BytesIO()
             stdout_log_level = logging.DEBUG
             try:
-                ghostscript.Ghostscript(*args, stdout=stdout_buf, stderr=stderr_buf)
+                subprocess.run(sumatra_pdf_args, check=True)
                 self.send_status(status='success')
             except Exception:
-                _logger.exception("Error while printing report, ghostscript args: %s, error buffer: %s", args, stderr_buf.getvalue())
+                _logger.exception("Error while printing report, SumatraPDF args: %s, error buffer: %s", sumatra_pdf_args, stderr_buf.getvalue())
                 stdout_log_level = logging.ERROR  # some stdout value might contains relevant error information
                 self.send_status(status='error', message='ERROR_FAILED')
                 raise
             finally:
-                _logger.log(stdout_log_level, "Ghostscript stdout: %s", stdout_buf.getvalue())
+                _logger.log(stdout_log_level, "SumatraPDF stdout: %s", stdout_buf.getvalue())
 
     def _action_default(self, data):
         _logger.debug("_action_default called for printer %s", self.device_name)
