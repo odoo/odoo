@@ -304,4 +304,16 @@ export class ClosePosPopup extends Component {
         const amounts = this.props.default_cash_details.moves.map((move) => move.amount);
         return amounts.reduce((acc, x) => acc + x, 0);
     }
+    get validPms() {
+        return this.props.non_cash_payment_methods.filter(
+            (item) => item.number == 1 && (item.type === "bank" || item.type === "cash")
+        );
+    }
+    isTheLastPM(pm) {
+        return pm === this.validPms.at(-1) && this.validPms.length % 2 === 0;
+    }
+
+    isOnePmUsed() {
+        return this.validPms.length == 0;
+    }
 }
