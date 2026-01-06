@@ -1122,7 +1122,8 @@ class AccountMove(models.Model):
             else:
                 move.expected_currency_rate = 1
 
-    @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date', 'taxable_supply_date')
+    @api.onchange('invoice_date')
+    @api.depends('currency_id', 'company_currency_id', 'company_id')
     def _compute_invoice_currency_rate(self):
         for move in self:
             if move.is_invoice(include_receipts=True):
