@@ -199,7 +199,11 @@ export class ProductListPage extends Component {
     }
 
     selectProduct(product, target) {
-        if (!product.self_order_available || !this.isProductAvailable(product)) {
+        if (
+            !product.self_order_available ||
+            !this.isProductAvailable(product) ||
+            this.selfOrder.isProductSnoozed(product)
+        ) {
             return;
         }
         if (product.isCombo()) {
