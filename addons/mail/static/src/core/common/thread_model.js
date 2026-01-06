@@ -118,12 +118,6 @@ export class Thread extends Record {
     followersCount;
     loadOlder = false;
     loadNewer = false;
-    get importantCounter() {
-        if (this.model === "mail.box") {
-            return this.counter;
-        }
-        return this.message_needaction_counter;
-    }
     get isFocused() {
         return this.isFocusedCounter !== 0;
     }

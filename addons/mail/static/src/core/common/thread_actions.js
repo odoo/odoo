@@ -82,15 +82,15 @@ registerThreadAction("meeting-chat", {
     actionPanelComponent: MeetingChat,
     actionPanelOuterClass: "bg-100 border border-secondary",
     badge: ({ thread }) => thread.isUnread,
-    badgeIcon: ({ thread }) => !thread.importantCounter && "fa fa-circle text-700",
-    badgeText: ({ thread }) => thread.importantCounter || undefined,
+    badgeIcon: ({ channel }) => !channel.importantCounter && "fa fa-circle text-700",
+    badgeText: ({ channel }) => channel.importantCounter || undefined,
     condition: ({ owner }) => owner.env.inMeetingView,
     icon: "fa fa-fw fa-comments",
     name: _t("Chat"),
     sequence: 30,
-    tags: ({ thread }) => {
+    tags: ({ channel }) => {
         const tags = [];
-        if (thread.importantCounter) {
+        if (channel.importantCounter) {
             tags.push(ACTION_TAGS.IMPORTANT_BADGE);
         }
         return tags;
