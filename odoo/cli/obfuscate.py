@@ -134,16 +134,16 @@ class Obfuscate(Command):
         parser = config.parser
         parser.prog = self.prog
         group = optparse.OptionGroup(parser, "Obfuscate Configuration")
-        group.add_option('--pwd', dest="pwd", default=False, help="Cypher password")
-        group.add_option('--fields', dest="fields", default=False, help="List of table.columns to obfuscate/unobfuscate: table1.column1,table2.column1,table2.column2")
-        group.add_option('--exclude', dest="exclude", default=False, help="List of table.columns to exclude from obfuscate/unobfuscate: table1.column1,table2.column1,table2.column2")
-        group.add_option('--file', dest="file", default=False, help="File containing the list of table.columns to obfuscate/unobfuscate")
-        group.add_option('--unobfuscate', action='store_true', default=False)
-        group.add_option('--allfields', action='store_true', default=False, help="Used in unobfuscate mode, try to unobfuscate all fields. Cannot be used in obfuscate mode. Slower than specifying fields.")
-        group.add_option('--vacuum', action='store_true', default=False, help="Vacuum database after unobfuscating")
-        group.add_option('--pertablecommit', action='store_true', default=False, help="Commit after each table instead of a big transaction")
+        group.add_option('--pwd', dest="pwd", my_default=None, help="Cypher password")
+        group.add_option('--fields', dest="fields", my_default=None, help="List of table.columns to obfuscate/unobfuscate: table1.column1,table2.column1,table2.column2")
+        group.add_option('--exclude', dest="exclude", my_default=None, help="List of table.columns to exclude from obfuscate/unobfuscate: table1.column1,table2.column1,table2.column2")
+        group.add_option('--file', dest="file", my_default=None, help="File containing the list of table.columns to obfuscate/unobfuscate")
+        group.add_option('--unobfuscate', action='store_true', my_default=False)
+        group.add_option('--allfields', action='store_true', my_default=False, help="Used in unobfuscate mode, try to unobfuscate all fields. Cannot be used in obfuscate mode. Slower than specifying fields.")
+        group.add_option('--vacuum', action='store_true', my_default=False, help="Vacuum database after unobfuscating")
+        group.add_option('--pertablecommit', action='store_true', my_default=False, help="Commit after each table instead of a big transaction")
         group.add_option(
-            '-y', '--yes', dest="yes", action='store_true', default=False,
+            '-y', '--yes', dest="yes", action='store_true', my_default=False,
             help="Don't ask for manual confirmation. Use it carefully as the obfuscate method is not considered as safe to transfer anonymous datas to a third party.")
 
         parser.add_option_group(group)
@@ -158,7 +158,10 @@ class Obfuscate(Command):
             if opt.allfields and not opt.unobfuscate:
                 _logger.error("--allfields can only be used in unobfuscate mode")
                 sys.exit("ERROR: --allfields can only be used in unobfuscate mode")
-            self.dbname = config['db_name']
+            db_names = config['db_name']
+            if not db_names or len(db_names) > 1:
+                self.parser.error("Please provide a single database in the config file")
+            self.dbname = db_names[0]
             self.registry = Registry(self.dbname)
             with self.registry.cursor() as cr:
                 self.cr = cr
