@@ -31,12 +31,18 @@ class Web_Unsplash(http.Controller):
             view counter.
         '''
         try:
-            if not url.startswith('https://api.unsplash.com/photos/') and not modules.module.current_test:
-                raise Exception(self.env._("ERROR: Unknown Unsplash notify URL!"))
+            self._check_unsplash_url(url)
             access_key = self._get_access_key()
             requests.get(url, params=url_encode({'client_id': access_key}))
         except Exception as e:
             logger.exception("Unsplash download notification failed: " + str(e))
+
+    def _check_unsplash_url(self, url):
+        ''' Check if the given url is a valid unsplash url
+            :param url: the url to be checked
+        '''
+        if not url.startswith('https://api.unsplash.com/photos/') and not modules.module.current_test:
+            raise Exception(self.env._("ERROR: Unknown Unsplash notify URL!"))
 
     # ------------------------------------------------------
     # add unsplash image url
