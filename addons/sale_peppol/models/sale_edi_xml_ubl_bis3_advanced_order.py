@@ -36,8 +36,10 @@ class SaleEdiXmlUbl_Bis3_AdvancedOrder(models.AbstractModel):
         return order_vals, logs
 
     def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
-        """Override of `account.edi.common` to adapt dictionary keys from the base method to be
-        compatible with the `sale.order.line` model."""
+        """
+        EXTENSION of `sale.edi.xml.ubl_bis3` module. Adds 'line_item_id' which is used to identify
+        order lines when importing/exporting orders to PEPPOL advanced document.
+        """
         xpath_dict = self._get_line_xpaths(document_type, qty_factor)
 
         line_item_id = None
@@ -46,7 +48,7 @@ class SaleEdiXmlUbl_Bis3_AdvancedOrder(models.AbstractModel):
             line_item_id = line_item_id_node.text
 
         return {
-            'ubl_line_item_ref': line_item_id,
+            'l10n_sg_ubl_line_item_ref': line_item_id,
             **super()._retrieve_line_vals(tree, document_type, qty_factor),
         }
 
@@ -87,8 +89,11 @@ class SaleEdiXmlUbl_Bis3_OrderChange(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
-        """Override of `account.edi.common` to adapt dictionary keys from the base method to be
-        compatible with the `sale.order.line` model."""
+        """
+        EXTENSION of `sale.edi.xml.ubl_bis3_advanced_order` module. Adds 'line_status_code' in
+        'order change' document import. The code is used to identify whether the lines are added,
+        deleted, changed, or unchanged.
+        """
         line_status_code = None
         line_status_code_node = tree.find('./{*}LineStatusCode')
         if line_status_code_node is not None:
@@ -98,6 +103,57 @@ class SaleEdiXmlUbl_Bis3_OrderChange(models.AbstractModel):
             'line_status_code': line_status_code,
             **super()._retrieve_line_vals(tree, document_type, qty_factor),
         }
+
+    def log_order_change_diff(self, order, tree):
+        """
+        Compare the order's order line data with the tree's order line data then log the difference.
+        This is to help users to know what the incoming changes are about.
+        """
+        html_output = "<b>Received order change request via PEPPOL:</b><ul>"
+        for line_tree in tree.iterfind('./{*}OrderLine/{*}LineItem'):
+            line_vals = self._retrieve_line_vals(line_tree, 'order_change')
+            line_status_code = line_vals.pop('line_status_code')
+            if line_status_code == '1':
+                html_output += f"<li>Line added: {line_vals['name']}</li>"
+                html_output += "<ul>"
+                html_output += f"<li>Quantity: {line_vals['product_uom_qty']}</li>"
+                html_output += f"<li>Unit Price: {line_vals['price']}</li>"
+                if line_vals['discount'] != 0:
+                    html_output += f"<li>Discount {line_vals['discount']}</li>"
+                html_output += "</ul>"
+                continue
+
+            updated_line_ref = line_vals.pop('l10n_sg_ubl_line_item_ref')
+            line = order.order_line.search(
+                    [('l10n_sg_ubl_line_item_ref', '=', updated_line_ref)],
+                    limit=1,
+                )
+            if not line:
+                continue
+
+            if line_status_code == '2':  # Order line is deleted
+                html_output += f"<li>Line deleted: {line.name}</li>"
+            elif line_status_code == '3':  # Order line is changed
+                currency = order.currency_id
+
+                html_output += f"<li>Line changed: {line.name}</li>"
+                html_output += "<ul>"
+
+                if line.product_id.id != line_vals['product_id']:
+                    html_output += f"<li>Product ID: {line.product_id.id} -> {line_vals['product_id']}</li>"
+                if line.product_uom_qty != line_vals['product_uom_qty']:
+                    html_output += f"<li>Quantity: {line.product_uom_qty} -> {line_vals['product_uom_qty']}</li>"
+                if line.product_uom_id.id != line_vals['product_uom_id']:
+                    html_output += f"<li>Product UOM ID: {line.product_uom_id.id} -> {line_vals['product_uom_id']}</li>"
+                if currency.compare_amounts(line.price_unit, line_vals['price_unit']) != 0:
+                    html_output += f"<li>Unit Price: {line.price_unit} -> {line_vals['price_unit']}</li>"
+                if currency.compare_amounts(line.discount, line_vals['discount']) != 0:
+                    html_output += f"<li>Discount: {line.discount} -> {currency.round(line_vals['discount'])}</li>"
+
+                html_output += "</ul>"
+
+        html_output += "</ul>"
+        order.message_post(body=html_output)
 
     def process_peppol_order_change(self, order):
         """ Apply PEPPOL order change document to `sale_order`. Searches through ir.attachment of
@@ -129,20 +185,20 @@ class SaleEdiXmlUbl_Bis3_OrderChange(models.AbstractModel):
                 order.write({'order_line': [order_line]})
 
             elif line_status_code == "2":  # Line is being deleted
-                updated_line_ref = order_line_vals.get('ubl_line_item_ref')
+                updated_line_ref = order_line_vals.get('l10n_sg_ubl_line_item_ref')
                 if updated_line_ref is None:
                     continue
                 order.order_line.search(
-                    [('ubl_line_item_ref', '=', updated_line_ref)],
+                    [('l10n_sg_ubl_line_item_ref', '=', updated_line_ref)],
                     limit=1,
                 ).unlink()
 
             elif line_status_code == "3":  # Line is being updated
-                updated_line_ref = order_line_vals.get('ubl_line_item_ref')
+                updated_line_ref = order_line_vals.get('l10n_sg_ubl_line_item_ref')
                 if updated_line_ref is None:
                     continue
                 line_to_update = next(filter(
-                    lambda line: line.ubl_line_item_ref == updated_line_ref,
+                    lambda line: line.l10n_sg_ubl_line_item_ref == updated_line_ref,
                     order.order_line,
                 ), None)
                 if line_to_update:

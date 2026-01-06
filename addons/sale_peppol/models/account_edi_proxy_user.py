@@ -75,6 +75,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     attachment_ids=[attachment.id],
                 )
                 attachment.write({'res_model': 'sale.order', 'res_id': order.id})
+                self.env['sale.edi.xml.ubl_bis3_order_change'].log_order_change_diff(order, tree)
                 order.l10n_sg_has_peppol_order_change = True
 
         elif doc_customization_id == customization_id['order_cancel']:
