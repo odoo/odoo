@@ -38,6 +38,7 @@ function applyForAJob(jobName, application) {
         trigger: "textarea[name='Short Introduction']",
         run: `edit ${application.subject}`,
     }, { // TODO: Upload a file ?
+        id: `send_form_${jobName.toLowerCase()}`,
         content: "Send the form",
         trigger: ".s_website_form_send",
         run: "click",
@@ -89,6 +90,7 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {}, () => [
 },
 ...clickOnEditAndWaitEditMode(),
 {
+    id: "set_fake_job_id_default",
     content: 'Add a fake default value for the job_id hidden field',
     trigger: ":iframe form input[name=job_id]:not(:visible)",
     run() {
