@@ -2,7 +2,7 @@
 import logging
 from datetime import datetime, timedelta
 
-from odoo import _, api, fields, models
+from odoo import _lt, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import SQL
 
@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 def _create_sequence(cr, seq_name, number_increment, number_next):
     """ Create a PostreSQL sequence. """
     if number_increment == 0:
-        raise UserError(_('Step must not be zero.'))
+        raise UserError(_lt('Step must not be zero.'))
     sql = "CREATE SEQUENCE %s INCREMENT BY %%s START WITH %%s" % seq_name
     cr.execute(sql, (number_increment, number_next))
 
@@ -30,7 +30,7 @@ def _drop_sequences(cr, seq_names):
 def _alter_sequence(cr, seq_name, number_increment=None, number_next=None):
     """ Alter a PostreSQL sequence. """
     if number_increment == 0:
-        raise UserError(_("Step must not be zero."))
+        raise UserError(_lt("Step must not be zero."))
     cr.execute("SELECT relname FROM pg_class WHERE relkind=%s AND relname=%s", ('S', seq_name))
     if not cr.fetchone():
         # sequence is not created yet, we're inside create() so ignore it, will be set later

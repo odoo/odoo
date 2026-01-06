@@ -8,7 +8,7 @@ from markupsafe import Markup
 from urllib.parse import parse_qs, urlparse
 from werkzeug.urls import url_encode
 
-from odoo import _
+from odoo import _lt
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools.image import image_process
@@ -63,7 +63,7 @@ def get_video_url_data(video_url, autoplay=False, loop=False,
     """
     source = get_video_source_data(video_url)
     if source is None:
-        return {'error': True, 'message': _('The provided url is invalid')}
+        return {'error': True, 'message': _lt('The provided url is invalid')}
 
     embed_url = video_url
     platform, video_id, platform_match = source
@@ -235,7 +235,7 @@ def handle_history_divergence(record, html_field_name, vals):
             server_last_history_id = server_history_matches[1].split(',')[-1]
             if server_last_history_id not in incoming_history_ids:
                 logger.warning('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
-                raise ValidationError(_(
+                raise ValidationError(_lt(
                     'The document was already saved from someone with a different history for model "%(model)s", field "%(field)s" with id "%(id)d".',
                     model=record._name,
                     field=html_field_name,
