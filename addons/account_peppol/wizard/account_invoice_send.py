@@ -146,7 +146,7 @@ class AccountInvoiceSend(models.TransientModel):
                     params={'documents': documents},
                 )
             except AccountEdiProxyError as e:
-                for invoice in invoices_data.items():
+                for invoice, invoice_data in invoices_data.items():
                     invoice.peppol_move_state = 'error'
                     invoice_data['error'] = e.message
             else:
