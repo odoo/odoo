@@ -14,6 +14,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_datetime, format_date, format_list, groupby, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.tools.misc import clean_context
 
 
 class PickingType(models.Model):
@@ -1210,6 +1211,7 @@ class Picking(models.Model):
             'views': [(view_id, 'list')],
             'domain': [('id', 'in', self.move_line_ids.ids)],
             'context': {
+                'sml_specific_default': True,
                 'default_picking_id': self.id,
                 'default_location_id': self.location_id.id,
                 'default_location_dest_id': self.location_dest_id.id,
@@ -1842,6 +1844,8 @@ class Picking(models.Model):
 
     def action_put_in_pack(self, move_lines_to_pack=False):
         self.ensure_one()
+        if self.env.context.get('sml_specific_default'):
+            self = self.with_context(clean_context(self.env.context))
         if self.state not in ('done', 'cancel'):
             move_line_ids = self._package_move_lines(move_lines_to_pack=move_lines_to_pack)
             if move_line_ids:
