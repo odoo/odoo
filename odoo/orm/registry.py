@@ -15,7 +15,7 @@ import typing
 import warnings
 from collections import defaultdict, deque
 from collections.abc import Mapping
-from contextlib import closing, contextmanager, nullcontext, ExitStack
+from contextlib import closing, nullcontext, ExitStack
 from functools import partial
 from operator import attrgetter
 
@@ -137,6 +137,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         upgrade_modules: Collection[str] = (),
         reinit_modules: Collection[str] = (),
         new_db_demo: bool | None = None,
+        lock_wait: int = 15,
     ) -> Registry:
         """Create and return a new registry for the given database name.
 
@@ -159,9 +160,13 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         :param new_db_demo: Whether to install demo data for the new database. If set to ``None``, the value will be
           determined by the ``config['with_demo']``. Defaults to ``None``
+        :param lock_wait: How long to wait to acquire the lock on the database (in seconds).
         """
         if (registry := cls.registries.get(db_name)) and not registry.ready:
             raise Exception('Registry for database %s can not be loaded recursively' % db_name)
+
+        from odoo.modules import db  # noqa: PLC0415
+        from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
 
         t0 = time.time()
         registry: Registry = object.__new__(cls)
@@ -175,25 +180,33 @@ class Registry(Mapping[str, type["BaseModel"]]):
         cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
         try:
             registry.setup_signaling()
-            with registry.cursor() as cr:
-                # This transaction defines a critical section for multi-worker concurrency control.
-                # When the transaction commits, the first worker proceeds to upgrade modules. Other workers
-                # encounter a serialization error and retry, finding no upgrade marker in the database.
-                # This significantly reduces the likelihood of concurrent module upgrades across workers.
-                # NOTE: This block is intentionally outside the try-except below to prevent workers that fail
-                # due to serialization errors from calling `reset_modules_state` while the first worker is
-                # actively upgrading modules.
-                from odoo.modules import db  # noqa: PLC0415
-                if db.is_initialized(cr):
-                    cr.execute("DELETE FROM ir_config_parameter WHERE key='base.partially_updated_database'")
-                    if cr.rowcount:
-                        update_module = True
-            # This should be a method on Registry
-            from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
-            exit_stack = ExitStack()
-            try:
-                if upgrade_modules or install_modules or reinit_modules:
-                    update_module = True
+            if upgrade_modules or install_modules or reinit_modules:
+                update_module = True
+
+            with ExitStack() as exit_stack:
+                # The transaction 'cr' defines a critical section for multi-worker concurrency
+                # control. It uses a shared lock to avoid registry updates while loading modules,
+                # and an exclusive lock when updating the registry.
+                cr = exit_stack.enter_context(registry.cursor())
+                assert lock_wait >= 0
+                cr.execute(f"SET SESSION lock_timeout = '{int(lock_wait)}s'")
+
+                # acquire the exclusive or shared lock at the session level; this enables to guard
+                # several transactions under the lock until the cursor is closed
+                if not update_module:
+                    cr.execute("SELECT pg_advisory_lock_shared(hashtext('registry_loading'))")
+                    if db.is_initialized(cr):
+                        # check whether module updates are pending
+                        cr.execute("DELETE FROM ir_config_parameter WHERE key='base.partially_updated_database'")
+                        if cr.rowcount:
+                            _logger.debug("Database %s initialized, removing upgrade marker", cr.dbname)
+                            # We are updating modules, so we must acquire the exclusive lock. The
+                            # upgrade marker (config parameter above) is deleted while loading modules.
+                            update_module = True
+                if update_module:
+                    cr.execute("SELECT pg_advisory_lock(hashtext('registry_loading'))")
+
+                # now load modules
                 if new_db_demo is None:
                     new_db_demo = config['with_demo']
                 if first_registry and not update_module:
@@ -201,14 +214,30 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 retries = 5 if update_module else 1
                 for _ in range(retries):
                     # load_modules multiple times in case there are modules to be uninstalled
-                    load_modules(
-                        registry,
-                        update_module=update_module,
-                        upgrade_modules=upgrade_modules,
-                        install_modules=install_modules,
-                        reinit_modules=reinit_modules,
-                        new_db_demo=new_db_demo,
-                    )
+                    cr.commit()  # start a new transaction
+                    try:
+                        load_modules(
+                            registry,
+                            cr=cr,
+                            update_module=update_module,
+                            upgrade_modules=upgrade_modules,
+                            install_modules=install_modules,
+                            reinit_modules=reinit_modules,
+                            new_db_demo=new_db_demo,
+                        )
+                    except Exception:
+                        cr.rollback()
+                        reset_modules_state(cr)
+                        raise
+                    if update_module:
+                        cr.execute(
+                            """
+                            INSERT INTO ir_config_parameter(key, value)
+                            SELECT 'base.partially_updated_database', '1'
+                            WHERE EXISTS(SELECT FROM ir_module_module WHERE state IN ('to upgrade', 'to install', 'to remove'))
+                            ON CONFLICT DO NOTHING
+                            """
+                        )
                     if registry.loaded:
                         break
                     models_to_check = registry._models_to_check
@@ -218,11 +247,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     upgrade_modules = install_modules = reinit_modules = ()
                 else:
                     raise Exception(f'Failed to load registry after {retries} attempts')  # noqa: TRY301
-            except Exception:
-                reset_modules_state(db_name)
-                raise
-            finally:
-                exit_stack.close()
         except Exception:
             _logger.error('Failed to load registry')
             del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
@@ -1088,10 +1112,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
             # Check if the model registry must be reloaded
             if self.registry_sequence != db_registry_sequence:
                 _logger.info("Reloading the model registry after database signaling.")
+                old_sequence = self.registry_sequence
                 self = Registry.new(self.db_name)
-                self.registry_sequence = db_registry_sequence
                 if _logger.isEnabledFor(logging.DEBUG):
-                    changes += "[Registry - %s -> %s]" % (self.registry_sequence, db_registry_sequence)
+                    changes += "[Registry - %s -> %s]" % (old_sequence, self.registry_sequence)
             # Check if the model caches must be invalidated.
             else:
                 invalidated = []
@@ -1113,10 +1137,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
     def signal_changes(self) -> None:
         """ Notifies other processes if registry or cache has been invalidated. """
-        if not self.ready:
-            _logger.warning('Calling signal_changes when registry is not ready is not suported')
-            return
-
         if self.registry_invalidated:
             _logger.info("Registry changed, signaling through the database")
             with self.cursor() as cr:
