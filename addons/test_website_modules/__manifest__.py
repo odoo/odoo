@@ -16,7 +16,7 @@ installed.""",
         'website_livechat',
         'website_crm_iap_reveal',
         'website_sale_comparison',
-        'website_sale_wishlist',
+        'website_sale',
     ],
     'assets': {
         'web.assets_tests': [

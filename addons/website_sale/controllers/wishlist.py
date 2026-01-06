@@ -37,7 +37,7 @@ class ProductWishlist(Controller):
         wishes = request.env['product.wishlist'].with_context(display_default_code=False).current()
 
         return request.render(
-            'website_sale_wishlist.product_wishlist',
+            'website_sale.product_wishlist',
             {
                 'wishes': wishes,
             }

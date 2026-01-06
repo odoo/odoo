@@ -267,7 +267,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _get_additional_shop_values(self, values, **kwargs):
         """ Hook to update values used for rendering website_sale.products template """
-        return {}
+        return {
+            'products_in_wishlist': request.env['product.wishlist'].current().product_id.product_tmpl_id,
+        }
 
     def _get_product_query_params(self, **kwargs):
         """Allow to configure the product page URL's query string."""
@@ -1832,7 +1834,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'product_page_image_layout', 'product_page_image_width', 'product_page_grid_columns',
             'product_page_image_spacing', 'product_page_image_ratio',
             'product_page_image_ratio_mobile', 'product_page_cols_order',
-            'product_page_image_roundness', 'product_page_cta_design'
+            'product_page_image_roundness', 'product_page_cta_design',
+            # wishlist
+            'wishlist_opt_products_design_classes', 'wishlist_grid_columns',
+            'wishlist_mobile_columns', 'wishlist_gap',
         }
         # Default ppg to 1.
         if 'ppg' in options and not options['ppg']:

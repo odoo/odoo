@@ -12,4 +12,5 @@ from . import (
     sale,
     variant,
     website,
+    wishlist,
 )
