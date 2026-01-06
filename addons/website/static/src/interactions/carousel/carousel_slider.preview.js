@@ -6,6 +6,9 @@ const CarouselSliderPreview = (I) =>
         carouselOptions = { ride: true, pause: true, interval: 500 };
 
         setup() {
+            this.carouselInnerEl = this.el.querySelector(".carousel-inner");
+            this.carouselItemEls = [...this.carouselInnerEl.querySelectorAll(".carousel-item")];
+
             // Bind mouse events to the entire section (top-most parent of the
             // snippet). This ensures events trigger when hovering anywhere on
             // the snippet, even if the carousel itself is smaller in width.
