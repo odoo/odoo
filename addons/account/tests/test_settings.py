@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 
 
@@ -116,3 +116,13 @@ class TestSettings(AccountTestInvoicingCommon):
             user_env['res.company'].browse(company_b.id).write({
                 'currency_id': self.env.ref('base.EUR').id,
             })
+
+    def test_set_fiscalyear_last_day_less_than_or_equal_zero(self):
+        """Test that ensure that fiscalyear_last_day raises ValidationError when set
+           to Zero or a negative value."""
+        company = self.company_data['company']
+        with self.assertRaises(ValidationError):
+            company.fiscalyear_last_day = -1
+
+        with self.assertRaises(ValidationError):
+            company.fiscalyear_last_day = 0
