@@ -52,6 +52,18 @@
         <field name="search_view_id" ref="product.product_category_search_view"/>
         <field name="view_id" ref="product.product_category_list_view"/>
     </record>
+    <record id="pos_product_combo_choice_action" model="ir.actions.act_window">
+        <field name="name">Combo Choices</field>
+        <field name="res_model">product.combo</field>
+        <field name="view_id" ref="product.product_combo_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add combo choices
+            </p><p>
+                Build flexible product combinations.
+            </p>
+        </field>
+    </record>
 
     <record id="product_template_form_view" model="ir.ui.view">
         <field name="name">product.template.form.inherit</field>
@@ -129,7 +141,7 @@
     <menuitem id="point_of_sale.menu_product_combo"
         name="Combo Choices"
         parent="point_of_sale.pos_config_menu_catalog"
-        action="product.product_combo_action"
+        action="pos_product_combo_choice_action"
         sequence="15"/>
     <menuitem id="pos_config_menu_action_product_pricelist"
         parent="point_of_sale.pos_config_menu_catalog"
