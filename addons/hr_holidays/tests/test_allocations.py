@@ -72,25 +72,9 @@ class TestAllocations(TestHrHolidaysCommon):
             'request_unit': 'day',
         })
 
-    def test_allocation_whole_company(self):
-        company_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
-            'name': 'Bank Holiday',
-            'allocation_mode': 'company',
-            'company_id': self.company.id,
-            'holiday_status_id': self.leave_type.id,
-            'duration': 2,
-            'allocation_type': 'regular',
-        })
-
-        company_allocation.action_generate_allocations()
-
-        num_of_allocations = self.env['hr.leave.allocation'].search_count([('employee_id', '=', self.employee.id)])
-        self.assertEqual(num_of_allocations, 1)
-
     def test_allocation_multi_employee(self):
         employee_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
             'name': 'Bank Holiday',
-            'allocation_mode': 'employee',
             'employee_ids': [(4, self.employee.id), (4, self.employee_emp.id)],
             'holiday_status_id': self.leave_type.id,
             'duration': 2,
@@ -98,21 +82,6 @@ class TestAllocations(TestHrHolidaysCommon):
         })
 
         employee_allocation.action_generate_allocations()
-
-        num_of_allocations = self.env['hr.leave.allocation'].search_count([('employee_id', '=', self.employee.id)])
-        self.assertEqual(num_of_allocations, 1)
-
-    def test_allocation_department(self):
-        department_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
-            'name': 'Bank Holiday',
-            'allocation_mode': 'department',
-            'department_id': self.department.id,
-            'holiday_status_id': self.leave_type.id,
-            'duration': 2,
-            'allocation_type': 'regular',
-        })
-
-        department_allocation.action_generate_allocations()
 
         num_of_allocations = self.env['hr.leave.allocation'].search_count([('employee_id', '=', self.employee.id)])
         self.assertEqual(num_of_allocations, 1)
@@ -137,21 +106,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'allocation_type': 'regular',
         })
         allocation_wizard.action_generate_allocations()
-
-    def test_allocation_category(self):
-        category_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
-            'name': 'Bank Holiday',
-            'allocation_mode': 'category',
-            'category_id': self.category_tag.id,
-            'holiday_status_id': self.leave_type.id,
-            'duration': 2,
-            'allocation_type': 'regular',
-        })
-
-        category_allocation.action_generate_allocations()
-
-        num_of_allocations = self.env['hr.leave.allocation'].search_count([('employee_id', '=', self.employee.id)])
-        self.assertEqual(num_of_allocations, 1)
 
     def test_allocation_request_day(self):
         self.leave_type.write({
@@ -217,7 +171,6 @@ class TestAllocations(TestHrHolidaysCommon):
 
         hour_type_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
             'name': 'Hours Allocation',
-            'allocation_mode': 'employee',
             'employee_ids': [(4, self.employee.id), (4, self.employee_emp.id)],
             'holiday_status_id': self.leave_type.id,
             'duration': 10,

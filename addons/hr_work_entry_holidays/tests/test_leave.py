@@ -113,7 +113,6 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         self.assertEqual(len(work_entries.work_entry_type_id), 1)
         leave = self.env['hr.leave.generate.multi.wizard'].create({
             'name': 'Holiday!!!',
-            'allocation_mode': 'company',
             'company_id': self.env.company.id,
             'holiday_status_id': self.leave_type.id,
             'date_from': datetime(2022, 8, 8),

@@ -84,7 +84,6 @@ class TestWorkingHours(TestHrCalendarCommon):
 
         company_leave = self.env['hr.leave.generate.multi.wizard'].create({
             'name': 'holiday from monday to tuesday',
-            'allocation_mode': 'company',
             'company_id': self.company_A.id,
             'holiday_status_id': self.leave_type.id,
             'date_from': date(2023, 12, 25),
