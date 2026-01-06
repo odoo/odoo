@@ -61,7 +61,7 @@ class StockPackageLevel(models.Model):
                         to_dispatch = quant.quantity
                         if corresponding_mls:
                             for ml in corresponding_mls:
-                                qty = min(to_dispatch, ml.move_id.product_qty) if len(corresponding_mls) > 1 else to_dispatch
+                                qty = min(to_dispatch, ml.quantity) if len(corresponding_mls) > 1 else to_dispatch
                                 to_dispatch = to_dispatch - qty
                                 ml_update_dict[ml] += qty
                                 if float_is_zero(to_dispatch, precision_rounding=ml.product_id.uom_id.rounding):
