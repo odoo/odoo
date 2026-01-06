@@ -392,23 +392,6 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             except ValidationError:
                 _logger.info('Skip recursive partner hierarchies for parent_id %s of partner: %s', parent_id, dst_partner.id)
 
-    @api.model
-    def _merge_bank_accounts(self, src_partners, dst_partner):
-        """ Merge bank accounts of src_partners into dst_partner.
-            :param src_partners: merge source res.partner recordset (does not include destination one)
-            :param dst_partner: record of destination res.partner
-        """
-        all_src_accounts = src_partners.bank_ids
-
-        for src_account in all_src_accounts:
-            duplicate_account = dst_partner.bank_ids.filtered(lambda a: a.sanitized_account_number == src_account.sanitized_account_number)
-            if duplicate_account:
-                self._update_foreign_keys_generic('res.partner.bank', src_account, duplicate_account)
-                self._update_reference_fields_generic('res.partner.bank', src_account, duplicate_account)
-                src_account.sudo().unlink()
-            else:
-                src_account.sudo().write({'partner_id': dst_partner.id})
-
     def _merge(self, partner_ids, dst_partner=None, extra_checks=True):
         """ private implementation of merge partner
             :param partner_ids : ids of partner to merge
@@ -457,9 +440,9 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                 'company_id': dst_partner.company_id.id
             })
 
-        # Merge bank accounts before merging partners
-        self._merge_bank_accounts(src_partners, dst_partner)
+        self._merge_partners(src_partners, dst_partner)
 
+    def _merge_partners(self, src_partners, dst_partner):
         # call sub methods to do the merge
         self._update_foreign_keys(src_partners, dst_partner)
         self._update_reference_fields(src_partners, dst_partner)
