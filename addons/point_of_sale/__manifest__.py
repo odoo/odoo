@@ -55,6 +55,7 @@
         'views/pos_session_sales_details.xml',
         'views/product_tag_views.xml',
         'views/stock_reference_views.xml',
+        'data/ir_cron_data.xml',
     ],
     'demo': [
         'data/demo_data.xml',
