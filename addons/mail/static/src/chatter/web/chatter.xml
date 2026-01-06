@@ -19,7 +19,13 @@
                     <button class="o-mail-Chatter-logNote btn text-nowrap my-2" t-att-class="{
                         'btn-primary active': state.composerType === 'note',
                         'btn-secondary': state.composerType !== 'note',
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
                     }" t-att-disabled="!state.thread.canPostMessage and props.threadId and props.threadId" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+                    }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
+=======
+                    }" t-att-disabled="!state.thread.canPostMessage and props.threadId" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
                         Log note
                     </button>
                     <button t-if="props.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap my-2"

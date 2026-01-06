@@ -97,8 +97,16 @@ class TestPartnerAssign(TransactionCase):
             pass
 
 
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
 @tagged('lead_portal', 'at_install', '-post_install')  # LEGACY at_install
 class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestPartnerLeadPortal(TestCrmCommon):
+=======
+@tagged('lead_portal')
+class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
 
     def setUp(self):
         super(TestPartnerLeadPortal, self).setUp()

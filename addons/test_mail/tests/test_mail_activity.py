@@ -105,6 +105,7 @@ class TestActivityRights(TestActivityCommon):
                 # document access -> ok bypass
                 activity.write({'summary': 'Caramba caramba'})
 
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
     def test_activity_security_user_access_customized(self):
         """ Test '_mail_get_operation_for_mail_message_operation' support when scheduling activities. """
         access_open, access_ro, access_locked = self.env['mail.test.access.custo'].with_user(self.user_admin).create([
@@ -143,6 +144,35 @@ class TestActivityRights(TestActivityCommon):
         admin_activities[0].with_user(self.user_employee).read(['summary'])
         admin_activities[1].with_user(self.user_employee).read(['summary'])
 
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+=======
+    def test_activity_security_user_access_customized(self):
+        """ Test '_mail_get_operation_for_mail_message_operation' support when scheduling activities. """
+        access_open, access_ro, access_locked = self.env['mail.test.access.custo'].with_user(self.user_admin).create([
+            {'name': 'Open'},
+            {'name': 'Open RO', 'is_readonly': True},
+            {'name': 'Locked', 'is_locked': True},
+        ])
+        # sanity checks on rule implementation
+        (access_open + access_ro + access_locked).with_user(self.user_employee).check_access('read')
+        access_open.with_user(self.user_employee).check_access('write')
+        with self.assertRaises(exceptions.AccessError):
+            (access_ro + access_locked).with_user(self.user_employee).check_access('write')
+
+        # '_mail_get_operation_for_mail_message_operation' allows to post, hence posting activities
+        access_open.with_user(self.user_employee).activity_schedule(
+            'test_mail.mail_act_test_todo_generic',
+        )
+        access_ro.with_user(self.user_employee).activity_schedule(
+            'test_mail.mail_act_test_todo_generic',
+        )
+
+        with self.assertRaises(exceptions.AccessError):
+            access_locked.with_user(self.user_employee).activity_schedule(
+                'test_mail.mail_act_test_todo_generic',
+            )
+
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_noaccess_automated(self):
         def _employee_crash(records, operation):

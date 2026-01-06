@@ -215,6 +215,7 @@ class TestMailMessageAccess(MessageAccessCommon):
         """ Test '_mail_get_operation_for_mail_message_operation' support """
         record = self.env['mail.test.access.custo'].with_user(self.user_employee).create({'name': 'Open'})
         for user in self.user_employee + self.user_portal:
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
             with self.subTest(user_name=user.name):
                 _message = record.with_user(user).message_post(
                     # attachments=[('Attachment', b'My attachment')],  # TDE FIXME: incoherency between message and attachment check
@@ -222,9 +223,31 @@ class TestMailMessageAccess(MessageAccessCommon):
                     subtype_id=self.env.ref('mail.mt_comment').id,
                 )
         # lock -> see '_get_mail_message_access'
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+            _message = record.message_post(
+                body='A message',
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+        # lock -> see '_mail_get_operation_for_mail_message_operation'
+=======
+            with self.subTest(user_name=user.name):
+                _message = record.with_user(user).message_post(
+                    # attachments=[('Attachment', b'My attachment')],  # FIXME
+                    body='A message',
+                    subtype_id=self.env.ref('mail.mt_comment').id,
+                )
+        # lock -> see '_mail_get_operation_for_mail_message_operation'
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
         record.write({'is_locked': True})
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
         record.invalidate_model()
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+=======
+        record.message_unsubscribe(partner_ids=self.partner_employee.ids)  # avoid acl conflict with those follower-based
+        record.invalidate_model()
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
         for user in self.user_employee + self.user_portal:
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
             with self.subTest(user_name=user.name):
                 with self.assertRaises(AccessError):
                     _message = record.with_user(user).message_post(
@@ -242,9 +265,32 @@ class TestMailMessageAccess(MessageAccessCommon):
                 # can post
                 _message = record.with_user(user).message_post(
                     # attachments=[('Attachment', b'My attachment')],  # TDE FIXME: incoherency between message and attachment check
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+            with self.assertRaises(AccessError):
+                _message_portal = record.with_user(self.user_portal).message_post(
+=======
+            with self.subTest(user_name=user.name):
+                with self.assertRaises(AccessError):
+                    _message = record.with_user(user).message_post(
+                        body='Another portal message',
+                        subtype_id=self.env.ref('mail.mt_comment').id,
+                    )
+        # readonly -> "read" access sufficient on unlocked records, see '_mail_get_operation_for_mail_message_operation'
+        record.sudo().write({'is_locked': False, 'is_readonly': True})
+        record.invalidate_model()
+        for user in self.user_employee + self.user_portal:
+            with self.subTest(user_name=user.name):
+                # cannot write
+                with self.assertRaises(AccessError):
+                    record.with_user(user).write({'name': 'Can Update'})
+                # can post
+                _message = record.with_user(user).message_post(
+                    # attachments=[('Attachment', b'My attachment')],  # FIXME
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
                     body='Another portal message',
                     subtype_id=self.env.ref('mail.mt_comment').id,
                 )
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
                 # controller check
                 self.authenticate(user.login, user.login)
                 res = self.make_jsonrpc_request(
@@ -258,6 +304,22 @@ class TestMailMessageAccess(MessageAccessCommon):
                     },
                 )
                 self.assertEqual(len(res['store_data']['mail.message']), 1)
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+=======
+                # controller check
+                self.authenticate(user.login, user.login)
+                res = self.make_jsonrpc_request(
+                    route="/mail/message/post",
+                    params={
+                        'thread_model': record._name,
+                        'thread_id': record.id,
+                        'post_data': {
+                            'body': "Test",
+                        },
+                    },
+                )['store_data']
+                self.assertEqual(len(res['mail.message']), 1)
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
 
     def test_access_create_mail_post_access(self):
         """ Test 'mail_post_access' support that allows creating a message with
@@ -312,10 +374,21 @@ class TestMailMessageAccess(MessageAccessCommon):
             }, False, 'No access on record but reply to notified parent'),
             # internal = forbidden (internal users only)
             (self.record_portal, {'is_internal': True}, True, 'Internal subtype always forbidden'),
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
             (self.record_portal, {'is_internal': True, 'message_type': 'notification'}, True, 'Automatic log not accepted'),
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+=======
+            (self.record_portal, {'is_internal': True, 'message_type': 'notification'}, False, 'Automatic log accepted'),
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
             (self.record_portal, {'subtype_id': self.env.ref('mail.mt_note').id}, True, 'Internal flag always forbidden'),
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
             (self.record_portal, {'subtype_id': self.test_subtype_access_internal.id}, True, 'Internal flag (custom subtype) always forbidden'),
             (self.record_portal, {'message_type': 'notification', 'subtype_id': self.test_subtype_access_internal.id}, True, 'Automatic log not accepted'),
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+=======
+            (self.record_portal, {'subtype_id': self.test_subtype_access_internal.id}, True, 'Internal flag (custom subtype) always forbidden'),
+            (self.record_portal, {'message_type': 'notification', 'subtype_id': self.test_subtype_access_internal.id}, False, 'Automatic log accepted'),
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
             (self.record_portal, {'subtype_id': False}, True, 'No subtype = internal = always forbidden'),
         ]:
             with self.subTest(record=record, msg_vals=msg_vals, reason=reason):
@@ -531,6 +604,7 @@ class TestMailMessageAccess(MessageAccessCommon):
             # forbidden: internal (subtype / message)
             (self.record_portal.message_ids[0], {
                 'subtype_id': self.env.ref('mail.mt_note').id,
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
             }, True, 'Note (comment) cannot be read by portal users'),
             (self.record_portal.message_ids[0], {
                 'subtype_id': self.test_subtype_access_internal.id,
@@ -542,8 +616,21 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.record_portal.message_ids[0], {
                 'subtype_id': False,
             }, True, 'Pure log (no subtype, even comment) cannot be read by portal users'),
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+            }, True, 'Note cannot be read by portal users'),
+=======
+            }, True, 'Note (comment) cannot be read by portal users'),
+            (self.record_portal.message_ids[0], {
+                'subtype_id': self.test_subtype_access_internal.id,
+            }, True, 'Internal subtype (comment) cannot be read by portal users'),
+            (self.record_portal.message_ids[0], {
+                'message_type': 'email_outgoing',
+                'subtype_id': self.env.ref('mail.mt_note').id,
+            }, False, 'Note (email_outgoing) can be read by portal users'),
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
             (self.record_portal.message_ids[0], {
                 'is_internal': True,
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
             }, True, 'Internal message (comment) cannot be read by portal users'),
             (self.record_portal.message_ids[0], {
                 'is_internal': True,
@@ -553,6 +640,18 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.record_portal.message_ids[0], {
                 'message_type': 'user_notification',
             }, True, 'User notifications for other people can never be read by portal users'),
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+            }, True, 'Internal message cannot be read by portal users'),
+=======
+            }, True, 'Internal message (comment) cannot be read by portal users'),
+            (self.record_portal.message_ids[0], {
+                'is_internal': True,
+                'message_type': 'notification',
+            }, False, 'Internal message (notification) can be read by portal users'),
+            (self.record_portal.message_ids[0], {
+                'message_type': 'user_notification',
+            }, True, 'User notifications for other people can never be read by portal users'),
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
         ]:
             original_vals = {
                 'author_id': msg.author_id.id,
@@ -565,9 +664,15 @@ class TestMailMessageAccess(MessageAccessCommon):
             with self.subTest(msg=msg, reason=reason):
                 if msg_vals:
                     msg.write(msg_vals)
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
 
                 self.env.invalidate_all()
                 self.env.transaction.clear_access_cache()
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+=======
+
+                self.env.invalidate_all()
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
                 if should_crash:
                     with self.assertRaises(AccessError):
                         msg.with_user(self.user_portal).read(['body'])
@@ -813,6 +918,7 @@ class TestMailMessageAccess(MessageAccessCommon):
             res_id=self.record_public.id,
             subtype_id=self.ref('mail.mt_comment'),
         ))
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
         msg_record_public_with_tracking = self.env['mail.message'].create(dict(base_msg_vals,
             body='Public Comment with Trackings',
             message_type='notification',
@@ -832,6 +938,16 @@ class TestMailMessageAccess(MessageAccessCommon):
             res_id=self.record_public.id,
             subtype_id=self.ref('mail.mt_comment'),
         ))
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+=======
+        msg_record_public_internal = self.env['mail.message'].create(dict(base_msg_vals,
+            body='Internal Comment on Public',
+            is_internal=True,
+            model=self.record_public._name,
+            res_id=self.record_public.id,
+            subtype_id=self.ref('mail.mt_comment'),
+        ))
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
 
         for (test_user, add_domain), exp_messages in zip([
             (self.user_public, []),
@@ -840,6 +956,7 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.user_employee, [('body', 'ilike', 'Internal')]),
             (self.user_admin, []),
         ], [
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
             # public: record with access
             msg_record_public + msg_record_public_with_tracking,
             # portal: mentionned + record with access, if published
@@ -848,6 +965,22 @@ class TestMailMessageAccess(MessageAccessCommon):
             msgs[1:6] + msg_record_portal + msg_record_portal_internal + msg_record_public + msg_record_public_with_tracking + msg_record_public_internal,
             msgs[1:6] + msg_record_portal_internal + msg_record_public_internal,
             msgs[1:] + msg_record_admin + msg_record_portal + msg_record_portal_internal + msg_record_public + msg_record_public_with_tracking + msg_record_public_internal,
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+            msg_record_public,
+            msgs[0] + msgs[3] + msg_record_portal + msg_record_public,
+            msgs[1:6] + msg_record_portal + msg_record_public,
+            msgs[1:6],
+            msgs[1:] + msg_record_admin + msg_record_portal + msg_record_public
+=======
+            # public: record with access
+            msg_record_public,
+            # portal: mentionned + record with access, if published
+            msgs[0] + msgs[3] + msg_record_portal + msg_record_public,
+            # employee
+            msgs[1:6] + msg_record_portal + msg_record_portal_internal + msg_record_public + msg_record_public_internal,
+            msgs[1:6] + msg_record_portal_internal + msg_record_public_internal,
+            msgs[1:] + msg_record_admin + msg_record_portal + msg_record_portal_internal + msg_record_public + msg_record_public_internal,
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
         ]):
             with self.subTest(test_user=test_user.name, add_domain=add_domain):
                 self.env.invalidate_all()
@@ -879,8 +1012,16 @@ class TestMailMessageAccess(MessageAccessCommon):
         ])
         self.assertEqual(found_por, messages_all)
 
+<<<<<<< 2860fa9e04f30af291a5ea681745630a9e310055
         # lock -> locked records need 'write' access, as defined in '_get_mail_message_access'
         # hence messages are out of search, symmetrical to reading therm
+||||||| fe12288d87561e4f95fcc23dc18727d6a1cea1e7
+        # lock -> see '_mail_get_operation_for_mail_message_operation', which is not supported currently
+        # in the search, making it inconsistent with 'read'
+=======
+        # lock -> locked records need 'write' access, as defined in '_mail_get_operation_for_mail_message_operation'
+        # hence messages are out of search, symmetrical to reading therm
+>>>>>>> a6a575c41caf5de998c8d4d58bb2cb4cbebf7c20
         records[2].write({'is_locked': True, 'name': 'Locked !'})
         records[2].flush_recordset()
         found_emp = self.env['mail.message'].with_user(self.user_employee).search([
