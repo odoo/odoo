@@ -1,4 +1,4 @@
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblBis3Common, TestUblCiiBECommon
 from odoo.addons.base.tests.files import DOCX_RAW, XLSX_RAW
 
@@ -47,6 +47,43 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_payee_financial_account')
+
+    def test_invoice_payment_mandate_active(self):
+        self.ensure_installed('account_sepa_direct_debit')
+        self.env.company.sdd_creditor_identifier = 'BE30ZZZ300D000000042'
+        self._create_sdd_mandate(
+            partner=self.partner_be,
+            account_number='BE68539007547034',
+            end_date=fields.Date.add(fields.Date.today(), days=5),
+        )
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(lst_price=100.0, taxes_id=tax_21)
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            partner_id=self.partner_be,
+            post=True,
+        )
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_payment_mandate_active')
+
+    def test_invoice_payment_mandate_expired(self):
+        self.ensure_installed('account_sepa_direct_debit')
+        self.env.company.sdd_creditor_identifier = 'BE30ZZZ300D000000042'
+        self._create_sdd_mandate(
+            partner=self.partner_be,
+            account_number='BE68539007547034',
+            start_date=fields.Date.subtract(fields.Date.today(), days=3),
+            end_date=fields.Date.subtract(fields.Date.today(), days=1),
+        )
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(lst_price=100.0, taxes_id=tax_21)
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            partner_id=self.partner_be,
+            post=True,
+        )
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_payment_mandate_expired')
 
     def test_invoice_negative_price_unit(self):
         """ Ensure the price_unit and the quantity sign are inversed during the generation of the
