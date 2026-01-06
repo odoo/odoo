@@ -32,30 +32,12 @@ class PaymentTransaction(models.Model):
             "url_params": {"reference": self.reference},
         }
 
-    def _get_communication(self):
-        """Return the communication the user should use for their transaction.
-
-        This communication might change according to the settings and the accounting localization.
-
-        Note: self.ensure_one()
-
-        :return: The selected communication.
-        :rtype: str
-        """
-        self.ensure_one()
-        communication = ""
-        if hasattr(self, "invoice_ids") and self.invoice_ids:
-            communication = self.invoice_ids[0].payment_reference
-        elif hasattr(self, "sale_order_ids") and self.sale_order_ids:
-            communication = self.sale_order_ids[0].reference
-        return communication or self.reference
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "custom":
             return super()._apply_updates(payment_data)
 
-        if payment_data.get(const.CUSTOM_STATE_DONE_KEY):
+        if self.payment_method_id._is_postpaid() or payment_data.get(const.CUSTOM_STATE_DONE_KEY):
             self._set_done()
         else:
             self._set_pending()
@@ -101,3 +83,28 @@ class PaymentTransaction(models.Model):
         ):
             return Markup("<h4>%s</h4>") % self.env._("Finalize your payment")
         return status_message
+
+    def _requires_payment_instructions(self):
+        """Override of `payment` to include wire transfer transactions."""
+        self.ensure_one()
+        if self.provider_id.custom_mode != "wire_transfer":
+            return super()._requires_payment_instructions()
+        return True
+
+    def _get_communication(self):
+        """Return the communication the user should use for their transaction.
+
+        This communication might change according to the settings and the accounting localization.
+
+        Note: self.ensure_one()
+
+        :return: The selected communication.
+        :rtype: str
+        """
+        self.ensure_one()
+        communication = ""
+        if hasattr(self, "invoice_ids") and self.invoice_ids:
+            communication = self.invoice_ids[0].payment_reference
+        elif hasattr(self, "sale_order_ids") and self.sale_order_ids:
+            communication = self.sale_order_ids[0].reference
+        return communication or self.reference

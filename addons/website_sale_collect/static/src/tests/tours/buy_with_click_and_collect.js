@@ -64,7 +64,7 @@ registry.category('web_tour.tours').add(
                 trigger: 'input[name="o_payment_radio"][data-payment-method-code="pay_on_site"]',
                 run: 'click',
             },
-            ...tourUtils.pay({ expectUnloadPage: true, waitFinalizeYourPayment: true }),
+            ...tourUtils.pay({ expectUnloadPage: true }),
             {
                 content: "Check payment status confirmation window",
                 trigger: '[name="order_confirmation"][data-order-tracking-info]',

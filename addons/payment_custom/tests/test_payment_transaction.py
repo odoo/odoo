@@ -18,10 +18,24 @@ class TestPaymentTransaction(PaymentCustomCommon):
             raise unittest.SkipTest(msg)
 
         cls.provider = cls._prepare_provider(code="custom", custom_mode="wire_transfer")
+        cls.pay_on_invoice_provider = cls._prepare_provider(
+            code="custom", custom_mode="pay_on_invoice"
+        )
         cls.product = cls.env["product.product"].create({
             "name": "test product",
             "list_price": cls.amount,
         })
+
+    def test_postpaid_transactions_are_confirmed(self):
+        tx = self._create_transaction(
+            "redirect",
+            provider_id=self.pay_on_invoice_provider.id,
+            payment_method_id=self.pay_on_invoice_provider.payment_method_ids[:1].id,
+        )
+        self.assertEqual(tx.state, "draft")
+        tx._record({"reference": tx.reference})
+        self._run_processing()
+        self.assertEqual(tx.state, "done")
 
     def test_communication_based_on_transaction_reference(self):
         """Test that the payment communication falls back to the transaction reference when there
