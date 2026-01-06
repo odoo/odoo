@@ -45,17 +45,21 @@ registry.category("web_tour.tours").add("tour_to_check_undeterminisms", {
         {
             trigger: ".button0",
             run: "click",
+            observe: true,
         },
         {
             trigger: ".button1",
             run: "click",
+            observe: true,
         },
         {
             trigger: ".container",
+            observe: true,
         },
         {
             trigger: ".button2",
             run: "click",
+            observe: true,
         },
     ],
 });
@@ -68,18 +72,19 @@ beforeEach(async () => {
         },
     });
     patchWithCleanup(browser.console, {
-        log: (s) => expect.step(`log: ${s}`),
-        error: (s) => {
+        log: () => {},
+        error: () => {},
+        warn: (s) => {
             s = s.replace(/\n +at.*/g, ""); // strip stack trace
             expect.step(`error: ${s}`);
         },
-        warn: () => {},
         dir: () => {},
     });
     await mountWithCleanup(Root);
     await odoo.startTour("tour_to_check_undeterminisms", {
         mode: "auto",
-        delayToCheckUndeterminisms: 300,
+        debug: true,
+        observeDelay: 300,
     });
 });
 
@@ -98,8 +103,6 @@ test("element is no longer visible", async () => {
     await waitForMacro();
     const expectedError = `Initial element is no longer visible`;
     expect.verifySteps([
-        "log: [1/4] Tour tour_to_check_undeterminisms → Step .button0",
-        "log: [2/4] Tour tour_to_check_undeterminisms → Step .button1",
         `error: FAILED: [2/4] Tour tour_to_check_undeterminisms → Step .button1.
 ${mainErrorMessage(".button1")}
 ${expectedError}`,
@@ -116,8 +119,6 @@ test("change text", async () => {
     };
     await waitForMacro();
     expect.verifySteps([
-        "log: [1/4] Tour tour_to_check_undeterminisms → Step .button0",
-        "log: [2/4] Tour tour_to_check_undeterminisms → Step .button1",
         `error: FAILED: [2/4] Tour tour_to_check_undeterminisms → Step .button1.
 ${mainErrorMessage(".button1")}
 Initial element has changed:
@@ -161,8 +162,6 @@ test("change attributes", async () => {
   ]
 }`;
     expect.verifySteps([
-        "log: [1/4] Tour tour_to_check_undeterminisms → Step .button0",
-        "log: [2/4] Tour tour_to_check_undeterminisms → Step .button1",
         `error: FAILED: [2/4] Tour tour_to_check_undeterminisms → Step .button1.
 ${mainErrorMessage(".button1")}
 Initial element has changed:
@@ -197,9 +196,6 @@ test("add child node", async () => {
   ]
 }`;
     expect.verifySteps([
-        "log: [1/4] Tour tour_to_check_undeterminisms → Step .button0",
-        "log: [2/4] Tour tour_to_check_undeterminisms → Step .button1",
-        "log: [3/4] Tour tour_to_check_undeterminisms → Step .container",
         `error: FAILED: [3/4] Tour tour_to_check_undeterminisms → Step .container.
 ${mainErrorMessage(".container")}
 Initial element has changed:
@@ -226,8 +222,6 @@ test.skip("snapshot is the same but has mutated", async () => {
   "attribute: class"
 ]`;
     expect.verifySteps([
-        "log: [1/4] Tour tour_to_check_undeterminisms → Step .button0",
-        "log: [2/4] Tour tour_to_check_undeterminisms → Step .button1",
         `error: FAILED: [2/4] Tour tour_to_check_undeterminisms → Step .button1.
 ${mainErrorMessage(".button1")}
 ${expectedError}`,

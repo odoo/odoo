@@ -97,7 +97,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
 
         // --- Check with Forecasted quantities
         ...catalogSuggestion.setParameters({ basedOn: "Forecasted", nbDays: 18, factor: 100 }),
-        { trigger: "span[name='suggest_total']:visible:contains('1,000')", pause: true },
+        { trigger: "span[name='suggest_total']:visible:contains('1,000')" },
         ...catalogSuggestion.assertCatalogRecord("test_product", { forecast: 50, suggest: 50 }), // 18 days --> forecast uses only one 50 delivery
 
         ...catalogSuggestion.setParameters({ nbDays: 7 }),

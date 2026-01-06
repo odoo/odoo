@@ -2559,7 +2559,6 @@ class HttpCase(TransactionCase):
             'keepWatchBrowser': kwargs.get('watch', False),
             'debug': kwargs.get('debug', False),
             'startUrl': url_path,
-            'delayToCheckUndeterminisms': kwargs.pop('delay_to_check_undeterminisms', int(os.getenv("ODOO_TOUR_DELAY_TO_CHECK_UNDETERMINISMS", "0")) or 0),
         }
         code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
         ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")
@@ -2567,9 +2566,6 @@ class HttpCase(TransactionCase):
 
         if step_delay is not None:
             self._logger.warning('step_delay is only suitable for local testing')
-        if options["delayToCheckUndeterminisms"] > 0:
-            timeout = timeout + 1000 * options["delayToCheckUndeterminisms"]
-            _logger.runbot("Tour %s is launched with mode: check for undeterminisms.", tour_name)
         Users = self.registry['res.users']
 
         def setup(_):
