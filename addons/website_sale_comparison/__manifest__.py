@@ -16,6 +16,7 @@ Finally, the module comes with an option to display an attribute summary table i
         'security/ir.model.access.csv',
         'views/product_attribute_category_views.xml',
         'views/product_attribute_views.xml',
+        'views/comparison_templates.xml',
         'views/templates.xml',
     ],
     'demo': [

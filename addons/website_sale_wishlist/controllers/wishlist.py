@@ -3,7 +3,7 @@
 from odoo.http import Controller, request, route
 
 
-class WebsiteSaleWishlist(Controller):
+class ProductWishlist(Controller):
 
     @route('/shop/wishlist/add', type='jsonrpc', auth='public', website=True)
     def add_to_wishlist(self, product_id, **kw):
