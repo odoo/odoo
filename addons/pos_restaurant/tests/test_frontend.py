@@ -791,7 +791,7 @@ class TestFrontend(TestFrontendCommon):
         """
         self.start_pos_tour('test_direct_sales', login="pos_user")
         orders = self.env['pos.order'].search([], limit=3, order='id desc')
-        self.assertEqual(orders[2].floating_order_name, orders[2].pos_reference)
+        self.assertEqual(orders[2].floating_order_name, orders[2].tracking_number)
         self.assertEqual(orders[1].floating_order_name, "Test")
         self.assertEqual(orders[0].floating_order_name, False)
         self.assertIsNotNone(orders[0].table_id)
