@@ -204,6 +204,10 @@ export class ComboConfiguratorPopup extends Component {
 
         return [itemsIncluded, itemsExtra];
     }
+    getProductAvailability(product) {
+        const snoozes = this.pos.config.pos_snooze_ids;
+        return !product.getSnooze(snoozes);
+    }
 
     async onClickProduct(product, combo_item) {
         const productTmpl = product.product_tmpl_id;

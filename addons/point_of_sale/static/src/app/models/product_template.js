@@ -3,6 +3,8 @@ import { markup } from "@odoo/owl";
 import { ProductTemplateAccounting } from "./accounting/product_template_accounting";
 import { normalize } from "@web/core/l10n/utils";
 
+const { DateTime } = luxon;
+
 /**
  * ProductProduct, shadow of product.product in python.
  * To works properly, this model needs to be registered in the registry
@@ -83,6 +85,15 @@ export class ProductTemplate extends ProductTemplateAccounting {
         }
 
         return current;
+    }
+
+    getSnooze(snoozes) {
+        return snoozes?.find(
+            (snooze) =>
+                snooze.product_template_id.id == this.id &&
+                snooze.start_time <= DateTime.now().toUTC() &&
+                (snooze.end_time ? snooze.end_time >= DateTime.now().toUTC() : true)
+        );
     }
 
     getImageUrl() {

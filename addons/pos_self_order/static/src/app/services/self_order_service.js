@@ -70,6 +70,7 @@ export class SelfOrder extends Reactive {
         this.currentCategory = null;
         this.productByCategIds = {};
         this.availableCategories = [];
+        this.snoozedProducts = new Set();
 
         this.initData();
         if (this.config.self_ordering_mode === "kiosk") {
@@ -79,6 +80,16 @@ export class SelfOrder extends Reactive {
         }
 
         this.data.connectWebSocket("ORDER_STATE_CHANGED", () => this.getUserDataFromServer());
+        this.data.connectWebSocket("SNOOZE_CHANGED", async (payload) => {
+            const { deleted, ...updates } = payload;
+            if (deleted) {
+                const snoozeModel = this.models["pos.product.template.snooze"];
+                const toDelete = deleted.map((id) => snoozeModel.get(id)).filter(Boolean);
+                this.models["pos.product.template.snooze"].deleteMany(toDelete);
+            }
+            await this.models.connectNewData(updates);
+            this.initSnoozedProducts();
+        });
         this.data.connectWebSocket("PRODUCT_CHANGED", (payload) => {
             const productTemplateIds = payload["product.template"].map((tmpl) => tmpl.id);
             const existingProductIds = this.models["product.template"].filter((tmpl) =>
@@ -474,6 +485,7 @@ export class SelfOrder extends Reactive {
 
     initData() {
         this.initProducts();
+        this.initSnoozedProducts();
         this._initLanguages();
         this.initHardware();
     }
@@ -489,6 +501,25 @@ export class SelfOrder extends Reactive {
             lg.display_name = lg.name.split("/").pop();
         });
         cookie.set("frontend_lang", this.currentLanguage?.code || "en_US");
+    }
+
+    initSnoozedProducts() {
+        if (!this.config.pos_snooze_ids || this.config.pos_snooze_ids.length == 0) {
+            return;
+        }
+        const snoozes = this.config.pos_snooze_ids.filter(
+            (snooze) => snooze.end_time > luxon.DateTime.now()
+        );
+        this.snoozedProducts = new Set(snoozes.map((snooze) => snooze.product_template_id.id));
+        const earliest = Math.min(...snoozes.map((snooze) => snooze.end_time.toMillis()));
+
+        if (earliest) {
+            const delay = earliest - luxon.DateTime.now().toMillis();
+
+            this.snoozeUpdateTimer = setTimeout(() => {
+                this.initSnoozedProducts();
+            }, Math.max(0, delay) + 1000);
+        }
     }
 
     createPrinter(printer) {

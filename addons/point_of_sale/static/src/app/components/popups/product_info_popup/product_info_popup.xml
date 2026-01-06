@@ -17,6 +17,18 @@
                 </h3>
                 <t t-out="props.productTemplate.productDescriptionMarkup" />
             </div>
+            <div class="section-availability mt-3 mb-4 pb-4 border-bottom text-start d-flex align-items-center gap-3">
+                <h3 class="section-title mb-0">Self-ordering:</h3>
+                <div class="section-self-order-availability-body ms-auto d-flex text-start align-items-center gap-2 justify-content-between">
+                    <button class="btn btn-lg lh-lg" t-on-click="openSnoozeDialog" t-attf-class="{{this.state.activeSnooze ? 'btn-warning' : 'btn-secondary'}}">
+                        <i class="fa fa-clock-o me-1" t-if="!(this.state.activeSnooze and this.ui.isSmall)" aria-hidden="true"></i>
+                        <span t-if="!this.state.activeSnooze and !this.ui.isSmall"> Availability </span>
+                        <span class="m-0" t-if="this.state.activeSnooze" style="font-variant-numeric: tabular-nums;">
+                            <t t-esc="state.countdown" />
+                        </span>
+                    </button>
+                </div>
+            </div>
             <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info?.productInfo?.warehouses?.length > 0">
                 <h3 class="section-title">
                     Inventory

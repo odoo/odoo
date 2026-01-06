@@ -201,6 +201,24 @@ export class ProductScreen extends Component {
             false
         );
     }
+    getProductAvailability(product) {
+        const snooze_ids = this.pos.config.pos_snooze_ids;
+        if (!snooze_ids?.length) {
+            return true;
+        }
+
+        const snooze = product.getSnooze(snooze_ids);
+        if (snooze) {
+            setTimeout(() => {
+                const snoozeExists = this.pos.data.read("pos.product.template.snooze", [snooze.id]);
+                if (snoozeExists?.length > 0) {
+                    this.pos.data.delete("pos.product.template.snooze", [snooze.id]);
+                }
+            }, Math.max(0, snooze.end_time.toMillis() - luxon.DateTime.now().toMillis() + 1000));
+            return false;
+        }
+        return true;
+    }
     getProductName(product) {
         return product.name;
     }
