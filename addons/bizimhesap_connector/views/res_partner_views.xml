@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- RES.PARTNER FORM EXTENSION -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <record id="res_partner_view_form_bizimhesap" model="ir.ui.view">
+        <field name="name">res.partner.form.bizimhesap</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="🔗 BizimHesap" name="bizimhesap">
+                    <group string="💰 Cari Bakiye Bilgileri">
+                        <group>
+                            <field name="bizimhesap_balance" widget="monetary" />
+                            <field name="bizimhesap_cheque_bond" widget="monetary" />
+                        </group>
+                        <group>
+                            <field name="bizimhesap_currency" />
+                            <field name="bizimhesap_last_balance_update" />
+                        </group>
+                    </group>
+
+                    <group string="🔗 Eşleşme Kayıtları">
+                        <field name="bizimhesap_binding_ids" readonly="1" nolabel="1">
+                            <list string="Eşleşmeler" create="0" delete="0">
+                                <field name="backend_id" />
+                                <field name="external_id" />
+                                <field name="external_code" />
+                                <field name="external_balance" />
+                                <field name="sync_date" />
+                            </list>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- RES.PARTNER TREE EXTENSION -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <record id="res_partner_view_tree_bizimhesap" model="ir.ui.view">
+        <field name="name">res.partner.tree.bizimhesap</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="bizimhesap_synced" string="BH"
+                    widget="boolean" optional="hide"
+                    groups="bizimhesap_connector.group_bizimhesap_user" />
+                <field name="bizimhesap_balance" string="BH Bakiye"
+                    optional="hide"
+                    groups="bizimhesap_connector.group_bizimhesap_user" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

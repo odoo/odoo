@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- MAIN MENU -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- Ana menü joker_ceo modülünde tanımlı (bizimhesap_menu_root) -->
+    <menuitem id="bizimhesap_menu_root"
+        name="BizimHesap"
+        sequence="10" />
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- CONFIGURATION MENU -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <menuitem id="bizimhesap_menu_config"
+        name="Yapılandırma"
+        parent="bizimhesap_menu_root"
+        sequence="90"
+        groups="bizimhesap_connector.group_bizimhesap_manager" />
+
+    <menuitem id="bizimhesap_menu_backend"
+        name="Bağlantılar"
+        parent="bizimhesap_menu_config"
+        action="bizimhesap_backend_action"
+        sequence="10" />
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- OPERATIONS MENU -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <menuitem id="bizimhesap_menu_operations"
+        name="İşlemler"
+        parent="bizimhesap_menu_root"
+        sequence="10" />
+
+    <menuitem id="bizimhesap_menu_sync_logs"
+        name="Senkronizasyon Logları"
+        parent="bizimhesap_menu_operations"
+        action="bizimhesap_sync_log_action"
+        sequence="10" />
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- CARILER (PARTNERS) MENU -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <menuitem id="bizimhesap_menu_partners"
+        name="Cariler"
+        parent="bizimhesap_menu_root"
+        sequence="5" />
+
+    <!-- Customers Action -->
+    <record id="bizimhesap_customers_action" model="ir.actions.act_window">
+        <field name="name">Müşteriler</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('customer_rank', '>', 0)]</field>
+        <field name="context">{'default_customer_rank': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Yeni müşteri oluşturun veya BizimHesap'tan senkronize edin
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="bizimhesap_menu_customers"
+        name="Müşteriler"
+        parent="bizimhesap_menu_partners"
+        action="bizimhesap_customers_action"
+        sequence="10" />
+
+    <!-- Suppliers Action -->
+    <record id="bizimhesap_suppliers_action" model="ir.actions.act_window">
+        <field name="name">Tedarikçiler</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('supplier_rank', '>', 0)]</field>
+        <field name="context">{'default_supplier_rank': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Yeni tedarikçi oluşturun veya BizimHesap'tan senkronize edin
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="bizimhesap_menu_suppliers"
+        name="Tedarikçiler"
+        parent="bizimhesap_menu_partners"
+        action="bizimhesap_suppliers_action"
+        sequence="20" />
+
+    <!-- All Partners Action -->
+    <record id="bizimhesap_all_partners_action" model="ir.actions.act_window">
+        <field name="name">Tüm Cariler</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tüm carilerinizi buradan görüntüleyin
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="bizimhesap_menu_all_partners"
+        name="Tüm Cariler"
+        parent="bizimhesap_menu_partners"
+        action="bizimhesap_all_partners_action"
+        sequence="30" />
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- BINDINGS MENU -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <menuitem id="bizimhesap_menu_bindings"
+        name="Eşleşmeler"
+        parent="bizimhesap_menu_root"
+        sequence="20" />
+
+    <!-- Partner Bindings Action -->
+    <record id="bizimhesap_partner_binding_action" model="ir.actions.act_window">
+        <field name="name">Cari Eşleşmeleri</field>
+        <field name="res_model">bizimhesap.partner.binding</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="bizimhesap_menu_partner_bindings"
+        name="Cari Eşleşmeleri"
+        parent="bizimhesap_menu_bindings"
+        action="bizimhesap_partner_binding_action"
+        sequence="10" />
+
+    <!-- Product Bindings Action -->
+    <record id="bizimhesap_product_binding_action" model="ir.actions.act_window">
+        <field name="name">Ürün Eşleşmeleri</field>
+        <field name="res_model">bizimhesap.product.binding</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="bizimhesap_menu_product_bindings"
+        name="Ürün Eşleşmeleri"
+        parent="bizimhesap_menu_bindings"
+        action="bizimhesap_product_binding_action"
+        sequence="20" />
+
+    <!-- Invoice Bindings Action -->
+    <record id="bizimhesap_invoice_binding_action" model="ir.actions.act_window">
+        <field name="name">Fatura Eşleşmeleri</field>
+        <field name="res_model">bizimhesap.invoice.binding</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="bizimhesap_menu_invoice_bindings"
+        name="Fatura Eşleşmeleri"
+        parent="bizimhesap_menu_bindings"
+        action="bizimhesap_invoice_binding_action"
+        sequence="30" />
+
+</odoo>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Marketplace Sync Log List View -->
+        <record id="marketplace_sync_log_tree" model="ir.ui.view">
+            <field name="name">marketplace.sync.log.tree</field>
+            <field name="model">marketplace.sync.log</field>
+            <field name="arch" type="xml">
+                <list string="Senkronizasyon Logları" decoration-danger="status == 'error'"
+                    decoration-success="status == 'success'">
+                    <field name="channel_id" />
+                    <field name="operation" />
+                    <field name="status" />
+                    <field name="start_time" />
+                    <field name="duration" />
+                    <field name="records_processed" />
+                    <field name="records_created" />
+                    <field name="records_updated" />
+                    <field name="records_failed" />
+                </list>
+            </field>
+        </record>
+
+        <!-- Marketplace Sync Log Form View -->
+        <record id="marketplace_sync_log_form" model="ir.ui.view">
+            <field name="name">marketplace.sync.log.form</field>
+            <field name="model">marketplace.sync.log</field>
+            <field name="arch" type="xml">
+                <form string="Senkronizasyon Logu">
+                    <header>
+                        <button name="action_retry" type="object" string="Yeniden Dene"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('status', '!=', 'error')]}" />
+                        <field name="status" widget="statusbar" options="{'clickable': False}" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="channel_id" />
+                                <field name="operation" />
+                                <field name="start_time" />
+                                <field name="end_time" />
+                                <field name="duration" />
+                            </group>
+                            <group>
+                                <field name="records_processed" />
+                                <field name="records_created" />
+                                <field name="records_updated" />
+                                <field name="records_failed" />
+                                <field name="api_call_count" />
+                                <field name="response_time" />
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Notlar" name="notes">
+                                <field name="notes" widget="html" />
+                            </page>
+
+                            <page string="Hata Bilgileri" name="errors"
+                                attrs="{'invisible': [('status', '!=', 'error')]}">
+                                <group>
+                                    <field name="error_message" widget="text" />
+                                </group>
+                                <group>
+                                    <label for="error_details" />
+                                    <field name="error_details" widget="ace"
+                                        options="{'mode': 'json'}" nolabel="1" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="marketplace_sync_log_action" model="ir.actions.act_window">
+            <field name="name">Senkronizasyon Logları</field>
+            <field name="res_model">marketplace.sync.log</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

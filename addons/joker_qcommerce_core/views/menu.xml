@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Hızlı Teslimat Menü -->
+        <menuitem
+            id="qcommerce_menu_root"
+            name="Hızlı Teslimat"
+            icon="fa-bolt"
+            sequence="25" />
+
+        <menuitem
+            id="qcommerce_menu_channels"
+            name="Kanallar"
+            parent="qcommerce_menu_root"
+            action="action_qcommerce_channel"
+            sequence="10" />
+
+        <menuitem
+            id="qcommerce_menu_orders"
+            name="Siparişler"
+            parent="qcommerce_menu_root"
+            action="action_qcommerce_order"
+            sequence="20" />
+
+        <menuitem
+            id="qcommerce_menu_deliveries"
+            name="Teslimatlar"
+            parent="qcommerce_menu_root"
+            action="action_qcommerce_delivery"
+            sequence="30" />
+
+        <menuitem
+            id="qcommerce_menu_sync_logs"
+            name="Senkronizasyon Logları"
+            parent="qcommerce_menu_root"
+            action="action_qcommerce_sync_log"
+            sequence="40" />
+
+    </data>
+</odoo>

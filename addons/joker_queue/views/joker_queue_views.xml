@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Job List View -->
+    <record id="joker_queue_job_view_list" model="ir.ui.view">
+        <field name="name">joker.queue.job.list</field>
+        <field name="model">joker.queue.job</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'done'" 
+                  decoration-danger="state == 'failed'"
+                  decoration-warning="state == 'started'"
+                  decoration-info="state == 'enqueued'">
+                <field name="name"/>
+                <field name="uuid" optional="hide"/>
+                <field name="channel_id"/>
+                <field name="model_name"/>
+                <field name="method_name"/>
+                <field name="state" widget="badge" 
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'failed'"
+                       decoration-warning="state == 'started'"
+                       decoration-info="state == 'enqueued'"/>
+                <field name="priority"/>
+                <field name="eta"/>
+                <field name="retry_count"/>
+                <field name="exec_time" optional="show"/>
+                <field name="user_id" optional="hide"/>
+                <field name="create_date" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Job Form View -->
+    <record id="joker_queue_job_view_form" model="ir.ui.view">
+        <field name="name">joker.queue.job.form</field>
+        <field name="model">joker.queue.job</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_run" string="Çalıştır" type="object" 
+                            class="btn-primary"
+                            invisible="state not in ('pending', 'enqueued')"/>
+                    <button name="action_retry" string="Yeniden Dene" type="object"
+                            class="btn-secondary"
+                            invisible="state != 'failed'"/>
+                    <button name="action_cancel" string="İptal Et" type="object"
+                            class="btn-secondary"
+                            invisible="state not in ('pending', 'enqueued')"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="pending,enqueued,started,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="İş Adı"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="İş Tanımı">
+                            <field name="uuid" readonly="1"/>
+                            <field name="channel_id"/>
+                            <field name="model_name"/>
+                            <field name="method_name"/>
+                            <field name="priority"/>
+                        </group>
+                        <group string="Zamanlama">
+                            <field name="eta"/>
+                            <field name="date_started" readonly="1"/>
+                            <field name="date_done" readonly="1"/>
+                            <field name="exec_time" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Retry">
+                            <field name="max_retries"/>
+                            <field name="retry_count" readonly="1"/>
+                            <field name="retry_delay"/>
+                        </group>
+                        <group string="Diğer">
+                            <field name="user_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Argümanlar">
+                            <group>
+                                <field name="record_ids" widget="text"/>
+                                <field name="args" widget="text"/>
+                                <field name="kwargs" widget="text"/>
+                            </group>
+                        </page>
+                        <page string="Sonuç">
+                            <group>
+                                <field name="result" widget="text" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Hata" invisible="not exc_info">
+                            <group>
+                                <field name="exc_info" widget="text" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Job Search View -->
+    <record id="joker_queue_job_view_search" model="ir.ui.view">
+        <field name="name">joker.queue.job.search</field>
+        <field name="model">joker.queue.job</field>
+        <field name="arch" type="xml">
+            <search string="İş Ara">
+                <field name="name"/>
+                <field name="uuid"/>
+                <field name="model_name"/>
+                <field name="method_name"/>
+                <field name="channel_id"/>
+                <field name="user_id"/>
+                <filter name="filter_pending" string="Bekleyen" 
+                        domain="[('state', 'in', ('pending', 'enqueued'))]"/>
+                <filter name="filter_running" string="Çalışan" 
+                        domain="[('state', '=', 'started')]"/>
+                <filter name="filter_done" string="Tamamlanan" 
+                        domain="[('state', '=', 'done')]"/>
+                <filter name="filter_failed" string="Başarısız" 
+                        domain="[('state', '=', 'failed')]"/>
+                <filter name="filter_my" string="Benim İşlerim" 
+                        domain="[('user_id', '=', uid)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Job Action -->
+    <record id="joker_queue_job_action" model="ir.actions.act_window">
+        <field name="name">Kuyruk İşleri</field>
+        <field name="res_model">joker.queue.job</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="joker_queue_job_view_search"/>
+        <field name="context">{'search_default_filter_pending': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Henüz kuyrukta iş yok
+            </p>
+            <p>
+                Background job'lar burada listelenir. Yeni işler otomatik olarak 
+                oluşturulur veya kod üzerinden programatik olarak eklenebilir.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_joker_queue_root"
+              name="JOKER Queue"
+              sequence="30"
+              web_icon="joker_queue,static/description/icon.svg"/>
+
+    <menuitem id="menu_joker_queue_jobs"
+              name="Background Jobs"
+              parent="menu_joker_queue_root"
+              action="joker_queue_job_action"
+              sequence="10"
+              groups="group_joker_queue_user"/>
+
+    <!-- Kanal menüsü joker_queue_channel_views.xml'de tanımlı -->
+</odoo>

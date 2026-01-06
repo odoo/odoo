@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- CUSTOMER ABSTRACT WIZARD FORM -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <record id="view_bizimhesap_customer_abstract_wizard_form" model="ir.ui.view">
+        <field name="name">bizimhesap.customer.abstract.wizard.form</field>
+        <field name="model">bizimhesap.customer.abstract.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cari Hesap Ekstresi">
+                <header>
+                    <button name="action_refresh"
+                        type="object"
+                        string="🔄 Yenile"
+                        class="btn-primary" />
+                    <button special="cancel" string="Kapat" class="btn-secondary" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id" readonly="1" />
+                            <field name="backend_id" readonly="1" />
+                        </group>
+                        <group>
+                            <field name="external_id" readonly="1" />
+                            <field name="balance" readonly="1" widget="monetary" />
+                            <field name="currency" invisible="1" />
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="📊 Hesap Ekstresi" name="abstract">
+                            <field name="abstract_html" widget="html" nolabel="1" />
+                        </page>
+                        <page string="🔍 Ham Veri" name="raw_data">
+                            <field name="abstract_data" widget="text" nolabel="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Quick Sync Dashboard View -->
+    <record id="bizimhesap_quick_sync_view_form" model="ir.ui.view">
+        <field name="name">bizimhesap.quick.sync.form</field>
+        <field name="model">bizimhesap.quick.sync</field>
+        <field name="arch" type="xml">
+            <form string="BizimHesap Hızlı Senkron">
+                <group>
+                    <group>
+                        <field name="backend_id" />
+                    </group>
+                    <group>
+                        <field name="date_from" invisible="1" />
+                        <field name="date_to" invisible="1" />
+                        <separator string="Hızlı aksiyonlar aşağıdadır." colspan="4" />
+                    </group>
+                </group>
+
+                <separator string="Hızlı Aksiyonlar" />
+                <group col="3">
+                    <button name="action_sync_partners" type="object"
+                        string="👥 Carileri Sync"
+                        class="btn-primary" />
+                    <button name="action_sync_products" type="object"
+                        string="📦 Ürünleri Sync"
+                        class="btn-info" />
+                    <button name="action_sync_invoices" type="object"
+                        string="🧾 Faturaları Sync"
+                        class="btn-warning" />
+                    <button name="action_sync_payments" type="object"
+                        string="💰 Ödemeleri Sync"
+                        class="btn-success" />
+                    <button name="action_sync_all" type="object"
+                        string="🔄 Tümünü Sync"
+                        class="btn-secondary" />
+                </group>
+
+                <footer>
+                    <button string="Kapat" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="bizimhesap_quick_sync_action" model="ir.actions.act_window">
+        <field name="name">Hızlı Senkron</field>
+        <field name="res_model">bizimhesap.quick.sync</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="bizimhesap_menu_quick_sync"
+        name="Hızlı Senkron"
+        parent="bizimhesap_menu_operations"
+        action="bizimhesap_quick_sync_action"
+        sequence="1" />
+</odoo>

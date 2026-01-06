@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Dashboard Metrics Views -->
+        <record id="view_dashboard_metrics_form" model="ir.ui.view">
+            <field name="name">dashboard.metrics.form</field>
+            <field name="model">dashboard.metrics</field>
+            <field name="arch" type="xml">
+                <form string="Dashboard Metrics" create="false" edit="false" delete="false">
+                    <!-- Pazaryeri Section -->
+                    <group string="📦 PAZARYERI METRİKLERİ" col="4">
+                        <div class="alert alert-info" colspan="4">
+                            Trendyol, Hepsiburada, N11, Çiçek Sepeti platformları
+                        </div>
+                        <field name="pazaryeri_total_orders" widget="statinfo" />
+                        <field name="pazaryeri_pending_orders" widget="statinfo" />
+                        <field name="pazaryeri_confirmed_orders" widget="statinfo" />
+                        <field name="pazaryeri_shipped_orders" widget="statinfo" />
+                        <field name="pazaryeri_success_rate" widget="statinfo"
+                            string="Başarı Oranı (%)" />
+                        <field name="pazaryeri_total_amount" widget="monetary"
+                            string="Toplam Tutar (₺)" />
+                        <field name="pazaryeri_top_platform" widget="statinfo" />
+                        <field name="channel_stats" colspan="4" nolabel="1" />
+                    </group>
+
+                    <!-- Q-Commerce Section -->
+                    <group string="⚡ Q-COMMERCE (HIZLI TESLIMAT) METRİKLERİ" col="4">
+                        <div class="alert alert-success" colspan="4">
+                            Getir, Yemeksepeti, Vigo platformları
+                        </div>
+                        <field name="qcommerce_total_orders" widget="statinfo" />
+                        <field name="qcommerce_pending_orders" widget="statinfo" />
+                        <field name="qcommerce_preparing_orders" widget="statinfo" />
+                        <field name="qcommerce_on_way_orders" widget="statinfo" />
+                        <field name="qcommerce_delivered_orders" widget="statinfo" />
+                        <field name="qcommerce_success_rate" widget="statinfo"
+                            string="Başarı Oranı (%)" />
+                        <field name="qcommerce_avg_delivery_time" widget="statinfo"
+                            string="Ort. Teslimat (dk)" />
+                        <field name="qcommerce_total_amount" widget="monetary"
+                            string="Toplam Tutar (₺)" />
+                        <field name="qcommerce_top_platform" widget="statinfo" />
+                        <field name="qcommerce_channel_stats" colspan="4" nolabel="1" />
+                    </group>
+
+                    <!-- Overall Summary -->
+                    <group string="📊 GENEL ÖZETİ" col="4">
+                        <field name="total_orders" widget="statinfo"
+                            string="Toplam Sipariş (Tüm Platform)" />
+                        <field name="total_revenue" widget="monetary" string="Toplam Gelir (₺)" />
+                        <field name="overall_success_rate" widget="statinfo"
+                            string="Genel Başarı Oranı (%)" />
+                        <field name="last_sync_time" string="Son Senkronizasyon" readonly="1" />
+                        <field name="pending_syncs" widget="statinfo"
+                            string="Hatalı Senkronizasyonlar" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Dashboard Sync Views -->
+        <record id="view_dashboard_sync_tree" model="ir.ui.view">
+            <field name="name">dashboard.sync.tree</field>
+            <field name="model">dashboard.sync</field>
+            <field name="arch" type="xml">
+                <list string="Senkronizasyon Durumu" edit="false">
+                    <field name="channel_type" invisible="0" />
+                    <field name="channel_id" optional="show" />
+                    <field name="qcommerce_channel_id" optional="show" />
+                    <field name="last_sync" optional="show" />
+                    <field name="next_sync" optional="show" />
+                    <field name="status" optional="show" />
+                    <field name="records_synced" sum="Toplam" />
+                </list>
+            </field>
+        </record>
+
+        <record id="view_dashboard_sync_form" model="ir.ui.view">
+            <field name="name">dashboard.sync.form</field>
+            <field name="model">dashboard.sync</field>
+            <field name="arch" type="xml">
+                <form string="Senkronizasyon Durumu">
+                    <header>
+                        <button name="action_sync_now" type="object" string="Şimdi Senkronize Et"
+                            class="btn-primary" icon="fa-refresh" />
+                    </header>
+                    <group col="4">
+                        <field name="channel_type" widget="radio" />
+                        <field name="channel_id"
+                            attrs="{'invisible': [('channel_type', '!=', 'pazaryeri')]}" />
+                        <field name="qcommerce_channel_id"
+                            attrs="{'invisible': [('channel_type', '!=', 'qcommerce')]}" />
+                        <field name="status" widget="badge" decoration-success="status == 'success'"
+                            decoration-danger="status == 'error'"
+                            decoration-info="status == 'syncing'" />
+                        <field name="last_sync" />
+                        <field name="next_sync" />
+                        <field name="records_synced" />
+                    </group>
+                    <group string="Hata Detayları"
+                        attrs="{'invisible': [('error_message', '=', False)]}">
+                        <field name="error_message" nolabel="1" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_dashboard_sync_search" model="ir.ui.view">
+            <field name="name">dashboard.sync.search</field>
+            <field name="model">dashboard.sync</field>
+            <field name="arch" type="xml">
+                <search string="Senkronizasyon Durumu">
+                    <field name="channel_type" />
+                    <field name="status" />
+                    <filter name="filter_error" string="Hata Var"
+                        domain="[('status', '=', 'error')]" />
+                    <filter name="filter_syncing" string="Şu Anda Senkronizasyon Yapıyor"
+                        domain="[('status', '=', 'syncing')]" />
+                    <filter name="filter_success" string="Başarılı"
+                        domain="[('status', '=', 'success')]" />
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>

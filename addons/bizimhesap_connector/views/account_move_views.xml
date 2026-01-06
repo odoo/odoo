@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- ACCOUNT.MOVE FORM EXTENSION -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <record id="account_move_view_form_bizimhesap" model="ir.ui.view">
+        <field name="name">account.move.form.bizimhesap</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_sync_to_bizimhesap" 
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-exchange"
+                        invisible="move_type not in ('out_invoice', 'in_invoice', 'out_refund', 'in_refund')"
+                        groups="bizimhesap_connector.group_bizimhesap_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="bizimhesap_synced" widget="boolean"/>
+                        </span>
+                        <span class="o_stat_text">BizimHesap</span>
+                    </div>
+                </button>
+                <button name="action_open_bizimhesap" 
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-external-link"
+                        invisible="not bizimhesap_url"
+                        groups="bizimhesap_connector.group_bizimhesap_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">BizimHesap'ta Aç</span>
+                    </div>
+                </button>
+            </xpath>
+            
+            <xpath expr="//notebook" position="inside">
+                <page string="🔗 BizimHesap" name="bizimhesap"
+                      invisible="move_type not in ('out_invoice', 'in_invoice', 'out_refund', 'in_refund')"
+                      groups="bizimhesap_connector.group_bizimhesap_user">
+                    <group string="📤 BizimHesap Gönderim Bilgileri">
+                        <group>
+                            <field name="bizimhesap_guid" readonly="1"/>
+                            <field name="bizimhesap_sent_date" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="bizimhesap_url" readonly="1" widget="url"/>
+                        </group>
+                    </group>
+                    <group string="🔗 Eşleşme Kayıtları">
+                        <field name="bizimhesap_binding_ids" readonly="1" nolabel="1">
+                            <list string="Eşleşmeler" create="0" delete="0">
+                                <field name="backend_id"/>
+                                <field name="external_id"/>
+                                <field name="external_number"/>
+                                <field name="invoice_type"/>
+                                <field name="sync_date"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- ACCOUNT.MOVE TREE EXTENSION -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <record id="account_move_view_tree_bizimhesap" model="ir.ui.view">
+        <field name="name">account.move.tree.bizimhesap</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="bizimhesap_synced" string="BH" 
+                       widget="boolean" optional="hide"
+                       groups="bizimhesap_connector.group_bizimhesap_user"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

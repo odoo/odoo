@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SYNC WIZARD FORM -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <record id="bizimhesap_sync_wizard_view_form" model="ir.ui.view">
+        <field name="name">bizimhesap.sync.wizard.form</field>
+        <field name="model">bizimhesap.sync.wizard</field>
+        <field name="arch" type="xml">
+            <form string="BizimHesap Senkronizasyonu">
+                <group>
+                    <group>
+                        <field name="backend_id"/>
+                        <field name="sync_type"/>
+                        <field name="direction"/>
+                    </group>
+                    <group>
+                        <field name="date_from" 
+                               invisible="sync_type != 'invoices'"/>
+                        <field name="date_to" 
+                               invisible="sync_type != 'invoices'"/>
+                    </group>
+                </group>
+                
+                <footer>
+                    <button name="action_sync" 
+                            string="🔄 Senkronize Et" 
+                            type="object" 
+                            class="btn-primary"/>
+                    <button string="İptal" 
+                            class="btn-secondary" 
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SYNC WIZARD ACTION -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <record id="bizimhesap_sync_wizard_action" model="ir.actions.act_window">
+        <field name="name">BizimHesap Senkronizasyonu</field>
+        <field name="res_model">bizimhesap.sync.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    
+    <!-- Add to Operations Menu -->
+    <menuitem id="bizimhesap_menu_sync_wizard"
+              name="Manuel Senkronizasyon"
+              parent="bizimhesap_menu_operations"
+              action="bizimhesap_sync_wizard_action"
+              sequence="5"/>
+
+</odoo>

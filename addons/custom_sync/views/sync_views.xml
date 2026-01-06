@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sync Config Form View -->
+    <record id="view_joker_sync_config_form" model="ir.ui.view">
+        <field name="name">joker.sync.config.form</field>
+        <field name="model">joker.sync.config</field>
+        <field name="arch" type="xml">
+            <form string="Senkronizasyon Yapılandırması">
+                <header>
+                    <button name="test_connection" type="object" 
+                            string="Bağlantıyı Test Et" class="btn-primary"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Bağlantı Bilgileri">
+                            <field name="name"/>
+                            <field name="url" placeholder="https://www.jokergrubu.com"/>
+                            <field name="database"/>
+                        </group>
+                        <group string="Kimlik Bilgileri">
+                            <field name="username"/>
+                            <field name="password" password="True"/>
+                            <field name="api_key" password="True"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Ayarlar">
+                            <field name="sync_interval"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Durum">
+                            <field name="last_sync" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Sync Config Tree View -->
+    <record id="view_joker_sync_config_tree" model="ir.ui.view">
+        <field name="name">joker.sync.config.tree</field>
+        <field name="model">joker.sync.config</field>
+        <field name="arch" type="xml">
+            <tree string="Senkronizasyon Yapılandırmaları">
+                <field name="name"/>
+                <field name="url"/>
+                <field name="database"/>
+                <field name="state"/>
+                <field name="last_sync"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Sync Log Tree View -->
+    <record id="view_joker_sync_log_tree" model="ir.ui.view">
+        <field name="name">joker.sync.log.tree</field>
+        <field name="model">joker.sync.log</field>
+        <field name="arch" type="xml">
+            <tree string="Senkronizasyon Logları" decoration-success="state=='success'" 
+                  decoration-danger="state=='error'" decoration-warning="state=='partial'">
+                <field name="create_date"/>
+                <field name="name"/>
+                <field name="model_name"/>
+                <field name="direction"/>
+                <field name="record_count"/>
+                <field name="duration"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Sync Log Form View -->
+    <record id="view_joker_sync_log_form" model="ir.ui.view">
+        <field name="name">joker.sync.log.form</field>
+        <field name="model">joker.sync.log</field>
+        <field name="arch" type="xml">
+            <form string="Senkronizasyon Logu">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="model_name"/>
+                            <field name="direction"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                            <field name="record_count"/>
+                            <field name="duration"/>
+                        </group>
+                    </group>
+                    <group string="Hata Detayı" attrs="{'invisible': [('state', '!=', 'error')]}">
+                        <field name="error_message" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_joker_sync_config" model="ir.actions.act_window">
+        <field name="name">Senkronizasyon Ayarları</field>
+        <field name="res_model">joker.sync.config</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_joker_sync_log" model="ir.actions.act_window">
+        <field name="name">Senkronizasyon Logları</field>
+        <field name="res_model">joker.sync.log</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_joker_sync_root" name="Joker Sync" sequence="100"/>
+    
+    <menuitem id="menu_joker_sync_config" 
+              name="Yapılandırma" 
+              parent="menu_joker_sync_root"
+              action="action_joker_sync_config"
+              sequence="10"/>
+    
+    <menuitem id="menu_joker_sync_logs" 
+              name="Loglar" 
+              parent="menu_joker_sync_root"
+              action="action_joker_sync_log"
+              sequence="20"/>
+</odoo>

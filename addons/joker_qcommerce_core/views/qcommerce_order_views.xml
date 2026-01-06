@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Q-Commerce Siparişi -->
+        <record id="view_qcommerce_order_tree" model="ir.ui.view">
+            <field name="name">qcommerce.order.tree</field>
+            <field name="model">qcommerce.order</field>
+            <field name="arch" type="xml">
+                <list string="Hızlı Teslimat Siparişleri"
+                    colors="red:status=='cancelled';green:status=='delivered'">
+                    <field name="name" />
+                    <field name="platform_order_id" />
+                    <field name="channel_id" />
+                    <field name="customer_name" />
+                    <field name="status" />
+                    <field name="amount_total" />
+                    <field name="order_date" />
+                </list>
+            </field>
+        </record>
+
+        <record id="view_qcommerce_order_form" model="ir.ui.view">
+            <field name="name">qcommerce.order.form</field>
+            <field name="model">qcommerce.order</field>
+            <field name="arch" type="xml">
+                <form string="Hızlı Teslimat Siparişi">
+                    <header>
+                        <button name="action_confirm" type="object" class="btn-primary"
+                            string="Onayla" states="pending" />
+                        <button name="action_mark_preparing" type="object" class="btn-info"
+                            string="Hazırlanıyor" states="confirmed" />
+                        <button name="action_mark_ready" type="object" class="btn-success"
+                            string="Hazır" states="preparing" />
+                        <button name="action_mark_on_way" type="object" class="btn-info"
+                            string="Yolda" states="ready" />
+                        <button name="action_mark_delivered" type="object" class="btn-success"
+                            string="Teslim Edildi" states="on_way" />
+                        <button name="action_cancel" type="object" class="btn-danger"
+                            string="İptal Et" states="pending,confirmed" />
+                        <field name="status" widget="statusbar"
+                            statusbar_visible="pending,confirmed,preparing,ready,on_way,delivered,cancelled" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" class="oe_inline" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Sipariş Bilgileri">
+                                <field name="platform_order_id" />
+                                <field name="channel_id" />
+                                <field name="order_date" />
+                                <field name="confirmed_date" />
+                                <field name="ready_date" />
+                                <field name="delivered_date" />
+                            </group>
+                            <group string="Müşteri Bilgileri">
+                                <field name="customer_name" />
+                                <field name="customer_phone" />
+                                <field name="customer_email" />
+                                <field name="partner_id" />
+                            </group>
+                        </group>
+                        <group string="Teslimat">
+                            <field name="delivery_address" />
+                            <field name="delivery_zone" />
+                            <field name="latitude" />
+                            <field name="longitude" />
+                        </group>
+                        <group string="Sipariş Tutarı">
+                            <field name="amount_subtotal" />
+                            <field name="amount_delivery" />
+                            <field name="amount_discount" />
+                            <field name="amount_total" />
+                            <field name="payment_method" />
+                        </group>
+                        <group string="Not ve İstekler">
+                            <field name="notes" nolabel="1" />
+                            <field name="special_requests" nolabel="1" />
+                        </group>
+                        <notebook>
+                            <page string="Ürünler">
+                                <field name="line_ids" nolabel="1">
+                                    <list editable="bottom">
+                                        <field name="product_name" />
+                                        <field name="platform_product_id" />
+                                        <field name="quantity" />
+                                        <field name="unit_price" />
+                                        <field name="subtotal" />
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Teslimat">
+                                <field name="delivery_id" />
+                            </page>
+                            <page string="Satış Siparişi">
+                                <field name="sale_order_id" />
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_qcommerce_order_kanban" model="ir.ui.view">
+            <field name="name">qcommerce.order.kanban</field>
+            <field name="model">qcommerce.order</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="status" quick_create="False">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card">
+                                <div class="oe_kanban_content">
+                                    <strong>
+                                        <field name="name" />
+                                    </strong>
+                                    <br />
+                                    <small>
+                                        <field name="customer_name" /><br /> ₺<field
+                                            name="amount_total" />
+                                    </small>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+    </data>
+</odoo>

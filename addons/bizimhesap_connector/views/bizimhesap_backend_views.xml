@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- FORM VIEW -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <record id="bizimhesap_backend_view_form" model="ir.ui.view">
+        <field name="name">bizimhesap.backend.form</field>
+        <field name="model">bizimhesap.backend</field>
+        <field name="arch" type="xml">
+            <form string="BizimHesap Bağlantısı">
+                <header>
+                    <button name="action_test_connection"
+                        string="🔗 Bağlantıyı Test Et"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state == 'connected'" />
+                    <button name="action_test_connection"
+                        string="🔄 Yeniden Test Et"
+                        type="object"
+                        invisible="state != 'connected'" />
+                    <button name="action_sync_all"
+                        string="🔄 Tümünü Senkronize Et"
+                        type="object"
+                        class="btn-success"
+                        help="Cariler ve Ürünler çekilir, Faturalar gönderilir"
+                        invisible="state != 'connected'" />
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,connected" />
+                </header>
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs" type="object"
+                            class="oe_stat_button" icon="fa-list-alt">
+                            <field name="sync_log_count" widget="statinfo" string="Loglar" />
+                        </button>
+                        <button name="action_view_partner_bindings" type="object"
+                            class="oe_stat_button" icon="fa-users">
+                            <field name="partner_binding_count" widget="statinfo" string="Cariler" />
+                        </button>
+                        <button name="action_view_product_bindings" type="object"
+                            class="oe_stat_button" icon="fa-cube">
+                            <field name="product_binding_count" widget="statinfo" string="Ürünler" />
+                        </button>
+                        <button name="action_view_invoice_bindings" type="object"
+                            class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="invoice_binding_count" widget="statinfo" string="Faturalar" />
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Bağlı Değil"
+                        bg_color="text-bg-danger"
+                        invisible="state != 'draft'" />
+                    <widget name="web_ribbon" title="Hata"
+                        bg_color="text-bg-danger"
+                        invisible="state != 'error'" />
+
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1>
+                            <field name="name" placeholder="Bağlantı adı..." />
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group name="api" string="🔐 API Ayarları">
+                            <field name="api_url" />
+                            <field name="api_key" password="True" />
+                            <field name="username" />
+                            <field name="password" password="True" />
+                        </group>
+                        <group name="company" string="🏢 Şirket">
+                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="active" />
+                            <field name="last_test_date" readonly="1" />
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="📊 Senkronizasyon" name="sync">
+                            <group>
+                                <group string="Senkronize Edilecekler">
+                                    <field name="sync_partner" />
+                                    <field name="sync_product" />
+                                    <field name="sync_invoice" />
+                                    <field name="sync_payment" />
+                                </group>
+                                <group string="Yön ve Zamanlama">
+                                    <field name="sync_direction" />
+                                    <field name="auto_sync" />
+                                    <field name="sync_interval"
+                                        invisible="not auto_sync" />
+                                </group>
+                                <group string="Ödeme Mutabakatı">
+                                    <field name="auto_reconcile_payments" />
+                                    <field
+                                        name="payment_reconcile_tolerance" /> attrs="{'invisible':
+                                    [('auto_reconcile_payments','=',False)]}" /> </group>
+                            </group>
+
+                            <group string="📅 Son Senkronizasyonlar">
+                                <group>
+                                    <field name="last_sync_date" readonly="1" />
+                                    <field name="last_partner_sync" readonly="1" />
+                                </group>
+                                <group>
+                                    <field name="last_product_sync" readonly="1" />
+                                    <field name="last_invoice_sync" readonly="1" />
+                                    <field name="last_payment_sync" readonly="1" />
+                                </group>
+                            </group>
+
+                            <group string="🎯 Hızlı Senkronizasyon">
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <button name="action_sync_warehouses"
+                                        string="🏭 Depoları Sync"
+                                        type="object"
+                                        class="btn-outline-primary"
+                                        invisible="state != 'connected'" />
+                                    <button name="action_sync_categories"
+                                        string="📁 Kategorileri Sync"
+                                        type="object"
+                                        class="btn-outline-primary"
+                                        invisible="state != 'connected'" />
+                                    <button name="action_sync_partners"
+                                        string="👥 Carileri Çek"
+                                        type="object"
+                                        class="btn-outline-success"
+                                        help="BizimHesap'tan müşteri ve tedarikçileri çeker"
+                                        invisible="state != 'connected'" />
+                                    <button name="action_sync_products"
+                                        string="📦 Ürünleri Çek"
+                                        type="object"
+                                        class="btn-outline-info"
+                                        help="BizimHesap'tan ürünleri çeker"
+                                        invisible="state != 'connected'" />
+                                    <button name="action_sync_invoices"
+                                        string="📤 Faturaları Gönder"
+                                        type="object"
+                                        class="btn-outline-warning"
+                                        help="Odoo'daki faturaları BizimHesap'a gönderir"
+                                        invisible="state != 'connected'" />
+                                    <button name="action_sync_payments"
+                                        string="💰 Ödemeleri Sync (⚠️ API Desteklemiyor)"
+                                        type="object"
+                                        class="btn-outline-secondary"
+                                        help="BizimHesap B2B API ödeme listesi sağlamıyor"
+                                        invisible="state != 'connected'" />
+                                </div>
+                            </group>
+                        </page>
+
+                        <page string="⚙️ Varsayılan Hesaplar" name="defaults">
+                            <group>
+                                <group>
+                                    <field name="default_customer_account_id" />
+                                    <field name="default_supplier_account_id" />
+                                </group>
+                                <group>
+                                    <field name="default_income_account_id" />
+                                    <field name="default_expense_account_id" />
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="🔑 Token Bilgisi" name="token">
+                            <group>
+                                <field name="access_token" readonly="1" />
+                                <field name="token_expiry" readonly="1" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TREE VIEW -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <record id="bizimhesap_backend_view_tree" model="ir.ui.view">
+        <field name="name">bizimhesap.backend.tree</field>
+        <field name="model">bizimhesap.backend</field>
+        <field name="arch" type="xml">
+            <list string="BizimHesap Bağlantıları"
+                decoration-success="state == 'connected'"
+                decoration-danger="state == 'error'"
+                decoration-muted="state == 'draft'">
+                <field name="name" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="api_url" />
+                <field name="last_sync_date" />
+                <field name="state" widget="badge"
+                    decoration-success="state == 'connected'"
+                    decoration-danger="state == 'error'"
+                    decoration-info="state == 'draft'" />
+                <field name="active" column_invisible="1" />
+            </list>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- KANBAN VIEW -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <record id="bizimhesap_backend_view_kanban" model="ir.ui.view">
+        <field name="name">bizimhesap.backend.kanban</field>
+        <field name="model">bizimhesap.backend</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name" />
+                <field name="state" />
+                <field name="last_sync_date" />
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong>
+                                    <field name="name" />
+                                </strong>
+                                <div class="text-muted small"> Son Sync: <field
+                                        name="last_sync_date" />
+                                </div>
+                            </div>
+                            <field name="state" widget="label_selection"
+                                options="{'classes': {'draft': 'secondary', 'connected': 'success', 'error': 'danger'}}" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- ACTION -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <record id="bizimhesap_backend_action" model="ir.actions.act_window">
+        <field name="name">BizimHesap Bağlantıları</field>
+        <field name="res_model">bizimhesap.backend</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                İlk BizimHesap bağlantınızı oluşturun!
+            </p>
+            <p>
+                BizimHesap ön muhasebe uygulaması ile Odoo arasında
+                veri senkronizasyonu yapabilirsiniz.
+            </p>
+        </field>
+    </record>
+
+</odoo>

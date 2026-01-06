@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Pazaryeri Menü -->
+        <menuitem
+            id="marketplace_menu_root"
+            name="Pazaryeri Yönetimi"
+            icon="fa-shopping-cart"
+            sequence="40" />
+
+        <!-- Pazaryeri Entegrasyonu -->
+        <menuitem
+            id="marketplace_menu_integration"
+            name="Entegrasyonlar"
+            parent="marketplace_menu_root"
+            sequence="10" />
+
+        <menuitem
+            id="marketplace_menu_channels"
+            name="Pazaryeri Kanalları"
+            parent="marketplace_menu_integration"
+            action="marketplace_channel_action"
+            sequence="10" />
+
+        <!-- Pazaryeri Verileri -->
+        <menuitem
+            id="marketplace_menu_data"
+            name="Pazaryeri Verileri"
+            parent="marketplace_menu_root"
+            sequence="20" />
+
+        <menuitem
+            id="marketplace_menu_products"
+            name="Pazaryeri Ürünleri"
+            parent="marketplace_menu_data"
+            action="marketplace_product_action"
+            sequence="10" />
+
+        <menuitem
+            id="marketplace_menu_orders"
+            name="Pazaryeri Siparişleri"
+            parent="marketplace_menu_data"
+            action="marketplace_order_action"
+            sequence="20" />
+
+        <!-- İzleme & Raporlar -->
+        <menuitem
+            id="marketplace_menu_monitoring"
+            name="İzleme"
+            parent="marketplace_menu_root"
+            sequence="30" />
+
+        <menuitem
+            id="marketplace_menu_sync_logs"
+            name="Senkronizasyon Logları"
+            parent="marketplace_menu_monitoring"
+            action="marketplace_sync_log_action"
+            sequence="10" />
+
+    </data>
+</odoo>

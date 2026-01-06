@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Channel List View -->
+    <record id="joker_queue_channel_view_list" model="ir.ui.view">
+        <field name="name">joker.queue.channel.list</field>
+        <field name="model">joker.queue.channel</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="max_concurrent"/>
+                <field name="pending_count"/>
+                <field name="running_count"/>
+                <field name="done_count"/>
+                <field name="failed_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Channel Form View -->
+    <record id="joker_queue_channel_view_form" model="ir.ui.view">
+        <field name="name">joker.queue.channel.form</field>
+        <field name="model">joker.queue.channel</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_view_jobs" string="İşleri Göster" type="object"
+                            class="btn-secondary"/>
+                    <button name="action_run_pending" string="Bekleyenleri Çalıştır" type="object"
+                            class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_jobs" type="object"
+                                class="oe_stat_button" icon="fa-tasks">
+                            <field name="job_count" string="İşler" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Arşiv" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Kanal Adı"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="sequence"/>
+                            <field name="max_concurrent"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="pending_count" readonly="1"/>
+                            <field name="running_count" readonly="1"/>
+                            <field name="done_count" readonly="1"/>
+                            <field name="failed_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Channel Action -->
+    <record id="joker_queue_channel_action" model="ir.actions.act_window">
+        <field name="name">Kanallar</field>
+        <field name="res_model">joker.queue.channel</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                İlk kanalınızı oluşturun
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <!-- Ana menü joker_ceo modülünde tanımlı (menu_joker_queue_root) -->
+    <menuitem id="menu_joker_queue_channels"
+              name="Kuyruk Kanalları"
+              parent="menu_joker_queue_root"
+              action="joker_queue_channel_action"
+              sequence="20"
+              groups="group_joker_queue_user"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_joker_queue_config"
+              name="Ayarlar"
+              parent="menu_joker_queue_root"
+              sequence="100"
+              groups="group_joker_queue_user"/>
+</odoo>

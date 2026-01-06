@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Main Dashboard Menu -->
+        <menuitem id="menu_dashboard_root" name="📊 Dashboard" parent="web.menu_root" sequence="1" />
+
+        <!-- Dashboard Metrics Action -->
+        <record id="action_dashboard_metrics" model="ir.actions.act_window">
+            <field name="name">Pazaryeri Dashboard</field>
+            <field name="res_model">dashboard.metrics</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_dashboard_metrics_form" />
+        </record>
+
+        <menuitem id="menu_dashboard_metrics" name="📈 Pazaryeri Analitik"
+            parent="menu_dashboard_root" action="action_dashboard_metrics" sequence="1" />
+
+        <!-- Dashboard Sync Action -->
+        <record id="action_dashboard_sync" model="ir.actions.act_window">
+            <field name="name">Senkronizasyon Durumu</field>
+            <field name="res_model">dashboard.sync</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_dashboard_sync" name="🔄 Senkronizasyon Durumu"
+            parent="menu_dashboard_root" action="action_dashboard_sync" sequence="2" />
+
+        <!-- Link to Pazaryeri Orders -->
+        <record id="action_dashboard_pazaryeri_orders" model="ir.actions.act_window">
+            <field name="name">Pazaryeri Siparişleri</field>
+            <field name="res_model">marketplace.order</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+        <menuitem id="menu_dashboard_pazaryeri_orders" name="📦 Pazaryeri Siparişleri"
+            parent="menu_dashboard_root" action="action_dashboard_pazaryeri_orders" sequence="3" />
+
+        <!-- Link to Q-Commerce Orders -->
+        <record id="action_dashboard_qcommerce_orders" model="ir.actions.act_window">
+            <field name="name">Hızlı Teslimat Siparişleri</field>
+            <field name="res_model">qcommerce.order</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+        <menuitem id="menu_dashboard_qcommerce_orders" name="⚡ Hızlı Teslimat Siparişleri"
+            parent="menu_dashboard_root" action="action_dashboard_qcommerce_orders" sequence="4" />
+
+        <!-- Link to Q-Commerce Deliveries -->
+        <record id="action_dashboard_qcommerce_deliveries" model="ir.actions.act_window">
+            <field name="name">Teslimatlar</field>
+            <field name="res_model">qcommerce.delivery</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+        <menuitem id="menu_dashboard_qcommerce_deliveries" name="🚗 Teslimatlar"
+            parent="menu_dashboard_root" action="action_dashboard_qcommerce_deliveries" sequence="5" />
+
+        <!-- Link to Pazaryeri Channels -->
+        <record id="action_dashboard_pazaryeri_channels" model="ir.actions.act_window">
+            <field name="name">Pazaryeri Kanalları</field>
+            <field name="res_model">marketplace.channel</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_dashboard_pazaryeri_channels" name="🏪 Pazaryeri Kanalları"
+            parent="menu_dashboard_root" action="action_dashboard_pazaryeri_channels" sequence="6" />
+
+        <!-- Link to Q-Commerce Channels -->
+        <record id="action_dashboard_qcommerce_channels" model="ir.actions.act_window">
+            <field name="name">Hızlı Teslimat Kanalları</field>
+            <field name="res_model">qcommerce.channel</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_dashboard_qcommerce_channels" name="⚡ Hızlı Teslimat Kanalları"
+            parent="menu_dashboard_root" action="action_dashboard_qcommerce_channels" sequence="7" />
+
+    </data>
+</odoo>

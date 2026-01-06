@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Default Channel -->
+    <record id="channel_default" model="joker.queue.channel">
+        <field name="name">Default</field>
+        <field name="code">default</field>
+        <field name="sequence">1</field>
+        <field name="max_concurrent">2</field>
+        <field name="description">Genel amaçlı kuyruk</field>
+    </record>
+
+    <!-- High Priority Channel -->
+    <record id="channel_high" model="joker.queue.channel">
+        <field name="name">Yüksek Öncelik</field>
+        <field name="code">high</field>
+        <field name="sequence">0</field>
+        <field name="max_concurrent">5</field>
+        <field name="description">Öncelikli işler için</field>
+    </record>
+
+    <!-- Batch Processing Channel -->
+    <record id="channel_batch" model="joker.queue.channel">
+        <field name="name">Toplu İşlem</field>
+        <field name="code">batch</field>
+        <field name="sequence">10</field>
+        <field name="max_concurrent">1</field>
+        <field name="description">Toplu işlemler için (import/export)</field>
+    </record>
+
+    <!-- Email Channel -->
+    <record id="channel_email" model="joker.queue.channel">
+        <field name="name">E-posta</field>
+        <field name="code">email</field>
+        <field name="sequence">5</field>
+        <field name="max_concurrent">3</field>
+        <field name="description">E-posta gönderimi</field>
+    </record>
+
+    <!-- Sync Channel -->
+    <record id="channel_sync" model="joker.queue.channel">
+        <field name="name">Senkronizasyon</field>
+        <field name="code">sync</field>
+        <field name="sequence">5</field>
+        <field name="max_concurrent">2</field>
+        <field name="description">Harici sistem senkronizasyonu</field>
+    </record>
+
+    <!-- AI/Analysis Channel -->
+    <record id="channel_ai" model="joker.queue.channel">
+        <field name="name">AI/Analiz</field>
+        <field name="code">ai</field>
+        <field name="sequence">15</field>
+        <field name="max_concurrent">1</field>
+        <field name="description">AI ve analiz işleri</field>
+    </record>
+
+    <!-- Cron: Process Queue -->
+    <record id="ir_cron_process_queue" model="ir.cron">
+        <field name="name">Joker Queue: Kuyruk İşle</field>
+        <field name="model_id" ref="model_joker_queue_job"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_process_queue()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <!-- Cron: Cleanup Old Jobs -->
+    <record id="ir_cron_cleanup_jobs" model="ir.cron">
+        <field name="name">Joker Queue: Eski İşleri Temizle</field>
+        <field name="model_id" ref="model_joker_queue_job"/>
+        <field name="state">code</field>
+        <field name="code">model.cleanup_old_jobs(days=30)</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

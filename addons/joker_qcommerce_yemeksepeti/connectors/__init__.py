@@ -1,0 +1,1 @@
+from .yemeksepeti_connector import YemeksepetiConnector

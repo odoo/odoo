@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Muhasebe Hesabı Eşleştirmesi Form Görünümü -->
+    <record id="bizimhesap_account_mapping_form" model="ir.ui.view">
+        <field name="name">bizimhesap.account.mapping.form</field>
+        <field name="model">bizimhesap.account.mapping</field>
+        <field name="arch" type="xml">
+            <form string="Muhasebe Hesabı Eşleştirmesi">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="backend_id" />
+                            <field name="bizimhesap_code" />
+                            <field name="bizimhesap_account_name" />
+                        </group>
+                        <group>
+                            <field name="odoo_account_id" />
+                            <field name="account_type" />
+                            <field name="is_active" />
+                        </group>
+                    </group>
+                    <field name="notes" colspan="2" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Muhasebe Hesabı Eşleştirmesi Liste Görünümü -->
+    <record id="bizimhesap_account_mapping_list" model="ir.ui.view">
+        <field name="name">bizimhesap.account.mapping.list</field>
+        <field name="model">bizimhesap.account.mapping</field>
+        <field name="arch" type="xml">
+            <list string="Muhasebe Hesabı Eşleştirmeleri">
+                <field name="bizimhesap_code" />
+                <field name="bizimhesap_account_name" />
+                <field name="odoo_account_id" />
+                <field name="account_type" />
+                <field name="is_active" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Muhasebe Hesabı Eşleştirmesi Arama -->
+    <record id="bizimhesap_account_mapping_search" model="ir.ui.view">
+        <field name="name">bizimhesap.account.mapping.search</field>
+        <field name="model">bizimhesap.account.mapping</field>
+        <field name="arch" type="xml">
+            <search string="Muhasebe Hesabı Eşleştirmesi Ara">
+                <field name="bizimhesap_code" />
+                <field name="bizimhesap_account_name" />
+                <filter name="active" string="Aktif" domain="[('is_active', '=', True)]" />
+                <filter name="inactive" string="Pasif" domain="[('is_active', '=', False)]" />
+                <group expand="0" string="Grupla">
+                    <filter name="group_by_backend"
+                        string="Backend'e göre"
+                        context="{'group_by':'backend_id'}" />
+                    <filter name="group_by_type"
+                        string="Hesap Tipi'ne göre"
+                        context="{'group_by':'account_type'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_bizimhesap_account_mapping" model="ir.actions.act_window">
+        <field name="name">Muhasebe Hesabı Eşleştirmeleri</field>
+        <field name="res_model">bizimhesap.account.mapping</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem
+        id="menu_bizimhesap_account_mapping"
+        action="action_bizimhesap_account_mapping"
+        parent="bizimhesap_menu_bindings"
+        sequence="20"
+        name="Hesap Eşleştirmeleri" />
+</odoo>

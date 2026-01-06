@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Actions -->
+        <record id="action_qcommerce_channel" model="ir.actions.act_window">
+            <field name="name">Hızlı Teslimat Kanalları</field>
+            <field name="res_model">qcommerce.channel</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="view_qcommerce_channel_kanban" />
+            <field name="search_view_id" ref="view_qcommerce_channel_search" />
+            <field name="help">Hızlı teslimat platformlarının kanallarını yönetin</field>
+        </record>
+
+        <record id="action_qcommerce_order" model="ir.actions.act_window">
+            <field name="name">Hızlı Teslimat Siparişleri</field>
+            <field name="res_model">qcommerce.order</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="view_qcommerce_order_kanban" />
+            <field name="search_view_id" ref="view_qcommerce_order_search" />
+            <field name="help">Hızlı teslimat siparişlerini yönetin</field>
+        </record>
+
+        <record id="action_qcommerce_delivery" model="ir.actions.act_window">
+            <field name="name">Teslimatlar</field>
+            <field name="res_model">qcommerce.delivery</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_qcommerce_delivery_tree" />
+            <field name="search_view_id" ref="view_qcommerce_delivery_search" />
+            <field name="help">Teslimatları takip edin</field>
+        </record>
+
+        <record id="action_qcommerce_sync_log" model="ir.actions.act_window">
+            <field name="name">Senkronizasyon Logları</field>
+            <field name="res_model">qcommerce.sync.log</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_qcommerce_sync_log_tree" />
+            <field name="search_view_id" ref="view_qcommerce_sync_log_search" />
+            <field name="help">API senkronizasyon loglarını görüntüleyin</field>
+        </record>
+
+        <!-- Search Views -->
+        <record id="view_qcommerce_channel_search" model="ir.ui.view">
+            <field name="name">qcommerce.channel.search</field>
+            <field name="model">qcommerce.channel</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" />
+                    <field name="platform_type" />
+                    <separator />
+                    <filter name="active" string="Aktif" domain="[('active', '=', True)]" />
+                </search>
+            </field>
+        </record>
+
+        <record id="view_qcommerce_order_search" model="ir.ui.view">
+            <field name="name">qcommerce.order.search</field>
+            <field name="model">qcommerce.order</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" />
+                    <field name="customer_name" />
+                    <field name="channel_id" />
+                    <separator />
+                    <filter name="pending" string="Beklemede" domain="[('status', '=', 'pending')]" />
+                    <filter name="confirmed" string="Onaylandı"
+                        domain="[('status', '=', 'confirmed')]" />
+                    <filter name="preparing" string="Hazırlanıyor"
+                        domain="[('status', '=', 'preparing')]" />
+                    <filter name="delivered" string="Teslim Edildi"
+                        domain="[('status', '=', 'delivered')]" />
+                </search>
+            </field>
+        </record>
+
+        <record id="view_qcommerce_delivery_search" model="ir.ui.view">
+            <field name="name">qcommerce.delivery.search</field>
+            <field name="model">qcommerce.delivery</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" />
+                    <field name="courier_name" />
+                    <separator />
+                    <filter name="waiting" string="Kurye Bekleniyor"
+                        domain="[('status', '=', 'waiting')]" />
+                    <filter name="in_progress" string="Yolda"
+                        domain="[('status', '=', 'in_progress')]" />
+                    <filter name="delivered" string="Teslim Edildi"
+                        domain="[('status', '=', 'delivered')]" />
+                </search>
+            </field>
+        </record>
+
+        <record id="view_qcommerce_sync_log_search" model="ir.ui.view">
+            <field name="name">qcommerce.sync.log.search</field>
+            <field name="model">qcommerce.sync.log</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" />
+                    <field name="channel_id" />
+                    <separator />
+                    <filter name="success" string="Başarılı" domain="[('status', '=', 'success')]" />
+                    <filter name="error" string="Hata" domain="[('status', '=', 'error')]" />
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>

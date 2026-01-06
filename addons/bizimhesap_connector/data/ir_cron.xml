@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Cron Job: Auto Sync All -->
+    <record id="ir_cron_bizimhesap_sync_all" model="ir.cron">
+        <field name="name">BizimHesap: Otomatik Senkronizasyon</field>
+        <field name="model_id" ref="model_bizimhesap_backend"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_sync_all()</field>
+        <field name="interval_number">30</field>
+        <field name="interval_type">minutes</field>
+        <field name="active">True</field>
+    </record>
+
+</odoo>

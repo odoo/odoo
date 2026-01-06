@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Manuel İş Akışı -->
+    <record id="workflow_manual" model="joker.sale.workflow">
+        <field name="name">Manuel</field>
+        <field name="code">manual</field>
+        <field name="sequence">100</field>
+        <field name="auto_confirm_order" eval="False"/>
+        <field name="auto_create_invoice" eval="False"/>
+        <field name="auto_validate_invoice" eval="False"/>
+        <field name="description">Tüm adımlar manuel olarak yapılır</field>
+    </record>
+
+    <!-- Yarı Otomatik İş Akışı -->
+    <record id="workflow_semi_auto" model="joker.sale.workflow">
+        <field name="name">Yarı Otomatik</field>
+        <field name="code">semi_auto</field>
+        <field name="sequence">50</field>
+        <field name="auto_confirm_order" eval="True"/>
+        <field name="auto_create_invoice" eval="False"/>
+        <field name="auto_validate_invoice" eval="False"/>
+        <field name="description">Sipariş otomatik onaylanır, fatura manuel oluşturulur</field>
+    </record>
+
+    <!-- Tam Otomatik İş Akışı -->
+    <record id="workflow_full_auto" model="joker.sale.workflow">
+        <field name="name">Tam Otomatik</field>
+        <field name="code">full_auto</field>
+        <field name="sequence">10</field>
+        <field name="auto_confirm_order" eval="True"/>
+        <field name="auto_create_invoice" eval="True"/>
+        <field name="auto_validate_invoice" eval="True"/>
+        <field name="auto_send_invoice_email" eval="True"/>
+        <field name="description">Tüm adımlar otomatik olarak yapılır</field>
+    </record>
+
+    <!-- VIP Müşteri İş Akışı -->
+    <record id="workflow_vip" model="joker.sale.workflow">
+        <field name="name">VIP Müşteri</field>
+        <field name="code">vip</field>
+        <field name="sequence">5</field>
+        <field name="auto_confirm_order" eval="True"/>
+        <field name="auto_create_invoice" eval="True"/>
+        <field name="auto_validate_invoice" eval="True"/>
+        <field name="auto_send_invoice_email" eval="True"/>
+        <field name="use_delay" eval="False"/>
+        <field name="description">VIP müşteriler için hızlı otomasyon</field>
+    </record>
+
+    <!-- Düşük Tutarlı Siparişler -->
+    <record id="workflow_low_value" model="joker.sale.workflow">
+        <field name="name">Düşük Tutarlı</field>
+        <field name="code">low_value</field>
+        <field name="sequence">20</field>
+        <field name="auto_confirm_order" eval="True"/>
+        <field name="auto_create_invoice" eval="True"/>
+        <field name="auto_validate_invoice" eval="True"/>
+        <field name="max_amount">1000</field>
+        <field name="description">1000 TL altı siparişler için tam otomasyon</field>
+    </record>
+</odoo>

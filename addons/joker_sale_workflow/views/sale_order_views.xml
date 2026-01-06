@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sale Order Form Inherit -->
+    <record id="sale_order_view_form_workflow" model="ir.ui.view">
+        <field name="name">sale.order.form.workflow</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="workflow_id" options="{'no_create': True}"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Otomasyon" name="automation">
+                    <group>
+                        <group string="İş Akışı Durumu">
+                            <field name="workflow_state" widget="badge"
+                                   decoration-success="workflow_state == 'done'"
+                                   decoration-danger="workflow_state == 'error'"
+                                   decoration-warning="workflow_state == 'processing'"
+                                   decoration-info="workflow_state == 'pending'"/>
+                        </group>
+                        <group string="İşlemler">
+                            <button name="action_run_workflow" string="İş Akışını Başlat" 
+                                    type="object" class="btn-primary"
+                                    invisible="not workflow_id"/>
+                            <button name="action_clear_workflow_log" string="Logu Temizle"
+                                    type="object" class="btn-secondary"
+                                    invisible="not auto_workflow_log"/>
+                        </group>
+                    </group>
+                    <group string="Otomasyon Logu" invisible="not auto_workflow_log">
+                        <field name="auto_workflow_log" widget="text" nolabel="1"
+                               readonly="1" style="font-family: monospace;"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Sale Order List Inherit -->
+    <record id="sale_order_view_list_workflow" model="ir.ui.view">
+        <field name="name">sale.order.list.workflow</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="workflow_id" optional="hide"/>
+                <field name="workflow_state" widget="badge" optional="hide"
+                       decoration-success="workflow_state == 'done'"
+                       decoration-danger="workflow_state == 'error'"
+                       decoration-warning="workflow_state == 'processing'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Sale Order Search Inherit -->
+    <record id="sale_order_view_search_workflow" model="ir.ui.view">
+        <field name="name">sale.order.search.workflow</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                <separator/>
+                <filter name="filter_auto_pending" string="Otomasyon Bekliyor"
+                        domain="[('workflow_state', '=', 'pending')]"/>
+                <filter name="filter_auto_error" string="Otomasyon Hatası"
+                        domain="[('workflow_state', '=', 'error')]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

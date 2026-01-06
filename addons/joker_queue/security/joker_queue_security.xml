@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Queue Manager Group -->
+    <record id="group_joker_queue_manager" model="res.groups">
+        <field name="name">Queue Manager</field>
+        <field name="comment">Kuyruk yöneticileri - tüm işleri görebilir ve yönetebilir</field>
+    </record>
+
+    <!-- Queue User Group -->
+    <record id="group_joker_queue_user" model="res.groups">
+        <field name="name">Queue User</field>
+        <field name="comment">Kuyruk kullanıcıları - kendi işlerini görebilir</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Job Record Rules -->
+    <record id="joker_queue_job_rule_user" model="ir.rule">
+        <field name="name">Queue Jobs: User sees own jobs</field>
+        <field name="model_id" ref="model_joker_queue_job"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_joker_queue_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="joker_queue_job_rule_manager" model="ir.rule">
+        <field name="name">Queue Jobs: Manager sees all</field>
+        <field name="model_id" ref="model_joker_queue_job"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_joker_queue_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

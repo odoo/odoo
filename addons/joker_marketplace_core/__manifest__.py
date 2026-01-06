@@ -1,0 +1,31 @@
+{
+    "name": "JOKER Pazaryeri Core",
+    "version": "19.0.1.0.0",
+    "category": "Sales/Marketplace",
+    "summary": "Tüm pazaryeri entegrasyonları için base framework",
+    "author": "JOKER CEO",
+    "website": "https://joker.ai",
+    "depends": [
+        "base",
+        "sale",
+        "stock",
+        "account",
+        "purchase",
+    ],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/marketplace_channel_views.xml",
+        "views/marketplace_product_views.xml",
+        "views/marketplace_order_views.xml",
+        "views/marketplace_sync_log_views.xml",
+        "views/menu.xml",
+    ],
+    "external_dependencies": {
+        "python": ["requests", "lxml", "zeep"],
+    },
+    "installable": True,
+    "application": True,
+    "auto_install": False,
+    "license": "LGPL-3",
+    "post_init_hook": "post_init_hook",
+}

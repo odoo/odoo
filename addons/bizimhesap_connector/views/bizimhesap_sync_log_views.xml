@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- SYNC LOG LIST VIEW -->
+    <record id="bizimhesap_sync_log_view_tree" model="ir.ui.view">
+        <field name="name">bizimhesap.sync.log.list</field>
+        <field name="model">bizimhesap.sync.log</field>
+        <field name="arch" type="xml">
+            <list string="Senkronizasyon Logları"
+                decoration-success="status == 'success'"
+                decoration-warning="status == 'warning'"
+                decoration-danger="status == 'error'"
+                default_order="create_date desc">
+                <field name="create_date" string="Tarih" />
+                <field name="backend_id" />
+                <field name="operation" />
+                <field name="records_created" />
+                <field name="records_updated" />
+                <field name="records_failed" />
+                <field name="status" widget="badge" />
+                <field name="message" />
+            </list>
+        </field>
+    </record>
+
+    <!-- SYNC LOG FORM VIEW -->
+    <record id="bizimhesap_sync_log_view_form" model="ir.ui.view">
+        <field name="name">bizimhesap.sync.log.form</field>
+        <field name="model">bizimhesap.sync.log</field>
+        <field name="arch" type="xml">
+            <form string="Sync Log" create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="backend_id" />
+                            <field name="operation" />
+                            <field name="status" />
+                            <field name="status_code" />
+                        </group>
+                        <group>
+                            <field name="create_date" />
+                            <field name="duration" />
+                            <field name="model" />
+                            <field name="record_id" />
+                            <field name="external_id" />
+                        </group>
+                    </group>
+                    <group string="İstatistikler">
+                        <group>
+                            <field name="records_created" />
+                            <field name="records_updated" />
+                        </group>
+                        <group>
+                            <field name="records_skipped" />
+                            <field name="records_failed" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Mesajlar">
+                            <field name="message" />
+                            <field name="error_message" invisible="not error_message" />
+                        </page>
+                        <page string="İstek/Yanıt">
+                            <group>
+                                <field name="request_data" />
+                            </group>
+                            <group>
+                                <field name="response_data" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SYNC LOG SEARCH VIEW -->
+    <record id="bizimhesap_sync_log_view_search" model="ir.ui.view">
+        <field name="name">bizimhesap.sync.log.search</field>
+        <field name="model">bizimhesap.sync.log</field>
+        <field name="arch" type="xml">
+            <search string="Search Logs">
+                <field name="operation" />
+                <field name="backend_id" />
+                <separator />
+                <filter name="filter_success" string="Başarılı"
+                    domain="[('status', '=', 'success')]" />
+                <filter name="filter_warning" string="Uyarı" domain="[('status', '=', 'warning')]" />
+                <filter name="filter_error" string="Hata" domain="[('status', '=', 'error')]" />
+                <separator />
+                <filter name="filter_today" string="Bugün"
+                    domain="[('create_date', '>=', (context_today()).strftime('%Y-%m-%d'))]" />
+                <separator />
+                <filter name="group_backend" string="Backend" context="{'group_by': 'backend_id'}" />
+                <filter name="group_status" string="Durum" context="{'group_by': 'status'}" />
+            </search>
+        </field>
+    </record>
+
+    <!-- SYNC LOG ACTION -->
+    <record id="bizimhesap_sync_log_action" model="ir.actions.act_window">
+        <field name="name">Senkronizasyon Logları</field>
+        <field name="res_model">bizimhesap.sync.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="bizimhesap_sync_log_view_search" />
+        <field name="context">{'search_default_filter_today': 1}</field>
+    </record>
+
+    <!-- BINDING VIEWS -->
+    <record id="bizimhesap_partner_binding_view_form" model="ir.ui.view">
+        <field name="name">bizimhesap.partner.binding.form</field>
+        <field name="model">bizimhesap.partner.binding</field>
+        <field name="arch" type="xml">
+            <form string="Cari Eşleşmesi" create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="backend_id" />
+                            <field name="odoo_id" />
+                            <field name="external_id" />
+                            <field name="external_code" />
+                        </group>
+                        <group>
+                            <field name="external_balance" />
+                            <field name="sync_date" />
+                            <field name="sync_state" />
+                        </group>
+                    </group>
+                    <group string="BizimHesap Verileri" invisible="not external_data">
+                        <field name="external_data" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="bizimhesap_partner_binding_view_tree" model="ir.ui.view">
+        <field name="name">bizimhesap.partner.binding.list</field>
+        <field name="model">bizimhesap.partner.binding</field>
+        <field name="arch" type="xml">
+            <list string="Cari Eşleşmeleri">
+                <field name="backend_id" />
+                <field name="odoo_id" />
+                <field name="external_id" />
+                <field name="external_code" />
+                <field name="sync_date" />
+                <field name="sync_state" widget="badge" />
+            </list>
+        </field>
+    </record>
+
+    <record id="bizimhesap_product_binding_view_tree" model="ir.ui.view">
+        <field name="name">bizimhesap.product.binding.list</field>
+        <field name="model">bizimhesap.product.binding</field>
+        <field name="arch" type="xml">
+            <list string="Ürün Eşleşmeleri">
+                <field name="backend_id" />
+                <field name="odoo_id" />
+                <field name="external_id" />
+                <field name="external_code" />
+                <field name="sync_date" />
+                <field name="sync_state" widget="badge" />
+            </list>
+        </field>
+    </record>
+
+    <record id="bizimhesap_invoice_binding_view_tree" model="ir.ui.view">
+        <field name="name">bizimhesap.invoice.binding.list</field>
+        <field name="model">bizimhesap.invoice.binding</field>
+        <field name="arch" type="xml">
+            <list string="Fatura Eşleşmeleri">
+                <field name="backend_id" />
+                <field name="odoo_id" />
+                <field name="external_id" />
+                <field name="external_number" />
+                <field name="invoice_type" />
+                <field name="sync_date" />
+                <field name="sync_state" widget="badge" />
+            </list>
+        </field>
+    </record>
+
+</odoo>

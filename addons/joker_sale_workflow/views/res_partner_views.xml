@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Partner Form Inherit -->
+    <record id="res_partner_view_form_workflow" model="ir.ui.view">
+        <field name="name">res.partner.form.workflow</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']//group[@name='sale']" position="inside">
+                <field name="sale_workflow_id" options="{'no_create': True}"/>
+                <field name="auto_invoice"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

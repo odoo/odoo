@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- PRODUCT.PRODUCT FORM EXTENSION -->
+    <record id="product_product_view_form_bizimhesap" model="ir.ui.view">
+        <field name="name">product.product.form.bizimhesap</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_sync_to_bizimhesap" 
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-exchange"
+                        groups="bizimhesap_connector.group_bizimhesap_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="bizimhesap_synced" widget="boolean"/>
+                        </span>
+                        <span class="o_stat_text">BizimHesap</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- BizimHesap Security Groups -->
+    <record id="module_category_bizimhesap" model="ir.module.category">
+        <field name="name">BizimHesap</field>
+        <field name="description">BizimHesap Entegrasyon Modülü</field>
+        <field name="sequence">100</field>
+    </record>
+
+    <record id="group_bizimhesap_user" model="res.groups">
+        <field name="name">BizimHesap / Kullanıcı</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_bizimhesap_manager" model="res.groups">
+        <field name="name">BizimHesap / Yönetici</field>
+        <field name="implied_ids" eval="[(4, ref('group_bizimhesap_user'))]"/>
+    </record>
+
+    <!-- Record Rules -->
+    <record id="bizimhesap_backend_company_rule" model="ir.rule">
+        <field name="name">BizimHesap Backend: Multi-Company</field>
+        <field name="model_id" ref="model_bizimhesap_backend"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

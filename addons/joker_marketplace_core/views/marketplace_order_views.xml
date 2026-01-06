@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Marketplace Order List View -->
+        <record id="marketplace_order_tree" model="ir.ui.view">
+            <field name="name">marketplace.order.tree</field>
+            <field name="model">marketplace.order</field>
+            <field name="arch" type="xml">
+                <tree string="Pazaryeri Siparişleri" decoration-danger="status == 'error'">
+                    <field name="channel_order_id" />
+                    <field name="channel_id" />
+                    <field name="order_date" />
+                    <field name="partner_name" />
+                    <field name="amount_total" sum="Toplam" />
+                    <field name="status" />
+                    <field name="shipping_status" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Marketplace Order Form View -->
+        <record id="marketplace_order_form" model="ir.ui.view">
+            <field name="name">marketplace.order.form</field>
+            <field name="model">marketplace.order</field>
+            <field name="arch" type="xml">
+                <form string="Pazaryeri Siparişi">
+                    <header>
+                        <button name="action_confirm" type="object" string="Odoo'ya Aktar"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('synced_to_odoo', '=', True)]}" />
+                        <button name="action_mark_shipped" type="object" string="Gönderildi"
+                            attrs="{'invisible': [('status', 'not in', ['confirmed', 'packed'])]}" />
+                        <button name="action_mark_delivered" type="object" string="Teslim Edildi"
+                            attrs="{'invisible': [('status', 'not in', ['shipped'])]}" />
+                        <button name="action_cancel" type="object" string="İptal Et"
+                            attrs="{'invisible': [('status', 'in', ['delivered', 'cancelled'])]}" />
+                        <field name="status" widget="statusbar" options="{'clickable': True}" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(sale_order_action)d" type="action"
+                                class="oe_stat_button" icon="fa-file-o"
+                                attrs="{'invisible': [('sale_order_id', '=', False)]}">
+                                <field string="Satış Siparişi" name="sale_order_id"
+                                    widget="statinfo" />
+                            </button>
+                        </div>
+
+                        <h1>
+                            <field name="channel_order_id" readonly="1" /> (<field name="channel_id"
+                                readonly="1" />) </h1>
+
+                        <group>
+                            <group string="Sipariş Bilgileri">
+                                <field name="order_date" />
+                                <field name="synced_to_odoo" widget="boolean_toggle" />
+                                <field name="sale_order_id" />
+                            </group>
+                            <group string="Müşteri Bilgileri">
+                                <field name="partner_id" />
+                                <field name="partner_name" />
+                                <field name="partner_email" />
+                                <field name="partner_phone" />
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Sipariş Satırları" name="lines">
+                                <field name="line_ids" nolabel="1">
+                                    <list editable="bottom">
+                                        <field name="product_id" />
+                                        <field name="qty" />
+                                        <field name="price" />
+                                        <field name="discount" />
+                                        <field name="subtotal" />
+                                    </list>
+                                </field>
+                            </page>
+
+                            <page string="Adresler" name="addresses">
+                                <group>
+                                    <field name="shipping_address" widget="text" />
+                                </group>
+                                <group>
+                                    <field name="billing_address" widget="text" />
+                                </group>
+                            </page>
+
+                            <page string="Kargo" name="shipping">
+                                <group>
+                                    <group>
+                                        <field name="shipping_method" />
+                                        <field name="tracking_number" />
+                                        <field name="shipping_status" />
+                                    </group>
+                                    <group>
+                                        <field name="courier_id" />
+                                        <field name="shipping_cost" />
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Finansal" name="financial">
+                                <group>
+                                    <field name="amount_total" />
+                                    <field name="commission" />
+                                    <field name="shipping_cost" />
+                                </group>
+                            </page>
+
+                            <page string="Notlar" name="notes">
+                                <field name="customer_notes" />
+                                <field name="internal_notes" />
+                            </page>
+
+                            <page string="İrsaliye &amp; Fatura" name="docs">
+                                <field name="picking_ids" nolabel="1">
+                                    <tree>
+                                        <field name="name" />
+                                        <field name="state" />
+                                        <field name="scheduled_date" />
+                                    </tree>
+                                </field>
+                                <field name="invoice_ids" nolabel="1">
+                                    <tree>
+                                        <field name="name" />
+                                        <field name="state" />
+                                        <field name="amount_total" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+
+                        <div attrs="{'invisible': [('sync_error', '=', False)]}">
+                            <group>
+                                <label for="sync_error" />
+                                <field name="sync_error" widget="text" nolabel="1" />
+                            </group>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="marketplace_order_action" model="ir.actions.act_window">
+            <field name="name">Pazaryeri Siparişleri</field>
+            <field name="res_model">marketplace.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_pending': 1}</field>
+        </record>
+
+    </data>
+</odoo>

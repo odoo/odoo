@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Q-Commerce Teslimat -->
+        <record id="view_qcommerce_delivery_tree" model="ir.ui.view">
+            <field name="name">qcommerce.delivery.tree</field>
+            <field name="model">qcommerce.delivery</field>
+            <field name="arch" type="xml">
+                <list string="Teslimatlar"
+                    colors="red:status=='cancelled';green:status=='delivered'">
+                    <field name="name" />
+                    <field name="order_id" />
+                    <field name="courier_name" />
+                    <field name="status" />
+                    <field name="estimated_delivery_minutes" />
+                    <field name="actual_delivery_minutes" />
+                    <field name="requested_date" />
+                </list>
+            </field>
+        </record>
+
+        <record id="view_qcommerce_delivery_form" model="ir.ui.view">
+            <field name="name">qcommerce.delivery.form</field>
+            <field name="model">qcommerce.delivery</field>
+            <field name="arch" type="xml">
+                <form string="Teslimat">
+                    <header>
+                        <button name="action_pickup" type="object" class="btn-info"
+                            string="Kargoya Çıktı" states="assigned" />
+                        <button name="action_delivered" type="object" class="btn-success"
+                            string="Teslim Edildi" states="in_progress" />
+                        <button name="action_cancel" type="object" class="btn-danger"
+                            string="İptal Et" />
+                        <field name="status" widget="statusbar"
+                            statusbar_visible="waiting,assigned,in_progress,delivered,cancelled" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" class="oe_inline" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Teslimat Bilgileri">
+                                <field name="order_id" />
+                                <field name="platform_delivery_id" />
+                                <field name="estimated_delivery_minutes" />
+                                <field name="actual_delivery_minutes" />
+                            </group>
+                            <group string="Kurye Bilgileri">
+                                <field name="courier_name" />
+                                <field name="courier_phone" />
+                                <field name="courier_vehicle" />
+                            </group>
+                        </group>
+                        <group string="Konum (Real-time)">
+                            <field name="courier_latitude" />
+                            <field name="courier_longitude" />
+                        </group>
+                        <group string="Tarihler">
+                            <field name="requested_date" />
+                            <field name="assigned_date" />
+                            <field name="pickup_date" />
+                            <field name="delivered_date" />
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

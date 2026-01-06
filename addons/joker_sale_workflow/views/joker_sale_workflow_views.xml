@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Workflow List View -->
+    <record id="joker_sale_workflow_view_list" model="ir.ui.view">
+        <field name="name">joker.sale.workflow.list</field>
+        <field name="model">joker.sale.workflow</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="auto_confirm_order"/>
+                <field name="auto_create_invoice"/>
+                <field name="auto_validate_invoice"/>
+                <field name="order_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Workflow Form View -->
+    <record id="joker_sale_workflow_view_form" model="ir.ui.view">
+        <field name="name">joker.sale.workflow.form</field>
+        <field name="model">joker.sale.workflow</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_view_orders" string="Siparişler" type="object"
+                            class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_orders" type="object"
+                                class="oe_stat_button" icon="fa-shopping-cart">
+                            <field name="order_count" string="Siparişler" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Arşiv" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="İş Akışı Adı"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Genel">
+                            <field name="code"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Otomatik İşlemler">
+                            <field name="auto_confirm_order"/>
+                            <field name="auto_create_invoice"/>
+                            <field name="auto_validate_invoice"/>
+                            <field name="auto_send_invoice_email"/>
+                            <field name="auto_mark_done"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Tutar Koşulları">
+                            <field name="min_amount"/>
+                            <field name="max_amount"/>
+                        </group>
+                        <group string="Zamanlama">
+                            <field name="use_delay"/>
+                            <field name="delay_minutes" invisible="not use_delay"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Filtreler">
+                            <group>
+                                <field name="partner_category_ids" widget="many2many_tags"/>
+                                <field name="product_category_ids" widget="many2many_tags"/>
+                                <field name="payment_term_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                        <page string="Açıklama">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Workflow Action -->
+    <record id="joker_sale_workflow_action" model="ir.actions.act_window">
+        <field name="name">Satış İş Akışları</field>
+        <field name="res_model">joker.sale.workflow</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                İlk iş akışınızı oluşturun
+            </p>
+            <p>
+                Satış iş akışları, siparişlerin otomatik olarak nasıl işleneceğini belirler.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_joker_sale_workflow_root"
+              name="JOKER Sale Workflow"
+              sequence="40"
+              web_icon="joker_sale_workflow,static/description/icon.svg"/>
+
+    <menuitem id="menu_joker_sale_workflow_rules"
+              name="İş Akışı Kuralları"
+              parent="menu_joker_sale_workflow_root"
+              action="joker_sale_workflow_action"
+              sequence="10"
+              groups="sales_team.group_sale_manager"/>
+</odoo>

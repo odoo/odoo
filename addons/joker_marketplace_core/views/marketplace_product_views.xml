@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Marketplace Product List View -->
+        <record id="marketplace_product_tree" model="ir.ui.view">
+            <field name="name">marketplace.product.tree</field>
+            <field name="model">marketplace.product</field>
+            <field name="arch" type="xml">
+                <list string="Pazaryeri Ürünleri" decoration-danger="sync_status == 'error'">
+                    <field name="channel_id" />
+                    <field name="product_id" />
+                    <field name="channel_sku" />
+                    <field name="sale_price" sum="Toplam Fiyat" />
+                    <field name="qty_sellable" sum="Toplam Stok" />
+                    <field name="status" />
+                    <field name="sync_status" />
+                </list>
+            </field>
+        </record>
+
+        <!-- Marketplace Product Form View -->
+        <record id="marketplace_product_form" model="ir.ui.view">
+            <field name="name">marketplace.product.form</field>
+            <field name="model">marketplace.product</field>
+            <field name="arch" type="xml">
+                <form string="Pazaryeri Ürünü">
+                    <header>
+                        <button name="action_activate" type="object" string="Aktif Yap"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('status', '!=', 'inactive')]}" />
+                        <button name="action_deactivate" type="object" string="Deaktif Yap"
+                            attrs="{'invisible': [('status', '=', 'inactive')]}" />
+                        <button name="action_sync_now" type="object" string="Senkronize Et" />
+                        <field name="status" widget="statusbar" options="{'clickable': True}" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="channel_id" />
+                                <field name="product_id" />
+                                <field name="channel_product_id" />
+                                <field name="channel_sku" />
+                                <field name="active" widget="boolean_toggle" />
+                            </group>
+                            <group>
+                                <field name="sync_status" />
+                                <field name="last_sync" />
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Bilgileri" name="info">
+                                <group>
+                                    <field name="title" />
+                                    <field name="channel_category" />
+                                </group>
+                                <field name="description" widget="html" />
+                            </page>
+
+                            <page string="Fiyatlandırma" name="pricing">
+                                <group>
+                                    <group>
+                                        <field name="list_price" />
+                                        <field name="sale_price" />
+                                        <field name="cost_price" />
+                                    </group>
+                                    <group>
+                                        <field name="margin" />
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Stok" name="inventory">
+                                <group>
+                                    <field name="qty_available" />
+                                    <field name="qty_reserved" />
+                                    <field name="qty_sellable" />
+                                </group>
+                            </page>
+
+                            <page string="Kategoriler" name="categories">
+                                <field name="category_ids" widget="many2many_tags" />
+                            </page>
+
+                            <page string="Ek Veriler" name="extra">
+                                <field name="extra_data" widget="ace" options="{'mode': 'json'}" />
+                            </page>
+                        </notebook>
+
+                        <div attrs="{'invisible': [('sync_error', '=', False)]}">
+                            <group>
+                                <label for="sync_error" />
+                                <field name="sync_error" widget="text" nolabel="1" />
+                            </group>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="marketplace_product_action" model="ir.actions.act_window">
+            <field name="name">Pazaryeri Ürünleri</field>
+            <field name="res_model">marketplace.product</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

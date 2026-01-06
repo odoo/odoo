@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Q-Commerce Kanal -->
+        <record id="view_qcommerce_channel_tree" model="ir.ui.view">
+            <field name="name">qcommerce.channel.tree</field>
+            <field name="model">qcommerce.channel</field>
+            <field name="arch" type="xml">
+                <tree string="Hızlı Teslimat Kanalları">
+                    <field name="name" />
+                    <field name="platform_type" />
+                    <field name="total_orders" />
+                    <field name="pending_orders_count" />
+                    <field name="success_rate" widget="percentage" />
+                    <field name="last_sync" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_qcommerce_channel_form" model="ir.ui.view">
+            <field name="name">qcommerce.channel.form</field>
+            <field name="model">qcommerce.channel</field>
+            <field name="arch" type="xml">
+                <form string="Hızlı Teslimat Kanalı">
+                    <header>
+                        <button name="action_sync_orders" type="object" class="btn-primary"
+                            string="Siparişleri Senkronize Et" />
+                        <button name="test_connection" type="object" class="btn-info"
+                            string="Bağlantıyı Test Et" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" class="oe_inline" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Platform Bilgileri">
+                                <field name="platform_type" />
+                                <field name="active" />
+                                <field name="merchant_id" />
+                                <field name="api_key" password="True" />
+                                <field name="api_secret" password="True" />
+                                <field name="shop_id" />
+                            </group>
+                            <group string="İstatistikler">
+                                <field name="total_orders" />
+                                <field name="total_deliveries" />
+                                <field name="pending_orders_count" />
+                                <field name="success_rate" widget="percentage" />
+                                <field name="last_sync" />
+                            </group>
+                        </group>
+                        <group string="Ayarlar">
+                            <field name="preparation_time_minutes" />
+                            <field name="max_delivery_time_minutes" />
+                            <field name="auto_accept_orders" />
+                            <field name="auto_request_courier" />
+                        </group>
+                        <group string="Teslimat Bölgeleri">
+                            <field name="delivery_zones" nolabel="1" />
+                        </group>
+                        <notebook>
+                            <page string="Siparişler">
+                                <field name="order_ids" nolabel="1">
+                                    <tree>
+                                        <field name="name" />
+                                        <field name="platform_order_id" />
+                                        <field name="status" />
+                                        <field name="amount_total" />
+                                        <field name="order_date" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Senkronizasyon Logları">
+                                <field name="sync_log_ids" nolabel="1">
+                                    <tree>
+                                        <field name="name" />
+                                        <field name="operation_type" />
+                                        <field name="status" />
+                                        <field name="records_processed" />
+                                        <field name="duration_seconds" />
+                                        <field name="start_date" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_qcommerce_channel_kanban" model="ir.ui.view">
+            <field name="name">qcommerce.channel.kanban</field>
+            <field name="model">qcommerce.channel</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="platform_type" quick_create="False">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card">
+                                <div class="oe_kanban_content">
+                                    <strong>
+                                        <field name="name" />
+                                    </strong>
+                                    <br />
+                                    <small>
+                                        <span class="badge badge-info"><field name="total_orders" />
+                                            sipariş</span>
+                                        <span class="badge badge-warning"><field
+                                                name="pending_orders_count" /> bekleme</span>
+                                        <span class="badge badge-success">
+                                            <field name="success_rate" widget="percentage" />
+                                        </span>
+                                    </small>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+    </data>
+</odoo>
