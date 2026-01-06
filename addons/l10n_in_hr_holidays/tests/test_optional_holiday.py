@@ -25,7 +25,8 @@ class TestOptionalHoliday(TestHrHolidaysCommon):
 
         cls.optional_holiday = cls.env['l10n.in.hr.leave.optional.holiday'].create({
             'name': 'optional holiday',
-            'date': '2025-01-02'
+            'start_date': '2025-01-02',
+            'end_date': '2025-01-02',
         })
 
     def test_optional_holiday_valid_leave_request(self):

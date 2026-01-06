@@ -46,17 +46,22 @@ class HrLeave(models.Model):
             return
         date_from = min(leaves_to_check.mapped("request_date_from"))
         date_to = max(leaves_to_check.mapped("request_date_to"))
-        optional_holidays = dict(self.env["l10n.in.hr.leave.optional.holiday"]._read_group(
-            domain=[("date", ">=", date_from), ("date", "<=", date_to)],
-            groupby=["date:day"],
-            aggregates=["__count"],
-        ))
+        optional_holidays_groups = self.env["l10n.in.hr.leave.optional.holiday"]._read_group(
+            domain=[("start_date", "<=", date_to), ("end_date", ">=", date_from)],
+            groupby=[],
+            aggregates=["id:recordset"],
+        )
+
+        optional_holiday_record = self.env['l10n.in.hr.leave.optional.holiday']
+        for optional_holiday in optional_holidays_groups:
+            optional_holiday_record |= optional_holiday[0]
+
         optional_holidays_intervals = Intervals([(
-                datetime.combine(date, time.min),
-                datetime.combine(date, time.max),
+                datetime.combine(optional_holiday.start_date, time.min),
+                datetime.combine(optional_holiday.end_date, time.max),
                 self.env['l10n.in.hr.leave.optional.holiday']
             )
-            for date in optional_holidays
+            for optional_holiday in optional_holiday_record
         ])
         invalid_leaves = []
         for leave in leaves_to_check:

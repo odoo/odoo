@@ -8,7 +8,7 @@ from odoo.fields import Domain
 class L10nInHrLeaveOptionalHoliday(models.Model):
     _name = 'l10n.in.hr.leave.optional.holiday'
     _description = 'Optional Holidays'
-    _order = 'date desc'
+    _order = 'start_date asc'
 
     @api.model
     def default_get(self, field_list=None):
@@ -17,15 +17,21 @@ class L10nInHrLeaveOptionalHoliday(models.Model):
         return super().default_get(field_list)
 
     name = fields.Char(required=True)
-    date = fields.Date(required=True)
+    start_date = fields.Date(required=True)
+    end_date = fields.Date(readonly=False, required=True, store=True, compute='_compute_end_date')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
 
-    @api.depends('name', 'date')
+    @api.depends('start_date')
+    def _compute_end_date(self):
+        for holiday in self:
+            holiday.end_date = holiday.start_date
+
+    @api.depends('name', 'start_date')
     def _compute_display_name(self):
         for holiday in self:
             name = holiday.name
-            if holiday.date:
-                name = f'{name} ({holiday.date})'
+            if holiday.start_date:
+                name = f'{name} ({holiday.start_date})'
             holiday.display_name = name
 
     @api.ondelete(at_uninstall=False)
@@ -35,8 +41,8 @@ class L10nInHrLeaveOptionalHoliday(models.Model):
         ])
         dates_domain = Domain.OR([[
              '&',
-            ("request_date_from", "<=", optional_holiday.date),
-            ("request_date_to", ">=", optional_holiday.date),
+            ("request_date_from", "<=", optional_holiday.start_date),
+            ("request_date_to", ">=", optional_holiday.end_date),
         ] for optional_holiday in self])
         linked_leave_request = self.env["hr.leave"].search_count(domain & dates_domain, limit=1)
         if linked_leave_request:

@@ -5,7 +5,8 @@
         <field name="arch" type="xml">
             <list editable="bottom">
                 <field name="name"/>
-                <field name="date" string="Date"/>
+                <field name="start_date" string="Start Date"/>
+                <field name="end_date" string="End Date"/>
                 <field name="company_id" string="Company" groups="base.group_multi_company"/>
             </list>
         </field>
@@ -16,10 +17,10 @@
         <field name="arch" type="xml">
             <search string="Optional Holidays">
                 <field name="name"/>
-                <field name="date" string="Start Date"/>
+                <field name="start_date" string="Start Date"/>
                 <field name="company_id" string="Company" groups="base.group_multi_company"/>
                 <separator/>
-                <filter name="filter_date" date="date" default_period="year" string="Period"/>
+                <filter name="filter_date" date="start_date" default_period="year" string="Period"/>
                 <group>
                     <filter name="company" string="Company" context="{'group_by': 'company_id'}"
                         groups="base.group_multi_company"/>
