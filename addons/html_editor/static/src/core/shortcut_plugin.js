@@ -4,6 +4,7 @@ import { fillEmpty } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { omit } from "@web/core/utils/objects";
 import { escapeRegExp } from "@web/core/utils/strings";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef {Object} Shortcut
@@ -169,7 +170,7 @@ export class ShortCutPlugin extends Plugin {
                 this.dependencies.selection.extractContent(
                     this.dependencies.selection.getEditableSelection()
                 );
-                fillEmpty(blockEl);
+                fillEmpty(closestElement(selection.focusNode));
                 command.run(matchedShortcut.commandParams);
             }
         }
