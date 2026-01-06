@@ -82,7 +82,12 @@ def on_message(ws, messages):
             if iot_mac in payload['iotIdentifiers']:
                 helpers.disconnect_from_server()
                 close_server_log_sender_handler()
-        elif message_type not in ['print_confirmation', 'bundle_changed']:  # intended to be ignored
+        elif message_type == 'bundle_changed':
+            # This message is sent by the DB whenever the web JS asset bundle changes.
+            # While this is a bit of a hack we use this message to check if the DB has been upgraded,
+            # since we know the bundle will always change in this situation.
+            helpers.check_git_branch()
+        elif message_type != 'print_confirmation':  # intended to be ignored
             _logger.warning("message type not supported: %s", message_type)
 
 
