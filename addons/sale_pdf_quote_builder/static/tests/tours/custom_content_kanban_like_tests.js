@@ -13,7 +13,6 @@ registry.category("web_tour.tours").add('custom_content_kanban_like_tour', {
         },
         {
             trigger: "h5:contains(custom_1) ~ div textarea",
-            break: true,
             run: "edit Test",
         },
         ...stepUtils.saveForm(),

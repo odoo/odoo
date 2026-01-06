@@ -30,7 +30,7 @@ export class TourAutomatic {
     start() {
         setupEventActions(document.createElement("div"), { allowSubmit: true });
         enableEventLogs(this.debugMode);
-        const { delayToCheckUndeterminisms, stepDelay } = this.config;
+        const { stepDelay, observeDelay } = this.config;
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
             .flatMap((step) => [
@@ -58,8 +58,8 @@ export class TourAutomatic {
                             ? 9999999
                             : step.timeout || this.timeout || 10000,
                     action: async (trigger) => {
-                        if (delayToCheckUndeterminisms > 0) {
-                            await step.checkForUndeterminisms(trigger, delayToCheckUndeterminisms);
+                        if (step.observe) {
+                            await step.checkForUndeterminisms(trigger, observeDelay);
                         }
                         this.allowUnload = false;
                         if (!step.skipped && step.expectUnloadPage) {
@@ -189,14 +189,17 @@ export class TourAutomatic {
     throwError(...args) {
         console.groupEnd();
         tourState.setCurrentTourOnError();
-        // console.error notifies the test runner that the tour failed.
-        browser.console.error([`FAILED: ${this.currentStep.describeMe}.`, ...args].join("\n"));
         // The logged text shows the relative position of the failed step.
         // Useful for finding the failed step.
         browser.console.dir(this.describeWhereIFailed);
+        const error = [`FAILED: ${this.currentStep.describeMe}.`, ...args].join("\n");
         if (this.debugMode) {
+            browser.console.warn(error);
             // eslint-disable-next-line no-debugger
             debugger;
+        } else {
+            // console.error notifies the test runner that the tour failed.
+            browser.console.error(error);
         }
     }
 

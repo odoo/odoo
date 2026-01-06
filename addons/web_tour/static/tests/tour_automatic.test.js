@@ -313,10 +313,10 @@ test("a failing tour logs the step that failed", async () => {
         "log: [3/9] Tour tour1 → Step content (trigger: .button2)",
         "log: [4/9] Tour tour1 → Step content (trigger: .button3)",
         "log: [5/9] Tour tour1 → Step content (trigger: .wrong_selector)",
+        `runbot: {"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILED:[5/9]Tourtour1→Stepcontent(trigger:.wrong_selector){"content":"content","trigger":".wrong_selector","run":"click","timeout":111},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`,
         `error: FAILED: [5/9] Tour tour1 → Step content (trigger: .wrong_selector).
 Element (.wrong_selector) has not been found.
 TIMEOUT step failed to complete within 111 ms.`,
-        `runbot: {"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILED:[5/9]Tourtour1→Stepcontent(trigger:.wrong_selector){"content":"content","trigger":".wrong_selector","run":"click","timeout":111},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`,
     ]);
 });
 
