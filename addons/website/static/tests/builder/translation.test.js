@@ -2,7 +2,7 @@ import { Builder } from "@html_builder/builder";
 import { EditWebsiteSystrayItem } from "@website/client_actions/website_preview/edit_website_systray_item";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText, pasteHtml, pasteText } from "@html_editor/../tests/_helpers/user_actions";
-import { beforeEach, describe, expect, press, test } from "@odoo/hoot";
+import { beforeEach, delay, describe, expect, globals, press, test } from "@odoo/hoot";
 import {
     animationFrame,
     manuallyDispatchProgrammaticEvent,
@@ -19,6 +19,7 @@ import {
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { TranslationPlugin } from "@website/builder/plugins/translation_plugin";
 import { dummyBase64Img } from "@html_builder/../tests/helpers";
+import { getTranslatedElements } from "./translated_elements_getter.hoot";
 
 defineWebsiteModels();
 
@@ -473,6 +474,23 @@ test("Ensure the contenteditable attributes have been set before the Translation
     });
 });
 
+test("sidebar should open even when translated elements fetch is slow", async () => {
+    const originalFetch = globals.fetch;
+
+    patchWithCleanup(globals, {
+        async fetch(url, options) {
+            if (url === "/website/get_translated_elements") {
+                await delay(100);
+            }
+            return originalFetch.call(this, url, options);
+        },
+    });
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({ inWrap: "Hello" }),
+    });
+    expect(".o_builder_sidebar_open").toHaveCount(1);
+});
+
 function getTranslateEditable({
     inWrap,
     oeId = "526",
@@ -511,6 +529,7 @@ async function setupSidebarBuilderForTranslation(options) {
             },
         }
     );
+    await getTranslatedElements();
     await openBuilderSidebar();
     return { getEditor, getEditableContent };
 }
