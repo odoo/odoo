@@ -5,9 +5,7 @@ import odoo.tests
 
 from requests import Session, PreparedRequest, Response
 
-from datetime import datetime
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from dateutil.relativedelta import relativedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -69,19 +67,6 @@ class TestMenusAdminLight(odoo.tests.HttpCase):
         if 'pos.prep.display' in self.env:
             self.env['pos.prep.display'].create({
                 'name': 'Super Smart Kitchen Display',
-            })
-        # There is a bug when we go the Field Service app (without any demo data) and we
-        # click on the Studio button. It seems the fake group generated containing one record
-        # to be used in the KanbanEditorRenderer has groupByField to undefined
-        # (I guess it is because there is no group by?) and we got an error at this line
-        # because we assume groupByField is defined.
-        if 'project.task' in self.env and 'is_fsm' in self.env['project.task']:
-            self.env['project.task'].create({
-                'name': 'Zizizbroken',
-                'project_id': self.env.ref('industry_fsm.fsm_project').id,
-                'user_ids': [(4, self.env.ref('base.user_admin').id)],
-                'date_deadline': datetime.now() + relativedelta(hour=12),
-                'planned_date_begin': datetime.now() + relativedelta(hour=10),
             })
         self.browser_js("/odoo", "odoo.loader.modules.get('@web/webclient/clickbot/clickbot_loader').startClickEverywhere(undefined, true);", "odoo.isReady === true", login="admin", timeout=120, success_signal="clickbot test succeeded")
 
