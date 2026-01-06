@@ -1545,7 +1545,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'errors': self._get_shop_payment_errors(order),
             'partner': order.partner_invoice_id,
             'order': order,
-            'submit_button_label': _("Pay now"),
         }
         payment_form_values = {
             **sale_portal.CustomerPortal._get_payment_values(

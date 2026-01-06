@@ -43,4 +43,15 @@
         </t>
     </template>
 
+    <template id="website_sale.submit_button" inherit_id="payment.submit_button">
+        <div name="o_payment_default_submit_labels" position="replace">    
+            <t t-if="website_sale_order and not website_sale_order.amount_total">
+                <span name="o_free_order_label" t-field="res_company.free_order_label"/>
+            </t>
+            <t t-else=""> 
+                <t>$0</t>
+            </t>
+        </div>
+    </template>
+    
 </odoo>

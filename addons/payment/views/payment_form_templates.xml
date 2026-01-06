@@ -375,14 +375,26 @@
 
     <template id="payment.submit_button" name="Submit Button">
         <!-- Parameters description:
-            - label: The label of the submit button.
+            - submit_button_label: The label of the submit button (Optional). If passed, it
+              overwrites Pay Now/Pay Later labels.
         -->
         <button name="o_payment_submit_button"
                 type="submit"
                 t-out="submit_button_label"
                 class="btn btn-primary w-100 w-md-auto ms-auto px-5"
                 disabled="true"
-        />
+        >   
+            <t t-if="not submit_button_label">
+                <div name="o_payment_default_submit_labels">
+                    <span name="o_pay_now_label" t-field="res_company.pay_now_label"/>
+                    <span 
+                        name="o_pay_later_label"
+                        t-field="res_company.pay_later_label"
+                        class="d-none"
+                    />
+                </div>
+            </t>
+        </button>
     </template>
 
     <template id="payment.no_pms_available_warning">
