@@ -493,6 +493,9 @@ class Meeting(models.Model):
 
     def _microsoft_values(self, fields_to_sync, initial_values={}):
         values = dict(initial_values)
+        if not values.get('transactionId'):
+            values['transactionId'] = self._get_microsoft_transaction_id()
+
         if not fields_to_sync:
             return values
 

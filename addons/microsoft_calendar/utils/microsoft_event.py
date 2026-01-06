@@ -142,6 +142,44 @@ class MicrosoftEvent(abc.Set):
                     'need_sync_m': False,
                 })
 
+        # 3. try to match unmapped events with Odoo events using transactionId
+        unmapped_events = self.filter(lambda e: e.id not in mapped_events)
+
+        db_uuid_prefix = env['ir.config_parameter'].sudo().get_param('database.uuid') + "_"
+        transaction_id_mapping = {}
+
+        for ms_event in unmapped_events:
+            transaction_id = ms_event.transactionId
+            if not transaction_id or not transaction_id.startswith(db_uuid_prefix):
+                continue
+
+            parts = transaction_id.split('_')
+            if len(parts) != 2:
+                continue
+
+            try:
+                odoo_id = int(parts[1])
+                if odoo_id > 0:
+                    transaction_id_mapping[odoo_id] = ms_event
+            except ValueError:
+                continue
+
+        if transaction_id_mapping:
+            odoo_events = model_env.with_context(active_test=False).search([
+                ('id', 'in', list(transaction_id_mapping.keys())),
+                ('microsoft_id', '=', False),
+            ]).with_env(env)
+
+            for odoo_event in odoo_events:
+                ms_event = transaction_id_mapping[odoo_event.id]
+                ms_event._events[ms_event.id]['_odoo_id'] = odoo_event.id
+                mapped_events.append(ms_event.id)
+                odoo_event.write({
+                    'microsoft_id': ms_event.id,
+                    'ms_universal_event_id': ms_event.iCalUId,
+                    'need_sync_m': False,
+                })
+
         return self.filter(lambda e: e.id in mapped_events)
 
     def owner_id(self, env):

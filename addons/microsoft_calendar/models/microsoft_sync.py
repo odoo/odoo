@@ -529,3 +529,11 @@ class MicrosoftSync(models.AbstractModel):
         future record synchronization for the original owner.
         """
         raise NotImplementedError()
+
+    def _get_microsoft_transaction_id(self):
+        """
+        Returns a deterministic transactionId for the record, used for idempotency
+        and recovering events from Outlook when the creation response was lost.
+        """
+        self.ensure_one()
+        return "%s_%s" % (self.env['ir.config_parameter'].sudo().get_param('database.uuid'), self.id)

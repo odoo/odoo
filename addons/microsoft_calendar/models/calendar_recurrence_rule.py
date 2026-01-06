@@ -162,7 +162,9 @@ class RecurrenceRule(models.Model):
         Get values to update the whole Outlook event recurrence.
         (done through the first event of the Outlook recurrence).
         """
-        return self.base_event_id._microsoft_values(fields_to_sync, initial_values={'type': 'seriesMaster'})
+        values = self.base_event_id._microsoft_values(fields_to_sync, initial_values={'type': 'seriesMaster'})
+        values['transactionId'] = self._get_microsoft_transaction_id()
+        return values
 
     def _ensure_attendees_have_email(self):
         self.calendar_event_ids.filtered(lambda e: e.active)._ensure_attendees_have_email()

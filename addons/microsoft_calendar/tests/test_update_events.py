@@ -24,6 +24,7 @@ class TestUpdateEvents(TestCommon):
     def setUp(self):
         super(TestUpdateEvents, self).setUp()
         self.create_events_for_tests()
+        self.db_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
 
     # -------------------------------------------------------------------------------
     # Update from Odoo to Outlook
@@ -68,7 +69,7 @@ class TestUpdateEvents(TestCommon):
         self.assertTrue(res)
         mock_patch.assert_called_once_with(
             self.simple_event.microsoft_id,
-            {"subject": "my new simple event", "isOnlineMeeting": False},
+            {"subject": "my new simple event", "isOnlineMeeting": False, "transactionId": f"{self.db_uuid}_{self.simple_event.id}"},
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
         )
@@ -92,7 +93,7 @@ class TestUpdateEvents(TestCommon):
         self.assertTrue(res)
         mock_patch.assert_called_once_with(
             self.simple_event.microsoft_id,
-            {"subject": "my new simple event", "isOnlineMeeting": False},
+            {"subject": "my new simple event", "isOnlineMeeting": False, "transactionId": f"{self.db_uuid}_{self.simple_event.id}"},
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
         )
@@ -123,7 +124,7 @@ class TestUpdateEvents(TestCommon):
         self.assertTrue(res)
         mock_patch.assert_called_once_with(
             self.recurrent_events[modified_event_id].microsoft_id,
-            {'seriesMasterId': 'REC123', 'type': 'exception', "subject": new_name},
+            {'seriesMasterId': 'REC123', 'type': 'exception', "subject": new_name, "transactionId": f"{self.db_uuid}_{self.recurrent_events[modified_event_id].id}"},
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
         )
@@ -168,7 +169,8 @@ class TestUpdateEvents(TestCommon):
                     'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
                     'timeZone': 'Europe/London'
                 },
-                'isAllDay': False
+                'isAllDay': False,
+                'transactionId': f"{self.db_uuid}_{self.recurrent_events[modified_event_id].id}",
             },
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
@@ -228,7 +230,7 @@ class TestUpdateEvents(TestCommon):
         self.assertTrue(res)
         mock_patch.assert_called_once_with(
             self.recurrent_events[modified_event_id].microsoft_id,
-            {'seriesMasterId': 'REC123', 'type': 'exception', "subject": new_name},
+            {'seriesMasterId': 'REC123', 'type': 'exception', "subject": new_name, "transactionId": f"{self.db_uuid}_{self.recurrent_events[modified_event_id].id}"},
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
         )
@@ -266,7 +268,7 @@ class TestUpdateEvents(TestCommon):
         for i in range(modified_event_id, self.recurrent_events_count):
             mock_patch.assert_any_call(
                 self.recurrent_events[i].microsoft_id,
-                {'seriesMasterId': 'REC123', 'type': 'exception', "subject": new_name},
+                {'seriesMasterId': 'REC123', 'type': 'exception', "subject": new_name, "transactionId": f"{self.db_uuid}_{self.recurrent_events[i].id}"},
                 token=mock_get_token(self.organizer_user),
                 timeout=ANY,
             )
@@ -348,7 +350,8 @@ class TestUpdateEvents(TestCommon):
                     'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
                     'timeZone': 'Europe/London'
                 },
-                'isAllDay': False
+                'isAllDay': False,
+                'transactionId': f"{self.db_uuid}_{self.recurrent_events[modified_event_id].id}",
             },
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
@@ -421,7 +424,8 @@ class TestUpdateEvents(TestCommon):
                     'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
                     'timeZone': 'Europe/London'
                 },
-                'isAllDay': False
+                'isAllDay': False,
+                'transactionId': f"{self.db_uuid}_{self.recurrent_events[modified_event_id].id}",
             },
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
@@ -489,7 +493,8 @@ class TestUpdateEvents(TestCommon):
                     'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
                     'timeZone': 'Europe/London'
                 },
-                'isAllDay': False
+                'isAllDay': False,
+                'transactionId': f"{self.db_uuid}_{self.recurrent_events[modified_event_id].id}",
             },
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
@@ -525,7 +530,7 @@ class TestUpdateEvents(TestCommon):
         for i in range(self.recurrent_events_count):
             mock_patch.assert_any_call(
                 self.recurrent_events[i].microsoft_id,
-                {'seriesMasterId': 'REC123', 'type': 'exception', "subject": new_name},
+                {'seriesMasterId': 'REC123', 'type': 'exception', "subject": new_name, "transactionId": f"{self.db_uuid}_{self.recurrent_events[i].id}"},
                 token=mock_get_token(self.organizer_user),
                 timeout=ANY,
             )
@@ -582,7 +587,8 @@ class TestUpdateEvents(TestCommon):
                     'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
                     'timeZone': 'Europe/London'
                 },
-                'isAllDay': False
+                'isAllDay': False,
+                'transactionId': f"{self.db_uuid}_{self.recurrent_events[0].id}",
             },
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
@@ -646,7 +652,8 @@ class TestUpdateEvents(TestCommon):
                     'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
                     'timeZone': 'Europe/London'
                 },
-                'isAllDay': False
+                'isAllDay': False,
+                'transactionId': f"{self.db_uuid}_{self.recurrent_events[0].id}",
             },
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
