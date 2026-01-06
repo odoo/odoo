@@ -493,7 +493,7 @@ class IrActionsServerHistory(models.Model):
         self.display_name = False
         for history in self.filtered('create_date'):
             locale = get_lang(self.env).code
-            tzinfo = ZoneInfo(self.env.user.tz)
+            tzinfo = self.env.tz
             datetime = history.create_date.replace(microsecond=0)
             datetime = datetime.replace(tzinfo=UTC)
             datetime = datetime.astimezone(tzinfo) if tzinfo else datetime
