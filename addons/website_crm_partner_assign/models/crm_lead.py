@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
+
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
@@ -339,3 +340,13 @@ class CrmLead(models.Model):
                     'url': '/my/opportunity/%s' % record.id,
                 }
         return super(CrmLead, self)._get_access_action(access_uid=access_uid, force_website=force_website)
+
+    @api.model
+    def _get_mail_message_access(self, res_ids, operation, model_name=None):
+        # Allow readonly posting for assigned users, to avoid ACLs issue in frontend
+        # as they do not have write access anymore on the lead itself, just specific
+        # controllers and UI
+        if operation == 'create' and res_ids and (not model_name or model_name == 'crm.lead'):
+            if all(lead.partner_assigned_id == self.env.user.partner_id for lead in self.browse(res_ids)):
+                return 'read'
+        return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
