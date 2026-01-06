@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
+import { showProductColumn } from "@account/js/tours/tour_utils";
 
 import { markup } from "@odoo/owl";
 
@@ -67,6 +68,7 @@ registry.category("web_tour.tours").add('account_tour', {
         content: _t("Add a line to your invoice"),
         run: "click",
     },
+    ...showProductColumn(),
     {
         trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id]`,
         content: _t("Fill in the details of the product or see the suggestion."),

@@ -1,3 +1,28 @@
+export function showProductColumn() {
+    // Show product column if Sale is not installed.
+    return [
+        {
+            content: "Open line fields list",
+            trigger: ".o_optional_columns_dropdown_toggle",
+            run: "click",
+        },
+        {
+            content: "Show product column",
+            trigger: '.o-dropdown-item input[name="product_id"]',
+            run: function (actions) {
+                if (!this.anchor.checked) {
+                    actions.click();
+                }
+            },
+        },
+        {
+            content: "Close line fields list",
+            trigger: ".o_optional_columns_dropdown_toggle",
+            run: "click",
+        },
+    ];
+}
+
 export function addSectionFromProductCatalog() {
     return [
         {
