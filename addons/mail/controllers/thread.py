@@ -184,6 +184,7 @@ class ThreadController(http.Controller):
                     )
                 ),
             ).ids
+        res.setdefault("message_type", "comment")
         return res
 
     @http.route("/mail/message/post", methods=["POST"], type="jsonrpc", auth="public")

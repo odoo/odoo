@@ -289,6 +289,10 @@ export class Thread extends Record {
         return this.needactionMessages.length > 0;
     }
 
+    get canPostMessage() {
+        return this.hasWriteAccess || (this.hasReadAccess && this.canPostOnReadonly);
+    }
+
     /**
      * Return the name of the given persona to display in the context of this
      * thread.
