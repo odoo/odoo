@@ -18,6 +18,7 @@ Finally, the module comes with an option to display an attribute summary table i
         'views/product_attribute_views.xml',
         'views/comparison_templates.xml',
         'views/templates.xml',
+        'views/wishlist_templates.xml',
     ],
     'demo': [
         'data/product_attribute_category_data.xml',
