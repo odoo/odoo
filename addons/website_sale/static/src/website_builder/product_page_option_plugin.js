@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { ProductPageOption } from "./product_page_option";
 import { rpc } from "@web/core/network/rpc";
 import { isImageCorsProtected } from "@html_editor/utils/image";
-import { TABS } from "@html_editor/main/media/media_dialog/media_dialog";
+import { TABS } from "@html_editor/main/media/media_dialog/media_dialog_utils";
 import { WebsiteConfigAction, PreviewableWebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
@@ -322,12 +322,16 @@ export class ProductReplaceMainImageAction extends BaseProductPageAction {
         super.setup();
         this.reload = false;
     }
-    apply({ editingElement: productDetailMainEl }) {
+    apply({ editingElement }) {
+        this.dependencies.media.openMediaDialog(this.getMediaDialogProps({ editingElement }));
+    }
+
+    getMediaDialogProps({ editingElement: productDetailMainEl }){
         // Emulate click on the main image of the carousel.
         const image = productDetailMainEl.querySelector(
             `[data-oe-model="${this.model}"][data-oe-field=image_1920] img`
         );
-        this.dependencies.media.openMediaDialog({
+        return {
             multiImages: false,
             visibleTabs: ["IMAGES"],
             node: image,
@@ -353,7 +357,7 @@ export class ProductReplaceMainImageAction extends BaseProductPageAction {
                     image_1920: image.src.split(",")[1],
                 });
             },
-        });
+        }
     }
 }
 

@@ -81,7 +81,7 @@ class IrAttachment(models.Model):
 
     @api.model
     def _editor_media_fields(self, split_relational = False):
-        relational_fields = ['original_id']
+        m2o_fields = ['original_id']
         non_relational_fields = [
             'id',
             'name',
@@ -100,9 +100,9 @@ class IrAttachment(models.Model):
             'original_id',
         ]
         if not split_relational:
-            return relational_fields + non_relational_fields
+            return m2o_fields + non_relational_fields
         return {
-            'relational': relational_fields,
+            'm2o': m2o_fields,
             'non_relational': non_relational_fields
         }
 

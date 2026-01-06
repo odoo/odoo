@@ -10,7 +10,8 @@ import {
     paragraphRelatedElementsSelector,
 } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
-import { MediaDialog, TABS } from "./media_dialog/media_dialog";
+import { MediaDialog } from "./media_dialog/media_dialog";
+import { TABS } from "./media_dialog/media_dialog_utils";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
