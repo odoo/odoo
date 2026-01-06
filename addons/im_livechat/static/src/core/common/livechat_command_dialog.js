@@ -27,7 +27,7 @@ export class LivechatCommandDialog extends Component {
     executeCommand() {
         const command = commandRegistry.get(this.props.commandName, false);
         if (command) {
-            this.props.thread.executeCommand(
+            this.props.thread.channel.executeCommand(
                 command,
                 `/${this.props.commandName} ${this.state.inputText}`
             );

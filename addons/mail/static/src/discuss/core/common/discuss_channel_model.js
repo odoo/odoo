@@ -447,6 +447,18 @@ export class DiscussChannel extends Record {
         super.delete(...arguments);
     }
 
+    async executeCommand(command, body = "") {
+        await command.onExecute?.(this);
+        if (command.methodName) {
+            await this.store.env.services.orm.call(
+                "discuss.channel",
+                command.methodName,
+                [[this.id]],
+                { body }
+            );
+        }
+    }
+
     async fetchChannelMembers() {
         if (this.fetchMembersState === "pending") {
             return;

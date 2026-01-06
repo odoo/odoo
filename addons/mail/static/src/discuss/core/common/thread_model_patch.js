@@ -151,22 +151,11 @@ const threadPatch = {
                 (!command.channel_types ||
                     command.channel_types.includes(this.channel?.channel_type))
             ) {
-                await this.executeCommand(command, textContent);
+                await this.channel.executeCommand(command, textContent);
                 return;
             }
         }
         return super.post(...arguments);
-    },
-    async executeCommand(command, body = "") {
-        await command.onExecute?.(this.channel);
-        if (command.methodName) {
-            await this.store.env.services.orm.call(
-                "discuss.channel",
-                command.methodName,
-                [[this.id]],
-                { body }
-            );
-        }
     },
 };
 patch(Thread.prototype, threadPatch);

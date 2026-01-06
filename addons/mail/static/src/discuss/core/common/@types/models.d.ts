@@ -38,7 +38,6 @@ declare module "models" {
     }
     export interface Thread {
         channel: DiscussChannel;
-        executeCommand: (command: unknown, body: string) => Promise<void>;
         firstUnreadMessage: Message;
         markedAsUnread: boolean;
         markingAsRead: boolean;
