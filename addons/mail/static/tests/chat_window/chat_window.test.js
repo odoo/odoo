@@ -942,7 +942,7 @@ test("Open chat window of new inviter", async () => {
     });
     await contains(".o-mail-ChatWindow", { text: "Newbie" });
     await contains(".o_notification", {
-        text: "Newbie connected. This is their first connection. Wish them luck.",
+        text: "Newbie just connected for the first time. Wish them luck!",
     });
 });
 
