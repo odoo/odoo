@@ -173,49 +173,58 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # if an exception is raised.
         cls.delete(db_name)
         cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
-        try:
-            registry.setup_signaling()
+
+        @contextmanager
+        def db_lock():
             with registry.cursor() as cr:
-                # This transaction defines a critical section for multi-worker concurrency control.
-                # When the transaction commits, the first worker proceeds to upgrade modules. Other workers
-                # encounter a serialization error and retry, finding no upgrade marker in the database.
-                # This significantly reduces the likelihood of concurrent module upgrades across workers.
-                # NOTE: This block is intentionally outside the try-except below to prevent workers that fail
-                # due to serialization errors from calling `reset_modules_state` while the first worker is
-                # actively upgrading modules.
-                from odoo.modules import db  # noqa: PLC0415
-                if db.is_initialized(cr):
-                    cr.execute("DELETE FROM ir_config_parameter WHERE key='base.partially_updated_database'")
-                    if cr.rowcount:
-                        update_module = True
-            # This should be a method on Registry
-            from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
-            exit_stack = ExitStack()
+                cr.execute("""SELECT pg_advisory_lock(hashtext('registry_loading'))""")
+                yield
+                cr.rollback()
+
+        with db_lock():
             try:
-                if upgrade_modules or install_modules or reinit_modules:
-                    update_module = True
-                if new_db_demo is None:
-                    new_db_demo = config['with_demo']
-                if first_registry and not update_module:
-                    exit_stack.enter_context(gc.disabling_gc())
-                load_modules(
-                    registry,
-                    update_module=update_module,
-                    upgrade_modules=upgrade_modules,
-                    install_modules=install_modules,
-                    reinit_modules=reinit_modules,
-                    new_db_demo=new_db_demo,
-                    models_to_check=models_to_check,
-                )
+                registry.setup_signaling()
+                with registry.cursor() as cr:
+                    # This transaction defines a critical section for multi-worker concurrency control.
+                    # When the transaction commits, the first worker proceeds to upgrade modules. Other workers
+                    # encounter a serialization error and retry, finding no upgrade marker in the database.
+                    # This significantly reduces the likelihood of concurrent module upgrades across workers.
+                    # NOTE: This block is intentionally outside the try-except below to prevent workers that fail
+                    # due to serialization errors from calling `reset_modules_state` while the first worker is
+                    # actively upgrading modules.
+                    from odoo.modules import db  # noqa: PLC0415
+                    if db.is_initialized(cr):
+                        cr.execute("DELETE FROM ir_config_parameter WHERE key='base.partially_updated_database'")
+                        if cr.rowcount:
+                            update_module = True
+                # This should be a method on Registry
+                from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
+                exit_stack = ExitStack()
+                try:
+                    if upgrade_modules or install_modules or reinit_modules:
+                        update_module = True
+                    if new_db_demo is None:
+                        new_db_demo = config['with_demo']
+                    if first_registry and not update_module:
+                        exit_stack.enter_context(gc.disabling_gc())
+                    load_modules(
+                        registry,
+                        update_module=update_module,
+                        upgrade_modules=upgrade_modules,
+                        install_modules=install_modules,
+                        reinit_modules=reinit_modules,
+                        new_db_demo=new_db_demo,
+                        models_to_check=models_to_check,
+                    )
+                except Exception:
+                    reset_modules_state(db_name)
+                    raise
+                finally:
+                    exit_stack.close()
             except Exception:
-                reset_modules_state(db_name)
+                _logger.error('Failed to load registry')
+                del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
                 raise
-            finally:
-                exit_stack.close()
-        except Exception:
-            _logger.error('Failed to load registry')
-            del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
-            raise
 
         del registry._reinit_modules
 
@@ -1067,10 +1076,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
             # Check if the model registry must be reloaded
             if self.registry_sequence != db_registry_sequence:
                 _logger.info("Reloading the model registry after database signaling.")
+                old_sequence = self.registry_sequence
                 self = Registry.new(self.db_name)
-                self.registry_sequence = db_registry_sequence
                 if _logger.isEnabledFor(logging.DEBUG):
-                    changes += "[Registry - %s -> %s]" % (self.registry_sequence, db_registry_sequence)
+                    changes += "[Registry - %s -> %s]" % (old_sequence, db_registry_sequence)
             # Check if the model caches must be invalidated.
             else:
                 invalidated = []
@@ -1092,10 +1101,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
     def signal_changes(self) -> None:
         """ Notifies other processes if registry or cache has been invalidated. """
-        if not self.ready:
-            _logger.warning('Calling signal_changes when registry is not ready is not suported')
-            return
-
         if self.registry_invalidated:
             _logger.info("Registry changed, signaling through the database")
             with self.cursor() as cr:
