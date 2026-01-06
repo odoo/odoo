@@ -2823,3 +2823,58 @@ class TestStockFlowPostInstall(TestStockCommon):
 
         new_location_complete_name = self.env['stock.location'].name_create('NoPrefixLocation')[1]
         self.assertEqual(new_location_complete_name, 'NoPrefixLocation')
+
+    def test_package_level_quantity_split(self):
+        """
+        Deliver an entire package holding two lots of the same product through two
+        separate moves. Marking the package level as done must dispatch each quant
+        over the move lines without exceeding what each move line already reserved.
+        """
+        self.picking_type_out.show_entire_packs = True
+        self.productA.tracking = 'lot'
+        lot_1, lot_2 = self.env['stock.lot'].create([
+            {'name': 'lot1', 'product_id': self.productA.id},
+            {'name': 'lot2', 'product_id': self.productA.id},
+        ])
+        package = self.env['stock.quant.package'].create({'name': 'PACK01'})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 2, lot_id=lot_1, package_id=package)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 3, lot_id=lot_2, package_id=package)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 3.0,
+                    'product_uom': self.productA.uom_id.id,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                    'description_picking': 'Line_1',
+                }),
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 2.0,
+                    'product_uom': self.productA.uom_id.id,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                    'description_picking': 'Line_2',
+                }),
+            ],
+        })
+        picking.action_confirm()
+        picking.action_assign()
+
+        move_1, move_2 = picking.move_ids
+        self.assertEqual(picking.package_level_ids.package_id, package)
+
+        picking.package_level_ids.is_done = True
+
+        self.assertEqual(move_1.quantity, 3.0)
+        self.assertEqual(move_2.quantity, 2.0)
+        self.assertRecordValues(picking.move_line_ids.sorted('id'), [
+            {'move_id': move_1.id, 'lot_id': lot_1.id, 'quantity': 2.0},
+            {'move_id': move_1.id, 'lot_id': lot_2.id, 'quantity': 1.0},
+            {'move_id': move_2.id, 'lot_id': lot_2.id, 'quantity': 2.0},
+        ])
