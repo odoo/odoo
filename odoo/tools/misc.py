@@ -66,6 +66,7 @@ __all__ = [
     'file_open',
     'file_open_temporary_directory',
     'file_path',
+    'find_circular_dependency',
     'find_in_path',
     'formatLang',
     'format_amount',
@@ -368,6 +369,39 @@ def topological_sort[T](elems: Mapping[T, Collection[T]]) -> list[T]:
         visit(el)
 
     return result
+
+
+def find_circular_dependency[T](elems: Mapping[T, Collection[T]]) -> list[T]:
+    """
+    Check for circular dependencies in the given mapping.
+
+    Uses procedural DFS implementation.
+
+    :param elems: Mapping of elements to their dependencies. See also :func:`topological_sort`.
+    :return: List representing the circular dependency chain if found, empty list otherwise
+    """
+    visited: set[T] = set()
+    path: list[T] = []
+    deps_iters = [iter(elems)]
+
+    while True:
+        node = next(deps_iters[-1], SENTINEL)
+
+        if node is SENTINEL:  # Backtrack
+            if not path:
+                return []
+
+            path.pop()
+            deps_iters.pop()
+
+        elif node in visited:
+            if node in path:  # Cycle found
+                return path[path.index(node):] + [node]
+
+        else:  # Traverse
+            visited.add(node)
+            path.append(node)
+            deps_iters.append(iter(elems.get(node, ())))
 
 
 def merge_sequences[T](*iterables: Iterable[T]) -> list[T]:
