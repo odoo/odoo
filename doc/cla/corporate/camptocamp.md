@@ -57,3 +57,4 @@ Italo Lopes italo.lopes@camptocamp.com https://github.com/imlopes
 Luca Policastro luca.policastro@camptocamp.com https://github.com/Luca-Policastro
 Tomasz Walter tomasz.walter@camptocamp.com https://github.com/twalter-c2c
 Paolo Yammouni paolo.yammouni@camptocamp.com https://github.com/paoloyam
+Henry Backman henry.backman@camptocamp.com https://github.com/henrybackman
