@@ -1,4 +1,4 @@
-from odoo import Command
+from odoo import Command, fields
 from .common import TestUblBis3Common, TestUblCiiBECommon
 from odoo.tests import tagged
 
@@ -92,3 +92,45 @@ class TestUblExportBis3SelfInvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_credit_note_selfbilling')
+
+    def test_credit_note_self_billing_payment_mandate_active(self):
+        self.ensure_installed('account_sepa_direct_debit')
+        self.env.company.sdd_creditor_identifier = 'BE30ZZZ300D000000042'
+        self._create_sdd_mandate(
+            partner=self.partner_be,
+            account_number='BE68539007547034',
+            end_date=fields.Date.add(fields.Date.today(), days=5),
+        )
+        tax_21 = self.percent_tax(21.0, type_tax_use='purchase')
+        product = self._create_product(standard_price=100.0, supplier_taxes_id=tax_21.ids)
+        credit_note = self._create_invoice_one_line(
+            journal_id=self.self_billing_journal.id,
+            product_id=product,
+            partner_id=self.partner_be,
+            move_type='in_refund',
+            post=True,
+        )
+        self._generate_invoice_ubl_file(credit_note)
+        self._assert_invoice_ubl_file(credit_note, 'test_credit_note_self_billing_payment_mandate_active')
+
+    def test_credit_note_self_billing_payment_mandate_expired(self):
+        """Ensure inactive mandate (expired) will not be exported as a PaymentMandate node"""
+        self.ensure_installed('account_sepa_direct_debit')
+        self.env.company.sdd_creditor_identifier = 'BE30ZZZ300D000000042'
+        self._create_sdd_mandate(
+            partner=self.partner_be,
+            account_number='BE68539007547034',
+            start_date=fields.Date.subtract(fields.Date.today(), days=3),
+            end_date=fields.Date.subtract(fields.Date.today(), days=1),
+        )
+        tax_21 = self.percent_tax(21.0, type_tax_use='purchase')
+        product = self._create_product(standard_price=100.0, supplier_taxes_id=tax_21.ids)
+        invoice = self._create_invoice_one_line(
+            journal_id=self.self_billing_journal.id,
+            product_id=product,
+            partner_id=self.partner_be,
+            move_type='in_refund',
+            post=True,
+        )
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_credit_note_self_billing_payment_mandate_expired')

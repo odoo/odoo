@@ -1,4 +1,4 @@
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import config, file_open
 
@@ -255,6 +255,22 @@ class TestUblBis3Common(TestUblCiiCommon):
         values = super()._create_partner_default_values()
         values['invoice_edi_format'] = 'ubl_bis3'
         return values
+
+    def _create_sdd_mandate(self, partner, account_number, start_date=None, end_date=None):
+        partner_bank = self.env['res.partner.bank'].create({
+            'account_number': account_number,
+            'partner_id': partner.id,
+            'company_id': self.env.company.id,
+        })
+        mandate = self.env['sdd.mandate'].create({  # noqa: OLS03001
+            'name': f'mandate_{partner.name}_{account_number[-4:]}',
+            'partner_id': partner.id,
+            'partner_bank_id': partner_bank.id,
+            'start_date': start_date or fields.Date.today(),
+            'end_date': end_date,
+            'company_id': self.env.company.id,
+        })
+        mandate.action_validate_mandate()
 
     # -------------------------------------------------------------------------
     # EXPORT HELPERS
