@@ -218,8 +218,12 @@ $input-border-color: $gray-400;
     }
 }
 
-#product_detail ~ .oe_structure.oe_empty > section:first-child {
-    border-top: $border-width solid $border-color;
+#product_detail {
+    word-break: break-word;
+
+    ~ .oe_structure.oe_empty > section:first-child {
+        border-top: $border-width solid $border-color;
+    }
 }
 
 .o_alternative_product {
