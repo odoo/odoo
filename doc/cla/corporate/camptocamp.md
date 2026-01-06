@@ -59,5 +59,10 @@ Luca Policastro luca.policastro@camptocamp.com https://github.com/Luca-Policastr
 Tomasz Walter tomasz.walter@camptocamp.com https://github.com/twalter-c2c
 Florent Xicluna florent.xicluna@camptocamp.com https://github.com/florentx
 Paolo Yammouni paolo.yammouni@camptocamp.com https://github.com/paoloyam
+<<<<<<< 85688ffd11a3a988bf32c8c923a4628a89b57f87
 Cyril Jeanneret cyril.jeanneret@camptocamp.com https://github.com/cyrilmanuel
 Henry Backman henry.backman@camptocamp.com https://github.com/henrybackman
+||||||| 0bd3e5a8be3bcb1fed551a60845c14ba38207cad
+=======
+Henry Backman henry.backman@camptocamp.com https://github.com/henrybackman
+>>>>>>> 5f8f29d5f62955ef56c8b175e4cf12173bd0196e
