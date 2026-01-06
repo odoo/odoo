@@ -174,9 +174,10 @@ class Website(Home):
             domain_to = get_base_domain(website.domain)
             if domain_from != domain_to:
                 # redirect to correct domain for a correct routing map
+                query_params = urllib.parse.urlencode({'isredir': 1, 'path': path})
                 url_to = tools.urls.urljoin(
                     website.domain,
-                    '/website/force/%s?isredir=1&path=%s' % (website.id, path),
+                    f'/website/force/{website.id}?{query_params}',
                 )
                 return request.redirect(url_to)
         website._force()
