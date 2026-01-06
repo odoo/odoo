@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, UTC
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 
 
@@ -14,7 +14,11 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     _description = 'Generate time off for multiple employees'
 
     def _get_employee_domain(self):
-        domain = Domain([('company_id', 'in', self.env.companies.ids)])
+        domain = (
+            Domain([("company_id", "=", self.company_id.id)])
+            if self.company_id
+            else Domain([("company_id", "in", self.env.companies.ids)])
+        )
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             domain &= Domain(['|', ('leave_manager_id', '=', self.env.user.id), ('user_id', '=', self.env.user.id)])
         return domain
@@ -23,20 +27,8 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     holiday_status_id = fields.Many2one(
         "hr.leave.type", string="Time Off Type", required=True,
         domain="[('company_id', 'in', [company_id, False])]")
-    allocation_mode = fields.Selection([
-        ('employee', 'By Employee'),
-        ('company', 'By Company'),
-        ('department', 'By Department'),
-        ('category', 'By Employee Tag')],
-        string='Allocation Mode', readonly=False, required=True, default='employee',
-        help="Allow to create requests in batchs:\n- By Employee: for a specific employee"
-             "\n- By Company: all employees of the specified company"
-             "\n- By Department: all employees of the specified department"
-             "\n- By Employee Tag: all employees of the specific employee group category")
     employee_ids = fields.Many2many('hr.employee', string='Employees', domain=lambda self: self._get_employee_domain())
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
-    department_id = fields.Many2one('hr.department')
-    category_id = fields.Many2one('hr.employee.category', string='Employee Tag')
     date_from = fields.Date('Start Date', required=True, default=lambda self: fields.Date.today())
     date_to = fields.Date('End Date', required=True, default=lambda self: fields.Date.today())
     hour_from = fields.Float(string='Hour from', compute='_compute_hour_from_to', readonly=False, store=True)
@@ -60,18 +52,6 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
                     and calendar):
                 record.hour_from, _ = calendar._get_hours_for_date(record.date_from)
                 _, record.hour_to = calendar._get_hours_for_date(record.date_to)
-
-    def _get_employees_from_allocation_mode(self):
-        self.ensure_one()
-        if self.allocation_mode == 'employee':
-            employees = self.employee_ids or self.env['hr.employee'].search(self._get_employee_domain())
-        elif self.allocation_mode == 'category':
-            employees = self.category_id.employee_ids.filtered(lambda e: e.company_id in self.env.companies)
-        elif self.allocation_mode == 'company':
-            employees = self.env['hr.employee'].search([('company_id', '=', self.company_id.id)])
-        else:
-            employees = self.department_id.member_ids
-        return employees
 
     def _prepare_employees_holiday_values(self, employees, date_from_tz, date_to_tz):
         self.ensure_one()
@@ -99,7 +79,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
 
     def action_generate_time_off(self):
         self.ensure_one()
-        employees = self._get_employees_from_allocation_mode()
+        employees = self.employee_ids or self.env['hr.employee'].search(self._get_employee_domain())
 
         tz = ZoneInfo(self.company_id.resource_calendar_id.tz or self.env.user.tz or 'UTC')
         if self.leave_type_request_unit == 'hour':
@@ -153,10 +133,3 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
                 'active_id': False,
             },
         }
-
-    @api.constrains('allocation_mode')
-    def _check_allocation_mode(self):
-        is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-        for record in self:
-            if record.allocation_mode != 'employee' and not is_manager:
-                raise AccessError(self.env._("As Time Off Responsible, you can only use the allocation mode 'By Employee'."))

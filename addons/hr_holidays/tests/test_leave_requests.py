@@ -266,22 +266,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_to': fields.Date.from_string('2017-03-11'),
         })
 
-    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
-    def test_department_leave(self):
-        """ Create a department leave """
-        self.employee_hrmanager.write({'department_id': self.hr_dept.id})
-        self.assertFalse(self.env['hr.leave'].search([('employee_id', 'in', self.hr_dept.member_ids.ids)]))
-        leave_wizard_form = Form(self.env['hr.leave.generate.multi.wizard'].with_user(self.user_hrmanager))
-        leave_wizard_form.allocation_mode = 'department'
-        leave_wizard_form.department_id = self.hr_dept
-        leave_wizard_form.holiday_status_id = self.holidays_type_1
-        leave_wizard_form.date_from = date(2019, 5, 6)
-        leave_wizard_form.date_to = date(2019, 5, 6)
-        leave_wizard = leave_wizard_form.save()
-        leave_wizard.action_generate_time_off()
-        member_ids = self.hr_dept.member_ids.ids
-        self.assertEqual(self.env['hr.leave'].search_count([('employee_id', 'in', member_ids)]), len(member_ids), "Time Off should be created for members of department")
-
     @users('Titus')
     def test_create_group_leave_without_hr_right(self):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
@@ -344,7 +328,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'holiday_status_id': self.holidays_type_1.id,
             'date_from': date(2019, 5, 6),
             'date_to': date(2019, 5, 6),
-            'allocation_mode': 'employee',
         })
         leave_wizard.action_generate_time_off()
         generated_leaves = self.env['hr.leave'].search([
@@ -460,12 +443,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         company = self.env['res.company'].create({'name': "Hergé"})
         employee = self.env['hr.employee'].create({'name': "Remi", 'company_id': company.id})
         leave_wizard_form = Form(self.env['hr.leave.generate.multi.wizard'])
-        leave_wizard_form.allocation_mode = 'company'
-        leave_wizard_form.company_id = company
         leave_wizard_form.holiday_status_id = self.holidays_type_1
         leave_wizard_form.date_from = date(2019, 5, 6)
         leave_wizard_form.date_to = date(2019, 5, 6)
         leave_wizard = leave_wizard_form.save()
+        leave_wizard.company_id = company
         leave_wizard.action_generate_time_off()
         employee_leave = self.env['hr.leave'].search([('employee_id', '=', employee.id)])
         self.assertEqual(
