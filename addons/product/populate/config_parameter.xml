@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Without this key set, by default only 1k variants can be created in `_create_variant_ids` -->
+    <record id="force_create_all_variants_benchmark" model="ir.config_parameter">
+        <field name="key">product.dynamic_variant_limit</field>
+        <field name="value" eval="2**31 - 1"/>  <!-- "no" limit -->
+    </record>
+</odoo>

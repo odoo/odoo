@@ -79,7 +79,7 @@
                 <field name="active" eval="True"/>
                 <field name="is_sellable" eval="True"/>
                 <field name="stock_quantity" start="10" end="100"/>
-                <field name="supplier_id" ref="active_suppliers" null_frac="0.1"/>
+                <field name="supplier_id" ref="active_suppliers" null_ratio="0.1"/>
                 <field name="tag_ids" ref="tags" count="3" std="1"/>
             </model>
             <model name="test_populate.customer" count="15" id="customers">
@@ -99,7 +99,7 @@
                 <field name="total_amount" start="10.0" end="2000.0"/>
                 <field name="status" values="{'draft': 2, 'confirmed': 3, 'shipped': 2, 'delivered': 3}"/>
                 <field name="is_urgent" values="{True: 1, False: 5}"/>
-                <field name="notes" length="80" null_frac="0.5"/>
+                <field name="notes" length="80" null_ratio="0.5"/>
             </model>
             <model name="test_populate.order.line" count="60">
                 <field name="order_id" ref="orders"/>
