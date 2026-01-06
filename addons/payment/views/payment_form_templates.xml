@@ -48,8 +48,8 @@
         />
         <t t-set="pay_label">Pay</t> <!-- Allow translating the label. -->
         <t t-set="save_label">Save</t> <!-- Allow translating the label. -->
-        <t t-set="submit_button_label"
-           t-value="submit_button_label or (pay_label if mode == 'payment' else save_label)"
+        <t t-set="pay_now_label">Pay Now</t>
+        <t t-set="submit_button_label" t-value="pay_now_label if submit_button_label or (pay_label if mode == 'payment' else save_label)"
         />
         <form t-if="payment_methods_sudo or tokens_sudo" id="o_payment_form"
               class="o_payment_form"
