@@ -15,6 +15,9 @@
     'auto_install': True,
     'post_init_hook': '_pos_online_payment_post_init',
     'assets': {
+        'web.assets_frontend': [
+            'pos_online_payment/static/src/portal/**/*',
+        ],
         'point_of_sale.assets_prod': [
             'pos_online_payment/static/src/app/**/*',
             'pos_online_payment/static/src/overrides/pos_overrides/**/*',
