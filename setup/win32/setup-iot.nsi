@@ -133,7 +133,7 @@ LangString DESC_Odoo_IoT ${LANG_ENGLISH} "Install the Odoo Server with IoT modul
 LangString DESC_FinishPage_Link ${LANG_ENGLISH} "Contact Odoo for Partnership and/or Support"
 LangString TITLE_Odoo_IoT ${LANG_ENGLISH} "Odoo IoT"
 LangString TITLE_Nginx ${LANG_ENGLISH} "Nginx WebServer"
-LangString TITLE_Ghostscript ${LANG_ENGLISH} "Ghostscript interpreter"
+LangString TITLE_SumatraPDF ${LANG_ENGLISH} "PDF interpreter"
 LangString DESC_FinishPageText ${LANG_ENGLISH} "Start Odoo"
 LangString UnsafeDirText ${LANG_ENGLISH} "Installing outside of $PROGRAMFILES64 is not recommended.$\nDo you want to continue ?"
 
@@ -142,7 +142,7 @@ LangString DESC_Odoo_IoT ${LANG_FRENCH} "Installation du Serveur Odoo avec les m
 LangString DESC_FinishPage_Link ${LANG_FRENCH} "Contactez Odoo pour un Partenariat et/ou du Support"
 LangString TITLE_Odoo_IoT ${LANG_FRENCH} "Odoo IoT"
 LangString TITLE_Nginx ${LANG_FRENCH} "Installation du serveur web Nginx"
-LangString TITLE_Ghostscript ${LANG_FRENCH} "Installation de l'interpréteur Ghostscript"
+LangString TITLE_SumatraPDF ${LANG_FRENCH} "Installation de l'interpréteur PDF"
 LangString DESC_FinishPageText ${LANG_FRENCH} "Démarrer Odoo"
 LangString UnsafeDirText ${LANG_FRENCH} "Installer en dehors de $PROGRAMFILES64 n'est pas recommandé.$\nVoulez-vous continuer ?"
 
@@ -245,23 +245,25 @@ Section -$(TITLE_Nginx) Nginx
     File "..\iot_box_builder\overwrite_before_init\etc\ssl\private\nginx-cert.key"
 SectionEnd
 
-Section -$(TITLE_Ghostscript) SectionGhostscript
+Section -$(TITLE_SumatraPDF) SectionSumatraPDF
     SetOutPath '$TEMP'
-    VAR /GLOBAL ghostscript_exe_filename
-    VAR /GLOBAL ghostscript_url
+    VAR /GLOBAL sumatra_exe_filename
+    VAR /GLOBAL sumatra_url
 
-    StrCpy $ghostscript_exe_filename "gs10012w64.exe"
-    StrCpy $ghostscript_url "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10012/$ghostscript_exe_filename"
+    StrCpy $sumatra_exe_filename "SumatraPDF-3.5.2-64-install.exe"
+    StrCpy $sumatra_url "https://www.sumatrapdfreader.org/dl/rel/3.5.2/$sumatra_exe_filename"
 
-    DetailPrint "Downloading Ghostscript"
-    NScurl::http get "$ghostscript_url" "$TEMP\$ghostscript_exe_filename" /PAGE /END
-    DetailPrint "Temp dir: $TEMP\$ghostscript_exe_filename"
+    DetailPrint "Downloading Sumatra PDF"
+    NScurl::http get "$sumatra_url" "$TEMP\$sumatra_exe_filename" /PAGE /END
+    DetailPrint "Temp dir: $TEMP\$sumatra_exe_filename"
 
-    Rmdir /r "INSTDIR\Ghostscript"
-    DetailPrint "Installing Ghostscript"
-    ExecWait '"$TEMP\$ghostscript_exe_filename" \
-        /S \
-        /D=$INSTDIR\Ghostscript'
+    Rmdir /r "INSTDIR\SumatraPDF"
+    DetailPrint "Installing Sumatra PDF"
+    ExecWait '"$TEMP\$sumatra_exe_filename" \
+        -install -silent \
+        -d "$INSTDIR\SumatraPDF"'
+    SetOutPath "$INSTDIR\SumatraPDF"
+    File "conf\iot\sumatrapdfrestrict.ini"
 SectionEnd
 
 Section -Post
@@ -290,7 +292,7 @@ Section "Uninstall"
     Pop $R0
     ReadRegStr $0 HKLM "${UNINSTALL_REGISTRY_KEY_SERVER}" "UninstallString"
     ExecWait '"$0" /S'
-    ExecWait '"$INSTDIR\Ghostscript\uninstgs.exe" /S'
+    ExecWait '"$INSTDIR\SumatraPDF\SumatraPDF.exe" -uninstall -silent'
 
     nsExec::Exec "net stop ${SERVICENAME}"
     nsExec::Exec "sc delete ${SERVICENAME}"
