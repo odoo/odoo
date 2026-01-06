@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- A Populate demo for the Stock module -->
+    <record id="stock_populate_demo" model="populate.blueprint">
+        <field name="name">Stock - Populate Demo</field>
+        <field name="definition_xml" type="xml">
+
+            <!-- ===== PRODUCTS ===== -->
+
+            <model name="product.category" count="20" id="product_categories">
+                <field name="name" generator="fake.bs"/>
+            </model>
+
+            <model name="product.template" count="500" id="product_templates" context="{'tracking_disable': True}">
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="type" eval="'consu'"/>
+                <field name="is_storable" eval="True"/>
+                <field name="categ_id" ref="product_categories"/>
+                <field name="tracking" values="{'none': 6, 'lot': 2, 'serial': 2}"/>
+                <field name="list_price" start="5.0" end="2000.0" distribution="exponential(rate=0.002)"/>
+                <field name="standard_price" start="1.0" end="1000.0" distribution="exponential(rate=0.003)"/>
+                <field name="weight" start="0.1" end="50.0" distribution="exponential(rate=0.05)" null_ratio="0.3"/>
+                <field name="volume" start="0.01" end="10.0" distribution="exponential(rate=0.08)" null_ratio="0.4"/>
+                <field name="sale_ok" values="{True: 9, False: 1}"/>
+                <field name="purchase_ok" values="{True: 9, False: 1}"/>
+            </model>
+
+            <model name="product.product" type="write" id="product_templates.product_variant_ids">
+                <field name="default_code" generator="fake.ean13" unique="True"/>
+                <field name="barcode" eval="default_code"/>
+            </model>
+
+            <!-- ===== PARTNERS (vendors / customers) ===== -->
+
+            <model name="res.partner" count="100" id="partners">
+                <field name="name" generator="fake.company"/>
+                <field name="is_company" eval="True"/>
+                <field name="email" generator="fake.company_email"/>
+                <field name="phone" generator="fake.phone_number"/>
+                <field name="street" generator="fake.street_address"/>
+                <field name="city" generator="fake.city"/>
+                <field name="zip" generator="fake.postcode"/>
+            </model>
+
+            <!-- ===== WAREHOUSES & LOCATIONS ===== -->
+
+            <model name="stock.warehouse" count="3" id="warehouses" scale="False">
+                <field name="v_city" virtual="True" generator="fake.city" unique="True"/>
+                <field name="name" eval="v_city + ' Warehouse'"/>
+                <field name="code" eval="v_city[:3].upper()"/>
+            </model>
+
+            <!-- Warehouse zones (aisles/areas) as direct children of each warehouse's view location -->
+            <model name="stock.location" count="15" id="stock_zones">
+                <field name="name" generator="fake.bothify" text="Zone-??"/>
+                <field name="usage" eval="'view'"/>
+                <field name="location_id" ref="warehouses.view_location_id"/>
+            </model>
+
+            <!-- Shelf locations as children of zones -->
+            <model name="stock.location" count="200" id="stock_locations">
+                <field name="name" generator="fake.bothify" text="Row-##-Shelf-??"/>
+                <field name="usage" eval="'internal'"/>
+                <field name="location_id" ref="stock_zones"/>
+                <field name="active" values="{True: 95, False: 5}"/>
+                <field name="cyclic_inventory_frequency" start="0" end="365" null_ratio="0.6"/>
+            </model>
+
+            <!-- ===== LOTS & SERIAL NUMBERS ===== -->
+
+            <model name="stock.lot" count="3000" id="stock_lots">
+                <field name="product_id" domain="[('tracking', '=', 'lot')]" ref="product_templates.product_variant_ids"/>
+                <field name="name" generator="fake.ean13" unique="True"/>
+                <field name="ref" generator="fake.bothify" text="REF-####-????" null_ratio="0.6"/>
+                <field name="note" generator="fake.sentence" null_ratio="0.7"/>
+            </model>
+
+            <model name="stock.lot" count="2000" id="stock_serials">
+                <field name="product_id" domain="[('tracking', '=', 'serial')]" ref="product_templates.product_variant_ids"/>
+                <field name="name" generator="fake.ean8" unique="True"/>
+                <field name="ref" generator="fake.bothify" text="SN-####-????" null_ratio="0.6"/>
+            </model>
+
+            <!-- ===== STOCK QUANTS (on-hand inventory) ===== -->
+
+            <model name="stock.quant" count="5000" id="stock_quants" context="{'inventory_mode': True}">
+                <field name="product_id" ref="product_templates.product_variant_ids"/>
+                <field name="location_id" ref="stock_locations"/>
+                <field name="lot_id" domain="[('product_id', '=', product_id)]" null_ratio="0.5"/>
+                <field name="inventory_quantity" start="1.0" end="500.0" distribution="exponential(rate=0.01)"/>
+            </model>
+
+            <!-- ===== RECEIPTS (incoming pickings) ===== -->
+
+            <model name="stock.picking" count="1000" id="receipts" context="{'tracking_disable': True}">
+                <field name="picking_type_id" ref="warehouses.in_type_id" domain="[('code', '=', 'incoming')]"/>
+                <field name="location_id" domain="[('usage', '=', 'supplier')]"/>
+                <field name="location_dest_id" ref="stock_locations"/>
+                <field name="scheduled_date" start="today -6m" end="today +1m"/>
+                <field name="partner_id" ref="partners" null_ratio="0.3"/>
+                <field name="origin" generator="fake.bothify" text="PO-####-????" null_ratio="0.3"/>
+                <field name="priority" values="{'0': 8, '1': 2}"/>
+            </model>
+
+            <model name="stock.move" count="3000" id="receipt_moves" context="{'tracking_disable': True}">
+                <field name="picking_id" ref="receipts" partition="True"/>
+                <field name="product_id" ref="product_templates.product_variant_ids"/>
+                <field name="product_uom_qty" start="1.0" end="200.0" distribution="exponential(rate=0.02)"/>
+                <field name="date" eval="env['stock.picking'].browse(picking_id).scheduled_date"/>
+                <field name="state" eval="'confirmed'"/>
+            </model>
+
+            <!-- ===== DELIVERY ORDERS (outgoing pickings) ===== -->
+
+            <model name="stock.picking" count="1000" id="deliveries" context="{'tracking_disable': True}">
+                <field name="picking_type_id" ref="warehouses.out_type_id" domain="[('code', '=', 'outgoing')]"/>
+                <field name="location_id" ref="stock_locations"/>
+                <field name="location_dest_id" domain="[('usage', '=', 'customer')]"/>
+                <field name="scheduled_date" start="today -3m" end="today +2m"/>
+                <field name="partner_id" ref="partners" null_ratio="0.3"/>
+                <field name="origin" generator="fake.bothify" text="SO-####-????" null_ratio="0.3"/>
+                <field name="priority" values="{'0': 7, '1': 3}"/>
+            </model>
+
+            <model name="stock.move" count="3000" id="delivery_moves" context="{'tracking_disable': True}">
+                <field name="picking_id" ref="deliveries" partition="True"/>
+                <field name="product_id" ref="product_templates.product_variant_ids"/>
+                <field name="product_uom_qty" start="1.0" end="100.0" distribution="exponential(rate=0.03)"/>
+                <field name="date" eval="env['stock.picking'].browse(picking_id).scheduled_date"/>
+                <field name="state" eval="'confirmed'"/>
+            </model>
+
+            <!-- ===== INTERNAL TRANSFERS ===== -->
+
+            <model name="stock.picking" count="500" id="internal_transfers" context="{'tracking_disable': True}">
+                <field name="picking_type_id" ref="warehouses.int_type_id" domain="[('code', '=', 'internal')]"/>
+                <field name="location_id" ref="stock_locations"/>
+                <field name="location_dest_id" ref="stock_locations"/>
+                <field name="scheduled_date" start="today -1m" end="today +1m"/>
+                <field name="priority" values="{'0': 9, '1': 1}"/>
+            </model>
+
+            <model name="stock.move" count="1500" id="internal_moves" context="{'tracking_disable': True}">
+                <field name="picking_id" ref="internal_transfers" partition="True"/>
+                <field name="product_id" ref="product_templates.product_variant_ids"/>
+                <field name="product_uom_qty" start="1.0" end="50.0" distribution="exponential(rate=0.05)"/>
+                <field name="date" eval="env['stock.picking'].browse(picking_id).scheduled_date"/>
+                <field name="state" eval="'confirmed'"/>
+            </model>
+
+            <!-- ===== REORDERING RULES ===== -->
+
+            <model name="stock.warehouse.orderpoint" count="500" id="orderpoints">
+                <field name="v_product_id" virtual="True" generator="relation.one" comodel_name="product.product" ref="product_templates.product_variant_ids"/>
+                <field name="v_location_id" virtual="True" generator="relation.one" comodel_name="stock.location" ref="stock_locations"/>
+                <field name="v_unique_product_per_location" virtual="True" eval="(v_product_id, v_location_id)" unique="True"/>
+                <field name="product_id" eval="v_unique_product_per_location[0]"/>
+                <field name="location_id" eval="v_unique_product_per_location[1]"/>
+                <field name="warehouse_id" eval="env['stock.location'].browse(location_id).warehouse_id.id"/>
+                <field name="product_min_qty" start="0.0" end="100.0" distribution="exponential(rate=0.05)"/>
+                <field name="product_max_qty" start="100.0" end="1000.0" distribution="exponential(rate=0.005)"/>
+                <field name="trigger" values="{'auto': 8, 'manual': 2}"/>
+                <field name="active" values="{True: 9, False: 1}"/>
+            </model>
+
+        </field>
+    </record>
+</odoo>

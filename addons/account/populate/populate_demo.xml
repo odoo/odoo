@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- A Populate demo for the Account module -->
+    <record id="account_populate_demo" model="populate.blueprint">
+        <field name="name">Account - Populate Demo</field>
+        <field name="definition_xml" type="xml">
+            <!-- Create business partners (customers and vendors) -->
+            <model name="res.partner" count="3000" id="account_customers">
+                <field name="name" generator="fake.company"/>
+                <field name="is_company" eval="True"/>
+                <field name="email" generator="fake.company_email" null_ratio="0.2"/>
+                <field name="phone" generator="fake.phone_number" null_ratio="0.3"/>
+                <field name="street" generator="fake.street_address" null_ratio="0.2"/>
+                <field name="city" generator="fake.city" null_ratio="0.2"/>
+                <field name="zip" generator="fake.postcode" null_ratio="0.2"/>
+                <field name="country_id" domain="[('code', 'in', ['US', 'CA', 'GB', 'DE', 'FR', 'ES', 'IT', 'NL', 'BE', 'AU'])]" null_ratio="0.1"/>
+                <field name="active" values="{True: 95, False: 5}"/>
+            </model>
+
+            <model name="res.partner" count="1500" id="account_vendors">
+                <field name="name" generator="fake.company"/>
+                <field name="is_company" eval="True"/>
+                <field name="email" generator="fake.company_email" null_ratio="0.2"/>
+                <field name="phone" generator="fake.phone_number" null_ratio="0.3"/>
+                <field name="street" generator="fake.street_address" null_ratio="0.3"/>
+                <field name="city" generator="fake.city" null_ratio="0.3"/>
+                <field name="zip" generator="fake.postcode" null_ratio="0.3"/>
+                <field name="country_id" domain="[('code', 'in', ['US', 'CA', 'GB', 'DE', 'FR', 'ES', 'IT'])]" null_ratio="0.2"/>
+                <field name="active" values="{True: 92, False: 8}"/>
+            </model>
+
+            <model name="res.users" count="200" id="account_users" context="{'tracking_disable': True, 'install_mode': True}">
+                <field name="name" generator="fake.name"/>
+                <field name="v_user_name" virtual="True" generator="fake.user_name"/>
+                <field name="v_rng_digits" virtual="True" generator="scalar.integer" start="10" end="999"/>
+                <field name="login" eval="f'{v_user_name}{v_rng_digits}'" unique="True"/>
+                <field name="email" generator="fake.email" null_ratio="0.1"/>
+            </model>
+
+            <!-- Create account structure -->
+            <model name="account.account.tag" count="100" id="account_tags">
+                <field name="v_name" virtual="True" generator="fake.words" nb="2" unique="True"/>
+                <field name="name" eval="' '.join(word.capitalize() for word in v_name)"/>
+                <field name="applicability" values="{'accounts': 3, 'taxes': 2, 'products': 5}"/>
+                <field name="color" start="1" end="10"/>
+            </model>
+
+            <model name="account.tax.group" count="30" id="tax_groups">
+                <field name="v_name" virtual="True" generator="fake.words" nb="2" unique="True"/>
+                <field name="name" eval="' '.join(word.capitalize() for word in v_name)"/>
+                <field name="sequence" start="1" end="100"/>
+            </model>
+
+            <model name="account.tax" count="150" id="taxes">
+                <field name="v_name" virtual="True" generator="fake.catch_phrase"/>
+                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'{v_name} {v_counter:03}'" unique="True"/>
+                <field name="amount" start="0.0" end="30.0" distribution="beta(alpha=2, beta=5)"/>
+                <field name="description" eval="f'{amount:.1f}%'"/>
+                <field name="amount_type" values="{'percent': 7, 'fixed': 2, 'division': 1}"/>
+                <field name="type_tax_use" values="{'sale': 4, 'purchase': 4, 'none': 2}"/>
+                <field name="tax_group_id" ref="tax_groups"/>
+                <field name="active" values="{True: 9, False: 1}"/>
+            </model>
+
+            <model name="account.account" count="500" id="chart_accounts">
+                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="code" eval="f'{100000 + v_counter}'" unique="True"/>
+                <field name="account_type"
+                       values="{'asset_receivable': 1, 'asset_cash': 1, 'asset_current': 3, 'asset_non_current': 2,
+                               'asset_fixed': 2, 'liability_payable': 1, 'liability_current': 2,
+                               'liability_non_current': 1, 'equity': 1, 'income': 5, 'expense': 5,
+                               'expense_depreciation': 1, 'expense_direct_cost': 2}"/>
+                <field name="v_reconcile" virtual="True" generator="scalar.boolean" values="{True: 3, False: 7}"/>
+                <field name="reconcile" eval="v_reconcile if account_type not in ('asset_receivable', 'liability_payable') else True"/>
+                <field name="tag_ids" ref="account_tags" domain="[('applicability', '=', 'accounts')]" count="3" std="1" null_ratio="0.5"/>
+            </model>
+
+            <!-- Create journals -->
+            <model name="account.journal" count="80" id="all_journals">
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
+                <field name="code" eval="f'J{v_counter:03}'" unique="True"/>
+                <field name="type" values="{'sale': 3, 'purchase': 3, 'general': 2, 'bank': 2, 'cash': 1}"/>
+                <field name="sequence" start="1" end="100"/>
+                <field name="color" start="1" end="10" null_ratio="0.7"/>
+            </model>
+
+            <!-- Create payment terms -->
+            <model name="account.payment.term" count="50" id="payment_terms">
+                <field name="name" generator="fake.bs"/>
+                <field name="active" values="{True: 9, False: 1}"/>
+                <field name="note" generator="fake.sentence" nb_words="10" null_ratio="0.6"/>
+            </model>
+
+            <!-- Create products for invoice lines -->
+            <model name="product.product" count="2000" id="invoice_products">
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="type" values="{'consu': 5, 'service': 5}"/>
+                <field name="list_price" start="10.0" end="5000.0" distribution="exponential(rate=0.002)"/>
+                <field name="standard_price" start="5.0" end="3000.0" distribution="exponential(rate=0.002)"/>
+                <field name="active" values="{True: 92, False: 8}"/>
+                <field name="sale_ok" values="{True: 8, False: 2}"/>
+                <field name="purchase_ok" values="{True: 7, False: 3}"/>
+            </model>
+
+            <!-- Create customer invoices -->
+            <model name="account.move" count="15000" id="customer_invoices" context="{'mail_auto_subscribe_no_notify': True}">
+                <field name="partner_id" ref="account_customers"/>
+                <field name="journal_id" ref="all_journals" domain="[('type', '=', 'sale')]"/>
+                <field name="date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
+                <field name="invoice_date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
+                <field name="invoice_date_due" start="today -2y +30d" end="today +90d" null_ratio="0.3"/>
+                <field name="move_type" values="{'out_invoice': 85, 'out_refund': 15}"/>
+                <field name="ref" generator="fake.ean" length="13" null_ratio="0.6"/>
+                <field name="narration" generator="fake.paragraph" null_ratio="0.7"/>
+                <field name="payment_reference" generator="fake.ean" length="13" null_ratio="0.5"/>
+                <field name="invoice_payment_term_id" ref="payment_terms" null_ratio="0.4"/>
+                <field name="invoice_user_id" ref="account_users" null_ratio="0.3"/>
+            </model>
+
+            <!-- Create vendor bills -->
+            <model name="account.move" count="8000" id="vendor_bills" context="{'mail_auto_subscribe_no_notify': True}">
+                <field name="partner_id" ref="account_vendors"/>
+                <field name="journal_id" ref="all_journals" domain="[('type', '=', 'purchase')]"/>
+                <field name="date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
+                <field name="invoice_date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
+                <field name="invoice_date_due" start="today -2y +30d" end="today +60d" null_ratio="0.3"/>
+                <field name="move_type" values="{'in_invoice': 85, 'in_refund': 15}"/>
+                <field name="ref" generator="fake.ean" length="13" null_ratio="0.4"/>
+                <field name="narration" generator="fake.text" max_nb_chars="200" null_ratio="0.8"/>
+                <field name="invoice_payment_term_id" ref="payment_terms" null_ratio="0.4"/>
+                <field name="invoice_user_id" ref="account_users" null_ratio="0.4"/>
+            </model>
+
+            <!-- Create miscellaneous journal entries -->
+            <model name="account.move" count="5000" id="misc_entries" context="{'mail_auto_subscribe_no_notify': True}">
+                <field name="partner_id" ref="account_customers" null_ratio="0.6"/>
+                <field name="journal_id" ref="all_journals" domain="[('type', '=', 'general')]"/>
+                <field name="date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
+                <field name="move_type" eval="'entry'"/>
+                <field name="ref" generator="fake.ean" length="13" null_ratio="0.5"/>
+                <field name="narration" generator="fake.text" max_nb_chars="150" null_ratio="0.7"/>
+            </model>
+
+            <!-- Create invoice lines for customer invoices -->
+            <model name="account.move.line" count="45000" id="customer_invoice_lines" context="{'check_move_validity': False}">
+                <field name="move_id" ref="customer_invoices" partition="True"/>
+                <field name="product_id" ref="invoice_products" domain="[('sale_ok', '=', True)]" null_ratio="0.1"/>
+                <field name="account_id" ref="chart_accounts" domain="[('account_type', '=', 'income')]"/>
+                <field name="name" generator="fake.sentence" nb_words="6"/>
+                <field name="quantity" start="1.0" end="100.0" distribution="exponential(rate=0.05)"/>
+                <field name="price_unit" start="10.0" end="2000.0" distribution="exponential(rate=0.002)"/>
+                <field name="discount" start="0.0" end="50.0" distribution="exponential(rate=0.2)" null_ratio="0.6"/>
+                <field name="tax_ids" ref="taxes" domain="[('type_tax_use', '=', 'sale')]" count="2" std="1" null_ratio="0.2"/>
+            </model>
+
+            <!-- Create invoice lines for vendor bills -->
+            <model name="account.move.line" count="24000" id="vendor_bill_lines" context="{'check_move_validity': False}">
+                <field name="move_id" ref="vendor_bills" partition="True"/>
+                <field name="product_id" ref="invoice_products" domain="[('purchase_ok', '=', True)]" null_ratio="0.1"/>
+                <field name="account_id" ref="chart_accounts" domain="[('account_type', 'in', ['expense', 'expense_direct_cost'])]"/>
+                <field name="name" generator="fake.sentence" nb_words="5"/>
+                <field name="quantity" start="1.0" end="50.0" distribution="exponential(rate=0.08)"/>
+                <field name="price_unit" start="5.0" end="1500.0" distribution="exponential(rate=0.003)"/>
+                <field name="discount" start="0.0" end="30.0" distribution="exponential(rate=0.3)" null_ratio="0.7"/>
+                <field name="tax_ids" ref="taxes" domain="[('type_tax_use', '=', 'purchase')]" count="2" std="1" null_ratio="0.2"/>
+            </model>
+
+            <!-- Create payments -->
+            <model name="account.payment" count="12000" id="customer_payments">
+                <field name="partner_id" ref="account_customers" null_ratio="0.1"/>
+                <field name="journal_id" ref="all_journals" domain="[('type', 'in', ['bank', 'cash'])]"/>
+                <field name="date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
+                <field name="amount" start="50.0" end="10000.0" distribution="exponential(rate=0.0005)"/>
+                <field name="currency_id" eval="(journal := env['account.journal'].browse(journal_id)) and (journal.currency_id.id or journal.company_id.currency_id.id)"/>
+                <field name="payment_type" values="{'inbound': 7, 'outbound': 3}"/>
+                <field name="partner_type" values="{'customer': 7, 'supplier': 3}"/>
+                <field name="memo" generator="fake.sentence" nb_words="4" null_ratio="0.5"/>
+            </model>
+
+            <!-- Create bank statement lines (statements are auto-created from lines) -->
+            <model name="account.bank.statement.line" count="15000" id="bank_statement_lines">
+                <field name="journal_id" ref="all_journals" domain="[('type', '=', 'bank')]" partition="True"/>
+                <field name="partner_id" ref="account_customers" null_ratio="0.3"/>
+                <field name="date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
+                <field name="payment_ref" generator="fake.sentence" nb_words="4"/>
+                <field name="amount" start="-5000.0" end="10000.0" distribution="normal(mean=500, std=1000)"/>
+                <field name="currency_id" eval="(journal := env['account.journal'].browse(journal_id)) and (journal.currency_id.id or journal.company_id.currency_id.id)"/>
+            </model>
+
+            <!-- Create reconciliation models -->
+            <model name="account.reconcile.model" count="10" id="reconcile_models">
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="trigger" values="{'manual': 5, 'auto_reconcile': 5}"/>
+                <field name="match_label" values="{'contains': 4, 'not_contains': 2, 'match_regex': 1}"/>
+                <field name="v_match_label_param" virtual="True" generator="fake.word" null_ratio="0.5"/>
+                <field name="v_rng_regex" virtual="True" generator="textual.char" length="12"/>
+                <field name="match_label_param" eval="v_rng_regex if match_label == 'match_regex' else v_match_label_param"/>
+                <field name="active" values="{True: 9, False: 1}"/>
+            </model>
+
+            <!-- Create cash rounding -->
+            <model name="account.cash.rounding" count="20" id="cash_rounding">
+                <field name="name" generator="fake.word"/>
+                <field name="rounding" start="0.01" end="1.0" distribution="exponential(rate=5)"/>
+                <field name="strategy" values="{'biggest_tax': 5, 'add_invoice_line': 5}"/>
+                <field name="rounding_method" values="{'UP': 3, 'DOWN': 3, 'HALF-UP': 4}"/>
+            </model>
+
+            <!-- Create analytic plans -->
+            <model name="account.analytic.plan" count="10" id="analytic_plans">
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="description" generator="fake.sentence" nb_words="8" null_ratio="0.5"/>
+                <field name="color" start="1" end="10"/>
+                <field name="default_applicability" values="{'optional': 5, 'mandatory': 3, 'unavailable': 2}"/>
+            </model>
+
+            <!-- Create analytic accounts (requires an existing analytic plan via plan_id) -->
+            <model name="account.analytic.account" count="300" id="analytic_accounts">
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="plan_id" domain="[('parent_id', '=', False)]"/>
+                <field name="code" generator="fake.ean" length="8" null_ratio="0.5"/>
+                <field name="partner_id" ref="account_customers" null_ratio="0.6"/>
+                <field name="active" values="{True: 9, False: 1}"/>
+            </model>
+
+            <!-- Create analytic lines (account_id is the project plan column, always present) -->
+            <model name="account.analytic.line" count="20000" id="analytic_lines">
+                <field name="name" generator="fake.sentence" nb_words="6"/>
+                <field name="account_id" ref="analytic_accounts"/>
+                <field name="date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
+                <field name="amount" start="-5000.0" end="5000.0" distribution="normal(mean=0, std=500)"/>
+                <field name="currency_id" eval="env['account.analytic.account'].browse(account_id).company_id.currency_id.id"/>
+                <field name="unit_amount" start="0.5" end="40.0" distribution="exponential(rate=0.1)" null_ratio="0.4"/>
+                <field name="partner_id" ref="account_customers" null_ratio="0.4"/>
+            </model>
+        </field>
+    </record>
+</odoo>

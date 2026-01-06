@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        ==========================================================
+        BENCHMARK 1: Deep Project — 1 project with 10,000 tasks
+        ==========================================================
+        Tests ORM performance under heavy one-to-many load on a
+        single project (stage resolution, compute fields, etc.).
+    -->
+    <record id="benchmark_deep_project" model="populate.blueprint">
+        <field name="name">Benchmark: Deep Project</field>
+        <field name="definition_xml" type="xml">
+            <model name="project.task.type" count="7" id="bench_stages" scale="False">
+                <field name="sequence" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Stage {sequence}'"/>
+                <field name="fold" eval="sequence &gt; 5"/>
+            </model>
+
+            <model name="project.project" count="1" id="bench_project" scale="False">
+                <field name="name" eval="'Benchmark Deep Project'"/>
+                <field name="type_ids" ref="bench_stages" count="5"/>
+                <field name="allow_milestones" eval="True"/>
+                <field name="allow_task_dependencies" eval="False"/>
+                <field name="privacy_visibility" eval="'employees'"/>
+            </model>
+
+            <model name="project.task" count="10000" id="bench_tasks">
+                <field name="name" length="24"/>
+                <field name="project_id" ref="bench_project"/>
+                <field name="stage_id" ref="bench_stages"/>
+                <field name="priority" values="{'0': 4, '1': 3, '2': 2, '3': 1}"/>
+                <field name="sequence" start="1" end="10000"/>
+                <field name="date_deadline" start="today" end="today +1y" null_ratio="0.4"/>
+                <field name="allocated_hours" start="0.5" end="40" distribution="exponential(rate=0.1)"/>
+                <field name="state" values="{'01_in_progress': 5, '1_done': 2, '1_canceled': 1, '03_approved': 1, '02_changes_requested': 1}"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 2: Wide Projects — many projects, few tasks each
+        ==========================================================
+        Tests project creation throughput and per-project computed
+        field overhead (milestone counts, task counts, stage logic).
+    -->
+    <record id="benchmark_wide_projects" model="populate.blueprint">
+        <field name="name">Benchmark: Wide Projects</field>
+        <field name="definition_xml" type="xml">
+            <model name="project.task.type" count="7" id="wide_stages" scale="False">
+                <field name="sequence" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Stage {sequence}'"/>
+                <field name="fold" eval="sequence &gt; 5"/>
+            </model>
+
+            <model name="project.project" count="1000" id="wide_projects">
+                <field name="name" length="20"/>
+                <field name="type_ids" ref="wide_stages" count="7"/>
+                <field name="privacy_visibility" eval="'employees'"/>
+                <field name="allow_milestones" eval="True"/>
+                <field name="allow_task_dependencies" eval="False"/>
+            </model>
+
+            <model name="project.task" count="5000" id="wide_tasks">
+                <field name="name" length="20"/>
+                <field name="project_id" ref="wide_projects"/>
+                <field name="stage_id" ref="wide_stages"/>
+                <field name="priority"/>
+                <field name="date_deadline" start="today" end="today +6m"/>
+                <field name="state"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 3: Milestones at scale — project with many milestones
+        ==========================================================
+        Stresses milestone compute fields, deadline checks, and
+        the link between tasks and milestones.
+    -->
+    <record id="benchmark_milestones" model="populate.blueprint">
+        <field name="name">Benchmark: Milestones</field>
+        <field name="definition_xml" type="xml">
+            <model name="project.task.type" count="7" id="ms_stages" scale="False">
+                <field name="sequence" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Stage {sequence}'"/>
+                <field name="fold" eval="sequence &gt; 5"/>
+            </model>
+
+            <model name="project.project" count="1" id="ms_project" scale="False">
+                <field name="name" eval="'Benchmark Milestones Project'"/>
+                <field name="type_ids" ref="ms_stages" count="7"/>
+                <field name="allow_milestones" eval="True"/>
+                <field name="allow_task_dependencies" eval="False"/>
+                <field name="privacy_visibility" eval="'employees'"/>
+            </model>
+
+            <model name="project.milestone" count="2000" id="ms_milestones">
+                <field name="name" length="18"/>
+                <field name="project_id" ref="ms_project"/>
+                <field name="deadline" start="today -1m" end="today +1y"/>
+                <field name="is_reached" values="{False: 7, True: 3}"/>
+            </model>
+
+            <model name="project.task" count="5000" id="ms_tasks">
+                <field name="name" length="20"/>
+                <field name="project_id" ref="ms_project"/>
+                <field name="stage_id" ref="ms_stages"/>
+                <field name="milestone_id" ref="ms_milestones"/>
+                <field name="priority"/>
+                <field name="state"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 4: Tags at scale — tag fanout
+        ==========================================================
+        Many tags linked to many tasks via M2M. Stresses relational
+        write throughput and name_search / tag lookups.
+    -->
+    <record id="benchmark_tags" model="populate.blueprint">
+        <field name="name">Benchmark: Tags</field>
+        <field name="definition_xml" type="xml">
+            <model name="project.tags" count="2000" id="bench_tags">
+                <field name="name" length="14" unique="True"/>
+                <field name="color" start="1" end="11"/>
+            </model>
+
+            <model name="project.task.type" count="4" id="tag_stages" scale="False">
+                <field name="sequence" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Stage {sequence}'"/>
+                <field name="fold" eval="sequence &gt; 3"/>
+            </model>
+
+            <model name="project.project" count="5" id="tag_projects">
+                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Benchmark Tags Project {v_counter}'"/>
+                <field name="type_ids" ref="tag_stages" count="4"/>
+                <field name="tag_ids" ref="bench_tags" count="8" std="2"/>
+                <field name="privacy_visibility" eval="'employees'"/>
+            </model>
+
+            <model name="project.task" count="5000" id="tag_tasks">
+                <field name="name" length="20"/>
+                <field name="project_id" ref="tag_projects"/>
+                <field name="stage_id" ref="tag_stages"/>
+                <field name="tag_ids" ref="bench_tags" count="10" std="3"/>
+                <field name="priority"/>
+                <field name="state"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 5: Bulk creation — pure record throughput
+        ==========================================================
+        Measures raw create() performance for each important model
+        with minimal field overhead. Good for ORM/DB baseline.
+    -->
+    <record id="benchmark_bulk_creation" model="populate.blueprint">
+        <field name="name">Benchmark: Bulk Creation</field>
+        <field name="definition_xml" type="xml">
+            <model name="project.task.type" count="1000" id="bulk_stages">
+                <field name="name" length="10"/>
+                <field name="sequence" start="1" end="100"/>
+            </model>
+
+            <model name="project.tags" count="1000" id="bulk_tags">
+                <field name="name" length="12" unique="True"/>
+                <field name="color" start="1" end="11"/>
+            </model>
+
+            <model name="project.project" count="1000" id="bulk_projects">
+                <field name="name" length="16"/>
+                <field name="type_ids" ref="bulk_stages" count="5" std="2"/>
+                <field name="privacy_visibility" eval="'employees'"/>
+                <field name="allow_milestones" eval="True"/>
+                <field name="allow_task_dependencies" eval="False"/>
+            </model>
+
+            <model name="project.milestone" count="1000" id="bulk_milestones">
+                <field name="name" length="14"/>
+                <field name="project_id" ref="bulk_projects"/>
+                <field name="deadline" start="today" end="today +2y"/>
+            </model>
+
+            <model name="project.task" count="1000" id="bulk_tasks">
+                <field name="name" length="20"/>
+                <field name="project_id" ref="bulk_projects"/>
+                <field name="stage_id" ref="bulk_stages"/>
+                <field name="milestone_id" ref="bulk_milestones"/>
+                <field name="tag_ids" ref="bulk_tags" count="2" std="1" null_ratio="0.3"/>
+                <field name="priority"/>
+                <field name="state"/>
+                <field name="sequence" start="1" end="10000"/>
+                <field name="date_deadline" start="today" end="today +1y"/>
+                <field name="allocated_hours" start="0.5" end="80" distribution="normal(mean=8, std=4)"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 6: Subtask hierarchy — nesting stress test
+        ==========================================================
+        Creates tasks, then writes parent_id to form a hierarchy.
+        Stresses recursive computes (subtask_count, state propagation,
+        partner_id inheritance, project_id propagation).
+    -->
+    <record id="benchmark_subtasks" model="populate.blueprint">
+        <field name="name">Benchmark: Subtask Hierarchy</field>
+        <field name="definition_xml" type="xml">
+            <model name="project.task.type" count="4" id="sub_stages" scale="False">
+                <field name="sequence" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Stage {sequence}'"/>
+                <field name="fold" eval="sequence &gt; 3"/>
+            </model>
+
+            <model name="project.project" count="1" id="sub_project" scale="False">
+                <field name="name" eval="'Benchmark Subtask Project'"/>
+                <field name="type_ids" ref="sub_stages" count="4"/>
+                <field name="privacy_visibility" eval="'employees'"/>
+                <field name="allow_task_dependencies" eval="False"/>
+            </model>
+
+            <model name="project.task" count="1000" id="parent_tasks">
+                <field name="name" length="20"/>
+                <field name="project_id" ref="sub_project"/>
+                <field name="stage_id" ref="sub_stages"/>
+                <field name="priority"/>
+                <field name="state" eval="'01_in_progress'"/>
+            </model>
+
+            <model name="project.task" count="5000" id="child_tasks">
+                <field name="name" length="18"/>
+                <field name="parent_id" ref="parent_tasks"/>
+                <field name="project_id" eval="model.browse(parent_id).project_id.id"/>
+                <field name="stage_id" ref="sub_stages"/>
+                <field name="priority"/>
+                <field name="state"/>
+            </model>
+
+            <model name="project.task" count="5000" id="grandchild_tasks">
+                <field name="name" length="18"/>
+                <field name="stage_id" ref="sub_stages"/>
+                <field name="project_id" eval="model.browse(parent_id).project_id.id"/>
+                <field name="parent_id" ref="child_tasks"/>
+                <field name="priority"/>
+                <field name="state"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 7: Updates (write jobs) — bulk write throughput
+        ==========================================================
+        Creates records, then performs write-back updates on them.
+        Useful for measuring write() overhead with tracking, computes, etc.
+    -->
+    <record id="benchmark_updates" model="populate.blueprint">
+        <field name="name">Benchmark: Write Jobs (create 2k tasks, then update all)</field>
+        <field name="definition_xml" type="xml">
+            <model name="project.task.type" count="4" id="upd_stages">
+                <field name="name" length="10"/>
+                <field name="sequence" start="1" end="10"/>
+            </model>
+
+            <model name="project.project" count="1" id="upd_project" scale="False">
+                <field name="name" eval="'Benchmark Write Project'"/>
+                <field name="type_ids" ref="upd_stages" count="4"/>
+                <field name="privacy_visibility" eval="'employees'"/>
+            </model>
+
+            <model name="project.task" count="10000" id="upd_tasks">
+                <field name="name" length="20"/>
+                <field name="project_id" ref="upd_project"/>
+                <field name="stage_id" ref="upd_stages"/>
+                <field name="priority" eval="'0'"/>
+                <field name="state" eval="'01_in_progress'"/>
+            </model>
+
+            <!-- Write pass: update priority and allocated hours on all created tasks -->
+            <model name="project.task" type="write" ref="upd_tasks" parallel="False">
+                <field name="priority" values="{'0': 2, '1': 4, '2': 3, '3': 1}"/>
+                <field name="allocated_hours" start="1" end="40"/>
+            </model>
+
+            <!-- Second write pass: close ~half the tasks -->
+            <model name="project.task" type="write" ref="upd_tasks" parallel="False">
+                <field name="state" values="{'01_in_progress': 5, '1_done': 4, '1_canceled': 1}"/>
+            </model>
+        </field>
+    </record>
+</odoo>
