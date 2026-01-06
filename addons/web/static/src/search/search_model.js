@@ -1372,7 +1372,7 @@ export class SearchModel extends EventBus {
                 break;
             case "dateGroupBy":
                 enrichSearchItem.options = _enrichOptions(
-                    this.intervalOptions,
+                    this._getIntervalOptions(searchItem),
                     queryElements.map((queryElem) => queryElem.intervalId)
                 );
                 break;
@@ -1662,7 +1662,7 @@ export class SearchModel extends EventBus {
                     case "dateGroupBy": {
                         type = "groupBy";
                         for (const intervalId of activeItem.intervalIds) {
-                            const { description } = INTERVAL_OPTIONS[intervalId];
+                            const { description } = this._getIntervalOptionByIntervalId(intervalId);
                             values.push(`${searchItem.description}: ${description}`);
                         }
                         break;
@@ -1723,7 +1723,7 @@ export class SearchModel extends EventBus {
                     const [fieldName, interval] = gb.split(":");
                     const { string } = this.searchViewFields[fieldName];
                     if (interval) {
-                        const { description } = INTERVAL_OPTIONS[interval];
+                        const { description } = this._getIntervalOptionByIntervalId(interval);
                         return `${string}:${description}`;
                     }
                     return string;
@@ -1957,7 +1957,9 @@ export class SearchModel extends EventBus {
             }
             for (const activeItem of activeItems) {
                 if ("intervalIds" in activeItem) {
-                    activeItem.intervalIds.sort((g1, g2) => rankInterval(g1) - rankInterval(g2));
+                    activeItem.intervalIds.sort(
+                        (g1, g2) => this._rankInterval(g1) - this._rankInterval(g2)
+                    );
                 }
             }
             groups.push({ id, activeItems });
@@ -1965,6 +1967,17 @@ export class SearchModel extends EventBus {
         return groups;
     }
 
+    _getIntervalOptions(searchItem) {
+        return this.intervalOptions;
+    }
+
+    _getIntervalOptionByIntervalId(intervalId) {
+        return INTERVAL_OPTIONS[intervalId];
+    }
+
+    _rankInterval(intervalOptionId) {
+        return rankInterval(intervalOptionId);
+    }
     /**
      *
      * @private

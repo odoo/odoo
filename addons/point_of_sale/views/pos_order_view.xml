@@ -216,7 +216,7 @@
         <field name="name">pos.order.kanban</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" create="0" sample="1">
+            <kanban class="o_kanban_mobile" create="0" sample="1" js_class="pos_kanban_view">
                 <field name="currency_id"/>
                 <templates>
                     <t t-name="card">
@@ -244,7 +244,7 @@
         <field name="name">pos.order.pivot</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <pivot string="PoS Orders" sample="1">
+            <pivot string="PoS Orders" sample="1" js_class="pos_pivot_view">
                 <field name="date_order" type="row"/>
                 <field name="margin"/>
                 <field name="margin_percent" invisible="1"/>
@@ -287,7 +287,7 @@
         <field name="name">pos.order.list</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <list string="POS Orders" create="0" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" duplicate="0">
+            <list string="POS Orders" create="0" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" duplicate="0" js_class="pos_list_view">
                 <header>
                     <button name="action_create_invoices" type="object" string="Create Invoices"/>
                 </header>

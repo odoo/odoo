@@ -4,7 +4,7 @@
             <field name="name">report.pos.order.pivot</field>
             <field name="model">report.pos.order</field>
             <field name="arch" type="xml">
-                <pivot string="Point of Sale Analysis" sample="1">
+                <pivot string="Point of Sale Analysis" sample="1" js_class="pos_pivot_view">
                     <field name="product_categ_id" type="row"/>
                     <field name="date" interval="month" type="col"/>
                     <field name="order_id" type="measure"/>
@@ -18,7 +18,7 @@
             <field name="name">report.pos.order.graph</field>
             <field name="model">report.pos.order</field>
             <field name="arch" type="xml">
-                <graph string="Point of Sale Analysis" sample="1">
+                <graph string="Point of Sale Analysis" sample="1" js_class="pos_graph_view">
                     <field name="product_categ_id"/>
                     <field name="price_total" type="measure"/>
                 </graph>
@@ -29,7 +29,7 @@
             <field name="name">report.pos.order.view.list</field>
             <field name="model">report.pos.order</field>
             <field name="arch" type="xml">
-                <list string="Point of Sale Analysis">
+                <list string="Point of Sale Analysis" js_class="pos_list_view">
                     <field name="date"/>
                     <field name="order_id" optional="hide"/>
                     <field name="partner_id" optional="hide"/>
