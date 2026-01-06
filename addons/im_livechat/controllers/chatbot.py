@@ -46,7 +46,7 @@ class LivechatChatbotScriptController(http.Controller):
         # sudo: chatbot.script.step - visitor can access current step of the script
         if current_step := discuss_channel.sudo().chatbot_current_step_id:
             if (
-                current_step.is_forward_operator
+                current_step.step_type == "forward_operator"
                 and discuss_channel.livechat_operator_id
                 != current_step.chatbot_script_id.operator_partner_id
             ):
@@ -86,7 +86,7 @@ class LivechatChatbotScriptController(http.Controller):
                 **chatbot_next_step,
                 "id": (next_step.id, posted_message.id),
                 "isLast": next_step._is_last_step(discuss_channel),
-                "operatorFound": next_step.is_forward_operator
+                "operatorFound": next_step.step_type == "forward_operator"
                 and discuss_channel.livechat_operator_id != chatbot.operator_partner_id,
             },
         )
