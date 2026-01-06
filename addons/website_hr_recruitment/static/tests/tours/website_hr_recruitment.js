@@ -36,7 +36,13 @@ function applyForAJob(jobName, application) {
         content: "Complete Subject",
         trigger: "textarea[name='Short Introduction']",
         run: `edit ${application.subject}`,
-    }, { // TODO: Upload a file ?
+    },
+    ...(application.skills || []).map((skill) => ({
+        content: `Select the ${skill} skill`,
+        trigger: `.s_website_form_skills .form-check:has(label:contains('${skill}')) input[name=skill_ids]`,
+        run: "click",
+    })),
+    { // TODO: Upload a file ?
         content: "Send the form",
         trigger: ".s_website_form_send",
         run: "click",
@@ -54,6 +60,7 @@ registry.category("web_tour.tours").add('website_hr_recruitment_tour', {
         email: 'john@smith.com',
         phone: '118.218',
         subject: '### [GURU] HR RECRUITMENT TEST DATA ###',
+        skills: ['Tour Python', 'Tour Owl'],
     }),
     {
         content: "Go back to the jobs page",
@@ -94,6 +101,27 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {}, () => [
     content: 'Add a new field',
     trigger: 'div[data-container-title="Field"] button.btn-success',
     run: "click",
+}, {
+    content: "Open the field type selector of the new field",
+    trigger: "[data-container-title=Field] [data-label=Type] button:contains('Text')",
+    run: "click",
+}, {
+    content: "Select the Skills field",
+    trigger: ".o_popover [data-action-id=existingField][data-action-value=applicant_skill_ids]",
+    run: "click",
+}, {
+    content: "Wait for the skills field to render",
+    trigger: ":iframe .s_website_form_field[data-type=one2many_skill]",
+}, {
+    content: "Check that the placeholder is displayed while no skill type is selected",
+    trigger: ":iframe .s_website_form_field[data-type=one2many_skill] .o_website_form_skills_empty input:visible",
+}, {
+    content: "Enable the Tour Coding skill type",
+    trigger: "[data-container-title=Field] .o_we_table_wrapper tr:has(input:value('Tour Coding')) input[type=checkbox]",
+    run: "click",
+}, {
+    content: "Check that the skills of the Tour Coding skill type are displayed",
+    trigger: ":iframe .s_website_form_skills input[name=skill_ids] + label:contains('Tour Owl')",
 },
 {
     content: 'Add a fake default value for the job_id hidden field',
@@ -154,5 +182,12 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {}, () => [
             console.error('The department_id field has lost its default value');
         }
     },
+}, {
+    content: "Select the saved skills field",
+    trigger: ":iframe .s_website_form_field[data-type=one2many_skill] label:contains('Tour Owl')",
+    run: "click",
+}, {
+    content: "Verify that the saved skills field has kept its skill type",
+    trigger: "[data-container-title=Field] .o_we_table_wrapper tr:has(input:value('Tour Coding')) input[type=checkbox]:checked",
 },
 ]);

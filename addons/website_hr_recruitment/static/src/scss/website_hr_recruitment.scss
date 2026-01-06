@@ -64,3 +64,9 @@
         @extend %o_website_hr_recruitment_hover;
     }
 }
+
+// The skills field of the application form is hidden until a skill category is
+// selected in the editor.
+body:not(.editor_enable) .s_website_form_field[data-type="one2many_skill"]:has(.o_website_form_skills_empty) {
+    display: none !important;
+}

@@ -5,7 +5,7 @@ from functools import partial
 
 from odoo import http, _
 from odoo.addons.website.controllers.form import WebsiteForm
-from odoo.fields import Domain
+from odoo.fields import Command, Domain
 from odoo.http import request
 from odoo.tools.translate import LazyTranslate
 
@@ -204,6 +204,13 @@ class WebsiteHrRecruitment(WebsiteForm):
 
     def extract_data(self, model_sudo, values):
         short_introduction = values.get("short_introduction", None)
+        skills = request.env['hr.skill']
+        if model_sudo.model == "hr.applicant":
+            values = dict(values)
+            # `applicant_skill_ids` is reported as the `one2many_skill` pseudo-type, which has no input filter so it
+            # must never reach super(). The skills are submitted/created through the `skill_ids` value instead.
+            values.pop('applicant_skill_ids', None)
+            skills = self._get_submitted_skills(values.pop('skill_ids', ''))
         data = super().extract_data(model_sudo, values)
         if short_introduction:
             introduction_label = self.env._("Short Introduction")
@@ -220,7 +227,32 @@ class WebsiteHrRecruitment(WebsiteForm):
                 )
                 if website_source:
                     data['record']['source_id'] = website_source.id
+            if skills:
+                data['record']['applicant_skill_ids'] = [
+                    Command.create({
+                        'skill_id': skill.id,
+                        'skill_type_id': skill.skill_type_id.id,
+                        'skill_level_id': self._get_default_skill_level(skill).id,
+                    })
+                    for skill in skills
+                ]
         return data
+
+    def _get_submitted_skills(self, skill_ids):
+        """ Return the existing skills of `skill_ids` (comma-separated ids), certifications excluded: those are proven
+        by a document, not self-declared. Invalid values are ignored. """
+        skill_ids = {int(s) for s in skill_ids.split(',') if s.strip().isdigit()} - {0}
+        if not skill_ids:
+            return request.env['hr.skill']
+        # sudo: public visitors cannot read skills; only the submitted ids are searched.
+        return request.env['hr.skill'].sudo().search([
+            ('id', 'in', list(skill_ids)),
+            ('skill_type_id.is_certification', '=', False),
+        ])
+
+    def _get_default_skill_level(self, skill):
+        levels = skill.skill_type_id.skill_level_ids
+        return levels.filtered('default_level')[:1] or levels[:1]
 
     def _should_log_authenticate_message(self, record):
         if record._name == "hr.applicant" and not request.session.uid:

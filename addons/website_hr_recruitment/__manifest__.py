@@ -39,6 +39,7 @@
         ],
         "website.assets_inside_builder_iframe": [
             'website_hr_recruitment/static/src/js/*.edit.*',
+            'website_hr_recruitment/static/src/xml/*.xml',
         ],
         'website.assets_editor': [
             'website_hr_recruitment/static/src/js/systray_items/new_content.js',
