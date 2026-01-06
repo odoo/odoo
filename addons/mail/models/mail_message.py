@@ -397,6 +397,26 @@ class MailMessage(models.Model):
     def _get_search_domain_share(self):
         return Domain(['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)])
 
+    def _filter_records_for_message_operation(self, doc_model, doc_res_ids, operation):
+        """ Helper returning records on which 'operation' on mail.message is
+        allowed, based on '_mail_group_by_operation_for_mail_message_operation' behavior and potential
+        model override. """
+        documents_all = self.env[doc_model].with_context(active_test=False).browse(doc_res_ids)
+        operation_res_ids = documents_all._mail_group_by_operation_for_mail_message_operation(operation)
+
+        # group documents per operation to check, based on mail.message access
+        # note that some ids may be filtered out if (e.g. group limitation, ...)
+        allowed_ids = []
+        for record_operation, records in operation_res_ids.items():
+            operation_result = records._check_access(record_operation)
+            # keepr actually returned records for the opration, that are not forbidden
+            allowed_ids += [
+                record.id for record in records
+                if record.id not in (operation_result or [self.env[doc_model]])[0]._ids
+            ]
+
+        return self.env[doc_model].browse(allowed_ids)
+
     @api.model
     def _find_allowed_doc_ids(self, model_ids):
         """ Filters out messages user cannot read due to missing document access.
@@ -417,19 +437,9 @@ class MailMessage(models.Model):
         for doc_model, doc_dict in model_ids.items():
             if not IrModelAccess.check(doc_model, 'read', False):
                 continue
-            records_all = self.env[doc_model].with_context(active_test=False).search([('id', 'in', list(doc_dict))])
-            allowed_documents = self.env[doc_model]
-            # _mail_group_by_operation_for_mail_message_operation set prefetch to records_all.ids
-            # hence should be good, no need to force it again
-            operation_res_ids = records_all._mail_group_by_operation_for_mail_message_operation('read')
-            # filter for each operation
-            for record_operation, records in operation_res_ids.items():
-                if record_operation == "read":  # already implied by 'search'
-                    allowed_documents += records
-                else:
-                    allowed_documents += records._filtered_access(record_operation)
+            allowed = self._filter_records_for_message_operation(doc_model, list(doc_dict), 'read')
             allowed_ids |= {
-                msg_id for document_id in allowed_documents.ids for msg_id in doc_dict[document_id]
+                msg_id for document_id in allowed.ids for msg_id in doc_dict[document_id]
             }
         return allowed_ids
 
@@ -574,15 +584,10 @@ class MailMessage(models.Model):
                     message.get('message_type') != 'user_notification'):
                 model_docid_msgids[message['model']][message['res_id']].append(mid)
         for model, docid_msgids in model_docid_msgids.items():
-            documents = self.env[model].browse(docid_msgids)
-            # group documents per operation to check, based on mail.message access
-            # note that some ids may be filtered out if (e.g. group limitation, ...)
-            operation_res_ids = documents._mail_group_by_operation_for_mail_message_operation(operation)
-            for record_operation, records in operation_res_ids.items():
-                check_result = records._check_access(record_operation)
-                forbidden_doc_ids = set(check_result[0]._ids) if check_result else set()
-                for res_id in (r.id for r in records if r.id not in forbidden_doc_ids):
-                    for mid in docid_msgids[res_id]:
+            allowed = self._filter_records_for_message_operation(model, docid_msgids, operation)
+            for doc_id, msg_ids in docid_msgids.items():
+                if doc_id in allowed.ids:
+                    for mid in msg_ids:
                         messages_to_check.pop(mid)
 
         if not messages_to_check:
