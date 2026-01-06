@@ -23,6 +23,7 @@ registry.category("web_tour.tours").add("SellingEventInPos", {
             ProductScreen.clickDisplayedProduct("My Awesome Event"),
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
             Dialog.confirm(),
+            EventTourUtils.answerGlobalTextQuestion("Name", "Tony Stark"),
             EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
             EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
             Dialog.confirm(),

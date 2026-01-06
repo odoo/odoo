@@ -58,7 +58,9 @@ patch(ProductScreen.prototype, {
             return;
         }
 
-        const { globalSimpleChoice, globalTextAnswer } = Object.entries(result.byOrder).reduce(
+        const { globalSimpleChoice, globalTextAnswer, globalUserData } = Object.entries(
+            result.byOrder
+        ).reduce(
             (acc, [questionId, answer]) => {
                 const question = this.pos.models["event.question"].get(parseInt(questionId));
                 if (
@@ -67,12 +69,17 @@ patch(ProductScreen.prototype, {
                 ) {
                     acc.globalSimpleChoice[questionId] = answer;
                 } else if (answer) {
+                    if (
+                        ["name", "email", "phone", "company_name"].includes(question.question_type)
+                    ) {
+                        acc.globalUserData[question.question_type] = answer; // Global (once per order) questions should also populate the user fields.
+                    }
                     acc.globalTextAnswer[questionId] = answer;
                 }
 
                 return acc;
             },
-            { globalSimpleChoice: {}, globalTextAnswer: {} }
+            { globalSimpleChoice: {}, globalTextAnswer: {}, globalUserData: {} }
         );
 
         for (const [ticketId, data] of Object.entries(result.byRegistration)) {
@@ -85,7 +92,7 @@ patch(ProductScreen.prototype, {
             });
 
             for (const registration of data) {
-                const userData = {};
+                const userData = { ...globalUserData };
                 for (const [questionId, answer] of Object.entries(registration)) {
                     const question = this.pos.models["event.question"].get(parseInt(questionId));
 
@@ -93,14 +100,15 @@ patch(ProductScreen.prototype, {
                         continue;
                     }
 
-                    if (question.question_type === "email") {
-                        userData.email = answer;
-                    } else if (question.question_type === "phone") {
-                        userData.phone = answer;
-                    } else if (question.question_type === "name") {
-                        userData.name = answer;
-                    } else if (question.question_type === "company_name") {
-                        userData.company_name = answer;
+                    // as we may have several questions populating the same field (e.g: the name)
+                    // we use the following condition to avoid the fields which are already handled,
+                    // goal is to use the answer to the first question of every 'type' (aka name / phone / email / company name) for the user data.
+
+                    if (
+                        !userData[question.question_type] &&
+                        ["name", "email", "phone", "company_name"].includes(question.question_type)
+                    ) {
+                        userData[question.question_type] = answer;
                     }
                 }
 
