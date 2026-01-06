@@ -40,28 +40,6 @@ const threadPatch = {
         }
         return res;
     },
-    /** @override */
-    get importantCounter() {
-        if (
-            this.channel?.isChatChannel &&
-            this.channel?.self_member_id?.message_unread_counter_ui
-        ) {
-            return this.channel.self_member_id.message_unread_counter_ui;
-        }
-        if (this.channel.discussAppCategory?.id === "channels") {
-            if (this.store.settings.channel_notifications === "no_notif") {
-                return 0;
-            }
-            if (
-                this.store.settings.channel_notifications === "all" &&
-                !this.channel?.self_member_id?.mute_until_dt
-            ) {
-                return this.channel?.self_member_id?.message_unread_counter_ui;
-            }
-        }
-        return super.importantCounter;
-    },
-    /** @override */
     get isUnread() {
         return this.channel?.self_member_id?.message_unread_counter > 0 || super.isUnread;
     },
