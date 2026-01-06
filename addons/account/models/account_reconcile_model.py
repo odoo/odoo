@@ -128,6 +128,7 @@ class AccountReconcileModel(models.Model):
         ('lower', 'Is lower than or equal to'),
         ('greater', 'Is greater than or equal to'),
         ('between', 'Is between'),
+        ('remaining_percentage', 'Remaining Percentage'),
     ], string='Amount', tracking=True,
         help='The reconciliation model will only be applied when the amount being lower than, greater than or between specified amount(s).')
     match_amount_min = fields.Float(string='Amount Min Parameter', tracking=True)
