@@ -360,7 +360,12 @@ class Message(models.Model):
 
         forbidden_doc_ids = set()
         for record_operation, records in documents_per_operation.items():
-            operation_result = records._check_access(record_operation)
+            try:
+                operation_result = records._check_access(record_operation)
+            except MissingError:
+                existing = records.exists()
+                forbidden_doc_ids |= set((records - existing).ids)
+                operation_result = existing._check_access(record_operation)
             forbidden_doc_ids |= set(operation_result[0]._ids) if operation_result else set()
 
         return self.env[doc_model].browse([doc_id for doc_id in doc_res_ids if doc_id not in forbidden_doc_ids])
