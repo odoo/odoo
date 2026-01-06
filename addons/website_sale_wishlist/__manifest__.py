@@ -13,6 +13,7 @@ Allow shoppers of your eCommerce store to create personalized collections of pro
         'security/ir.model.access.csv',
 
         'views/templates.xml',
+        'views/wishlist_templates.xml',
         'views/svg_templates.xml',
     ],
     'assets': {

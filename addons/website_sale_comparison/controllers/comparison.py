@@ -3,7 +3,7 @@
 from odoo.http import Controller, request, route
 
 
-class WebsiteSaleProductComparison(Controller):
+class ProductComparison(Controller):
 
     @route('/shop/compare', type='http', auth='public', website=True, sitemap=False)
     def product_compare(self, **post):
