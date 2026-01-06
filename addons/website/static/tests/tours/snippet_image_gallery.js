@@ -88,7 +88,9 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     content: "Check that the image has been moved",
     trigger: "iframe .s_image_gallery .carousel-item.active img[data-index='1']",
     isCheck: true,
-}, {
+},
+    wTourUtils.assertCssVariable("height", "500px", "iframe .s_image_gallery"),
+{
     content: "Click on the footer to reload the editor panel",
     trigger: "iframe #footer",
 }, {
@@ -116,7 +118,23 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     content: "Check that the option is restored",
     trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
     isCheck: true,
-}]);
+}, {
+    content: "Change the height of the snippet",
+    trigger: `.snippet-option-ScrollButton [data-name="fixed_height_opt"] input`,
+    run: "text 400",
+}, {
+    content: "Click on move to next",
+    trigger: ".snippet-option-GalleryElement we-button[data-position='next']",
+}, {
+    content: "Check that the image has been moved",
+    trigger: "iframe .s_image_gallery .carousel-item.active img[data-index='2']",
+    isCheck: true,
+}, {
+    content: "Click on the moved image",
+    trigger: "iframe .s_image_gallery .carousel-item.active img[data-index='2']",
+},
+    wTourUtils.assertCssVariable("height", "400px", "iframe .s_image_gallery"),
+]);
 
 wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
     test: true,

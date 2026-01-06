@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
@@ -67,5 +68,31 @@ registry.category("web_tour.tours").add("l10n_es_edi_verifactu_pos.tour_invoiced
         PaymentScreen.clickPaymentMethod("Bank"),
         PaymentScreen.clickValidate(),
         ReceiptScreen.isShown(),
+    ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_es_verifactu_qr_on_reprint", {
+    test: true,
+    steps: () => [
+        ProductScreen.confirmOpeningPopup(),
+        ProductScreen.clickHomeCategory(),
+        ProductScreen.clickDisplayedProduct("verifactu_pos_product"),
+        ProductScreen.clickPayButton(),
+        PaymentScreen.clickPaymentMethod("Cash"),
+        PaymentScreen.clickValidate(),
+        Chrome.clickMenuButton(),
+        ProductScreen.clickOrderMenu(),
+        TicketScreen.selectFilter("Paid"),
+        TicketScreen.selectOrder("-0001"),
+        TicketScreen.clickControlButton("Print Receipt"),
+        [
+            {
+                trigger: ".receipt-screen .pos-receipt-order-data:contains('QR tributario:')",
+            },
+            {
+                trigger: ".receipt-screen img.pos-receipt-qrcode",
+            },
+        ],
+        Chrome.endTour(),
     ].flat(),
 });

@@ -64,3 +64,12 @@ class TestL10nEsEdiVerifactuPosFrontend(TestL10nEsEdiVerifactuPosCommon, TestPoi
 
         self.assertEqual(refund_move.l10n_es_edi_verifactu_refund_reason, 'R4')
         self.assertTrue(refund_move.l10n_es_edi_verifactu_document_ids.json_attachment_id)
+
+    def test_es_verifactu_qr_on_reprint(self):
+        self.config.with_user(self.pos_user).open_ui()
+        with self._mock_zeep_registration_operation_certificate_issue():
+            self.start_tour(
+                f'/pos/ui?config_id={self.config.id}',
+                'test_es_verifactu_qr_on_reprint',
+                login='pos_user',
+            )

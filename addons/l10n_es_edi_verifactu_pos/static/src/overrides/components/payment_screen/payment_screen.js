@@ -23,12 +23,8 @@ patch(PaymentScreen.prototype, {
 
     async _postPushOrderResolve(order, order_server_ids) {
         if (this.pos.config.l10n_es_edi_verifactu_required) {
-            const [orderRead] = await this.orm.read(
-                'pos.order',
-                order_server_ids,
-                ['l10n_es_edi_verifactu_qr_code'],
-            );
-            order.l10n_es_edi_verifactu_qr_code = orderRead.l10n_es_edi_verifactu_qr_code;
+            const [res] = await this.pos.selectedOrder.fetch_l10n_es_edi_verifactu_qr_code(order_server_ids);
+            order.l10n_es_edi_verifactu_qr_code = res.l10n_es_edi_verifactu_qr_code;
         }
         return super._postPushOrderResolve(...arguments);
     },

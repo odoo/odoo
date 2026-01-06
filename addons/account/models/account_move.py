@@ -3946,6 +3946,7 @@ class AccountMove(models.Model):
                     raise UserError(_("The Bill/Refund date is required to validate this document."))
 
         for move in self:
+            move.line_ids._check_constrains_account_id_journal_id()
             if move.state in ['posted', 'cancel']:
                 raise UserError(_('The entry %s (id %s) must be in draft.', move.name, move.id))
             if not move.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
