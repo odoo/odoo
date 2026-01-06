@@ -6,7 +6,7 @@ from odoo.addons.mrp_account.tests.common import TestBomPriceCommon, TestBomPric
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 from odoo.tools import float_compare, float_round
-from odoo import fields, Command
+from odoo import fields
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -163,6 +163,18 @@ class TestMrpAccount(TestBomPriceCommon):
         mrp_user = new_test_user(self.env, 'temp_mrp_user', 'mrp.group_mrp_user')
         mo_1 = self._create_mo(self.bom_1, 1)
         mo_1.with_user(mrp_user).button_mark_done()
+
+    def test_mo_overview_comp_different_uom(self):
+        """ Test that the overview takes into account the uom of the component in the price computation
+        """
+        self.screw.uom_id = self.env.ref('uom.product_uom_pack_6')
+        self.bom_1.bom_line_ids.filtered(lambda l: l.product_id == self.screw).uom_id = self.env.ref('uom.product_uom_unit')
+        mo = self._create_mo(self.bom_1, 1)
+        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(round(overview_values['data']['summary']['mo_cost'], 2), 677.08, "718.75 - 50 + 50/6")
+        mo.button_mark_done()
+        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(round(overview_values['data']['summary']['mo_cost'], 2), 677.08)
 
 
 class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
@@ -447,45 +459,3 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         mo.move_raw_ids.picked = True
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
-
-    def test_mo_overview_comp_different_uom(self):
-        """ Test that the overview takes into account the uom of the component in the price computation
-        """
-        product_chocolate = self.env['product.product'].create({
-            'name': 'Chocolate',
-            'is_storable': True,
-            'uom_id': self.env.ref('uom.product_uom_kgm').id,
-            'standard_price': 40,
-        })
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': product_chocolate.id,
-            'inventory_quantity': 20,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
-        })
-        product_chococake = self.env['product.product'].create({
-            'name': 'Choco Cake',
-            'is_storable': True,
-        })
-
-        self.env['mrp.bom'].create({
-            'product_id': product_chococake.id,
-            'product_tmpl_id': product_chococake.product_tmpl_id.id,
-            'uom_id': product_chococake.uom_id.id,
-            'product_qty': 1.0,
-            'type': 'normal',
-            'bom_line_ids': [
-                Command.create({'product_id': product_chocolate.id, 'product_qty': 100, 'uom_id': self.env.ref('uom.product_uom_gram').id}),
-            ],
-        })
-        mo = self.env['mrp.production'].create({
-            'name': 'MO',
-            'product_qty': 1.0,
-            'product_id': product_chococake.id,
-        })
-
-        mo.action_confirm()
-        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
-        self.assertEqual(round(overview_values['data']['summary']['mo_cost'], 2), 4)
-        mo.button_mark_done()
-        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
-        self.assertEqual(round(overview_values['data']['summary']['mo_cost'], 2), 4)

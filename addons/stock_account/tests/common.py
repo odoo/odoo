@@ -301,6 +301,7 @@ class TestStockValuationCommon(BaseCommon):
         cls.account_stock_variation = cls.account_stock_valuation.account_stock_variation_id
         cls.account_payable = cls.company.partner_id.property_account_payable_id
         cls.account_receivable = cls.company.partner_id.property_account_receivable_id
+        cls.account_income = cls.company.income_account_id
 
         cls.picking_type_in = cls.warehouse.in_type_id
         cls.picking_type_out = cls.warehouse.out_type_id

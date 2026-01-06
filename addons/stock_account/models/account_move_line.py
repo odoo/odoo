@@ -53,9 +53,6 @@ class AccountMoveLine(models.Model):
         """
         self.ensure_one()
 
-        if not self.product_id:
-            return self.price_unit
-
         original_line = self.move_id.reversed_entry_id.line_ids.filtered(
             lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and
             l.product_uom_id == self.product_uom_id and l.price_unit >= 0)
@@ -63,24 +60,26 @@ class AccountMoveLine(models.Model):
         if original_line:
             return original_line.price_unit
 
-        if self.product_id.cost_method in ['standard', 'average']:
-            return self.product_id.standard_price
+        if not self.product_id:
+            return self.price_unit
 
-        # FIFO
-        moves = self._get_stock_moves().filtered(lambda m: m.state == 'done')
-        if not moves:
-            return self.product_id._run_fifo(self.quantity)
-
-        price_unit = moves._get_price_unit()
-        valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
-        posted_cogs_value = - sum(self.sale_line_ids.order_id.invoice_ids.line_ids.filtered(
-            lambda line: line.product_id == self.product_id and line.display_type == 'cogs' and line.account_id == valuation_account
-        ).mapped('balance'))
-        posted_cogs_qty = sum(self.sale_line_ids.order_id.invoice_ids.line_ids.filtered(
-            lambda line: line.product_id == self.product_id and line.display_type == 'cogs' and line.account_id == valuation_account
-        ).mapped('quantity'))
-        total_qty = posted_cogs_qty + self.quantity
-        return (price_unit * total_qty - posted_cogs_value) / self.quantity
+        cogs_qty = self._get_cogs_qty()
+        if moves := self._get_stock_moves().filtered(lambda m: m.state == 'done'):
+            price_unit = moves._get_cogs_price_unit(cogs_qty)
+        else:
+            if self.product_id.cost_method in ['standard', 'average']:
+                price_unit = self.product_id.standard_price
+            else:
+                price_unit = self.product_id._run_fifo(cogs_qty) / cogs_qty if cogs_qty else 0
+        return (price_unit * cogs_qty - self._get_posted_cogs_value()) / self.quantity
 
     def _get_stock_moves(self):
         return self.env['stock.move']
+
+    def _get_cogs_qty(self):
+        self.ensure_one()
+        return self.quantity
+
+    def _get_posted_cogs_value(self):
+        self.ensure_one()
+        return 0
