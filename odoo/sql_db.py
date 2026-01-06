@@ -182,9 +182,16 @@ class BaseCursor(_CursorProtocol):
 
     def flush(self) -> None:
         """ Flush the current transaction, and run precommit hooks. """
-        if self.transaction is not None:
-            self.transaction.flush()
-        self.precommit.run()
+        # In case some pre-commit added another pre-commit or triggered changes
+        # in the ORM, we must flush and run it again.
+        for _ in range(10):  # limit number of iterations
+            if self.transaction is not None:
+                self.transaction.flush()
+            if not self.precommit:
+                break
+            self.precommit.run()
+        else:
+            _logger.warning("Too many iterations for flushing the cursor!")
 
     def clear(self) -> None:
         """ Clear the current transaction, and clear precommit hooks. """
