@@ -20,12 +20,22 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
                 <field name="message_ids"/>
             </div>
         </form>`;
+    const viewWithActivities = `
+        <form string="Simple">
+            <sheet>
+                <field name="name"/>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="activity_ids"/>
+                <field name="message_ids"/>
+            </div>
+        </form>`;
     let userAccess = {};
     const { openView } = await start({
         serverData: {
             views: {
                 "mail.test.multi.company,false,form": view,
-                "mail.test.multi.company.read,false,form": view,
+                "mail.test.multi.company.read,false,form": viewWithActivities,
             },
         },
         async mockRPC(route, args, performRPC) {
@@ -41,10 +51,11 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
     });
     const simpleId = pyEnv["mail.test.multi.company"].create({ name: "Test MC Simple" });
     const simpleMcId = pyEnv["mail.test.multi.company.read"].create({
-        name: "Test MC Readonly",
+        name: "Test MC Readonly with Activities",
     });
     async function assertSendButton(
         enabled,
+        activities,
         msg,
         model = null,
         resId = null,
@@ -59,12 +70,21 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
         });
         if (enabled) {
             await contains(".o-mail-Chatter-topbar button:enabled", { text: "Send message" });
+            await contains(".o-mail-Chatter-topbar button:enabled", { text: "Log note" });
+            if (activities) {
+                await contains(".o-mail-Chatter-topbar button:enabled", { text: "Activities" });
+            }
         } else {
             await contains(".o-mail-Chatter-topbar button:disabled", { text: "Send message" });
+            await contains(".o-mail-Chatter-topbar button:disabled", { text: "Log note" });
+            if (activities) {
+                await contains(".o-mail-Chatter-topbar button:disabled", { text: "Activities" });
+            }
         }
     }
     await assertSendButton(
         true,
+        false,
         "Record, all rights",
         "mail.test.multi.company",
         simpleId,
@@ -72,6 +92,7 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
         true
     );
     await assertSendButton(
+        true,
         true,
         "Record, all rights",
         "mail.test.multi.company.read",
@@ -81,6 +102,7 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
     );
     await assertSendButton(
         false,
+        false,
         "Record, no write access",
         "mail.test.multi.company",
         simpleId,
@@ -88,16 +110,17 @@ QUnit.test("Send message button activation (access rights dependent)", async fun
     );
     await assertSendButton(
         true,
+        true,
         "Record, read access but model accept post with read only access",
         "mail.test.multi.company.read",
         simpleMcId,
         true
     );
-    await assertSendButton(false, "Record, no rights", "mail.test.multi.company", simpleId);
-    await assertSendButton(false, "Record, no rights", "mail.test.multi.company.read", simpleMcId);
+    await assertSendButton(false, false, "Record, no rights", "mail.test.multi.company", simpleId);
+    await assertSendButton(false, true, "Record, no rights", "mail.test.multi.company.read", simpleMcId);
     // Note that rights have no impact on send button for draft record (chatter.isTemporary=true)
-    await assertSendButton(true, "Draft record", "mail.test.multi.company");
-    await assertSendButton(true, "Draft record", "mail.test.multi.company.read");
+    await assertSendButton(true, false, "Draft record", "mail.test.multi.company");
+    await assertSendButton(true, true, "Draft record", "mail.test.multi.company.read");
 });
 
 QUnit.test(

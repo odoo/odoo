@@ -219,6 +219,7 @@ class TestMailMessageAccess(MessageAccessCommon):
         for user in self.user_employee + self.user_portal:
             with self.subTest(user_name=user.name):
                 _message = record.with_user(user).message_post(
+                    attachments=[('Attachment', b'My attachment')],
                     body='A message',
                     subtype_id=self.env.ref('mail.mt_comment').id,
                 )
@@ -242,6 +243,7 @@ class TestMailMessageAccess(MessageAccessCommon):
                     record.with_user(user).write({'name': 'Can Update'})
                 # can post
                 _message = record.with_user(user).message_post(
+                    attachments=[('Attachment', b'My attachment')],
                     body='Another portal message',
                     subtype_id=self.env.ref('mail.mt_comment').id,
                 )
