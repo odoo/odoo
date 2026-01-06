@@ -9,7 +9,9 @@ def test_all_l10n(env):
     """
     # Install the requirements
     l10n_mods = env['ir.module.module'].search([
+        '|',
         ('name', '=like', 'l10n_%'),
+        ('name', '=like', 'test_l10n_%'),
         ('state', '=', 'uninstalled'),
     ])
     l10n_mods.button_immediate_install()
