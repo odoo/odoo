@@ -1149,6 +1149,9 @@ class Callbacks:
         self._funcs.clear()
         self.data.clear()
 
+    def __len__(self) -> int:
+        return len(self._funcs)
+
 
 class ReversedIterable(Reversible[T], typing.Generic[T]):
     """ An iterable implementing the reversal of another iterable. """
