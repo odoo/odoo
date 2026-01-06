@@ -65,7 +65,7 @@ class ResUsers(models.Model):
                 values.pop('login', None)
                 values.pop('name', None)
                 partner_user.write(values)
-                if not partner_user.login_date:
+                if not partner_user.login_date and partner_user._is_internal():
                     partner_user._notify_inviter()
                 return (partner_user.login, values.get('password'))
             else:
@@ -79,7 +79,6 @@ class ResUsers(models.Model):
                     values['company_id'] = partner.company_id.id
                     values['company_ids'] = [(6, 0, [partner.company_id.id])]
                 partner_user = self._signup_create_user(values)
-                partner_user._notify_inviter()
         else:
             # no token, sign up an external user
             values['email'] = values.get('email') or values.get('login')
