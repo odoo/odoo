@@ -20,7 +20,6 @@ const threadPatch = {
                 return this.model === "discuss.channel" ? this.id : undefined;
             },
         });
-        this.group_ids = fields.Many("res.groups");
         this.firstUnreadMessage = fields.One("mail.message", {
             compute() {
                 return this.channel?.firstUnreadMessage;
