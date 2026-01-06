@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
+
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
@@ -9,7 +10,6 @@ from odoo.exceptions import AccessDenied, AccessError, UserError
 
 class CrmLead(models.Model):
     _inherit = "crm.lead"
-    _mail_post_access = 'read'
 
     partner_latitude = fields.Float('Geo Latitude', digits=(10, 7))
     partner_longitude = fields.Float('Geo Longitude', digits=(10, 7))
@@ -340,3 +340,15 @@ class CrmLead(models.Model):
                     'url': '/my/opportunity/%s' % record.id,
                 }
         return super(CrmLead, self)._get_access_action(access_uid=access_uid, force_website=force_website)
+
+    @api.model
+    def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        # Allow readonly posting for assigned users, to avoid ACLs issue in frontend
+        # as they do not have write access anymore on the lead itself, just specific
+        # controllers and UI
+        assigned = self.filtered(
+            lambda lead: lead.partner_assigned_id == self.env.user.partner_id
+        ) if message_operation == "create" else self.browse()
+        result = super()._mail_get_operation_for_mail_message_operation(message_operation)
+        result.update(dict.fromkeys(assigned, 'read'))
+        return result
