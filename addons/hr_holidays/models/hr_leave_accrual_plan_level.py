@@ -113,7 +113,7 @@ class HrLeaveAccrualLevel(models.Model):
     can_be_carryover = fields.Boolean(related='accrual_plan_id.can_be_carryover', readonly=True,
         export_string_translation=False)
     action_with_unused_accruals = fields.Selection(
-        [('lost', 'Lost'),
+        [('lost', 'Lost (Reset)'),
          ('all', 'Carried over')],
         compute="_compute_action_with_unused_accruals",
         store=True,
