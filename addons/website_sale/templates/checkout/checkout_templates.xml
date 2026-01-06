@@ -54,8 +54,8 @@
                             <input type="hidden"
                                    name="csrf_token"
                                    t-att-value="request.csrf_token()"/>
-                            <t t-if="not hide_payment_button" t-call="payment.submit_button"
-                                submit_button_label.translate="Confirm Order"/>
+                            <t t-if="not hide_payment_button" t-call="payment.submit_button"/>
+                               
                         </form>
                     </div>
                     <t t-elif="not hide_payment_button" t-call="payment.submit_button"/>
