@@ -15,7 +15,6 @@ import traceback
 
 import odoo.sql_db
 import odoo.tools.sql
-import odoo.tools.translate
 from odoo import api, tools
 from odoo.tools import OrderedSet
 from odoo.tools.convert import convert_file, IdRef, ConvertMode as LoadMode
@@ -264,6 +263,7 @@ def load_module_graph(
             package.state = 'installed'
             module.env.flush_all()
             module.env.cr.commit()
+            registry.signal_changes()
 
         test_time = 0.0
         test_queries = 0
@@ -361,14 +361,18 @@ def load_modules(
         # connection settings are automatically reset when the connection is
         # borrowed from the pool
         cr.execute("SET SESSION lock_timeout = '15s'")
-        if not modules_db.is_initialized(cr):
+        if modules_db.is_initialized(cr):
+            _logger.debug("Database %s initialized, removing upgrade marker", cr.dbname)
+            cr.execute("DELETE FROM ir_config_parameter WHERE key='base.partially_updated_database'")
+            cr.commit()
+            if 'base' in reinit_modules:
+                registry._reinit_modules.add('base')
+        else:
             if not update_module:
                 _logger.error("Database %s not initialized, you can force it with `-i base`", cr.dbname)
                 return
             _logger.info("Initializing database %s", cr.dbname)
             modules_db.initialize(cr)
-        elif 'base' in reinit_modules:
-            registry._reinit_modules.add('base')
 
         if 'base' in upgrade_modules:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
@@ -545,7 +549,9 @@ def load_modules(
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
                 registry = Registry.new(
-                    cr.dbname, update_module=update_module, models_to_check=models_to_check,
+                    cr.dbname,
+                    update_module=update_module,
+                    models_to_check=models_to_check,
                 )
                 return
 
