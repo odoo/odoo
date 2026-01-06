@@ -2,6 +2,7 @@
 
 import json
 
+from werkzeug.test import EnvironBuilder
 from werkzeug.urls import url_encode
 
 from unittest.mock import patch, Mock
@@ -226,4 +227,19 @@ class TestControllers(tests.HttpCase):
                 expected_srcs,
                 actual_srcs,
                 "XPath should filter out dynamic images, include only static",
+            )
+
+    def test_website_force_domain_redirect(self):
+        """
+        Test that /website/force/{website.id} redirects domain correctly
+        """
+        self.env.user.group_ids += self.env.ref('website.group_multi_website')
+        website = self.env['website'].search([], limit=1)
+        website.domain = self.base_url()
+        with MockRequest(self.env, website=website, url_root='http://example.com') as mock_request:
+            mock_request.httprequest.environ = EnvironBuilder(base_url='http://example.com').get_environ()
+            redirect = Website().website_force(website_id=website.id, path='/?a=b&c=d')
+            self.assertEqual(
+                redirect.headers['Location'],
+                f'{self.base_url()}/website/force/{website.id}?isredir=1&path=%2F%3Fa%3Db%26c%3Dd'
             )
