@@ -3,15 +3,14 @@
 import base64
 import io
 import re
+import requests
 import time
 import uuid
 import zipfile
 from datetime import datetime, timedelta
-
-import requests
 from requests import RequestException
 
-from odoo import _, api, fields, models
+from odoo import _lt, api, fields, models
 from odoo.exceptions import UserError
 
 SINVOICE_API_URL = 'https://api-vinvoice.viettel.vn/services/einvoiceapplication/api/'
@@ -26,10 +25,10 @@ def _l10n_vn_edi_send_request(method, url, json_data=None, params=None, headers=
         error = None
         if resp_json.get('code') or resp_json.get('error'):
             data = resp_json.get('data') or resp_json.get('error')
-            error = _('Error when contacting SInvoice: %s.', data)
+            error = _lt('Error when contacting SInvoice: %s.', data)
         return resp_json, error
     except (RequestException, ValueError) as err:
-        return {}, _('Something went wrong, please try again later: %s', err)
+        return {}, _lt('Something went wrong, please try again later: %s', err)
 
 
 class AccountMove(models.Model):

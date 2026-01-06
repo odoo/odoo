@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
-
 import requests
 
-from odoo import _, api, fields, models
+from odoo import _lt, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin
 
@@ -18,9 +17,9 @@ def _l10n_id_make_qris_request(endpoint, params):
         response.raise_for_status()
         response = response.json()
     except requests.exceptions.HTTPError as err:
-        raise ValidationError(_("Communication with QRIS failed. QRIS returned with the following error: %s", err))
+        raise ValidationError(_lt("Communication with QRIS failed. QRIS returned with the following error: %s", err))
     except (requests.RequestException, ValueError):
-        raise ValidationError(_("Could not establish a connection to the QRIS API."))
+        raise ValidationError(_lt("Could not establish a connection to the QRIS API."))
 
     return response
 
