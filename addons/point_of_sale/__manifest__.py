@@ -81,7 +81,14 @@
             'point_of_sale/static/src/backend/pos_payment_provider_cards/*',
             'point_of_sale/static/src/app/hooks/hooks.js',
             'point_of_sale/static/src/backend/many2many_placeholder_list_view/*',
+            'point_of_sale/static/src/backend/views/**/*',
+            ('remove', 'point_of_sale/static/src/backend/views/pivot/*'),
+            ('remove', 'point_of_sale/static/src/backend/views/graph/*'),
             'point_of_sale/static/src/backend/test_epos/*',
+        ],
+        'web.assets_backend_lazy': [
+            'point_of_sale/static/src/backend/views/pivot/*',
+            'point_of_sale/static/src/backend/views/graph/*',
         ],
         "web.assets_web_dark": [
             'point_of_sale/static/src/scss/pos_dashboard.dark.scss',
@@ -104,6 +111,7 @@
             # Adding error handler back since they are removed in the prod bundle
             'web/static/src/core/errors/error_handlers.js',
             'web/static/src/core/dialog/dialog.scss',
+            'point_of_sale/static/src/backend/views/**/*',
         ],
         'web.assets_unit_tests': [
             'point_of_sale/static/tests/unit/**/*',
