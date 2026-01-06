@@ -48,7 +48,8 @@ class MailMessage(models.Model):
                         res.one("scriptStep", ["message", "step_type"], value=step)
                         res.attr(
                             "operatorFound",
-                            step.is_forward_operator and channel.livechat_operator_id != chatbot,
+                            step.step_type == "forward_operator" and
+                            channel.livechat_operator_id != chatbot,
                         )
                         if answer := chatbot_message.user_script_answer_id:
                             res.attr("selectedAnswer", {"id": answer.id, "label": answer.name})
