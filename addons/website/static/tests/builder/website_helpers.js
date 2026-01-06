@@ -301,20 +301,21 @@ export async function setupWebsiteBuilder(
     resolveIframeLoaded(iframe);
     await animationFrame();
     if (openEditor) {
-        await openBuilderSidebar(editAssetsLoaded);
+        await openBuilderSidebar(editAssetsLoaded, translateMode);
     }
     return {
         getEditor: () => editor,
         getEditableContent: () => editableContent,
-        openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
+        openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded, translateMode),
         waitSidebarUpdated,
     };
 }
 
-async function openBuilderSidebar(editAssetsLoaded) {
+async function openBuilderSidebar(editAssetsLoaded, translateMode) {
     // The next line allow us to await asynchronous fetches and cache them before it is used
     await Promise.all([
         getWebsiteSnippets(),
+        translateMode ? getTranslatedElements() : Promise.resolve(),
         loadBundle("website.website_builder_assets"),
         loadBundle("html_editor.assets_image_cropper"),
     ]);

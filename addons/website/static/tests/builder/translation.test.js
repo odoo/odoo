@@ -473,6 +473,13 @@ test("Ensure the contenteditable attributes have been set before the Translation
     });
 });
 
+test("sidebar is open when we setup builder for translation", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({ inWrap: "Hello" }),
+    });
+    expect(".o_builder_sidebar_open").toHaveCount(1);
+});
+
 function getTranslateEditable({
     inWrap,
     oeId = "526",
