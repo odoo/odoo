@@ -233,7 +233,16 @@ class StockMove(models.Model):
             return 0
         total_value = sum(self.mapped('value'))
         total_qty = sum(m._get_valued_qty() for m in self)
-        return total_value / total_qty if total_qty else self.product_id.standard_price
+        return total_value / total_qty if total_qty else 0
+
+    def _get_cogs_price_unit(self, quantity=0):
+        """ Returns the COGS unit price to value this stock move
+        quantity should be given in product uom """
+
+        total_qty = sum(m._get_valued_qty() for m in self)
+        if not total_qty:
+            return 0
+        return sum(self.mapped('value')) / total_qty if self.product_id.cost_method == 'fifo' else self.product_id.standard_price
 
     @api.model
     def _get_valued_types(self):
@@ -292,8 +301,7 @@ class StockMove(models.Model):
                 move.value = move.product_id.with_context(fifo_qty_already_processed=fifo_qty_processed[move.product_id])._run_fifo(valued_qty)
                 fifo_qty_processed[move.product_id] += valued_qty
             else:
-                qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
-                move.value = move.product_id.standard_price * qty
+                move.value = move.product_id.standard_price * move._get_valued_qty()
 
         # Recompute the standard price
         self.env['product.product'].browse(products_to_recompute)._update_standard_price()
