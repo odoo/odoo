@@ -18,6 +18,9 @@
             <page name="payment_methods" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </page>
+            <page name="configuration" position="attributes">
+                <attribute name="invisible" separator="or" add="custom_mode == 'pay_on_invoice'"/>
+            </page>
             <group name="provider_credentials" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </group>
@@ -25,11 +28,14 @@
                 <attribute name="invisible" separator="and" add="code != 'custom'"/>
             </group>
             <field name="capture_manually" position="after">
-                <field name="qr_code" invisible="code != 'custom'" />
+                <field name="qr_code" invisible="custom_mode != 'wire_transfer'"/>
             </field>
             <group name="provider_config_others" position="attributes">
-                <attribute name="invisible">code == 'custom'</attribute>
+                <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </group>
+            <page name="messages" position="attributes">
+                <attribute name="invisible" separator="or" add="custom_mode == 'pay_on_invoice'"/>
+            </page>
             <field name="pre_msg" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </field>
@@ -42,7 +48,7 @@
                             class="oe_link ms-0 ps-0"
                             icon="fa-refresh"
                             />
-              </div>
+                </div>
             </field>
             <field name="done_msg" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>

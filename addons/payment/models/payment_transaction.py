@@ -1478,3 +1478,11 @@ class PaymentTransaction(models.Model):
                 ),
             }
         return status_messages.get(self.state)
+
+    def _requires_payment_instructions(self):
+        """Return whether payment instructions should be given to the user.
+
+        :return: True if payment instructions are required
+        :rtype: bool
+        """
+        return False

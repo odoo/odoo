@@ -59,6 +59,7 @@ class PaymentTransaction(models.Model):
             sales_orders = pending_tx.sale_order_ids.filtered(
                 lambda so: so.state in ["draft", "sent"]
             )
+
             sales_orders.filtered(lambda so: so.state == "draft").with_context(
                 tracking_disable=True
             ).action_quotation_sent()

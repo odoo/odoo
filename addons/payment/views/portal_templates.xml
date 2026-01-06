@@ -134,7 +134,12 @@
                                         Please wait...
                                     </h1>
                                     <p>
-                                        Your payment is being processed.
+                                        <t t-if="tx.payment_method_id._is_postpaid()">
+                                            Your order is being processed.
+                                        </t>
+                                        <t t-else="">
+                                            Your payment is being processed.
+                                        </t>
                                     </p>
                                 </div>
                                 <div class="o_payment_summary d-flex gap-3">

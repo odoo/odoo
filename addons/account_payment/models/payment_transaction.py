@@ -93,7 +93,7 @@ class PaymentTransaction(models.Model):
                 return prefix
         return super()._compute_reference_prefix(separator, **values)
 
-    #=== BUSINESS METHODS - POST-PROCESSING ===#
+    # === LIFECYCLE METHODS - POST-PROCESSING === #
 
     def _post_process(self):
         """ Override of `payment` to add account-specific logic to the post-processing.
@@ -108,16 +108,7 @@ class PaymentTransaction(models.Model):
             self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
 
             # Create and post missing payments.
-            # As there is nothing to reconcile for validation transactions, no payment is created
-            # for them. This is also true for validations with or without a validity check (transfer
-            # of a small amount with immediate refund) because validation amounts are not included
-            # in payouts. As the reconciliation is done in the child transactions for partial voids
-            # and captures, no payment is created for their source transactions either.
-            if (
-                tx.operation != 'validation'
-                and not tx.payment_id
-                and not any(child.state in ['done', 'cancel'] for child in tx.child_transaction_ids)
-            ):
+            if tx._should_create_payment():
                 tx.with_company(tx.company_id)._create_payment()
 
             if tx.payment_id:
@@ -129,6 +120,24 @@ class PaymentTransaction(models.Model):
                 tx._log_message_on_linked_documents(message)
         for tx in self.filtered(lambda t: t.state == 'cancel'):
             tx.payment_id.action_cancel()
+
+    def _should_create_payment(self):
+        """Return whether an `account.payment` should be created for this transaction.
+
+        :return: Whether a payment should be created.
+        :rtype: bool
+        """
+        self.ensure_one()
+        return (
+            not self.payment_id
+            # There is nothing to reconcile for validation transactions as no payment is created for
+            # them. This is also true for validations with validity check (transfer of a small
+            # amount with immediate refund) because validation amounts are not included in payouts.
+            and self.operation != "validation"
+            # Reconciliation is done in the child transactions for partial voids and captures, thus
+            # no payment is created for their source transactions.
+            and not any(child.state in ["done", "cancel"] for child in self.child_transaction_ids)
+        )
 
     def _create_payment(self, **extra_create_values):
         """Create an `account.payment` record for the current transaction.

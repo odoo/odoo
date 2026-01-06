@@ -128,7 +128,7 @@
                 role="alert"
             >
                 <t t-out="tx_sudo._get_status_message(order=order)"/>
-                <t t-if="tx_sudo.provider_code == 'custom'">
+                <t t-if="tx_sudo._requires_payment_instructions()">
                     <div id="order_reference" t-if="order.reference" class="mt-2 mb-3">
                         <b>Communication: </b><span t-out='order.reference'/>
                     </div>
