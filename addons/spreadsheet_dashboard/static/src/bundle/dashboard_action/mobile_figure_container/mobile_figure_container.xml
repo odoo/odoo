@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="documents_spreadsheet.MobileFigureContainer">
+        <div class="o-spreadsheet">
+            <div t-if="!figureRows.length" class="m-3">
+                Only chart figures are displayed in small screens but this dashboard doesn't contain any
+            </div>
+            <t t-foreach="figureRows" t-as="figureRow" t-key="figureRow_index">
+                <div class="o_figure_row d-flex flex-row">
+                    <t t-foreach="figureRow" t-as="figure" t-key="figure_index">
+                        <div t-if="figure.tag === 'empty'" class="o_empty_figure o-mobile-figure o-figure position-relative"/>
+                        <t t-else="">
+                            <t t-set="minHeight" t-value="figureRow.length === 1 ? `min-height: ${figure.height}px;` : ''"/>
+                            <div t-att-style="minHeight + ' direction:ltr;'" class="o-mobile-figure o-figure position-relative">
+                                <t figureUI="figure" t-component="getFigureComponent(figure)"/>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>
