@@ -219,6 +219,9 @@ class PosConfig(models.Model):
         return f"{year_2_digits}{device_identifier}-{self.id}-{next_number}", tracking_number
 
     def notify_synchronisation(self, session_id, device_identifier, records={}):
+        self._notify_synchronisation(session_id, device_identifier, records)
+
+    def _notify_synchronisation(self, session_id, device_identifier, records={}, deleted_record_ids=None):
         self.ensure_one()
         static_records = {}
 
@@ -228,6 +231,7 @@ class PosConfig(models.Model):
 
         self._notify('SYNCHRONISATION', {
             'static_records': static_records,
+            'deleted_record_ids': deleted_record_ids,
             'session_id': session_id,
             'device_identifier': device_identifier,
             'records': records

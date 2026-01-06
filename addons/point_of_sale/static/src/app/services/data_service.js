@@ -31,6 +31,7 @@ export class PosData extends Reactive {
         this.relations = [];
         this.custom = {};
         this.syncInProgress = false;
+        this.dataLoadedFromCache = false;
         this.mutex = markRaw(new Mutex());
         this.records = {};
         this.opts = new DataServiceOptions();
@@ -267,6 +268,7 @@ export class PosData extends Reactive {
 
     async loadInitialData() {
         let localData = await this.getCachedServerDataFromIndexedDB();
+        this.dataLoadedFromCache = true;
         const session = localData?.["pos.session"]?.[0];
 
         if (
@@ -329,7 +331,7 @@ export class PosData extends Reactive {
                         localData[model] = local.concat(values);
                     }
                 }
-
+                this.dataLoadedFromCache = false;
                 this.synchronizeServerDataInIndexedDB(localData);
             } catch (error) {
                 let message = _t("An error occurred while loading the Point of Sale: \n");
@@ -525,10 +527,14 @@ export class PosData extends Reactive {
 
             switch (type) {
                 case "write":
-                    result = await this.orm.write(model, ids, values);
+                    result = await this.orm.write(model, ids, values, {
+                        context: { device_identifier: this.device.identifier },
+                    });
                     break;
                 case "delete":
-                    result = await this.orm.unlink(model, ids);
+                    result = await this.orm.unlink(model, ids, {
+                        context: { device_identifier: this.device.identifier },
+                    });
                     break;
                 case "call":
                     result = await this.orm.call(model, method, args, kwargs);
@@ -549,7 +555,9 @@ export class PosData extends Reactive {
             }
 
             if (type === "create") {
-                const response = await this.orm.create(model, values);
+                const response = await this.orm.create(model, values, {
+                    context: { device_identifier: this.device.identifier },
+                });
                 values[0].id = response[0];
                 result = values;
             }
@@ -955,6 +963,10 @@ export class PosData extends Reactive {
         }
 
         return limitedLoading;
+    }
+
+    isDataLoadedFromCache() {
+        return this.dataLoadedFromCache;
     }
 }
 

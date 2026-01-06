@@ -58,7 +58,7 @@
                          <div class="product_list grid" t-att-class="{'pt-sm-3 pt-lg-4': selfOrder.kioskMode, 'pb-2': !selfOrder.kioskMode}">
                             <div t-foreach="productList" t-as="product" t-key="product.id" class="o_self_product_box g-col-12 g-col-md-6 g-col-lg-3 rounded-4 p-3 p-lg-0 shadow-sm shadow-lg-none" t-att-class="{'g-col-kiosk-p-4': productList.length &lt;= 9 , 'g-col-kiosk-p-3': productList.length &gt; 9 }">
                                 <t t-set="not_available" t-value="!product.self_order_available || !isProductAvailable(product)" />
-                                <article t-on-click="(evt) => this.selectProduct(product, evt.target)" class="position-relative d-flex flex-row-reverse flex-lg-column align-items-start cursor-pointer" t-att-class="{'opacity-50' : not_available}">
+                                <article t-on-click="(evt) => this.selectProduct(product, evt.target)" class="position-relative d-flex flex-row-reverse flex-lg-column align-items-start cursor-pointer" t-att-class="{'opacity-25' : not_available}">
                                     <div class="product_img ratio ratio-1x1 w-lg-100 flex-shrink-0 ms-2 ms-lg-0">
                                         <img class="object-fit-cover rounded-4" t-attf-src="/web/image/product.template/#{product.id}/image_512?unique=#{product.write_date}" loading="lazy"/>
                                     </div>

@@ -3656,6 +3656,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.start_pos_tour("test_refund_line_keep_attributes")
 
+    def test_pos_snooze(self):
+        """Test that the available switch is on for available products
+        and off for snoozed products. """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_pos_snooze')
+
     def test_orderline_merge_with_higher_price_precision(self):
         """ Test that orderline merging works correctly when product price has a higher precision than the currency. """
         self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 3

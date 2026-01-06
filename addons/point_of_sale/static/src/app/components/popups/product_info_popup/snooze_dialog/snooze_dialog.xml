@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.SnoozeDialog">
+        <Dialog size="'sm'">
+            <t t-set-slot="header">
+                <h3> <t t-esc="this.headerTitle " /> </h3>
+            </t>
+            <div class="btn-group d-flex flex-column gap-2" role="group">
+                <t t-foreach="getSnoozeOptions()" t-as="option" t-key="option.value">
+                    <div class="row">
+                        <label class="col form-check-label" t-attf-for="{{option.id}}"> <t t-esc="option.label" /> </label>
+                        <div class="col text-end pe-4">
+                            <input type="radio" class="form-check-input" name="btnradio" t-attf-for="{{option.id}}" t-on-click="() => this.select(option.value)" />
+                        </div>
+                    </div>
+                </t>
+
+            </div>
+            <t t-set-slot="footer">
+                <div class="d-flex flex-row gap-2 w-100">
+                    <button class="btn btn-primary flex-grow-1 flex-sm-grow-0" t-on-click="save">Apply</button>
+                    <button class="btn btn-secondary flex-grow-1 flex-sm-grow-0" t-on-click="props.close">Discard</button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>

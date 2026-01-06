@@ -44,6 +44,7 @@ import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
+import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -464,6 +465,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         await this.processProductAttributes();
         await this.config.cacheReceiptLogo();
+        await this.initSnoozedProducts();
     }
     cashMove() {
         this.openCashbox(_t("Cash in / out"));
@@ -3146,6 +3148,44 @@ export class PosStore extends WithLazyGetterTrap {
         const preparationKey = orderline.preparationKey;
         order.removeOrderline(orderline, false);
         delete order.last_order_preparation_change.lines[preparationKey];
+    }
+
+    async initSnoozedProducts() {
+        this.snoozedProductTracker = new SnoozedProductTracker(this.config.pos_snooze_ids);
+        this.models["pos.config"].addEventListener("update", (data) => {
+            if (data.fields?.includes("pos_snooze_ids")) {
+                this.snoozedProductTracker.setSnoozes(this.config.pos_snooze_ids);
+            }
+        });
+        if (this.data.isDataLoadedFromCache()) {
+            try {
+                const snoozes = await this.data.searchRead("pos.product.template.snooze", [
+                    ["pos_config_id", "=", this.config.id],
+                ]);
+                const snoozedIds = new Set(snoozes.map((s) => s.id));
+                const snoozeModel = this.models["pos.product.template.snooze"];
+                const snoozetoDelete = snoozeModel
+                    .getAll()
+                    .filter((snooze) => !snoozedIds.has(snooze.id));
+                snoozeModel.deleteMany(snoozetoDelete);
+            } catch (error) {
+                logPosMessage(
+                    "Store",
+                    "initSnoozedProducts",
+                    `Error reading snoozes from server: ${error.message}`,
+                    CONSOLE_COLOR,
+                    [error]
+                );
+            }
+        }
+    }
+
+    getActiveSnooze(product) {
+        return this.snoozedProductTracker.getActiveSnooze(product);
+    }
+
+    isProductSnoozed(product) {
+        return this.snoozedProductTracker.isProductSnoozed(product);
     }
 }
 
