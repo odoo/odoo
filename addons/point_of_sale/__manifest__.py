@@ -61,6 +61,7 @@
         'receipt/pos_tip_receipt.xml',  # needed in the backend and frontend
         'receipt/pos_cash_move_receipt.xml',  # needed in the backend and frontend
         'receipt/pos_sale_details_receipt.xml',  # needed in the backend and frontend
+        'data/ir_cron_data.xml',
     ],
     'demo': [
         'data/demo_data.xml',
