@@ -4,6 +4,7 @@
 import json
 
 from odoo.api import Environment
+from odoo.fields import Command
 import odoo.tests
 from odoo.tools import html2plaintext
 import unittest
@@ -25,6 +26,18 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             'name': 'Internship',
             'is_published': True,
             'department_id': department.id,
+        })
+        skill_type = self.env['hr.skill.type'].create({
+            'name': 'Tour Coding',
+            'sequence': 0,
+            'skill_ids': [
+                Command.create({'name': 'Tour Python'}),
+                Command.create({'name': 'Tour Owl'}),
+            ],
+            'skill_level_ids': [
+                Command.create({'name': 'Beginner', 'level_progress': 10}),
+                Command.create({'name': 'Good', 'level_progress': 50, 'default_level': True}),
+            ],
         })
 
         self.start_tour(self.env['website'].get_client_action_url('/jobs'), 'website_hr_recruitment_tour_edit_form', login='admin')
@@ -48,6 +61,12 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             "The Guru custom fields should be correctly logged in the chatter."
         )
         self.assertEqual(guru_applicant.job_id, job_guru)
+        self.assertEqual(guru_applicant.applicant_skill_ids.skill_id, skill_type.skill_ids)
+        self.assertEqual(
+            guru_applicant.applicant_skill_ids.skill_level_id,
+            skill_type.skill_level_ids.filtered('default_level'),
+            "The default level of the skill type should be set on the applicant skills",
+        )
 
         internship_applicant = capt.records[1]
         self.assertEqual(internship_applicant.partner_name, 'Jack Doe')
@@ -62,6 +81,7 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             "The Internship custom fields should be correctly logged in the chatter."
         )
         self.assertEqual(internship_applicant.job_id, job_intern)
+        self.assertFalse(internship_applicant.applicant_skill_ids)
 
     def test_jobs_listing_city_unspecified(self):
         """ Test that the jobs listing page does not crash when a job has no address. """
@@ -132,6 +152,71 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             ),
             "One message in the chatter should contain the extra information filled in by the applicant"
         )
+
+    def test_apply_job_with_skills(self):
+        """ The skills posted with the website form are linked to the applicant.
+
+        Duplicated skill ids must not lose the application: one active skill
+        per skill_id is enforced by hr.individual.skill.mixin, so two rows for
+        the same skill would roll back the applicant creation.
+        """
+        levels = [Command.create({'name': 'Good', 'level_progress': 50})]
+        skill_type, other_type, certification_type = self.env['hr.skill.type'].create([{
+            'name': 'Programming',
+            'skill_ids': [Command.create({'name': 'Python'}), Command.create({'name': 'JavaScript'})],
+            'skill_level_ids': levels,
+        }, {
+            'name': 'Fictional Languages',
+            'skill_ids': [Command.create({'name': 'Klingon'})],
+            'skill_level_ids': levels,
+        }, {
+            'name': 'Certifications',
+            'is_certification': True,
+            'skill_ids': [Command.create({'name': 'Odoo Certified'})],
+            'skill_level_ids': levels,
+        }])
+        skill_a, skill_b = skill_type.skill_ids
+        other_skill = other_type.skill_ids
+        certification = certification_type.skill_ids
+
+        job = self.env['hr.job'].create({'name': 'Developer', 'is_published': True})
+        self.authenticate(None, None)
+        for skill_ids, expected_skills in (
+            (f'{skill_a.id},{skill_b.id},{other_skill.id}', skill_a + skill_b + other_skill),
+            (f'{skill_a.id},{skill_a.id}', skill_a),
+            (f'{skill_a.id},0,abc,999999999', skill_a),
+            # Certifications are proven by a document, not self-declared.
+            (f'{skill_a.id},{certification.id}', skill_a),
+            ('', self.env['hr.skill']),
+        ):
+            with self.subTest(skill_ids=skill_ids):
+                response = self.url_open('/website/form/hr.applicant', data={
+                    'partner_name': 'John Smith',
+                    'email_from': 'john@smith.com',
+                    'job_id': job.id,
+                    'skill_ids': skill_ids,
+                })
+                applicant = self.env['hr.applicant'].browse(response.json().get('id'))
+                self.assertTrue(applicant.exists())
+                self.assertEqual(applicant.applicant_skill_ids.skill_id, expected_skills)
+                self.assertEqual(applicant.applicant_skill_ids.skill_level_id, expected_skills.skill_type_id.skill_level_ids)
+
+        # A submission rejected by super() with skills selected returns the
+        # validation error rather than a server error.
+        response = self.url_open('/website/form/hr.applicant', data={
+            'partner_name': 'John Smith',
+            'email_from': 'john@smith.com',
+            'job_id': 'not-an-id',
+            'skill_ids': str(skill_a.id),
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'error_fields': ['job_id']})
+
+        # Certifications are not offered in the form builder.
+        skills_field = self.env['ir.model'].get_authorized_fields('hr.applicant', {})['applicant_skill_ids']
+        offered_types = {record['id'] for record in skills_field['records']}
+        self.assertIn(skill_type.id, offered_types)
+        self.assertNotIn(certification_type.id, offered_types)
 
     def test_apply_job_does_not_update_existing_user(self):
         internal_user = new_test_user(
