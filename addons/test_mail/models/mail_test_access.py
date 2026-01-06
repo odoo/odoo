@@ -38,7 +38,7 @@ class MailTestAccessCusto(models.Model):
     or partner which have their own set of ACLs. """
     _description = 'Mail Access Test with Custo'
     _name = 'mail.test.access.custo'
-    _inherit = ['mail.thread.blacklist']
+    _inherit = ['mail.thread.blacklist', 'mail.activity.mixin']
     _mail_post_access = 'write'  # default value but ease mock
     _order = 'id DESC'
     _primary_email = 'email_from'

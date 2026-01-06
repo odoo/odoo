@@ -408,11 +408,18 @@ class MailMessage(models.Model):
         # note that some ids may be filtered out if (e.g. group limitation, ...)
         allowed_ids = []
         for record_operation, records in operation_res_ids.items():
-            operation_result = records._check_access(record_operation)
-            # keepr actually returned records for the opration, that are not forbidden
+            forbidden_doc_ids = set()
+            try:
+                operation_result = records._check_access(record_operation)
+            except MissingError:
+                existing = records.exists()
+                forbidden_doc_ids = set((records - existing).ids)
+                operation_result = existing._check_access(record_operation)
+            forbidden_doc_ids |= set((operation_result or [self.env[doc_model]])[0]._ids)
+            # keep actually returned records for the operation, that are not forbidden
             allowed_ids += [
                 record.id for record in records
-                if record.id not in (operation_result or [self.env[doc_model]])[0]._ids
+                if record.id not in forbidden_doc_ids
             ]
 
         return self.env[doc_model].browse(allowed_ids)
