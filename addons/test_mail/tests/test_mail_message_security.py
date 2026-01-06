@@ -9,10 +9,10 @@ from odoo.addons.test_mail.models.mail_test_access import MailTestAccess
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 
 
-class MessageAccessCommon(MailCommon):
+class MessageAccessCommon(MailCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -219,6 +219,7 @@ class TestMailMessageAccess(MessageAccessCommon):
         for user in self.user_employee + self.user_portal:
             with self.subTest(user_name=user.name):
                 _message = record.with_user(user).message_post(
+                    attachments=[('Attachment', b'My attachment')],
                     body='A message',
                     subtype_id=self.env.ref('mail.mt_comment').id,
                 )
@@ -242,9 +243,23 @@ class TestMailMessageAccess(MessageAccessCommon):
                     record.with_user(user).write({'name': 'Can Update'})
                 # can post
                 _message = record.with_user(user).message_post(
+                    attachments=[('Attachment', b'My attachment')],
                     body='Another portal message',
                     subtype_id=self.env.ref('mail.mt_comment').id,
                 )
+                # controller check
+                self.authenticate(user.login, user.login)
+                res = self.make_jsonrpc_request(
+                    route="/mail/message/post",
+                    params={
+                        'thread_model': record._name,
+                        'thread_id': record.id,
+                        'post_data': {
+                            'body': "Test",
+                        },
+                    },
+                )
+                self.assertEqual(len(res['mail.message']), 1)
 
     def test_access_create_mail_post_access(self):
         """ Test 'mail_post_access' support that allows creating a message with
