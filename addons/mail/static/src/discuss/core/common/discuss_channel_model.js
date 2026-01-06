@@ -224,6 +224,7 @@ export class DiscussChannel extends Record {
             : this.displayName;
         return text;
     }
+    group_ids = fields.Many("res.groups");
     get memberListTypes() {
         return ["channel", "group"];
     }
