@@ -59,7 +59,7 @@
                 </div>
                 <hr/>
                 <div class="row g-3">
-                    <div class="col-12 col-md-6" t-if="pos.config.cash_control">
+                    <div class="col-12" t-if="pos.config.cash_control" t-att-class="{'col-md-6': !this.isOnePmUsed()}">
                         <label class="form-label">Cash Count</label>
                         <div class="d-flex w-100 gap-2 mt-1">
                             <Input
@@ -74,9 +74,8 @@
                             />
                         </div>
                     </div>
-                    <t t-foreach="props.non_cash_payment_methods" t-as="pm" t-key="pm.id">
-                        <t t-set="_showDiff" t-value="['bank', 'cash'].includes(pm.type) and pm.number !== 0" />
-                        <div class="col-12 col-md-6" t-if="_showDiff">
+                    <t t-foreach="validPms" t-as="pm" t-key="pm.id">
+                        <div class="col-12" t-att-class="{'col-md-6': !this.isTheLastPM(pm)}">
                             <label class="form-label">
                                 <t t-esc="pm.name" /> Count
                             </label>
