@@ -508,6 +508,7 @@ export async function setupSidebarBuilderForTranslation(options) {
             },
         }
     );
+    await getTranslatedElements();
     await openBuilderSidebar();
     return { getEditor, getEditableContent };
 }
