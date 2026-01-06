@@ -29,7 +29,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'is_based_on_worked_time': True,
-                'can_be_carryover': True,
+                'accrued_gain_action': 'carryover',
                 'level_ids': [(0, 0, {
                     'milestone_date': 'after',
                     'start_count': 1,
@@ -76,7 +76,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             'name': 'Accrual Plan For Test',
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'end',
-            'can_be_carryover': True,
+            'accrued_gain_action': 'carryover',
             'carryover_date': 'year_start',
             'level_ids': [(0, 0, {
                 'milestone_date': 'after',

@@ -73,10 +73,10 @@
                                 <br/>
                             </t>
                         </h4>
-                        <div class="mt-1" t-if="level.data.can_be_carryover || level.data.cap_accrued_time_yearly || level.data.maximum_leave">
-                            <t t-if="level.data.can_be_carryover">
+                        <div class="mt-1" t-if="level.data.accrued_gain_action == 'carryover' || level.data.cap_accrued_time_yearly || level.data.maximum_leave">
+                            <t t-if="level.data.accrued_gain_action == 'carryover'">
                                 <t t-if="level.data.action_with_unused_accruals == 'lost'">
-                                    Unused days will be lost.<br/>
+                                    Unused days will be reset.<br/>
                                 </t>
                                 <t t-elif="level.data.carryover_options == 'unlimited'">
                                     Unused days will be transferred totally on each <t t-esc="state.carryOverDate"/>.

@@ -110,10 +110,11 @@ class HrLeaveAccrualLevel(models.Model):
         store=True, readonly=False,
         help="When the field is checked the total amount accrued each year will be capped at the specified amount")
     maximum_leave_yearly = fields.Float(digits=(16, 2), export_string_translation=False)
-    can_be_carryover = fields.Boolean(related='accrual_plan_id.can_be_carryover', readonly=True,
+    accrued_gain_action = fields.Selection(related='accrual_plan_id.accrued_gain_action',
+        readonly=True,
         export_string_translation=False)
     action_with_unused_accruals = fields.Selection(
-        [('lost', 'Lost'),
+        [('lost', 'Lost (Reset)'),
          ('all', 'Carried over')],
         compute="_compute_action_with_unused_accruals",
         store=True,
@@ -235,10 +236,10 @@ class HrLeaveAccrualLevel(models.Model):
             if not level.cap_accrued_time:
                 level.maximum_leave = 0
 
-    @api.depends('can_be_carryover')
+    @api.depends('accrued_gain_action')
     def _compute_action_with_unused_accruals(self):
         for level in self:
-            if not level.can_be_carryover:
+            if level.accrued_gain_action == 'lost':
                 level.action_with_unused_accruals = 'lost'
 
     @api.depends('action_with_unused_accruals')
