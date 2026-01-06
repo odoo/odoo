@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-# 
+#
 # Translators:
 # Tiffany Chang, 2024
 # Miku Laitinen <miku.laitinen@gmail.com>, 2024
@@ -17,19 +17,19 @@
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:03+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
@@ -75,7 +75,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Testi</span>\n"
 "                                <span class=\"o_stat_text\">Ympäristö</span>"
@@ -94,7 +95,8 @@ msgstr "<span class=\"text-success\">Kutsujen debug</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">Tuotanto</span>\n"
 "                                <span class=\"o_stat_text\">Ympäristö</span>"
@@ -197,8 +199,7 @@ msgstr "Huolitsija"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid ""
-"Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
-"Tags."
+"Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
 msgstr ""
 "Kuljetusyhtiöllä %s ei voi olla samaa tunnistetta sekä pakollisissa että "
 "poissuljetuissa tunnisteissa."
@@ -375,7 +376,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
-"Toimituspostinumeron etuliitteet osoitetaan jakeluliikenteen harjoittajille, jotta voidaan rajoittaa\n"
+"Toimituspostinumeron etuliitteet osoitetaan jakeluliikenteen harjoittajille, "
+"jotta voidaan rajoittaa\n"
 "            mihin postinumeroihin se on saatavilla."
 
 #. module: delivery
@@ -413,8 +415,10 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
-"Kullakin kuljetusliikkeellä (esim. UPS) voi olla useita toimitustapoja (esim.\n"
-"            UPS Express, UPS Standard), joihin liittyy joukko hinnoittelusääntöjä\n"
+"Kullakin kuljetusliikkeellä (esim. UPS) voi olla useita toimitustapoja "
+"(esim.\n"
+"            UPS Express, UPS Standard), joihin liittyy joukko "
+"hinnoittelusääntöjä\n"
 "            kuhunkin menetelmään."
 
 #. module: delivery
@@ -437,11 +441,15 @@ msgstr "Virhe: Tämä toimitustapa ei ole käytettävissä."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
-"Arvioidut kustannukset: asiakkaalta laskutetaan arvioidut toimituskustannukset.\n"
-"Todelliset kustannukset: asiakkaalta laskutetaan todelliset toimituskulut, toimituskulut päivitetään myyntitilauksessa (SO) toimituksen jälkeen."
+"Arvioidut kustannukset: asiakkaalta laskutetaan arvioidut "
+"toimituskustannukset.\n"
+"Todelliset kustannukset: asiakkaalta laskutetaan todelliset toimituskulut, "
+"toimituskulut päivitetään myyntitilauksessa (SO) toimituksen jälkeen."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -461,11 +469,11 @@ msgstr "Täytä tämä kenttä, jos aiot laskuttaa lähetyksen perustuen noutoon
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
-"Filling this form allows you to make the shipping method available according"
-" to the content of the order or its destination."
+"Filling this form allows you to make the shipping method available according "
+"to the content of the order or its destination."
 msgstr ""
-"Tämän lomakkeen täyttämällä voit valita toimitustavan tilauksen sisällön tai"
-" määränpään mukaan."
+"Tämän lomakkeen täyttämällä voit valita toimitustavan tilauksen sisällön tai "
+"määränpään mukaan."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -517,8 +525,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
-"Jos tilauksen kokonaismäärä (ilman lähetystä) on tämän arvon yläpuolella tai"
-" yhtä suuri, asiakas saa ilmaisen toimituksen"
+"Jos tilauksen kokonaismäärä (ilman lähetystä) on tämän arvon yläpuolella tai "
+"yhtä suuri, asiakas saa ilmaisen toimituksen"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_volume
@@ -728,8 +736,8 @@ msgid ""
 "will only match '100' and not '1000')"
 msgstr ""
 "Postinumeroiden etuliitteet, joita tämä operaattori koskee. Huomaa, että "
-"säännöllisiä lausekkeita voidaan käyttää tukemaan maita, joissa postinumeron"
-" pituus vaihtelee, eli '$' voidaan lisätä etuliitteen loppuun täsmällisen "
+"säännöllisiä lausekkeita voidaan käyttää tukemaan maita, joissa postinumeron "
+"pituus vaihtelee, eli '$' voidaan lisätä etuliitteen loppuun täsmällisen "
 "postinumeron löytämiseksi (esim. '100$' vastaa vain '100' eikä '1000')"
 
 #. module: delivery
@@ -846,8 +854,8 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
-"Lähetysvakuutus on palvelu, joka voi korvata lähettäjille, joiden paketti on"
-" kadonnut, varastettu ja/tai vahingoittunut kuljetuksen aikana."
+"Lähetysvakuutus on palvelu, joka voi korvata lähettäjille, joiden paketti on "
+"kadonnut, varastettu ja/tai vahingoittunut kuljetuksen aikana."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -892,8 +900,8 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
 msgid ""
-"The method is available only if at least one product of the order has one of"
-" these tags."
+"The method is available only if at least one product of the order has one of "
+"these tags."
 msgstr ""
 "Menetelmä on käytettävissä vain, jos vähintään yhdellä tilauksen tuotteella "
 "on jokin näistä tunnisteista."
@@ -934,8 +942,10 @@ msgid ""
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Näiden menetelmien avulla toimitushinta voidaan laskea automaattisesti\n"
-"            asetustenne mukaisesti; myyntitilauksessa (perustuen myyntitilauksen\n"
-"            tarjouksen perusteella) tai laskun perusteella (toimitustilausten perusteella)."
+"            asetustenne mukaisesti; myyntitilauksessa (perustuen "
+"myyntitilauksen\n"
+"            tarjouksen perusteella) tai laskun perusteella "
+"(toimitustilausten perusteella)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
@@ -1026,9 +1036,11 @@ msgstr "Mittayksikön paino"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
 "Et voi päivittää toimituskuluja tilaukselle, joka on jo laskutettu!\n"

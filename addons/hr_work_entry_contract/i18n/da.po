@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_work_entry_contract
-# 
+#
 # Translators:
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # lhmflexerp <lhm@flexerp.dk>, 2024
@@ -10,19 +10,19 @@
 # Mads Søndergaard, 2024
 # Mads Søndergaard, 2025
 # Kira Petersen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_work_entry_contract
@@ -32,9 +32,12 @@ msgid ""
 "\n"
 "        Defines the source for work entries generation\n"
 "\n"
-"        Working Schedule: Work entries will be generated from the working hours below.\n"
-"        Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)\n"
-"        Planning: Work entries will be generated from the employee's planning. (requires Planning app)\n"
+"        Working Schedule: Work entries will be generated from the working "
+"hours below.\n"
+"        Attendances: Work entries will be generated from the employee's "
+"attendances. (requires Attendance app)\n"
+"        Planning: Work entries will be generated from the employee's "
+"planning. (requires Planning app)\n"
 "    "
 msgstr ""
 
@@ -43,8 +46,7 @@ msgstr ""
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
 msgid ""
 "%(employee)s does not have a contract from %(date_start)s to %(date_end)s."
-msgstr ""
-"%(employee)s har ikke en kontrakt fra %(date_start)s til %(date_end)s."
+msgstr "%(employee)s har ikke en kontrakt fra %(date_start)s til %(date_end)s."
 
 #. module: hr_work_entry_contract
 #. odoo-python
@@ -201,13 +203,13 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 msgid ""
-"In order to regenerate the work entries, you need to provide the wizard with"
-" an employee_id, a date_from and a date_to. In addition to that, the time "
+"In order to regenerate the work entries, you need to provide the wizard with "
+"an employee_id, a date_from and a date_to. In addition to that, the time "
 "interval defined by date_from and date_to must not contain any validated "
 "work entries."
 msgstr ""
-"For at regenerere arbejdsposteringer, skal du give guiden en employee_id, en"
-" date_from, og en date_to. Derudover må tidsintervallet defineret af "
+"For at regenerere arbejdsposteringer, skal du give guiden en employee_id, en "
+"date_from, og en date_to. Derudover må tidsintervallet defineret af "
 "date_from og date_to ikke indeholde nogen validerede arbejdsposteringer."
 
 #. module: hr_work_entry_contract
@@ -284,8 +286,7 @@ msgstr "Syg fri tid"
 #. module: hr_work_entry_contract
 #. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_contract.py:0
-msgid ""
-"Sorry, generating work entries from cancelled contracts is not allowed."
+msgid "Sorry, generating work entries from cancelled contracts is not allowed."
 msgstr ""
 
 #. module: hr_work_entry_contract
@@ -304,8 +305,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_contract_view_form_inherit
 msgid "This work entry cannot be validated. The work entry type is undefined."
 msgstr ""
-"Denne arbejdspostering kunne ikke valideres. Arbejdsposterings typen er ikke"
-" defineret."
+"Denne arbejdspostering kunne ikke valideres. Arbejdsposterings typen er ikke "
+"defineret."
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_type__is_leave

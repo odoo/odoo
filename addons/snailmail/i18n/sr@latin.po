@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2025-11-21 06:40+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
@@ -41,6 +41,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Address"
 msgstr "Adresa"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
+msgid ""
+"An error occurred when sending a letter with Snailmail on “%(record_name)s”"
+msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
@@ -236,7 +243,7 @@ msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.js:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
 msgid "Failed letter"
 msgstr ""
@@ -421,6 +428,11 @@ msgid "Send Now"
 msgstr "Pošalji odmah"
 
 #. module: snailmail
+#: model:iap.service,description:snailmail.iap_service_snailmail
+msgid "Send your customer invoices and follow-up reports by post, worldwide."
+msgstr ""
+
+#. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__sent
@@ -450,8 +462,19 @@ msgid "Snailmail Color"
 msgstr ""
 
 #. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover_readonly
+msgid "Snailmail Cover Readonly"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
+msgstr ""
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "Snailmail Failure: %(modelName)s"
 msgstr ""
 
 #. module: snailmail
@@ -511,6 +534,11 @@ msgstr ""
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
 msgid "Snailmail: process letters queue"
+msgstr ""
+
+#. module: snailmail
+#: model:iap.service,unit_name:snailmail.iap_service_snailmail
+msgid "Stamps"
 msgstr ""
 
 #. module: snailmail

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_pdf_quote_builder
-# 
+#
 # Translators:
 # Helen Sulaoja <helen@avalah.ee>, 2024
 # Triine Aavik <triine@avalah.ee>, 2024
@@ -19,19 +19,19 @@
 # Patrick-Jordan Kiudorv, 2024
 # Tairi Tiimann, 2024
 # Katrin Kampura, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Katrin Kampura, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_pdf_quote_builder
@@ -57,16 +57,16 @@ msgstr "<span>Dokumendi tüüp:</span>"
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in product documents can't be linked to a quotation"
-" document."
+"A form field set as used in product documents can't be linked to a quotation "
+"document."
 msgstr ""
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in quotation documents can't be linked to a product"
-" document."
+"A form field set as used in quotation documents can't be linked to a product "
+"document."
 msgstr ""
 
 #. module: sale_pdf_quote_builder
@@ -94,20 +94,28 @@ msgstr "Kõik failid on üles laaditud"
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
-"Leave it empty if you don't want to share this document with sales customer.\n"
-"On quote: the document will be sent to and accessible by customers at any time.\n"
+"Leave it empty if you don't want to share this document with sales "
+"customer.\n"
+"On quote: the document will be sent to and accessible by customers at any "
+"time.\n"
 "e.g. this option can be useful to share Product description files.\n"
-"On order confirmation: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
+"On order confirmation: the document will be sent to and accessible by "
+"customers.\n"
+"e.g. this option can be useful to share User Manual or digital content "
+"bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation and "
+"sale order between the header pages and the quote table. "
 msgstr ""
 "Võimaldab teil jagada dokumenti oma müügiga seotud klientidega.\n"
 "Jäta tühjaks, kui sa ei soovi seda dokumenti kliendiga jagada.\n"
-"Pakkumine: dokument saadetakse ja on klientidele igal hetkel vaatamiseks lubatud.\n"
+"Pakkumine: dokument saadetakse ja on klientidele igal hetkel vaatamiseks "
+"lubatud.\n"
 "nt. see valik on kasulik, kui soovid tooteinfo faile kliendiga jagada.\n"
-"Kinnitatud tellimus: dokument saadetakse ja on klientidele vaatamiseks lubatud.\n"
+"Kinnitatud tellimus: dokument saadetakse ja on klientidele vaatamiseks "
+"lubatud.\n"
 "nt. see valik on kasulik, kui soovid kasutusjuhendit kliendiga jagada.\n"
-"Pakkumise sees: dokument lisatakse pakkumise PDF faili päise ja pakkumise osa vahele."
+"Pakkumise sees: dokument lisatakse pakkumise PDF faili päise ja pakkumise "
+"osa vahele."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -364,8 +372,8 @@ msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
 msgstr ""
-"Vigane vormi välja nimi %(field_name)s. Päise või jaluse vormi välja nimi ei"
-" tohi alata \"sol_id_\"."
+"Vigane vormi välja nimi %(field_name)s. Päise või jaluse vormi välja nimi ei "
+"tohi alata \"sol_id_\"."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -505,17 +513,25 @@ msgstr "Toote dokumendid"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid ""
-"Provide header pages and footer pages to compose an attractive quotation with more information\n"
-"                        about your company, your products and you services. <br/>\n"
-"                        The pdf of your quotes will be built by putting together header pages, product descriptions,\n"
-"                        details of the quote and then the footer pages. <br/>\n"
-"                        If empty, it will use those define in the company settings. <br/>"
+"Provide header pages and footer pages to compose an attractive quotation "
+"with more information\n"
+"                        about your company, your products and you services. "
+"<br/>\n"
+"                        The pdf of your quotes will be built by putting "
+"together header pages, product descriptions,\n"
+"                        details of the quote and then the footer pages. <br/"
+">\n"
+"                        If empty, it will use those define in the company "
+"settings. <br/>"
 msgstr ""
 "Lisa päise ja jalus, et koostada atraktiivne pakkumine,\n"
-" mis sisaldab rohkem teavet sinu ettevõtte, toodete ja teenuste kohta. <br/>\n"
-"                        Pakkumise PDF koostatakse, ühendades päise, tootekirjeldused,\n"
+" mis sisaldab rohkem teavet sinu ettevõtte, toodete ja teenuste kohta. <br/"
+">\n"
+"                        Pakkumise PDF koostatakse, ühendades päise, "
+"tootekirjeldused,\n"
 "                         pakkumise üksikasjad ja seejärel jalus. <br/>\n"
-"                        Kui jätate tühjaks, kasutatakse neid, mis on määratud ettevõtte seadetes <br/>"
+"                        Kui jätate tühjaks, kasutatakse neid, mis on "
+"määratud ettevõtte seadetes <br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw

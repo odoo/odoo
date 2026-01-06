@@ -55,7 +55,7 @@
                         <div class="p-2 w-100">
                             <h5 class="mt-0 mb-1" t-field="course.channel_id.name"/>
 
-                            <div class="overflow-hidden mb-1" style="height:24px">
+                            <div class="overflow-hidden mb-1" style="height:25px">
                                 <t t-foreach="course.channel_id.tag_ids.filtered(lambda tag: tag.color)" t-as="tag">
                                     <a t-att-href="'/slides/all/tag/%s' % slug(tag)" onclick="event.stopPropagation()" t-attf-class="badge o_wslides_channel_tag post_link #{'o_color_'+str(tag.color)}" t-esc="tag.name"/>
                                 </t>

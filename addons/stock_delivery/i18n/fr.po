@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_delivery
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Manon Rondou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -105,8 +106,7 @@ msgstr "Annuler"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
 "L'annulation d'une livraison peut être irréversible. Êtes-vous sûr de "
 "vouloir continuer ?"
@@ -199,11 +199,15 @@ msgstr "Afficher les liens de suivi"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "Coût estimé : le client se verra facturer le coût estimé de l'expédition. \n"
-"Coût réel : le client se verra facturer le coût réel de l'expédition, le coût de l'expédition sera mis à jour sur la commande client après la livraison."
+"Coût réel : le client se verra facturer le coût réel de l'expédition, le "
+"coût de l'expédition sera mis à jour sur la commande client après la "
+"livraison."
 
 #. module: stock_delivery
 #. odoo-python
@@ -355,11 +359,16 @@ msgstr "Routes"
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
-"Les règles d'origine déterminent l'origine des marchandises, c'est-à-dire non pas l'endroit d'où elles ont été expédiées, mais celui où elles ont été produites ou fabriquées.\n"
-"En tant que telle, l'‘origine’ est la 'nationalité économique' des marchandises échangées dans le commerce."
+"Les règles d'origine déterminent l'origine des marchandises, c'est-à-dire "
+"non pas l'endroit d'où elles ont été expédiées, mais celui où elles ont été "
+"produites ou fabriquées.\n"
+"En tant que telle, l'‘origine’ est la 'nationalité économique' des "
+"marchandises échangées dans le commerce."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
@@ -390,8 +399,8 @@ msgstr "Envoyer à l'expéditeur"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
+"(ref)s"
 msgstr ""
 "Envoi au transporteur %(carrier_name)s pour expédition avec le numéro de "
 "suivi %(ref)s"
@@ -485,8 +494,8 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
-"Le poids de votre colis est supérieur au poids maximal autorisé pour ce type"
-" de colis. Veuillez choisir un autre type de colis."
+"Le poids de votre colis est supérieur au poids maximal autorisé pour ce type "
+"de colis. Veuillez choisir un autre type de colis."
 
 #. module: stock_delivery
 #. odoo-python
@@ -570,11 +579,11 @@ msgstr "Poids :"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
-"Il n'est pas possible de regrouper des produits dans un même colis s'ils ont"
-" des transporteurs différents (vérifiez que tous leurs transferts ont un "
+"Il n'est pas possible de regrouper des produits dans un même colis s'ils ont "
+"des transporteurs différents (vérifiez que tous leurs transferts ont un "
 "transporteur assigné et qu'ils ont recours au même transporteur)."
 
 #. module: stock_delivery

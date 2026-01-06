@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-# 
+#
 # Translators:
 # Larisa Pop, 2024
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:03+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: delivery
 #. odoo-python
@@ -58,14 +59,16 @@ msgid ""
 "                </p>"
 msgstr ""
 "<p class=\"o_view_nocontent\">\n"
-"                   Cumpărați Odoo Enterprise acum pentru a obține mai mulți furnizori.\n"
+"                   Cumpărați Odoo Enterprise acum pentru a obține mai mulți "
+"furnizori.\n"
 "                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
 "                                <span class=\"o_stat_text\">Mediu</span>"
@@ -84,7 +87,8 @@ msgstr "<span class=\"text-success\">Solicitări de depanare</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">Producție</span>\n"
 "                                <span class=\"o_stat_text\">Mediu</span>"
@@ -102,8 +106,8 @@ msgid ""
 "for customers to follow."
 msgstr ""
 "O descriere a metodei de livrare pe care doriți să o comunicați clienților "
-"pe comanda de vânzare și pe e-mailul de confirmare a vânzărilor. De exemplu,"
-" instrucțiuni pentru clienți să urmeze."
+"pe comanda de vânzare și pe e-mailul de confirmare a vânzărilor. De exemplu, "
+"instrucțiuni pentru clienți să urmeze."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -189,8 +193,7 @@ msgstr "Transportator"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid ""
-"Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
-"Tags."
+"Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
 msgstr ""
 "Transportatorul %s nu poate avea aceeași etichetă atât la Etichete "
 "obligatorii cât și la Etichete excluse."
@@ -405,8 +408,8 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
-"Fiecare operator (de exemplu UPS) poate avea mai multe metode de livrare (de"
-" exemplu UPS Express, UPS Standard) cu un set de reguli de prețuri atașate "
+"Fiecare operator (de exemplu UPS) poate avea mai multe metode de livrare (de "
+"exemplu UPS Express, UPS Standard) cu un set de reguli de prețuri atașate "
 "fiecărei metode."
 
 #. module: delivery
@@ -430,11 +433,14 @@ msgstr "Eroare: această metodă de livrare nu este disponibilă."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "Cost estimat: clientul va fi facturat cu costul estimat al transportului.\n"
-"Cost real: clientul va fi facturat cu costul real al transportului, costul transportului va fi actualizat pe SO după livrare."
+"Cost real: clientul va fi facturat cu costul real al transportului, costul "
+"transportului va fi actualizat pe SO după livrare."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -456,8 +462,8 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
-"Filling this form allows you to make the shipping method available according"
-" to the content of the order or its destination."
+"Filling this form allows you to make the shipping method available according "
+"to the content of the order or its destination."
 msgstr ""
 "Completarea acestui formular vă permite să faceți metoda de expediere "
 "disponibilă în funcție de conținutul comenzii sau de destinația acesteia."
@@ -530,8 +536,8 @@ msgid ""
 "If the total weight of the order is over this weight, the method won't be "
 "available."
 msgstr ""
-"Dacă greutatea totală a comenzii depășește această greutate, metoda nu va fi"
-" disponibilă."
+"Dacă greutatea totală a comenzii depășește această greutate, metoda nu va fi "
+"disponibilă."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -703,8 +709,8 @@ msgstr "Date locație ridicare"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Please select a country before choosing a state or a zip prefix."
 msgstr ""
-"Vă rugăm să selectați o țară înainte de a alege un stat sau un prefix de cod"
-" poștal."
+"Vă rugăm să selectați o țară înainte de a alege un stat sau un prefix de cod "
+"poștal."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -856,8 +862,8 @@ msgid ""
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
 "Detaliile metodei de expediere de inclus în partea de jos a comenzilor de "
-"vânzare și e-mailurile lor de confirmare. De exemplu, instrucțiuni de urmat"
-"  pentru clienți."
+"vânzare și e-mailurile lor de confirmare. De exemplu, instrucțiuni de urmat  "
+"pentru clienți."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -893,8 +899,8 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
 msgid ""
-"The method is available only if at least one product of the order has one of"
-" these tags."
+"The method is available only if at least one product of the order has one of "
+"these tags."
 msgstr ""
 "Metoda este disponibilă doar dacă cel puțin un produs din comandă are una "
 "dintre aceste etichete."
@@ -936,8 +942,8 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
-"Aceste metode permit calcularea automată a prețului de livrare în funcție de"
-" setările dvs.; pe comanda de vânzare (pe baza ofertei) sau pe factură (pe "
+"Aceste metode permit calcularea automată a prețului de livrare în funcție de "
+"setările dvs.; pe comanda de vânzare (pe baza ofertei) sau pe factură (pe "
 "baza comenzilor de livrare)."
 
 #. module: delivery
@@ -952,8 +958,8 @@ msgid ""
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
 "Această opțiune adaugă un link pentru client în portal pentru a urmări cu "
-"ușurință coletul. Folosiți <shipmenttrackingnumber> ca substituent în URL-ul"
-" dvs."
+"ușurință coletul. Folosiți <shipmenttrackingnumber> ca substituent în URL-ul "
+"dvs."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -1029,14 +1035,18 @@ msgstr "Eticheta unității de măsură a greutății"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
-"Nu puteți actualiza costurile de livrare pentru o comandă unde acestea au fost deja facturate!\n"
+"Nu puteți actualiza costurile de livrare pentru o comandă unde acestea au "
+"fost deja facturate!\n"
 "\n"
-"Următoarele linii de livrare (produs, cantitate și preț facturate) au fost deja procesate:\n"
+"Următoarele linii de livrare (produs, cantitate și preț facturate) au fost "
+"deja procesate:\n"
 "\n"
 
 #. module: delivery
@@ -1046,8 +1056,8 @@ msgid ""
 "You cannot delete the deliveries product category as it is used on the "
 "delivery carriers products."
 msgstr ""
-"Nu puteți șterge categoria de produse pentru livrări deoarece este utilizată"
-" pe produsele operatorilor de transport."
+"Nu puteți șterge categoria de produse pentru livrări deoarece este utilizată "
+"pe produsele operatorilor de transport."
 
 #. module: delivery
 #. odoo-javascript

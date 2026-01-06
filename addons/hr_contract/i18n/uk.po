@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_contract
-# 
+#
 # Translators:
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_count
@@ -44,11 +47,13 @@ msgstr "/ місяць"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
 msgid ""
-"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" title=\"In Contract Since\">\n"
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" "
+"title=\"In Contract Since\">\n"
 "                                    In Contract Since\n"
 "                                </span>"
 msgstr ""
-"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" title=\"In Contract Since\">\n"
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" "
+"title=\"In Contract Since\">\n"
 "                                    В контракті з\n"
 "                                </span>"
 
@@ -67,14 +72,16 @@ msgid ""
 "<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
 "                                    Contract\n"
 "                                </span>\n"
-"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                <span invisible=\"contracts_count == 1\" "
+"class=\"o_stat_text text-danger\">\n"
 "                                    Contracts\n"
 "                                </span>"
 msgstr ""
 "<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
 "                                    Контракт\n"
 "                                </span>\n"
-"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                <span invisible=\"contracts_count == 1\" "
+"class=\"o_stat_text text-danger\">\n"
 "                                    Контракти\n"
 "                                </span>"
 
@@ -84,14 +91,16 @@ msgid ""
 "<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
 "                                        Contracts\n"
 "                                    </span>\n"
-"                                    <span invisible=\"contracts_count &gt; 1\" class=\"o_stat_text\">\n"
+"                                    <span invisible=\"contracts_count &gt; "
+"1\" class=\"o_stat_text\">\n"
 "                                        Contract\n"
 "                                    </span>"
 msgstr ""
 "<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
 "                                        Контракти\n"
 "                                    </span>\n"
-"                                    <span invisible=\"contracts_count &gt; 1\" class=\"o_stat_text\">\n"
+"                                    <span invisible=\"contracts_count &gt; "
+"1\" class=\"o_stat_text\">\n"
 "                                        Контракт\n"
 "                                    </span>"
 
@@ -176,11 +185,13 @@ msgstr "Адміністратор"
 #. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 msgid ""
-"An employee can only have one contract at the same time. (Excluding Draft and Cancelled contracts).\n"
+"An employee can only have one contract at the same time. (Excluding Draft "
+"and Cancelled contracts).\n"
 "\n"
 "Employee: %(employee_name)s"
 msgstr ""
-"Працівник може мати лише один контракт одночасно. (За винятком проектів і анульованих контрактів).\n"
+"Працівник може мати лише один контракт одночасно. (За винятком проектів і "
+"анульованих контрактів).\n"
 "\n"
 "Співробітник: %(employee_name)s"
 
@@ -270,8 +281,8 @@ msgid ""
 "Contract %(contract)s: start date (%(start)s) must be earlier than contract "
 "end date (%(end)s)."
 msgstr ""
-"Контракт %(contract)s: дата початку (%(start)s) має бути раніше, ніж кінцева"
-" дата контракту (%(end)s)."
+"Контракт %(contract)s: дата початку (%(start)s) має бути раніше, ніж кінцева "
+"дата контракту (%(end)s)."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contracts_count
@@ -664,8 +675,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Якщо активне поле встановлено як Помилкове, це дозволить вам приховати запис"
-" кадрів, не видаливши його."
+"Якщо активне поле встановлено як Помилкове, це дозволить вам приховати запис "
+"кадрів, не видаливши його."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__is_under_contract

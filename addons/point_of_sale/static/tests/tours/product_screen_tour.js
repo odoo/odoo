@@ -485,8 +485,24 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             ProductScreenPartnerList.searchCustomerValueAndClear("United States"),
             ProductScreenPartnerList.searchCustomerValueAndClear("9898989899"),
             ProductScreenPartnerList.searchCustomerValueAndClear("0987654321"),
+            ProductScreenPartnerList.searchCustomerValueAndClear("john@doe.com"),
+            // Test wildcard search ('j%hn d%e' -> john doe)
             ProductScreen.clickPartnerButton(),
-            PartnerList.searchCustomerValue("john@doe.com"),
+            {
+                isActive: ["mobile"],
+                content: `Click search field`,
+                trigger: `.fa-search.undefined`,
+                run: `click`,
+            },
+            {
+                content: `Search customer with "j%hn d%e"`,
+                trigger: `.modal-dialog .input-group input`,
+                run: `edit j%hn d%e`,
+            },
+            {
+                content: `Check "John Doe" is shown`,
+                trigger: `.partner-list .partner-info:nth-child(1):contains("John Doe")`,
+            },
         ].flat(),
 });
 

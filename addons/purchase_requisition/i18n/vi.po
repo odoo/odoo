@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_requisition
-# 
+#
 # Translators:
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
 # Thi Huong Nguyen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: purchase_requisition
@@ -324,13 +324,20 @@ msgstr "Tạo đơn dự trù"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid ""
-"Create a call for tender by adding alternative requests for quotation to different vendors.\n"
-"                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
-"                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
+"Create a call for tender by adding alternative requests for quotation to "
+"different vendors.\n"
+"                            Make your choice by selecting the best "
+"combination of lead time, OTD and/or total amount.\n"
+"                            By comparing product lines you can also decide "
+"to order some products from one vendor and others from another vendor."
 msgstr ""
-"Tạo một thông báo mời thầu bằng cách thêm yêu cầu báo giá dự trù cho các nhà cung cấp khác nhau.\n"
-"                            Sau đó chọn nhà cung cấp có sự kết hợp hoàn hảo nhất giữa thời gian hoàn thành, tỷ lệ giao hàng đúng hạn và/hoặc tổng tiền.\n"
-"                            Bằng cách so sánh chi tiết sản phẩm, bạn cũng có thể quyết định đặt mua một số sản phẩm từ nhà cung cấp này và những sản phẩm khác từ nhà cung cấp khác."
+"Tạo một thông báo mời thầu bằng cách thêm yêu cầu báo giá dự trù cho các nhà "
+"cung cấp khác nhau.\n"
+"                            Sau đó chọn nhà cung cấp có sự kết hợp hoàn hảo "
+"nhất giữa thời gian hoàn thành, tỷ lệ giao hàng đúng hạn và/hoặc tổng tiền.\n"
+"                            Bằng cách so sánh chi tiết sản phẩm, bạn cũng có "
+"thể quyết định đặt mua một số sản phẩm từ nhà cung cấp này và những sản phẩm "
+"khác từ nhà cung cấp khác."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -424,8 +431,8 @@ msgid ""
 "End date cannot be earlier than start date. Please check dates for "
 "agreements: %s"
 msgstr ""
-"Ngày kết thúc không thể sớm hơn ngày bắt đầu. Vui lòng kiểm tra ngày của hợp"
-" đồng: %s"
+"Ngày kết thúc không thể sớm hơn ngày bắt đầu. Vui lòng kiểm tra ngày của hợp "
+"đồng: %s"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -451,7 +458,8 @@ msgstr "Font biểu tượng, ví dụ: fa-tasks"
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specific period\n"
-"            (e.g. a year) and you order products within this agreement to benefit\n"
+"            (e.g. a year) and you order products within this agreement to "
+"benefit\n"
 "            from the negotiated prices."
 msgstr ""
 "Đối với một hợp đồng khung, bạn có thể ghi nhận hợp đồng cho một kỳ cụ thể\n"
@@ -514,22 +522,21 @@ msgstr "Nếu chọn, một số tin nhắn sẽ có lỗi gửi."
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
 msgid ""
 "If the chosen vendor or if any of the products in the original PO have a "
-"blocking warning then we prevent creation of alternative PO. This is because"
-" normally these fields are cleared w/warning message within form view, but "
-"we cannot recreate that in this case."
+"blocking warning then we prevent creation of alternative PO. This is because "
+"normally these fields are cleared w/warning message within form view, but we "
+"cannot recreate that in this case."
 msgstr ""
 "Nếu nhà cung cấp được chọn hoặc nếu bất kỳ sản phẩm nào trong đơn mua hàng "
 "gốc có cảnh báo chặn thì chúng tôi sẽ chặn việc tạo đơn mua hàng dự trù. "
 "Điều này là do thông thường các trường này bị xóa với thông báo cảnh báo "
-"trong chế độ xem biểu mẫu, nhưng chúng tôi không thể tạo lại trường đó trong"
-" trường hợp này."
+"trong chế độ xem biểu mẫu, nhưng chúng tôi không thể tạo lại trường đó trong "
+"trường hợp này."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid ""
 "If this is checked, the product quantities of the original PO will be copied"
-msgstr ""
-"Nếu được chọn, số lượng sản phẩm của đơn mua hàng gốc sẽ được sao chép"
+msgstr "Nếu được chọn, số lượng sản phẩm của đơn mua hàng gốc sẽ được sao chép"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
@@ -909,8 +916,8 @@ msgstr "Một số thông tin chưa được xoá"
 msgid ""
 "Some quantities were not cleared because their status is not a RFQ status."
 msgstr ""
-"Một số số lượng chưa bị xoá vì trạng thái của chúng không phải là trạng thái"
-" RFQ."
+"Một số số lượng chưa bị xoá vì trạng thái của chúng không phải là trạng thái "
+"RFQ."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_start
@@ -971,9 +978,9 @@ msgstr "Đơn mua hàng gốc mà đơn mua hàng dự trù này đang được 
 #. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 msgid ""
-"The vendor you have selected or at least one of the products you are copying"
-" from the original order has a blocking warning on it and cannot be selected"
-" to create an alternative."
+"The vendor you have selected or at least one of the products you are copying "
+"from the original order has a blocking warning on it and cannot be selected "
+"to create an alternative."
 msgstr ""
 "Nhà cung cấp bạn đã chọn hoặc ít nhất một trong các sản phẩm bạn đang sao "
 "chép từ đơn đặt hàng ban đầu có chứa cảnh báo chặn, nên bạn không thể chọn "
@@ -1007,11 +1014,13 @@ msgstr "Đây là một cảnh báo chặn!\n"
 msgid ""
 "To close this purchase requisition, cancel related Requests for Quotation.\n"
 "\n"
-"Imagine the mess if someone confirms these duplicates: double the order, double the trouble :)"
+"Imagine the mess if someone confirms these duplicates: double the order, "
+"double the trouble :)"
 msgstr ""
 "Để đóng yêu cầu mua hàng này, hãy hủy Yêu cầu báo giá liên quan.\n"
 "\n"
-"Thử tưởng tượng sự lộn xộn nếu ai đó xác nhận đơn hàng trùng lặp này: nhân đôi đơn hàng, nhân đôi rắc rối :)"
+"Thử tưởng tượng sự lộn xộn nếu ai đó xác nhận đơn hàng trùng lặp này: nhân "
+"đôi đơn hàng, nhân đôi rắc rối :)"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -1102,8 +1111,8 @@ msgstr "Còn các Yêu cầu báo giá thay thế thì sao?"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
 msgid ""
-"Whether or not this purchase order is linked to another purchase order as an"
-" alternative."
+"Whether or not this purchase order is linked to another purchase order as an "
+"alternative."
 msgstr ""
 "Đơn mua hàng này có được liên kết với một đơn mua hàng khác để làm đơn dự "
 "trù hay không."
@@ -1150,8 +1159,8 @@ msgstr "Bạn không thể xác nhận hợp đồng khung chứa dòng không c
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid ""
-"You cannot confirm agreement '%(agreement)s' because it does not contain any"
-" product lines."
+"You cannot confirm agreement '%(agreement)s' because it does not contain any "
+"product lines."
 msgstr ""
 "Bạn không thể xác nhận hợp đồng '%(agreement)s' vì hiện không có dòng nào "
 "chứa sản phẩm."

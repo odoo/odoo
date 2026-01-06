@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* microsoft_calendar
-# 
+#
 # Translators:
 # Manon Rondou, 2025
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 18:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: microsoft_calendar
@@ -72,8 +72,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/microsoft_calendar/models/res_users.py:0
 msgid ""
-"An error occurred while generating the token. Your authorization code may be"
-" invalid or has already expired [%s]. You should check your Client ID and "
+"An error occurred while generating the token. Your authorization code may be "
+"invalid or has already expired [%s]. You should check your Client ID and "
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
@@ -179,11 +179,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
-"Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
-"If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar."
+"Due to an Outlook Calendar limitation, recurrence updates must be done "
+"directly in Outlook Calendar.\n"
+"If this recurrence is not shown in Outlook Calendar, you must delete it in "
+"Odoo Calendar and recreate it in Outlook Calendar."
 msgstr ""
-"Door een beperking van Outlook Calendar moeten herhalingsupdates rechtstreeks in Outlook Calendar worden uitgevoerd.\n"
-"Als deze herhaling niet wordt getoond in Outlook Agenda, dan moet je deze verwijderen in Odoo Kalender en opnieuw aanmaken in Outlook Calendar."
+"Door een beperking van Outlook Calendar moeten herhalingsupdates "
+"rechtstreeks in Outlook Calendar worden uitgevoerd.\n"
+"Als deze herhaling niet wordt getoond in Outlook Agenda, dan moet je deze "
+"verwijderen in Odoo Kalender en opnieuw aanmaken in Outlook Calendar."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -209,11 +213,17 @@ msgstr "Afspraak terugkeerpatroon"
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
-"For a correct synchronization between Odoo and Outlook Calendar, all attendees must have an email address. However, some events do not respect this condition. As long as the events are incorrect, the calendars will not be synchronized.\n"
+"For a correct synchronization between Odoo and Outlook Calendar, all "
+"attendees must have an email address. However, some events do not respect "
+"this condition. As long as the events are incorrect, the calendars will not "
+"be synchronized.\n"
 "Either update the events/attendees or archive these events %(details)s:\n"
 "%(invalid_events)s"
 msgstr ""
-"Voor een correcte synchronisatie tussen Odoo en Outlook-agenda moeten alle aanwezigen een e-mailadres hebben. Bij sommige afspraken wordt deze voorwaarde echter niet gerespecteerd. Zolang deze afspraken niet kloppen, worden de agenda's niet gesynchroniseerd.\n"
+"Voor een correcte synchronisatie tussen Odoo en Outlook-agenda moeten alle "
+"aanwezigen een e-mailadres hebben. Bij sommige afspraken wordt deze "
+"voorwaarde echter niet gerespecteerd. Zolang deze afspraken niet kloppen, "
+"worden de agenda's niet gesynchroniseerd.\n"
 "Werk de afspraken / deelnemers bij of archiveer deze afspraken %(details)s:\n"
 "%(invalid_events)s"
 
@@ -224,8 +234,8 @@ msgid ""
 "For having a different organizer in your event, it is necessary that the "
 "organizer have its Odoo Calendar synced with Outlook Calendar."
 msgstr ""
-"Om een andere organisator van de afspraak te hebben, moet de Odoo agenda van"
-" de organisator gesynchroniseerd zijn met Outlook Agenda."
+"Om een andere organisator van de afspraak te hebben, moet de Odoo agenda van "
+"de organisator gesynchroniseerd zijn met Outlook Agenda."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -245,8 +255,7 @@ msgstr ""
 #: model:ir.model.fields,help:microsoft_calendar.field_res_config_settings__cal_microsoft_sync_paused
 msgid "Indicates if synchronization with Outlook Calendar is paused or not."
 msgstr ""
-"Geeft aan of de synchronisatie met Outlook Agenda al dan niet is "
-"onderbroken."
+"Geeft aan of de synchronisatie met Outlook Agenda al dan niet is onderbroken."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -425,8 +434,8 @@ msgstr "Synchroniseer alleen nieuwe afspraken."
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 msgid ""
-"The Outlook Synchronization needs to be configured before you can use it, do"
-" you want to do it now?"
+"The Outlook Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
 msgstr ""
 "De Outlook synchronisatie moet geconfigureerd worden voordat je deze kan "
 "gebruiken. Wil je dit nu doen?"
@@ -435,8 +444,7 @@ msgstr ""
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
 msgstr ""
-"Dit heeft alleen gevolgen voor afspraken waarvan de gebruiker de eigenaar "
-"is."
+"Dit heeft alleen gevolgen voor afspraken waarvan de gebruiker de eigenaar is."
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form

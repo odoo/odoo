@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-11-18 13:14+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/"
@@ -47,11 +47,15 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hello,<br/><br/>\n"
-"                You have requested to be subscribed to the mailing list <strong t-out=\"object.name or ''\"/>.\n"
+"                You have requested to be subscribed to the mailing list "
+"<strong t-out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                To confirm, please visit the following link: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>\n"
 "                <br/><br/>\n"
-"                If this was a mistake or you did not requested this action, please ignore this message.\n"
+"                If this was a mistake or you did not requested this action, "
+"please ignore this message.\n"
 "            </div>\n"
 "        "
 msgstr ""
@@ -61,11 +65,15 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hello,<br/><br/>\n"
-"                You have requested to be unsubscribed to the mailing list <strong t-out=\"object.name or ''\"/>.\n"
+"                You have requested to be unsubscribed to the mailing list "
+"<strong t-out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                To confirm, please visit the following link: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
 "                <br/><br/>\n"
-"                If this was a mistake or you did not requested this action, please ignore this message.\n"
+"                If this was a mistake or you did not requested this action, "
+"please ignore this message.\n"
 "            </div>\n"
 "        "
 msgstr ""
@@ -75,26 +83,35 @@ msgstr ""
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Please find below the guidelines of the <t t-out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
-"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"                <p>Please find below the guidelines of the <t t-"
+"out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p>\n"
 "            </div>\n"
 "        "
 msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
-msgid "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-msgid "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgid ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
 msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
-msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
-msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgid ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -120,8 +137,8 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
 msgid ""
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
-" title=\"Show attachments\"/>"
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\" "
+"title=\"Show attachments\"/>"
 msgstr ""
 
 #. module: mail_group
@@ -153,8 +170,10 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid ""
-"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != 'allow'\">Whitelisted</span>\n"
-"                            <span class=\"ms-2 badge text-bg-danger\" invisible=\"author_moderation != 'ban'\">Banned</span>"
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
+"'allow'\">Whitelisted</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" "
+"invisible=\"author_moderation != 'ban'\">Banned</span>"
 msgstr ""
 
 #. module: mail_group
@@ -313,11 +332,11 @@ msgstr ""
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that"
-" did not match any partner."
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
 msgstr ""
-"Autor poruke. Ako nije postavljen, email_from može sadržavati adresu e-pošte"
-" koja nije odgovarala niti jednom partneru."
+"Autor poruke. Ako nije postavljen, email_from može sadržavati adresu e-pošte "
+"koja nije odgovarala niti jednom partneru."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__access_group_id
@@ -584,8 +603,8 @@ msgstr "ID"
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
 "ID matične evidencije sadrži pseudonim (na primjer : projekt sadrži "
 "pseudonim pod kojim djelatnik kreira zadatak)"
@@ -985,8 +1004,8 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Opcionalni ID zapisa na kojeg će biti povezane sve dolazne poruke, čak i ako"
-" oni nisu odgovorili na njega. Ako je postavljeno, to će onemogućiti "
+"Opcionalni ID zapisa na kojeg će biti povezane sve dolazne poruke, čak i ako "
+"oni nisu odgovorili na njega. Ako je postavljeno, to će onemogućiti "
 "stvaranje novih zapisa u potpunosti."
 
 #. module: mail_group
@@ -1007,8 +1026,8 @@ msgstr "ID zapisa nadređenog"
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Matični model sadrži pseudonim. Model sadrži alias referencu ali nije nužno "
@@ -1058,7 +1077,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "Pravila za objavu poruke na dokumentu putem poštanskog sandučića.\n"
 "- svatko: svatko može objaviti poruku\n"
@@ -1247,8 +1267,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid ""
-"Template \"mail_group.mail_template_guidelines\" was not found. No email has"
-" been sent. Please contact an administrator to fix this issue."
+"Template \"mail_group.mail_template_guidelines\" was not found. No email has "
+"been sent. Please contact an administrator to fix this issue."
 msgstr ""
 
 #. module: mail_group
@@ -1294,12 +1314,12 @@ msgstr ""
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
-"Model (Odoo vrsta dokumenta) na koje se ovaj alias odgovara. Svaki dolazni "
-"e-mail koji ne odgovara na postojeći zapis uzrokovati će stvaranje novog "
+"Model (Odoo vrsta dokumenta) na koje se ovaj alias odgovara. Svaki dolazni e-"
+"mail koji ne odgovara na postojeći zapis uzrokovati će stvaranje novog "
 "zapisa ovog modela (npr. projektni zadatak)"
 
 #. module: mail_group
@@ -1457,7 +1477,8 @@ msgstr "je bio"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid ""
 "members<br/>\n"
-"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
+"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" "
+"aria-label=\"Traffic\" title=\"Traffic\"/>"
 msgstr ""
 
 #. module: mail_group

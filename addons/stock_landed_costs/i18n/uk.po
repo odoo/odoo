@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_landed_costs
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -28,8 +31,10 @@ msgstr "%(product)s: %(quantity)s вже не на складі"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
-msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -268,7 +273,8 @@ msgid ""
 msgstr ""
 "Рівно: вартість буде розділена порівну.\n"
 "За кількістю: вартість буде розділена відповідно до кількості товару.\n"
-"За поточною вартістю: вартість буде розділена відповідно до поточної вартості товару.\n"
+"За поточною вартістю: вартість буде розділена відповідно до поточної "
+"вартості товару.\n"
 "За вагою: вартість буде розділена залежно від ваги.\n"
 "За обсягом: вартість буде розділена залежно від його обсягу."
 
@@ -725,16 +731,16 @@ msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
 msgstr ""
-"Ви не можете застосувати додаткові витрати до вибраних %s. Додаткові витрати"
-" можуть розподілятися тільки на товари з оцінкою по FIFO або по середній "
+"Ви не можете застосувати додаткові витрати до вибраних %s. Додаткові витрати "
+"можуть розподілятися тільки на товари з оцінкою по FIFO або по середній "
 "вартості."
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/product.py:0
 msgid ""
-"You cannot change the product type or disable landed cost option because the"
-" product is used in an account move line."
+"You cannot change the product type or disable landed cost option because the "
+"product is used in an account move line."
 msgstr ""
 "Ви не можете змінити тип товару або вимкнути додаткові витрати, оскільки "
 "товар використовується у рядку бухгалтерської проводки."

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_expiry
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Thi Huong Nguyen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: product_expiry
@@ -115,7 +115,8 @@ msgstr "Được tạo vào"
 msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
-msgstr "Ngày để xác định lô và sê-ri đã hết hạn bằng bộ lọc \"Cảnh báo hết hạn\"."
+msgstr ""
+"Ngày để xác định lô và sê-ri đã hết hạn bằng bộ lọc \"Cảnh báo hết hạn\"."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -258,8 +259,8 @@ msgstr ""
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_time
 msgid ""
 "Number of days before the Expiration Date after which the goods starts "
-"deteriorating, without being dangerous yet. It will be computed on the "
-"lot/serial number."
+"deteriorating, without being dangerous yet. It will be computed on the lot/"
+"serial number."
 msgstr ""
 "Số ngày trước Ngày hết hạn mà sau đó hàng hóa bắt đầu hư hỏng nhưng chưa "
 "nguy hiểm. Số ngày này sẽ được xác định theo số lô/số sê-ri."
@@ -358,8 +359,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock. This date will be used in FEFO removal strategy."
 msgstr ""
-"Đây là ngày mà hàng hóa có số sê-ri này phải được loại khỏi kho. Ngày này sẽ"
-" được sử dụng trong chiến lược lấy hàng FEFO."
+"Đây là ngày mà hàng hóa có số sê-ri này phải được loại khỏi kho. Ngày này sẽ "
+"được sử dụng trong chiến lược lấy hàng FEFO."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date
@@ -393,12 +394,12 @@ msgstr "Sử dụng ngày hết hạn"
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
 msgid ""
-"When this box is ticked, you have the possibility to specify dates to manage"
-" product expiration, on the product and on the corresponding lot/serial "
+"When this box is ticked, you have the possibility to specify dates to manage "
+"product expiration, on the product and on the corresponding lot/serial "
 "numbers"
 msgstr ""
-"Khi ô này được chọn, bạn có thể xác định ngày để quản lý hạn sử dụng của sản"
-" phẩm trên sản phẩm và trên số lô/sê-ri tương ứng"
+"Khi ô này được chọn, bạn có thể xác định ngày để quản lý hạn sử dụng của sản "
+"phẩm trên sản phẩm và trên số lô/sê-ri tương ứng"
 
 #. module: product_expiry
 #. odoo-python
@@ -414,10 +415,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
 msgid ""
-"You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is "
+"expired.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
-"Bạn sắp giao các sản phẩm %(product_name)s, %(lot_name)s đã hết hạn sử dụng.\n"
+"Bạn sắp giao các sản phẩm %(product_name)s, %(lot_name)s đã hết hạn sử "
+"dụng.\n"
 "Bạn có xác nhận muốn tiếp tục không?"
 
 #. module: product_expiry

@@ -1,38 +1,46 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_track
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # bf2549c5415a9287249cba2b8a5823c7, 2024
 # 何彬 <vnsoft.he@gmail.com>, 2024
 # Chloe Wang, 2025
 # Raymond Yu <cl_yu@hotmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:40+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2025\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_event_track
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
-"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br/>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name "
+"or ''\">What This Event Is All About</t> has been accepted and confirmed for "
+"the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online "
+"Reveal</t>.\n"
 "    <br/>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
@@ -40,16 +48,23 @@ msgid ""
 "    Thank you,\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-"
+"o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "    </t>\n"
 msgstr ""
 "\n"
-"    亲爱的<t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
-"    很高兴地通知您，您提议的活动  <t t-out=\"object.name or ''\">（活动内容）</t> 已被接纳及确认用于 <t t-out=\"object.event_id.name or ''\">OpenWood 系列线上发布会</t>活动。\n"
+"    亲爱的<t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br/>\n"
+"    很高兴地通知您，您提议的活动  <t t-out=\"object.name or ''\">（活动内容）"
+"</t> 已被接纳及确认用于 <t t-out=\"object.event_id.name or ''\">OpenWood 系列"
+"线上发布会</t>活动。\n"
 "    <br/>\n"
 "    更多详情请点击此处：\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            查看演讲\n"
 "        </a>\n"
 "    </div>\n"
@@ -57,7 +72,8 @@ msgstr ""
 "    谢谢！\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-"
+"o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "    </t>\n"
 
 #. module: website_event_track
@@ -171,13 +187,17 @@ msgstr "<span class=\"fa fa-plus me-1\"/> 排期音轨"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                    <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                    <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                    <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                    <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                </span>"
 msgstr ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                    <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"错误\" title=\"错误\"/>\n"
-"                                    <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                    <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"错误\" title=\"错误\"/>\n"
+"                                    <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                </span>"
 
 #. module: website_event_track
@@ -389,13 +409,18 @@ msgstr "由于关键追踪不能被取消，这个字段存储了伙伴选择删
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
 msgid ""
-"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
-"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
-"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"As you may have heard before, making your own furniture is actually not as "
+"difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete "
+"them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee "
+"table you can easily put one together using\n"
 "    wood crates."
 msgstr ""
-"正如您以前可能听说过的那样，自己制作家具实际上并不像您想象的那样困难或复杂。\n"
-"    事实上，有些项目非常容易，任何人都可以成功完成。例如，用一个旧轮胎做一个可爱的凳子是小菜一碟。\n"
+"正如您以前可能听说过的那样，自己制作家具实际上并不像您想象的那样困难或复"
+"杂。\n"
+"    事实上，有些项目非常容易，任何人都可以成功完成。例如，用一个旧轮胎做一个"
+"可爱的凳子是小菜一碟。\n"
 "    如果您需要一个咖啡桌，您可以很容易地用木箱把它拼起来。\n"
 "    木板条箱。"
 
@@ -572,7 +597,9 @@ msgid ""
 "Considering to build a wooden house? Watch this video to find out more "
 "information about a construction process and final result. Step by step "
 "simple explanation! Interested?"
-msgstr "考虑建造一座木制房屋？请看这个视频，了解更多关于施工过程和最终结果的信息。一步一步的简单解释!有兴趣吗？"
+msgstr ""
+"考虑建造一座木制房屋？请看这个视频，了解更多关于施工过程和最终结果的信息。一"
+"步一步的简单解释!有兴趣吗？"
 
 #. module: website_event_track
 #. odoo-python
@@ -1132,8 +1159,8 @@ msgstr "如果在专题到达这一步时，设置发送EMail给客户。"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
 msgid ""
-"If set, the talk will be set as favorite for each attendee registered to the"
-" event."
+"If set, the talk will be set as favorite for each attendee registered to the "
+"event."
 msgstr "如果设置了，该讲座将被设置为每个登记参加活动的与会者的最爱。"
 
 #. module: website_event_track
@@ -1340,7 +1367,9 @@ msgstr "闪电讲座"
 msgid ""
 "Link to Q&amp;A here! The time has come to hide those old block walls. Love "
 "simple and transformation type projects like this! :)-"
-msgstr "在这里链接到Q&amp;A!是时候把那些旧的砖墙藏起来了。我喜欢这样的简单和改造型项目。:)-"
+msgstr ""
+"在这里链接到Q&amp;A!是时候把那些旧的砖墙藏起来了。我喜欢这样的简单和改造型项"
+"目。:)-"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
@@ -1633,7 +1662,9 @@ msgid ""
 "woodworking! In this video I share with you how/why I started building "
 "furniture!"
 msgstr ""
-"我收到的最多的问题之一可能是我是如何开始做木工的！在这个视频中，我分享了我是如何/为什么开始做家具的。在这段视频中，我与您分享了我是如何/为什么开始制作家具的!"
+"我收到的最多的问题之一可能是我是如何开始做木工的！在这个视频中，我分享了我是"
+"如何/为什么开始做家具的。在这段视频中，我与您分享了我是如何/为什么开始制作家"
+"具的!"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage0
@@ -1995,18 +2026,22 @@ msgstr "有很多想法值得探索，所以从适合绝对初学者的10个DIY�
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"There are several variants of wood is available in the world but we are talking about most expensive\n"
-"    ones in the world and keeping to the point we have arranged ten most expensive wood."
+"There are several variants of wood is available in the world but we are "
+"talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most "
+"expensive wood."
 msgstr ""
 "世界上有几种不同的木材，但我们讨论的是世界上最昂贵的木材。\n"
-"    但我们谈论的是世界上最昂贵的木材，为了保持这一点，我们安排了十种最昂贵的木材。"
+"    但我们谈论的是世界上最昂贵的木材，为了保持这一点，我们安排了十种最昂贵的"
+"木材。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "These are 30 minutes talks on many different topics. Most topics are "
 "accepted in lightning talks."
-msgstr "这些演讲时间为 30 分钟，涉及许多不同的主题。大多数主题都可以参加闪电讲座。"
+msgstr ""
+"这些演讲时间为 30 分钟，涉及许多不同的主题。大多数主题都可以参加闪电讲座。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2016,8 +2051,7 @@ msgstr "这些都是配有幻灯片的标准讲座，时间段为 60 分钟。"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid ""
-"They will be created automatically once attendees start browsing your "
-"events."
+"They will be created automatically once attendees start browsing your events."
 msgstr "一旦与会者开始浏览您的活动，它们就会自动创建。"
 
 #. module: website_event_track
@@ -2089,10 +2123,13 @@ msgstr "世界上最昂贵的10种木材"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
-"    that there are hundreds of wood types exist around the globe following different properties and use."
+"Top most expensive wood in the world is quite interesting topic and several "
+"people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following "
+"different properties and use."
 msgstr ""
-"世界上最昂贵的木材是一个相当有趣的话题，一些人可能会感到惊讶，全球有数百种不同性质和用途的木材。\n"
+"世界上最昂贵的木材是一个相当有趣的话题，一些人可能会感到惊讶，全球有数百种不"
+"同性质和用途的木材。\n"
 "    全球有数百种不同性质和用途的木材。"
 
 #. module: website_event_track
@@ -2277,21 +2314,28 @@ msgstr "不支持在跟踪列表访客上执行 “不在 ”操作"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Use these simple steps to easily haul LONG lumber in a short box pickup truck.  A dose of carpenter's\n"
-"    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
-"    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
+"Use these simple steps to easily haul LONG lumber in a short box pickup "
+"truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws "
+"are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or "
+"jobsite."
 msgstr ""
 "使用这些简单的步骤，可以轻松地用短箱皮卡拖运长条形木材。  一剂木匠的\n"
-"    巧，加上几块木板、一条结实的带子和几颗螺丝钉，我就可以轻松地把长木板从木场拖到下一级木工车间或工地。\n"
+"    巧，加上几块木板、一条结实的带子和几颗螺丝钉，我就可以轻松地把长木板从木"
+"场拖到下一级木工车间或工地。\n"
 "    长木板从木材厂运到下一级木工车间或工作现场。"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
-"    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) "
+"allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated "
+"knots."
 msgstr ""
-"使用独特的捆扎带包裹方法（不是蹦极绳！！），可以将木材牢牢捆住，而不需要打上或解开复杂的结。\n"
+"使用独特的捆扎带包裹方法（不是蹦极绳！！），可以将木材牢牢捆住，而不需要打上"
+"或解开复杂的结。\n"
 "    牢牢地束缚住木材，而不需要打和解复杂的绳结。"
 
 #. module: website_event_track

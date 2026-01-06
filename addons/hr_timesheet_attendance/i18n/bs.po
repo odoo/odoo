@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2025-11-25 09:50+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-12-31 16:37+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-18/"
 "hr_timesheet_attendance/bs/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__attendance_cost
@@ -31,7 +31,7 @@ msgstr ""
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_attendance
-msgid "Attendance Hours"
+msgid "Attendance Time"
 msgstr ""
 
 #. module: hr_timesheet_attendance
@@ -61,19 +61,20 @@ msgid "Display Name"
 msgstr "Prikazani naziv"
 
 #. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "Employee"
 msgstr "Zaposleni"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_difference
-msgid "Hours Difference"
-msgstr ""
-
-#. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__id
 msgid "ID"
 msgstr "ID"
+
+#. module: hr_timesheet_attendance
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Last Week"
+msgstr "Zadnja sedmica"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_ir_ui_menu
@@ -96,23 +97,17 @@ msgid "No data yet!"
 msgstr ""
 
 #. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Attendance"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "This Week"
+msgstr "Ove sedmice"
 
 #. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Difference"
-msgstr ""
-
-#. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Timesheet"
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_difference
+msgid "Time Difference"
 msgstr ""
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_graph
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "Timesheet Attendance"
@@ -136,10 +131,13 @@ msgstr ""
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_timesheet
-msgid "Timesheets Hours"
+msgid "Timesheets Time"
 msgstr ""
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__user_id
-msgid "User"
-msgstr "Korisnik"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Today"
+msgstr "Danas"
+
+#~ msgid "User"
+#~ msgstr "Korisnik"

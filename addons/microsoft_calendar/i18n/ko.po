@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* microsoft_calendar
-# 
+#
 # Translators:
 # Daye Jeong, 2024
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 18:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: microsoft_calendar
@@ -69,13 +69,14 @@ msgstr "사용하려면 관리자가 Outlook 동기화 설정을 해야 합니�
 #. odoo-python
 #: code:addons/microsoft_calendar/models/res_users.py:0
 msgid ""
-"An error occurred while generating the token. Your authorization code may be"
-" invalid or has already expired [%s]. You should check your Client ID and "
+"An error occurred while generating the token. Your authorization code may be "
+"invalid or has already expired [%s]. You should check your Client ID and "
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
-"토큰 생성 중에 오류가 발생했습니다. 인증 코드가 잘못되었거나 이미 만료된 코드 [%s]입니다. Microsoft Azure 포털에서 "
-"클라이언트 아이디 및 암호를 확인하거나 캘린더 동기화를 중지한 후 다시 시작하시기 바랍니다."
+"토큰 생성 중에 오류가 발생했습니다. 인증 코드가 잘못되었거나 이미 만료된 코"
+"드 [%s]입니다. Microsoft Azure 포털에서 클라이언트 아이디 및 암호를 확인하거"
+"나 캘린더 동기화를 중지한 후 다시 시작하시기 바랍니다."
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_attendee
@@ -166,17 +167,23 @@ msgstr "표시명"
 msgid ""
 "Due to an Outlook Calendar limitation, recurrence updates must be done "
 "directly in Outlook Calendar."
-msgstr "Outlook 캘린더 제한으로 인해 반복되는 일정은 Outlook 캘린더에서 직접 업데이트해야 합니다."
+msgstr ""
+"Outlook 캘린더 제한으로 인해 반복되는 일정은 Outlook 캘린더에서 직접 업데이트"
+"해야 합니다."
 
 #. module: microsoft_calendar
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
-"Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
-"If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar."
+"Due to an Outlook Calendar limitation, recurrence updates must be done "
+"directly in Outlook Calendar.\n"
+"If this recurrence is not shown in Outlook Calendar, you must delete it in "
+"Odoo Calendar and recreate it in Outlook Calendar."
 msgstr ""
-"Outlook 캘린더 제한으로 인해 반복되는 일정은 Outlook 캘린더에서 직접 업데이트해야 합니다.\n"
-"반복 내용이 Outlook 캘린더에 표시되지 않으면 Odoo 캘린더에서 삭제한 후 Outlook 캘린더에서 다시 생성할 수 있습니다."
+"Outlook 캘린더 제한으로 인해 반복되는 일정은 Outlook 캘린더에서 직접 업데이트"
+"해야 합니다.\n"
+"반복 내용이 Outlook 캘린더에 표시되지 않으면 Odoo 캘린더에서 삭제한 후 "
+"Outlook 캘린더에서 다시 생성할 수 있습니다."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -184,7 +191,9 @@ msgstr ""
 msgid ""
 "Due to an Outlook Calendar limitation, recurrent events must be created "
 "directly in Outlook Calendar."
-msgstr "Outlook 캘린더 제한으로 인해 반복되는 일정은 Outlook 캘린더에서 직접 생성해야 합니다."
+msgstr ""
+"Outlook 캘린더 제한으로 인해 반복되는 일정은 Outlook 캘린더에서 직접 생성해"
+"야 합니다."
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_alarm_manager
@@ -200,11 +209,16 @@ msgstr "일정 반복 규칙"
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
-"For a correct synchronization between Odoo and Outlook Calendar, all attendees must have an email address. However, some events do not respect this condition. As long as the events are incorrect, the calendars will not be synchronized.\n"
+"For a correct synchronization between Odoo and Outlook Calendar, all "
+"attendees must have an email address. However, some events do not respect "
+"this condition. As long as the events are incorrect, the calendars will not "
+"be synchronized.\n"
 "Either update the events/attendees or archive these events %(details)s:\n"
 "%(invalid_events)s"
 msgstr ""
-"Odoo와 Outlook 일정 간에 제대로 동기화하려면 모든 참석자에게 전자 메일 주소가 있어야 합니다. 일부 이벤트는 이 요구 사항을 충족하지 않아 동기화가 되지 않습니다.\n"
+"Odoo와 Outlook 일정 간에 제대로 동기화하려면 모든 참석자에게 전자 메일 주소"
+"가 있어야 합니다. 일부 이벤트는 이 요구 사항을 충족하지 않아 동기화가 되지 않"
+"습니다.\n"
 "이벤트/참석자를 업데이트하거나 이러한 이벤트를 %(details)s에 보관하세요:\n"
 "%(invalid_events)s"
 
@@ -214,7 +228,9 @@ msgstr ""
 msgid ""
 "For having a different organizer in your event, it is necessary that the "
 "organizer have its Odoo Calendar synced with Outlook Calendar."
-msgstr "행사에 다른 주최자를 추가하려면 주최자의 Odoo 캘린더가 Outlook 캘린더와 동기화되어 있어야 합니다."
+msgstr ""
+"행사에 다른 주최자를 추가하려면 주최자의 Odoo 캘린더가 Outlook 캘린더와 동기"
+"화되어 있어야 합니다."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -226,7 +242,9 @@ msgstr "ID"
 msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr "사용중인 필드를 아니오로 설정하면 일정 알람 정보를 제거하지 않고 숨길 수 있습니다."
+msgstr ""
+"사용중인 필드를 아니오로 설정하면 일정 알람 정보를 제거하지 않고 숨길 수 있습"
+"니다."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_res_config_settings__cal_microsoft_sync_paused
@@ -360,8 +378,8 @@ msgid ""
 "the day of the previous event, and cannot be moved to or after the day of "
 "the following event."
 msgstr ""
-"Outlook 제한: 반복되는 경우, 행사를 이전 행사일 당일이나 이전으로 이동할 수 없으며, 다음 행사일 당일이나 이후로 이동할 수 "
-"없습니다."
+"Outlook 제한: 반복되는 경우, 행사를 이전 행사일 당일이나 이전으로 이동할 수 "
+"없으며, 다음 행사일 당일이나 이후로 이동할 수 없습니다."
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -407,9 +425,10 @@ msgstr "새로운 행사만 동기화"
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 msgid ""
-"The Outlook Synchronization needs to be configured before you can use it, do"
-" you want to do it now?"
-msgstr "Outlook 동기화를 사용하려면 먼저 설정을 해야 합니다. 지금 설정하시겠습니까?"
+"The Outlook Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
+msgstr ""
+"Outlook 동기화를 사용하려면 먼저 설정을 해야 합니다. 지금 설정하시겠습니까?"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy

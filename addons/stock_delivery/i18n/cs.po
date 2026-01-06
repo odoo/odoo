@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_delivery
-# 
+#
 # Translators:
 # Stanislav Kurinec, 2024
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -105,8 +106,7 @@ msgstr "Zrušit"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
 "Zrušení dodávky nemusí být možné vrátit zpět. Jste si jisti, že chcete "
 "pokračovat?"
@@ -199,11 +199,15 @@ msgstr "Zobrazit sledovací odkazy"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
-"Odhadované náklady: zákazníkovi budou fakturovány odhadované náklady na dopravu.\n"
-"Skutečné náklady: zákazníkovi budou fakturovány skutečné náklady na dopravu, náklady na dopravu budou aktualizovány na SO po doručení."
+"Odhadované náklady: zákazníkovi budou fakturovány odhadované náklady na "
+"dopravu.\n"
+"Skutečné náklady: zákazníkovi budou fakturovány skutečné náklady na dopravu, "
+"náklady na dopravu budou aktualizovány na SO po doručení."
 
 #. module: stock_delivery
 #. odoo-python
@@ -355,11 +359,13 @@ msgstr "Trasy"
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
-"Pravidla původu určují, odkud zboží pochází, tj. ne odkud bylo odesláno, ale"
-" kde bylo vyrobeno nebo vyráběno. Takovým způsobem je 'původ' 'ekonomickou "
+"Pravidla původu určují, odkud zboží pochází, tj. ne odkud bylo odesláno, ale "
+"kde bylo vyrobeno nebo vyráběno. Takovým způsobem je 'původ' 'ekonomickou "
 "národností' zboží obchodovaného v obchodu."
 
 #. module: stock_delivery
@@ -391,8 +397,8 @@ msgstr "Poslat odesílateli"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
+"(ref)s"
 msgstr ""
 "Zásilka byla odeslána dopravci %(carrier_name)s k odeslání se sledovacím "
 "číslem %(ref)s"
@@ -456,8 +462,7 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"ISO kód země ve dvou znacích. Toto pole můžete použít pro rychlé "
-"vyhledávání."
+"ISO kód země ve dvou znacích. Toto pole můžete použít pro rychlé vyhledávání."
 
 #. module: stock_delivery
 #. odoo-python
@@ -482,8 +487,8 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
-"Hmotnost balení je vyšší než maximální povolená hmotnost tohoto typu balení."
-" Vyberte prosím jiný typ balíčku."
+"Hmotnost balení je vyšší než maximální povolená hmotnost tohoto typu balení. "
+"Vyberte prosím jiný typ balíčku."
 
 #. module: stock_delivery
 #. odoo-python
@@ -567,8 +572,8 @@ msgstr "Hmotnost:"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
 "Produkty nemůžete zabalit do stejného balíku, pokud mají různé přepravce "
 "(tj. zkontrolujte, zda všechny jejich převody mají přiřazeného přepravce a "
@@ -586,8 +591,8 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"Váš způsob doručení nemá přesměrování na webu kurýrního poskytovatele, který"
-" by sledoval tuto objednávku."
+"Váš způsob doručení nemá přesměrování na webu kurýrního poskytovatele, který "
+"by sledoval tuto objednávku."
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix

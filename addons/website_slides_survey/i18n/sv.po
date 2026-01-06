@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:41+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2025-11-19 09:16+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/"
@@ -50,11 +50,16 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t><br/><br/>\n"
-"        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basics of Gardening</t>.<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant' or "
+"''\">participant</t><br/><br/>\n"
+"        Unfortunately, you have failed the certification and are no longer a "
+"member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or "
+"''\">Basics of Gardening</t>.<br/><br/>\n"
 "        Don't hesitate to enroll again!\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)"
+"\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                Enroll now\n"
 "            </a>\n"
 "        </div>\n"
@@ -90,10 +95,12 @@ msgstr ""
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
 msgid ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" title=\"Share certification\"/>\n"
+"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" "
+"title=\"Share certification\"/>\n"
 "                        Share your certification"
 msgstr ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" title=\"Share certification\"/>\n"
+"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" "
+"title=\"Share certification\"/>\n"
 "                        Dela med dig av din certifiering"
 
 #. module: website_slides_survey
@@ -145,8 +152,10 @@ msgstr "<span class=\"text-muted\">Certifieringar</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
-msgid "<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
-msgstr "<span>Börja nu</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
+msgid ""
+"<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
+msgstr ""
+"<span>Börja nu</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
 
 #. module: website_slides_survey
 #: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id
@@ -185,10 +194,12 @@ msgstr "Tillåt förhandsvisning"
 #. odoo-python
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 msgid ""
-"Any Survey listed below is currently used as a Course Certification and cannot be deleted:\n"
+"Any Survey listed below is currently used as a Course Certification and "
+"cannot be deleted:\n"
 "%s"
 msgstr ""
-"Alla undersökningar som listas nedan används för närvarande som kurscertifiering och kan inte tas bort:\n"
+"Alla undersökningar som listas nedan används för närvarande som "
+"kurscertifiering och kan inte tas bort:\n"
 "%s"
 
 #. module: website_slides_survey
@@ -544,11 +555,11 @@ msgstr "Information om abonnenten"
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
 msgid ""
-"Subtype of the slide category, allows more precision on the actual file type"
-" / source type."
+"Subtype of the slide category, allows more precision on the actual file "
+"type / source type."
 msgstr ""
-"Subtyp av slide-kategorin, tillåter mer precision på den faktiska filtypen /"
-" källtypen."
+"Subtyp av slide-kategorin, tillåter mer precision på den faktiska filtypen / "
+"källtypen."
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
@@ -599,16 +610,14 @@ msgid ""
 "The course is accessible by anyone : the users don't need to join the "
 "channel to access the content of the course."
 msgstr ""
-"Kursen är tillgänglig för alla: användarna behöver inte gå med i kanalen för"
-" att få tillgång till innehållet i kursen."
+"Kursen är tillgänglig för alla: användarna behöver inte gå med i kanalen för "
+"att få tillgång till innehållet i kursen."
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_channel_ids
-msgid ""
-"The courses this survey is linked to through the e-learning application"
+msgid "The courses this survey is linked to through the e-learning application"
 msgstr ""
-"De kurser som denna undersökning är kopplad till via e-learning-"
-"applikationen"
+"De kurser som denna undersökning är kopplad till via e-learning-applikationen"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
@@ -652,11 +661,15 @@ msgstr "Det är inte tillåtet att länka en certifiering."
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
 msgid ""
-"You can gain badges by passing certifications. Here is a list of all available certification badges.\n"
-"                            <br/>Follow the links to reach new heights and skill up!"
+"You can gain badges by passing certifications. Here is a list of all "
+"available certification badges.\n"
+"                            <br/>Follow the links to reach new heights and "
+"skill up!"
 msgstr ""
-"Du kan få utmärkelser genom att klara certifieringar. Här är en lista över alla tillgängliga certifieringsmärken.\n"
-"                           <br/>Följ länkarna för att nå nya höjder och förbättra dina färdigheter!"
+"Du kan få utmärkelser genom att klara certifieringar. Här är en lista över "
+"alla tillgängliga certifieringsmärken.\n"
+"                           <br/>Följ länkarna för att nå nya höjder och "
+"förbättra dina färdigheter!"
 
 #. module: website_slides_survey
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed

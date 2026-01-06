@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_timesheet
-# 
+#
 # Translators:
 # Katrin Kampura, 2024
 # Leaanika Randmets, 2024
@@ -18,19 +18,19 @@
 # Birgit Vijar, 2025
 # Siim Raasuke, 2025
 # Tairi Tiimann, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tairi Tiimann, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet
@@ -84,8 +84,8 @@ msgstr "%(name)s tööaja arvestusleht"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"'%(missing_plan_names)s' analytic plan(s) required on the project "
-"'%(project_name)s' linked to the timesheet."
+"'%(missing_plan_names)s' analytic plan(s) required on the project '%"
+"(project_name)s' linked to the timesheet."
 msgstr ""
 
 #. module: hr_timesheet
@@ -124,12 +124,17 @@ msgstr "2021-09-01"
 #. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
-msgstr "<b class=\"tip_title\">Vihje: Salvesta tööaja arvestusleht kiiremini</b>"
+msgstr ""
+"<b class=\"tip_title\">Vihje: Salvesta tööaja arvestusleht kiiremini</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
-msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -153,9 +158,11 @@ msgid ""
 "<span invisible=\"not has_timesheet\">\n"
 "                        You cannot delete employees who have timesheets.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            You can either archive these employees or first delete all of their timesheets.\n"
+"                            You can either archive these employees or first "
+"delete all of their timesheets.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Please first delete all of their timesheets.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -164,16 +171,21 @@ msgid ""
 "                    </span>"
 msgstr ""
 "<span invisible=\"not has_timesheet\">\n"
-"                        Te ei saa kustutada töötajaid, kellel on tööaja arvestuslehed.\n"
+"                        Te ei saa kustutada töötajaid, kellel on tööaja "
+"arvestuslehed.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            Te saate kas töötajad arhiveerida või esmalt kustutada kõik nende tööaja arvestuslehed.\n"
+"                            Te saate kas töötajad arhiveerida või esmalt "
+"kustutada kõik nende tööaja arvestuslehed.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
-"                            Palun kustutage esmalt kõik nende tööaja arvestuslehed.\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Palun kustutage esmalt kõik nende tööaja "
+"arvestuslehed.\n"
 "                        </span>\n"
 "                    </span>\n"
 "                    <span invisible=\"has_timesheet\">\n"
-"                        Kas olete kindel, et tahate need töötajad kustutada?\n"
+"                        Kas olete kindel, et tahate need töötajad "
+"kustutada?\n"
 "                    </span>"
 
 #. module: hr_timesheet
@@ -291,11 +303,14 @@ msgstr "Analüütilise plaani rakendusvõimalused"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid ""
-"Analyze the projects and tasks on which your employees spend their time.<br>\n"
+"Analyze the projects and tasks on which your employees spend their time."
+"<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
-"Analüüsige projekte ja ülesandeid, millele Teie töötajad oma aega kulutavad.<br>\n"
-"                 Hinnake, milline osa on arveldatav ja milliseid kulusid see esindab."
+"Analüüsige projekte ja ülesandeid, millele Teie töötajad oma aega kulutavad."
+"<br>\n"
+"                 Hinnake, milline osa on arveldatav ja milliseid kulusid see "
+"esindab."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_allow
@@ -531,8 +546,7 @@ msgstr "Lisaaeg"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid ""
-"Generate timesheets for validated time off requests and public holidays"
+msgid "Generate timesheets for validated time off requests and public holidays"
 msgstr ""
 
 #. module: hr_timesheet
@@ -927,8 +941,8 @@ msgstr "Ettevõtte sisemine projekt peaks olema selles ettevõttes."
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"The project, the task and the analytic accounts of the timesheet must belong"
-" to the same company."
+"The project, the task and the analytic accounts of the timesheet must belong "
+"to the same company."
 msgstr ""
 
 #. module: hr_timesheet
@@ -940,8 +954,8 @@ msgstr "Tööaja arvestuslehed puuduvad"
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"These projects have some timesheet entries referencing them. Before removing"
-" these projects, you have to remove these timesheet entries."
+"These projects have some timesheet entries referencing them. Before removing "
+"these projects, you have to remove these timesheet entries."
 msgstr ""
 "Nendel projektidel on neile viitavad tööaja arvestusread. Enne nende "
 "projektide eemaldamist peate eemaldama need tööaja arvestusread."
@@ -991,8 +1005,8 @@ msgstr "Operaatorit %s see otsingumeetod ei toeta."
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"This project has some timesheet entries referencing it. Before removing this"
-" project, you have to remove these timesheet entries."
+"This project has some timesheet entries referencing it. Before removing this "
+"project, you have to remove these timesheet entries."
 msgstr ""
 "Sellel projektil on sellele viitavad tööaja arvestusread. Enne selle "
 "projekti eemaldamist peate eemaldama need tööaja arvestusread."
@@ -1021,10 +1035,12 @@ msgstr ""
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects, don't forget to setup the right "
+"unit of measure in your employees."
 msgstr ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects, don't forget to setup the right "
+"unit of measure in your employees."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -1257,8 +1273,7 @@ msgstr "Privaatsel ülesandel ei saa aega logida. "
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"Timesheets must be created with an active employee in the selected "
-"companies."
+"Timesheets must be created with an active employee in the selected companies."
 msgstr ""
 "Tööaja arvestuslehed peavad olema loodud aktiivse töötaja kohta valitud "
 "ettevõttes."
@@ -1334,8 +1349,8 @@ msgstr "Kokku:"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
-"Track your working hours by projects every day and invoice this time to your"
-" customers."
+"Track your working hours by projects every day and invoice this time to your "
+"customers."
 msgstr ""
 "Jälgige igapäevaselt oma projektipõhist tööaega ning arveldage see aeg "
 "kliendile edasi."
@@ -1356,7 +1371,8 @@ msgid ""
 "        @user Assign the task to a user\n"
 "        ! Set the task a high priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
 "Kasuta pealkirjas uute ülesannete määramiseks neid märksõnu:\n"
 "\n"
@@ -1365,7 +1381,8 @@ msgstr ""
 "        @kasutaja Määra ülesandele vastutav/kasutaja\n"
 "        ! Määra ülesandele kõrgem prioriteet\n"
 "\n"
-"        Jälgi kindlasti, et kasutad õiget formaati ja järjekorda nt. Paranda konfigureerimise ekraani 5h #feature #v16 @Mitchell !"
+"        Jälgi kindlasti, et kasutad õiget formaati ja järjekorda nt. Paranda "
+"konfigureerimise ekraani 5h #feature #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1392,11 +1409,13 @@ msgstr "Vaata detaile"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_from_employee
 msgid ""
 "You can register and track your workings hours by project every\n"
-"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    day. Every time spent on a project will become a cost "
+"and can be re-invoiced to\n"
 "                    customers if required."
 msgstr ""
 "Saate erinevates projektides registreerida ja jälgida oma tööaega\n"
-"                     päeval. Iga projektile kulutatud aeg muutub kuluks ja selle eest saab uuesti vajadusel kliendile arve esitada\n"
+"                     päeval. Iga projektile kulutatud aeg muutub kuluks ja "
+"selle eest saab uuesti vajadusel kliendile arve esitada\n"
 "                     "
 
 #. module: hr_timesheet
@@ -1415,16 +1434,18 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid ""
-"You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/>\n"
-"                            Please switch to another account, or reactivate the current one to timesheet on the project."
+"You cannot log timesheets on this project since it is linked to an inactive "
+"analytic account.<br/>\n"
+"                            Please switch to another account, or reactivate "
+"the current one to timesheet on the project."
 msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive "
-"analytic account.<br/> Please change this account, or reactivate the current"
-" one to timesheet on the project."
+"analytic account.<br/> Please change this account, or reactivate the current "
+"one to timesheet on the project."
 msgstr ""
 
 #. module: hr_timesheet
@@ -1447,10 +1468,12 @@ msgstr "jaoks"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "on\n"
-"                            <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
+"                            <span class=\"fw-bold text-dark\"> Sub-tasks</"
+"span>)"
 msgstr ""
 "on\n"
-"                            <span class=\"fw-bold text-dark\">Alamülesanded</span>)"
+"                            <span class=\"fw-bold text-dark\">Alamülesanded</"
+"span>)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1459,4 +1482,5 @@ msgid ""
 "                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
 "on\n"
-"                        <span class=\"fw-bold text-dark\">Alamülesanded</span>)"
+"                        <span class=\"fw-bold text-dark\">Alamülesanded</"
+"span>)"

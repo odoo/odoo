@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2025-09-11 17:19+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
@@ -18,10 +18,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
-"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
-"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: certificate
@@ -370,7 +370,8 @@ msgstr "Не вдалося завантажити закритий ключ."
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid "The public exponent should be 65537 (or 3 for legacy purposes)."
-msgstr "Відкритий показник степеня має бути 65537 (або 3 для застарілих цілей)."
+msgstr ""
+"Відкритий показник степеня має бути 65537 (або 3 для застарілих цілей)."
 
 #. module: certificate
 #. odoo-python
@@ -395,7 +396,8 @@ msgstr "Серійний номер, який потрібно додавати 
 msgid ""
 "This certificate could not be loaded. Either the content or the password is "
 "erroneous."
-msgstr "Не вдалося завантажити цей сертифікат. Або вміст, або пароль помилкові."
+msgstr ""
+"Не вдалося завантажити цей сертифікат. Або вміст, або пароль помилкові."
 
 #. module: certificate
 #. odoo-python
@@ -435,8 +437,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid ""
-"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
-" RSA."
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC, "
+"RSA."
 msgstr ""
 "Непідтримуваний асиметричний криптографічний алгоритм '%s'. Наразі "
 "підтримуються: EC, RSA."
@@ -444,8 +446,10 @@ msgstr ""
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
 msgid ""
-"Used to set a public key in case the one self-contained in the certificate is erroneus.\n"
-"                When a public key is set this way, it will be used instead of the one in the certificate.\n"
+"Used to set a public key in case the one self-contained in the certificate "
+"is erroneus.\n"
+"                When a public key is set this way, it will be used instead "
+"of the one in the certificate.\n"
 "             "
 msgstr ""
 "Використовується для встановлення відкритого ключа у випадку, якщо той, що "

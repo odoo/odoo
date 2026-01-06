@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-# 
+#
 # Translators:
 # Георги Пехливанов <sonaris@gmail.com>, 2024
 # Elena Varbanova, 2024
@@ -14,19 +14,19 @@
 # Maria Boyadjieva <marabo2000@gmail.com>, 2024
 # Martin Dinovski, 2025
 # Veselina Slavkova, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:03+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Veselina Slavkova, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
@@ -72,7 +72,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Тестова</span>\n"
 "                                <span class=\"o_stat_text\">Среда</span>"
@@ -91,7 +92,8 @@ msgstr "<span class=\"text-success\">Заявки за дебъгване</span>
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">Производствена</span>\n"
 "                                <span class=\"o_stat_text\">Среда</span>"
@@ -196,8 +198,7 @@ msgstr "Превозвач"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid ""
-"Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
-"Tags."
+"Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
 msgstr ""
 "Превозвачът %s не може да има един и същ таг както в Задължителни Тагове, "
 "така и в Изключени Тагове."
@@ -374,7 +375,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
-"Префиксите на пощенски кодове за доставка се задават на превозвачите, за да ограничат\n"
+"Префиксите на пощенски кодове за доставка се задават на превозвачите, за да "
+"ограничат\n"
 "до кои пощенски кодове е налична доставката."
 
 #. module: delivery
@@ -412,7 +414,8 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
-"Всеки превозвач (например UPS) може да има няколко метода на доставка (например \n"
+"Всеки превозвач (например UPS) може да има няколко метода на доставка "
+"(например \n"
 "UPS Express, UPS Standard) с набор от правила за ценообразуване, прикачени\n"
 "към всеки метод."
 
@@ -436,11 +439,16 @@ msgstr "Грешка: този метод на доставка не е нали
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
-"Приблизителна цена: на клиента ще бъде фактурирана приблизителната цена на доставката.\n"
-"Реална цена: на клиента ще бъде фактурирана реалната цена на доставката, цената на доставката ще бъде актуализирана в Поръчката за продажба след доставката."
+"Приблизителна цена: на клиента ще бъде фактурирана приблизителната цена на "
+"доставката.\n"
+"Реална цена: на клиента ще бъде фактурирана реалната цена на доставката, "
+"цената на доставката ще бъде актуализирана в Поръчката за продажба след "
+"доставката."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -462,8 +470,8 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
-"Filling this form allows you to make the shipping method available according"
-" to the content of the order or its destination."
+"Filling this form allows you to make the shipping method available according "
+"to the content of the order or its destination."
 msgstr ""
 "Попълването на този формуляр позволява да направите метода на доставка "
 "достъпен според съдържанието на поръчката или нейната дестинация."
@@ -708,8 +716,7 @@ msgstr "Данни за мястото на получаване"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Please select a country before choosing a state or a zip prefix."
 msgstr ""
-"Моля, изберете държава, преди да изберете област или префикс на пощенски "
-"код."
+"Моля, изберете държава, преди да изберете област или префикс на пощенски код."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -730,9 +737,9 @@ msgid ""
 "will only match '100' and not '1000')"
 msgstr ""
 "Префикси на пощенски кодове, за които се прилага този превозвач. Имайте "
-"предвид, че могат да се използват регулярни изрази за поддръжка на държави с"
-" различна дължина на пощенските кодове, т.е. '$' може да се добави в края на"
-" префикса, за да съвпадне с точния пощенски код (например '100$'ще съвпадне "
+"предвид, че могат да се използват регулярни изрази за поддръжка на държави с "
+"различна дължина на пощенските кодове, т.е. '$' може да се добави в края на "
+"префикса, за да съвпадне с точния пощенски код (например '100$'ще съвпадне "
 "само с '100', а не и с '1000')"
 
 #. module: delivery
@@ -899,8 +906,8 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
 msgid ""
-"The method is available only if at least one product of the order has one of"
-" these tags."
+"The method is available only if at least one product of the order has one of "
+"these tags."
 msgstr ""
 "Методът е наличен само ако поне един продукт от поръчката има един от тези "
 "тагове."
@@ -956,9 +963,8 @@ msgid ""
 "This option adds a link for the customer in the portal to track their "
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
-"Тази опция добавя връзка за клиента в портала, за да проследява лесно своята"
-" пратка. Използвайте<shipmenttrackingnumber> като заместител в URL адреса "
-"си."
+"Тази опция добавя връзка за клиента в портала, за да проследява лесно своята "
+"пратка. Използвайте<shipmenttrackingnumber> като заместител в URL адреса си."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -1034,14 +1040,18 @@ msgstr "Етикет на мерната единица за тегло"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
-"Не можете да актуализирате разходите за доставка на поръчка, за която вече е издадена фактура!\n"
+"Не можете да актуализирате разходите за доставка на поръчка, за която вече е "
+"издадена фактура!\n"
 "\n"
-"Следните редове за доставка (продукт, фактурирано количество и цена) вече са обработени:\n"
+"Следните редове за доставка (продукт, фактурирано количество и цена) вече са "
+"обработени:\n"
 "\n"
 
 #. module: delivery
@@ -1051,8 +1061,8 @@ msgid ""
 "You cannot delete the deliveries product category as it is used on the "
 "delivery carriers products."
 msgstr ""
-"Не можете да изтриете категорията продукти за доставки, тъй като се използва"
-" от продуктите на куриерските услуги"
+"Не можете да изтриете категорията продукти за доставки, тъй като се използва "
+"от продуктите на куриерските услуги"
 
 #. module: delivery
 #. odoo-javascript
@@ -1078,5 +1088,4 @@ msgstr "Напр. UPS Express"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
-msgstr ""
-"i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
+msgstr "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
