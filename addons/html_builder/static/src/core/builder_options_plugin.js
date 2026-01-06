@@ -249,9 +249,6 @@ export class BuilderOptionsPlugin extends Plugin {
                 "Should not have any mutations in the current step when you update the container selection"
             );
         }
-        if (this.dependencies.history.getIsPreviewing()) {
-            return;
-        }
         if (target) {
             if (target.closest(this.notActivableElementsSelector)) {
                 return;

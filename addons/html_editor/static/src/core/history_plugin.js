@@ -1539,7 +1539,10 @@ export class HistoryPlugin extends Plugin {
         return {
             preview: (...args) => {
                 revertOperation();
-                revertOperation = this.makeSavePoint();
+                let step;
+                revertOperation = () => {
+                    this.discardStep(step);
+                };
                 this.isPreviewing = true;
                 this.stageSelection();
                 operation(...args);
@@ -1550,7 +1553,7 @@ export class HistoryPlugin extends Plugin {
                 // The operation should be similar than in the 'commit'
                 // (normalize etc...) hence the 'addStep' (but we need to remove
                 // it for the collaboration).
-                this.addStep();
+                step = this.addStep();
             },
             commit: (...args) => {
                 revertOperation();
@@ -1579,9 +1582,12 @@ export class HistoryPlugin extends Plugin {
                 await revertOperation();
                 const def = new Deferred();
                 const revertSavePoint = this.makeSavePoint();
+                let step;
                 revertOperation = async () => {
                     await def;
-                    revertSavePoint();
+                    if (step) {
+                        this.discardStep(step);
+                    }
                 };
                 this.isPreviewing = true;
                 try {
@@ -1602,11 +1608,11 @@ export class HistoryPlugin extends Plugin {
                 // The operation should be similar than in the 'commit'
                 // (normalize etc...) hence the 'addStep' (but we need to remove
                 // it for the collaboration).
-                this.addStep();
+                step = this.addStep();
             },
             commit: async (...args) => {
-                await revertOperation();
                 this.isPreviewing = false;
+                await revertOperation();
                 const revertSavePoint = this.makeSavePoint();
                 try {
                     await operation(...args);
@@ -1620,9 +1626,9 @@ export class HistoryPlugin extends Plugin {
                 this.addStep();
             },
             revert: async () => {
+                this.isPreviewing = false;
                 await revertOperation();
                 revertOperation = () => {};
-                this.isPreviewing = false;
             },
         };
     }
@@ -1676,6 +1682,76 @@ export class HistoryPlugin extends Plugin {
         // Register resulting mutations as a new "restore" step (prevent undo).
         this.dispatchContentUpdated();
         this.addStep({ type: "restore" });
+    }
+
+    /**
+     * Restores the editable to a state as if a specific step never occured.
+     * It does so by reverting the current draft and all steps up to the step
+     * to discard, then re-applying them all except the one to discard and any
+     * steps that are undo/redo of that step.
+     * This will add a new "restore" step and set the reverted steps's state to
+     * "discarded".
+     *
+     * @param {HistoryStep} step
+     */
+    discardStep(step) {
+        const stepIndex = this.steps.findLastIndex((item) => item === step);
+        if (this.discardedSteps.has(step.id)) {
+            return;
+        }
+
+        // preserve the current draft, to restore it after
+        this.handleObserverRecords();
+        const draftMutations = this.currentStep.mutations.slice();
+        this.revertMutations(this.currentStep.mutations);
+        this.observer.takeRecords();
+        this.currentStep.mutations = [];
+        // TODO ABD TODO @phoenix: selection may become obsolete, it should evolve with mutations.
+        const selectionToRestore = this.dependencies.selection.preserveSelection();
+        const extraToRestore = { ...this.currentStep.extraStepInfos };
+
+        // Revert all mutations until stepIndex
+        for (let i = this.steps.length - 1; i >= stepIndex; i--) {
+            const currentStep = this.steps[i];
+            this.revertMutations(currentStep.mutations, { forNewStep: true });
+            // Process (filter, handle and stage) mutations so that the
+            // attribute comparison for the state change is done with the
+            // intermediate attribute value and not with the final value in the
+            // DOM after all steps were reverted then applied again.
+            this.processNewRecords(this.observer.takeRecords());
+        }
+        // Re-apply every steps excepts the step to discard and its undo/redo,
+        // and mark them as discarded
+        let doCount = 0;
+        for (let i = stepIndex; i < this.steps.length; i++) {
+            const currentStep = this.steps[i];
+            let shouldDiscardCurrent = false;
+            if (this.isReversibleStep(i) && !this.discardedSteps.has(currentStep.id)) {
+                if (currentStep.type === "original" || currentStep.type === "redo") {
+                    doCount += 1;
+                    shouldDiscardCurrent = doCount === 1;
+                } else if (currentStep.type === "undo") {
+                    doCount -= 1;
+                    shouldDiscardCurrent = doCount === 0;
+                }
+            }
+            if (shouldDiscardCurrent) {
+                this.discardedSteps.add(currentStep.id);
+            } else {
+                this.applyMutations(currentStep.mutations, { forNewStep: true });
+                this.processNewRecords(this.observer.takeRecords());
+            }
+        }
+        // Register resulting mutations as a new "restore" step (prevent undo).
+        this.dispatchContentUpdated();
+        this.addStep({ type: "restore" });
+
+        // restore the draft
+        this.applyMutations(draftMutations, { forNewStep: true });
+        this.handleObserverRecords();
+        // TODO ABD TODO @phoenix: evaluate if the selection is not restorable at the desired position
+        selectionToRestore.restore();
+        this.currentStep.extraStepInfos = extraToRestore;
     }
 
     setStepExtra(key, value) {
