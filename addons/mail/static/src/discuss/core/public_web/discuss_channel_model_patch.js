@@ -82,6 +82,9 @@ const discussChannelPatch = {
     get allowCalls() {
         return super.allowCalls && !this.parent_channel_id;
     },
+    get autoOpenChatWindowOnNewMessage() {
+        return false;
+    },
     /** @param {string} description */
     async notifyDescriptionToServer(description) {
         this.description = description;
