@@ -97,8 +97,8 @@ class TestPartnerAssign(TransactionCase):
             pass
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class TestPartnerLeadPortal(TestCrmCommon):
+@tagged('lead_portal', 'at_install', '-post_install')  # LEGACY at_install
+class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
 
     def setUp(self):
         super(TestPartnerLeadPortal, self).setUp()
@@ -247,6 +247,28 @@ class TestPartnerLeadPortal(TestCrmCommon):
         record_action = self.lead_portal._get_access_action(access_uid=self.user_portal.id)
         self.assertEqual(record_action['url'], '/my/opportunity/%s' % self.lead_portal.id)
         self.assertEqual(record_action['type'], 'ir.actions.act_url')
+
+    def test_portal_post(self):
+        self.authenticate(self.user_portal.login, self.user_portal.login)
+        self.make_jsonrpc_request(
+            route="/mail/message/post",
+            params={
+                'thread_model': self.lead_portal._name,
+                'thread_id': self.lead_portal.id,
+                'pid': self.user_portal.partner_id.id,
+                'post_data': {
+                    'body': "Test",
+                },
+            },
+        )
+        message = self.lead_portal.message_ids[0]
+        self.assertMessageFields(
+            message, {
+                'author_id': self.user_portal.partner_id,
+                'body': '<p>Test</p>',
+                'message_type': 'comment',
+            }
+        )
 
     def test_route_portal_my_opportunities_as_portal(self):
         """Test that the portal user can access its own opportunities even if
