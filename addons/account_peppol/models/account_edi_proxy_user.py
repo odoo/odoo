@@ -289,11 +289,23 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 move.peppol_move_state = content['state']
                 move._message_log(body=_('Peppol status update: %s', content['state']))
 
+<<<<<<< 6153c2eca1beaf5f45cd5b117904ce97db25d9f2
             edi_user._call_peppol_proxy(
                 "/api/peppol/1/ack",
                 params={'message_uuids': list(message_uuids.keys())},
             )
 
+||||||| 59783b14e2a8a9e497bb53e8db50c97c3620dfb1
+                edi_user._call_peppol_proxy(
+                    "/api/peppol/1/ack",
+                    params={'message_uuids': list(message_uuids.keys())},
+                )
+=======
+            edi_user._call_peppol_proxy(
+                "/api/peppol/1/ack",
+                params={'message_uuids': list(message_uuids.keys())},
+            )
+>>>>>>> 8d506ba2ad282450654f4433f49413558b1dcc40
         if need_retrigger:
             self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger()
 
