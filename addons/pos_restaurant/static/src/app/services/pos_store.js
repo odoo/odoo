@@ -111,7 +111,7 @@ patch(PosStore.prototype, {
             for (const order of orders) {
                 // Avoid to block others devices on register screen when no table and name is set.
                 if (!order.table_id && !order.floating_order_name) {
-                    order.floating_order_name = order.pos_reference;
+                    order.floating_order_name = order.floatingOrderName || order.pos_reference;
                 }
             }
         }
