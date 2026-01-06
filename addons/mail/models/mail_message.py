@@ -349,7 +349,7 @@ class Message(models.Model):
         allowed = self.browse(id_ for id_ in ids if id_ in allowed_ids)
         return allowed._as_query(order)
 
-    def _filter_records_for_message_operation(self, doc_model, doc_res_ids, operation):
+    def _filter_records_for_message_operation(self, doc_model, doc_res_ids, operation, filter_python=False):
         """ Helper returning records on which 'operation' on mail.message is
         allowed, based on '_get_mail_message_access' behavior and potential
         model override. """
@@ -366,7 +366,8 @@ class Message(models.Model):
         for record_operation, records in documents_per_operation.items():
             operation_allowed = records.check_access_rights(record_operation, raise_exception=False)
             if operation_allowed:
-                allowed += records._filter_access_rules(record_operation)
+                filter_method = records._filter_access_rules_python if filter_python else records._filter_access_rules
+                allowed += filter_method(record_operation)
         return allowed
 
     @api.model
