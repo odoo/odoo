@@ -15,6 +15,7 @@ import { MAIN_PLUGINS } from "../src/plugin_sets";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { insertText, tripleClick } from "./_helpers/user_actions";
+import { withSequence } from "@html_editor/utils/resource";
 
 test("getEditableSelection should work, even if getSelection returns null", async () => {
     const { editor } = await setupEditor("<p>a[b]</p>");
@@ -1188,4 +1189,23 @@ test("should not autoscroll if selection is partially visible in viewport", asyn
     // Ensure that extending selection did not trigger any auto-scrolling.
     expect(scrollableElement.scrollTop).toBe(scrollTop);
     expect(isInViewPort(lastParagraph)).toBe(false);
+});
+
+describe("crash fixes", () => {
+    test("Should survive disconnected anchor", async () => {
+        class TestPlugin extends Plugin {
+            static id = "test";
+            resources = {
+                selectionchange_handlers: withSequence(-1, (selectionData) => {
+                    const { anchorNode } = selectionData.editableSelection;
+                    anchorNode.parentElement.remove();
+                }),
+            };
+        }
+
+        const { el } = await setupEditor("<p>x<span>a[]</span></p>", {
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+        expect(getContent(el)).toBe("<p>x[]</p>");
+    });
 });
