@@ -1,0 +1,120 @@
+# 🎯 Server Deployment - Hazır Komutlar
+
+## 📍 Mevcut Durum
+- **Repository:** JokerGrubu/JokerOdoo
+- **Feature Branch:** `feature/joker-modules-setup`
+- **GitHub PR Link:** https://github.com/JokerGrubu/JokerOdoo/compare/19.0...feature/joker-modules-setup
+- **Commit:** 62b2d9e9cc7a
+
+---
+
+## 🚀 1️⃣ Feature Branch'ı Server'a Çekin
+
+```bash
+cd /opt/joker_stack
+
+# Origin'den feature branch'ı fetch edin
+git fetch origin feature/joker-modules-setup
+
+# Branch'a geçin
+git checkout feature/joker-modules-setup
+
+# Doğrulama
+git status
+git log --oneline -2
+```
+
+---
+
+## 📦 2️⃣ Modülleri Yükleyin (Tek Komut)
+
+```bash
+# Tüm Joker modüllerini yükleyin
+docker exec joker_odoo odoo \
+  -i joker_queue,joker_marketplace_core,joker_marketplace_trendyol,joker_marketplace_n11,joker_marketplace_hepsiburada,joker_marketplace_cicek_sepeti,joker_qcommerce_core,joker_qcommerce_yemeksepeti,joker_qcommerce_getir,joker_qcommerce_vigo,joker_dashboard,joker_sale_workflow,bizimhesap_connector,custom_sync \
+  -d MobilSoft \
+  --stop-after-init
+```
+
+---
+
+## 🔄 3️⃣ Odoo'yu Yeniden Başlatın
+
+```bash
+docker compose restart odoo
+
+# Hazır olmasını bekleyin
+sleep 20
+
+# Sağlık kontrol
+docker compose ps | grep odoo
+```
+
+---
+
+## ✅ 4️⃣ Kurulum Doğrulaması
+
+```bash
+# Odoo CLI ile modülleri listele
+docker exec joker_odoo odoo \
+  -d MobilSoft \
+  --list-modules=all | grep joker
+
+# Web UI kontrol: http://localhost:8069
+# Apps → Bul: "joker" → Hepsi "Installed" olmalı
+```
+
+---
+
+## 🔧 Production Checklist
+
+- [ ] Backup al: `docker exec joker_db pg_dump -U odoo MobilSoft > /backup/prod_$(date +%s).sql`
+- [ ] Feature branch pull: `git checkout feature/joker-modules-setup`
+- [ ] Modülleri kur: Yukarıdaki 2. adımı çalıştır
+- [ ] Odoo restart: `docker compose restart odoo`
+- [ ] Modülleri doğrula: Web UI'de kontrol et
+- [ ] Marketplace: Kanal setup (Trendyol, N11, vb.)
+- [ ] Q-Commerce: Teslimat ayarları
+- [ ] BizimHesap: Hesap eşleştirme
+- [ ] Main branch'a merge et: `git checkout 19.0 && git merge feature/joker-modules-setup && git push origin 19.0`
+
+---
+
+## 🆘 Hızlı Sorun Giderme
+
+### Modül yükleme sırasında hata
+```bash
+# Session temizle
+docker exec joker_odoo rm -rf /var/lib/odoo/sessions/*
+# Tekrar dene
+```
+
+### Odoo'dan "ModuleNotFoundError" hatası
+```bash
+# Modülü adres çubuğundan kontrol et
+# /opt/joker_stack/addons/MODULE_NAME/__manifest__.py var mı?
+ls -la /opt/joker_stack/addons/joker_*/
+```
+
+### Database kilit sorunu
+```bash
+docker compose restart joker_db joker_odoo
+sleep 30
+```
+
+---
+
+## 📊 Eklenen Dosya Özeti
+- **160+ dosya** (Python, XML, CSV, PDF)
+- **14 modül** (Core + adaptörler)
+- **~18KB kod** (manifest ve ayarlamalar)
+- **Hariç tutulan:** backup/, data/, logs/, payment_paytr_kt/
+
+---
+
+## 📞 İletişim
+**Hata durumunda:** Git logs ve Docker logs kontrol et
+```bash
+docker compose logs odoo --tail=200 | grep -E "ERROR|Exception|Traceback"
+git log --oneline | head -5
+```
