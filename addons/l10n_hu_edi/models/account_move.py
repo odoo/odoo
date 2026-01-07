@@ -831,7 +831,11 @@ class AccountMove(models.Model):
             if bank_account.acc_type == 'iban':
                 return normalize_iban(bank_account.acc_number)
             else:
-                return bank_account.acc_number
+                bban = re.sub(r'[\D]', '', bank_account.acc_number or '')
+                if len(bban) == 16:
+                    return "%s-%s" % (bban[:8], bban[8:])
+                else:
+                    return "%s-%s-%s" % (bban[:8], bban[8:16], bban[16:24])
 
         supplier = self.company_id.partner_id
         customer = self.partner_id.commercial_partner_id
