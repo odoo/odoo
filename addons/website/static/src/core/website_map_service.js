@@ -1,4 +1,3 @@
-import { loadJS } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -9,7 +8,6 @@ import { escape } from "@web/core/utils/strings";
 registry.category("services").add("website_map", {
     dependencies: ["public.interactions", "notification"],
     start(env, deps) {
-        const publicInteractions = deps["public.interactions"];
         const notification = deps["notification"];
         let gmapAPIKeyProm;
         let gmapAPILoading;
@@ -27,6 +25,56 @@ registry.category("services").add("website_map", {
                 return gmapAPIKeyProm;
             },
             /**
+             * Initializes the Google Maps JavaScript API using the dynamic library
+             * import bootstrap pattern. Libraries (e.g. "maps", "places", "marker") are
+             * loaded lazily via `google.maps.importLibrary()` at each call site.
+             *
+             * @private
+             * @param {string} key - The Google Maps API key
+             * @see https://developers.google.com/maps/documentation/javascript/load-maps-js-api#dynamic-library-import
+             */
+            initGoogleMapsAPI(key) {
+                ((g) => {
+                    var h,
+                        a,
+                        k,
+                        p = "The Google Maps JavaScript API",
+                        c = "google",
+                        l = "importLibrary",
+                        q = "__ib__",
+                        m = document,
+                        b = window;
+                    b = b[c] || (b[c] = {});
+                    var d = b.maps || (b.maps = {}),
+                        r = new Set(),
+                        e = new URLSearchParams(),
+                        u = () =>
+                            h ||
+                            (h = new Promise(async (f, n) => {
+                                await (a = m.createElement("script"));
+                                e.set("libraries", [...r] + "");
+                                for (k in g) {
+                                    e.set(
+                                        k.replace(/[A-Z]/g, (t) => "_" + t[0].toLowerCase()),
+                                        g[k]
+                                    );
+                                }
+                                e.set("callback", c + ".maps." + q);
+                                a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                                d[q] = f;
+                                a.onerror = () => (h = n(Error(p + " could not load.")));
+                                a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                                m.head.append(a);
+                            }));
+                    d[l]
+                        ? console.warn(p + " only loads once. Ignoring:", g)
+                        : (d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)));
+                })({
+                    key: key,
+                    v: "weekly",
+                });
+            },
+            /**
              * @param {boolean} [editableMode=false]
              * @param {boolean} [refetch=false]
              */
@@ -38,14 +86,6 @@ registry.category("services").add("website_map", {
                 if (refetch || !gmapAPILoading) {
                     gmapAPILoading = new Promise(async resolve => {
                         const key = await this.getGMapAPIKey(refetch);
-
-                        window.odoo_gmap_api_post_load = (async function odoo_gmap_api_post_load() {
-                            for (const el of document.querySelectorAll("section.s_google_map")) {
-                                publicInteractions.stopInteractions(el);
-                                publicInteractions.startInteractions(el);
-                            }
-                            resolve(key);
-                        }).bind(this);
 
                         if (!key) {
                             if (!editableMode && user.isAdmin) {
@@ -63,7 +103,8 @@ registry.category("services").add("website_map", {
                             gmapAPILoading = false;
                             return;
                         }
-                        await loadJS(`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=odoo_gmap_api_post_load&key=${encodeURIComponent(key)}`);
+                        this.initGoogleMapsAPI(key);
+                        resolve(key);
                     });
                 }
                 return gmapAPILoading;

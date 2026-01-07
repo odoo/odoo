@@ -36,9 +36,12 @@ export class GoogleMap extends Interaction {
 
     async willStart() {
         if (typeof google !== 'object' || typeof google.maps !== 'object') {
-            await this.services.website_map.loadGMapAPI(this.canSpecifyKey);
-            return;
+            const key = await this.services.website_map.loadGMapAPI(this.canSpecifyKey);
+            if (!key) {
+                return;
+            }
         }
+        await google.maps.importLibrary("maps");
         this.canStart = true;
     }
 
