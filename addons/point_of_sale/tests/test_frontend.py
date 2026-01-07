@@ -3451,6 +3451,92 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_orderline_merge_with_higher_price_precision', login="pos_user")
 
+    def test_product_configurator_price(self):
+        """ Test that the product configurator displays the correct price when selecting attributes that impact the price. """
+        self.env['product.template'].search([('available_in_pos', '=', True)]).active = False
+        tax_10 = self.env['account.tax'].create({
+            'name': 'Tax 10%',
+            'amount': 10,
+        })
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'Include to Exclude',
+        })
+        tax_10 = self.env['account.tax'].create({
+            'name': 'Tax 10 Excluded',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'price_include_override': 'tax_excluded',
+        })
+        self.env['account.tax'].create({
+            'name': 'Tax 10 Included',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'price_include_override': 'tax_included',
+            'fiscal_position_ids': fiscal_position,
+            'original_tax_ids': tax_10,
+        })
+        product = self.env['product.template'].create({
+            'name': 'Configurable Product',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'taxes_id': [(6, 0, [tax_10.id])],
+        })
+        size_attribute = self.env['product.attribute'].create({
+            'name': 'Size',
+            'create_variant': 'always',
+        })
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'create_variant': 'no_variant',
+        })
+        small_size_value, large_size_value = self.env['product.attribute.value'].create([{
+            'name': 'Small',
+            'attribute_id': size_attribute.id,
+        }, {
+            'name': 'Large',
+            'attribute_id': size_attribute.id,
+        }])
+        red_color_value, blue_color_value = self.env['product.attribute.value'].create([{
+            'name': 'Red',
+            'attribute_id': color_attribute.id,
+        }, {
+            'name': 'Blue',
+            'attribute_id': color_attribute.id,
+        }])
+        size_line = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product.id,
+            'attribute_id': size_attribute.id,
+            'value_ids': [(6, 0, [small_size_value.id, large_size_value.id])],
+        })
+        size_line.product_template_value_ids[1].price_extra = 1
+        color_line = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product.id,
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, [red_color_value.id, blue_color_value.id])],
+        })
+        color_line.product_template_value_ids[0].price_extra = 2
+        color_line.product_template_value_ids[1].price_extra = 3
+
+        pricelist_1, pricelist_2 = self.env['product.pricelist'].create([{
+            'name': 'Pricelist 1',
+        }, {
+            'name': 'Pricelist 2',
+            'item_ids': [(0, 0, {
+                'applied_on': '1_product',
+                'product_tmpl_id': product.id,
+                'fixed_price': 20.0,
+            })],
+        }])
+        self.main_pos_config.write({
+            'available_pricelist_ids': [(6, 0, [pricelist_1.id, pricelist_2.id])],
+            'pricelist_id': pricelist_1.id,
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(6, 0, [fiscal_position.id])],
+        })
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_product_configurator_price', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

@@ -8,11 +8,17 @@ export class ProductTemplateAccounting extends Base {
     static pythonModel = "product.template";
 
     prepareProductBaseLineForTaxesComputationExtraValues(opts = {}) {
-        const { price = false, pricelist = false, fiscalPosition = false } = opts;
+        const { price = false, pricelist = false, fiscalPosition = false, priceExtra = 0 } = opts;
         const isVariant = Boolean(this?.product_tmpl_id);
         const config = this.models["pos.config"].getFirst();
         const productTemplate = isVariant ? this.product_tmpl_id : this;
-        const baseP = productTemplate.getPrice(pricelist, 1, 0, false, isVariant ? this : false);
+        const baseP = productTemplate.getPrice(
+            pricelist,
+            1,
+            priceExtra,
+            false,
+            isVariant ? this : false
+        );
         const priceUnit = price || price === 0 ? price : baseP;
         const currency = config.currency_id;
 
@@ -139,7 +145,7 @@ export class ProductTemplateAccounting extends Base {
 
     getBaseLine(opts = {}) {
         const vals = opts.overridedValues || {};
-        const { price = false, pricelist = false, fiscalPosition = false } = vals;
+        const { price = false, pricelist = false, fiscalPosition = false, priceExtra = 0 } = vals;
 
         return accountTaxHelpers.prepare_base_line_for_taxes_computation(
             {},
@@ -147,6 +153,7 @@ export class ProductTemplateAccounting extends Base {
                 price,
                 pricelist,
                 fiscalPosition,
+                priceExtra,
                 ...vals,
             })
         );
