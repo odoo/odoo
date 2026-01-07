@@ -105,9 +105,9 @@ describe("row", () => {
                     <table>
                         <tbody>
                             <tr style="height: 20px;">
-                                <th class="o_table_header" style="width: 20px;">ab[]</th>
-                                <th class="o_table_header" style="width: 25px;">cd</th>
-                                <th class="o_table_header" style="width: 30px;">ef</th>
+                                <th style="width: 20px;" class="o_table_header">ab[]</th>
+                                <th style="width: 25px;" class="o_table_header">cd</th>
+                                <th style="width: 30px;" class="o_table_header">ef</th>
                             </tr>
                             <tr style="height: 30px;">
                                 <td>ab</td>

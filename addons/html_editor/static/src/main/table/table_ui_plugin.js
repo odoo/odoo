@@ -32,6 +32,7 @@ export class TableUIPlugin extends Plugin {
                 commandId: "openTablePicker",
             },
         ],
+        selectionchange_handlers: this.updateActiveCell.bind(this),
     };
 
     setup() {
@@ -97,6 +98,15 @@ export class TableUIPlugin extends Plugin {
         } else {
             this.openPicker();
         }
+    }
+
+    updateActiveCell(selectionData) {
+        const selection = selectionData.editableSelection;
+        const selectedTd = closestElement(selection.startContainer, ".o_selected_td");
+        if (selection.isCollapsed || !selectedTd) {
+            return;
+        }
+        this.activeTd = false;
     }
 
     onMouseMove(ev) {
@@ -168,6 +178,9 @@ export class TableUIPlugin extends Plugin {
             clearColumnContent: withAddStep(this.dependencies.table.clearColumnContent),
             clearRowContent: withAddStep(this.dependencies.table.clearRowContent),
             toggleAlternatingRows: withAddStep(this.dependencies.table.toggleAlternatingRows),
+            mergeSelectedCells: withAddStep(this.dependencies.table.mergeSelectedCells),
+            unmergeSelectedCell: withAddStep(this.dependencies.table.unmergeSelectedCell),
+            buildTableGrid: this.dependencies.table.buildTableGrid,
         };
         if (td.cellIndex === 0) {
             this.rowMenu.open({
