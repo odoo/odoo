@@ -20,12 +20,7 @@ sudo mount -t proc /proc proc/
 sudo mount -t sysfs /sys sys/
 sudo mount --rbind /dev dev/
 
-# Use hw_drivers if present, otherwise fall back to iot_drivers
-if [ -d /home/pi/odoo/addons/hw_drivers ]; then
-    SCRIPT_PATH=/home/pi/odoo/addons/hw_drivers/tools/upgrade_scripts/upgrade_trixie/upgrade_trixie_chroot.sh
-else
-    SCRIPT_PATH=/home/pi/odoo/addons/iot_drivers/tools/upgrade_scripts/upgrade_trixie/upgrade_trixie_chroot.sh
-fi
+SCRIPT_PATH=/home/pi/odoo/addons/iot_drivers/tools/upgrade_scripts/upgrade_trixie/upgrade_trixie_chroot.sh
 
 if [ ! -f "$SCRIPT_PATH" ]; then
     echo "Upgrade script not found at $SCRIPT_PATH" >&2
