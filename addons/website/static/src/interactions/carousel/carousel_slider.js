@@ -15,6 +15,7 @@ export class CarouselSlider extends Interaction {
         _window: {
             "t-on-resize": this.debounced(this.computeMaxHeight, 250),
         },
+        // This is what affects the carousel item height
         ".carousel-item": {
             "t-att-style": () => ({
                 "min-height": this.maxHeight ? `${this.maxHeight}px` : "",

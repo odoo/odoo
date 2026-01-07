@@ -7,6 +7,7 @@ const CarouselSliderEdit = (I) =>
             ...this.dynamicContent,
             _root: {
                 ...this.dynamicContent._root,
+                // This is what is not working
                 "t-on-content_changed": this.onContentChanged,
             },
         };
@@ -14,7 +15,18 @@ const CarouselSliderEdit = (I) =>
         carouselOptions = { ride: false, pause: true, keyboard: false };
         showClickableSlideLinks = false;
 
+        start() {
+            super.start();
+
+            // Recompute max height when content changes
+            const observer = new MutationObserver(() => {
+                this.computeMaxHeight();
+            });
+            observer.observe(this.el, { subtree: true, childList: true });
+        }
+
         onContentChanged() {
+            console.log("Content changed - recomputing height");
             this.computeMaxHeight();
         }
     };
