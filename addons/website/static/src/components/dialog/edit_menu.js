@@ -2,7 +2,7 @@ import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
 import { WebsiteDialog } from "./dialog";
-import { Component, useState, useEffect, onWillStart, useRef } from "@odoo/owl";
+import { Component, useState, useEffect, onWillStart, useRef, reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { isEmail } from "@web/core/utils/strings";
@@ -132,7 +132,7 @@ export class MenuDialog extends Component {
                 // Do nothing if URL is invalid.
             }
         }
-        this.props.save(this.state.name, url, this.state.pageNotFound);
+        this.props.save(this.state.name, url);
         this.props.close();
     }
 
@@ -303,23 +303,23 @@ export class EditMenuDialog extends Component {
         this.dialogs.add(MenuDialog, {
             isMegaMenu,
             url: "",
-            save: (name, url, pageNotFound, isNewWindow) => {
-                const newMenu = {
+            save: (name, url) => {
+                const newMenu = reactive({
                     fields: {
                         id: `menu_${new Date().toISOString()}`,
                         name,
                         url: isMegaMenu || !url ? "#" : url,
-                        new_window: isNewWindow,
+                        new_window: false,
                         is_mega_menu: isMegaMenu,
                         sequence: 0,
                         parent_id: false,
                     },
                     children: [],
-                    page_not_found: pageNotFound,
-                };
+                    page_not_found: false,
+                });
                 this.state.rootMenu.children.push(newMenu);
-                // this.state.rootMenu.children.at(-1) to forces a rerender
-                this.map.set(newMenu.fields["id"], this.state.rootMenu.children.at(-1));
+                this.map.set(newMenu.fields["id"], newMenu);
+                this.checkMenuUrlExists(newMenu, url);
             },
         });
     }
@@ -330,12 +330,23 @@ export class EditMenuDialog extends Component {
             name: menuToEdit.fields["name"],
             url: menuToEdit.fields["url"],
             isMegaMenu: menuToEdit.fields["is_mega_menu"],
-            save: (name, url, pageNotFound) => {
+            save: (name, url) => {
                 menuToEdit.fields["name"] = name;
                 menuToEdit.fields["url"] = url || "#";
-                menuToEdit.page_not_found = pageNotFound;
+                menuToEdit.page_not_found = false;
+                this.checkMenuUrlExists(menuToEdit, url);
             },
         });
+    }
+
+    checkMenuUrlExists(menu, url) {
+        if (url) {
+            checkUrlExists(url).then((exists) => {
+                if (menu.fields["url"] === url) {
+                    menu.page_not_found = !exists;
+                }
+            });
+        }
     }
 
     deleteMenu(id) {
