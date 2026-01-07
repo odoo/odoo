@@ -114,7 +114,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     async _onGMapAPIRequest(ev) {
         ev.stopPropagation();
         const apiKey = await this.website_map.loadGMapAPI(ev.data.editableMode, ev.data.refetch);
-        ev.data.onSuccess(apiKey);
+        await ev.data.onSuccess(apiKey);
     },
     /**
      * @private
@@ -123,7 +123,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     async _onGMapAPIKeyRequest(ev) {
         ev.stopPropagation();
         const apiKey = await this.website_map.getGMapAPIKey(ev.data.refetch);
-        ev.data.onSuccess(apiKey);
+        await ev.data.onSuccess(apiKey);
     },
     /**
     /**
