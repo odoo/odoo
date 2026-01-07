@@ -76,9 +76,11 @@ class EventQuestion(models.Model):
 
     def action_view_question_answers(self):
         """ Allow analyzing the attendees answers to event questions in a convenient way:
+
         - A graph view showing counts of each suggestion for simple_choice questions
           (Along with secondary pivot and list views)
-        - A list view showing textual answers values for text_box questions. """
+        - A list view showing textual answers values for text_box questions.
+        """
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("event.action_event_registration_report")
         action['context'] = {'search_default_question_id': self.id}
