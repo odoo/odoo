@@ -42,6 +42,7 @@ import {
     useEffect,
     useRef,
     useState,
+    useSubEnv,
 } from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
 import { effect } from "@web/core/utils/reactive";
@@ -213,7 +214,7 @@ export class FormController extends Component {
             this.model.config.fields = fields;
         };
         this.model = useState(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
-
+        useSubEnv({ model: this.model });
         onMounted(() => {
             effect(
                 (model) => {
