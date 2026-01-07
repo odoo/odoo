@@ -373,11 +373,17 @@ class HrAttendance(models.Model):
                         # Count time before, during and after 'working hours'
                         pre_work_time, work_duration, post_work_time, planned_work_duration = attendances._get_pre_post_work_time(emp, working_times, attendance_date)
                         # Overtime within the planned work hours + overtime before/after work hours is > company threshold
-                        overtime_duration = work_duration - planned_work_duration
-                        if pre_work_time > company_threshold:
-                            overtime_duration += pre_work_time
-                        if post_work_time > company_threshold:
-                            overtime_duration += post_work_time
+                        total_overtime_duration = pre_work_time + work_duration + post_work_time - planned_work_duration
+                        if total_overtime_duration > company_threshold and total_overtime_duration > 0:
+                            company_overtime_duration = total_overtime_duration
+                        else:
+                            company_overtime_duration = 0
+
+                        if total_overtime_duration < 0 and abs(total_overtime_duration) > employee_threshold:
+                            employee_overtime_duration = total_overtime_duration
+                        else:
+                            employee_overtime_duration = 0
+                        overtime_duration = employee_overtime_duration + company_overtime_duration
                         # Global overtime including the thresholds
                         overtime_duration_real = sum(attendances.mapped('worked_hours')) - planned_work_duration
 
