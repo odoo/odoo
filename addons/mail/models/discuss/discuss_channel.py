@@ -1160,13 +1160,14 @@ class DiscussChannel(models.Model):
         post_joined_message=True,
     ):
         """
-        :param channel: channel to add the persona to
         :param guest_name: name of the persona
         :param post_joined_message: whether to post a message to the channel
             to notify that the persona joined
-        :param create_member_params dict: optional parameters to pass to the
+
+        :param dict create_member_params: optional parameters to pass to the
             channel member create function.
-        :return tuple(partner, guest):
+
+        :rtype: tuple[partner, guest]
         """
         self.ensure_one()
         guest = self.env["mail.guest"]

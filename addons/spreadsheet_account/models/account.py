@@ -108,16 +108,17 @@ class AccountAccount(models.Model):
     @api.model
     def spreadsheet_fetch_debit_credit(self, args_list):
         """Fetch data for ODOO.CREDIT, ODOO.DEBIT and ODOO.BALANCE formulas
-        The input list looks like this:
-        [{
-            date_range: {
-                range_type: "year"
-                year: int
-            },
-            company_id: int
-            codes: str[]
-            include_unposted: bool
-        }]
+        The input list looks like this::
+
+            [{
+                date_range: {
+                    range_type: "year"
+                    year: int
+                },
+                company_id: int
+                codes: str[]
+                include_unposted: bool
+            }]
         """
         results = []
         for args in args_list:
@@ -133,16 +134,17 @@ class AccountAccount(models.Model):
     @api.model
     def spreadsheet_fetch_residual_amount(self, args_list):
         """Fetch data for ODOO.RESUDUAL formulas
-        The input list looks like this:
-        [{
-            date_range: {
-                range_type: "year"
-                year: int
-            },
-            company_id: int
-            codes: str[]
-            include_unposted: bool
-        }]
+        The input list looks like this::
+
+            [{
+                date_range: {
+                    range_type: "year"
+                    year: int
+                },
+                company_id: int
+                codes: str[]
+                include_unposted: bool
+            }]
         """
         results = []
         for args in args_list:
@@ -157,17 +159,18 @@ class AccountAccount(models.Model):
     @api.model
     def spreadsheet_fetch_partner_balance(self, args_list):
         """Fetch data for ODOO.PARTNER.BALANCE formulas
-        The input list looks like this:
-        [{
-            date_range: {
-                range_type: "year"
-                year: int
-            },
-            company_id: int
-            codes: str[]
-            include_unposted: bool
-            partner_ids: int[]
-        }]
+        The input list looks like this::
+
+            [{
+                date_range: {
+                    range_type: "year"
+                    year: int
+                },
+                company_id: int
+                codes: str[]
+                include_unposted: bool
+                partner_ids: int[]
+            }]
         """
         results = []
         for args in args_list:
@@ -200,16 +203,17 @@ class AccountAccount(models.Model):
     @api.model
     def spreadsheet_fetch_balance_tag(self, args_list):
         """Fetch data for ODOO.BALANCE.TAG formulas
-        The input list looks like this:
-        [{
-            account_tag_ids: str[]
-            date_range: {
-                range_type: "year"
-                year: int
-            },
-            company_id: int
-            include_unposted: bool
-        }]
+        The input list looks like this::
+
+            [{
+                account_tag_ids: str[]
+                date_range: {
+                    range_type: "year"
+                    year: int
+                },
+                company_id: int
+                include_unposted: bool
+            }]
         """
         results = []
         for args in args_list:
