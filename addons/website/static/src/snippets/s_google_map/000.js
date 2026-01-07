@@ -32,10 +32,9 @@ publicWidget.registry.GoogleMap = publicWidget.Widget.extend({
                     onSuccess: () => resolve(),
                 });
             });
-            // The animation will be restarted for all maps as soon as the
-            // google map script has been executed.
-            return;
         }
+
+        await google.maps.importLibrary("maps");
 
         // Define a default map's colors set
         const std = [];

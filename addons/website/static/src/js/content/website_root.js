@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { rpc } from "@web/core/network/rpc";
@@ -95,6 +94,56 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         return registry;
     },
     /**
+     * Initializes the Google Maps JavaScript API using the dynamic library
+     * import bootstrap pattern. Libraries (e.g. "maps", "places", "marker") are
+     * loaded lazily via `google.maps.importLibrary()` at each call site.
+     *
+     * @private
+     * @param {string} key - The Google Maps API key
+     * @see https://developers.google.com/maps/documentation/javascript/load-maps-js-api#dynamic-library-import
+     */
+    _initGoogleMapsAPI(key) {
+        ((g) => {
+            var h,
+                a,
+                k,
+                p = "The Google Maps JavaScript API",
+                c = "google",
+                l = "importLibrary",
+                q = "__ib__",
+                m = document,
+                b = window;
+            b = b[c] || (b[c] = {});
+            var d = b.maps || (b.maps = {}),
+                r = new Set(),
+                e = new URLSearchParams(),
+                u = () =>
+                    h ||
+                    (h = new Promise(async (f, n) => {
+                        await (a = m.createElement("script"));
+                        e.set("libraries", [...r] + "");
+                        for (k in g) {
+                            e.set(
+                                k.replace(/[A-Z]/g, (t) => "_" + t[0].toLowerCase()),
+                                g[k]
+                            );
+                        }
+                        e.set("callback", c + ".maps." + q);
+                        a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                        d[q] = f;
+                        a.onerror = () => (h = n(Error(p + " could not load.")));
+                        a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                        m.head.append(a);
+                    }));
+            d[l]
+                ? console.warn(p + " only loads once. Ignoring:", g)
+                : (d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)));
+        })({
+            key: key,
+            v: "weekly",
+        });
+    },
+    /**
      * @private
      * @param {boolean} [editableMode=false]
      * @param {boolean} [refetch=false]
@@ -107,11 +156,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         if (refetch || !this._gmapAPILoading) {
             this._gmapAPILoading = new Promise(async resolve => {
                 const key = await this._getGMapAPIKey(refetch);
-
-                window.odoo_gmap_api_post_load = (async function odoo_gmap_api_post_load() {
-                    await this._startWidgets($("section.s_google_map"), {editableMode: editableMode});
-                    resolve(key);
-                }).bind(this);
 
                 if (!key) {
                     if (!editableMode && user.isAdmin) {
@@ -129,7 +173,8 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
                     this._gmapAPILoading = false;
                     return;
                 }
-                await loadJS(`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=odoo_gmap_api_post_load&key=${encodeURIComponent(key)}`);
+                this._initGoogleMapsAPI(key);
+                resolve(key);
             });
         }
         return this._gmapAPILoading;
@@ -174,7 +219,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     async _onGMapAPIRequest(ev) {
         ev.stopPropagation();
         const apiKey = await this._loadGMapAPI(ev.data.editableMode, ev.data.refetch);
-        ev.data.onSuccess(apiKey);
+        await ev.data.onSuccess(apiKey);
     },
     /**
      * @private
@@ -183,7 +228,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     async _onGMapAPIKeyRequest(ev) {
         ev.stopPropagation();
         const apiKey = await this._getGMapAPIKey(ev.data.refetch);
-        ev.data.onSuccess(apiKey);
+        await ev.data.onSuccess(apiKey);
     },
     /**
     /**
