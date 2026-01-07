@@ -756,16 +756,23 @@ class ResPartner(models.Model):
         if address_to_upstream:
             new_address = self._get_address_values()
             self.parent_id.write(new_address)  # is going to trigger _fields_sync again
+
+        sync_commercial_fields = self._synced_commercial_fields()
+        # allow child delivery addresses to have a separate VAT, without syncing upstream
+        if self.type == 'delivery' and 'vat' in sync_commercial_fields:
+            sync_commercial_fields.remove('vat')
         commercial_to_upstream = (
             # has a parent and is not a commercial entity itself
             bool(self.parent_id) and (self.commercial_partner_id != self) and
             # actually updated, or parent updated
-            (any(field in values for field in self._synced_commercial_fields()) or 'parent_id' in values) and
+            (any(field in values for field in sync_commercial_fields) or 'parent_id' in values) and
             # something is actually updated
-            any(self[fname] != self.parent_id[fname] for fname in self._synced_commercial_fields())
+            any(self[fname] != self.parent_id[fname] for fname in sync_commercial_fields)
         )
         if commercial_to_upstream:
             new_synced_commercials = self._get_synced_commercial_values()
+            if self.type == 'delivery':
+                new_synced_commercials.pop('vat', None)
             self.parent_id.write(new_synced_commercials)
 
         # 3. To DOWNSTREAM: sync children

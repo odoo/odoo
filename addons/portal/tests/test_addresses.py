@@ -250,6 +250,30 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             [self.default_address_values],
         )
 
+    def test_update_vat_on_child_delivery_addresses(self):
+        """
+        Check that the VAT can be updated on a child delivery address, without updating the parent's VAT.
+        """
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        csrf_token = Request.csrf_token(self)
+
+        res = self._submit_address_values({
+            **self.default_address_values,
+            'csrf_token': csrf_token,
+            'address_type': 'delivery',
+            'vat': 'BE0926372368',
+        })
+        self.assertEqual(res, {'redirectUrl': '/my/addresses'})
+        delivery_address = self.portal_user.partner_id.child_ids
+        self.assertRecordValues(
+            delivery_address,
+            [{**self.default_address_values, 'vat': 'BE0926372368'}],
+        )
+        self.assertRecordValues(
+            self.portal_user.partner_id,
+            [{'vat': False}],
+        )
+
     def test_delivery_use_as_billing_address_creation(self):
         self.authenticate(self.portal_user.login, self.portal_user.login)
         csrf_token = Request.csrf_token(self)
