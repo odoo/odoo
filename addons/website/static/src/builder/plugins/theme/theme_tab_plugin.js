@@ -280,6 +280,7 @@ export class CustomizeGrayAction extends BuilderAction {
                 colorType: "gray",
             }
         );
+        setBuilderCSSVariables(getHtmlStyle(this.document));
     }
 }
 export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
