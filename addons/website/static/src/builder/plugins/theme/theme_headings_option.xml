@@ -63,19 +63,19 @@
             </t>
         </BuilderRow>
         <BuilderRow label.translate="Margins" tooltip.translate="Heading 1" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput title.translate="Top" actionParam="'headings-margin-top'" unit="'px'" saveUnit="'px'"/>
-            <BuilderNumberInput title.translate="Bottom" actionParam="'headings-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+            <BuilderNumberInput title.translate="Top" actionParam="'headings-margin-top'" unit="'px'" saveUnit="'px'" prefixIcon="'fa fa-arrow-up'"/>
+            <BuilderNumberInput title.translate="Bottom" actionParam="'headings-margin-bottom'" unit="'px'" saveUnit="'px'" prefixIcon="'fa fa-arrow-down'"/>
             <t t-set-slot="collapse">
                 <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput title.translate="Top" actionParam="'h' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
-                        <BuilderNumberInput title.translate="Bottom" actionParam="'h' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+                        <BuilderNumberInput title.translate="Top" actionParam="'h' + depth + '-margin-top'" unit="'px'" saveUnit="'px'" prefixIcon="'fa fa-arrow-up'"/>
+                        <BuilderNumberInput title.translate="Bottom" actionParam="'h' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'" prefixIcon="'fa fa-arrow-down'"/>
                     </BuilderRow>
                 </t>
                 <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderNumberInput title.translate="Top" actionParam="'display-' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
-                        <BuilderNumberInput title.translate="Bottom" actionParam="'display-' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+                        <BuilderNumberInput title.translate="Top" actionParam="'display-' + depth + '-margin-top'" unit="'px'" saveUnit="'px'" prefixIcon="'fa fa-arrow-up'"/>
+                        <BuilderNumberInput title.translate="Bottom" actionParam="'display-' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'" prefixIcon="'fa fa-arrow-down'"/>
                     </BuilderRow>
                 </t>
             </t>
