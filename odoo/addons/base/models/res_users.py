@@ -11,6 +11,7 @@ import itertools
 import json
 import logging
 import os
+import re
 import time
 from collections import defaultdict
 from functools import wraps
@@ -538,10 +539,27 @@ class Users(models.Model):
     def _compute_companies_count(self):
         self.companies_count = self.env['res.company'].sudo().search_count([])
 
+    @staticmethod
+    def _normalize_etc_gmt(tz):
+        """
+        Invert Etc/GMT sign because POSIX convention is reversed.
+        Etc/GMT+2 → Etc/GMT-2
+        Etc/GMT-2 → Etc/GMT+2
+        """
+        if not tz:
+            return tz
+        timezone = re.fullmatch(r'Etc/GMT([+-])(\d+)', tz)
+        if not timezone:
+            return tz
+        sign, hours = timezone.groups()
+        inverted = '-' if sign == '+' else '+'
+        return f'Etc/GMT{inverted}{hours}'
+
     @api.depends('tz')
     def _compute_tz_offset(self):
         for user in self:
-            user.tz_offset = datetime.datetime.now(pytz.timezone(user.tz or 'GMT')).strftime('%z')
+            tz = self._normalize_etc_gmt(user.tz or 'UTC')
+            user.tz_offset = datetime.datetime.now(pytz.timezone(tz)).strftime('%z')
 
     @api.depends('groups_id')
     def _compute_accesses_count(self):
