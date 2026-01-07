@@ -197,3 +197,38 @@ registry.category("web_tour.tours").add("test_custom_attribute_alone_displayed",
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_product_configurator_price", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Product"),
+            ProductConfigurator.priceIs("13.20"), // 10 (Small) + 2 (Red) + 1.2 (10% tax)
+            ProductConfigurator.pickRadio("Large"),
+            ProductConfigurator.priceIs("14.30"), // 10 + 1 (Large) + 2 (Red) + 1.3 (10% tax)
+            ProductConfigurator.pickRadio("Blue"),
+            ProductConfigurator.priceIs("15.40"), // 10 + 1 (Large) + 3 (Blue) + 1.4 (10% tax)
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("15.40"),
+            ProductScreen.clickPriceList("Pricelist 2"),
+            ProductScreen.totalAmountIs("22.00"),
+            ProductScreen.clickDisplayedProduct("Configurable Product"),
+            ProductConfigurator.priceIs("22.00"), // 20 (pricelist 2) + 2 (10% tax)
+            ProductConfigurator.pickRadio("Blue"),
+            ProductConfigurator.priceIs("22.00"), // 20 (pricelist 2) + 2 (10% tax)
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("44.00"),
+            Chrome.createFloatingOrder(),
+            ProductScreen.clickFiscalPosition("Include to Exclude"),
+            ProductScreen.clickDisplayedProduct("Configurable Product"),
+            ProductConfigurator.priceIs("12.00"), // 10 (Small) + 2 (Red)
+            ProductConfigurator.pickRadio("Large"),
+            ProductConfigurator.priceIs("13.00"), // 10 + 1 (Large) + 2 (Red)
+            ProductConfigurator.pickRadio("Blue"),
+            ProductConfigurator.priceIs("14.00"), // 10 + 1 (Large) + 3 (Blue)
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("14.00"),
+            Chrome.endTour(),
+        ].flat(),
+});
