@@ -15,7 +15,9 @@
     <ImageFilterOption level="1"/>
     <ImageFormatOption level="1"/>
     <t t-if="!state.isSocialMediaImg">
-        <ImageShapeOption />
+        <t t-if="!state.isDynamicSVG">
+            <ImageShapeOption />
+        </t>
         <BuilderRow label.translate="Description"
             tooltip.translate="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
             <BuilderTextInput
