@@ -27,14 +27,17 @@ class StockWarehouse(models.Model):
     def _get_picking_type_create_values(self, max_sequence):
         data, next_sequence = super(StockWarehouse, self)._get_picking_type_create_values(max_sequence)
         prod_location = self._get_production_location()
-        scrap_location_id = self.company_id.scrap_location_id.id
+        scrap_location = self.company_id.scrap_location_id
+        if not scrap_location:
+            raise UserError(_("No location of type Inventory Loss found"))
+
         data.update({
             'repair_type_id': {
                 'name': _('Repairs'),
                 'code': 'repair_operation',
                 'default_location_src_id': self.lot_stock_id.id,
                 'default_location_dest_id': prod_location.id,
-                'default_remove_location_dest_id': scrap_location_id,
+                'default_remove_location_dest_id': scrap_location.id,
                 'default_recycle_location_dest_id': self.lot_stock_id.id,
                 'sequence': next_sequence + 1,
                 'company_id': self.company_id.id,
