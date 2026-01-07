@@ -467,12 +467,12 @@ const GPSPicker = InputUserValueWidget.extend({
             this.trigger_up('gmap_api_request', {
                 editableMode: true,
                 configureIfNecessary: true,
-                onSuccess: key => {
+                onSuccess: async (key) => {
                     if (!key) {
                         resolve(false);
                         return;
                     }
-
+                    await this.contentWindow.google.maps.importLibrary("places");
                     // TODO see _notifyGMapError, this tries to trigger an error
                     // early but this is not consistent with new gmap keys.
                     this._nearbySearch('(50.854975,4.3753899)', !!key)
