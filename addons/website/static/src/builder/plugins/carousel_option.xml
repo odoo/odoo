@@ -40,11 +40,24 @@
 
     <BuilderRow label.translate="Transition">
         <BuilderSelect>
-            <BuilderSelectItem classAction="'slide'">Slide</BuilderSelectItem>
-            <BuilderSelectItem classAction="'carousel-fade slide'">Fade</BuilderSelectItem>
+            <BuilderSelectItem id="'transition_slide'" classAction="'slide'">Slide</BuilderSelectItem>
+            <BuilderSelectItem id="'transition_fade'" classAction="'carousel-fade slide'">Fade</BuilderSelectItem>
             <BuilderSelectItem classAction="'carousel-instant slide'">None</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
+
+    <t t-if="isActiveItem('transition_slide') || isActiveItem('transition_fade')">
+        <BuilderRow label.translate="Speed" level="1">
+            <BuilderNumberInput 
+                styleAction="'--transition-speed'"
+                default="400"
+                unit="'ms'"
+                step="10"
+                min="200"
+                preview="false"
+                applyWithUnit="true"/>
+        </BuilderRow>
+    </t>
 
     <BuilderRow label.translate="Autoplay" level="1">
         <BuilderSelect dataAttributeAction="'bsRide'">
@@ -55,7 +68,7 @@
     </BuilderRow>
 
     <t t-if="isActiveItem('auto_after_first_hover') || isActiveItem('auto_always')">
-        <BuilderRow label.translate="Timespan" level="1">
+        <BuilderRow label.translate="Timespan" level="2">
             <BuilderNumberInput dataAttributeAction="'bsInterval'"
                 default="10"
                 unit="'s'"

@@ -3378,3 +3378,10 @@ input[value*="data-oe-translation-source-sha"] {
 img.o_image_popup {
     cursor: pointer;
 }
+
+.slide {
+    --transition-speed: 600ms;
+    .carousel-item {
+        transition-duration: var(--transition-speed) !important;
+    }
+}
