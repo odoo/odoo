@@ -889,6 +889,22 @@ class TestRepair(TestRepairCommon):
                 'company_id': company.id,
             })
 
+    def test_missing_inventory_loss_location_raises_user_error(self):
+        """
+        Test that a missing inventory loss location raises a UserError when creating a warehouse.
+        """
+        inv_locations = self.env['stock.location'].search([
+            ('usage', '=', 'inventory'),
+            ('company_id', '=', self.env.company.id),
+        ])
+        if inv_locations:
+            inv_locations.write({'usage': "internal"})
+        with self.assertRaises(UserError):
+            self.env['stock.warehouse'].create({
+                'name': 'ELCT',
+                'code': 'ET',
+            })
+
     def test_add_product_from_catalog(self):
         """Check that only consumable products are available in the catalog."""
         catalog_action = self.repair0.action_add_from_catalog()
