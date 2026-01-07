@@ -55,7 +55,7 @@ class ProjectTags(models.Model):
         follows the order specified in ``id_order``. Complexity is O(n).
 
         :param list[dict] tag_list: Ordered (by ID) list of record values, each record being
-                        a dict containing at least an 'id' key.
+            a dict containing at least an 'id' key.
 
         :param list[int] id_order: List of integer IDs specifying the desired order of records.
 

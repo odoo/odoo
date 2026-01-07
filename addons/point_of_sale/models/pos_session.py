@@ -588,9 +588,10 @@ class PosSession(models.Model):
         Calling this method will try store the cash details during the session closing.
 
         :param counted_cash: float, the total cash the user counted from its cash register
-        If successful, it returns {'successful': True}
-        Otherwise, it returns {'successful': False, 'message': str, 'redirect': bool}.
-        'redirect' is a boolean used to know whether we redirect the user to the back end or not.
+
+        If successful, it returns ``{'successful': True}``.
+        Otherwise, it returns ``{'successful': False, 'message': str, 'redirect': bool}`` where
+        ``'redirect'`` is a boolean used to know whether we redirect the user to the back end or not.
         When necessary, error (i.e. UserError, AccessError) is raised which should redirect the user to the back end.
         """
         self.ensure_one()
