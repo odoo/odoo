@@ -109,20 +109,34 @@ export class TableMenu extends Component {
     }
 
     onPointerDown(ev) {
+        const target = this.props.target;
+        let hasMergedSpan = false;
+        if (this.props.type === "column") {
+            const colIndex = this.tableGrid[0].indexOf(target);
+            hasMergedSpan = this.tableGrid.some((row) => row[colIndex].colSpan > 1);
+        } else {
+            const colIndex = getRowIndex(target);
+            hasMergedSpan = this.tableGrid[colIndex].some((cell) => cell.rowSpan > 1);
+        }
+        // Do not allow drag-and-drop on merged cells
+        if (hasMergedSpan) {
+            return;
+        }
         this.longPressTimer = setTimeout(() => {
             this.props.overlay.close();
             // Open the TableDragDrop overlay.
             this.props.tableDragDropOverlay.open({
-                target: this.props.target,
+                target: target,
                 props: {
                     type: this.props.type,
                     pointerPos: { x: ev.clientX, y: ev.clientY },
-                    target: this.props.target,
+                    target: target,
                     document: this.props.document,
                     editable: this.props.editable,
                     close: () => this.props.tableDragDropOverlay.close(),
                     moveRow: this.props.moveRow,
                     moveColumn: this.props.moveColumn,
+                    tableGrid: this.tableGrid,
                 },
             });
         }, 200); // long press threshold

@@ -513,7 +513,7 @@ export class TablePlugin extends Plugin {
         const table = closestElement(cell, "table");
         const tableGrid = this.buildTableGrid(table);
         const columnIndex = tableGrid[0].indexOf(cell);
-        const nColumns = cell.parentElement.children.length;
+        const nColumns = tableGrid[0].length;
         if (targetIndex < 0 || targetIndex >= nColumns || targetIndex === columnIndex) {
             return;
         }
