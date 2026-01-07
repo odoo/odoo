@@ -893,7 +893,7 @@ class AccountMove(models.Model):
                 'lineNumberReference': base_invoice != self and line_number,
                 'lineExpressionIndicator': line.product_id and line.product_uom_id,
                 'lineNatureIndicator': {False: 'OTHER', 'service': 'SERVICE'}.get(line.product_id.type, 'PRODUCT'),
-                'lineDescription': line.name.replace('\n', ' '),
+                'lineDescription': line.name.replace('\n', ' ')[:512],
             }
 
             if 'is_downpayment' in line and line.is_downpayment:
