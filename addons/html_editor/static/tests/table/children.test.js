@@ -299,9 +299,9 @@ describe("row", () => {
                     <table>
                         <tbody>
                             <tr style="height: 30px;">
-                                <th class="o_table_header" style="width: 20px;">gh</th>
-                                <th class="o_table_header" style="width: 25px;">ij</th>
-                                <th class="o_table_header" style="width: 30px;">kl</th>
+                                <th style="width: 20px;" class="o_table_header">gh</th>
+                                <th style="width: 25px;" class="o_table_header">ij</th>
+                                <th style="width: 30px;" class="o_table_header">kl</th>
                             </tr>
                             <tr style="height: 20px;">
                                 <td style="width: 20px;">ab[]</td>
@@ -337,9 +337,9 @@ describe("row", () => {
                     <table>
                         <tbody>
                             <tr style="height: 30px;">
-                                <th class="o_table_header" style="width: 20px;">gh</th>
-                                <th class="o_table_header" style="width: 25px;">ij</th>
-                                <th class="o_table_header" style="width: 30px;">kl[]</th>
+                                <th style="width: 20px;" class="o_table_header">gh</th>
+                                <th style="width: 25px;" class="o_table_header">ij</th>
+                                <th style="width: 30px;" class="o_table_header">kl[]</th>
                             </tr>
                             <tr style="height: 20px;">
                                 <td style="width: 20px;">ab</td>
@@ -808,12 +808,12 @@ describe("column", () => {
                         <tbody>
                             <tr style="height: 20px;">
                                 <th class="o_table_header" style="width: 20px;">ab</th>
-                                <th class="o_table_header" style="width: 25px;">cd</th>
+                                <th class="o_table_header" style="width: 25px;">cd[]</th>
                                 <th class="o_table_header" style="width: 30px;">ef</th>
                             </tr>
                             <tr style="height: 30px;">
                                 <td>gh</td>
-                                <td>ij[]</td>
+                                <td>ij</td>
                                 <td>kl</td>
                             </tr>
                         </tbody>
@@ -826,12 +826,12 @@ describe("column", () => {
                             <tr style="height: 20px;">
                                 <th class="o_table_header" style="width: 20px;">ab</th>
                                 <th class="o_table_header" style="width: 30px;">ef</th>
-                                <th class="o_table_header" style="width: 25px;">cd</th>
+                                <th class="o_table_header" style="width: 25px;">cd[]</th>
                             </tr>
                             <tr style="height: 30px;">
                                 <td>gh</td>
                                 <td>kl</td>
-                                <td>ij[]</td>
+                                <td>ij</td>
                             </tr>
                         </tbody>
                     </table>

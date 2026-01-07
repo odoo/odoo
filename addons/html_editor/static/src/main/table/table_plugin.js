@@ -510,24 +510,33 @@ export class TablePlugin extends Plugin {
      * @param {HTMLTableCellElement} cell
      */
     moveColumn(targetIndex, cell) {
-        const columnIndex = getColumnIndex(cell);
+        const table = closestElement(cell, "table");
+        const tableGrid = this.buildTableGrid(table);
+        const columnIndex = tableGrid[0].indexOf(cell);
         const nColumns = cell.parentElement.children.length;
         if (targetIndex < 0 || targetIndex >= nColumns || targetIndex === columnIndex) {
             return;
         }
 
+        const tdsToMove = new Set([...tableGrid].map((tr) => tr[columnIndex]));
         const selectionToRestore = this.dependencies.selection.getEditableSelection();
-        [...cell.parentElement.parentElement.children].map((tr) => {
-            const tdToMove = tr.children[columnIndex];
-            const targetTd = tr.children[targetIndex];
-            if (targetIndex < columnIndex) {
-                targetTd.before(tdToMove);
-            } else {
-                targetTd.after(tdToMove);
+        const insertBefore = targetIndex < columnIndex;
+        tdsToMove.forEach((td) => {
+            const rowIndex = getRowIndex(td);
+            const row = tableGrid[rowIndex];
+            const moveStep = insertBefore ? 1 : -1;
+            let index = targetIndex;
+            while (index !== columnIndex) {
+                const cell = row[index];
+                if (cell && getRowIndex(cell) === rowIndex) {
+                    insertBefore ? cell.before(td) : cell.after(td);
+                    break;
+                }
+                index += moveStep;
             }
         });
-
         this.dependencies.selection.setSelection(selectionToRestore);
+        this.tableGridMap.delete(table);
     }
 
     /**
@@ -571,6 +580,7 @@ export class TablePlugin extends Plugin {
             }
         }
         this.dependencies.selection.setSelection(selectionToRestore);
+        this.tableGridMap?.delete(closestElement(row, "table"));
     }
 
     /**

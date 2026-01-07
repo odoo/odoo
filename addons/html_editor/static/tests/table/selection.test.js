@@ -1440,7 +1440,7 @@ describe("move cursor with arrow keys", () => {
                 `),
             });
         });
-        test("should move the cursor down across cells with colspan using ArrowUp", async () => {
+        test("should move the cursor up across cells with colspan using ArrowUp", async () => {
             const { el } = await setupEditor(
                 unformat(`
                     <table class="table table-bordered o_table">

@@ -1,6 +1,6 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Component, onMounted, onWillUnmount, useExternalListener, useRef } from "@odoo/owl";
-import { getColumnIndex, getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
+import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
@@ -134,6 +134,26 @@ export class TableMenu extends Component {
         delete this.longPressTimer;
     }
 
+    isCurrentOrAdjacentCellRowSpanned(position) {
+        const td = this.props.target;
+        const tr = closestElement(td, "tr");
+        const rowIndex = getRowIndex(tr);
+        const adjacentRowIndex = position === "move_down" ? rowIndex + 1 : rowIndex - 1;
+        return (
+            this.tableGrid[rowIndex]?.some((cell) => cell?.rowSpan > 1) ||
+            this.tableGrid[adjacentRowIndex]?.some((cell) => cell?.rowSpan > 1)
+        );
+    }
+
+    isCurrentOrAdjacentCellColSpanned(position) {
+        const targetCell = this.props.target;
+        const columnIndex = this.tableGrid[0].indexOf(targetCell);
+        const adjacentIndex = position === "move_right" ? columnIndex + 1 : columnIndex - 1;
+        return this.tableGrid.some(
+            (row) => row[columnIndex]?.colSpan > 1 || row[adjacentIndex]?.colSpan > 1
+        );
+    }
+
     colItems() {
         const ltr = this.props.direction === "ltr";
         const { canMerge, canUnmerge, cells, spanType } = getSelectedCellsMergeInfo(
@@ -146,13 +166,19 @@ export class TableMenu extends Component {
                 name: "move_left",
                 icon: "fa-chevron-left disabled",
                 text: ltr ? _t("Move left") : _t("Move right"),
-                action: (target) => this.props.moveColumn(getColumnIndex(target) - 1, target),
+                action: (target) =>
+                    this.props.moveColumn(this.tableGrid[0].indexOf(target) - 1, target),
+                disable: this.isCurrentOrAdjacentCellColSpanned("move_left"),
+                tooltip: _t("Merged columns cannot be moved left or right."),
             },
             !this.isLast && {
                 name: "move_right",
                 icon: "fa-chevron-right",
                 text: ltr ? _t("Move right") : _t("Move left"),
-                action: (target) => this.props.moveColumn(getColumnIndex(target) + 1, target),
+                action: (target) =>
+                    this.props.moveColumn(this.tableGrid[0].indexOf(target) + 1, target),
+                disable: this.isCurrentOrAdjacentCellColSpanned("move_right"),
+                tooltip: _t("Merged columns cannot be moved left or right."),
             },
             {
                 name: "insert_left",
@@ -235,14 +261,18 @@ export class TableMenu extends Component {
                 icon: "fa-chevron-up",
                 text: _t("Move up"),
                 action: (target) =>
-                    this.props.moveRow(getRowIndex(target.parentElement) - 1, target.parentElement),
+                    this.props.moveRow(getRowIndex(target) - 1, target.parentElement),
+                disable: this.isCurrentOrAdjacentCellRowSpanned("move_up"),
+                tooltip: _t("Merged rows cannot be moved up or down."),
             },
             !this.isLast && {
                 name: "move_down",
                 icon: "fa-chevron-down",
                 text: _t("Move down"),
                 action: (target) =>
-                    this.props.moveRow(getRowIndex(target.parentElement) + 1, target.parentElement),
+                    this.props.moveRow(getRowIndex(target) + 1, target.parentElement),
+                disable: this.isCurrentOrAdjacentCellRowSpanned("move_down"),
+                tooltip: _t("Merged rows cannot be moved up or down."),
             },
             !this.isTableHeader && {
                 name: "insert_above",
