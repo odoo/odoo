@@ -27,6 +27,12 @@ export class SurveyResultPagination extends Interaction {
         tbody: {
             "t-out": () => this.tableContent,
         },
+        _root: {
+            // The following two events are dispatched by survey_result when
+            // user clicks on the "print" button.
+            "t-on-save_state_and_show_all": this.onSaveStateAndShowAll,
+            "t-on-restore_state": this.onRestoreState,
+        },
     };
 
     setup() {
@@ -40,20 +46,18 @@ export class SurveyResultPagination extends Interaction {
             showAll: false,
             hideFilter: this.el.dataset.hideFilter,
         };
+        this.paginationStateBackup = null;
+    }
 
-        // The following two events are dispatched by survey_result when user
-        // clicks on the "print" button.
-        this.el.addEventListener("save_state_and_show_all", () => {
-            this.paginationStateBackup = Object.assign({}, this.paginationState);
-            this.onShowAllAnswers();
-            this.updateContent();
-        });
-        this.el.addEventListener("restore_state", () => {
-            if (this.paginationStateBackup) {
-                this.paginationState = this.paginationStateBackup;
-            }
-            this.updateContent();
-        });
+    onSaveStateAndShowAll() {
+        this.paginationStateBackup = Object.assign({}, this.paginationState);
+        this.onShowAllAnswers();
+    }
+
+    onRestoreState() {
+        if (this.paginationStateBackup) {
+            this.paginationState = this.paginationStateBackup;
+        }
     }
 
     parseAnswersJSON() {
