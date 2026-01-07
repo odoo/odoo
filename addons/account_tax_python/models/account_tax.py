@@ -82,6 +82,62 @@ class AccountTax(models.Model):
         check_formula(self.env, transformed_formula)
         return transformed_formula, accessed_fields
 
+<<<<<<< 24db73743d8bb4d678af7efb4d78a019e0953395
+||||||| 37bf1703c7478a3010b71cd60bbb43b3295a605b
+        i = 0
+        while i < len(formula):
+
+            if formula[i] == ' ':
+                i += 1
+                continue
+
+            continue_needed = False
+            for token in allowed_tokens:
+                if formula[i:i + len(token)] == token:
+                    i += len(token)
+                    continue_needed = True
+                    break
+            if continue_needed:
+                continue
+
+            number_size = get_number_size(formula, i)
+            if number_size > 0:
+                i += number_size
+                continue
+
+            raise ValidationError(_("Malformed formula '%(formula)s' at position %(position)s", formula=formula, position=i))
+
+    @api.model
+=======
+        i = 0
+        while i < len(formula):
+
+            if formula[i] == ' ':
+                i += 1
+                continue
+
+            continue_needed = False
+            # Token consumption should be greedy, so the set of allowed tokens should be
+            # sorted from longer to shorter. Otherwise, if the set has '>' before '>=',
+            # the '>=' token will raise an error. This is because the '>' is consumed and
+            # then it leaves the '=' character next, wich is not in the allowed_tokens.
+            for token in sorted(allowed_tokens, key=len, reverse=True):
+                if formula[i:i + len(token)] == token:
+                    i += len(token)
+                    continue_needed = True
+                    break
+            if continue_needed:
+                continue
+
+            number_size = get_number_size(formula, i)
+            if number_size > 0:
+                i += number_size
+                continue
+
+            raise ValidationError(_("Malformed formula '%(formula)s' at position %(position)s", formula=formula, position=i))
+
+    @api.model
+>>>>>>> ff657768d41242fb3d8c85c83eccc124e0fb563e
     def _eval_tax_amount_formula(self, raw_base, evaluation_context):
         """ Evaluate the formula of the tax passed as parameter.
 
