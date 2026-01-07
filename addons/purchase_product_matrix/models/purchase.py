@@ -164,7 +164,8 @@ class PurchaseOrderLine(models.Model):
 
     def _get_product_purchase_description(self, product):
         name = super(PurchaseOrderLine, self)._get_product_purchase_description(product)
-        for no_variant_attribute_value in self.product_no_variant_attribute_value_ids:
+        product_lang_no_variant_attribute_value_ids = self.with_context(product.env.context).product_no_variant_attribute_value_ids
+        for no_variant_attribute_value in product_lang_no_variant_attribute_value_ids:
             name += "\n" + no_variant_attribute_value.attribute_id.name + ': ' + no_variant_attribute_value.name
 
         return name
