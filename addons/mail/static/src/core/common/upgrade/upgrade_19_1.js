@@ -14,8 +14,10 @@ export const upgrade_19_1 = {
     },
 };
 
+export const MESSAGE_SOUND_LS_19_1 = "Settings,undefined:messageSound";
+
 upgrade_19_1.add("mail.user_setting.message_sound", {
-    key: "Settings,undefined:messageSound",
+    key: MESSAGE_SOUND_LS_19_1,
     value: false,
 });
 

@@ -4,8 +4,9 @@ import { session } from "@web/session";
 const LOCAL_STORAGE_SUBVERSION = 0;
 
 /**
- * @typedef {Object} LocalStorageValue
+ * @typedef {Object} VersionedLocalStorageValue
  * @property {any} value
+ * @property {string} version
  */
 
 export function getCurrentLocalStorageVersion() {
@@ -22,7 +23,7 @@ export function getCurrentLocalStorageVersion() {
 
 /**
  * Utility class to simplify interaction on local storage with constant local storage key.
- * When a value is set, this is done as `{ value }`.
+ * When a value is set, this is done as `{ value, version }`.
  * Note: The object syntax is necessary to properly handle types, like "false" vs false.
  */
 export class LocalStorageEntry {
@@ -38,11 +39,22 @@ export class LocalStorageEntry {
         }
         return parseRawValue(rawValue)?.value;
     }
-    set(value) {
+    getVersioned() {
+        const rawValue = this.rawGet();
+        if (rawValue === null) {
+            return undefined;
+        }
+        const versionedValue = parseRawValue(rawValue);
+        if (!versionedValue || typeof versionedValue !== "object") {
+            return undefined;
+        }
+        return versionedValue;
+    }
+    set(value, version = getCurrentLocalStorageVersion()) {
         if (this.rawGet() !== null && this.get() === value) {
             return;
         }
-        browser.localStorage.setItem(this.key, toRawValue(value));
+        browser.localStorage.setItem(this.key, toRawValue(value, version));
     }
     rawGet() {
         return browser.localStorage.getItem(this.key);
@@ -55,13 +67,13 @@ export class LocalStorageEntry {
     }
 }
 
-export function toRawValue(value) {
-    return JSON.stringify({ value });
+export function toRawValue(value, version = getCurrentLocalStorageVersion()) {
+    return JSON.stringify({ value, version });
 }
 
 /**
  * @param {string} rawValue
- * @returns {LocalStorageValue}
+ * @returns {VersionedLocalStorageValue}
  */
 export function parseRawValue(rawValue) {
     try {

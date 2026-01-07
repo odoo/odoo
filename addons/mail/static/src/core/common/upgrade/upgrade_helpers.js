@@ -104,8 +104,12 @@ function getUpgradeMap() {
  */
 function applyUpgrade(upgradeData) {
     const oldEntry = new LocalStorageEntry(upgradeData.key);
-    const oldValue = oldEntry.rawGet() ?? oldEntry.get();
-    if (oldValue === undefined) {
+    const versionedValue = oldEntry.getVersioned();
+    const oldValue = oldEntry.get() ?? oldEntry.rawGet();
+    if (
+        [undefined, null].includes(oldValue) ||
+        (versionedValue && parseVersion(upgradeData.version).isLowerThan(versionedValue.version))
+    ) {
         return; // could not upgrade (cannot parse or more recent version)
     }
     const { key, value } =
@@ -114,5 +118,5 @@ function applyUpgrade(upgradeData) {
             : upgradeData.upgrade;
     oldEntry.remove();
     const newEntry = new LocalStorageEntry(key);
-    newEntry.set(value);
+    newEntry.set(value, upgradeData.version);
 }

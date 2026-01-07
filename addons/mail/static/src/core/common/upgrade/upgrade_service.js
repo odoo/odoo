@@ -7,12 +7,12 @@ export const discussUpgradeService = {
     dependencies: [],
     start() {
         const lse = new LocalStorageEntry("discuss.upgrade.version");
-        const oldVersion = lse.get() ?? "1.0";
+        const oldVersion = lse.getVersioned()?.version ?? "1.0";
         const currentVersion = getCurrentLocalStorageVersion();
-        lse.set(currentVersion);
         if (parseVersion(oldVersion).isLowerThan(currentVersion)) {
             upgradeFrom(oldVersion);
         }
+        lse.set(true); // update version
     },
 };
 

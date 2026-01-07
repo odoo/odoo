@@ -2,7 +2,7 @@ import { defineLivechatModels } from "@im_livechat/../tests/livechat_test_helper
 
 import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
-import { toRawValue } from "@mail/utils/common/local_storage";
+import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
@@ -34,7 +34,7 @@ test("category 'Livechat' is folded", async () => {
         DiscussAppCategory.localId("im_livechat.category_default"),
         "is_open"
     );
-    expect(localStorage.getItem(defaultLivechat_is_open)).toBe(toRawValue(false));
+    expect(new LocalStorageEntry(defaultLivechat_is_open).get()).toBe(false);
     expect(
         localStorage.getItem("discuss_sidebar_category_folded_im_livechat.category_default")
     ).toBe(null);
