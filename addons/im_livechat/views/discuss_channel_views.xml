@@ -11,6 +11,7 @@
                     <field name="livechat_agent_requesting_help_history"/>
                     <field name="livechat_agent_providing_help_history"/>
                     <field name="country_id" string="Country"/>
+                    <field name="description"/>
                     <field name="livechat_customer_partner_ids" string="Customer"/>
                     <filter name="filter_my_sessions" domain="[('livechat_agent_partner_ids.user_ids', 'in', uid)]" string="My Sessions"/>
                     <separator/>
@@ -58,6 +59,7 @@
                     <field name="livechat_agent_requesting_help_history" widget="many2one_avatar" optional="hide"/>
                     <field name="livechat_agent_providing_help_history" widget="many2one_avatar" optional="hide"/>
                     <field name="livechat_bot_history_ids" string="Chatbot" widget="many2many_tags_avatar" optional="hide"/>
+                    <field name="description" optional="hide"/>
                     <field name="country_id" optional="show"/>
                     <field name="livechat_lang_id" optional="show"/>
                     <field name="livechat_expertise_ids" string="Expertise" widget="many2many_tags" optional="show"/>

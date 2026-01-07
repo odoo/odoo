@@ -115,7 +115,6 @@ class DiscussChannel(models.Model):
     livechat_status = fields.Selection(
         selection=[
             ("in_progress", "In progress"),
-            ("waiting", "Waiting for customer"),
             ("need_help", "Looking for help"),
         ],
         compute="_compute_livechat_status",
@@ -825,14 +824,6 @@ class DiscussChannel(models.Model):
             ).total_seconds() / 3600
         if not self.livechat_end_dt and author_history.livechat_member_type == "agent":
             self.livechat_failure = "no_failure"
-        # sudo: discuss.channel - accessing livechat_status in internal code is acceptable
-        if (
-            not self.livechat_end_dt
-            and self.sudo().livechat_status == "waiting"
-            and author_history.livechat_member_type == "visitor"
-        ):
-            # sudo: discuss.channel - writing livechat_status when a message is posted is acceptable
-            self.sudo().livechat_status = "in_progress"
         return super()._message_post_after_hook(message, msg_vals)
 
     def _chatbot_restart(self, chatbot_script):
