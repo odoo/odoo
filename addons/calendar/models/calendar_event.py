@@ -1678,11 +1678,17 @@ class CalendarEvent(models.Model):
         return details
 
     def _get_customer_description(self):
-        """:return (html): Sanitized HTML description for customer to include in calendar exports"""
+        """
+        :rtype: str
+        :returns: html Sanitized HTML description for customer to include in calendar exports
+        """
         return html_sanitize(self.description) if not is_html_empty(self.description) else ''
 
     def _get_customer_summary(self):
-        """:return (str): The summary to include in calendar exports"""
+        """
+        :rtype: str
+        :returns: The summary to include in calendar exports
+        """
         return self.name or ''
 
     @api.model

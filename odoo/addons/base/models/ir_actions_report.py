@@ -462,13 +462,13 @@ class IrActionsReport(models.Model):
 
         return bodies, res_ids, header, footer, specific_paperformat_args
 
-    def _run_wkhtmltoimage(self, bodies, width, height, image_format="jpg"):
+    def _run_wkhtmltoimage(self, bodies, width, height, image_format="jpg") -> list[bytes | None]:
         """
-        :bodies str: valid html documents as strings
-        :param width int: width in pixels
-        :param height int: height in pixels
-        :param image_format union['jpg', 'png']: format of the image
-        :return list[bytes|None]:
+        :param str bodies: valid html documents as strings
+        :param int width: width in pixels
+        :param int height: height in pixels
+        :param image_format: format of the image
+        :type image_format: typing.Literal['jpg', 'png']
         """
         if modules.module.current_test:
             return [None] * len(bodies)
