@@ -494,3 +494,12 @@ describe("removeInvisibleWhitespace", () => {
         });
     });
 });
+
+describe("crash fixes", () => {
+    test("inserting a br should not crash", async () => {
+        const { el, editor } = await setupEditor("<p>a[]</p>");
+        const br = document.createElement("br");
+        editor.shared.dom.insert(br);
+        expect(getContent(el)).toBe("<p>a[]</p>");
+    });
+});
