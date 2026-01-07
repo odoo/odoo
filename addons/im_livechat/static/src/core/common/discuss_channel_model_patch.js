@@ -1,16 +1,18 @@
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
-
 import { fields } from "@mail/model/misc";
+import { convertBrToLineBreak } from "@mail/utils/common/format";
 
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
+import { url } from "@web/core/utils/urls";
 
 /** @type {import("models").DiscussChannel} */
 const discussChannelPatch = {
     setup() {
         super.setup(...arguments);
         this.chatbot = fields.One("Chatbot", { inverse: "channel_id" });
+        this.country_id = fields.One("res.country");
         this.livechat_agent_history_ids = fields.Many("im_livechat.channel.member.history", {
             inverse: "channelAsAgentHistory",
         });
@@ -43,6 +45,28 @@ const discussChannelPatch = {
             },
         });
         this.unpinOnThreadSwitch = false;
+        this.livechat_end_dt = fields.Datetime();
+        this.livechat_operator_id = fields.One("res.partner");
+        /** @type {string|undefined} */
+        this.livechat_note = fields.Html();
+        this.livechatNoteText = fields.Attr(undefined, {
+            compute() {
+                if (this.livechat_note !== undefined) {
+                    return convertBrToLineBreak(this.livechat_note || "");
+                }
+                return this.livechatNoteText;
+            },
+        });
+        this.livechatVisitorMember = fields.One("discuss.channel.member", {
+            compute() {
+                if (this.channel_type !== "livechat") {
+                    return;
+                }
+                return [...this.channel_member_ids]
+                    .sort((a, b) => a.id - b.id)
+                    .find((member) => member.livechat_member_type === "visitor");
+            },
+        });
     },
     get allowDescriptionTypes() {
         return [...super.allowDescriptionTypes, "livechat"];
@@ -147,6 +171,9 @@ const discussChannelPatch = {
             return _t("This live chat conversation has ended");
         }
         return super.composerHiddenText;
+    },
+    get transcriptUrl() {
+        return url(`/im_livechat/download_transcript/${this.id}`);
     },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

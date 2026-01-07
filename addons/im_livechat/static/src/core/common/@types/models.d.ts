@@ -31,15 +31,22 @@ declare module "models" {
     }
     export interface DiscussChannel {
         chatbot: Chatbot;
+        country_id: Country;
         livechat_agent_history_ids: LivechatChannelMemberHistory[];
         livechat_channel_id: LivechatChannel;
         livechat_channel_member_history_ids: LivechatChannelMemberHistory[];
         livechat_customer_history_ids: LivechatChannelMemberHistory[];
+        livechat_end_dt: import("luxon").DateTime;
         livechat_expertise_ids: LivechatExpertise[];
         livechat_lang_id: ResLang;
         livechat_looking_for_help_since_dt: import("luxon").DateTime;
+        livechat_note: ReturnType<import("@odoo/owl").markup>|string;
+        livechat_operator_id: ResPartner;
         livechat_status: "in_progress"|"need_help"|undefined;
+        livechatNoteText: unknown;
         livechatShouldAskLeaveConfirmation: Readonly<boolean>;
+        livechatVisitorMember: ChannelMember;
+        transcriptUrl: Readonly<string>;
         unpinOnThreadSwitch: boolean;
     }
     export interface LivechatChannel {
@@ -67,13 +74,7 @@ declare module "models" {
         "im_livechat.expertise": StaticMailRecord<LivechatExpertise, typeof LivechatExpertiseClass>;
     }
     export interface Thread {
-        country_id: Country;
-        livechat_end_dt: import("luxon").DateTime;
-        livechat_note: ReturnType<import("@odoo/owl").markup>|string;
-        livechat_outcome: "no_answer"|"no_agent"|"no_failure"|"escalated"|undefined;
-        livechatNoteText: string|undefined;
-        livechatVisitorMember: ChannelMember;
-        transcriptUrl: Readonly<string>;
+        composerHidden: Readonly<boolean>;
     }
 
     export interface Models {

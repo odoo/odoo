@@ -23,6 +23,21 @@ patch(DiscussChannel, discussChannelStaticPatch);
 const discussChannelPatch = {
     setup() {
         super.setup(...arguments);
+        this.livechatWelcomeMessage = fields.One("mail.message", {
+            compute() {
+                if (this.hasWelcomeMessage) {
+                    const livechatService = this.store.env.services["im_livechat.livechat"];
+                    return {
+                        id: -0.2 - this.id,
+                        body: livechatService.options.default_message,
+                        thread: this.thread,
+                        author_id: this.livechat_agent_history_ids.sort((a, b) => a.id - b.id)[0]
+                            ?.partner_id,
+                    };
+                }
+            },
+        });
+        this.requested_by_operator = false;
         this.storeAsActiveLivechats = fields.One("Store", {
             compute() {
                 return this.channel_type === "livechat" && !this.livechat_end_dt
@@ -30,6 +45,21 @@ const discussChannelPatch = {
                     : null;
             },
             inverse: "activeLivechats",
+        });
+        this._toggleChatbot = fields.Attr(false, {
+            compute() {
+                return this.chatbot && !this.livechat_end_dt;
+            },
+            onUpdate() {
+                this.isLoadedDeferred.then(() => {
+                    if (this._toggleChatbot) {
+                        this.chatbot.start();
+                    } else {
+                        this.chatbot?.stop();
+                    }
+                });
+            },
+            eager: true,
         });
     },
     get avatarUrl() {
@@ -57,6 +87,12 @@ const discussChannelPatch = {
     },
     get hasAttachmentPanel() {
         return this.channel_type !== "livechat" && super.hasAttachmentPanel;
+    },
+    get hasWelcomeMessage() {
+        return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
+    },
+    get isLastMessageFromCustomer() {
+        return this.newestPersistentOfAllMessage?.isSelfAuthored;
     },
     _onDeleteChatWindow() {
         if (this.isTransient && this.channel_type === "livechat") {

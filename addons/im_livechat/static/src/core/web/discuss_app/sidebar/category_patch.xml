@@ -31,7 +31,7 @@
     <t t-name="im_livechat.LivechatStatusLabelOfThread">
         <t t-set="livechatThread" t-value="templateParams.livechatThread"/>
         <t t-set="small" t-value="templateParams.small"/>
-        <span t-if="livechatThread.channel?.channel_type === 'livechat' and (livechatThread.channel.livechat_status === 'need_help' or livechatThread.livechat_end_dt)" class="o-livechat-LivechatStatusLabel" t-att-title="livechatThread.channel.livechatStatusLabel" t-att-class="{
+        <span t-if="livechatThread.channel?.channel_type === 'livechat' and (livechatThread.channel.livechat_status === 'need_help' or livechatThread.channel.livechat_end_dt)" class="o-livechat-LivechatStatusLabel" t-att-title="livechatThread.channel.livechatStatusLabel" t-att-class="{
             'position-absolute top-0 start-0': env.inDiscussSidebar or env.inChatBubble or env.inNotificationItem,
             'o-livechat-LivechatStatusLabel-Sidebar end-0 bottom-0 rounded-2 border': env.inDiscussSidebar,
             'd-flex z-1 bg-opacity-100': env.inChatBubble or env.inNotificationItem,
@@ -42,8 +42,8 @@
             'bg-info': env.inDiscussSidebar and livechatThread.channel.livechat_status === 'need_help' and !livechatThread.channel.self_member_id,
         }">
             <t t-set="livechatStatusButton" t-value="store.livechatStatusButtons.find(btn => btn.status === livechatThread.channel.livechat_status)"/>
-            <i class="o-livechat-LivechatStatusLabel-icon" t-attf-class="{{ livechatThread.livechat_end_dt ? ('fa fa-flag-checkered' + (small ? ' o-xsmaller' : '')) : small ? livechatStatusButton?.iconSmall : livechatStatusButton?.icon }}" t-att-class="{
-                'o-white': livechatThread.livechat_end_dt,
+            <i class="o-livechat-LivechatStatusLabel-icon" t-attf-class="{{ livechatThread.channel.livechat_end_dt ? ('fa fa-flag-checkered' + (small ? ' o-xsmaller' : '')) : small ? livechatStatusButton?.iconSmall : livechatStatusButton?.icon }}" t-att-class="{
+                'o-white': livechatThread.channel.livechat_end_dt,
                 'position-absolute start-0 top-0 z-1 o-inDiscussSidebar rounded-circle o-px-0_5': env.inDiscussSidebar,
                 'fa-fw': !env.inDiscussSidebar,
             }"/>

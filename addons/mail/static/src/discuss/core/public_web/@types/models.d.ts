@@ -11,6 +11,7 @@ declare module "models" {
         createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
         discussAppCategory: DiscussAppCategory;
         hasSubChannelFeature: Readonly<boolean>;
+        inChathubOnNewMessage: Readonly<boolean>;
         isDisplayInSidebar: boolean;
         isLocallyPinned: boolean;
         lastSubChannelLoaded: DiscussChannel;
