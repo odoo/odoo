@@ -20,14 +20,14 @@
                 <t t-else="">
                     <ThreadIcon className="'align-self-center fs-3 my-2 opacity-75'" size="'large'" thread="thread"/>
                 </t>
-                <div class="flex-grow-1 align-self-center align-items-center h-100 py-1">
+                <div class="flex-grow-1 align-self-center align-items-center h-100 py-1" t-att-class="{ 'lh-sm': showsChatLocalDateTime }">
                     <div class="d-flex">
                         <div t-if="thread.channel?.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
                             <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-esc="thread.channel.parent_channel_id.displayName" t-on-click="() => this.thread?.channel?.parent_channel_id?.open({ focus: true })"/>
                             <i class="oi oi-chevron-right o-xsmaller mx-1"/>
                         </div>
                         <AutoresizeInput
-                            className="'o-mail-DiscussContent-threadName fw-bold flex-shrink-1 py-0 fs-4'"
+                            className="'o-mail-DiscussContent-threadName fw-bold flex-shrink-1 py-0 ' + (showsChatLocalDateTime ? 'fs-5' : 'fs-4')"
                             enabled="thread.is_editable or thread.channel?.channel_type === 'chat'"
                             onValidate.bind="renameThread"
                             value="thread.displayName || ''"
@@ -44,7 +44,7 @@
                             />
                         </t>
                     </div>
-                    <div t-if="thread.channel?.channel_type === 'chat' and state.correspondentLocalDateTimeFormatted" class="text-muted small ms-1" t-out="state.correspondentLocalDateTimeFormatted"/>
+                    <div t-if="showsChatLocalDateTime" class="text-muted smaller ms-1" t-out="state.correspondentLocalDateTimeFormatted"/>
                 </div>
                 <div class="pe-3">
                     <ActionList actions="[partitionedActions.quick, partitionedActions.other, ...partitionedActions.group.slice().reverse()]" inline="true" odooControlPanelSwitchStyle="true"/>
