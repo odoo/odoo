@@ -150,6 +150,7 @@ class CalendarEvent(models.Model):
          ('private', 'Private'),
          ('confidential', 'Only internal users')], 'Privacy',
         help="People to whom this event will be visible.")
+    privacy_placeholder = fields.Char(compute='_compute_privacy_placeholder')
     effective_privacy = fields.Selection(
         [('public', 'Public'), ('private', 'Private'), ('confidential', 'Only internal users')],
         'Effective Privacy', help="Whether the event is private, considering the user privacy",
@@ -339,6 +340,12 @@ class CalendarEvent(models.Model):
     def _compute_effective_privacy(self):
         for event in self:
             event.effective_privacy = event.privacy or event.sudo().user_id.calendar_default_privacy
+
+    @api.depends('effective_privacy')
+    def _compute_privacy_placeholder(self):
+        privacy_selection_dict = dict(self._fields['effective_privacy']._description_selection(self.env))
+        for event in self:
+            event.privacy_placeholder = privacy_selection_dict.get(event.effective_privacy, _('User default'))
 
     def _compute_is_highlighted(self):
         if self.env.context.get('active_model') == 'res.partner':

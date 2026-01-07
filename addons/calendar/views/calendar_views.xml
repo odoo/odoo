@@ -107,8 +107,8 @@
                     <button name="action_open_composer" class="btn btn-primary" type="object" string="Send email" invisible="not user_can_edit"/>
                 </header>
                 <div invisible="not recurrence_id" class="alert alert-info oe_edit_only" role="status">
-                    <p>Edit recurring event</p>
-                    <field name="recurrence_update" widget="radio"/>
+                    <label for="recurrence_update" class="me-2">Edit recurring event</label>
+                    <field name="recurrence_update" widget="radio" options="{'horizontal': True}"/>
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -183,7 +183,8 @@
                             <label for="privacy" string="Status"/>
                             <div class="d-flex">
                                 <field name="show_as" class="oe_inline me-2" readonly="not user_can_edit" nolabel="1"/>
-                                <field name="privacy" class="oe_inline me-2" readonly="not user_can_edit" nolabel="1" placeholder="User default"
+                                <field name="privacy_placeholder" invisible="1"/> <!-- Used to generate the privacy field's placeholder. -->
+                                <field name="privacy" class="oe_inline me-2" readonly="not user_can_edit" nolabel="1" options="{'placeholder_field': 'privacy_placeholder'}"
                                     help="Set whether you're available for other simultaneous events and the privacy of this event to others. Manage your default privacy in your user preferences."/>
                             </div>
                             <field name="should_show_status" invisible="1"/>
@@ -244,7 +245,7 @@
                                     />
                                 </group>
                                 <group>
-                                    <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}" readonly="not user_can_edit"/>
+                                    <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True, 'on_tag_click': 'open_form'}" readonly="not user_can_edit"/>
                                     <field name="recurrence_id" invisible="1" />
                                     <field name="rrule_type" invisible="1" />
                                     <label for="recurrency" string="Recurrent"/>
@@ -284,7 +285,7 @@
                                         <field name="count" class="oe_inline w-auto" nolabel="1" invisible="end_type != 'count'" required="recurrency" readonly="not user_can_edit"/>
                                         <field name="until" class="oe_inline w-auto" nolabel="1" invisible="end_type != 'end_date'" readonly="not user_can_edit"
                                             required="recurrency and end_type == 'end_date'"
-                                            placeholder="e.g: 12/31/2023"
+                                            placeholder="e.g: 12/31/2030"
                                         />
                                     </div>
                                     <field name="event_tz" invisible="not recurrency" readonly="not user_can_edit"/>
@@ -333,9 +334,9 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <form string="Meetings" class="o_calendar_event_form_quick_create" js_class="calendar_quick_create_form_view">
-                <div class="o_unavailable_attendees_alert alert alert-warning border-0 d-flex flex-wrap m-0 mb-3" role="alert"
+                <div class="o_unavailability_alert alert alert-warning border-0 d-flex flex-wrap m-0 mb-3" role="alert"
                     invisible="not unavailable_partner_ids or allday">
-                    <span class="me-1">The following attendees are not available at the selected time</span>
+                    <span class="me-1">Not available at the selected time:</span>
                     <field name="unavailable_partner_ids" widget="many2many_tags"/>
                 </div>
                 <field name="invalid_email_partner_ids" invisible="1"/> <!--used in many2many_attendees widget-->
@@ -372,18 +373,17 @@
                     </span>
                     <field name="stop" invisible="1"/>
                 </div>
-                <div class="d-flex pt-1 pb-2" colspan="2">
-                    <i class="fa fa-fw flex-shrink-0 fa-user mt-1 text-600 me-2" title="Participants"/>
+                <div class="d-flex align-items-center pt-1 pb-2" colspan="2">
+                    <i class="fa fa-fw flex-shrink-0 fa-user text-600 me-2" title="Participants"/>
                     <field name="partner_ids" nolabel="1"
                         widget="many2many_tags"
                         placeholder="Participants"
-                        class="w-75 mb-0"
                     />
                 </div>
                 <div class="d-flex align-items-center pt-1 pb-2" colspan="2">
                     <i class="fa fa-fw flex-shrink-0 fa-map text-600 me-2" title="Location"/>
                     <field name="location" nolabel="1"
-                        placeholder="Location"
+                        placeholder="Room or Location"
                         class="w-100 mb-0"
                     />
                     <!--fields set via the fake front-end only actions must be force saved (see calendar_form)-->
@@ -393,7 +393,7 @@
                     <field name="videocall_source" force_save="1" invisible="1"/>
                     <button name="set_discuss_videocall_location" type="object" class="ms-1 pe-0 btn-link text-nowrap"
                         invisible="videocall_location" context="{'recurrence_update': recurrence_update}">
-                        <span class="fa fa-plus me-1"/>Video
+                        <span class="fa fa-plus me-1"/>Video conference
                     </button>
                 </div>
                 <div class="d-flex align-items-center pt-1 pb-2" colspan="2" invisible="not videocall_location">
@@ -406,7 +406,12 @@
                 </div>
                 <div class="d-flex align-items-center pt-1 pb-2" colspan="2">
                     <i class="fa fa-fw flex-shrink-0 fa-lock text-600 me-2" title="Visibility"/>
-                    <field name="privacy" nolabel="1" class="w-100 mb-0" placeholder="Visibility"/>
+                    <field name="privacy_placeholder" invisible="1"/> <!-- Used to generate the privacy field's placeholder. -->
+                    <field name="privacy" nolabel="1" class="w-100 mb-0" options="{'placeholder_field': 'privacy_placeholder'}"/>
+                </div>
+                <div class="d-flex align-items-center pt-1 pb-2" colspan="2">
+                    <i class="fa fa-fw flex-shrink-0 fa-circle text-600 me-2" title="Show as"/>
+                    <field name="show_as" nolabel="1" class="w-100 mb-0"/>
                 </div>
                 <div class="d-flex pt-1 pb-2" colspan="2">
                     <i class="fa fa-fw flex-shrink-0 fa-sticky-note mt-2 text-600 me-2" title="Notes"/>

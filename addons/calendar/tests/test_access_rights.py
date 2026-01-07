@@ -362,7 +362,6 @@ class TestAccessRights(TransactionCase):
             event_form.stop = datetime(2024, 1, 15, 10, 0)
             event_form.recurrency = True
             event_form.rrule_type_ui = 'yearly'
-            event_form.count = 3
             event_form.alarm_ids.add(alarm)
             event_form.partner_ids.add(self.john.partner_id)
             recurring_event = event_form.save()
