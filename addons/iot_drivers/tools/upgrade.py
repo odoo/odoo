@@ -104,7 +104,7 @@ def check_version_upgrades(local_branch, db_branch):
         with writable():
             _logger.warning("Updating to Debian Trixie for >= 19.1")
             subprocess.run(
-                ['/home/pi/odoo/addons/hw_drivers/tools/upgrade_scripts/upgrade_trixie/upgrade_trixie.sh'], check=True,
+                ['/home/pi/odoo/addons/iot_drivers/tools/upgrade_scripts/upgrade_trixie/upgrade_trixie.sh'], check=True,
             )
     except subprocess.CalledProcessError:
         _logger.exception("Failed to upgrade to debian Trixie. Check /home/pi/upgrade.log file for more details")
@@ -239,11 +239,6 @@ def misc_migration_updates():
         subprocess.run(
             ['sudo', 'sed', '-i', 's|iot_box_image|point_of_sale/tools/posbox|g', ramdisks_service], check=False
         )
-
-        # TODO: Remove this code when v16 is deprecated
-        with open('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf', 'r+', encoding='utf-8') as f:
-            if "server_wide_modules" not in f.read():
-                f.write("server_wide_modules=hw_drivers,hw_posbox_homepage,web\n")
 
     if path_file('odoo', 'addons', 'hw_drivers').exists():
         # TODO: remove this when v18.4 is deprecated (hw_drivers/,hw_posbox_homepage/ -> iot_drivers/)
