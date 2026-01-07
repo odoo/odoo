@@ -5,7 +5,7 @@ import { Component, onMounted, useState } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export class DatePickerPopup extends Component {
-    static template = "point_of_sale.DatePickerPopup";
+    static template = "pos_stock.DatePickerPopup";
     static components = { Dialog, DateTimeInput };
     static props = {
         title: { type: String, optional: true },

@@ -6,7 +6,7 @@
     'category': 'Sales/Point Of Sale',
     'sequence': 6,
     'summary': 'Use Coupons, Gift Cards and Loyalty programs in Point of Sale',
-    'depends': ['loyalty', 'point_of_sale'],
+    'depends': ['loyalty', 'pos_stock'],
     'data': [
         'security/ir.model.access.csv',
         'data/default_barcode_patterns.xml',

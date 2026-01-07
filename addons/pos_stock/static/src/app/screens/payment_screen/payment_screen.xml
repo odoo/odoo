@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_stock.PaymentScreen" t-inherit="point_of_sale.PaymentScreen" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='ui.isSmall']//t[@t-call='point_of_sale.PaymentScreenButtons']" position="replace">
+            <t t-call="pos_stock.PaymentScreenButtons"/>
+        </xpath>
+        <xpath expr="//t[@t-else='']//t[@t-call='point_of_sale.PaymentScreenButtons']" position="replace">
+            <t t-call="pos_stock.PaymentScreenButtons"/>
+        </xpath>
+    </t>
+    <t t-name="pos_stock.PaymentScreenButtons" t-inherit="point_of_sale.PaymentScreenButtons">
+        <xpath expr="//t[@t-set='hasOptionalButtons']" position="attributes">
+            <attribute name="t-value">
+                (pos.config.iface_tipproduct and pos.config.tip_product_id) or
+                pos.config.iface_cashdrawer or
+                pos.config.ship_later
+            </attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('tip-order')]" position="attributes">
+            <attribute name="t-if">
+                (pos.config.iface_tipproduct and pos.config.tip_product_id) or pos.config.iface_cashdrawer or pos.config.ship_later
+            </attribute>
+        </xpath>
+        <xpath expr="//button[hasclass('js_cashdrawer')]" position="after">
+            <button t-if="pos.config.ship_later" class="button btn btn-secondary btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.shipping_date }"
+                t-on-click="toggleShippingDatePicker">
+                <span t-attf-class="{{currentOrder.shipping_date ? 'me-auto' : 'mx-auto' }}"><i class="fa fa-clock-o me-2" />Ship Later</span>
+                <span t-if="currentOrder.shipping_date">
+                    <t t-esc="currentOrder.formatDateOrTime('shipping_date', 'date')" />
+                </span>
+            </button>
+        </xpath>
+    </t>
+
+</templates>

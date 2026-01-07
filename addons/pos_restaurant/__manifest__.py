@@ -14,7 +14,7 @@ This module adds several features to the Point of Sale that are specific to rest
 - Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers
 
 """,
-    'depends': ['point_of_sale'],
+    'depends': ['pos_stock'],
     'website': 'https://www.odoo.com/app/point-of-sale-restaurant',
     'data': [
         'security/ir.model.access.csv',
