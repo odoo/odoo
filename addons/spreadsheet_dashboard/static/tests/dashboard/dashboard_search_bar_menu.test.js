@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click, edit, queryAllTexts } from "@odoo/hoot-dom";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { contains, makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
@@ -37,9 +37,15 @@ async function mountDashboardSearchBarMenu(props) {
     await mountWithCleanup(DashboardSearchBarMenuWrapper, { props });
 }
 
+let env;
+let model;
+
+beforeEach(async () => {
+    env = await makeMockEnv();
+    model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+});
+
 test("basic text filter", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -51,8 +57,6 @@ test("basic text filter", async function () {
 });
 
 test("dashboard search bar menu with no active filters", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -64,8 +68,6 @@ test("dashboard search bar menu with no active filters", async function () {
 });
 
 test("dashboard search bar menu with active filters", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -78,8 +80,6 @@ test("dashboard search bar menu with active filters", async function () {
 });
 
 test("Can set a text filter value", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -100,8 +100,6 @@ test("Can set a text filter value", async function () {
 });
 
 test("Can set a numeric filter value with basic operator", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "numeric",
@@ -122,8 +120,6 @@ test("Can set a numeric filter value with basic operator", async function () {
 });
 
 test("Can set a numeric filter value with between operator", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "numeric",
@@ -145,8 +141,6 @@ test("Can set a numeric filter value with between operator", async function () {
 });
 
 test("Can set a relation filter value", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
@@ -171,8 +165,6 @@ test("Can set a relation filter value", async function () {
 });
 
 test("Can remove a default relation filter value", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
@@ -189,8 +181,6 @@ test("Can remove a default relation filter value", async function () {
 });
 
 test("Default value for relation filter is correctly displayed", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
@@ -204,8 +194,6 @@ test("Default value for relation filter is correctly displayed", async function 
 });
 
 test("Can change a boolean filter value", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "boolean",
@@ -223,8 +211,6 @@ test("Can change a boolean filter value", async function () {
 });
 
 test("Can set a date filter value", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     const label = "Date Filter";
     await addGlobalFilter(model, {
         id: "42",
@@ -243,8 +229,6 @@ test("Can set a date filter value", async function () {
 });
 
 test("Readonly user can update a filter value", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -261,8 +245,6 @@ test("Readonly user can update a filter value", async function () {
 });
 
 test("Can clear a filter value removing the values manually", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -280,8 +262,6 @@ test("Can clear a filter value removing the values manually", async function () 
 });
 
 test("Can clear a filter value with the clear button", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -297,8 +277,6 @@ test("Can clear a filter value with the clear button", async function () {
 });
 
 test("clearing a filter value preserves the operator", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -325,8 +303,6 @@ test("clearing a filter value preserves the operator", async function () {
 
 test("Relational global filter with no parent/child model do not have the child of operator", async function () {
     onRpc("ir.model", "has_searchable_parent_relation", () => ({ partner: false }));
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
@@ -340,8 +316,6 @@ test("Relational global filter with no parent/child model do not have the child 
 
 test("Relational global filter with a parent/child model adds the child of operator", async function () {
     onRpc("ir.model", "has_searchable_parent_relation", () => ({ partner: true }));
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
@@ -354,8 +328,6 @@ test("Relational global filter with a parent/child model adds the child of opera
 });
 
 test(`Relational global filter with "set" operator doesn't have a record selector input`, async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
@@ -369,8 +341,6 @@ test(`Relational global filter with "set" operator doesn't have a record selecto
 
 test("relational global filter operator options", async function () {
     onRpc("ir.model", "has_searchable_parent_relation", () => ({ partner: true }));
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
@@ -391,8 +361,6 @@ test("relational global filter operator options", async function () {
 });
 
 test("text global filter operator options", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
