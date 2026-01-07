@@ -1,4 +1,4 @@
-import { describe, expect, test, beforeEach } from "@odoo/hoot";
+import { describe, expect, test, beforeEach, Deferred, animationFrame } from "@odoo/hoot";
 import { waitFor, waitForNone, click, queryOne } from "@odoo/hoot-dom";
 import {
     defineWebsiteModels,
@@ -7,7 +7,7 @@ import {
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
-import { patchWithCleanup, mockService, onRpc } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup, mockService, onRpc, contains } from "@web/../tests/web_test_helpers";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { MenuDataPlugin } from "@website/builder/plugins/menu_data_plugin";
 import { MenuDialog } from "@website/components/dialog/edit_menu";
@@ -344,5 +344,116 @@ describe("EditMenuDialog", () => {
         await click(queryOne(".modal-footer > button.btn-primary"));
         await waitForNone(".modal");
         expect.verifySteps(["editor_has_saved"]);
+    });
+
+    describe("should suggest to create the page if it does not exists", () => {
+        // NOTE: we use `window.location.origin` as this is what is used by
+        // `isAbsoluteURLInCurrentDomain` to tell it is the same domain. If we
+        // simply use a relative url, the logic in `urlToCheck` incorrectly
+        // consider the url to be external because it is confused by the mocks
+        const topMenuUrl = new URL("/top-menu-url", window.location.origin).toString();
+        const sampleMenuData = {
+            fields: {
+                id: 4,
+                name: "Top Menu",
+                url: "#",
+                new_window: false,
+                is_mega_menu: false,
+                sequence: 0,
+                parent_id: false,
+            },
+            children: [
+                {
+                    fields: {
+                        id: 5,
+                        name: "Top Menu Item",
+                        url: topMenuUrl,
+                        new_window: false,
+                        is_mega_menu: false,
+                        sequence: 10,
+                        parent_id: 4,
+                    },
+                    children: [],
+                    is_homepage: true,
+                },
+            ],
+            is_homepage: false,
+        };
+
+        test("existing page do not have 'Create Page' button", async () => {
+            await setupWebsiteBuilder("", { headerContent: `<header>header</header>` });
+            await contains(":iframe header").click();
+
+            onRpc("website.menu", "get_tree", () => sampleMenuData);
+            onRpc("/website/check_existing_link", async (request) => {
+                const { params } = await request.json();
+                expect(params.link).toEqual("/top-menu-url");
+                return true;
+            });
+            await contains("button:contains('Edit Menu')").click();
+
+            expect("button:contains('Create Page')").toHaveCount(0);
+        });
+        test("non-existing page have 'Create Page' button", async () => {
+            await setupWebsiteBuilder("", { headerContent: `<header>header</header>` });
+            await contains(":iframe header").click();
+
+            onRpc("website.menu", "get_tree", () => sampleMenuData);
+            onRpc("/website/check_existing_link", async (request) => {
+                const { params } = await request.json();
+                expect(params.link).toEqual("/top-menu-url");
+                return false;
+            });
+            await contains("button:contains('Edit Menu')").click();
+
+            expect("button:contains('Create Page')").toHaveCount(1);
+        });
+
+        test("new menu with non-existing page have 'Create Page' button even if creation completes before it was indicated as non-existing in the creation dialog", async () => {
+            const builder = await setupWebsiteBuilder("", {
+                headerContent: `<header>header</header>`,
+            });
+            await contains(":iframe header").click();
+
+            onRpc("website.menu", "get_tree", () => ({ ...sampleMenuData, children: [] }));
+            await contains("button:contains('Edit Menu')").click();
+
+            patchWithCleanup(MenuDialog.prototype, {
+                setup() {
+                    super.setup();
+                    this.website.pageDocument = builder.getEditableContent().ownerDocument;
+                },
+                onClickOk() {
+                    // little lie to avoid calling `toRelativeIfSameDomain`,
+                    // so that we still have the absolute url (see NOTE above)
+                    this.props.isMegaMenu = true;
+                    super.onClickOk();
+                    this.props.isMegaMenu = false;
+                },
+            });
+
+            await contains("a:contains('Add Menu Item')").click();
+
+            const deferred = new Deferred();
+            onRpc("/website/check_existing_link", async (request) => {
+                const { params } = await request.json();
+                expect(params.link).toEqual("/top-menu-url");
+                expect.step("check existing");
+                await deferred;
+                return false;
+            });
+
+            await contains("label:contains('Title') + * input").fill("New menu name");
+            await contains("label:contains('Url') + * input").fill(topMenuUrl);
+            await expect.waitForSteps(["check existing"]);
+            await contains("button:contains('Continue')").click();
+
+            expect("button:contains('Create Page')").toHaveCount(0);
+            deferred.resolve();
+            // the request is done again by "Edit Menu"
+            await expect.waitForSteps(["check existing"]);
+            await animationFrame();
+            expect("button:contains('Create Page')").toHaveCount(1);
+        });
     });
 });
