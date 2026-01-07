@@ -28,7 +28,7 @@
         <field name="inherit_id" ref="certificate.certificate_certificate_view_form"/>
         <field name="arch" type="xml">
             <field name="scope" position="attributes">
-                <attribute name="invisible">False</attribute>
+                <attribute name="invisible" add="not (country_code == 'ES')" separator="or"/>
             </field>
         </field>
     </record>
