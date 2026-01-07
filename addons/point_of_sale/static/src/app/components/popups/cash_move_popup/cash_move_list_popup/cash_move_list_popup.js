@@ -13,6 +13,7 @@ export class CashMoveListPopup extends Component {
         close: { type: Function },
         cashMoves: { type: Array },
         partnerId: { type: Number },
+        onDelete: { type: Function, optional: true },
     };
     async setup() {
         super.setup();
@@ -46,6 +47,7 @@ export class CashMoveListPopup extends Component {
                 true
             );
             this.props.cashMoves = this.props.cashMoves.filter((cashMove) => cashMove.id !== cm.id);
+            this.props.onDelete(cm.id);
         } catch (error) {
             this.dialog.add(AlertDialog, {
                 title: _t("Odoo Server Error"),
