@@ -109,6 +109,10 @@ const discussChannelPatch = {
     get hasSubChannelFeature() {
         return ["channel", "group"].includes(this.channel_type);
     },
+    /** Condition for whether the conversation should become present in chat hub on new message */
+    get inChathubOnNewMessage() {
+        return !this.store.discuss.isActive;
+    },
     /**
      * @param {*} param0
      * @param {string} [param0.searchTerm]

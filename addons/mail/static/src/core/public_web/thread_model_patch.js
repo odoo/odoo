@@ -24,10 +24,6 @@ const threadModelPatch = {
             },
         });
     },
-    /** Condition for whether the conversation should become present in chat hub on new message */
-    get inChathubOnNewMessage() {
-        return !this.store.discuss.isActive;
-    },
     /** @param {boolean} pushState */
     setAsDiscussThread(pushState) {
         if (pushState === undefined) {

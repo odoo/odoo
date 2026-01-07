@@ -1,5 +1,10 @@
 declare module "models" {
     export interface DiscussChannel {
+        _toggleChatbot: boolean;
+        hasWelcomeMessage: Readonly<boolean>;
+        isLastMessageFromCustomer: Readonly<unknown>;
+        livechatWelcomeMessage: Message;
+        requested_by_operator: boolean;
         storeAsActiveLivechats: Store;
     }
     export interface Message {
@@ -13,12 +18,6 @@ declare module "models" {
     }
     export interface Thread {
         _prevComposerDisabled: boolean;
-        _toggleChatbot: boolean;
-        chatbotTypingMessage: Message;
-        hasWelcomeMessage: Readonly<boolean>;
-        isLastMessageFromCustomer: Readonly<boolean>;
-        livechatWelcomeMessage: Message;
         readyToSwapDeferred: Deferred;
-        requested_by_operator: boolean;
     }
 }
