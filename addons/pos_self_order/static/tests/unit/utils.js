@@ -32,7 +32,11 @@ export function initMockRpc() {
     onRpc("/pos-self-order/remove-order", () => ({}));
 }
 
-export const setupSelfPosEnv = async (mode = "kiosk") => {
+export const setupSelfPosEnv = async (
+    mode = "kiosk",
+    service_mode = "counter",
+    pay_after = "each"
+) => {
     // Do not change these variables, they are in accordance with the setup data
     odoo.access_token = uuidv4();
     odoo.info = {
@@ -42,7 +46,6 @@ export const setupSelfPosEnv = async (mode = "kiosk") => {
         db: "test",
         data: {
             config_id: 1,
-            self_ordering_mode: mode,
         },
     });
 
@@ -55,6 +58,11 @@ export const setupSelfPosEnv = async (mode = "kiosk") => {
     initMockRpc();
     await makeMockEnv();
     const store = getService("self_order");
+
+    store.config.self_ordering_mode = mode;
+    store.config.self_ordering_service_mode = service_mode;
+    store.config.self_ordering_pay_after = pay_after;
+
     await mountWithCleanup(selfOrderIndex);
     return store;
 };

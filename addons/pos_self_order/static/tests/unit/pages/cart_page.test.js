@@ -54,6 +54,17 @@ test("canChangeQuantity", async () => {
     expect(comp.canChangeQuantity(line)).toBe(false);
 });
 
+test("totalPriceAndTax", async () => {
+    const store = await setupSelfPosEnv("mobile", "table", "meal");
+    await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(CartPage, {});
+
+    expect(comp.totalPriceAndTax).toEqual({ priceWithTax: 595, tax: 95 });
+    await comp.pay();
+    await store.addToCart(store.models["product.template"].get(6), 2);
+    expect(comp.totalPriceAndTax).toEqual({ priceWithTax: 250, tax: 50 });
+});
+
 test("getPrice", async () => {
     const store = await setupSelfPosEnv();
     const order = await getFilledSelfOrder(store);
