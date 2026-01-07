@@ -20,13 +20,6 @@ class AccountMove(models.Model):
         string="ZATCA chain index", copy=False, readonly=True,
         help="Invoice index in chain, set if and only if an in-chain XML was submitted and did not error",
     )
-    l10n_sa_edi_chain_head_id = fields.Many2one(
-      'account.move',
-      string="ZATCA chain stopping move",
-      copy=False,
-      readonly=True,
-      help="Technical field to know if the chain has been stopped by a previous invoice",
-  )
 
     @api.ondelete(at_uninstall=False)
     def _prevent_zatca_rejected_invoice_deletion(self):
@@ -141,15 +134,28 @@ class AccountMove(models.Model):
     @api.depends('state', 'edi_document_ids.state')
     def _compute_show_reset_to_draft_button(self):
         """
-            Override to hide the Reset to Draft button for ZATCA Invoices that have been successfully submitted
-            in Production mode.
+            Override to manage the visibility of the Reset to Draft button for ZATCA invoices.
+
+            - Hide the button when the submission result is unknown (timeout / server error).
+            - In sandbox or simulation, show it only after a confirmed submission.
+            - In production, show it only for B2B invoices explicitly rejected by ZATCA.
         """
         super()._compute_show_reset_to_draft_button()
         for move in self:
-            # The "Reset to Draft" button should be hidden in the following cases:
-            # - Invoice has been successfully submitted in Production mode.
-            # - The invoice submission encountered a timed out, regardless of the API mode.
-            if move.l10n_sa_chain_index and (move.company_id.l10n_sa_edi_is_production or not move._l10n_sa_is_in_chain()):
+            if not move.l10n_sa_chain_index:
+                continue
+
+            if move.company_id.l10n_sa_api_mode != 'prod':
+                if not move._l10n_sa_is_in_chain():
+                    move.show_reset_to_draft_button = False
+                continue
+
+            has_rejection = self.env['ir.attachment'].search_count([
+                ('res_model', '=', 'account.move'),
+                ('res_id', '=', move.id),
+                ('name', 'ilike', '-rejected.xml'),
+            ], limit=1)
+            if not has_rejection:
                 move.show_reset_to_draft_button = False
 
     def button_draft(self):
@@ -176,7 +182,8 @@ class AccountMove(models.Model):
         edi_format = self.env.ref('l10n_sa_edi.edi_sa_zatca')
         # Build the dict of values to be used for generating the Invoice XML content
         # Set Invoice field values required for generating the XML content, hash and signature
-        self.l10n_sa_uuid = uuid.uuid4()
+        if not self.l10n_sa_uuid:
+            self.l10n_sa_uuid = uuid.uuid4()
         # We generate the XML content
         xml_content = edi_format._l10n_sa_generate_zatca_template(self)
         # Once the required values are generated, we hash the invoice, then use it to generate a Signature
@@ -311,22 +318,6 @@ class AccountMove(models.Model):
             'total_amount': invoice_node['cac:LegalMonetaryTotal']['cbc:TaxInclusiveAmount']['_text'],
             'total_tax': invoice_node['cac:TaxTotal'][-1]['cbc:TaxAmount']['_text'],
         }
-
-    def _retry_edi_documents_error(self):
-        """
-            Hook to reset the chain head error prior to retrying the submission
-        """
-        self.filtered(lambda m: m.country_code == 'SA').write({'l10n_sa_edi_chain_head_id': False})
-        zatca = self.env.ref('l10n_sa_edi.edi_sa_zatca')
-        self.filtered(lambda m: m._get_edi_document(zatca))._detach_attachments()
-        return super()._retry_edi_documents_error()
-
-    def action_show_chain_head(self):
-        """
-            Action to show the chain head of the invoice
-        """
-        self.ensure_one()
-        return self.l10n_sa_edi_chain_head_id._get_records_action(name=_("Chain Head"))
 
 
 class AccountMoveLine(models.Model):
