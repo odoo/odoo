@@ -96,7 +96,7 @@
 
     .ribbon {
         --Ribbon-wrapper-width: 6.77rem;
-        height: 5rem;
+        height: 100%;
         span {
             --Ribbon-left-position-default: 0.3rem;
         }
@@ -121,9 +121,10 @@
         @media only screen and (min-width:768px){
             .o_kanban_record:not(.o_kanban_ghost) {
                 width: 100%;
-                max-height: 5.1rem;
+                min-height: auto !important;
                 margin: 0px;
                 justify-content: center;
+                padding: 4px 8px !important;
             }
             .o_hr_holidays_kanban_mobile {
                 display: none;
