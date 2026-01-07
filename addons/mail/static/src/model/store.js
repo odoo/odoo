@@ -1,5 +1,5 @@
 import { Record } from "./record";
-import { STORE_SYM, modelRegistry } from "./misc";
+import { IS_DELETED_SYM, STORE_SYM, modelRegistry } from "./misc";
 import { reactive, toRaw } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
@@ -11,12 +11,53 @@ export class Store extends Record {
     /** @type {Map<string, Record>} */
     recordByLocalId;
     storeReady = false;
+    resetCount = 0;
     /**
      * @param {string} localId
      * @returns {Record}
      */
     get(localId) {
         return this.recordByLocalId.get(localId);
+    }
+
+    /**
+     * Reset the store to its initial state. To customize the reset behavior, override
+     * the `onReset` method.
+     */
+    async reset() {
+        this.storeReady = false;
+        await this.onReset();
+        this.resetCount++;
+        this.storeReady = true;
+    }
+
+    async onReset() {
+        this.MAKE_UPDATE(() => {
+            for (const [localId, record] of this.recordByLocalId.entries()) {
+                if (this.localId !== localId && record.exists()) {
+                    record.delete();
+                }
+            }
+        });
+        const rawStore = toRaw(this)._raw;
+        this.MAKE_UPDATE(() => {
+            for (const fieldName of rawStore.Model._.fields.keys()) {
+                rawStore._.requestCompute?.(rawStore, fieldName);
+                rawStore._.requestSort?.(rawStore, fieldName);
+            }
+        });
+    }
+
+    destroy() {
+        this.MAKE_UPDATE(() => {
+            for (const [localId, record] of this.recordByLocalId.entries()) {
+                if (this.localId !== localId && record.exists()) {
+                    record.delete();
+                }
+            }
+        });
+        this.delete();
+        this[IS_DELETED_SYM] = true;
     }
 
     handleError(err) {
@@ -124,6 +165,9 @@ export class Store extends Record {
                     /** @type {[Record, Map<string, true>]} */
                     const [record, map] = FU_QUEUE.entries().next().value;
                     FU_QUEUE.delete(record);
+                    if (RHD_QUEUE.has(record) || RD_QUEUE.has(record)) {
+                        continue;
+                    }
                     for (const fieldName of map.keys()) {
                         record._.onUpdate(record, fieldName);
                     }
@@ -172,6 +216,11 @@ export class Store extends Record {
                     }
                     deletingRecordsByLocalId.set(record.localId, record);
                     this.recordByLocalId.delete(record.localId);
+                    const stopFns = toRaw(record)._raw._.reactiveStopFns;
+                    while (stopFns.length) {
+                        const fn = stopFns.pop();
+                        fn();
+                    }
                     this._.ADD_QUEUE("hard_delete", toRaw(record));
                 }
                 while (RHD_QUEUE.size > 0) {
@@ -180,6 +229,7 @@ export class Store extends Record {
                     const record = RHD_QUEUE.keys().next().value;
                     RHD_QUEUE.delete(record);
                     deletingRecordsByLocalId.delete(record.localId);
+                    record._.recycleRecordLists(record);
                 }
             }
             this._.UPDATE--;
@@ -261,7 +311,17 @@ export class Store extends Record {
      */
     _onChange(record, key, callback) {
         let proxy;
+        let ready = true;
+        const ON_CHANGE_SYM = Symbol("onChange");
+        const stopFn = () => {
+            ready = false;
+            if (proxy) {
+                proxy[ON_CHANGE_SYM] = 1; // force trigger callback to "clear" reactive
+            }
+        };
+        toRaw(record)._raw._.reactiveStopFns.push(stopFn);
         function _observe() {
+            void proxy[ON_CHANGE_SYM];
             // access proxy[key] only once to avoid triggering reactive get() many times
             const val = proxy[key];
             if (typeof val === "object" && val !== null) {
@@ -273,21 +333,16 @@ export class Store extends Record {
             }
         }
         if (Array.isArray(key)) {
-            for (const k of key) {
-                this._onChange(record, k, callback);
-            }
-            return;
+            const stopFns = key.map((k) => this._onChange(record, k, callback));
+            return () => stopFns.forEach((fn) => fn());
         }
-        let ready = true;
         proxy = reactive(record, () => {
             if (ready) {
                 callback(_observe);
             }
         });
         _observe();
-        return () => {
-            ready = false;
-        };
+        return stopFn;
     }
     _cleanupData(data) {
         super._cleanupData(data);

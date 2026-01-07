@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 <t t-name="mail.DiscussSearch">
-    <div class="o-mail-DiscussSearch d-flex align-items-center gap-1" t-attf-class="{{ props.class }}" t-att-class="{ 'o-gap-1_5': store.discuss.isSidebarCompact }" t-ref="root">
+    <div t-if="store.discuss?.exists()" class="o-mail-DiscussSearch d-flex align-items-center gap-1" t-attf-class="{{ props.class }}" t-att-class="{ 'o-gap-1_5': store.discuss.isSidebarCompact }" t-ref="root">
         <Dropdown t-if="store.discuss.isSidebarCompact and !ui.isSmall" state="searchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu mx-2 my-0 min-w-0 ' + store.discussDropdownMenuClass(this)" manual="true">
             <t t-call="mail.DiscussSearch.inputContainer"/>
             <t t-set-slot="content">

@@ -378,6 +378,7 @@ export async function start(options) {
     });
     await mountWithCleanup(WebClient, { env, target });
     await loadEmoji();
+    after(() => env.services["mail.store"].destroy());
     return Object.assign(env, { ...options?.env, target });
 }
 

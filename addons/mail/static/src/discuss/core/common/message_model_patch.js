@@ -55,8 +55,10 @@ const messagePatch = {
     },
     /** @returns {import("models").ChannelMember[]} */
     get channelMemberHaveSeen() {
-        return this.channel_id.membersThatCanSeen.filter(
-            (m) => m.hasSeen(this) && m.persona.notEq(this.author)
+        return (
+            this.channel_id?.membersThatCanSeen?.filter(
+                (m) => m.hasSeen(this) && m.persona.notEq(this.author)
+            ) ?? []
         );
     },
     /**

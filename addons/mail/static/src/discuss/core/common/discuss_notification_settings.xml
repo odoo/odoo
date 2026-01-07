@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.DiscussNotificationSettings">
-        <div class="o-mail-DiscussNotificationSettings d-flex flex-column">
+        <div t-if="store.settings?.exists()" class="o-mail-DiscussNotificationSettings d-flex flex-column">
             <div class="d-flex flex-column my-1">
                 <h5>Channel Notifications</h5>
                 <span class="mb-1 text-muted small">This setting will be applied to all channels using the default notification settings.</span>

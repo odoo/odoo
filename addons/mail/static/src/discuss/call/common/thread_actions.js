@@ -37,7 +37,8 @@ registerThreadAction("call-settings", {
 });
 registerThreadAction("disconnect", {
     condition: ({ channel, owner, store }) =>
-        store.rtc.selfSession?.in(channel?.rtc_session_ids) && owner.isDiscussSidebarChannelActions,
+        store.rtc?.selfSession?.in(channel?.rtc_session_ids) &&
+        owner.isDiscussSidebarChannelActions,
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     icon: "fa fa-fw fa-phone",
     name: _t("Disconnect"),

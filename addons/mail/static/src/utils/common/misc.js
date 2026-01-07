@@ -80,10 +80,14 @@ export function isDragSourceExternalFile(dataTransfer) {
  * @param {Object} target
  * @param {string|string[]} key
  * @param {Function} callback
+ * @returns {Function} function to stop the onChange
  */
 export function onChange(target, key, callback) {
     let proxy;
+    let ready = true;
+    const ON_CHANGE_SYM = Symbol("onChange");
     function _observe() {
+        void proxy[ON_CHANGE_SYM];
         // access proxy[key] only once to avoid triggering reactive get() many times
         const val = proxy[key];
         if (typeof val === "object" && val !== null) {
@@ -95,17 +99,20 @@ export function onChange(target, key, callback) {
         }
     }
     if (Array.isArray(key)) {
-        for (const k of key) {
-            onChange(target, k, callback);
-        }
-        return;
+        const stopFns = key.map((k) => onChange(target, k, callback));
+        return () => stopFns.forEach((fn) => fn());
     }
     proxy = reactive(target, () => {
-        _observe();
-        callback();
+        if (ready) {
+            _observe();
+            callback();
+        }
     });
     _observe();
-    return proxy;
+    return () => {
+        ready = false;
+        proxy[ON_CHANGE_SYM] = 1; // force trigger callback to "clear" reactive
+    };
 }
 
 /**

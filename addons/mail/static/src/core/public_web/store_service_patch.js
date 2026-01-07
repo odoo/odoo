@@ -14,6 +14,9 @@ patch(Store.prototype, {
         this.menuThreads = fields.Many("mail.thread", {
             /** @this {import("models").Store} */
             compute() {
+                if (!this.discuss) {
+                    return [];
+                }
                 /** @type {import("models").Thread[]} */
                 const searchTerm = cleanTerm(this.discuss.searchTerm);
                 let threads = Object.values(this["mail.thread"].records).filter(

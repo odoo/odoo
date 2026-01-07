@@ -3,7 +3,8 @@
 
     <t t-name="discuss.NotificationSettings">
         <ActionPanel title.translate="Notification Settings" resizable="!!env.inMeetingView" initialWidth="400" icon="'fa fa-bell'">
-            <div class="o-discuss-NotificationSettings">
+            <t t-if="!store.settings?.exists()"/>
+            <div t-else="" class="o-discuss-NotificationSettings">
                 <t t-if="props.channel.self_member_id?.mute_until_dt">
                     <button class="btn w-100 d-flex p-1 opacity-75 border-0" t-on-click="()=>this.setMute(false)">
                         <div class="d-flex flex-column flex-grow-1 px-2 py-1 w-100 rounded">

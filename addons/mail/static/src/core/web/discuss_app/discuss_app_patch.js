@@ -23,6 +23,9 @@ patch(Discuss.prototype, {
         );
         useEffect(
             () => {
+                if (!this.store.inbox) {
+                    return;
+                }
                 if (
                     this.thread?.id === "inbox" &&
                     this.prevInboxCounter !== this.store.inbox.counter &&
@@ -36,7 +39,7 @@ patch(Discuss.prototype, {
                 }
                 this.prevInboxCounter = this.store.inbox.counter;
             },
-            () => [this.store.inbox.counter]
+            () => [this.store.inbox?.counter]
         );
     },
 });

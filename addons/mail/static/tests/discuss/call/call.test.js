@@ -417,7 +417,7 @@ test("Dropzones below fullscreen meeting view are disabled", async () => {
         close: () => {
             popoutWindow.closed = true;
             popoutIframe.remove(
-                popoutWindow.document.querySelector(".o-mail-PopoutAttachmentView")
+                popoutWindow.document?.querySelector(".o-mail-PopoutAttachmentView")
             );
         },
     };

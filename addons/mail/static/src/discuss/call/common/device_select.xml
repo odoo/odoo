@@ -3,6 +3,7 @@
 
     <t t-name="discuss.CallDeviceSelect">
         <Dropdown
+            t-if="store.settings?.exists()"
             onStateChanged.bind="openSelect"
             disabled="!isPermissionGranted(props.kind)"
             openOnMouseEnter="false"

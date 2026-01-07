@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit="mail.Composer" t-inherit-mode="extension">
+    <t t-inherit="mail.Composer.main" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-mail-Composer-coreMain')]" position="before">
             <div t-if="env.displayRating and !message" class="o-mail-Composer-starCard d-flex mb-3 px-2">
                 <div class="o-mail-Composer-stars enabled cursor-pointer" t-on-mouseleave="() => portalState.starValue = portalState.ratingValue">

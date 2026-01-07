@@ -20,7 +20,7 @@ const threadPatch = {
         this.isDisplayedInDiscussAppDesktop = fields.Attr(undefined, {
             /** @this {import("models").Thread} */
             compute() {
-                if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
+                if (this.store.discuss?.isActive && !this.store.env.services.ui.isSmall) {
                     return Boolean(this.discussAppAsThread);
                 }
                 return false;

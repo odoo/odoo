@@ -14,6 +14,43 @@ import { reactive, toRaw } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
 import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 
+/** @import { watchKeys } from "@web/../lib/hoot/mock/window" */
+
+function getRecordListPooling() {
+    /** saving on window so that this can be recycled on whole HOOT test suite. Smartly saving in keys that are whitelisted {@link watchKeys} */
+    window.odoo.discuss ??= {};
+    window.odoo.discuss.RECORD_LIST_POOLING ??= new Set();
+    return window.odoo.discuss.RECORD_LIST_POOLING;
+}
+
+/** @param {RecordList} recordList */
+function addRecordListToPooling(recordList) {
+    getRecordListPooling().add(recordList);
+}
+
+/** @param {RecordList} recordList */
+export function recycleRecordList(recordList) {
+    recordList._.prevRecycleNames ??= [];
+    recordList._.prevRecycleNames.push(`${recordList._.owner.localId}::` + recordList._.name);
+    recordList._.name = undefined;
+    recordList._.owner = undefined;
+    recordList.data.length = 0;
+    recordList._store = undefined;
+    recordList._.recycleCount ??= 0;
+    recordList._.recycleCount++;
+    addRecordListToPooling(recordList);
+}
+
+/** @returns {RecordList} */
+function retrieveRecordListFromPooling() {
+    const pooling = getRecordListPooling();
+    const recordList = pooling.entries().next().value?.[0];
+    if (recordList) {
+        pooling.delete(recordList);
+    }
+    return recordList;
+}
+
 export class RecordInternal {
     [IS_RECORD_SYM] = true;
     // Note: state of fields in Maps rather than object is intentional for improved performance.
@@ -71,6 +108,8 @@ export class RecordInternal {
     /** @type {string} */
     localId;
     gettingField = false;
+    /** @type {Function[]} List of functions to stop reactive observers on record like Record.onChange() */
+    reactiveStopFns = [];
     /**
      * For fields that use local storage, this map contains the "ls" object that eases interactions on the related
      * local storage entry. For instance, instead of having to write `browser.localStorage.setItem(EXACT_LOCAL_STORAGE_ENTRY_OF_FIELD, value)`,
@@ -94,7 +133,12 @@ export class RecordInternal {
             // - 'one' fields => undefined
             // - 'many' fields => RecordList
             // record[name]?.[0] is ONE_SYM or MANY_SYM
-            const recordList = new RecordList();
+            const recyclingRecordList = retrieveRecordListFromPooling();
+            if (recyclingRecordList) {
+                // console.count("recycling-record-list");
+                // recyclingRecordList._proxy = reactive(recyclingRecordList._proxyInternal);
+            }
+            const recordList = recyclingRecordList ?? new RecordList();
             Object.assign(recordList._, {
                 name: fieldName,
                 owner: record,
@@ -122,7 +166,7 @@ export class RecordInternal {
         }
         if (Model._.fieldsCompute.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {
-                onChange(recordProxy, fieldName, () => {
+                const stopFn = onChange(recordProxy, fieldName, () => {
                     if (this.fieldsComputing.get(fieldName)) {
                         /**
                          * Use a reactive to reset the computeInNeed flag when there is
@@ -133,19 +177,29 @@ export class RecordInternal {
                         this.fieldsComputeInNeed.delete(fieldName);
                     }
                 });
+                this.reactiveStopFns.push(stopFn);
                 // reset flags triggered by registering onChange
                 this.fieldsComputeInNeed.delete(fieldName);
                 this.fieldsSortInNeed.delete(fieldName);
             }
+            let computeObserverReady = true;
+            const OBSERVER_SYM = Symbol("computeObserver");
             const cb = function computeObserver() {
-                self.requestCompute(record, fieldName);
+                if (computeObserverReady) {
+                    void computeProxy2[OBSERVER_SYM];
+                    self.requestCompute(record, fieldName);
+                }
             };
+            this.reactiveStopFns.push(() => {
+                computeObserverReady = false;
+                computeProxy2[OBSERVER_SYM] = 1; // force trigger callback to "clear" reactive
+            });
             const computeProxy2 = reactive(recordProxy, cb);
             this.fieldsComputeProxy2.set(fieldName, computeProxy2);
         }
         if (Model._.fieldsSort.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {
-                onChange(recordProxy, fieldName, () => {
+                const stopFn = onChange(recordProxy, fieldName, () => {
                     if (this.fieldsSorting.get(fieldName)) {
                         /**
                          * Use a reactive to reset the inNeed flag when there is a
@@ -156,12 +210,22 @@ export class RecordInternal {
                         this.fieldsSortInNeed.delete(fieldName);
                     }
                 });
+                this.reactiveStopFns.push(stopFn);
                 // reset flags triggered by registering onChange
                 this.fieldsComputeInNeed.delete(fieldName);
                 this.fieldsSortInNeed.delete(fieldName);
             }
+            let sortProxy2Ready = true;
+            const OBSERVER_SYM = Symbol("sortObserver");
             const sortProxy2 = reactive(recordProxy, function sortObserver() {
-                self.requestSort(record, fieldName);
+                if (sortProxy2Ready) {
+                    void sortProxy2[OBSERVER_SYM];
+                    self.requestSort(record, fieldName);
+                }
+            });
+            this.reactiveStopFns.push(() => {
+                sortProxy2Ready = false;
+                sortProxy2[OBSERVER_SYM] = 1; // force trigger callback to "clear" reactive
             });
             this.fieldsSortProxy2.set(fieldName, sortProxy2);
         }
@@ -175,6 +239,19 @@ export class RecordInternal {
                     this.onUpdate(record, fieldName);
                 }
             });
+        }
+    }
+
+    /** @param {Record} record */
+    recycleRecordLists(record) {
+        // move all its record list in the pooling
+        for (const fieldName of record.Model._.fieldsOne.keys()) {
+            recycleRecordList(record[fieldName]);
+            delete record[fieldName];
+        }
+        for (const fieldName of record.Model._.fieldsMany.keys()) {
+            recycleRecordList(record[fieldName]);
+            delete record[fieldName];
         }
     }
 

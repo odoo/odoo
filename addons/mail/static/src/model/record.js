@@ -328,9 +328,14 @@ export class Record {
         return store.MAKE_UPDATE(function recordDelete() {
             // delete records inheriting the current record before deleting the current record
             for (const fieldName of record.Model._.inheritsInverseFields) {
-                const dependentRecordProxy = record._proxyInternal[fieldName];
-                if (dependentRecordProxy) {
-                    store._.ADD_QUEUE("delete", toRaw(dependentRecordProxy)._raw);
+                const dependentRecordList = record[fieldName];
+                if (dependentRecordList.length) {
+                    for (const dependentLocalId of dependentRecordList.data) {
+                        store._.ADD_QUEUE(
+                            "delete",
+                            toRaw(store.recordByLocalId.get(dependentLocalId))._raw
+                        );
+                    }
                 }
             }
             store._.ADD_QUEUE("delete", record);

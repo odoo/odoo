@@ -14,6 +14,8 @@ import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
 import { RecordInternal } from "./record_internal";
 
+/** @import { recycleRecordList } from "@mail/model/record_internal" */
+
 /** @returns {import("models").Store} */
 export function makeStore(env, { localRegistry } = {}) {
     const recordByLocalId = reactive(new Map());
@@ -100,6 +102,13 @@ export function makeStore(env, { localRegistry } = {}) {
                             const val = recordFullProxy[name];
                             record._.gettingField = false;
                             if (isRelation(Model, name)) {
+                                if (!val) {
+                                    /** record was hard-deleted, record list has been recycled {@link recycleRecordList} */
+                                    if (isMany(Model, name)) {
+                                        return [];
+                                    }
+                                    return undefined;
+                                }
                                 const recordListFullProxy = val._proxy;
                                 if (isMany(Model, name)) {
                                     return recordListFullProxy;

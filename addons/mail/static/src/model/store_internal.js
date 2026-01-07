@@ -13,6 +13,8 @@ const Markup = markup().constructor;
 /** @typedef {string} LocalStorageKey */
 /** @typedef {string} FieldName */
 
+/** @import { recycleRecordList } from "@mail/model/record_internal" */
+
 export class StoreInternal extends RecordInternal {
     /** @type {Map<import("./record").Record, Map<string, true>>} */
     FC_QUEUE = new Map(); // field-computes
@@ -257,6 +259,10 @@ export class StoreInternal extends RecordInternal {
     updateRelation(record, fieldName, value) {
         /** @type {RecordList<Record>} */
         const recordList = record[fieldName];
+        if (!recordList) {
+            /** record was hard-deleted, record list has been recycled {@link recycleRecordList} */
+            return;
+        }
         if (isMany(record.Model, fieldName)) {
             this.updateRelationMany(recordList, value);
         } else {

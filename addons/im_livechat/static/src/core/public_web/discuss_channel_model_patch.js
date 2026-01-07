@@ -47,7 +47,7 @@ const discussChannelPatch = {
         }
         if (
             this.livechat_status === "need_help" &&
-            this.store.discuss.livechatLookingForHelpCategory
+            this.store.discuss?.livechatLookingForHelpCategory
         ) {
             return this.store.discuss.livechatLookingForHelpCategory;
         }
