@@ -12,8 +12,13 @@ from odoo.tools.pdf import (
     DictionaryObject,
     NameObject,
     NumberObject,
-    DecodedStreamObject as StreamObject
+    FloatObject,
+    ByteStringObject,
+    ContentStream,
+    DecodedStreamObject as StreamObject,
 )
+
+from PyPDF2 import PageObject
 
 _logger = logging.getLogger(__name__)
 
@@ -163,9 +168,6 @@ class IncrementalPdfMerge:
         # 1. Load the current output stream PDF bytes in memory
         pdf_reader = PdfFileReader(io.BytesIO(self.get_output_stream_value()), strict=False)
 
-        if len(pdf_reader.pages) != len(overlay_pdf.pages):
-            raise ValueError("The overlay PDF must have the same number of pages as the original.")
-
         # 2. Determine the next available object ID and last xref location for incremental update
         start_id = pdf_reader.trailer[TK.SIZE]
         original_startxref = self._find_last_startxref(self.get_output_stream_value())
@@ -195,6 +197,100 @@ class IncrementalPdfMerge:
 
         # 5. Write all objects to the output stream
         output = self.output_stream
+        new_xref_entries = self._write_objects(output, incremented_objects)
+
+        # 6. Generate Xref table
+        xref_start, new_size = self._write_xref_table(output, new_xref_entries)
+
+        # 7. Construct the PDF trailer
+        self._write_trailer(output, pdf_reader, original_startxref, xref_start, new_size)
+
+    def merge_pdf_as_annotation(self, overlay_pdf: PdfFileReader) -> None:
+        # 1. Load the current output stream PDF bytes in memory
+        pdf_reader = PdfFileReader(io.BytesIO(self.get_output_stream_value()), strict=False)
+
+        # 2. Determine the next available object ID and last xref location for incremental update
+        start_id = pdf_reader.trailer[TK.SIZE]
+        original_startxref = self._find_last_startxref(self.get_output_stream_value())
+
+        # 3. Convert overlay pages to an annotations
+        incremented_objects = {}
+        for page_index in range(0, len(pdf_reader.pages)):
+            page = pdf_reader.pages[page_index]
+            page2 = overlay_pdf.pages[page_index]
+
+            annot = self._convert_page_content_to_annotation_object(page2)
+            if annot is None:
+                continue
+
+            new_annots = ArrayObject()
+            if "/Annots" in page:
+                annots = page["/Annots"]
+                if isinstance(annots, ArrayObject):
+                    for ref in annots:
+                        new_annots.append(ref)
+
+            writer = PdfFileWriter()  # A temporary PdfFileWriter used to wrap new objects
+            ann_indirect_reference = writer._add_object(annot)
+            new_annots.append(ann_indirect_reference)
+            page["/Annots"].append(writer._add_object(annot))
+            page[NameObject("/Annots")] = new_annots
+
+            incremented_objects[page.indirect_reference.idnum] = page
+
+        # 4. Graph Traversal & ID Assignment:
+        catalog = cast(DictionaryObject, pdf_reader.trailer[TK.ROOT])
+        self._sweep_indirect_references(catalog, pdf_reader, incremented_objects, start_id)
+
+        # 5. Write all objects to the output stream
+        output = self.output_stream
+        new_xref_entries = self._write_objects(output, incremented_objects)
+
+        # 6. Generate Xref table
+        xref_start, new_size = self._write_xref_table(output, new_xref_entries)
+
+        # 7. Construct the PDF trailer
+        self._write_trailer(output, pdf_reader, original_startxref, xref_start, new_size)
+
+    def _convert_page_content_to_annotation_object(self, page):
+        page_content = page.get_contents()
+        if page_content is None:
+            return
+
+        page_content = ContentStream(page_content, page.pdf)
+        page_content = PageObject._push_pop_gs(page_content, page.pdf)
+
+        form = StreamObject()
+        form._data = page_content.get_data()
+
+        mb = page.mediabox
+
+        bbox = ArrayObject([mb.left, mb.bottom, mb.right, mb.top])
+        form.update({
+            NameObject("/Type"): NameObject("/XObject"),
+            NameObject("/Subtype"): NameObject("/Form"),
+            NameObject("/FormType"): NumberObject(1),
+            NameObject("/BBox"): bbox,
+            NameObject("/Resources"): page.get("/Resources", DictionaryObject()),
+        })
+
+        rect = ArrayObject([ mb.left, mb.bottom, mb.right, mb.top ])
+        annot = DictionaryObject()
+        annot.update({
+            NameObject("/Type"): NameObject("/Annot"),
+            NameObject("/Subtype"): NameObject("/Stamp"),
+            NameObject("/Rect"): rect,
+            NameObject("/AP"): DictionaryObject({
+                NameObject("/N"): form
+            }),
+            NameObject("/F"): NumberObject(4),  # Print flag
+            NameObject("/P"): page.indirect_reference,
+            NameObject("/Contents"): ByteStringObject(b_("Signature Stamp"))
+        })
+
+        return annot
+
+    def _write_objects(self, output, incremented_objects):
         new_xref_entries = {}
         for obj_id, obj_data in sorted(incremented_objects.items()):
             new_xref_entries[obj_id] = output.tell()
@@ -202,7 +298,9 @@ class IncrementalPdfMerge:
             obj_data.write_to_stream(output, None)
             output.write(b"\nendobj\n")
 
-        # 6. Generate Xref table
+        return new_xref_entries
+
+    def _write_xref_table(self, output, new_xref_entries):
         # ----------------------------------------------------------------------
         # XRef CONSTRUCTIONS (ISO 32000-1, Section 7.5.4)
         # ----------------------------------------------------------------------
@@ -222,7 +320,8 @@ class IncrementalPdfMerge:
         # - Offset 0000000000: Points to the next free object index (0 if none).
         # - Generation 65535: Max integer ensures Object 0 is never reused/allocated.
         # - Type 'f': Marks this entry as 'Free'.
-        new_xref_entries[0] = 0
+        if 0 not in new_xref_entries:
+            new_xref_entries[0] = 0
 
         sorted_ids = sorted(new_xref_entries.keys())
         i = 0
@@ -242,6 +341,9 @@ class IncrementalPdfMerge:
 
             i += 1
 
+        return xref_start, max(sorted_ids) + 1
+
+    def _write_trailer(self, output, pdf_reader, original_startxref, xref_start, size):
         # 7. Construct the PDF trailer
         # ----------------------------------------------------------------------
         # TRAILER CONSTRUCTION (ISO 32000-1, Section 7.5.5)
@@ -259,7 +361,7 @@ class IncrementalPdfMerge:
         trailer = DictionaryObject()
         trailer.update(
             {
-                NameObject(TK.SIZE): NumberObject(max(sorted_ids) + 1),
+                NameObject(TK.SIZE): NumberObject(size),
                 NameObject(TK.ROOT): pdf_reader.trailer[TK.ROOT],
                 NameObject(TK.INFO): pdf_reader.trailer[TK.INFO],
                 NameObject(TK.PREV): NumberObject(original_startxref)
