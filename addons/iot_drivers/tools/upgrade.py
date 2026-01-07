@@ -222,11 +222,6 @@ def misc_migration_updates():
             ['sudo', 'sed', '-i', 's|iot_box_image|point_of_sale/tools/posbox|g', ramdisks_service], check=False
         )
 
-        # TODO: Remove this code when v16 is deprecated
-        with open('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf', 'r+', encoding='utf-8') as f:
-            if "server_wide_modules" not in f.read():
-                f.write("server_wide_modules=hw_drivers,hw_posbox_homepage,web\n")
-
     if path_file('odoo', 'addons', 'hw_drivers').exists():
         # TODO: remove this when v18.4 is deprecated (hw_drivers/,hw_posbox_homepage/ -> iot_drivers/)
         subprocess.run(
