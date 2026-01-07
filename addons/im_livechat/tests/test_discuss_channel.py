@@ -133,23 +133,14 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
             {"channel_id": self.livechat_channel.id},
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
+        group_id = self.env.ref("im_livechat.im_livechat_group_user").id
         with self.assertBus(
-            [(self.cr.dbname, "discuss.channel", channel.id, "internal_users")],
             [
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
-                        "discuss.channel": [
-                            {
-                                "id": channel.id,
-                                "livechat_status": "waiting",
-                            }
-                        ]
-                    },
-                }
-            ],
+                (self.cr.dbname, "discuss.channel", channel.id, "internal_users"),
+                (self.cr.dbname, "res.groups", group_id, "LOOKING_FOR_HELP"),
+            ]
         ):
-            channel.livechat_status = "waiting"
+            channel.livechat_status = "need_help"
 
     def test_livechat_status_switch_on_operator_joined_batch(self):
         """Test that the livechat status switches to 'in_progress' when an operator joins multiple channels in a batch,

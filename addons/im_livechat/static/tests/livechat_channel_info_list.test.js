@@ -100,12 +100,11 @@ test("shows live chat status in discuss sidebar", async () => {
         ],
         country_id: countryId,
         channel_type: "livechat",
-        livechat_status: "waiting",
+        livechat_status: "in_progress",
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-livechat-ChannelInfoList button.active", { text: "Waiting for customer" });
-    await contains(".o-mail-DiscussSidebar-item span[title='Waiting for customer']");
+    await contains(".o-livechat-ChannelInfoList button.active:text('In progress')");
     await click(".o-livechat-ChannelInfoList button", { text: "Looking for help" });
     await contains(".o-livechat-ChannelInfoList button.active", { text: "Looking for help" });
     await contains(".o-mail-DiscussSidebar-item span[title='Looking for help']");
@@ -147,13 +146,13 @@ test("editing livechat status is synced between tabs", async () => {
         text: "In progress",
     });
     await click(`${tab1.selector} .o-livechat-ChannelInfoList button`, {
-        text: "Waiting for customer",
+        text: "Looking for help",
     });
     await contains(`${tab1.selector} .o-livechat-ChannelInfoList button.active`, {
-        text: "Waiting for customer",
+        text: "Looking for help",
     });
     await contains(`${tab2.selector} .o-livechat-ChannelInfoList button.active`, {
-        text: "Waiting for customer",
+        text: "Looking for help",
     }); // Status should be synced with bus
 });
 
@@ -223,7 +222,6 @@ test("Disable actions for non-livechat users", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-livechat-LivechatStatusSelection button:text(In progress):disabled");
-    await waitFor(".o-livechat-LivechatStatusSelection button:text(Waiting for customer):disabled");
     await waitFor(".o-livechat-LivechatStatusSelection button:text(Looking for help):disabled");
     await waitFor("textarea[placeholder='Add your notes here...']:disabled");
     await waitFor(".o-livechat-ExpertiseTagsAutocomplete.o-disabled");

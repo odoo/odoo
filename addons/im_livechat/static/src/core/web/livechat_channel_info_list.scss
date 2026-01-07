@@ -17,19 +17,12 @@
     }
 
     .o-livechat-LivechatStatusLabel {
-        &.o-waiting {
-            transform: rotate(180deg);
-            transition: transform 1s;
-        }
         &.o-help {
             animation: none;
         }
     }
 
     button.active .o-livechat-LivechatStatusLabel {
-        &.o-waiting {
-            transform: none;
-        }
         &.o-help {
             animation: shakeX .5s;
         }
@@ -66,16 +59,6 @@
         .form-check-input {
             background-color: var(--purple);
             border-color: var(--purple);
-        }
-    }
-
-    button.active.o-waiting {
-        --list-group-active-color: var(--body-color);
-        --list-group-active-border-color: #{map-get($o-theme-text-colors, 'warning')};
-
-        .form-check-input {
-            background-color: map-get($o-theme-text-colors, 'warning');
-            border-color: map-get($o-theme-text-colors, 'warning');
         }
     }
 

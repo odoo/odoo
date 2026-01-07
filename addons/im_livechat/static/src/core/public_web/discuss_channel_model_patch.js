@@ -17,7 +17,7 @@ const discussChannelPatch = {
         });
         this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
         this.livechat_lang_id = fields.One("res.lang");
-        /** @type {"in_progress"|"waiting"|"need_help"|undefined} */
+        /** @type {"in_progress"|"need_help"|undefined} */
         this.livechat_status = fields.Attr(undefined, {
             onUpdate() {
                 if (this.livechat_status === "need_help") {
@@ -70,10 +70,7 @@ const discussChannelPatch = {
         if (this.livechat_end_dt) {
             return _t("Conversation has ended");
         }
-        const status = this.livechat_status;
-        if (status === "waiting") {
-            return _t("Waiting for customer");
-        } else if (status === "need_help") {
+        if (this.livechat_status === "need_help") {
             return _t("Looking for help");
         }
         return _t("In progress");
@@ -89,7 +86,7 @@ const discussChannelPatch = {
     get shouldSubscribeToBusChannel() {
         return super.shouldSubscribeToBusChannel || Boolean(this.shadowedBySelf);
     },
-    /** @param {"in_progress"|"waiting"|"need_help"} status */
+    /** @param {"in_progress"|"need_help"} status */
     updateLivechatStatus(status) {
         if (this.livechat_status === status) {
             return;
