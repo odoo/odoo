@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst, waitFor, setInputRange } from "@odoo/hoot-dom";
+import { queryFirst, setInputRange } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { testImg } from "./image_test_helpers";
@@ -114,8 +114,6 @@ test("Should change the shape color of an image", async () => {
     await contains("[data-action-value='html_builder/pattern/pattern_wave_4']").click();
     await waitSidebarUpdated();
 
-    await waitFor(`[data-label="Colors"] .o_we_color_preview`);
-
     expect(`[data-label="Colors"] .o_we_color_preview`).toHaveCount(4);
 
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).toHaveAttribute(
@@ -173,8 +171,6 @@ test("Should change the shape color of an image with a class color", async () =>
     await contains("[data-label='Shape'] .dropdown").click();
     await contains("[data-action-value='html_builder/pattern/pattern_wave_4']").click();
     await waitSidebarUpdated();
-
-    await waitFor(`[data-label="Colors"] .o_we_color_preview`);
 
     expect(`[data-label="Colors"] .o_we_color_preview`).toHaveCount(4);
 
@@ -247,7 +243,6 @@ describe("flip shape axis", () => {
         await contains("[data-label='Shape'] .dropdown").click();
         await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
         await waitSidebarUpdated();
-        await waitFor(`[data-action-id="flipImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
@@ -273,7 +268,6 @@ describe("flip shape axis", () => {
         await contains("[data-label='Shape'] .dropdown").click();
         await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
         await waitSidebarUpdated();
-        await waitFor(`[data-action-id="flipImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
@@ -300,7 +294,6 @@ describe("flip shape axis", () => {
         await contains("[data-label='Shape'] .dropdown").click();
         await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
         await waitSidebarUpdated();
-        await waitFor(`[data-action-id="flipImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
@@ -326,7 +319,6 @@ describe("flip shape axis", () => {
         await contains("[data-label='Shape'] .dropdown").click();
         await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
         await waitSidebarUpdated();
-        await waitFor(`[data-action-id="flipImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
@@ -355,7 +347,6 @@ describe("rotate shape", () => {
         await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
         // ensure the shape action has been applied
         await waitSidebarUpdated();
-        await waitFor(`[data-action-id="rotateImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
@@ -380,7 +371,6 @@ describe("rotate shape", () => {
         await contains("[data-label='Shape'] .dropdown").click();
         await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
         await waitSidebarUpdated();
-        await waitFor(`[data-action-id="rotateImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
@@ -408,8 +398,6 @@ describe("rotate shape", () => {
         await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
         // ensure the shape action has been applied
         await waitSidebarUpdated();
-
-        await waitFor(`[data-action-id="rotateImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
