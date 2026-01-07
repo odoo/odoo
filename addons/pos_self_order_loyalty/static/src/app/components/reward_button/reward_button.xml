@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.RewardButton">
+        <button class="btn btn-secondary btn-lg d-flex align-items-center gap-2 btn-reward px-3 text-nowrap py-0" t-att-class="{'text-bg-info': this.router.activeSlot === 'cart'}" t-on-click.stop="clickRewardButton">
+            <t t-if="this.router.activeSlot === 'cart'">
+                <t t-if="ui.isSmall">
+                    <i class="fa fa-gift" aria-hidden="true"/>
+                </t>
+                <t t-else="">
+                    <span class="fs-3">Apply Rewards</span>
+                </t>
+            </t>
+            <t t-else="">
+                <i class="fa fa-gift" aria-hidden="true"/>
+                <div class="d-flex flex-column" t-if="!ui.isSmall">
+                    <t t-if="!this.selfOrder.currentOrder.getPartner()">
+                        <span>Rewards</span>
+                    </t>
+                    <t t-else="">
+                        <t t-set="loyalty_points" t-value="this.getPartnerLoyaltyPoints()"/>
+                        <span class="fs-3" t-esc="this.selfOrder.currentOrder.getPartner().name"/>
+                        <span t-if="loyalty_points" class="fs-5 fw-normal" t-esc="loyalty_points"/>
+                    </t>
+                </div>
+            </t>
+        </button>
+    </t>
+</templates>

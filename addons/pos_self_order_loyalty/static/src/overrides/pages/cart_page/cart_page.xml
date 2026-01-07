@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.CartPage" t-inherit="pos_self_order.CartPage" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('o_self_footer')]/div[hasclass('o_self_container')]" position="attributes">
+            <attribute name="class" add="d-flex flex-row align-items-end" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('o_self_footer')]//div[hasclass('order-price')]" position="before">
+            <div class="d-flex flex-column align-items-start justify-content-end flex-grow-1 px-2">
+                <div t-foreach="selfOrder.getLoyaltyCards()" t-as="card" t-key="card_index" class="d-flex justify-content-between align-items-center gap-3">
+                    <span class="fw-bolder" t-esc="card.program_id.portal_point_name"/>
+                    <div class="d-flex gap-1 fw-bold">
+                        <span t-esc="card.points"/>
+                        <t t-set="pointsDifference" t-value="Math.round(card.program_id.uiState.pointsDifference * 100) / 100"/>
+                        <span t-if="pointsDifference !== 0" t-attf-class="{{getLoyaltyProgramClass(card.program_id)}}">
+                            <t t-if="pointsDifference &gt; 0">+ </t>
+                            <t t-else="">- </t>
+                            <t t-esc="pointsDifference"/>
+                        </span>
+                        
+                        <span>=</span>
+                        <span t-esc="selfOrder.getProgramPointsString(card.program_id, false)"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('order_not_container')]" position="after">
+            <div class="container o_self_container order_discount_container mb-2">
+                <hr/>
+                <div class="d-flex justify-content-between"
+                    t-on-click="this.onClickShowCode">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-gift-o p-1"/>
+                        <span class="fw-bolder" style="font-size: 1.1rem;">
+                            Add a discount code
+                        </span>
+                    </div>
+                    <div class="py-1 px-2">
+                        <i t-attf-class="fa {{ this.state.showCode ? 'fa-chevron-up' : 'fa-chevron-down' }}"/>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mt-2" t-att-class="{'d-none': !this.state.showCode}">
+                    <input type="text"
+                        class="form-control bg-white rounded-4 my-1"
+                        t-model="this.state.couponCode"
+                        t-on-keydown="onKeydownCouponInput"
+                        placeholder="Enter your code"
+                    />
+                    <i t-if="this.applyCouponCode.status == 'loading'" class="fa fa-spinner fa-spin m-3"/>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('product-name')]" position="after">  
+            <span t-if="line.is_reward_line" class="fst-italic" t-esc="line.reward_id.description" />
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('price-total')]" position="before">
+            <div class="fs-4 o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4 text-muted" t-if="displayBeforeDiscount">Total discount: <t t-esc="selfOrder.formatMonetary(this.getTotalDiscount())" /></div>
+        </xpath>
+    </t>
+</templates>

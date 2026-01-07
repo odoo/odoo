@@ -29,12 +29,15 @@ class PaymentTransaction(models.Model):
         super()._post_process()
         self._process_pos_online_payment()
 
+    def _verify_transaction_validity(self, transaction, pos_order):
+        if tools.float_compare(transaction.amount, 0.0, precision_rounding=pos_order.currency_id.rounding) <= 0:
+            raise ValidationError(_('The payment transaction (%d) has a negative amount.', transaction.id))
+
     def _process_pos_online_payment(self):
         for tx in self:
             if tx and tx.pos_order_id and tx.state in ('authorized', 'done') and not tx.payment_id.pos_order_id:
                 pos_order = tx.pos_order_id
-                if tools.float_compare(tx.amount, 0.0, precision_rounding=pos_order.currency_id.rounding) <= 0:
-                    raise ValidationError(_('The payment transaction (%d) has a negative amount.', tx.id))
+                self._verify_transaction_validity(tx, pos_order)
 
                 if not tx.payment_id: # the payment could already have been created by account_payment module
                     tx._create_payment()

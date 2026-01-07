@@ -16,7 +16,8 @@ class ProductTemplate(models.Model):
 
     self_order_visible = fields.Boolean(compute='_compute_self_order_visible')
 
-    def _load_pos_self_data_read(self, data, config):
+    @api.model
+    def _load_pos_self_data_search_read(self, data, config):
         domain = self._load_pos_self_data_domain(data, config)
         fields = set(self._load_pos_self_data_fields(config))
         products = self.search_read(

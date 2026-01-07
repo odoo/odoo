@@ -53,12 +53,12 @@ class PosSelfOrderController(http.Controller):
 
         amount_total, amount_untaxed = self._get_order_prices(order_ids.lines)
         order_ids.write({
-            'state': 'paid' if amount_total == 0 else 'draft',
+            'state': 'paid' if pos_config.currency_id.is_zero(amount_total) else 'draft',
             'amount_tax': amount_total - amount_untaxed,
             'amount_total': amount_total,
         })
 
-        if amount_total == 0:
+        if pos_config.currency_id.is_zero(amount_total):
             order_ids._process_saved_order(False)
 
         if preset_id and preset_id.mail_template_id:
@@ -174,12 +174,7 @@ class PosSelfOrderController(http.Controller):
             ]
 
         for data in order_access_tokens:
-            domain = Domain.OR([domain, ['&',
-                ('access_token', '=', data['access_token']),
-                '|',
-                ('write_date', '>', data.get('write_date')),
-                ('state', '!=', data.get('state')),
-            ]])
+            domain = Domain.OR([domain, [('access_token', '=', data['access_token'])]])
 
         # Do not use session.order_ids, it may fail if there is shared sessions
         orders = pos_config.env['pos.order'].search(domain)

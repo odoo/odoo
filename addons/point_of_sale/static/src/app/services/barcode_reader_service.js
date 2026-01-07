@@ -12,11 +12,9 @@ export class BarcodeReader {
         this.setup(...arguments);
     }
 
-    setup(parser, { dialog, notification, action, orm }) {
+    setup(parser, { dialog, notification }) {
         this.parser = parser;
         this.dialog = dialog;
-        this.action = action;
-        this.orm = orm;
         this.notification = notification;
         this.mutex = new Mutex();
         this.cbMaps = new Set();
@@ -118,7 +116,7 @@ export class BarcodeReader {
 }
 
 export const barcodeReaderService = {
-    dependencies: ["dialog", "barcode", "notification", "action", "orm"],
+    dependencies: ["dialog", "barcode", "notification", "orm"],
     async start(env, deps) {
         const { dialog, barcode, orm } = deps;
         let barcodeReader = null;

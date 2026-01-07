@@ -10,7 +10,9 @@ import { useStickyTitleObserver } from "@pos_self_order/app/utils/sticky_title_o
 
 export class ComboPage extends Component {
     static template = "pos_self_order.ComboPage";
-    static props = ["productTemplate"];
+    static props = {
+        productTemplate: Object,
+    };
     static components = {
         AttributeSelection,
         Stepper,
@@ -407,6 +409,14 @@ export class ComboPage extends Component {
         );
     }
 
+    get addToOrderOpts() {
+        return {};
+    }
+
+    get addToOrderUiState() {
+        return {};
+    }
+
     addToCart() {
         this.selfOrder.addToCart(
             this.props.productTemplate,
@@ -414,7 +424,9 @@ export class ComboPage extends Component {
             "",
             {},
             {},
-            this.getComboSelection()
+            this.getComboSelection(),
+            this.addToOrderOpts,
+            this.addToOrderUiState
         );
 
         this.goBack();
@@ -442,6 +454,10 @@ export class ComboPage extends Component {
         document
             .getElementById(missingAttribute?.attribute_id?.id)
             ?.scrollIntoView({ behavior: "smooth" });
+    }
+
+    canChangeQuantity() {
+        return true;
     }
 
     /*

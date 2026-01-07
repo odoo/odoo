@@ -66,6 +66,10 @@ function generateKioskCSS(companyPrimaryColor) {
         .o_self_background {
             background-color: ${mixColors("#ffffff", bgPrimary, 0.85)};
         }
+
+        .text-bg-primary-faded {
+            background-color: ${mixColors("#ffffff", bgPrimary, 0.85)};
+        }
     `;
 }
 

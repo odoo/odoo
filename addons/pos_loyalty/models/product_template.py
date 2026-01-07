@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import models, api
 
 
 class ProductTemplate(models.Model):
@@ -7,6 +7,15 @@ class ProductTemplate(models.Model):
     def _load_pos_data_search_read(self, data, config):
         read_data = super()._load_pos_data_search_read(data, config)
 
+        fields = self.env['product.template']._load_pos_data_fields(config)
+        limit_loading = self.env.context.get('pos_limited_loading', True)
+        missing_product_templates = self._get_loyalty_product_to_load(data, config, read_data, fields, limit_loading)
+
+        read_data.extend(missing_product_templates)
+        return read_data
+
+    @api.model
+    def _get_loyalty_product_to_load(self, data, config, read_data=[], fields=[], limit_loading=True):
         rewards = config._get_program_ids().reward_ids
         reward_products = rewards.discount_line_product_id | rewards.reward_product_ids | rewards.reward_product_id
         trigger_products = config._get_program_ids().trigger_product_ids
@@ -15,12 +24,11 @@ class ProductTemplate(models.Model):
         already_loaded_product_tmpl_ids = {template['id'] for template in read_data}
 
         missing_product_tmpl_ids = list(loyalty_product_tmpl_ids - already_loaded_product_tmpl_ids)
-        fields = self.env['product.template']._load_pos_data_fields(config)
 
         missing_product_templates = self.env['product.template'].browse(missing_product_tmpl_ids).read(fields=fields, load=False)
         product_ids_to_hide = reward_products.product_tmpl_id - self.env['product.template'].browse(already_loaded_product_tmpl_ids)
 
-        if self.env.context.get('pos_limited_loading', True):
+        if limit_loading:
             # Filter out products that can be loaded in the PoS but are not loaded yet
             product_ids_to_hide = product_ids_to_hide - product_ids_to_hide.filtered_domain(self._load_pos_data_domain(data, config))
 
@@ -40,6 +48,4 @@ class ProductTemplate(models.Model):
         ]).trigger_product_ids
 
         config_data['_pos_special_display_products_ids'] = special_display_products.product_tmpl_id.ids
-
-        read_data.extend(missing_product_templates)
-        return read_data
+        return missing_product_templates

@@ -173,13 +173,16 @@ export class CartPage extends Component {
         }
     }
 
-    canChangeQuantity(line) {
-        const order = this.selfOrder.currentOrder;
-        const lastChange = order.uiState.lineChanges[line.uuid];
-        if (!lastChange) {
-            return true;
+    canChangeQuantity(line, increase) {
+        if (!increase) {
+            const order = this.selfOrder.currentOrder;
+            const lastChange = order.uiState.lineChanges[line.uuid];
+            if (!lastChange) {
+                return true;
+            }
+            return lastChange.qty < line.qty;
         }
-        return lastChange.qty < line.qty;
+        return true;
     }
 
     canDeleteLine(line) {
@@ -197,27 +200,28 @@ export class CartPage extends Component {
             return;
         }
 
-        const doRemoveLine = () => {
-            this.selfOrder.removeLine(line);
-            if (this.lines.length === 0) {
-                this.router.navigate("product_list");
-            }
-        };
         const card = event?.target.closest(".product-cart-item");
         if (!card) {
-            doRemoveLine();
+            this.doRemoveLine(line);
             return;
         }
         const onAnimationEnd = () => {
             card.removeEventListener("animationend", onAnimationEnd);
-            doRemoveLine();
+            this.doRemoveLine(line);
         };
         card.addEventListener("animationend", onAnimationEnd);
         card.classList.add("delete-fade-out");
     }
 
+    doRemoveLine(line) {
+        this.selfOrder.removeLine(line);
+        if (this.lines.length === 0) {
+            this.router.navigate("product_list");
+        }
+    }
+
     changeQuantity(line, increase) {
-        if (!increase && !this.canChangeQuantity(line)) {
+        if (!this.canChangeQuantity(line, increase)) {
             return;
         }
 

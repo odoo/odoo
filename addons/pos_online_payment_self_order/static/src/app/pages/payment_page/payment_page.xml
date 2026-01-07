@@ -11,7 +11,7 @@
             </div>
         </xpath>
         <xpath expr="//div[hasclass('payment-state-container')]" position="attributes">
-            <attribute name="t-if">!this.selectedPaymentIsOnline and !state.selection</attribute>
+            <attribute name="t-if" add="!this.selectedPaymentIsOnline" separator=" and "/>
         </xpath>
     </t>
 </templates>

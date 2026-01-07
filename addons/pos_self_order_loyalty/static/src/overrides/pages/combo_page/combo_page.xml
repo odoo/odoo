@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.ComboPage" t-inherit="pos_self_order.ComboPage" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_self_combo_page')]//div[hasclass('combo-price')]" position="attributes">
+            <attribute name="t-att-class">{'text-decoration-line-through': this.props.reward_id}</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_combo_page')]//div[hasclass('combo-price')]" position="after">
+            <div t-if="this.props.reward_id" class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary">
+                Free
+            </div>
+        </xpath>
+    </t>
+</templates>

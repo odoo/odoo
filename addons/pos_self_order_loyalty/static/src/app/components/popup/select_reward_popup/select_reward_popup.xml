@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.SelectRewardPopup">
+        <div class="self_order_select_reward_popup o_dialog" t-att-id="id">
+            <div role="dialog" class="modal d-block" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body p-4 overflow-visible">
+                            <div class="position-absolute top-0 start-50 translate-middle px-4 py-3 rounded-4 text-bg-info border border-white border-5">
+                                <i class="fa fa-gift" aria-hidden="true"/>
+                            </div>
+                            <button type="button" class="position-absolute top-0 end-0 p-3 btn-close" t-on-click.stop="() => this.props.close()"></button>
+                            <div class="mt-4 d-flex flex-column align-items-center gap-2">
+                                <h1 t-esc="this.props.title"></h1>
+                                <div t-foreach="programs" t-as="program" t-key="program.id" class="d-flex flex-column align-items-center gap-2">
+                                    <t t-set="rewards" t-value="getRewards(program)"/>
+                                    <t t-set="program_points" t-value="getProgramPoints(program)"/>
+                                    <div t-if="this.props.showDivisions" class="d-flex gap-2 align-items-center justify-content-between w-100">
+                                        <h2 class="flex-basis-75" t-esc="program.name"/>
+                                        <h2 class="flex-basis-25" t-esc="selfOrder.getProgramPointsString(program)"/>
+                                    </div>
+                                    <button t-foreach="rewards" t-as="reward" t-key="reward_index" t-on-click.stop="() => this.confirm(reward)" t-att-disabled="program_points &lt; reward.required_points" class="d-flex align-items-center justify-content-between btn btn-lg btn-outline-secondary w-100 p-3 text-center">
+                                        <div class="ratio ratio-1x1 me-3" style="width: 40px" t-if="reward.imageUrl">
+                                            <img class="rounded-3" t-att-src="reward.imageUrl"/>
+                                        </div>
+                                        <span t-esc="reward.description" t-if="reward.description" t-att-class="{'w-100': !reward.imageUrl}" />
+                                    </button>
+                                </div>
+                                <div t-if="this.promotionRewards.length &gt; 0" class="d-flex flex-column align-items-center gap-2">
+                                    <div t-if="this.props.showDivisions" class="d-flex gap-2 align-items-center justify-content-between w-100">
+                                        <h2 class="flex-basis-75">Promotions</h2>
+                                    </div>
+                                    <button t-foreach="this.promotionRewards" t-as="reward" t-key="reward_index" t-on-click.stop="() => this.confirm(reward)" class="d-flex align-items-center justify-content-between btn btn-lg btn-outline-secondary w-100 p-3 text-start">
+                                        <div class="ratio ratio-1x1 me-3" style="width: 40px" t-if="reward.imageUrl">
+                                            <img class="rounded-3" t-att-src="reward.imageUrl"/>
+                                        </div>
+                                        <span t-esc="reward.description" t-if="reward.description" t-att-class="{'w-100': !reward.imageUrl}" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

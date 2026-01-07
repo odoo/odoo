@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.SelectProductPopup">
+        <div class="self_order_select_reward_popup o_dialog" t-att-id="id">
+            <div role="dialog" class="modal d-block" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body p-4 overflow-visible">
+                            <div class="position-absolute top-0 start-50 translate-middle px-4 py-3 rounded-4 text-bg-info border border-white border-5">
+                                <i class="fa fa-gift" aria-hidden="true"/>
+                            </div>
+                            <button type="button" class="position-absolute top-0 end-0 p-3 btn-close" t-on-click.stop="() => this.props.close()"></button>
+                            <div class="mt-4 d-flex flex-column align-items-center gap-2">
+                                <h1>Choose your reward</h1>
+                                <div t-foreach="props.products" t-as="product" t-key="product.id" class="d-flex flex-column align-items-center gap-2">
+                                    <ProductBox product="product" onClick="() => this.confirm(product)" bigList="false" free="true"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
