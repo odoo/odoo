@@ -822,8 +822,11 @@ class TestBoM(TestMrpCommon):
 
     def test_bom_report_planning_with_producible_qty(self):
         """ Simulate a BoM of a pickaxe, and test that the BoM structure report
-            respects the hardcoded limit of 700 planning days.
+            respects the hardcoded limit of 700 planning days (mocked as 28 days).
         """
+        # Workcenter is working 24/7
+        self.full_availability()
+
         location = self.env.ref('stock.stock_location_stock')
         pickaxe = self.env['product.product'].create({
             'name': 'Iron Pickaxe',
@@ -872,17 +875,26 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(report_values['lines']['operations_time'], 30.0)
         self.assertEqual(report_values['lines']['producible_qty'], 0)
 
-        # The planning is limited to 700 days and the calendar is 40h/week
-        # So the 700 days limit is equivalent to 700 / 7 * 40 = 4000 hours
-        # With 4000 hours, we can plan 16000 pickaxes.
+        # Limit the planning to two fortnights, and fill it almost completely while keeping
+        # 15 minutes available, so that we can still plan a single operation.
+        self.env['ir.config_parameter'].sudo().set_param('mrp.workcenter_max_planning_iterations', '2')
+        date_start = fields.Datetime.today() + timedelta(days=14 * 2 - 1)
+        end_of_day = date_start + timedelta(days=1)
 
         # Populate the workcenter's planning
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = bom_pickaxe
-        mo_form.product_qty = 16000 - 1  # Keep 1 slot available
-        mo = mo_form.save()
-        mo.action_confirm()
-        mo.button_plan()
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Game update',
+            'date_from': fields.Date.today(),
+            'date_to': end_of_day - timedelta(minutes=15),
+            'resource_id': workcenter.resource_id.id,
+            'time_type': 'other',
+        })
+
+        # Check that we still have one available slot of 15 minutes
+        self.assertEqual(
+            workcenter._get_first_available_slot(date_start, 15),
+            (end_of_day - timedelta(minutes=15), end_of_day),
+        )
 
         # 1 quantity should still work
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=1, searchVariant=False)

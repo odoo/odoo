@@ -33,14 +33,14 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
 
         // Basic product with no variants
         ...clickOnSnippet({id: 's_add_to_cart'}),
-        ...changeOptionInPopover("Add to Cart Button", "Product", "Product No Variant", true),
+        ...changeOptionInPopover("Add to Cart Button", "Product", "Product No Variant"),
         ...clickOnSave(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
         checkQuanityInCart("1"),
 
         // Product with 2 variants with visitor choice (will open modal)
         ...editAddToCartSnippet(),
-        ...changeOptionInPopover("Add to Cart Button", "Product", "Product Yes Variant 1", true),
+        ...changeOptionInPopover("Add to Cart Button", "Product", "Product Yes Variant 1"),
         ...clickOnSave(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
         clickOnElement("add to cart", ":iframe .modal button:contains(Add to Cart)"),
@@ -83,7 +83,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
             content: "Check if action option is visible",
             trigger: "[data-container-title='Add to Cart Button'] [data-label='Action']"
         },
-        ...changeOptionInPopover("Add to Cart Button", "Action", "Buy Now", false),
+        ...changeOptionInPopover("Add to Cart Button", "Action", "Buy Now"),
         // At this point the "Add to cart" button was changed to a "Buy Now" button
         ...clickOnSave(),
         clickOnElement('"Buy Now" button', ':iframe .s_add_to_cart_btn'),

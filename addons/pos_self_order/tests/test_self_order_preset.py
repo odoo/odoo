@@ -31,9 +31,19 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
         })
 
     def test_preset_dine_in_tour(self):
+        floor = self.env["restaurant.floor"].create({
+            "name": 'Main Floor',
+            "background_color": 'rgb(249,250,251)',
+            "table_ids": [(0, 0, {
+                "table_number": 1,
+            })],
+        })
+        self.pos_config.write({
+            "floor_ids": [(6, 0, [floor.id])],
+        })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
+        self_route = self.pos_config._get_self_order_route(floor.table_ids[0].id)
         self.start_tour(self_route, "self_order_preset_dine_in_tour")
 
     def test_preset_takeaway_tour(self):

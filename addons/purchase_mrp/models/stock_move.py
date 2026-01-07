@@ -9,6 +9,14 @@ from odoo.exceptions import UserError
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
+    def _get_cost_ratio(self, quantity):
+        self.ensure_one()
+        if self.bom_line_id.bom_id.type == "phantom":
+            uom_quantity = self.product_uom._compute_quantity(self.quantity, self.product_id.uom_id)
+            if not self.product_uom.is_zero(uom_quantity):
+                return (self.cost_share / 100) * quantity / uom_quantity
+        return super()._get_cost_ratio(quantity)
+
     def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
         vals = super()._prepare_phantom_move_values(bom_line, product_qty, quantity_done)
         if self.purchase_line_id:

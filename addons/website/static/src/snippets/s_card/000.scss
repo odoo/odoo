@@ -46,8 +46,8 @@
     }
 
     // Options
-    &.o_card_img_top {
-        >.o_card_img_ratio_custom {
+    &.o_card_img_top, &.o_card_img_bottom {
+        > .o_card_img_ratio_custom {
             --aspect-ratio: var(--card-img-aspect-ratio);
         }
     }
