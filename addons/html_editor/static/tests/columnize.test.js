@@ -6,6 +6,7 @@ import { getContent, setSelection } from "./_helpers/selection";
 import { insertText, redo, undo } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
 import { nodeSize } from "@html_editor/utils/position";
+import { unformat } from "./_helpers/format";
 
 function columnsContainer(contents) {
     return `<div class="container o_text_columns o-contenteditable-false"><div class="row">${contents}</div></div>`;
@@ -452,6 +453,36 @@ describe("undo", () => {
                 await insertText(editor, "x");
             },
             contentAfter: columnsContainer(column(6, "<p>x[]</p>") + column(6, "<p><br></p>")),
+        });
+    });
+    test("should create columns after undo", async () => {
+        await testEditor({
+            contentBefore: columnsContainer(
+                column(4, "<p>a</p>") + column(4, "<p>b</p>") + column(4, "<p>c[]</p>")
+            ),
+            stepFunction: async (editor) => {
+                columnize(4)(editor);
+                undo(editor);
+                columnize(4)(editor);
+            },
+            contentAfter: unformat(
+                `<div class="container o_text_columns o-contenteditable-false">
+                    <div class="row">
+                        <div class="o-contenteditable-true col-3">
+                            <p>a</p>
+                        </div>
+                        <div class="o-contenteditable-true col-3">
+                            <p>b</p>
+                        </div>
+                        <div class="o-contenteditable-true col-3">
+                            <p>c[]</p>
+                        </div>
+                        <div class="col-3 o-contenteditable-true">
+                            <p><br></p>
+                        </div>
+                    </div>
+                </div>`
+            ),
         });
     });
 });

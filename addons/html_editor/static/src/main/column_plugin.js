@@ -6,7 +6,7 @@ import { closestElement, firstLeaf } from "@html_editor/utils/dom_traversal";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
-const REGEX_BOOTSTRAP_COLUMN = /(?:^| )col(-[a-zA-Z]+)?(-\d+)?(?= |$)/;
+const REGEX_BOOTSTRAP_COLUMN = /(^| )col(-[a-zA-Z]+)?(-\d+)?(?= |$)/;
 
 function isUnremovableColumn(node, root) {
     const isColumnInnerStructure =
@@ -182,7 +182,7 @@ export class ColumnPlugin extends Plugin {
         for (const column of columns) {
             column.className = column.className.replace(
                 REGEX_BOOTSTRAP_COLUMN,
-                `col$1-${columnSize}`
+                `$1col$2-${columnSize}`
             );
         }
         if (diff > 0) {
