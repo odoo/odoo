@@ -11,6 +11,7 @@ import {
     queryOne,
     waitFor,
     waitForNone,
+    setInputRange,
 } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
@@ -20,7 +21,6 @@ import {
 } from "./website_helpers";
 import { dummyBase64Img } from "@html_builder/../tests/helpers";
 import { testImg } from "./image_test_helpers";
-import { delay } from "@web/core/utils/concurrency";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 
 defineWebsiteModels();
@@ -279,12 +279,7 @@ describe("Image format/optimize", () => {
         const img = await waitFor(":iframe .test-options-target img");
         await contains(":iframe .test-options-target img").click();
         await waitSidebarUpdated();
-        const input = queryFirst('[data-action-id="setImageQuality"] input');
-        input.value = 50;
-        input.dispatchEvent(new Event("input"));
-        await delay();
-        input.dispatchEvent(new Event("change"));
-        await delay();
+        await setInputRange(`[data-action-id="setImageQuality"] input`, 50);
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 

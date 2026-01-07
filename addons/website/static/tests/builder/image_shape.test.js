@@ -1,8 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst, waitFor } from "@odoo/hoot-dom";
+import { queryFirst, waitFor, setInputRange } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { delay } from "@web/core/utils/concurrency";
 import { testImg } from "./image_test_helpers";
 
 defineWebsiteModels();
@@ -456,14 +455,7 @@ test("Should change the speed of an animated shape", async () => {
 
     const originalSrc = queryFirst(":iframe .test-options-target img").src;
 
-    await waitFor(`[data-action-id="setImageShapeSpeed"]`);
-    const rangeInput = queryFirst(`[data-action-id="setImageShapeSpeed"] input`);
-    rangeInput.value = 2;
-    rangeInput.dispatchEvent(new Event("input"));
-    await delay();
-    rangeInput.dispatchEvent(new Event("change"));
-    await delay();
-
+    await setInputRange(`[data-action-id="setImageShapeSpeed"] input`, 2);
     // ensure the shape action has been applied
     await editor.shared.operation.next(() => {});
 
@@ -568,14 +560,9 @@ test("Should keep colors when changing speed and vice versa", async () => {
         queryFirst(`[data-label="Colors"] .o_we_color_preview:nth-child(3)`).style.backgroundColor,
         queryFirst(`[data-label="Colors"] .o_we_color_preview:nth-child(4)`).style.backgroundColor,
     ];
-    const rangeInput = queryFirst(`[data-action-id="setImageShapeSpeed"] input`);
 
     // Change speed
-    rangeInput.value = -1;
-    rangeInput.dispatchEvent(new Event("input"));
-    await delay();
-    rangeInput.dispatchEvent(new Event("change"));
-    await delay();
+    await setInputRange(`[data-action-id="setImageShapeSpeed"] input`, -1);
     await editor.shared.operation.next(() => {});
 
     // Change first color and verify speed unchanged
@@ -599,11 +586,7 @@ test("Should keep colors when changing speed and vice versa", async () => {
     expect(imgSelector).toHaveAttribute("data-shape-animation-speed", "-1");
 
     // Change speed and verify colors unchanged
-    rangeInput.value = 2;
-    rangeInput.dispatchEvent(new Event("input"));
-    await delay();
-    rangeInput.dispatchEvent(new Event("change"));
-    await delay();
+    await setInputRange(`[data-action-id="setImageShapeSpeed"] input`, 2);
     await editor.shared.operation.next(() => {});
 
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).toHaveStyle({
