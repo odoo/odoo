@@ -939,15 +939,16 @@ class Lead(models.Model):
 
     @api.model
     def _read_group_stage_ids(self, stages, domain):
-        # retrieve team_id from the context and write the domain
+        # retrieve team_id from the context, team_ids from the user and write the domain
         # - ('id', 'in', stages.ids): add columns that should be present
         # - OR ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
         team_id = self._context.get('default_team_id')
-        if team_id:
-            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_id', '=', False), ('team_id', '=', team_id)]
-        else:
-            search_domain = ['|', ('id', 'in', stages.ids), ('team_id', '=', False)]
+        team_ids = self.env.user.crm_team_ids._ids if self.env.context.get('show_user_team_stages') else ()
+        team_ids += (team_id,) if team_id else ()
+        search_domain = ['|', ('id', 'in', stages.ids), ('team_id', '=', False)]
+        if team_ids:
+            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_id', '=', False), ('team_id', 'in', team_ids)]
 
         # perform search
         stage_ids = stages.sudo()._search(search_domain, order=stages._order)
