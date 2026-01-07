@@ -5,8 +5,6 @@ import threading
 from os.path import join as opj
 from urllib.parse import urlparse
 
-import geoip2
-import maxminddb
 import werkzeug
 from psycopg2 import OperationalError
 from werkzeug.urls import url_encode  # TODO: use urllib
@@ -194,25 +192,6 @@ class Application:
         if not db:
             return self.nodb_routing_map
         return request.env['ir.http'].routing_map()
-
-    @functools.cached_property
-    def geoip_city_db(self):
-        try:
-            return geoip2.database.Reader(config['geoip_city_db'])
-        except (OSError, maxminddb.InvalidDatabaseError):
-            _logger.debug(
-                "Couldn't load Geoip City file at %s. IP Resolver disabled.",
-                config['geoip_city_db'], exc_info=True,
-            )
-            raise
-
-    @functools.cached_property
-    def geoip_country_db(self):
-        try:
-            return geoip2.database.Reader(config['geoip_country_db'])
-        except (OSError, maxminddb.InvalidDatabaseError) as exc:
-            _logger.debug("Couldn't load Geoip Country file (%s). Fallbacks on Geoip City.", exc)
-            raise
 
     def set_csp(self, response):
         headers = response.headers

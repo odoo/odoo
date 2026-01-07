@@ -1,25 +1,55 @@
 import functools
+import logging
 import warnings
 from collections.abc import Mapping
 
-try:
-    import geoip2.database
-    import geoip2.errors
-    import geoip2.models
-except ImportError:
-    geoip2 = None
+import geoip2.database
+import geoip2.errors
+import geoip2.models
 
 try:
-    import maxminddb
+    from maxminddb import InvalidDatabaseError as InvalidGeoipDatabase
 except ImportError:
-    maxminddb = None
+    InvalidGeoipDatabase = OSError
 
+from odoo.tools import config
+
+_logger = logging.getLogger('odoo.http')
 
 # Two empty objects used when the geolocalization failed. They have the
 # sames attributes as real countries/cities except that accessing them
 # evaluates to None.
 GEOIP_EMPTY_COUNTRY = geoip2.models.Country({})
 GEOIP_EMPTY_CITY = geoip2.models.City({})
+
+
+class EmptyGeoDB:
+    def country(self, ip):
+        raise geoip2.errors.AddressNotFoundError(ip)
+
+    def city(self, ip):
+        raise geoip2.errors.AddressNotFoundError(ip)
+
+
+@functools.lru_cache(1)
+def _geoip_city_db():
+    try:
+        return geoip2.database.Reader(config['geoip_city_db'])
+    except (OSError, InvalidGeoipDatabase):
+        _logger.debug(
+            "Couldn't load Geoip City file at %s. IP Resolver disabled.",
+            config['geoip_city_db'], exc_info=True,
+        )
+        return EmptyGeoDB()
+
+
+@functools.lru_cache(1)
+def _geoip_country_db():
+    try:
+        return geoip2.database.Reader(config['geoip_country_db'])
+    except (OSError, InvalidGeoipDatabase) as exc:
+        _logger.debug("Couldn't load Geoip Country file (%s). Fallbacks on Geoip City.", exc)
+        return EmptyGeoDB()
 
 
 class GeoIP(Mapping):
@@ -55,9 +85,7 @@ class GeoIP(Mapping):
     @functools.cached_property
     def _city_record(self):
         try:
-            return root.geoip_city_db.city(self.ip)
-        except (OSError, maxminddb.InvalidDatabaseError):
-            return GEOIP_EMPTY_CITY
+            return _geoip_city_db().city(self.ip)
         except geoip2.errors.AddressNotFoundError:
             return GEOIP_EMPTY_CITY
 
@@ -68,9 +96,7 @@ class GeoIP(Mapping):
             # city record is in cache already, save a geolocalization
             return self._city_record
         try:
-            return root.geoip_country_db.country(self.ip)
-        except (OSError, maxminddb.InvalidDatabaseError):
-            return self._city_record
+            return _geoip_country_db().country(self.ip)
         except geoip2.errors.AddressNotFoundError:
             return GEOIP_EMPTY_COUNTRY
 
@@ -126,7 +152,3 @@ class GeoIP(Mapping):
     def __len__(self):
         e = "The dictionnary GeoIP API is deprecated."
         raise NotImplementedError(e)
-
-
-# ruff: noqa: E402
-from .router import root
