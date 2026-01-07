@@ -630,7 +630,7 @@
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="state" optional="show" widget="badge" decoration-success="state == 'purchase'"
                         decoration-warning="state == 'to approve'" decoration-info="state == 'draft' or state == 'sent'"/>
-                    <field name="invoice_status" optional="hide"/>
+                    <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'invoiced'" decoration-info="invoice_status == 'to invoice'" optional="hide"/>
                 </list>
             </field>
         </record>
