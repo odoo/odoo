@@ -258,7 +258,6 @@
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/js/content/website_root.js',
             'website/static/src/js/content/compatibility.js',
-            'website/static/src/js/content/snippets.animation.js',
             'website/static/src/js/user_custom_javascript.js',
             'website/static/src/js/http_cookie.js',
             'website/static/src/xml/website.xml',
