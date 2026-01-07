@@ -6067,3 +6067,20 @@ class ViewModifiers(ViewCase):
         self.assertFalse(tree.xpath('//div[@id="foo"]'))
         self.assertTrue(tree.xpath('//div[@id="bar"]'))
         self.assertFalse(tree.xpath('//div[@id="stuff"]'))
+
+    def test_create_inherit_view_with_xpath_without_expr(self):
+        """Test that creating inherited view containing <xpath> node without the 'expr' attribute."""
+
+        parent_view = self.env.ref('base.view_partner_form')
+        inherit_arch = """
+            <xpath position="replace">
+                <field name="name"/>
+            </xpath>
+        """
+
+        with self.assertRaises(ValidationError):
+            self.env['ir.ui.view'].create({
+                'name': 'test.xpath.without.expr',
+                'inherit_id': parent_view.id,
+                'arch': inherit_arch,
+            })
