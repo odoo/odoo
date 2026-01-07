@@ -1,6 +1,11 @@
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
 
+const MIN_LEFT_SHIFT = 50;
+// One viewport worth of scroll (window.innerHeight) equals 50% parallax
+// movement.
+const PARALLAX_AMOUNT = 50;
+
 export class AnnouncementScroll extends Interaction {
     static selector = ".s_announcement_scroll";
 
@@ -17,12 +22,15 @@ export class AnnouncementScroll extends Interaction {
         },
         ".s_announcement_scroll_marquee_container": {
             "t-att-style": () => ({
-                transform: `translateX(${this.parallaxPosition}%)`,
+                transform: `translateX(${-this.parallaxPosition}%)`,
             }),
         },
     };
 
     setup() {
+        this.parallaxPosition = MIN_LEFT_SHIFT;
+        this.announcementScrollReady = false;
+        this.announcementScrollPageScrolling = false;
         this.marqueeContainerEl = this.el.querySelector(".s_announcement_scroll_marquee_container");
         this.marqueeItemEl = this.el.querySelector(".s_announcement_scroll_marquee_item");
         this.setParallaxPosition();
@@ -72,30 +80,23 @@ export class AnnouncementScroll extends Interaction {
      * position).
      */
     setParallaxPosition() {
-        const MIN_LEFT_SHIFT = 50;
+        this.parallaxPosition = MIN_LEFT_SHIFT;
 
         if (
             !this.el.classList.contains("s_announcement_scroll_parallax") ||
             window.matchMedia("(prefers-reduced-motion: reduce)").matches === true
         ) {
-            this.parallaxPosition = -MIN_LEFT_SHIFT;
             return;
         }
 
-        // One viewport worth of scroll (window.innerHeight) equals 50% parallax
-        // movement.
-        const PARALLAX_AMOUNT = 50;
         const rect = this.el.getBoundingClientRect();
-        const startScroll = window.scrollY + rect.top - window.innerHeight;
-        const endScroll = window.scrollY + rect.bottom;
-        const progress = Math.min(
-            Math.max((window.scrollY - startScroll) / (endScroll - startScroll), 0),
-            1
-        );
+        const progress =
+            (window.innerHeight - rect.top) / (rect.bottom + window.innerHeight - rect.top);
+        const clampedProgress = Math.min(Math.max(progress, 0), 1);
         if (this.el.classList.contains("s_announcement_scroll_direction_right")) {
-            this.parallaxPosition = -MIN_LEFT_SHIFT - PARALLAX_AMOUNT + progress * PARALLAX_AMOUNT;
+            this.parallaxPosition += (1 - clampedProgress) * PARALLAX_AMOUNT;
         } else {
-            this.parallaxPosition = -MIN_LEFT_SHIFT - progress * PARALLAX_AMOUNT;
+            this.parallaxPosition += clampedProgress * PARALLAX_AMOUNT;
         }
     }
 
