@@ -528,9 +528,11 @@ class HrAttendanceOvertimeRule(models.Model):
                     stop_datetime = datetime.combine(interval[0].date(), float_to_time(stop))
                     timing_intervals = Intervals([(start_datetime, stop_datetime, self.env['resource.calendar'])])
                     if rule.timing_start > rule.timing_stop:
+                        day_start = datetime.combine(interval[0].date(), datetime.min.time())
+                        day_end = datetime.combine(interval[0].date(), datetime.max.time())
                         timing_intervals = Intervals([
                             (i_start, i_stop, self.env['resource.calendar'])
-                        for i_start, i_stop in invert_intervals([(start_datetime, stop_datetime)], 0, 23.99)])
+                        for i_start, i_stop in invert_intervals([(start_datetime, stop_datetime)], day_start, day_end)])
                     timing_intervals_by_employee[employee] |= timing_intervals
             return timing_intervals_by_employee
 
