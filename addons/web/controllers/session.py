@@ -3,6 +3,8 @@
 import json
 import logging
 from contextlib import ExitStack
+from http import HTTPStatus
+from werkzeug.exceptions import Forbidden
 
 from werkzeug.urls import url_encode
 
@@ -10,8 +12,9 @@ import odoo
 import odoo.modules.registry
 from odoo.exceptions import AccessError
 from odoo.http import Controller, request, route
+from odoo.http.response import Response
 from odoo.http.router import db_filter
-from odoo.http.session import authenticate, logout, touch
+from odoo.http.session import authenticate, logout, touch, update_device_fingerprint
 
 _logger = logging.getLogger(__name__)
 
@@ -91,3 +94,11 @@ class Session(Controller):
     def session_identity_check(self, **kwargs):
         """ JSON route used to receive the authentication form sent by the user. """
         return request.env['ir.http']._check_identity(kwargs)
+
+    @route('/web/session/fingerprint/check', type='http', auth='user', methods=['POST'], check_identity=False, csrf=False)
+    def session_fingerprint_check(self, fingerprint):
+        """ HTTP route used to receive the fingerprint of the current device. """
+        if not update_device_fingerprint(request.session, request, fingerprint):
+            e = "Invalid fingerprint"
+            raise Forbidden(e)
+        return Response(status=HTTPStatus.NO_CONTENT)
