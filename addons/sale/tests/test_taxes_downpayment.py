@@ -758,3 +758,44 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         )
 
         self.assertAlmostEqual(dp_lines[0]['price_unit'], 1000.0, 2)
+
+    def test_down_payment_account_prediction(self):
+        """ The down payment account prediction should be determined by the db history and shouldn't
+            depend on res.partner.
+        """
+        self.company_data['company'].downpayment_account_id = None
+        new_partner = self.env['res.partner'].create({
+            'name': 'Arthur Morgan',
+        })
+        new_sale_account = self.env['account.account'].create({
+            'name': 'New Account',
+            'code': '42899354',
+        })
+        self.env['account.move'].create({
+            'partner_id': new_partner.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.company_data['product_order_cost'].id,
+                    'account_id': new_sale_account.id,
+                })
+            ]
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': new_partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_order_no'].id,
+                    'product_uom_qty': 1,
+                }),
+            ]
+        })
+        sale_order.action_confirm()
+        payment_params = {
+            'advance_payment_method': 'percentage',
+            'amount': 30,
+            'sale_order_ids': [Command.set(sale_order.ids)],
+        }
+        downpayment = self.env['sale.advance.payment.inv'].create(payment_params)
+        downpayment.create_invoices()
+        invoice = sale_order.invoice_ids
+        self.assertEqual(invoice.invoice_line_ids.account_id, self.company_data['default_account_revenue'])
