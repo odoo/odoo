@@ -92,8 +92,16 @@ class IrHttp(models.AbstractModel):
             DEFAULT_MAX_CONTENT_LENGTH,
         )
         is_internal_user = user._is_internal()
+
+        device_salt = (
+            request.session.get('_device_salt', False)  # TODO (v20): remove backward compatibility
+            if IrConfigSudo.get_bool('base.session_check_device') and session_uid
+            else False
+        )
+
         session_info = {
             "uid": session_uid,
+            "device_salt": device_salt,
             "is_system": user._is_system() if session_uid else False,
             "is_admin": user._is_admin() if session_uid else False,
             "is_public": user._is_public(),

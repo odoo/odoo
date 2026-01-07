@@ -51,7 +51,7 @@ class IrHttp(models.AbstractModel):
                         if first_fa:
                             timestamp_1fa, auth_method_1fa = first_fa
                             if timestamp_1fa > threshold:
-                                reauth_requirements["1fa_method"] = auth_method_1fa
+                                reauth_requirements["first_fa_method"] = auth_method_1fa
                     break
         return reauth_requirements
 

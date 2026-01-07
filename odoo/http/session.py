@@ -180,6 +180,7 @@ def get_default_session() -> dict:
         'uid': None,
         'session_token': None,
         '_devices': {},
+        '_device_salt': secrets.token_urlsafe(),
     }
 
 
@@ -296,6 +297,7 @@ def get_device(session: Session, request: Request) -> dict:
         'last_activity': None,
         'country': geoip.country.name,
         'city': geoip.city.name,
+        'trusted': not session['_devices'],  # First device in a session is always trusted
     }
     session.is_dirty = True
     return new_device
@@ -325,6 +327,19 @@ def update_device(session: Session, request: Request) -> dict | None:
     device['last_activity'] = now
     session.is_dirty = True
     return device
+
+
+def update_device_fingerprint(session: Session, request: Request, fingerprint: str) -> bool:
+    """
+    :return: ``True`` if the current device is trusted, ``False`` otherwise
+    """
+    device = get_device(session, request)
+    if device['trusted']:
+        session['_device_fingerprint'] = fingerprint
+    elif consteq(session.setdefault('_device_fingerprint', fingerprint), fingerprint):
+        device['trusted'] = True
+        session.is_dirty = True
+    return device['trusted']
 
 
 def update_session_token(session: Session, env: Environment) -> None:
