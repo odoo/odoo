@@ -30,6 +30,8 @@
         </BuilderSelect>
     </BuilderRow>
 
+    <t t-call="website.ImagePopUpOption"/>
+
     <t t-if="this.state.isSlideShow">
         <BuilderRow label.translate="Style">
             <BuilderSelect applyTo="'.carousel'">
@@ -72,8 +74,6 @@
             <BuilderCheckbox classAction="'s_image_gallery_indicators_outline'"/>
         </BuilderRow>
     </t>
-
-    <t t-call="website.ImagePopUpOption"/>
 
     <BuilderContext applyTo="'.carousel'">
         <BuilderRow label.translate="Transition">
