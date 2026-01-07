@@ -75,6 +75,13 @@ export class DiscussContent extends Component {
         return this.props.thread || this.store.discuss.thread;
     }
 
+    get showsChatLocalDateTime() {
+        return (
+            this.thread.channel?.channel_type === "chat" &&
+            this.state.correspondentLocalDateTimeFormatted
+        );
+    }
+
     get showThreadAvatar() {
         return ["channel", "group", "chat"].includes(this.thread.channel?.channel_type);
     }
