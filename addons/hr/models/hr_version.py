@@ -279,6 +279,16 @@ class HrVersion(models.Model):
             if len(versions_by_employee.grouped('contract_date_start').keys()) > 1:
                 raise ValidationError(self.env._("Cannot modify multiple versions contract dates with different contracts at once."))
 
+        multiple_versions = self
+        if values.get("contract_date_start"):
+            unique_versions = multiple_versions.filtered(lambda v: len(v.employee_id.version_ids) == 1)
+            multiple_versions -= unique_versions
+            if len(unique_versions):
+                unique_versions.with_context(sync_contract_dates=True).write({
+                    **values,
+                    "date_version": values["contract_date_start"]
+                })
+
         if not any(self.mapped('contract_date_start')):
             return super().write(values)
 
