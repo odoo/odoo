@@ -314,6 +314,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         }
         utmForm.classList.remove("d-none");
         document.querySelector("#generated_tracked_link").classList.add("d-none");
+        document.querySelector("input#url").disabled = "";
         document.querySelector("#btn_shorten_url").classList.remove("d-none");
         document.querySelector("input#url").value = '';
     },
@@ -368,6 +369,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
                 var link = result[0];
 
                 document.querySelector("#generated_tracked_link").classList.remove("d-none");
+                document.querySelector("input#url").disabled = "disabled";
                 document.querySelector("#btn_shorten_url").classList.add("d-none");
 
                 document.querySelector(".copy-to-clipboard").dataset.clipboardText = link.short_url;
