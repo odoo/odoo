@@ -441,18 +441,16 @@ export class DomPlugin extends Plugin {
                 candidateForRemoval.remove();
             }
         }
-        for (const insertedNode of allInsertedNodes.reverse()) {
-            if (insertedNode.isConnected) {
-                currentNode = insertedNode;
-                break;
-            }
+        const lastInsertedNode = allInsertedNodes.findLast((node) => node.isConnected);
+        if (!lastInsertedNode) {
+            return;
         }
         let lastPosition =
-            isParagraphRelatedElement(currentNode) ||
-            isListItemElement(currentNode) ||
-            isListElement(currentNode)
-                ? rightPos(lastLeaf(currentNode))
-                : rightPos(currentNode);
+            isParagraphRelatedElement(lastInsertedNode) ||
+            isListItemElement(lastInsertedNode) ||
+            isListElement(lastInsertedNode)
+                ? rightPos(lastLeaf(lastInsertedNode))
+                : rightPos(lastInsertedNode);
         lastPosition = normalizeCursorPosition(lastPosition[0], lastPosition[1], "right");
 
         if (!this.config.allowInlineAtRoot && this.isEditionBoundary(lastPosition[0])) {
