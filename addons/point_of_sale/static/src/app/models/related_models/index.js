@@ -37,6 +37,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     function getFields(model) {
         return processedModelDefs[model];
     }
+
+    function getInverseField(field) {
+        const inverse = inverseMap.get(field);
+        if (inverse instanceof Set) {
+            return inverse.values().next().value;
+        }
+        return inverse;
+    }
+
     const disabler = new TrapDisabler();
 
     /**
@@ -200,7 +209,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 if (field.dummy || !PARENT_X2MANY_TYPES.has(field.type)) {
                     return false;
                 }
-                const inverseField = inverseMap.get(field);
+                const inverseField = getInverseField(field);
                 return inverseField && !inverseField.dummy;
             });
         }
@@ -491,7 +500,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             const aggregatedUpdates = new AggregatedUpdates();
             for (const name in ownFields) {
                 const field = ownFields[name];
-                const inverse = inverseMap.get(field);
+                const inverse = getInverseField(field);
                 if (field.dummy) {
                     continue;
                 }
@@ -674,12 +683,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return ormSerialization(record, { dynamicModels, ...opts });
         }
 
-        _connect(field, ownerRecord, recordOrId, aggregatedUpdates) {
+        _connect(field, ownerRecord, recordOrId, aggregatedUpdates, inverseField = null) {
             if (!this[STORE_SYMBOL].hasIndex(field.relation, "id")) {
                 // Not supported model
                 return;
             }
-            const inverse = inverseMap.get(field);
+            const inverse = inverseField ?? getInverseField(field);
             const recordToConnect = this._getRecord(field.relation, recordOrId);
             if (!recordToConnect) {
                 return;
@@ -703,7 +712,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 aggregatedUpdates.add(ownerRecord, field.name);
             } else if (field.type === "one2many") {
                 if (!inverse.dummy) {
-                    this._connect(inverse, recordToConnect, ownerRecord, aggregatedUpdates);
+                    this._connect(inverse, recordToConnect, ownerRecord, aggregatedUpdates, field);
                 } else {
                     this._addItem(ownerRecord, field, recordToConnect, aggregatedUpdates);
                 }
@@ -713,13 +722,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             }
         }
 
-        _disconnect(field, ownerRecord, recordOrId, aggregatedUpdates) {
+        _disconnect(field, ownerRecord, recordOrId, aggregatedUpdates, inverseField = null) {
             if (!this[STORE_SYMBOL].hasIndex(field.relation, "id")) {
                 // Not supported model
                 return;
             }
 
-            const inverse = inverseMap.get(field);
+            const inverse = inverseField ?? getInverseField(field);
             const recordToDisconnect = this._getRecord(field.relation, recordOrId);
             if (!recordToDisconnect) {
                 return;
@@ -734,7 +743,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
             } else if (field.type === "one2many") {
                 if (!inverse.dummy) {
-                    this._disconnect(inverse, recordToDisconnect, ownerRecord, aggregatedUpdates);
+                    this._disconnect(
+                        inverse,
+                        recordToDisconnect,
+                        ownerRecord,
+                        aggregatedUpdates,
+                        field
+                    );
                 } else {
                     this._removeItem(ownerRecord, field, recordToDisconnect, aggregatedUpdates);
                 }
