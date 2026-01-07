@@ -156,6 +156,10 @@ export class PosSession extends models.ServerModel {
         return {};
     }
 
+    get_cash_in_out_list() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,

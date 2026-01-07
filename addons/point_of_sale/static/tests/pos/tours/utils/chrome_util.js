@@ -263,6 +263,13 @@ export function storedOrderCount(expectedCount) {
     };
 }
 
+export function checkButtonDisabled(text) {
+    return {
+        trigger: `button:contains("${text}")[disabled]`,
+        content: `Verify that the "${text}" button is disabled.`,
+    };
+}
+
 export function isSynced() {
     return {
         content: "Check if the request is proceeded",
