@@ -6,6 +6,7 @@ from unittest.mock import patch
 from werkzeug.datastructures import ResponseCacheControl
 from werkzeug.http import parse_cache_control_header
 
+import odoo.http.geoip
 from odoo.http.router import Application, root
 from odoo.http.session import Session
 from odoo.tools import config, reset_cached_properties
@@ -29,8 +30,8 @@ class TestHttpBase(HttpCaseWithUserDemo):
             'server_wide_modules': ['base', 'web', 'rpc', 'test_http'],
         }))
         cls.classPatch(Application, 'session_store', session_store)
-        cls.classPatch(Application, 'geoip_city_db', geoip_resolver)
-        cls.classPatch(Application, 'geoip_country_db', geoip_resolver)
+        cls.classPatch(odoo.http.geoip, '_geoip_city_db', lambda: geoip_resolver)
+        cls.classPatch(odoo.http.geoip, '_geoip_country_db', lambda: geoip_resolver)
 
     def setUp(self):
         super().setUp()
