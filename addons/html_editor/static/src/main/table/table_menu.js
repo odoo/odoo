@@ -1,6 +1,6 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Component, onMounted, onWillUnmount, useExternalListener, useRef } from "@odoo/owl";
-import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
+import { getColumnIndex, getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
@@ -23,8 +23,11 @@ export class TableMenu extends Component {
         resetColumnWidth: Function,
         resetTableSize: Function,
         clearColumnContent: Function,
+        mergeSelectedCells: Function,
+        unmergeSelectedCell: Function,
         clearRowContent: Function,
         toggleAlternatingRows: Function,
+        buildTableGrid: Function,
         overlay: Object,
         tableDragDropOverlay: Object,
         dropdownState: Object,
@@ -46,6 +49,8 @@ export class TableMenu extends Component {
             this.isLast = !tr.nextElementSibling;
             this.isTableHeader = [...tr.children][0].nodeName === "TH";
         }
+        this.editableDocument = this.props.editable.ownerDocument;
+        this.tableGrid = this.props.buildTableGrid(closestElement(this.props.target, "table"));
         this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
         this.menuRef = useRef("menuRef");
         const onPointerDown = (ev) => this.onPointerDown(ev);
@@ -131,6 +136,11 @@ export class TableMenu extends Component {
 
     colItems() {
         const ltr = this.props.direction === "ltr";
+        const { canMerge, canUnmerge, cells, spanType } = getSelectedCellsMergeInfo(
+            this.editableDocument,
+            this.tableGrid,
+            this.props.target
+        );
         return [
             !this.isFirst && {
                 name: "move_left",
@@ -180,12 +190,31 @@ export class TableMenu extends Component {
                 text: _t("Clear content"),
                 action: this.props.clearColumnContent.bind(this),
             },
+            cells.length > 1 && {
+                name: "merge_cell",
+                icon: "fa fa-compress",
+                text: _t("Merge Cells"),
+                disable: !canMerge,
+                tooltip: _t("Only rows or cells selection can be merged"),
+                action: () => this.props.mergeSelectedCells(cells, spanType),
+            },
+            canUnmerge && {
+                name: "unmerge_cell",
+                icon: "fa fa-compress",
+                text: _t("Unmerge Cells"),
+                action: this.props.unmergeSelectedCell.bind(this),
+            },
         ].filter(Boolean);
     }
 
     rowItems() {
         const table = closestElement(this.props.target, "table");
         const hasAlternatingRowClass = table.classList.contains("o_alternating_rows");
+        const { canMerge, canUnmerge, cells, spanType } = getSelectedCellsMergeInfo(
+            this.editableDocument,
+            this.tableGrid,
+            this.props.target
+        );
         return [
             this.isFirst &&
                 !this.isTableHeader && {
@@ -258,6 +287,20 @@ export class TableMenu extends Component {
                 icon: "fa-times-circle",
                 text: _t("Clear content"),
                 action: (target) => this.props.clearRowContent(target.parentElement),
+            },
+            cells.length > 1 && {
+                name: "merge_cell",
+                icon: "fa fa-compress",
+                text: _t("Merge Cells"),
+                disable: !canMerge,
+                tooltip: _t("Only rows or cells selection can be merged"),
+                action: () => this.props.mergeSelectedCells(cells, spanType),
+            },
+            canUnmerge && {
+                name: "unmerge_cell",
+                icon: "fa fa-compress",
+                text: _t("Unmerge Cells"),
+                action: this.props.unmergeSelectedCell.bind(this),
             },
         ].filter(Boolean);
     }

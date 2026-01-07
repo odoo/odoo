@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
     hover,
@@ -1109,7 +1109,7 @@ test("move second row to top when first row is header row", async () => {
         <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
-                <tr><th class="o_table_header">3</th><th class="o_table_header">4</th></tr>
+                <tr><th class="a o_table_header">3</th><th class="o_table_header">4</th></tr>
                 <tr><td>1[]</td><td>2</td></tr>
             </tbody>
         </table>
@@ -1230,7 +1230,7 @@ test("move header row below operation", async () => {
         <table>
             <tbody>
                 <tr><th class="o_table_header">3</th><th class="o_table_header">4</th></tr>
-                <tr><td>1[]</td><td>2</td></tr>
+                <tr><td class="a">1[]</td><td>2</td></tr>
             </tbody>
         </table>
         <p data-selection-placeholder=""><br></p>`)
@@ -1690,4 +1690,668 @@ test("removes alternating row colors when 'Clear Alternate Colors' option is cli
     expect(
         cells.every((cell) => getComputedStyle(cell).backgroundColor === firstRowCellColor)
     ).toBe(true);
+});
+
+describe("Disable table merge options", () => {
+    test("disables both merge options when selection spans multiple rows and columns", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="a"><p>[<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="b"><p><br></p></td>
+                            <td><p><br>]</p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="a o_selected_td"><p>[<br></p></td>
+                            <td class="o_selected_td"><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="b o_selected_td"><p><br></p></td>
+                            <td class="o_selected_td"><p><br>]</p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+        await expectElementCount(".o-we-table-menu", 0);
+
+        // hover on td to show col ui
+        await hover(el.querySelector("td.a"));
+        await waitFor("[data-type='column'].o-we-table-menu");
+
+        // click on it to open dropdown
+        await click("[data-type='column'].o-we-table-menu");
+        await waitFor("div[name='merge_cell']");
+
+        expect("div[name='merge_cell']").toHaveClass("disabled");
+
+        // click on menu to close dropdown
+        await click("[data-type='column'].o-we-table-menu");
+        await animationFrame();
+
+        // hover on td to show col ui
+        await hover(el.querySelector("td.b"));
+        await waitFor("[data-type='row'].o-we-table-menu");
+
+        // click on it to open dropdown
+        await click("[data-type='row'].o-we-table-menu");
+        await waitFor("div[name='merge_cell']");
+
+        expect("div[name='merge_cell']").toHaveClass("disabled");
+    });
+});
+
+describe("Merge column cells", () => {
+    test("merges selected cells in a single row into one with colspan", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a">[<p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p>]</td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a o_selected_td">[<p><br></p></td>
+                            <td class="o_selected_td"><p><br></p></td>
+                            <td class="o_selected_td"><p><br></p>]</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+
+        await expectElementCount(".o-we-table-menu", 0);
+
+        // hover on td to show col ui
+        await hover(el.querySelector("td.a"));
+        await waitFor("[data-type='row'].o-we-table-menu");
+
+        // click on it to open dropdown
+        await click("[data-type='row'].o-we-table-menu");
+        await waitFor("div[name='merge_cell']");
+
+        await click("div[name='merge_cell']");
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a o_selected_td" colspan="3"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+    });
+
+    test("merges selected filled cells by combining their content into one cell with colspan", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a">[<p>a</p></td>
+                            <td><p>b</p></td>
+                            <td><p>c</p>]</td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a o_selected_td">[<p>a</p></td>
+                            <td class="o_selected_td"><p>b</p></td>
+                            <td class="o_selected_td"><p>c</p>]</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+        await expectElementCount(".o-we-table-menu", 0);
+
+        // hover on td to show col ui
+        await hover(el.querySelector("td.a"));
+        await waitFor("[data-type='row'].o-we-table-menu");
+
+        // click on it to open dropdown
+        await click("[data-type='row'].o-we-table-menu");
+        await waitFor("div[name='merge_cell'");
+
+        await click("div[name='merge_cell']");
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a o_selected_td" colspan="3"><p>[a</p><p>b</p><p>c]</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+    });
+});
+
+describe("Merge row cells", () => {
+    test("merges selected cells vertically in a column by applying rowspan", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="a"><p>[<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br>]</p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="a o_selected_td"><p>[<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td"><p><br>]</p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+
+        await expectElementCount(".o-we-table-menu", 0);
+
+        // hover on td to show col ui
+        await hover(el.querySelector("td.a"));
+        await waitFor("[data-type='column'].o-we-table-menu");
+
+        // click on it to open dropdown
+        await click("[data-type='column'].o-we-table-menu");
+        await waitFor("div[name='merge_cell']");
+
+        await click("div[name='merge_cell']");
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="a o_selected_td" rowspan="2"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+    });
+
+    test("merges filled cells vertically by combining their content into one cell with rowspan", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="a"><p>[a</p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p>b]</p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="a o_selected_td"><p>[a</p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td"><p>b]</p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+        await expectElementCount(".o-we-table-menu", 0);
+
+        // hover on td to show col ui
+        await hover(el.querySelector("td.a"));
+        await waitFor("[data-type='column'].o-we-table-menu");
+
+        // click on it to open dropdown
+        await click("[data-type='column'].o-we-table-menu");
+        await waitFor("div[name='merge_cell'");
+
+        await click("div[name='merge_cell']");
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="a o_selected_td" rowspan="2"><p>[a</p><p>b]</p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+    });
+
+    test("does not display merge cell option when hovering over a table that has no selected cells", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <p><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="a"><p>[<br></p></td>
+                            <td><p><br>]</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="b"><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="a o_selected_td"><p>[<br></p></td>
+                            <td class="o_selected_td"><p><br>]</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="b"><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+        await expectElementCount(".o-we-table-menu", 0);
+        await hover(el.querySelector("td.b"));
+        await waitFor("[data-type='column'].o-we-table-menu");
+        await click("[data-type='column'].o-we-table-menu");
+        await animationFrame();
+        expect("div[name='merge_cell']").toHaveCount(0);
+        await click("[data-type='column'].o-we-table-menu");
+        await animationFrame();
+    });
+});
+
+describe("unmerge cells option", () => {
+    test("unmerge merged row cells via column menu", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="a" rowspan="2"><p>[]<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="a" rowspan="2"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+        await expectElementCount(".o-we-table-menu", 0);
+
+        // hover on td to show col ui
+        await hover(el.querySelector("td.a"));
+        await waitFor("[data-type='column'].o-we-table-menu");
+
+        // click on it to open dropdown
+        await click("[data-type='column'].o-we-table-menu");
+        await animationFrame();
+        expect("div[name='unmerge_cell']").toHaveCount(1);
+
+        await click("div[name='unmerge_cell']");
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="a"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+    });
+    test("unmerge merged column cells via row menu", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a" colspan="3"><p>[]<br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a" colspan="3"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+        await expectElementCount(".o-we-table-menu", 0);
+
+        // hover on td to show col ui
+        await hover(el.querySelector("td.a"));
+        await waitFor("[data-type='row'].o-we-table-menu");
+
+        // click on it to open dropdown
+        await waitFor("[data-type='row'].o-we-table-menu");
+        await click("[data-type='row'].o-we-table-menu");
+        await animationFrame();
+        expect("div[name='unmerge_cell']").toHaveCount(1);
+
+        await click("div[name='unmerge_cell']");
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+    });
+    test("unmerge merged filled row cells via column menu", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="a" rowspan="2"><p>a[]</p><p>b</p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="a" rowspan="2"><p>a[]</p><p>b</p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+        await expectElementCount(".o-we-table-menu", 0);
+
+        // hover on td to show col ui
+        await hover(el.querySelector("td.a"));
+        await waitFor("[data-type='column'].o-we-table-menu");
+
+        // click on it to open dropdown
+        await click("[data-type='column'].o-we-table-menu");
+        await animationFrame();
+        expect("div[name='unmerge_cell']").toHaveCount(1);
+
+        await click("div[name='unmerge_cell']");
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="a"><p>a[]</p><p>b</p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+    });
+    test("unmerge merged filled column cells via row menu", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a" colspan="3"><p>a[]</p><p>b</p></td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a" colspan="3"><p>a[]</p><p>b</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+        await expectElementCount(".o-we-table-menu", 0);
+
+        // hover on td to show col ui
+        await hover(el.querySelector("td.a"));
+        await waitFor("[data-type='row'].o-we-table-menu");
+
+        // click on it to open dropdown
+        await waitFor("[data-type='row'].o-we-table-menu");
+        await click("[data-type='row'].o-we-table-menu");
+        await animationFrame();
+        expect("div[name='unmerge_cell']").toHaveCount(1);
+
+        await click("div[name='unmerge_cell']");
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a"><p>a[]</p><p>b</p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+    });
 });

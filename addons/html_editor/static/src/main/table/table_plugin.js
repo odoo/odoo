@@ -63,6 +63,9 @@ function isUnremovableTableComponent(node, root) {
  * @property { TablePlugin['clearColumnContent'] } clearColumnContent
  * @property { TablePlugin['clearRowContent'] } clearRowContent
  * @property { TablePlugin['toggleAlternatingRows'] } toggleAlternatingRows
+ * @property { TablePlugin['mergeSelectedCells'] } mergeSelectedCells
+ * @property { TablePlugin['unmergeSelectedCell'] } unmergeSelectedCell
+ * @property { TablePlugin['buildTableGrid'] } buildTableGrid
  */
 
 /**
@@ -100,6 +103,9 @@ export class TablePlugin extends Plugin {
         "clearColumnContent",
         "clearRowContent",
         "toggleAlternatingRows",
+        "mergeSelectedCells",
+        "unmergeSelectedCell",
+        "buildTableGrid",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -126,6 +132,12 @@ export class TablePlugin extends Plugin {
         clean_for_save_handlers: ({ root }) => this.deselectTable(root),
         before_line_break_handlers: this.resetTableSelection.bind(this),
         before_split_block_handlers: this.resetTableSelection.bind(this),
+        post_undo_handlers: () => {
+            delete this.tableGridMap;
+        },
+        post_redo_handlers: () => {
+            delete this.tableGridMap;
+        },
 
         /** Overrides */
         tab_overrides: withSequence(20, this.handleTab.bind(this)),
@@ -353,16 +365,12 @@ export class TablePlugin extends Plugin {
         const preserveSelection = this.dependencies.selection.preserveSelection();
         [...reference.children].forEach((td) => {
             if (td.nodeName == "TD") {
-                const th = this.document.createElement("th");
-                if (td.style?.cssText.length) {
-                    th.style.cssText = td.style?.cssText;
-                }
+                const th = this.dependencies.dom.setTagName(td, "th");
                 th.classList.add("o_table_header");
-                th.append(...td.childNodes);
-                td.replaceWith(th);
             }
         });
         preserveSelection.restore();
+        this.tableGridMap?.delete(closestElement(reference, "table"));
     }
     /**
      * @param {HTMLTableRowElement} reference
@@ -371,15 +379,12 @@ export class TablePlugin extends Plugin {
         const preserveSelection = this.dependencies.selection.preserveSelection();
         [...reference.children].forEach((th) => {
             if (th.nodeName == "TH") {
-                const td = this.document.createElement("td");
-                if (th.style?.cssText.length) {
-                    td.style.cssText = th.style?.cssText;
-                }
-                td.append(...th.childNodes);
-                th.replaceWith(td);
+                th.classList.remove("o_table_header");
+                this.dependencies.dom.setTagName(th, "td");
             }
         });
         preserveSelection.restore();
+        this.tableGridMap?.delete(closestElement(reference, "table"));
     }
     /**
      * @param {HTMLTableCellElement} cell
@@ -658,6 +663,91 @@ export class TablePlugin extends Plugin {
         table.before(baseContainer);
         table.remove();
         this.dependencies.selection.setCursorStart(baseContainer);
+    }
+
+    /**
+     * Merges the given list of <td> elements by applying rowspan or colspan,
+     * moving their content into the first cell, and removing the rest.
+     *
+     * @param {HTMLTableCellElement[]} tds - The cells to merge.
+     * @param {"rowSpan" | "colSpan"} spanAttr - The attribute to apply for merging.
+     */
+    mergeSelectedCells(tds, spanAttr) {
+        if (!spanAttr || tds.length === 0) {
+            return;
+        }
+        const firstTd = tds[0];
+        firstTd.setAttribute(
+            spanAttr,
+            tds.reduce((total, td) => total + td[spanAttr], 0)
+        );
+
+        for (let i = 1; i < tds.length; i++) {
+            const currentTd = tds[i];
+            if (currentTd.textContent.trim() !== "") {
+                firstTd.append(...currentTd.childNodes);
+            }
+            currentTd.remove();
+        }
+        this.dependencies.selection.setSelection({
+            anchorNode: firstTd.firstChild,
+            anchorOffset: 0,
+            focusNode: firstTd.lastChild,
+            focusOffset: nodeSize(firstTd.lastChild),
+        });
+        this.tableGridMap.delete(closestElement(firstTd, "table"));
+    }
+
+    /**
+     * Splits a merged table cell (using either `rowspan` or `colspan`) back
+     * into individual cells by inserting new empty `<td>` elements
+     */
+    unmergeSelectedCell() {
+        const selectedCells = Array.from(this.editable.querySelectorAll(".o_selected_td"));
+        const { anchorNode, isCollapsed } = this.dependencies.selection.getEditableSelection();
+        if (isCollapsed && anchorNode && closestElement(anchorNode, isTableCell)) {
+            selectedCells.push(closestElement(anchorNode, isTableCell));
+        }
+        if (!selectedCells.length) {
+            return;
+        }
+        for (const cell of selectedCells) {
+            if (cell.hasAttribute("rowspan")) {
+                let tr = closestElement(cell, "tr");
+                const colIndex = getColumnIndex(cell);
+                for (let i = 1; i < cell.rowSpan; i++) {
+                    const nextTr = tr.nextElementSibling;
+                    if (nextTr) {
+                        const newTd = this.document.createElement("td");
+                        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                        fillEmpty(baseContainer);
+                        newTd.append(baseContainer);
+                        const targetTd = nextTr.childNodes[colIndex];
+                        if (targetTd) {
+                            nextTr.insertBefore(newTd, targetTd);
+                        } else {
+                            nextTr.appendChild(newTd);
+                        }
+                        tr = nextTr;
+                    }
+                }
+                cell.removeAttribute("rowspan");
+            } else if (cell.hasAttribute("colspan")) {
+                for (let i = 1; i < cell.colSpan; i++) {
+                    const newCell = this.document.createElement(cell.nodeName);
+                    if (cell.classList.contains("o_table_header")) {
+                        newCell.classList.add("o_table_header");
+                    }
+                    const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                    fillEmpty(baseContainer);
+                    newCell.append(baseContainer);
+                    cell.after(newCell);
+                }
+                cell.removeAttribute("colspan");
+            }
+        }
+        this.tableGridMap.delete(closestElement(selectedCells[0], "table"));
+        this.updateSelectionTable(this.dependencies.selection.getSelectionData());
     }
 
     // @todo @phoenix: handle deleteBackward on table cells
@@ -1382,5 +1472,54 @@ export class TablePlugin extends Plugin {
         }
         this.deselectTable(clonedContents);
         return clonedContents;
+    }
+
+    /**
+     * Builds and returns a 2D grid representing the structure of the given table.
+     * Each cell in the grid corresponds to a <td> or <th> element, taking into
+     * account their rowspan and colspan.
+     *
+     * @param {HTMLTableElement} table - The table element to process.
+     * @returns {HTMLTableCellElement[][] | undefined} A 2D array representing
+     *          the table grid, or undefined if no table is provided.
+     */
+    buildTableGrid(table) {
+        if (!table) {
+            return;
+        }
+        this.tableGridMap ??= new WeakMap();
+        const tableGrid = this.tableGridMap.get(table);
+        if (tableGrid) {
+            return tableGrid;
+        }
+        const grid = [];
+        const rows = [...table.rows];
+        for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+            const row = rows[rowIndex];
+            grid[rowIndex] = grid[rowIndex] || [];
+            let colIndex = 0;
+
+            for (const cell of [...row.cells]) {
+                while (grid[rowIndex][colIndex]) {
+                    colIndex++;
+                }
+
+                const rowspan = cell.rowSpan || 1;
+                const colspan = cell.colSpan || 1;
+
+                for (let r = 0; r < rowspan; r++) {
+                    const targetRow = rowIndex + r;
+                    grid[targetRow] = grid[targetRow] || [];
+                    for (let c = 0; c < colspan; c++) {
+                        const targetCol = colIndex + c;
+                        grid[targetRow][targetCol] = cell;
+                    }
+                }
+
+                colIndex += colspan;
+            }
+        }
+        this.tableGridMap.set(table, grid);
+        return grid;
     }
 }
