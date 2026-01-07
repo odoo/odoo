@@ -7,14 +7,16 @@
                     <tbody>
                         <t t-foreach="extra_data['loyalties']" t-as="loyalty">
                             <tr>
-                                <td class="text-start pb-1" >
+                                <td class="text-start pb-1" style="width: 40%;">
                                     <span t-out="loyalty['name']"/>
                                 </td>
-                                <td class="pb-1 text-end w-50">
-                                    <span t-if="not loyalty.get('barcode_base64')">
+                                <td class="pb-1 text-end" style="width: 60%;">
+                                    <t t-if="loyalty.get('barcode_base64')">
+                                        <img t-att-src="loyalty['barcode_base64']" class="img-fluid" style="transform: translateX(13%);"/>
+                                    </t>
+                                    <div>
                                         <t t-out="loyalty['type']"/> <t t-out="loyalty['points']"/>
-                                    </span>
-                                    <img t-else="" t-att-src="loyalty['barcode_base64']" class="w-100"/>
+                                    </div>
                                 </td>
                             </tr>
                         </t>
