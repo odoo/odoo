@@ -1,0 +1,24 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.ImageAlignSelector">
+        <Dropdown menuClass="'o-we-toolbar-dropdown'" bottomSheet="false">
+            <button class="btn btn-light" t-att-title="props.title" name="image_align">
+                <span class="px-1 d-flex align-items-center">
+                    <i t-att-class="`oi ${state.displayIcon}`"/>
+                </span>
+            </button>
+            <t t-set-slot="content">
+                <div data-prevent-closing-overlay="true">
+                    <t t-foreach="items" t-as="item" t-key="item_index">
+                        <button
+                            t-attf-class="btn btn-light oi {{item.name}}"
+                            t-att-title="item.title"
+                            t-att-class="{ active: item.name === state.displayIcon }"
+                            t-on-click="() => this.onSelected(item)"
+                            t-on-pointerdown.prevent="() => {}"
+                        />
+                    </t>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

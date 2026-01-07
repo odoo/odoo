@@ -51,7 +51,7 @@ export class MediaPlugin extends Plugin {
             {
                 id: "replaceImage",
                 description: _t("Replace media"),
-                icon: "fa-exchange",
+                icon: "fa-file-image-o",
                 run: this.replaceImage.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
