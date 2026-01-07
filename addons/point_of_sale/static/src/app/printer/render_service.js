@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { Component, onMounted, reactive, useRef, xml } from "@odoo/owl";
+import { Component, onRendered, reactive, useRef, xml } from "@odoo/owl";
 import { toCanvas } from "@point_of_sale/app/utils/html-to-image";
 
 class ComponentRenderer extends Component {
-    static props = ["comp", "onMounted"];
+    static props = ["comp", "onRendered"];
     static template = xml`
         <div t-ref="ref">
             <t t-component="props.comp.component" t-props="props.comp.props"/>
@@ -13,8 +13,9 @@ class ComponentRenderer extends Component {
     `;
     setup() {
         this.ref = useRef("ref");
-        onMounted(() => {
-            this.props.onMounted(this.ref?.el?.firstElementChild);
+        onRendered(async () => {
+            await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+            this.props.onRendered(this.ref?.el?.firstElementChild);
         });
     }
 }
@@ -28,7 +29,7 @@ export class RenderContainer extends Component {
     static template = xml`
         <div class="render-container-parent" style="left: -1000px; position: fixed;">
             <t t-if="props.comp.component">
-                <ComponentRenderer comp="props.comp" onMounted="props.onRendered" />
+                <ComponentRenderer comp="props.comp" onRendered="props.onRendered" />
             </t>
             <div class="render-container" />
         </div>`;
