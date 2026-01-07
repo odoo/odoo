@@ -70,13 +70,7 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
         trigger: ".modal .html-history-dialog.html-history-loaded",
     }, {
         content: "Verify that 5 revisions are displayed (default empty description after the creation of the todo + 3 edits)",
-        trigger: ".modal .html-history-dialog .o_revision_panel .list-group-item",
-        run: function () {
-            const items = document.querySelectorAll(".o_revision_panel .list-group-item");
-            if (items.length !== 5) {
-                throw new Error('Expect 5 Revisions in the history dialog, got ' + items.length);
-            }
-        },
+        trigger: ".modal .html-history-dialog .o_revision_panel .list-group-item:count(5)",
     }, {
         content: "Verify that the active revision (revision 4) is related to the current version",
         trigger: `.modal .history-container .history-content-view .history-view-inner:contains(${baseDescriptionContent} 3)`,
@@ -115,14 +109,7 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
         run: "click",
     }, {
         content: "Verify that the description contains the right text after the restore",
-        trigger: descriptionField,
-        run: function () {
-            const p = this.anchor?.innerText;
-            const expected = `${baseDescriptionContent} 1`;
-            if (p !== expected) {
-                throw new Error(`Expect description to be ${expected}, got ${p}`);
-            }
-        }
+        trigger: `${descriptionField}:contains(/^${baseDescriptionContent} 1$/)`,
     }, {
         trigger: "button.o_form_button_save",
         run: "click",
