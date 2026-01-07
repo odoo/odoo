@@ -34,10 +34,21 @@ class AccountReconcileModelLine(models.Model):
     )
     # technical shortcut to parse the amount to a float
     amount = fields.Float(string="Float Amount", compute='_compute_float_amount', store=True)
-    amount_string = fields.Char(string="Amount", default='100', required=True, help="""Value for the amount of the writeoff line
+    amount_string = fields.Char(
+        string="Amount",
+        default='100',
+        required=True,
+        help="""Value for the amount of the writeoff line
     * Percentage: Percentage of the balance, between 0 and 100.
     * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.
-    * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\\d,]+)""")
+    * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\\d,]+)
+    If the label is "01870912 0009065 00115" and you need the amount in decimal
+    format (e.g. 90.65), you can use a regex with capturing groups, for example:
+        \\s+0*(\\d+?)(\\d{2})(?=\\s)
+    In this case:
+    • the first group captures the integer part
+    • the second group captures the decimal part (last two digits)
+    """)
     tax_ids = fields.Many2many(
         comodel_name='account.tax',
         string="Taxes",
