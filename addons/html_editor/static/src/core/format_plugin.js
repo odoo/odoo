@@ -532,6 +532,9 @@ export class FormatPlugin extends Plugin {
     removeEmptyInlineElement(selectionData) {
         const { anchorNode } = selectionData.editableSelection;
         const blockEl = closestBlock(anchorNode);
+        if (!blockEl) {
+            return;
+        }
         const inlineElement = findFurthest(
             closestElement(anchorNode),
             blockEl,
