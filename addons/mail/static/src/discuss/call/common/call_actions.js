@@ -36,15 +36,16 @@ export const muteAction = {
     badge: ({ owner, store }) =>
         !owner.env.inCallMenu && store.rtc.microphonePermission !== "granted",
     badgeIcon: "fa fa-exclamation",
-    condition: ({ thread }) => thread?.isSelfInCall,
+    condition: ({ owner, store, thread }) =>
+        thread?.isSelfInCall && (owner.env.inCallMenu || !store.rtc.selfSession?.is_deaf),
     name: ({ store }) => (store.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
     isActive: ({ store }) =>
         (store.rtc.selfSession?.isMute && store.rtc.microphonePermission === "granted") ||
         store.rtc.selfSession?.is_deaf,
     isTracked: true,
-    icon: ({ action, store }) =>
+    icon: ({ action, owner, store }) =>
         action.isActive
-            ? store.rtc.selfSession?.is_deaf
+            ? store.rtc.selfSession?.is_deaf && !owner.env.inCallMenu
                 ? CALL_ICON_DEAFEN
                 : CALL_ICON_MUTED
             : "fa fa-microphone",
@@ -77,7 +78,8 @@ export const quickActionSettings = {
 };
 registerCallAction("quick-voice-settings", quickActionSettings);
 registerCallAction("deafen", {
-    condition: ({ owner, thread }) => owner.env.inCallMenu && thread?.isSelfInCall,
+    condition: ({ owner, store, thread }) =>
+        thread?.isSelfInCall && (owner.env.inCallMenu || store.rtc.selfSession?.is_deaf),
     name: ({ store }) => (store.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
     isTracked: true,
@@ -85,7 +87,7 @@ registerCallAction("deafen", {
     hotkey: "shift+d",
     onSelected: ({ store }) => store.rtc.toggleDeafen(),
     sequence: 10,
-    sequenceGroup: 110,
+    sequenceGroup: 100,
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.DANGER : undefined),
 });
 export const cameraOnAction = {
