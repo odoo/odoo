@@ -149,3 +149,48 @@ def update_packages():
     # upgrade and remove packages in the background
     background_cmd = 'chroot /root_bypass_ramdisks /bin/bash -c "apt-get upgrade -y && apt-get -y autoremove"'
     subprocess.Popen(["sudo", "bash", "-c", background_cmd], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+<<<<<<< 81a41e2820350f02e263042776609c41dac7b80a
+||||||| 0c4bf020ca886a02aadbb86a3336c9c1a6885af5
+
+
+@rpi_only
+def misc_migration_updates():
+    """Run miscellaneous updates after the code update."""
+    _logger.warning("Running version migration updates")
+    if path_file('odoo', 'addons', 'point_of_sale').exists():
+        # TODO: remove this when v18.0 is deprecated (point_of_sale/tools/posbox/ -> iot_box_image/)
+        ramdisks_service = "/root_bypass_ramdisks/etc/systemd/system/ramdisks.service"
+        subprocess.run(
+            ['sudo', 'sed', '-i', 's|iot_box_image|point_of_sale/tools/posbox|g', ramdisks_service], check=False
+        )
+
+        # TODO: Remove this code when v16 is deprecated
+        with open('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf', 'r+', encoding='utf-8') as f:
+            if "server_wide_modules" not in f.read():
+                f.write("server_wide_modules=hw_drivers,hw_posbox_homepage,web\n")
+
+    if path_file('odoo', 'addons', 'hw_drivers').exists():
+        # TODO: remove this when v18.4 is deprecated (hw_drivers/,hw_posbox_homepage/ -> iot_drivers/)
+        subprocess.run(
+            ['sed', '-i', 's|iot_drivers|hw_drivers,hw_posbox_homepage|g', '/home/pi/odoo.conf'], check=False
+        )
+=======
+
+
+@rpi_only
+def misc_migration_updates():
+    """Run miscellaneous updates after the code update."""
+    _logger.warning("Running version migration updates")
+    if path_file('odoo', 'addons', 'point_of_sale').exists():
+        # TODO: remove this when v18.0 is deprecated (point_of_sale/tools/posbox/ -> iot_box_image/)
+        ramdisks_service = "/root_bypass_ramdisks/etc/systemd/system/ramdisks.service"
+        subprocess.run(
+            ['sudo', 'sed', '-i', 's|iot_box_image|point_of_sale/tools/posbox|g', ramdisks_service], check=False
+        )
+
+    if path_file('odoo', 'addons', 'hw_drivers').exists():
+        # TODO: remove this when v18.4 is deprecated (hw_drivers/,hw_posbox_homepage/ -> iot_drivers/)
+        subprocess.run(
+            ['sed', '-i', 's|iot_drivers|hw_drivers,hw_posbox_homepage|g', '/home/pi/odoo.conf'], check=False
+        )
+>>>>>>> 27f882689f0acb9d0ef01a257ecc5329e28de92b
