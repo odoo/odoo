@@ -1153,6 +1153,7 @@ test("discuss sidebar call participant shows appropriate status icon", async () 
     await contains(
         ".o-mail-DiscussSidebarCallParticipants:contains('Mitchell Admin') .fa-microphone-slash"
     );
+    await contains("button[title='Unmute']");
     await click("button[title='Voice Settings']");
     await click(".dropdown-menu button:contains('Deafen')");
     await contains(".o-mail-DiscussSidebarCallParticipants:contains('Mitchell Admin') .fa-deaf");
@@ -1160,7 +1161,7 @@ test("discuss sidebar call participant shows appropriate status icon", async () 
         ".o-mail-DiscussSidebarCallParticipants:contains('Mitchell Admin') .fa-microphone-slash",
         { count: 0 }
     );
-    await click("button[title='Unmute']");
+    await click("button[title='Undeafen']");
     await contains(".o-mail-DiscussSidebarCallParticipants:contains('Mitchell Admin') .fa-deaf", {
         count: 0,
     });
