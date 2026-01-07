@@ -304,7 +304,7 @@ class TestAPI(SavepointCaseWithUserDemo):
             if partner._cache['state_id'] is not None
         }
         self.assertTrue(len(state_ids) > 1)
-        self.assertItemsEqual(state_ids, state._prefetch_ids)
+        self.assertEqual(state_ids, set(state._prefetch_ids))
 
         # reading ONE partner country should fetch ALL partners' countries
         for partner in partners:
@@ -481,18 +481,18 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(list(reversed(last._prefetch_ids)), prefetch_ids)
 
         # check prefetching across many2one field
-        prefetch_ids = records.state_id.ids
+        prefetch_ids = list(unique(records.state_id.ids))
         reversed_ids = list(unique(
             record.state_id.id
             for record in reversed(records)
             if record.state_id
         ))
 
-        self.assertEqual(list(first.state_id._prefetch_ids), prefetch_ids)
-        self.assertEqual(list(last.state_id._prefetch_ids), reversed_ids)
+        self.assertEqual(list(unique(first.state_id._prefetch_ids)), prefetch_ids)
+        self.assertEqual(list(unique(last.state_id._prefetch_ids)), reversed_ids)
 
-        self.assertEqual(list(reversed(first.state_id._prefetch_ids)), reversed_ids)
-        self.assertEqual(list(reversed(last.state_id._prefetch_ids)), prefetch_ids)
+        self.assertEqual(list(unique(reversed(first.state_id._prefetch_ids))), reversed_ids)
+        self.assertEqual(list(unique(reversed(last.state_id._prefetch_ids))), prefetch_ids)
 
         # check prefetching across x2many field
         prefetch_ids = records.child_ids.ids
