@@ -124,7 +124,11 @@ class AccountTaxPython(models.Model):
                 continue
 
             continue_needed = False
-            for token in allowed_tokens:
+            # Token consumption should be greedy, so the set of allowed tokens should be
+            # sorted from longer to shorter. Otherwise, if the set has '>' before '>=',
+            # the '>=' token will raise an error. This is because the '>' is consumed and
+            # then it leaves the '=' character next, wich is not in the allowed_tokens.
+            for token in sorted(allowed_tokens, key=len, reverse=True):
                 if formula[i:i + len(token)] == token:
                     i += len(token)
                     continue_needed = True
