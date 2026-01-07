@@ -1519,16 +1519,18 @@ class CrmLead(models.Model):
         return data
 
     def merge_opportunity(self, user_id=False, team_id=False, auto_unlink=True):
-        """ Merge opportunities in one. Different cases of merge:
-                - merge leads together = 1 new lead
-                - merge at least 1 opp with anything else (lead or opp) = 1 new opp
-            The resulting lead/opportunity will be the most important one (based on its confidence level)
-            updated with values from other opportunities to merge.
+        """
+        Merge opportunities in one. Different cases of merge:
 
-        :param user_id : the id of the saleperson. If not given, will be determined by `_merge_data`.
-        :param team : the id of the Sales Team. If not given, will be determined by `_merge_data`.
+        - merge leads together = 1 new lead
+        - merge at least 1 opp with anything else (lead or opp) = 1 new opp
 
-        :return crm.lead record resulting of th merge
+        The resulting lead/opportunity will be the most important one (based on its confidence level)
+        updated with values from other opportunities to merge.
+
+        :param user_id: the id of the saleperson. If not given, will be determined by :meth:`_merge_data`.
+        :param team_id: the id of the Sales Team. If not given, will be determined by :meth:`_merge_data`.
+        :returns: crm.lead record resulting of th merge
         """
         return self._merge_opportunity(user_id=user_id, team_id=team_id, auto_unlink=auto_unlink)
 
@@ -2806,20 +2808,24 @@ class CrmLead(models.Model):
     # PLS Backend Tooltip
     # -------------------
     def prepare_pls_tooltip_data(self):
-        '''
-            Compute and return all necessary information to render CrmPlsTooltip, displayed when
-            pressing the small AI button, located next to the label of probability when automated,
-            in the crm.lead form view. This method first replaces ids with display names of relational
-            fields before returning data, then also recomputes probabilities and writes them on self.
+        """
+        Compute and return all necessary information to render CrmPlsTooltip, displayed when
+        pressing the small AI button, located next to the label of probability when automated,
+        in the crm.lead form view. This method first replaces ids with display names of relational
+        fields before returning data, then also recomputes probabilities and writes them on self.
 
-            :returns: {
-                low_3_data: list of field-value couples for lowest 3 criterions, lowest first
-                probability: numerical value, used for display on tooltip
-                team_name: string, name of lead team if any
-                top_3_data: list of field-value couples for top 3 criterions, highest first
-              }
-            :rtype: dict
-        '''
+        :returns:
+
+            ::
+                {
+                    low_3_data: list of field-value couples for lowest 3 criterions, lowest first
+                    probability: numerical value, used for display on tooltip
+                    team_name: string, name of lead team if any
+                    top_3_data: list of field-value couples for top 3 criterions, highest first
+                }
+
+        :rtype: dict
+        """
         self.ensure_one()
         _unused, tooltip_data = self._pls_get_naive_bayes_probabilities(is_tooltip=True)
         sorted_scores_with_name = []
