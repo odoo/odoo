@@ -50,6 +50,7 @@
                 <t t-out="channel.importantCounter"/>
             </div>
             <div class="ms-1 flex-grow-1"/>
+            <i t-if="channel.allowDescription and channel.description" class="o-mail-ChatWindow-descriptionButton fa fa-fw fa-lg fa-info-circle o-p-0_5 me-2" t-att-class="{ 'o-showDescriptionDialog': state.showDescriptionDialog }" t-att-data-tooltip="channelDescriptionText" data-tooltip-delay="0" data-tooltip-position="top" t-on-click.stop="() => this.toggleShowDescriptionDialog()"/>
             <div class="d-flex flex-shrink-0 me-1">
                 <ActionList actions="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 4).reverse()" inline="true"/>
             </div>
@@ -76,6 +77,27 @@
                     <t t-call="mail.ChatWindow.memberTyping"/>
                     <Composer composer="channel.composer" autofocus="isMobileOS ? undefined : props.chatWindow.autofocus" mode="'compact'" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType" disabled="channel.composerDisabled"/>
                 </t>
+            </t>
+            <t t-if="state.showDescriptionDialog">
+                <div class="o-mail-ChatWindow-descriptionDialogBackground position-absolute w-100 h-100 d-flex justify-content-center align-items-center" t-on-click.stop="() => this.onClickDescriptionDialogBackground()">
+                    <div class="o-mail-ChatWindow-descriptionDialog rounded bg-view bg-opacity-100 p-3 m-3 d-flex flex-column position-relative" t-att-class="{ 'w-100': state.editingDescription }" t-on-click.stop="">
+                        <div class="d-flex align-items-center me-n2 mt-n2">
+                            <span class="text-muted small">Description:</span>
+                            <button class="ms-auto btn-close o-xsmaller p-1" t-on-click.stop="() => this.closeDescriptionDialog()"/>
+                        </div>
+                        <t t-if="state.editingDescription">
+                            <textarea t-att-class="editingDescriptionTextareaAttClass" autofocus="true" row="3" placeholder="Add a description" t-model="state.editingDescriptionText" t-on-keydown="onKeydownDescriptionTextarea"/>
+                            <div class="btn-group">
+                                <button class="btn btn-primary p-2" t-on-click.stop="() => this.updateThreadDescription()"><i class="fa fa-fw fa-save me-1"/><span>Save</span></button>
+                                <button class="btn btn-secondary p-2" t-on-click.stop="() => this.state.editingDescription = false"><i class="oi fa-fw oi-close me-1"/><span>Cancel</span></button>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <span t-att-class="editingDescriptionTextAttClass" t-esc="channel.description or ''"/>
+                            <button t-if="channel.is_editable" class="btn btn-primary p-2" t-on-click.stop="() => this.state.editingDescription = true"><i class="fa fa-fw fa-pencil me-1"/><span>Edit</span></button>
+                        </t>
+                    </div>
+                </div>
             </t>
         </div>
     </div>
