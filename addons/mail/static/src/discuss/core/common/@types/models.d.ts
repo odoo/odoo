@@ -38,14 +38,12 @@ declare module "models" {
     }
     export interface Thread {
         channel: DiscussChannel;
-        channel_name_member_ids: ChannelMember[];
         executeCommand: (command: unknown, body: string) => Promise<void>;
         firstUnreadMessage: Message;
         markedAsUnread: boolean;
         markingAsRead: boolean;
         markReadSequential: () => Promise<any>;
         scrollUnread: boolean;
-        showCorrespondentCountry: Readonly<boolean>;
     }
 
     export interface Models {
