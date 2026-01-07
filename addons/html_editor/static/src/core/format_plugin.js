@@ -240,6 +240,16 @@ export class FormatPlugin extends Plugin {
 
     // @todo phoenix: refactor this method.
     _formatSelection(formatName, { applyStyle, formatProps } = {}) {
+        const deepSelection = this.dependencies.selection.getSelectionData().deepEditableSelection;
+        const anchorElement = deepSelection.anchorNode;
+        const focusElement = deepSelection.focusNode;
+        if (
+            anchorElement === focusElement &&
+            !isContentEditable(anchorElement) &&
+            !closestElement(anchorElement, PROTECTED_QWEB_SELECTOR)
+        ) {
+            return;
+        }
         // note: does it work if selection is in opposite direction?
         const selection = this.dependencies.split.splitSelection();
         if (typeof applyStyle === "undefined") {
