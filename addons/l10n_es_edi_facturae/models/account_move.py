@@ -11,6 +11,7 @@ from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_round, float_repr, float_compare, date_utils, SQL
 from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value
+from odoo.tools.sql import column_exists, create_column
 from odoo.addons.l10n_es_edi_facturae.xml_utils import (
     NS_MAP,
     _canonicalize_node,
@@ -115,7 +116,12 @@ class AccountMove(models.Model):
             ('83', "Taxable Base modified due to discounts and rebates"),
             ('84', "Taxable Base modified due to firm court ruling or administrative decision"),
             ('85', "Taxable Base modified due to unpaid outputs where there is a judgement opening insolvency proceedings"),
-        ], string='Spanish Facturae EDI Reason Code', default='10')
+        ],
+        string='Spanish Facturae EDI Reason Code',
+        compute='_compute_l10n_es_edi_facturae_reason_code',
+        store=True,
+        readonly=False,
+    )
     l10n_es_invoicing_period_start_date = fields.Date(string="Invoice Period Start Date")
     l10n_es_invoicing_period_end_date = fields.Date(string="Invoice Period End Date")
     l10n_es_payment_means = fields.Selection(
@@ -139,7 +145,31 @@ class AccountMove(models.Model):
             ('17', "Banker’s draft"),
             ('18', "Cash on delivery"),
             ('19', "Payment by card"),
-        ], string="Payment Means", default='04')
+        ],
+        string="Payment Means",
+        compute='_compute_l10n_es_payment_means',
+        store=True,
+        readonly=False,
+    )
+
+    def _auto_init(self):
+        # Create compute stored field l10n_es_edi_facturae_reason_code and
+        # l10n_es_payment_means here to avoid timeout error on large databases.
+        if not column_exists(self.env.cr, 'account_move', 'l10n_es_edi_facturae_reason_code'):
+            create_column(self.env.cr, 'account_move', 'l10n_es_edi_facturae_reason_code', 'varchar')
+        if not column_exists(self.env.cr, 'account_move', 'l10n_es_payment_means'):
+            create_column(self.env.cr, 'account_move', 'l10n_es_payment_means', 'varchar')
+        return super()._auto_init()
+
+    @api.depends('country_code')
+    def _compute_l10n_es_edi_facturae_reason_code(self):
+        for move in self.filtered(lambda move: move.country_code == 'ES'):
+            move.l10n_es_edi_facturae_reason_code = move.l10n_es_edi_facturae_reason_code or '10'
+
+    @api.depends('country_code')
+    def _compute_l10n_es_payment_means(self):
+        for move in self.filtered(lambda move: move.country_code == 'ES'):
+            move.l10n_es_payment_means = move.l10n_es_payment_means or '04'
 
     def _get_fields_to_detach(self):
         # EXTENDS account
@@ -288,7 +318,7 @@ class AccountMove(models.Model):
                 installments.append({
                     'InstallmentDueDate': payment_term.date_maturity,
                     'InstallmentAmount': payment_term.amount_residual_currency,
-                    'PaymentMeans': self.l10n_es_payment_means,
+                    'PaymentMeans': self.l10n_es_payment_means or '04',
                     'AccountToBeCredited': {
                         'IBAN': self.partner_bank_id.sanitized_account_number,
                         'BIC': self.partner_bank_id.bank_bic,
