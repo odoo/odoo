@@ -1379,22 +1379,24 @@ We can redirect you to the public employee list."""
         """
         calendar_periods_by_employee = defaultdict(list)
         for employee in self.sudo():
-            for version in employee._get_versions_with_contract_overlap_with_period(start.date(), stop.date()):
-                # if employee is under fully flexible contract, use timezone of the employee
-                calendar_tz = timezone(version.resource_calendar_id.tz) if version.resource_calendar_id else timezone(employee.resource_id.tz)
-                date_start = datetime.combine(
-                    version.contract_date_start,
-                    time(0, 0, 0)
-                ).replace(tzinfo=calendar_tz).astimezone(utc)
-                if version.date_end:
-                    date_end = datetime.combine(
-                        version.date_end + relativedelta(days=1),
-                        time(0, 0, 0)
-                    ).replace(tzinfo=calendar_tz).astimezone(utc)
-                else:
-                    date_end = stop
-                calendar_periods_by_employee[employee].append(
-                    (max(date_start, start), min(date_end, stop), version.resource_calendar_id))
+            versions_with_contract = employee._get_versions_with_contract_overlap_with_period(start.date(), stop.date())
+            if versions_with_contract:
+                versions = versions_with_contract.filtered_domain([
+                        ('date_start', '<=', stop),
+                        '|',
+                        ('date_end', '=', False),
+                        ('date_end', '>=', start),
+                ])
+                for version in versions:
+                    calendar_tz = timezone(version.resource_calendar_id.tz) if version.resource_calendar_id else timezone(employee.resource_id.tz)
+                    v_start = datetime.combine(version.date_start, time.min).replace(tzinfo=calendar_tz).astimezone(utc)
+                    if version.date_end:
+                        v_end = datetime.combine(version.date_end + relativedelta(days=1), time.min).replace(tzinfo=calendar_tz).astimezone(utc)
+                    else:
+                        v_end = stop
+                    calendar_periods_by_employee[employee].append(
+                        (max(v_start, start), min(v_end, stop), version.resource_calendar_id)
+                    )
         return calendar_periods_by_employee
 
     @api.model
