@@ -53,7 +53,7 @@ class TestPeppolPurchaseOrderFlow(AccountTestInvoicingCommon):
         tracker = po.edi_tracker_ids[0]
         self.assertEqual(tracker.state, 'accepted')
 
-        messages = po.message_ids.filtered(lambda m: 'confirmation of order via PEPPOL' in m.body)
+        messages = po.message_ids.filtered(lambda m: 'Order is accepted by the seller' in m.body)
         self.assertTrue(messages)
 
     def test_receive_order_reject(self):
@@ -66,7 +66,7 @@ class TestPeppolPurchaseOrderFlow(AccountTestInvoicingCommon):
         self.assertEqual(po.l10n_sg_peppol_advanced_order_state, 'cancelled')
         self.assertEqual(po.state, 'cancel')
 
-        messages = po.message_ids.filtered(lambda m: 'order rejection via PEPPOL' in m.body)
+        messages = po.message_ids.filtered(lambda m: 'Order is rejected by the seller' in m.body)
         self.assertTrue(messages)
 
     def test_send_order_change(self):
@@ -96,7 +96,7 @@ class TestPeppolPurchaseOrderFlow(AccountTestInvoicingCommon):
         po.process_event(Event.RECEIVE_AP)
 
         self.assertEqual(po.l10n_sg_peppol_advanced_order_state, 'confirmed')
-        messages = po.message_ids.filtered(lambda m: 'confirmation of order change via PEPPOL' in m.body)
+        messages = po.message_ids.filtered(lambda m: 'Order change request is accepted by the seller' in m.body)
         self.assertTrue(messages)
 
     def test_receive_change_reject(self):
@@ -108,7 +108,7 @@ class TestPeppolPurchaseOrderFlow(AccountTestInvoicingCommon):
         po.process_event(Event.RECEIVE_RE)
 
         self.assertEqual(po.l10n_sg_peppol_advanced_order_state, 'confirmed')
-        messages = po.message_ids.filtered(lambda m: 'Order change request is rejected' in m.body)
+        messages = po.message_ids.filtered(lambda m: 'Order change request is rejected by the seller' in m.body)
         self.assertTrue(messages)
 
     def test_send_order_cancel(self):
@@ -131,11 +131,11 @@ class TestPeppolPurchaseOrderFlow(AccountTestInvoicingCommon):
         po.action_send_advanced_order()
         po.process_event(Event.RECEIVE_AP)
         po.action_send_order_cancel()
-        po.process_event(Event.RECEIVE_AP)
+        po.process_event(Event.RECEIVE_RE)
 
         self.assertEqual(po.l10n_sg_peppol_advanced_order_state, 'cancelled')
-        self.assertEqual(po.state, 'purchase')
-        messages = po.message_ids.filtered(lambda m: 'confirmation of order via PEPPOL' in m.body)
+        self.assertEqual(po.state, 'cancel')
+        messages = po.message_ids.filtered(lambda m: 'Order cancellation request is accepted by the seller' in m.body)
         self.assertTrue(messages)
 
     def test_receive_cancel_reject(self):
@@ -144,11 +144,11 @@ class TestPeppolPurchaseOrderFlow(AccountTestInvoicingCommon):
         po.action_send_advanced_order()
         po.process_event(Event.RECEIVE_AP)
         po.action_send_order_cancel()
-        po.process_event(Event.RECEIVE_RE)
+        po.process_event(Event.RECEIVE_AP)
 
         self.assertEqual(po.l10n_sg_peppol_advanced_order_state, 'confirmed')
-        self.assertEqual(po.state, 'cancel')
-        messages = po.message_ids.filtered(lambda m: 'confirmation of order cancel via PEPPOL' in m.body)
+        self.assertEqual(po.state, 'purchase')
+        messages = po.message_ids.filtered(lambda m: 'Order cancellation request is rejected by the seller' in m.body)
         self.assertTrue(messages)
 
     def test_invalid_event(self):

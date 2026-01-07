@@ -56,17 +56,10 @@ class PurchaseOrder(models.Model):
         default=OrderState.DRAFT,
     )
     edi_tracker_ids = fields.One2many(
-        'edi.order.tracker',
+        'purchase.peppol.advanced.order.tracker',
         'order_id',
         string="EDI Trackers",
     )
-
-    def _compute_order_change_sequence(self):
-        for order in self:
-            order.edi_order_change_seq = len([
-                tracker for tracker in order.edi_tracker_ids
-                if tracker.type == 'order_change'
-            ])
 
     def process_event(self, event):
         """
@@ -93,7 +86,7 @@ class PurchaseOrder(models.Model):
     # -------------------------------------------------------------------------
 
     def _on_peppol_order_confirm(self):
-        order_tracker = self.edi_tracker_ids[0]
+        order_tracker = self.edi_tracker_ids.search([('document_type', '=', 'order')], limit=1)
         order_tracker.state = 'accepted'
 
         if self.state in ['draft', 'sent']:
@@ -103,7 +96,7 @@ class PurchaseOrder(models.Model):
         self.message_post(body=self.env._("Order is accepted by the seller."))
 
     def _on_peppol_order_reject(self):
-        order_tracker = self.edi_tracker_ids[0]
+        order_tracker = self.edi_tracker_ids.search([('document_type', '=', 'order')], limit=1)
         order_tracker.state = 'rejected'
 
         if any(move.state not in ('cancel', 'draft') for move in self.invoice_ids):
@@ -116,13 +109,13 @@ class PurchaseOrder(models.Model):
         self.write({'state': 'cancel'})
 
     def _on_peppol_order_change_confirm(self):
-        order_tracker = self.edi_tracker_ids[0]
+        order_tracker = self.edi_tracker_ids.search([('document_type', '=', 'order_change')], limit=1)
         order_tracker.state = 'accepted'
 
         self.message_post(body=self.env._("Order change request is accepted by the seller."))
 
     def _on_peppol_order_change_reject(self):
-        order_tracker = self.edi_tracker_ids[0]
+        order_tracker = self.edi_tracker_ids.search([('document_type', '=', 'order_change')], limit=1)
         order_tracker.state = 'rejected'
 
         self.message_post(body=self.env._("Order change request is rejected by the seller."))
@@ -138,7 +131,7 @@ class PurchaseOrder(models.Model):
             self.env['purchase.edi.xml.ubl_bis3_order_change']._retrieve_order_vals(self, xml_tree)
 
     def _on_peppol_order_cancel_confirm(self):
-        order_tracker = self.edi_tracker_ids[0]
+        order_tracker = self.edi_tracker_ids.search([('document_type', '=', 'order_cancel')], limit=1)
         order_tracker.state = 'accepted'
 
         if any(move.state not in ('cancel', 'draft') for move in self.invoice_ids):
@@ -151,7 +144,7 @@ class PurchaseOrder(models.Model):
         self.write({'state': 'cancel'})
 
     def _on_peppol_order_cancel_reject(self):
-        order_tracker = self.edi_tracker_ids[0]
+        order_tracker = self.edi_tracker_ids.search([('document_type', '=', 'order_cancel')], limit=1)
         order_tracker.state = 'rejected'
 
         if self.state in ['draft', 'sent']:
@@ -175,7 +168,7 @@ class PurchaseOrder(models.Model):
         # Mock send
         print("@@!!@@ Order request sent @@!!@@")
 
-        self.env['edi.order.tracker'].create({
+        self.env['purchase.peppol.advanced.order.tracker'].create({
             'order_id': self.id,
             'attachment_id': attachment.id,
             'state': 'sent',
@@ -199,7 +192,7 @@ class PurchaseOrder(models.Model):
         # Mock send
         print("@@!!@@ Order request sent @@!!@@")
 
-        self.env['edi.order.tracker'].create({
+        self.env['purchase.peppol.advanced.order.tracker'].create({
             'order_id': self.id,
             'attachment_id': attachment.id,
             'state': 'sent',
@@ -222,7 +215,7 @@ class PurchaseOrder(models.Model):
         # Mock send
         print("@@!!@@ Order request sent @@!!@@")
 
-        self.env['edi.order.tracker'].create({
+        self.env['purchase.peppol.advanced.order.tracker'].create({
             'order_id': self.id,
             'attachment_id': attachment.id,
             'state': 'sent',

@@ -1,9 +1,9 @@
 from odoo import fields, models
 
 
-class PeppolEdiOrderTracker(models.Model):
-    _name = 'edi.order.tracker'
-    _description = 'Tracks Advanced Order Status'
+class PurchasePeppolAdvancedOrderTracker(models.Model):
+    _name = 'purchase.peppol.advanced.order.tracker'
+    _description = 'Model for tracking PEPPOL advanced order transactions'
     _order = 'sequence desc, id desc'
 
     sequence = fields.Integer()
