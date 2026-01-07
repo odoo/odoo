@@ -1097,3 +1097,18 @@ class TestHrAttendanceOvertime(HttpCase):
             'check_out': datetime(2021, 1, 4, 20, 0)
         })
         self.assertTrue(attendance.with_user(user1).linked_overtime_ids.rule_ids.has_access("read"))
+
+    def test_attendance_overtime_with_timing_rule_cross_midnight(self):
+        """Test attendance creation when the overtime timing rule crosses midnight."""
+        self.employee.ruleset_id.rule_ids.base_off = 'timing'
+        self.employee.ruleset_id.rule_ids.timing_start = 14
+        self.employee.ruleset_id.rule_ids.timing_stop = 5
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 8, 0),
+            'check_out': datetime(2021, 1, 4, 18, 0)
+        })
+
+        self.assertEqual(attendance.worked_hours, 9.0)
+        self.assertEqual(attendance.overtime_hours, 4.0)
+        self.assertEqual(attendance.expected_hours, 5.0)
