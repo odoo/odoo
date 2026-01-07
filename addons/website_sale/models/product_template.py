@@ -703,24 +703,25 @@ class ProductTemplate(models.Model):
         Note AWA: Known "exploit" issues with this method:
 
         - This method could be used by an unauthenticated user to generate a
-            lot of useless variants. Unfortunately, after discussing the
-            matter with ODO, there's no easy and user-friendly way to block
-            that behavior.
-
-            We would have to use captcha/server actions to clean/... that
-            are all not user-friendly/overkill mechanisms.
+          lot of useless variants. Unfortunately, after discussing the
+          matter with ODO, there's no easy and user-friendly way to block
+          that behavior.
+          We would have to use captcha/server actions to clean/... that
+          are all not user-friendly/overkill mechanisms.
 
         - This method could be used to try to guess what product variant ids
-            are created in the system and what product template ids are
-            configured as "dynamic", but that does not seem like a big deal.
+          are created in the system and what product template ids are
+          configured as "dynamic", but that does not seem like a big deal.
 
         The error messages are identical on purpose to avoid giving too much
         information to a potential attacker:
-            - returning 0 when failing
-            - returning the variant id whether it already existed or not
+
+        - returning 0 when failing
+        - returning the variant id whether it already existed or not
 
         :param product_template_attribute_value_ids: the combination for which
             to get or create variant
+
         :type product_template_attribute_value_ids: list of id
             of `product.template.attribute.value`
 

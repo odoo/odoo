@@ -317,10 +317,11 @@ class MailingMailing(models.Model):
         """Get placeholders for replaced links in sms widget for accurate computation of sms counts.
 
         Reminders and assumptions:
-          * Links wille be transformed to the format "[base_url]/r/[link_tracker_code]/s/[sms_id]".
-          * unsubscribe is formatted as: "\nSTOP SMS : [base_url]/sms/[mailing_id]/[trace_code]".
 
-        :return: Character counts used for links, formatted as `{link: str, unsubscribe: str}`.
+        * Links wille be transformed to the format ``"[base_url]/r/[link_tracker_code]/s/[sms_id]"``.
+        * unsubscribe is formatted as: ``"STOP SMS : [base_url]/sms/[mailing_id]/[trace_code]"``.
+
+        :returns: Character counts used for links, formatted as ``{link: str, unsubscribe: str}``.
         """
         if self:
             self.ensure_one()

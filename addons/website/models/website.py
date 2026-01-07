@@ -1337,10 +1337,11 @@ class Website(models.CachedModel):
     @api.model
     def search_url_dependencies(self, res_model, res_ids):
         """ Search dependencies just for information. It will not catch 100%
-            of dependencies and False positive is more than possible
-            Each module could add dependences in this dict
-            :returns a dictionnary where key is the 'categorie' of object related to the given
-                view, and the value is the list of text and link to the resource using given page
+        of dependencies and False positive is more than possible
+        Each module could add dependences in this dict
+
+        :returns: a dictionnary where key is the 'categorie' of object related to the given
+            view, and the value is the list of text and link to the resource using given page
         """
         dependencies = {}
         current_website = self.get_current_website()
@@ -1404,6 +1405,7 @@ class Website(models.CachedModel):
     @api.model
     def get_current_website(self, fallback=True):
         """ The current website is returned in the following order:
+
         - the website forced in session `force_website_id`
         - the website set in context
         - (if frontend or fallback) the website matching the request's "domain"

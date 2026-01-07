@@ -464,15 +464,17 @@ class SurveyQuestion(models.Model):
 
     def validate_question(self, answer, comment=None):
         """ Validate question, depending on question type and parameters
-         for simple choice, text, date and number, answer is simply the answer of the question.
-         For other multiple choices questions, answer is a list of answers (the selected choices
-         or a list of selected answers per question -for matrix type-):
-            - Simple answer : answer = 'example' or 2 or question_answer_id or 2019/10/10
-            - Multiple choice : answer = [question_answer_id1, question_answer_id2, question_answer_id3]
-            - Matrix: answer = { 'rowId1' : [colId1, colId2,...], 'rowId2' : [colId1, colId3, ...] }
+        for simple choice, text, date and number, answer is simply the answer of the question.
+        For other multiple choices questions, answer is a list of answers (the selected choices
+        or a list of selected answers per question -for matrix type-):
 
-         return dict {question.id (int): error (str)} -> empty dict if no validation error.
-         """
+        - Simple answer : ``answer = 'example'`` or ``2`` or ``question_answer_id`` or ``2019/10/10``
+        - Multiple choice : ``answer = [question_answer_id1, question_answer_id2, question_answer_id3]``
+        - Matrix: ``answer = { 'rowId1' : [colId1, colId2,...], 'rowId2' : [colId1, colId3, ...] }``
+
+        :returns: A dict ``{question.id: error}``, or an empty dict if no validation error.
+        :rtype: dict[int, str]
+        """
         self.ensure_one()
         if isinstance(answer, str):
             answer = answer.strip()

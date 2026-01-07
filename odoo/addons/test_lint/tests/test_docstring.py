@@ -163,7 +163,7 @@ def extract_docstring_params(doctree):
     types = {}
     rtype = inspect._empty
 
-    field_lists = [node for node in doctree if node.tagname == 'field_list']
+    field_lists = [node for node in doctree if node.tagname in ('docinfo', 'field_list')]
     for field_list in field_lists:
         for field in field_list:
             field_name, field_body = field.children
@@ -331,4 +331,4 @@ class TestDocstring(BaseCase):
     def _stringify_annotation(self, sign_type):
         if isinstance(sign_type, type):
             sign_type = sign_type.__name__
-        return str(sign_type)
+        return str(sign_type).removeprefix('typing.')
