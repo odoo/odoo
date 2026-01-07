@@ -104,7 +104,7 @@ class CalendarRecurrence(models.Model):
     rrule = fields.Char(compute='_compute_rrule', inverse='_inverse_rrule', store=True)
     dtstart = fields.Datetime(compute='_compute_dtstart')
     rrule_type = fields.Selection(RRULE_TYPE_SELECTION, default='weekly')
-    end_type = fields.Selection(END_TYPE_SELECTION, default='count')
+    end_type = fields.Selection(END_TYPE_SELECTION, default='forever')
     interval = fields.Integer(default=1)
     count = fields.Integer(default=1)
     mon = fields.Boolean()

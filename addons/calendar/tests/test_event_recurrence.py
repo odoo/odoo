@@ -45,6 +45,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'rrule_type': 'weekly',
             'tue': True,
             'interval': 1,
+            'end_type': 'count',
             'count': 3,
             'event_tz': 'UTC',
         })
@@ -64,6 +65,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'interval': 2,
             'rrule_type': 'weekly',
             'tue': True,
+            'end_type': 'count',
             'count': 2,
             'event_tz': 'UTC',
         })
@@ -82,6 +84,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'interval': 2,
             'rrule_type': 'weekly',
             'tue': True,
+            'end_type': 'count',
             'count': 2,
             'event_tz': 'UTC',
         })
@@ -196,6 +199,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
         self.event._apply_recurrence_values({
             'interval': 2,
             'rrule_type': 'yearly',
+            'end_type': 'count',
             'count': 2,
             'event_tz': 'UTC',
         })
@@ -214,6 +218,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'interval': 2,
             'rrule_type': 'weekly',
             'mon': True,
+            'end_type': 'count',
             'count': '2',
             'event_tz': 'America/New_York',  # DST change on 2002/10/27
         })
@@ -235,6 +240,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'interval': 1,
             'rrule_type': 'weekly',
             'sun': True,
+            'end_type': 'count',
             'count': '2',
             'event_tz': 'America/New_York'  # DST change on 2002/4/7
         })
@@ -257,6 +263,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'interval': 1,
             'rrule_type': 'weekly',
             'sun': True,
+            'end_type': 'count',
             'count': '2',
             'event_tz': 'America/New_York'  # DST change on 2002/4/7
         })
@@ -279,6 +286,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'interval': 1,
             'rrule_type': 'weekly',
             'mon': True,
+            'end_type': 'count',
             'count': 2,
             'event_tz': 'Europe/Brussels'  # DST change on 2020/3/23
         })
@@ -368,6 +376,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'rrule_type': 'weekly',
             'tue': True,
             'interval': 1,
+            'end_type': 'count',
             'count': 2,
             'event_tz': 'UTC',
             'allday': True,
@@ -421,6 +430,7 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
             'rrule_type': 'weekly',
             'tue': True,
             'interval': 1,
+            'end_type': 'count',
             'count': 3,
             'event_tz': 'Etc/GMT-4',
         })
@@ -684,6 +694,7 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
             'rrule_type': 'weekly',
             'tue': True,
             'interval': 1,
+            'end_type': 'count',
             'count': 3,
             'event_tz': 'Etc/GMT-4',
             'allday': True,
@@ -815,6 +826,7 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
             'wed': True,
             'fri': True,
             'interval': 1,
+            'end_type': 'count',
             'count': 3,
             'event_tz': 'Etc/GMT-4',
         })
@@ -859,6 +871,7 @@ class TestUpdateMultiDayWeeklyRecurrentEvents(TestRecurrentEvents):
             'tue': True,
             'fri': True,
             'interval': 1,
+            'end_type': 'count',
             'count': 3,
             'event_tz': 'Etc/GMT-4',
         })
@@ -932,6 +945,7 @@ class TestUpdateMonthlyByDay(TestRecurrentEvents):
             'recurrency': True,
             'rrule_type': 'monthly',
             'interval': 1,
+            'end_type': 'count',
             'count': 3,
             'month_by': 'day',
             'weekday': 'TUE',
@@ -972,6 +986,7 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
             'recurrency': True,
             'rrule_type': 'monthly',
             'interval': 1,
+            'end_type': 'count',
             'count': 3,
             'month_by': 'date',
             'day': 22,
@@ -1016,6 +1031,7 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
             calendar_form.name = 'test recurrence daily'
             calendar_form.recurrency = True
             calendar_form.rrule_type_ui = 'daily'
+            calendar_form.end_type = 'count'
             calendar_form.count = 2
             calendar_form.start = datetime(2019, 6, 23, 16)
             calendar_form.stop = datetime(2019, 6, 23, 17)
@@ -1032,6 +1048,7 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
             calendar_form.name = 'test recurrence monthly'
             calendar_form.recurrency = True
             calendar_form.rrule_type_ui = 'monthly'
+            calendar_form.end_type = 'count'
             calendar_form.count = 2
             calendar_form.start = datetime(2019, 6, 11, 16)
             calendar_form.stop = datetime(2019, 6, 11, 17)
@@ -1049,6 +1066,7 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
             calendar_form.name = 'test recurrence yearly'
             calendar_form.recurrency = True
             calendar_form.rrule_type_ui = 'yearly'
+            calendar_form.end_type = 'count'
             calendar_form.count = 2
             calendar_form.start = datetime(2019, 6, 11, 16)
             calendar_form.stop = datetime(2019, 6, 11, 17)
