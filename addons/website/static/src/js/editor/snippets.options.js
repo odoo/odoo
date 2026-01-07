@@ -495,6 +495,7 @@ const GPSPicker = InputUserValueWidget.extend({
             return;
         }
 
+        await this.contentWindow.google.maps.importLibrary("places");
         this._gmapAutocomplete = new this.contentWindow.google.maps.places.Autocomplete(this.inputEl, {types: ['geocode']});
         this.contentWindow.google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
     },
@@ -555,6 +556,7 @@ const GPSPicker = InputUserValueWidget.extend({
             return this._gmapCacheGPSToPlace[gps];
         }
 
+        await this.contentWindow.google.maps.importLibrary("places");
         const p = gps.substring(1).slice(0, -1).split(',');
         const location = new this.contentWindow.google.maps.LatLng(p[0] || 0, p[1] || 0);
         return new Promise(resolve => {

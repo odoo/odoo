@@ -37,6 +37,7 @@ publicWidget.registry.GoogleMap = publicWidget.Widget.extend({
             return;
         }
 
+        await google.maps.importLibrary("maps");
         // Define a default map's colors set
         const std = [];
         new google.maps.StyledMapType(std, {name: "Std Map"});
