@@ -18,7 +18,7 @@ class FleetVehicleLogContract(models.Model):
         return fields.Date.to_string(start_date + oneyear)
 
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, check_company=True, tracking=True, index=True)
-    cost_subtype_id = fields.Many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost', domain=[('category', '=', 'contract')])
+    cost_subtype_id = fields.Many2one('fleet.service.type', 'Contract Type', help='Cost type purchased with this cost', domain=[('category', '=', 'contract')])
     amount = fields.Monetary('Cost', tracking=True)
     date = fields.Date(help='Date when the cost has been executed')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
@@ -62,7 +62,7 @@ class FleetVehicleLogContract(models.Model):
         ('monthly', 'Monthly'),
         ('yearly', 'Yearly')
         ], 'Recurring Cost Frequency', default='monthly', required=True, tracking=True)
-    service_ids = fields.Many2many('fleet.service.type', string="Included Services")
+    service_ids = fields.Many2many('fleet.service.type', string="Included Services", domain=[('category', '=', 'service')])
 
     @api.depends('vehicle_id.name', 'cost_subtype_id')
     def _compute_contract_name(self):
