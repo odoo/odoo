@@ -66,6 +66,17 @@ export class MassMailingHtmlField extends HtmlField {
         };
     }
 
+    _isDirty() {
+        const dirty = super._isDirty();
+        // when the record is not dirty and the source_id is not set(never saved), we consider
+        // the html field in iframe is not dirty, so that the user can discard the changes without
+        // triggering the changesCommit.
+        if (!this.props.record.model.root.dirty && !this.props.record.data.source_id) {
+            return false;
+        }
+        return dirty;
+    }
+
     /**
      * @param {HTMLElement} popover
      * @param {Object} position
