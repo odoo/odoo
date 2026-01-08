@@ -11,7 +11,7 @@
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" t-att-href="record.website_url">
                         <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']"
-                            t-att-alt="record.display_name"/>
+                            t-att-alt="data.get('display_name')"/>
                     </a>
                     <i t-if="data.get('_latest_viewed')"
                         class="fa fa-trash o_carousel_product_remove js_remove"
@@ -20,7 +20,7 @@
                         t-att-data-product-selected="record.is_product_variant"/>
                     <div class="o_carousel_product_card_body card-body d-flex flex-wrap">
                         <a t-att-href="record.website_url" class="text-decoration-none d-block w-100">
-                            <div class="h6 card-title mb-0" t-field="record.display_name"/>
+                            <div class="h6 card-title mb-0" t-out="data.get('display_name')"/>
                         </a>
                         <div class="mt-2">
                             <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
@@ -58,10 +58,15 @@
                 <div class="o_carousel_product_card card h-100 w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" t-att-href="record.website_url">
-                        <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                        <img
+                            class="card-img-top o_img_product_square o_img_product_cover h-auto"
+                            loading="lazy"
+                            t-att-src="data['image_512']"
+                            t-att-alt="data.get('display_name')"
+                        />
                     </a>
                     <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
-                        <div class="card-title h5" t-field="record.display_name"/>
+                        <div class="card-title h5" t-out="data.get('display_name')"/>
                         <div class="card-text flex-grow-1 text-muted h6" t-field="record.description_sale"/>
                         <div class="mt-2">
                             <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
@@ -88,7 +93,12 @@
                 <div class="card h-100 border-0 w-100 rounded-0 bg-transparent" t-att-data-url="record.website_url">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" t-att-href="record.website_url">
-                        <img class="card-img-top h-auto o_img_product_square o_img_product_cover rounded" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                        <img
+                            class="card-img-top h-auto o_img_product_square o_img_product_cover rounded"
+                            loading="lazy"
+                            t-att-src="data['image_512']"
+                            t-att-alt="data.get('display_name')"
+                        />
                     </a>
                 </div>
             </t>
@@ -100,7 +110,12 @@
                 <div class="card h-100 border-0 w-100 rounded-0 bg-transparent o_dynamic_product_hovered" t-att-data-url="record.website_url">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" t-att-href="record.website_url">
-                        <img class="card-img-top h-auto o_img_product_square o_img_product_cover rounded" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                        <img
+                            class="card-img-top h-auto o_img_product_square o_img_product_cover rounded"
+                            loading="lazy"
+                            t-att-src="data['image_512']"
+                            t-att-alt="data.get('display_name')"
+                        />
                     </a>
                     <div class="o_carousel_product_card_body mt-2 d-flex justify-content-between">
                         <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
@@ -122,9 +137,14 @@
                 <div class="card h-100 border-0 w-100 rounded-0 bg-transparent o_dynamic_product_hovered" t-att-data-url="record.website_url">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="o_carousel_product_img_link overflow-hidden" t-att-href="record.website_url">
-                        <img class="card-img-top h-auto o_img_product_square o_img_product_cover rounded" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                        <img
+                            class="card-img-top h-auto o_img_product_square o_img_product_cover rounded"
+                            loading="lazy"
+                            t-att-src="data['image_512']"
+                            t-att-alt="data.get('display_name')"
+                        />
                     </a>
-                    <div class="h6 text-center mt-2 p-2" t-field="record.display_name"/>
+                    <div class="h6 text-center mt-2 p-2" t-out="data.get('display_name')"/>
                     <div class="text-center">
                         <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
                             <t t-set="rating_avg" t-value="record.rating_avg"/>
@@ -142,10 +162,15 @@
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <a class="o_carousel_product_img_link position-absolute mx-auto" t-att-href="record.website_url">
-                        <img class="card-img-top rounded-0" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                        <img
+                            class="card-img-top rounded-0"
+                            loading="lazy"
+                            t-att-src="data['image_512']"
+                            t-att-alt="data.get('display_name')"
+                        />
                     </a>
                     <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
-                        <div class="card-title h5 text-center" t-field="record.display_name"/>
+                        <div class="card-title h5 text-center" t-out="data.get('display_name')"/>
                         <div class="text-center">
                             <div class="h5">
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
@@ -177,12 +202,16 @@
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link" t-att-href="record.website_url">
                         <div class="overflow-hidden rounded">
-                            <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']"
-                            t-att-alt="record.display_name"/>
+                            <img
+                                class="card-img-top o_img_product_square o_img_product_cover h-auto"
+                                loading="lazy"
+                                t-att-src="data['image_512']"
+                                t-att-alt="data.get('display_name')"
+                            />
                         </div>
                     </a>
                     <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100 p-3">
-                        <div class="h6 card-title" t-field="record.display_name"/>
+                        <div class="h6 card-title" t-out="data.get('display_name')"/>
                         <div>
                             <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
                                 <t t-set="rating_avg" t-value="record.rating_avg"/>
@@ -204,8 +233,12 @@
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered" t-att-href="record.website_url">
                         <div class="overflow-hidden rounded">
-                            <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']"
-                            t-att-alt="record.display_name"/>
+                            <img
+                                class="card-img-top o_img_product_square o_img_product_cover h-auto"
+                                loading="lazy"
+                                t-att-src="data['image_512']"
+                                t-att-alt="data.get('display_name')"
+                            />
                         </div>
                     </a>
                     <div class="o_carousel_product_card_body h-100 p-3 d-flex flex-column justify-content-between">
@@ -223,7 +256,10 @@
                                 </t>
                             </div>
                         </div>
-                        <div class="card-title h6 flex-grow-1 w-100 mt-2 mb-3" t-field="record.display_name"/>
+                        <div
+                            class="card-title h6 flex-grow-1 w-100 mt-2 mb-3"
+                            t-out="data.get('display_name')"
+                        />
                         <div class="text-end o_dynamic_snippet_btn_wrapper" t-if="record._website_show_quick_add()">
                             <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
                             <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
@@ -252,11 +288,16 @@
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <div class="row flex-row-reverse">
                         <div class="col-lg-6 d-flex align-items-center justify-content-center justify-content-lg-end o_wrap_product_img position-relative">
-                            <img class="img img-fluid position-absolute o_img_product_cover w-100 h-100" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                            <img
+                                class="img img-fluid position-absolute o_img_product_cover w-100 h-100"
+                                loading="lazy"
+                                t-att-src="data['image_512']"
+                                t-att-alt="data.get('display_name')"
+                            />
                         </div>
                         <div class="col-lg-6 px-5 d-flex align-items-center">
                             <div class="o_carousel_product_card_body card-body p-5">
-                                <div class="card-title h1" t-field="record.display_name"/>
+                                <div class="card-title h1" t-out="data.get('display_name')"/>
                                 <div class="d-flex align-items-center my-4">
                                     <div class="h4 mb-0 me-3">
                                         <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
@@ -308,12 +349,17 @@
                     <div class="row h-100 p-0">
                         <div class="col-lg-4 position-static">
                             <a class="stretched-link o_dynamic_product_hovered" t-att-href="record.website_url">
-                                <img class="img img-fluid mx-auto o_img_product_square" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                                <img
+                                    class="img img-fluid mx-auto o_img_product_square"
+                                    loading="lazy"
+                                    t-att-src="data['image_512']"
+                                    t-att-alt="data.get('display_name')"
+                                />
                             </a>
                         </div>
                         <div class="o_carousel_product_card_body col-lg-8 d-flex flex-column justify-content-between">
                             <div>
-                                <div class="card-title h6" t-field="record.display_name"/>
+                                <div class="card-title h6" t-out="data.get('display_name')"/>
                             </div>
                             <div>
                                 <div class="mb-1">
@@ -361,11 +407,16 @@
                 <div class="o_carousel_product_card card w-100 border-0 o_dynamic_product_hovered o_cc o_cc5">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="stretched-link" t-att-href="record.website_url">
-                        <img class="img img-fluid position-absolute w-100 h-100 o_img_product_cover" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                        <img
+                            class="img img-fluid position-absolute w-100 h-100 o_img_product_cover"
+                            loading="lazy"
+                            t-att-src="data['image_512']"
+                            t-att-alt="data.get('display_name')"
+                        />
                     </a>
                     <div class="o_carousel_product_card_body d-flex flex-column justify-content-between h-100 bg-black-50 p-3 position-relative">
                         <div class="mb-3">
-                            <div class="card-title h5" t-field="record.display_name"/>
+                            <div class="card-title h5" t-out="data.get('display_name')"/>
                             <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
                                     <t t-set="rating_avg" t-value="record.rating_avg"/>
                                     <t t-set="rating_count" t-value="record.rating_count"/>
@@ -413,7 +464,7 @@
                     <div class="o_carousel_product_card_body card-body justify-content-between h-100 p-3">
                         <div class="row h-100">
                             <div class="col-8 d-flex flex-column">
-                                <div class="card-title h5" t-field="record.display_name"/>
+                                <div class="card-title h5" t-out="data.get('display_name')"/>
                                 <div class="card-text h6 text-muted" t-field="record.description_sale"/>
                                 <div class="d-flex justify-content-between align-items-center flex-wrap w-100 mt-auto">
                                     <div class="h5 text-primary mb-0 me-2">
@@ -428,7 +479,12 @@
                             <div class="col-4 position-static">
                                 <div class="overflow-hidden position-static">
                                     <a class="stretched-link o_dynamic_product_hovered" t-att-href="record.website_url">
-                                        <img class="img img-fluid o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                                        <img
+                                            class="img img-fluid o_img_product_square o_img_product_cover h-auto"
+                                            loading="lazy"
+                                            t-att-src="data['image_512']"
+                                            t-att-alt="data.get('display_name')"
+                                        />
                                     </a>
                                 </div>
                             </div>
