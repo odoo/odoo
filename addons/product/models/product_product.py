@@ -489,7 +489,7 @@ class ProductProduct(models.Model):
         return super()._search(domain, offset, limit, order)
 
     @api.depends('name', 'default_code', 'product_tmpl_id')
-    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id')
+    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id', 'lang')
     def _compute_display_name(self):
 
         def get_display_name(name, code):
