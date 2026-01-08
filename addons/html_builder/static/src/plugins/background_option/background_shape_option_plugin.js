@@ -8,7 +8,8 @@ import { getDefaultColors } from "./background_shape_option";
 import { withSequence } from "@html_editor/utils/resource";
 import { getBgImageURLFromURL } from "@html_editor/utils/image";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { getHtmlStyle } from "@html_editor/utils/formatting";
+import { getHtmlStyle, getCSSVariableValue } from "@html_editor/utils/formatting";
+import { rgbToHex } from "@web/core/utils/colors";
 
 /**
  * @typedef {((editingElement: HTMLElement) => HTMLElement)[]} background_shape_target_providers
@@ -25,12 +26,27 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             FlipShapeAction,
             SetBgAnimationSpeedAction,
             BackgroundShapeColorAction,
+            handleBgColorChangedAction,
         },
         background_shape_target_providers: withSequence(5, (editingElement) =>
             editingElement.querySelector(":scope > .o_we_bg_filter")
         ),
         content_not_editable_selectors: ".o_we_shape",
         system_node_selectors: ".o_we_shape",
+        on_removed_handlers: ({ nextTargetEl }) => {
+            this.handleBgColorChanged(nextTargetEl);
+        },
+        on_moved_handlers: ({ movedEl, siblingEl }) => {
+            this.handleBgColorChanged(movedEl);
+            this.handleBgColorChanged(siblingEl);
+        },
+        on_snippet_dropped_handlers: ({ snippetEl }) => {
+            this.handleBgColorChanged(snippetEl);
+        },
+        on_cloned_handlers: ({ cloneEl, originalEl }) => {
+            this.handleBgColorChanged(cloneEl);
+            this.handleBgColorChanged(originalEl);
+        },
     };
     static shared = [
         "getShapeStyleUrl",
@@ -40,6 +56,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         "getImplicitColors",
         "applyShape",
         "createShapeContainer",
+        "handleBgColorChanged",
     ];
     setup() {
         // TODO: update shapeBackgroundImagePerClass if a stylesheet value
@@ -171,6 +188,8 @@ export class BackgroundShapeOptionPlugin extends Plugin {
      * - the default colors
      * - patched with each set of colors of previous siblings shape
      * - patched with the colors of the previously selected shape
+     * - patched with the color of the bg color of the snippet next to the
+     * connection shape
      * - filtered to only keep the colors involved in the current shape
      *
      * @param {HTMLElement} editingElement
@@ -181,7 +200,10 @@ export class BackgroundShapeOptionPlugin extends Plugin {
     getImplicitColors(editingElement, shapeName, previousColors = {}) {
         const selectedBackgroundUrl = this.getShapeStyleUrl(shapeName);
         const defaultColors = this.getShapeDefaultColors(selectedBackgroundUrl);
-        let colors = previousColors;
+        let colors = Object.assign(
+            { ...previousColors },
+            this.getComputedConnectionsColors(editingElement, shapeName)
+        );
         let sibling = editingElement.previousElementSibling;
         while (sibling) {
             colors = Object.assign(this.getShapeData(sibling).colors || {}, colors);
@@ -199,7 +221,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
     getShapeDefaultColors(selectedBackgroundUrl) {
         const shapeSrc = selectedBackgroundUrl && getBgImageURLFromURL(selectedBackgroundUrl);
         const url = new URL(shapeSrc, window.location.origin);
-        return Object.fromEntries(url.searchParams.entries());
+        return Object.fromEntries(url.searchParams.entries().filter(([key]) => key !== "flip"));
     }
     /**
      * Retrieves current shape data from the target's dataset.
@@ -328,6 +350,340 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         }
         return this.backgroundShapesById;
     }
+    /**
+     * Handles a background color change on an element and updates Connections
+     * shapes accordingly.
+     * Also used when a snippet is cloned/moved/dropped/removed to updates the
+     * surrounding shapes.
+     *
+     * @param {HTMLElement} editingElement Element whose background color has changed.
+     * @param {String} newColor Newly selected background color (raw value or color combination).
+     */
+    handleBgColorChanged(editingElement, newColor = "") {
+        if (newColor) {
+            const isColorCombination = /^o_cc[12345]$/.test(newColor);
+            if (isColorCombination) {
+                const style = getHtmlStyle(this.document);
+                const colorNumber = newColor.substring(4);
+                newColor = getCSSVariableValue(`o-cc${colorNumber}-bg`, style).toLowerCase();
+            }
+        }
+        const { shape } = this.getShapeData(editingElement);
+        if (shape.includes("html_builder/Connections/")) {
+            this.applyShape(editingElement, () => ({
+                colors: this.getComputedConnectionsColors(editingElement, shape),
+            }));
+        }
+        const elements = this.getNeighborShape(editingElement);
+        for (const element of elements) {
+            const { shape } = this.getShapeData(element);
+            if (shape.includes("html_builder/Connections/")) {
+                this.applyShape(element, () => ({
+                    colors: this.getComputedConnectionsColors(element, shape, newColor),
+                }));
+            }
+        }
+    }
+    /**
+     * Returns the actual background visible for an element.
+     *
+     * @param {HTMLElement} curEl
+     */
+    getEffectiveBackgroundColor(curEl) {
+        while (curEl) {
+            const bgColor = getComputedStyle(curEl).backgroundColor;
+            if (bgColor !== "rgba(0, 0, 0, 0)" && bgColor !== "transparent") {
+                return rgbToHex(bgColor).toLowerCase();
+            }
+            curEl = curEl.parentElement;
+        }
+        return "#ffffff";
+    }
+    /**
+     * Returns the computed colors for the currently selected Connections shape.
+     *
+     * The color is computed based on the bgcolor of the next snippet or on the
+     * bgcolor of the previous if the shape flip on Y.
+     *
+     * @private
+     * @param {HTMLElement} editingElement Element for which the color has to be
+     * computed.
+     * @param {String} shapeName identifier of the selected shape.
+     * @param {String} neighborElBgColor Color that's gonna be applied on the neighbor element.
+     */
+    getComputedConnectionsColors(editingElement, shapeName, neighborElBgColor = "") {
+        if (!shapeName.includes("html_builder/Connections/")) {
+            return {};
+        }
+        const selectedBackgroundUrl = this.getShapeStyleUrl(shapeName);
+        const defaultColors = this.getShapeDefaultColors(selectedBackgroundUrl);
+        const defaultKey = Object.keys(defaultColors)[0];
+        let neighborElHexColor;
+        if (!neighborElBgColor) {
+            const targetRect = editingElement.getBoundingClientRect();
+            const shapeData = this.getShapeData(editingElement);
+            const x = targetRect.left + targetRect.width / 2;
+            const y = shapeData.flip.includes("y") ? targetRect.top - 1 : targetRect.bottom + 1;
+            const neighborEl = this.getBackgroundElementFromPoint(x, y);
+            neighborElHexColor = rgbToHex(getComputedStyle(neighborEl).backgroundColor);
+        } else {
+            neighborElHexColor = rgbToHex(neighborElBgColor);
+        }
+        const curBgHexColor = this.getEffectiveBackgroundColor(editingElement);
+
+        return {
+            [defaultKey]:
+                curBgHexColor !== neighborElHexColor
+                    ? neighborElHexColor
+                    : this.getContrastingColor(neighborElHexColor),
+        };
+    }
+    /**
+     * Compute the luminance of a color.
+     *
+     * @private
+     */
+    getLuminance(color) {
+        const hexColor = rgbToHex(color);
+        const r = parseInt(hexColor.slice(1, 3), 16);
+        const g = parseInt(hexColor.slice(3, 5), 16);
+        const b = parseInt(hexColor.slice(5), 16);
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+    /**
+     * Return the color of the current theme with the most contrast compared to
+     * the given color.
+     *
+     * @private
+     */
+    getContrastingColor(baseColor) {
+        const baseLuminance = this.getLuminance(baseColor);
+
+        const htmlStyle = getHtmlStyle(this.document);
+        const colors = ["o-color-1", "o-color-2", "o-color-3", "o-color-4", "o-color-5"];
+        const luminances = colors.map((color) => {
+            const colorValue = getCSSVariableValue(color, htmlStyle);
+            return { color, luminance: this.getLuminance(colorValue) };
+        });
+
+        let bestContrast;
+        let maxDifference = 0;
+
+        for (const { color, luminance } of luminances) {
+            const difference = Math.abs(baseLuminance - luminance);
+            if (difference > maxDifference) {
+                maxDifference = difference;
+                bestContrast = color;
+            }
+        }
+
+        return getCSSVariableValue(bestContrast, htmlStyle).toLowerCase();
+    }
+    /**
+     * Returns the elements stacked at the given point.
+     *
+     * Note on coordinates:
+     *  - clientX / clientY are viewport (client) coordinates, suitable for
+     *    elementsFromPoint() and elementFromPoint().
+     *  - documentX / documentY are coordinates relative to the full document
+     *    (client + current scroll offsets).
+     *
+     * If clientX/clientY are outside the viewport, elementsFromPoint cannot be
+     * used and we fallback to scanning elements in the document to find those
+     * whose bounding rect contains the document coordinates.
+     *
+     * @private
+     * @param {Number} clientX X coordinate relative to the viewport (can be
+     * negative).
+     * @param {Number} clientY Y coordinate relative to the viewport (can be
+     * negative).
+     * @returns {HTMLElement[]} Array of elements under the point, top-most
+     * first.
+     */
+    getElementsFromPoint(clientX, clientY) {
+        const iframeDoc = this.editable.ownerDocument;
+        const iframeWin = iframeDoc.defaultView;
+        const documentX = iframeWin.pageXOffset + clientX;
+        const documentY = iframeWin.pageYOffset + clientY;
+        let elements;
+        if (
+            clientX >= 0 &&
+            clientY >= 0 &&
+            clientX <= iframeWin.innerWidth &&
+            clientY <= iframeWin.innerHeight
+        ) {
+            elements = iframeDoc.elementsFromPoint(clientX, clientY);
+        } else {
+            // If the points is out of the viewport, we can't get the elements
+            // with elementsFromPoint so we need to check every element on the
+            // page to test if it intersect with the point. The Treewalker
+            // improve this logic by avoiding to check children of an element
+            // that is not intersecting (compared to a querySelectorAll)
+            // This can probably be improved
+            elements = [];
+            const walker = iframeDoc.createTreeWalker(iframeDoc.body, NodeFilter.SHOW_ELEMENT, {
+                acceptNode: (node) => {
+                    const rect = node.getBoundingClientRect();
+                    const absoluteLeft = iframeWin.pageXOffset + rect.left;
+                    const absoluteTop = iframeWin.pageYOffset + rect.top;
+                    const absoluteRight = absoluteLeft + rect.width;
+                    const absoluteBottom = absoluteTop + rect.height;
+                    if (
+                        documentX >= absoluteLeft &&
+                        documentX <= absoluteRight &&
+                        documentY >= absoluteTop &&
+                        documentY <= absoluteBottom
+                    ) {
+                        elements.push(node);
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                    return NodeFilter.FILTER_REJECT;
+                },
+            });
+            while (walker.nextNode()) {
+                // The walker goes through each node
+            }
+            elements.reverse();
+        }
+
+        // Remove header overlays if necessary (use documentY which is absolute)
+        // Or add it if the header is detached from the top of the page
+        const header = iframeDoc.querySelector("header");
+        if (header) {
+            const headerHeight = header.offsetHeight;
+            const isHeaderSidebar = header.classList.contains("o_header_sidebar");
+            if (documentY > headerHeight || isHeaderSidebar) {
+                elements = elements.filter((el) => !el.closest("header"));
+            } else if (documentY < headerHeight && !isHeaderSidebar) {
+                if (!elements.includes(header)) {
+                    elements.unshift(header.querySelector("nav"));
+                }
+            }
+        }
+
+        const wrapwrapEl = iframeDoc.querySelector("#wrapwrap");
+        if (wrapwrapEl && wrapwrapEl.classList.contains("o_footer_effect_enable")) {
+            const footer = iframeDoc.querySelector("footer");
+            const main = iframeDoc.querySelector("main");
+            const mainRect = main.getBoundingClientRect();
+            const mainBottom = iframeWin.pageYOffset + mainRect.bottom;
+            const isJustBelowMain = Math.abs(documentY - mainBottom) <= 2;
+
+            if (isJustBelowMain) {
+                elements.unshift(footer);
+            } else if (!isJustBelowMain) {
+                elements = elements.filter((el) => !el.closest("footer"));
+            }
+        }
+        return elements;
+    }
+    /**
+     * Returns the first element at the given point that has a non-transparent
+     * background color, after applying blacklist filters.
+     *
+     * If no suitable element is found under the point, the <body> element is
+     * returned as a fallback because it's not selected by the
+     * elementsFromPoints method but always has a background, visible behind
+     * snippet without background.
+     *
+     * @private
+     * @param {HTMLElement} editingElement Reference element used to obtain the
+     * document.
+     * @param {number} clientX X coordinate relative to the viewport.
+     * @param {number} clientY Y coordinate relative to the viewport.
+     * @returns {HTMLElement} The first visible background element under the
+     * point, or <body> if none matches.
+     */
+    getBackgroundElementFromPoint(clientX, clientY) {
+        const elements = this.getElementsFromPoint(clientX, clientY);
+        const element = elements.find(
+            (el) =>
+                (el.closest("[data-snippet]") || el.closest("header") || el.closest("footer")) &&
+                !getComputedStyle(el).backgroundColor.includes("rgba(0, 0, 0, 0)")
+        );
+        return element || this.editable.ownerDocument.querySelector("body");
+    }
+    /**
+     * Returns all elements containing a shape inside the closest parent snippet.
+     *
+     * Starting from the given element, this method climbs up to the highest
+     * parent snippet (`[data-snippet]`) and collects all elements that directly
+     * contain a `.o_we_shape` within that snippet.
+     *
+     * @param {HTMLElement} element Starting element.
+     * @returns {HTMLElement[]} List of elements containing a shape.
+     */
+    findElementsWithShape(element) {
+        if (!element || element.tagName === "BODY") {
+            return [];
+        }
+        let next;
+        while ((next = element.parentElement?.closest("[data-snippet]"))) {
+            element = next;
+        }
+        const allShapeEls = [...element.querySelectorAll(".o_we_shape")].map(
+            (el) => el.parentElement
+        );
+        return allShapeEls;
+    }
+    /**
+     * Checks whether a shape element is a direct neighbor of the edited element.
+     *
+     * A shape is considered a neighbor if the point just above or below it
+     * (depending on its vertical flip) overlaps the edited element.
+     *
+     * @param {HTMLElement} editingElement Element being edited.
+     * @param {HTMLElement} targetShapeEl Shape element to test.
+     * @returns {Boolean} Whether the shape is a neighbor of the edited element.
+     */
+    isShapeNeighbor(editingElement, targetShapeEl) {
+        const targetRect = targetShapeEl.getBoundingClientRect();
+        const shapeData = this.getShapeData(targetShapeEl);
+        const x = targetRect.left + targetRect.width / 2;
+        const y = shapeData.flip.includes("y") ? targetRect.top - 1 : targetRect.bottom + 1;
+        return this.getElementsFromPoint(x, y).includes(editingElement);
+    }
+    /**
+     * Returns the neighboring shape elements of a given element.
+     *
+     * Neighbors can be searched:
+     * - above ("top"), below ("bottom"), inside the same snippet ("inner")
+     * If no direction is specified, all neighboring shapes (top, bottom, and
+     * inner) are returned.
+     *
+     * @param {HTMLElement} editingElement Element for which neighbors are requested.
+     * @param {"top"|"bottom"|"inner"} direction Direction in which to look for neighbors.
+     * @returns {HTMLElement[]} List of neighboring shape elements.
+     */
+    getNeighborShape(editingElement, direction) {
+        const targetRect = editingElement.getBoundingClientRect();
+        const x = targetRect.left + targetRect.width / 2;
+        let y;
+        switch (direction) {
+            case "top":
+                y = targetRect.top - 1;
+                break;
+            case "bottom":
+                y = targetRect.bottom + 1;
+                break;
+            case "inner": {
+                const innerElements = this.findElementsWithShape(editingElement);
+                return innerElements.filter((el) => this.isShapeNeighbor(editingElement, el));
+            }
+            default: {
+                const topNeighbors = this.getNeighborShape(editingElement, "top");
+                const bottomNeighbors = this.getNeighborShape(editingElement, "bottom");
+                const innerNeighbors = this.getNeighborShape(editingElement, "inner");
+                return [...topNeighbors, ...bottomNeighbors, ...innerNeighbors];
+            }
+        }
+        const elements = this.getElementsFromPoint(x, y);
+        // There might be more than one shape next to the current snippet
+        // (e.g. big box) So we need to get all the shape to refresh them all
+        const element = elements.find((el) => el.querySelector(":scope > .o_we_shape"));
+        const shapeElements = this.findElementsWithShape(element);
+        return shapeElements.filter((el) => this.isShapeNeighbor(editingElement, el));
+    }
 }
 
 class BaseAnimationAction extends BuilderAction {
@@ -339,6 +695,7 @@ class BaseAnimationAction extends BuilderAction {
         this.getImplicitColors = this.dependencies.backgroundShapeOption.getImplicitColors;
         this.getBackgroundShapes = this.dependencies.backgroundShapeOption.getBackgroundShapes;
         this.createShapeContainer = this.dependencies.backgroundShapeOption.createShapeContainer;
+        this.handleBgColorChanged = this.dependencies.backgroundShapeOption.handleBgColorChanged;
     }
 }
 class SetBackgroundShapeAction extends BaseAnimationAction {
@@ -349,7 +706,7 @@ class SetBackgroundShapeAction extends BaseAnimationAction {
         const applyShapeParams = {
             shape: value,
             colors: this.getImplicitColors(editingElement, value, shapeData.colors),
-            flip: [],
+            flip: shapeData.flip,
             animated: params.animated,
             shapeAnimationSpeed: shapeData.shapeAnimationSpeed,
         };
@@ -379,18 +736,30 @@ class ShowOnMobileAction extends BaseAnimationAction {
 class FlipShapeAction extends BaseAnimationAction {
     static id = "flipShape";
     apply({ editingElement, params: { mainParam: axis } }) {
+        let { shape, flip, colors } = this.getShapeData(editingElement);
         this.applyShape(editingElement, () => {
-            const flip = new Set(this.getShapeData(editingElement).flip);
+            flip = new Set(flip);
             flip.add(axis);
             return { flip: [...flip] };
         });
+        if (axis === "y") {
+            this.applyShape(editingElement, () => ({
+                colors: this.getImplicitColors(editingElement, shape, colors),
+            }));
+        }
     }
     clean({ editingElement, params: { mainParam: axis } }) {
+        let { shape, flip, colors } = this.getShapeData(editingElement);
         this.applyShape(editingElement, () => {
-            const flip = new Set(this.getShapeData(editingElement).flip);
+            flip = new Set(flip);
             flip.delete(axis);
             return { flip: [...flip] };
         });
+        if (axis === "y") {
+            this.applyShape(editingElement, () => ({
+                colors: this.getImplicitColors(editingElement, shape, colors),
+            }));
+        }
     }
     isApplied({ editingElement, params: { mainParam: axis } }) {
         // Compat: flip classes are no longer used but may be
@@ -429,6 +798,12 @@ class BackgroundShapeColorAction extends BaseAnimationAction {
             const newColors = Object.assign(previousColors, { [colorName]: newColor });
             return { colors: newColors };
         });
+    }
+}
+class handleBgColorChangedAction extends BaseAnimationAction {
+    static id = "handleBgColorChanged";
+    apply({ editingElement, value }) {
+        this.handleBgColorChanged(editingElement, value);
     }
 }
 

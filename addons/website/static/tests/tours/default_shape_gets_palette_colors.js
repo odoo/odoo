@@ -17,6 +17,11 @@ registerWebsitePreviewTour(
             name: "Text - Image",
             groupName: "Content",
         }),
+        ...insertSnippet({
+            id: "s_banner",
+            name: "Banner",
+            groupName: "Intro",
+        }),
         ...clickOnSnippet({
             id: "s_text_image",
             name: "Text - Image",
