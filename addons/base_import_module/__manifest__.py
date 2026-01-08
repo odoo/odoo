@@ -19,7 +19,10 @@ for customization purpose.
     'assets': {
         'web.assets_backend': [
             'base_import_module/static/src/**/*',
-        ]
+        ],
+        'web.assets_unit_tests': [
+            'base_import_module/static/tests/**/*.test.js',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

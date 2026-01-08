@@ -70,10 +70,16 @@
             <field name="model">ir.module.module</field>
             <field name="inherit_id" ref="base.view_module_filter"/>
             <field name="arch" type="xml">
+                <xpath expr="//searchpanel" position="attributes">
+                   <attribute name="class">o_apps_searchpanel</attribute>
+               </xpath>
                 <xpath expr="//searchpanel/field[@name='category_id']" position="before">
                     <field name="module_type" string="Apps" expand="1"/>
                 </xpath>
             </field>
+        </record>
+        <record id="base.open_module_tree" model="ir.actions.act_window" forcecreate="0">
+            <field name="context">{'search_default_app': 1, 'searchpanel_default_module_type': 'official'}</field>
         </record>
     </data>
 </odoo>
