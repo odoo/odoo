@@ -300,7 +300,7 @@ class AccountMove(models.Model):
             self.env['ir.config_parameter'].sudo().set_param(param_key, last_fetched_date)
         return last_fetched_date
 
-    def _l10n_tr_nilvera_get_documents(self, invoice_channel="einvoice", document_category="Purchase", journal_type="in_invoice"):
+    def _l10n_tr_nilvera_get_documents(self, invoice_channel="einvoice", document_category="Purchase", journal_type="purchase"):
         with _get_nilvera_client(self.env.company) as client:
             endpoint = f"/{invoice_channel}/{quote(document_category)}"
             start_date = self._get_nilvera_last_fetch_date(invoice_channel, journal_type)
