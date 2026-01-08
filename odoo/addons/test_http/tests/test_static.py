@@ -83,9 +83,8 @@ class TestHttpStatic(TestHttpStaticCommon):
             self.assertCacheControl(res, 'public, max-age=604800')
 
     def test_static01_debug_assets(self):
-        session = self.authenticate(None, None)
-        session.debug = 'assets'
-
+        self.authenticate(None, None)
+        self.update_session(debug='assets')
         res = self.assertDownloadGizeh('/test_http/static/src/img/gizeh.png')
         self.assertCacheControl(res, 'no-cache, max-age=0')
 
@@ -429,10 +428,9 @@ class TestHttpStatic(TestHttpStaticCommon):
             self.assertEqual(res.headers['Content-Security-Policy'], "default-src 'none'")
 
     def test_static23_remove_cache_control_wkhmtltopdf(self):
-        session = self.authenticate(None, None)
+        self.authenticate(None, None)
         for debug in ('', 'assets'):
-            session.debug = debug
-            http.root.session_store.save(self.session)
+            self.update_session_context(debug=debug)
             with self.subTest(debug=debug):
                 res = self.db_url_open('/test_http/static/src/img/gizeh.png', headers={
                     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '

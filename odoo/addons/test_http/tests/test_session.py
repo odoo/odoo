@@ -43,16 +43,16 @@ class TestHttpSession(TestHttpBase):
 
     @mute_logger('odoo.http')  # greeting_none called ignoring args {'debug'}
     def test_session00_debug_mode(self):
-        session = self.authenticate(None, None)
-        self.assertEqual(session.debug, '')
+        self.authenticate(None, None)
+        self.assertEqual(self.session.debug, '')
         self.db_url_open('/test_http/greeting').raise_for_status()
-        self.assertEqual(session.debug, '')
+        self.assertEqual(self.session.debug, '')
         self.db_url_open('/test_http/greeting?debug=1').raise_for_status()
-        self.assertEqual(session.debug, '1')
+        self.assertEqual(self.session.debug, '1')
         self.db_url_open('/test_http/greeting').raise_for_status()
-        self.assertEqual(session.debug, '1')
+        self.assertEqual(self.session.debug, '1')
         self.db_url_open('/test_http/greeting?debug=').raise_for_status()
-        self.assertEqual(session.debug, '')
+        self.assertEqual(self.session.debug, '')
 
     def test_session01_default_session(self):
         # The default session should not be saved on the filestore.
@@ -66,10 +66,11 @@ class TestHttpSession(TestHttpBase):
                 raise AssertionError(msg) from exc
 
     def test_session03_logout_15_0_geoip(self):
-        session = self.authenticate(None, None)
-        session['db'] = 'idontexist'
-        session['geoip'] = {}  # Until saas-15.2 geoip was directly stored in the session
-        odoo.http.root.session_store.save(session)
+        self.authenticate(None, None)
+        self.update_session(
+            db='idontexist',
+            geoip={},  # Until saas-15.2 geoip was directly stored in the session
+        )
 
         with self.assertLogs('odoo.http', level='WARNING') as (_, warnings):
             res = self.multidb_url_open('/test_http/ensure_db', dblist=['db1', 'db2'])
@@ -77,7 +78,7 @@ class TestHttpSession(TestHttpBase):
         self.assertEqual(warnings, [
             "WARNING:odoo.http:Logged into database 'idontexist', but dbfilter rejects it; logging session out.",
         ])
-        self.assertFalse(session['db'])
+        self.assertFalse(self.session['db'])
         self.assertEqual(res.status_code, 303)
         self.assertURLEqual(res.headers.get('Location'), '/web/database/selector')
 
@@ -129,7 +130,7 @@ class TestHttpSession(TestHttpBase):
             self.assertEqual(res.text, 'en_US')
 
     def test_session06_saved_lang(self):
-        session = self.authenticate('demo', 'demo')
+        self.authenticate('demo', 'demo')
         self.env['res.lang']._activate_lang('en_US')  # default lang
         lang_fr = self.env['res.lang']._activate_lang('fr_FR')
 
@@ -138,22 +139,19 @@ class TestHttpSession(TestHttpBase):
             self.assertEqual(res.text, 'en_US')
 
         with self.subTest(case='fr saved and fr_FR enabled'):
-            session.context['lang'] = 'fr_FR'
-            odoo.http.root.session_store.save(session)
+            self.update_session_context(lang='fr_FR')
             res = self.url_open('/test_http/echo-http-context-lang')
             self.assertEqual(res.text, 'fr_FR')
 
         with self.subTest(case='fr saved but fr_FR disabled'):
-            session['lang'] = 'fr_FR'
-            odoo.http.root.session_store.save(session)
+            self.update_session_context(lang='fr_FR')
             lang_fr.active = False
             res = self.url_open('/test_http/echo-http-context-lang')
             self.assertEqual(res.text, 'en_US')
 
         milky_way = self.env.ref('test_http.milky_way')
         with self.subTest(case='fr record in url but fr_FR disabled'):
-            session.context['lang'] = 'fr_FR'
-            odoo.http.root.session_store.save(session)
+            self.update_session_context(lang='fr_FR')
             lang_fr.active = False
             self.url_open(f'/test_http/{milky_way.id}').raise_for_status()
 
@@ -392,6 +390,7 @@ class TestSessionStore(HttpCaseWithUserDemo):
         # default lifetime is 1 week
         with freeze_time() as freeze:
             session = self.authenticate(None, None)
+            self.update_session()  # it forces the session to be persisted
 
             freeze.tick(delta=datetime.timedelta(seconds=SESSION_LIFETIME - 1))
             self.env['ir.http']._gc_sessions()
@@ -409,6 +408,7 @@ class TestSessionStore(HttpCaseWithUserDemo):
         self.env['ir.config_parameter'].set_int('sessions.max_inactivity_seconds', 60)
         with freeze_time() as freeze:
             session = self.authenticate(None, None)
+            self.update_session()  # it forces the session to be persisted
 
             freeze.tick(delta=datetime.timedelta(seconds=59))
             self.env['ir.http']._gc_sessions()
@@ -426,6 +426,7 @@ class TestSessionStore(HttpCaseWithUserDemo):
         self.env['ir.config_parameter'].set_int('sessions.max_inactivity_seconds', SESSION_LIFETIME // 2)
         with freeze_time() as freeze:
             self.authenticate(None, None)
+            self.update_session()  # it forces the session to be persisted
             res = TestHttpBase.nodb_url_open(self, '/')
             res.raise_for_status()
             session = res.cookies.get('session_id')

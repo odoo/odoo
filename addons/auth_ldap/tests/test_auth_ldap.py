@@ -63,12 +63,11 @@ class TestAuthLDAP(HttpCase):
             )
             res.raise_for_status()
 
-        session = odoo.http.root.session_store.get(res.cookies["session_id"])
         self.assertEqual(
-            session.sid, res.cookies["session_id"], "A session must exist at this point")
+            self.session.sid, res.cookies["session_id"], "A session must exist at this point")
 
         with self.registry.cursor() as cr:
             cr.execute(
                 "SELECT id FROM res_users WHERE login = %s and id = %s",
-                ("test_ldap_user", session.uid))
+                ("test_ldap_user", self.session.uid))
             self.assertTrue(cr.rowcount, "User should be present")

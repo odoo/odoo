@@ -4,12 +4,12 @@ import json
 import time
 from http import HTTPStatus
 
-from odoo.http import Request, root, SESSION_ROTATION_INTERVAL
+from odoo.http import SESSION_ROTATION_INTERVAL, Request
 from odoo.tests import Like, new_test_user, tagged
 from odoo.tools import mute_logger
-from odoo.addons.test_http.controllers import CT_JSON
 
 from .test_common import TestHttpBase
+from odoo.addons.test_http.controllers import CT_JSON
 
 
 @tagged('post_install', '-at_install')
@@ -157,8 +157,7 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
         sid_before_rotation = self.opener.cookies['session_id']
 
         # Force a rotation by changing the create date of the session
-        self.session['create_time'] = time.time() - SESSION_ROTATION_INTERVAL
-        root.session_store.save(self.session)
+        self.update_session(create_time=time.time() - SESSION_ROTATION_INTERVAL)
 
         # Trigger session rotation by calling another endpoint
         res = self.db_url_open('/test_http/echo-http-get')

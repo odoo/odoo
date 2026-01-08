@@ -1,17 +1,15 @@
 import json
-import lxml.html
 import time
-
-import odoo.http
-
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from odoo.tests import HttpCase, new_test_user, tagged, TransactionCase
+import lxml.html
+
+from odoo.tests import HttpCase, TransactionCase, new_test_user, tagged
 from odoo.tests.common import HOST
 
-from odoo.addons.auth_totp.models.totp import TOTP
 from odoo.addons.auth_totp.controllers.home import TRUSTED_DEVICE_COOKIE
+from odoo.addons.auth_totp.models.totp import TOTP
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -241,21 +239,6 @@ class TestAuthTimeoutHttp(HttpCase):
             "/web/dataset/call_kw", json={"params": {"model": model, "method": method, "args": args, "kwargs": kwargs}}
         ).json()
 
-    def set_session_create_time(self, session_id, timestamp):
-        session = odoo.http.root.session_store.get(session_id)
-        session["create_time"] = timestamp
-        odoo.http.root.session_store.save(session)
-
-    def set_session_last_check_identity(self, session_id, timestamp):
-        session = odoo.http.root.session_store.get(session_id)
-        session["identity-check-last"] = timestamp
-        odoo.http.root.session_store.save(session)
-
-    def set_session_next_check_identity(self, session_id, timestamp):
-        session = odoo.http.root.session_store.get(session_id)
-        session["identity-check-next"] = timestamp
-        odoo.http.root.session_store.save(session)
-
     def set_auth_totp_mail(self):
         config = self.env["res.config.settings"].create({})
         config.auth_totp_enforce = True
@@ -290,11 +273,11 @@ class TestAuthTimeoutHttp(HttpCase):
 
     def test_check_identity_exception(self):
         group = self.user.group_ids[0]
-        session_id = self.authenticate(self.user.login, self.user.login).sid
+        self.authenticate(self.user.login, self.user.login)
 
         # Set an activity timeout and simulate an inactivity in the session
         group.lock_timeout_inactivity = 15  # 15 mins
-        self.set_session_next_check_identity(session_id, time.time())
+        self.update_session(**{'identity-check-next': time.time()})
 
         # Check identity must be checked
         self.assertMustCheckIdentity()
@@ -307,7 +290,7 @@ class TestAuthTimeoutHttp(HttpCase):
 
         # Set a lock timeout and simulate the user did not authenticate for 24+ hours
         group.lock_timeout = 24 * 60
-        self.set_session_create_time(session_id, time.time() - 25 * 60 * 60)  # 25 hours
+        self.update_session(create_time=time.time() - 25 * 60 * 60)  # 25 hours
 
         # Check a full login is required
         self.assertSessionExpired()
@@ -316,12 +299,12 @@ class TestAuthTimeoutHttp(HttpCase):
         group = self.user.group_ids[0]
         group.lock_timeout_inactivity = 15  # 15 mins
 
-        session_id = self.authenticate(self.user.login, self.user.login).sid
+        self.authenticate(self.user.login, self.user.login)
         # To avoid the check identity wizard during the configuration of TOTP, ...
-        self.set_session_last_check_identity(session_id, time.time())
+        self.update_session(**{'identity-check-last': time.time()})
 
         # 1. Password authentication
-        self.set_session_next_check_identity(session_id, time.time() - 16 * 60)
+        self.update_session(**{'identity-check-next': time.time() - 16 * 60})
         self.assertMustCheckIdentity()
         self.check_identity({"type": "password", "password": self.user.login})
         self.assertMustNotCheckIdentity()
@@ -330,7 +313,7 @@ class TestAuthTimeoutHttp(HttpCase):
         # 2.1 Enable TOTP by mail
         self.set_auth_totp_mail()
         # 2.2 Identify using TOTP by email
-        self.set_session_next_check_identity(session_id, time.time() - 16 * 60)
+        self.update_session(**{'identity-check-next': time.time() - 16 * 60})
         self.assertMustCheckIdentity()
         self.check_identity({"type": "totp_mail", "token": str(self.totp_code)})
         self.assertMustNotCheckIdentity()
@@ -338,7 +321,7 @@ class TestAuthTimeoutHttp(HttpCase):
         # 3. TOTP by app
         self.set_auth_totp()
         # 3.2 Identify using TOTP by code
-        self.set_session_next_check_identity(session_id, time.time() - 16 * 60)
+        self.update_session(**{'identity-check-next': time.time() - 16 * 60})
         self.assertMustCheckIdentity()
         self.check_identity({"type": "totp", "token": str(self.totp_code)})
         self.assertMustNotCheckIdentity()
@@ -348,7 +331,7 @@ class TestAuthTimeoutHttp(HttpCase):
         self.set_auth_passkey()
 
         # 4.2 Identify using a passkey
-        self.set_session_next_check_identity(session_id, time.time() - 16 * 60)
+        self.update_session(**{'identity-check-next': time.time() - 16 * 60})
         self.assertMustCheckIdentity()
         self.check_identity(
             {"type": "webauthn", "webauthn_response": json.dumps({"id": self.passkey_credential_id_base64url})}
@@ -370,12 +353,12 @@ class TestAuthTimeoutHttp(HttpCase):
         config.auth_totp_policy = "employee_required"
         config.execute()
 
-        session_id = self.authenticate(self.user.login, self.user.login).sid
+        self.authenticate(self.user.login, self.user.login)
 
         # Simulate the session did not authenticate for 30 minutes
         # Which falls between the 15 mins lock timeout without MFA
         # and the 60 mins lock timeout with MFA
-        self.set_session_next_check_identity(session_id, time.time() - 30 * 60)
+        self.update_session(**{'identity-check-next': time.time() - 30 * 60})
 
         # Assert the check identity exception is raised
         self.assertMustCheckIdentity()
@@ -388,7 +371,7 @@ class TestAuthTimeoutHttp(HttpCase):
 
         # Simulate the session did not authenticate for 90 mins
         # Which is greather than the 60 mins lock timeout with MFA
-        self.set_session_next_check_identity(session_id, time.time() - 90 * 60)
+        self.update_session(**{'identity-check-next': time.time() - 90 * 60})
 
         # Assert the check identity exception is raised
         self.assertMustCheckIdentity()
@@ -427,7 +410,7 @@ class TestAuthTimeoutHttp(HttpCase):
         config.auth_totp_policy = "employee_required"
         config.execute()
 
-        session_id = self.authenticate(self.user.login, self.user.login).sid
+        self.authenticate(self.user.login, self.user.login)
 
         # Simulate the session as inactive for 25 mins.
         # `identity-check-next` is set to `now` only when the first inactivity timeout is reached.
@@ -436,7 +419,7 @@ class TestAuthTimeoutHttp(HttpCase):
         # As the lowest inactivity timeout is configured to 15 mins above in this test
         # Setting `identity-check-next` to `now` - 10 mins means the session is inactive for 25 mins
         # Which falls between the timeout without mfa of 15 mins and the timeout with mfa of 30 mins
-        self.set_session_next_check_identity(session_id, time.time() - 10 * 60)
+        self.update_session(**{'identity-check-next': time.time() - 10 * 60})
 
         # Assert the check identity exception is raised
         self.assertMustCheckIdentity()
@@ -451,7 +434,7 @@ class TestAuthTimeoutHttp(HttpCase):
         # by setting to `identity-check-next` to 16 mins in the past:
         # 15 mins (lowest inactivity timeout configured above) + 16 mins = 31 mins of inactivity.
         # As it's greater than the 30 mins inactivity tiemout requiring MFA, MFA is required to check the identity
-        self.set_session_next_check_identity(session_id, time.time() - 16 * 60)
+        self.update_session(**{'identity-check-next': time.time() - 16 * 60})
 
         # Assert the check identity exception is raised
         self.assertMustCheckIdentity()
@@ -482,8 +465,8 @@ class TestAuthTimeoutHttp(HttpCase):
         group.lock_timeout_mfa = True
 
         # 2. Connect and set a TOTP for the user
-        session_id = self.authenticate(self.user.login, self.user.login).sid
-        self.set_session_last_check_identity(session_id, time.time())
+        self.authenticate(self.user.login, self.user.login)
+        self.update_session(**{'identity-check-last': time.time()})
         self.set_auth_totp()
 
         # 3. Disconnect
@@ -529,9 +512,9 @@ class TestAuthTimeoutHttp(HttpCase):
         self.assertGreater(device.expiration_date, datetime.now() + timedelta(seconds=group.lock_timeout * 60 - 60))
 
     def test_auth_timeout_tour(self):
-        session_id = self.authenticate(self.user.login, self.user.login).sid
+        self.authenticate(self.user.login, self.user.login)
         # To avoid the check identity wizard during the configuration of TOTP, ...
-        self.set_session_last_check_identity(session_id, time.time())
+        self.update_session(**{'identity-check-last': time.time()})
         self.set_auth_totp_mail()
         self.set_auth_totp()
         self.set_auth_passkey()

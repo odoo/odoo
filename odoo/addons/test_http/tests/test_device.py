@@ -1,21 +1,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
-from freezegun import freeze_time
 from unittest.mock import patch
 
-import odoo
+from freezegun import freeze_time
 
+import odoo
 from odoo import Command
+from odoo.tests import tagged
+
+from .test_common import TestHttpBase
 from odoo.addons.test_http.utils import (
     TEST_IP,
     USER_AGENT_android_chrome,
     USER_AGENT_linux_chrome,
-    USER_AGENT_linux_firefox
+    USER_AGENT_linux_firefox,
 )
-from odoo.tests import tagged
-
-from .test_common import TestHttpBase
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -300,9 +300,9 @@ class TestDevice(TestHttpBase):
         self.assertCountEqual(device_firefox.mapped('ip_address'), ['191.0.1.41'])
 
     def test_detection_no_trace_mechanism(self):
-        session = self.authenticate(self.user_admin.login, self.user_admin.login)
-        session['_trace_disable'] = True
-        odoo.http.root.session_store.save(session)
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        self.update_session(_trace_disable=True)
+
         res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
         self.assertEqual(res.status_code, 200)
 
@@ -310,7 +310,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 0)
         self.assertEqual(len(devices), 0)
         self.assertEqual(len(logs), 0)
-        self.assertEqual(len(session['_devices']), 0)
+        self.assertEqual(len(self.session['_devices']), 0)
 
     def test_detection_device_default_order(self):
         self.authenticate(self.user_admin.login, self.user_admin.login)

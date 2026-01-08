@@ -17,10 +17,9 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         self.start_tour('/', 'test_json_auth')
 
     def test_02_inactive_session_lang(self):
-        session = self.authenticate(None, None)
+        self.authenticate(None, None)
         self.env.ref('base.lang_fr').active = False
-        session.context['lang'] = 'fr_FR'
-        odoo.http.root.session_store.save(session)
+        self.update_session_context(lang='fr_FR')
 
         # ensure that _get_current_website_id will be able to match a website
         current_website_id = self.env["website"]._get_current_website_id(odoo.tests.HOST)
@@ -30,10 +29,9 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         res.raise_for_status()
 
     def test_03_totp_login_with_inactive_session_lang(self):
-        session = self.authenticate(None, None)
+        self.authenticate(None, None)
         self.env.ref('base.lang_fr').active = False
-        session.context['lang'] = 'fr_FR'
-        odoo.http.root.session_store.save(session)
+        self.update_session_context(lang='fr_FR')
 
         # ensure that _get_current_website_id will be able to match a website
         current_website_id = self.env["website"]._get_current_website_id(odoo.tests.HOST)
@@ -50,11 +48,8 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         self.assertTrue(res.next.path_url.startswith("/web/login/totp"))
 
     def test_04_ensure_website_cached_data_can_be_called(self):
-        session = self.authenticate('admin', 'admin')
-
-        # Force a browser language that is not installed
-        session.context['lang'] = 'fr_MC'
-        http.root.session_store.save(session)
+        self.authenticate('admin', 'admin')
+        self.update_session_context(lang='fr_MC')  # Force a browser language that is not installed
 
         # Disable cache in order to make sure that values would be fetched at any time
         get_cached_values_without_cache = Website._cached_data.__cache__.method
