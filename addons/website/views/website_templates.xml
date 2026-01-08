@@ -221,9 +221,13 @@
         <attribute name="class" add="o_not_editable small" separator=" "/>
         <attribute name="t-if">not editable</attribute>
     </xpath>
-    <xpath expr="//div[hasclass('o_footer_copyright')]//div[hasclass('col-sm')][2]" position="attributes">
-        <attribute name="class" remove="col-sm text-sm-end" add="col-md mt-auto mb-0 text-md-end" separator=" "/>
-    </xpath>
+    <xpath expr="//div[contains(@class, 'o_footer_copyright')]" position="replace">
+    <div class="o_footer_copyright text-center">
+        © <t t-esc="company.name"/>
+    </div>
+</xpath>
+
+
 
     <xpath expr="//head" position="inside">
         <t t-if="website.google_analytics_key and not editable">
