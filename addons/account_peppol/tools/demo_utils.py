@@ -3,7 +3,6 @@
 from base64 import b64encode
 import uuid
 
-from odoo.tools import _
 from odoo.tools.misc import file_open
 
 DEMO_BILL_PATH = 'account_peppol/tools/demo_bill'
@@ -27,20 +26,9 @@ def get_demo_vendor_bill(user):
     }
 
 
-def _get_notification_message(proxy_state):
-    if proxy_state == 'receiver':
-        title = _("Registered to receive documents via Peppol (demo).")
-        message = _("You can now receive demo vendor bills.")
-    else:
-        title = _("Registered as a sender (demo).")
-        message = _("You can now send invoices in demo mode.")
-    return title, message
-
 # -------------------------------------------------------------------------
 # MOCKED FUNCTIONS
 # -------------------------------------------------------------------------
-
-
 def _mock_call_peppol_proxy(func, self, endpoint, params=None):
 
     def _mock_get_all_documents(user):
@@ -84,7 +72,6 @@ def _mock_call_peppol_proxy(func, self, endpoint, params=None):
         'update_user': lambda _user: {},
         'cancel_peppol_registration': lambda _user: {},
         'unregister_to_sender': _mock_unregister_to_sender,
-        'migrate_peppol_registration': lambda _user: {'migration_key': 'demo_migration_key'},
         'participant_status': lambda _user: {'peppol_state': 'receiver'},
         'set_webhook': lambda _user: {},
         # document routes
@@ -114,13 +101,25 @@ def _mock_check_peppol_participant_exists(func, self, *args, **kwargs):
     return False
 
 
-def _mock_register_proxy_user(func, self, *args, **kwargs):
-    edi_user = func(self, *args, **kwargs)
-    if edi_user.proxy_type != 'peppol':
-        return edi_user
+def _mock_create_connection(func, self, *args, **kwargs):
+    edi_mode, peppol_identifier, _db_uuid, company = args
+    dummy_response = {'id_client': 'demo4peppol', 'refresh_token': 'demo', 'peppol_state': 'receiver'}
+    private_key_sudo = self.env['certificate.key'].sudo()._generate_rsa_private_key(
+        company,
+        name=f"peppol_{edi_mode}_{company.id}.key",
+    )
+    edi_user = self.env['account_edi_proxy_client.user'].create({
+        'id_client': dummy_response['id_client'],
+        'company_id': company.id,
+        'proxy_type': 'peppol',
+        'edi_mode': edi_mode,
+        'edi_identification': peppol_identifier,
+        'refresh_token': dummy_response['refresh_token'],
+        'private_key_id': private_key_sudo.id,
+    })
+    company.account_peppol_proxy_state = dummy_response['peppol_state']
 
     content = b64encode(file_open(DEMO_PRIVATE_KEY, 'rb').read())
-
     attachments = self.env['ir.attachment'].search([
         ('res_model', '=', 'certificate.key'),
         ('res_field', '=', 'content'),
@@ -137,11 +136,18 @@ def _mock_register_proxy_user(func, self, *args, **kwargs):
     return edi_user
 
 
+def _mock_can_connect(func, self, *args, **kwargs):
+    return {
+        'auth_required': False,
+    }
+
+
 _demo_behaviour = {
     '_call_peppol_proxy': _mock_call_peppol_proxy,  # account_edi_proxy_client.user
     '_get_peppol_verification_state': _mock_get_peppol_verification_state,  # res.partner
     '_check_peppol_participant_exists': _mock_check_peppol_participant_exists,  # res.partner
-    '_register_proxy_user': _mock_register_proxy_user,  # account_edi_proxy_client.user
+    '_create_connection': _mock_create_connection,  # peppol.registration
+    '_can_connect': _mock_can_connect,  # peppol.registration
 }
 
 # -------------------------------------------------------------------------
