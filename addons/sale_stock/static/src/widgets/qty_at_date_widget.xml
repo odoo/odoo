@@ -5,7 +5,7 @@
         <a t-att-tabindex="props.record.data.display_qty_widget ? '0' : '-1'"
             t-on-click="showPopup"
             t-att-class="!props.record.data.display_qty_widget ? 'invisible' : ''"
-            t-attf-class="fa fa-area-chart cursor-pointer {{ calcData.forecasted_issue ? 'text-danger' : '' }}"
+            t-attf-class="fa fa-area-chart cursor-pointer {{ calcData.forecasted_issue ? 'text-danger' : calcData.reservation_issue ? 'text-warning' : '' }}"
         />
     </t>
 
@@ -21,7 +21,7 @@
                     </tr>
                     <tr>
                         <td><strong>Available</strong><br /><small>All planned operations included</small></td>
-                        <td class="text-end"><b t-out='props.record.data.free_qty_today' t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': ''"/> <t t-out='props.record.data.product_uom[1]'/></td>
+                        <td class="text-end"><b t-out='props.record.data.free_qty_today' t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': props.calcData.reservation_issue ? 'text-warning': ''"/> <t t-out='props.record.data.product_uom[1]'/></td>
                     </tr>
                 </t>
                 <t t-elif="props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
