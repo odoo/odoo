@@ -200,5 +200,18 @@ export class ProductProduct extends models.ServerModel {
             product_template_attribute_value_ids: [],
             product_template_variant_value_ids: [],
         },
+        {
+            id: 18,
+            product_tmpl_id: 18,
+            lst_price: 0,
+            standard_price: 0,
+            display_name: "Free Product - Wood chair",
+            product_tag_ids: [],
+            barcode: false,
+            default_code: false,
+            product_template_attribute_value_ids: [],
+            product_template_variant_value_ids: [],
+            pos_categ_ids: [],
+        },
     ];
 }

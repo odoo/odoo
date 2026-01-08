@@ -74,6 +74,28 @@ export class LoyaltyReward extends models.ServerModel {
             reward_product_uom_id: false,
             reward_product_domain: "[]",
         },
+        {
+            id: 3,
+            description: "Free Product - Whiteboard Pen",
+            program_id: 7,
+            reward_type: "product",
+            required_points: 1,
+            clear_wallet: false,
+            currency_id: 1,
+            discount: 0,
+            discount_mode: "percent",
+            discount_applicability: "order",
+            all_discount_product_ids: [],
+            is_global_discount: true,
+            discount_max_amount: 0,
+            discount_line_product_id: 18,
+            reward_product_id: 10,
+            multi_product: false,
+            reward_product_ids: [10],
+            reward_product_qty: 1,
+            reward_product_uom_id: false,
+            reward_product_domain: "[]",
+        },
     ];
 }
 
