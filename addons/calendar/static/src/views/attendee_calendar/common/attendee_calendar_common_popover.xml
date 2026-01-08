@@ -24,7 +24,7 @@
         </xpath>
         <xpath expr="//t[@t-if='isEventDeletable']" position="before">
             <t t-if="displayAttendeeAnswerChoice">
-                <div class="btn-group w-100 w-lg-auto ms-lg-auto order-first order-lg-0 px-2 px-lg-0">
+                <div class="btn-group w-100 w-auto me-auto me-lg-0 ms-lg-auto order-first order-lg-0 px-2 px-lg-0">
                     <button class="btn"
                             t-attf-class="#{selectedStatusInfo.text === 'Yes' ? 'btn-secondary active' : 'btn-outline-secondary'}"
                             t-on-click="() => this.changeAttendeeStatus('accepted')">Yes</button>
