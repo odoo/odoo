@@ -387,7 +387,7 @@ class StockMove(models.Model):
         domain = Domain([('move_id', '=', self.id)])
         if at_date:
             domain &= Domain([('date', '<=', at_date)])
-        manual_value = self.env['product.value'].search(domain, order="date desc, id desc", limit=1)
+        manual_value = self.env['product.value'].sudo().search(domain, order="date desc, id desc", limit=1)
         if manual_value:
             valuation_data['value'] = manual_value.value
             valuation_data['quantity'] = quantity
