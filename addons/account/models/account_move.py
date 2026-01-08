@@ -2667,7 +2667,10 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     def _is_eligible_for_early_payment_discount(self, currency, reference_date):
         self.ensure_one()
-        payment_terms = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        payment_terms = self.env['account.move.line'].search([
+            ('move_id', '=', self.id),
+            ('display_type', '=', 'payment_term'),
+        ])
         return self.currency_id == currency \
             and self.move_type in self._early_payment_discount_move_types() \
             and self.invoice_payment_term_id.early_discount \
