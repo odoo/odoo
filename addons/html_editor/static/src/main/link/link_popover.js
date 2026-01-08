@@ -260,6 +260,10 @@ export class LinkPopover extends Component {
         }
     }
 
+    showGearIcon() {
+        return !!this.props.document.querySelector("#wrapwrap");
+    }
+
     toggleAdvancedOptions() {
         this.state.showAdvancedOptions = !this.state.showAdvancedOptions;
     }
