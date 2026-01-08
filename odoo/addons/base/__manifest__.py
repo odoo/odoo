@@ -65,7 +65,6 @@ The kernel of Odoo, needed for all installation.
         'views/res_lang_views.xml',
         'views/res_partner_views.xml',
         'views/clearing_label_views.xml',
-        'views/res_partner_bank_views.xml',
         'views/res_country_views.xml',
         'views/res_currency_views.xml',
         'views/res_groups_views.xml',
@@ -80,7 +79,6 @@ The kernel of Odoo, needed for all installation.
     ],
     'demo': [
         'data/res_users_demo.xml',
-        'data/res_partner_bank_demo.xml',
         'data/res_currency_demo.xml',
         'data/res_currency_rate_demo.xml',
         'data/res_partner_demo.xml',

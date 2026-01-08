@@ -18,7 +18,6 @@ from odoo.tools.date_utils import all_timezones
 
 if typing.TYPE_CHECKING:
     from .res_users import ResUsers
-    from .res_partner_bank import ResPartnerBank
     from .res_country import ResCountry, ResCountryState
     from .res_company import ResCompany
 
@@ -235,7 +234,6 @@ class ResPartner(models.Model):
        help="The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country")
     company_registry_label = fields.Char(string='Company ID Label', compute='_compute_company_registry_label')
     company_registry_placeholder = fields.Char(compute='_compute_company_registry_placeholder')
-    bank_ids: ResPartnerBank = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char('Website Link')
     comment = fields.Html(string='Notes')
 
@@ -848,11 +846,6 @@ class ResPartner(models.Model):
                                             'Linked active users :\n%(names)s', names=", ".join([u.display_name for u in users])))
         if vals.get('website'):
             vals['website'] = self._clean_website(vals['website'])
-        if vals.get('name'):
-            for partner in self:
-                for bank in partner.bank_ids:
-                    if bank.holder_name == partner.name:
-                        bank.holder_name = vals['name']
 
         # filter to keep only really updated values -> field synchronize goes through
         # partner tree and we should avoid infinite loops in case same value is
