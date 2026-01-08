@@ -257,6 +257,19 @@ test("translate attribute history", async () => {
     expect(".modal .modal-body input").toHaveValue("title");
 });
 
+test("undo shortcut in translate", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: `<h1>Homepage</h1>`,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    setSelection({ anchorNode: queryOne(":iframe h1"), anchorOffset: 0 });
+    await insertText(getEditor(), "New ");
+    expect(":iframe h1").toHaveText("New Homepage");
+    await press(["ctrl", "z"]);
+    await getEditor().shared.operation.next();
+    expect(":iframe h1").not.toHaveText("New Homepage");
+});
+
 test("translate select", async () => {
     await setupSidebarBuilderForTranslation({
         websiteContent: `
