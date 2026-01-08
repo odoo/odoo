@@ -137,7 +137,15 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 download=download,
             )
 
-        if request.env.user.share and access_token:
+        if (
+            request.env.user.share
+            and access_token
+            # Ensure request is coming from UI when accessing this order
+            and (
+                request.session.uid
+                or 'Sec-Fetch-Site' in request.httprequest.headers
+            )
+        ):
             # If a public/portal user accesses the order with the access token
             # Log a note on the chatter.
             today = fields.Date.today().isoformat()
