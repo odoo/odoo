@@ -20,7 +20,6 @@ Also:
     'depends': ['account'],
     'auto_install': ['account'],
     'data': [
-        'data/account_tax_report_data.xml',
         'data/account_tax_template_data.xml',
         'data/bas_a.xml',
         'data/bas_c.xml',
@@ -32,7 +31,6 @@ Also:
         'data/bas_w.xml',
         'data/bas_x.xml',
         'data/bas_y.xml',
-        'data/master_bas.xml',
         'data/res_currency_data.xml',
         'data/account.account.tag.csv',
         'views/menuitems.xml',
