@@ -7,6 +7,7 @@ import json
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_round
 from odoo.tools.sql import column_exists, create_column
 
 
@@ -129,8 +130,9 @@ class StockPicking(models.Model):
 
     @api.depends('move_ids.weight')
     def _cal_weight(self):
+        precision = self.env["decimal.precision"].precision_get('Stock Weight')
         for picking in self:
-            picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
+            picking.weight = float_round(sum(move.weight for move in picking.move_ids if move.state != 'cancel'), precision_digits=precision)
 
     def _carrier_exception_note(self, exception):
         self.ensure_one()
