@@ -748,7 +748,6 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         Test that invoice contacts without specific names use their parent partner's
         name in the XML output, avoiding the 'Invoice address' suffix from display_name.
         """
-        self.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
         partner = self.env['res.partner'].create({
             'parent_id': self.partner_a.id,
             'type': 'invoice'
