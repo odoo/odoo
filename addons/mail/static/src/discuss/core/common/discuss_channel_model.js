@@ -424,6 +424,9 @@ export class DiscussChannel extends Record {
     get shouldSubscribeToBusChannel() {
         return this.chatWindow?.isOpen;
     }
+    get isMeetingChannel() {
+        return this.default_display_mode === "video_full_screen";
+    }
     get isChatChannel() {
         return this.chatChannelTypes.includes(this.channel_type);
     }
