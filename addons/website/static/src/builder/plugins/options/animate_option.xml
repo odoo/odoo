@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website.animateOnScrollInOut">
-    <BuilderButtonGroup t-if="isActiveItem('animation_on_scroll_opt')" preview="false" action="'forceAnimation'">
-        <BuilderButton classAction="''">In</BuilderButton>
-        <BuilderButton classAction="'o_animate_out'">Out</BuilderButton>
-    </BuilderButtonGroup>
-</t>
-
 <t t-name="website.AnimateOption">
     <t t-if="this.state.isOptionActive">
         <BuilderRow label.translate="Animation">
@@ -30,11 +23,17 @@
                             id="'animation_on_hover_opt'"
                             t-if="state.canHover">On Hover</BuilderSelectItem>
             </BuilderSelect>
+            <t t-if="isActiveItem('animation_on_appearance_opt')">
+                <BuilderButton icon="'fa-play'" title.translate="Trigger Animation" preview="false" action="'forceAnimation'">
+                </BuilderButton>
+            </t>
             <t t-if="!!props.slots?.animationRowTrailing" t-slot="animationRowTrailing"/>
-            <t t-else="" t-call="website.animateOnScrollInOut"/> 
         </BuilderRow>
-        <BuilderRow label.translate="On Scroll" level="1" t-if="!!props.slots?.animationRowTrailing">
-            <t t-call="website.animateOnScrollInOut"/>
+        <BuilderRow label.translate="Trigger" level="1" t-if="isActiveItem('animation_on_scroll_opt')">
+            <BuilderButtonGroup t-if="isActiveItem('animation_on_scroll_opt')" preview="false" action="'forceAnimation'">
+                <BuilderButton classAction="''">Scroll In</BuilderButton>
+                <BuilderButton classAction="'o_animate_out'">Scroll Out</BuilderButton>
+            </BuilderButtonGroup>
         </BuilderRow>
         <BuilderRow label.translate="Effect" level="1">
             <BuilderSelect id="'animation_effect_opt'" dropdownClass="props.dropdownClass"
