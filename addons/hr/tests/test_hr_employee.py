@@ -596,6 +596,31 @@ class TestHrEmployee(TestHrCommon):
             employee_form.job_id = first_job
             self.assertEqual(employee_form.job_title, first_job.name)
 
+    def test_flexible_working_hours(self):
+        """
+        Test to verify that get_unusual_days() return false for flexible work schedule
+        """
+
+        employeeA = self.env['hr.employee'].create({
+            'name': 'Employee',
+            'date_version': datetime(2025, 1, 1),
+            'contract_date_start': datetime(2025, 1, 1),
+        })
+
+        # Testing employeA on regular working schedule
+        days = employeeA._get_unusual_days(str(datetime(2025, 1, 1)), str(datetime(2025, 12, 31)))
+        self.assertTrue(days)
+        self.assertTrue(days['2025-01-04'])
+
+        # Assigning flexible work hours to employeeA
+        employeeA.current_version_id.write({
+            'resource_calendar_id': False,
+            'hours_per_week': 40,
+        })
+        days = employeeA._get_unusual_days(str(datetime(2025, 1, 1)), str(datetime(2025, 12, 31)))
+        self.assertTrue(days)
+        self.assertFalse(days['2025-01-04'])
+
     def test_user_creation_from_employee_with_invalid_email(self):
         employee = self.env['hr.employee'].create({
             'name': 'Test Employee',
