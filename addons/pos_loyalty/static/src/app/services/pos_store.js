@@ -92,11 +92,13 @@ patch(PosStore.prototype, {
                         changed = true;
                     }
                 }
+
+                const rewardLinesChanged = order._updateRewardLines();
+
                 // Rewards may impact the number of points gained
-                if (changed) {
+                if (changed || rewardLinesChanged) {
                     await this.orderUpdateLoyaltyPrograms();
                 }
-                order._updateRewardLines();
             })
         );
     },
