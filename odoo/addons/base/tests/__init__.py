@@ -2,7 +2,6 @@
 
 from . import common
 from . import test_acl
-from . import test_api
 from . import test_barcode
 from . import test_base
 from . import test_basecase
