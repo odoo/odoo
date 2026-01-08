@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst, waitFor, advanceTime, animationFrame, setInputRange } from "@odoo/hoot-dom";
+import { queryFirst, advanceTime, animationFrame, setInputRange } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { testImg } from "./image_test_helpers";
@@ -123,8 +123,6 @@ test("Should change the shape color of an image", async () => {
     await selectImageShape("html_builder/pattern/pattern_wave_4");
     await waitSidebarUpdated();
 
-    await waitFor(`[data-label="Colors"] .o_we_color_preview`);
-
     expect(`[data-label="Colors"] .o_we_color_preview`).toHaveCount(4);
 
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).toHaveAttribute(
@@ -181,8 +179,6 @@ test("Should change the shape color of an image with a class color", async () =>
 
     await selectImageShape("html_builder/pattern/pattern_wave_4");
     await waitSidebarUpdated();
-
-    await waitFor(`[data-label="Colors"] .o_we_color_preview`);
 
     expect(`[data-label="Colors"] .o_we_color_preview`).toHaveCount(4);
 
@@ -253,7 +249,6 @@ describe("flip shape axis", () => {
 
         await selectImageShape("html_builder/geometric/geo_tetris");
         await waitSidebarUpdated();
-        await waitFor(`[data-action-id="flipImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
@@ -278,7 +273,6 @@ describe("flip shape axis", () => {
 
         await selectImageShape("html_builder/geometric/geo_tetris");
         await waitSidebarUpdated();
-        await waitFor(`[data-action-id="flipImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
@@ -304,7 +298,6 @@ describe("flip shape axis", () => {
 
         await selectImageShape("html_builder/geometric/geo_tetris");
         await waitSidebarUpdated();
-        await waitFor(`[data-action-id="flipImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
@@ -329,7 +322,6 @@ describe("flip shape axis", () => {
 
         await selectImageShape("html_builder/geometric/geo_tetris");
         await waitSidebarUpdated();
-        await waitFor(`[data-action-id="flipImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
@@ -357,7 +349,6 @@ describe("rotate shape", () => {
         await selectImageShape("html_builder/geometric/geo_tetris");
         // ensure the shape action has been applied
         await waitSidebarUpdated();
-        await waitFor(`[data-action-id="rotateImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
@@ -381,7 +372,6 @@ describe("rotate shape", () => {
 
         await selectImageShape("html_builder/geometric/geo_tetris");
         await waitSidebarUpdated();
-        await waitFor(`[data-action-id="rotateImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
@@ -408,8 +398,6 @@ describe("rotate shape", () => {
         await selectImageShape("html_builder/geometric/geo_tetris");
         // ensure the shape action has been applied
         await waitSidebarUpdated();
-
-        await waitFor(`[data-action-id="rotateImageShape"]`);
 
         expect(`:iframe .test-options-target img`).toHaveAttribute(
             "data-shape",
