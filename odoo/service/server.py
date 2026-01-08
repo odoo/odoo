@@ -784,8 +784,14 @@ class GeventServer(CommonServer):
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             gevent.spawn(self.watchdog)
 
+        sock = None
+        if os.environ.get('LISTEN_FDS') == '1' and os.environ.get('LISTEN_PID') == str(os.getpid()):
+            SD_LISTEN_FDS_START = 3
+            sock = socket.fromfd(SD_LISTEN_FDS_START, socket.AF_INET, socket.SOCK_STREAM)
+            self.interface, self.port = sock.getsockname()
+
         self.httpd = WSGIServer(
-            (self.interface, self.port), self.app,
+            sock or (self.interface, self.port), self.app,
             log=logging.getLogger('longpolling'),
             error_log=logging.getLogger('longpolling'),
             handler_class=ProxyHandler,
