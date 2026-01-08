@@ -99,7 +99,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(len(event_registration.registration_answer_ids), 3)
         self.assertEqual(event_answer_name, ['Q1-Answer1', 'Q2-Answer1', 'Q3-Answer1'])
 
-    def test_selling_multislot_event_in_pos(self):
+    def test_selling_has_slot_event_in_pos(self):
         self.pos_user.write({
             'group_ids': [
                 (4, self.env.ref('event.group_event_user').id),
@@ -126,7 +126,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             }
         ])
         self.test_event.write({
-            'is_multi_slots': True,
             'event_slot_ids': [(6, 0, (slot_1 + slot_2).ids)],
         })
         # Reduce first slot availability by one

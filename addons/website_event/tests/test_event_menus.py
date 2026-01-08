@@ -86,7 +86,7 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         self.env['website.event.menu'].create({
             'event_id': event.id,
             'menu_id': website_menu.id,
-            'menu_type': 'community',
+            'menu_type': 'introduction',
         })
 
         new_page = self.env['website'].new_page(new_page_url.lstrip('/'))
@@ -103,16 +103,11 @@ class TestEventMenus(OnlineEventCase, HttpCase):
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
             'website_menu': True,
-            'community_menu': False,
         })
         self.assertTrue(event.website_menu)
         self.assertTrue(event.introduction_menu)
         self.assertTrue(event.register_menu)
-        self.assertFalse(event.community_menu)
-        self._assert_website_menus(event, ['Home', 'Practical'], menus_out=['Rooms'])
-
-        event.community_menu = True
-        self._assert_website_menus(event, ['Home', 'Rooms', 'Practical'])
+        self._assert_website_menus(event, ['Home', 'Practical'])
 
         # test create without any requested menus
         event = self.env['event.event'].create({
@@ -124,12 +119,11 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         self.assertFalse(event.website_menu)
         self.assertFalse(event.introduction_menu)
         self.assertFalse(event.register_menu)
-        self.assertFalse(event.community_menu)
         self.assertFalse(event.menu_id)
 
-        # test update of website_menu triggering 3 sub menus
+        # test update of website_menu triggering 2 sub menus
         event.write({'website_menu': True})
-        self._assert_website_menus(event, ['Home', 'Practical'], menus_out=['Rooms'])
+        self._assert_website_menus(event, ['Home', 'Practical'])
 
     @users('user_event_web_manager')
     def test_menu_management_frontend(self):
@@ -138,26 +132,24 @@ class TestEventMenus(OnlineEventCase, HttpCase):
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
             'website_menu': True,
-            'community_menu': False,
         })
-        self._assert_website_menus(event, ['Home', 'Practical'], menus_out=['Rooms'])
+        self._assert_website_menus(event, ['Home', 'Practical'])
 
         # simulate menu removal from frontend: aka unlinking a menu
         event.menu_id.child_id.filtered(lambda menu: menu.name == 'Home').unlink()
 
         self.assertTrue(event.website_menu)
-        self._assert_website_menus(event, ['Practical'], menus_out=['Home', 'Rooms'])
+        self._assert_website_menus(event, ['Practical'], menus_out=['Home'])
 
         # re-created from backend
         event.introduction_menu = True
-        self._assert_website_menus(event, ['Home', 'Practical'], menus_out=['Rooms'])
+        self._assert_website_menus(event, ['Home', 'Practical'])
 
     def test_submenu_url(self):
         """ Test that the different URL of a submenu page of an event are accessible """
         old_event_1, old_event_2, event_1, event_2, event_3 = self.env["event.event"].create(
             [
                 {
-                    "community_menu": False,
                     "date_begin": fields.Datetime.to_string(
                         datetime.today() + timedelta(days=1)
                     ),
@@ -208,13 +200,12 @@ class TestEventMenus(OnlineEventCase, HttpCase):
                         datetime.today() + timedelta(days=15)
                     ),
                     "website_menu": True,
-                    "community_menu": False,
                 }
                 for _ in range(2)
             ]
         )
 
-        # Skip the register and community menus since they already have a unique URL
+        # Skip the register menu since it already has a unique URL.
         event_1_home_menu = event_1.menu_id.child_id.filtered(
             lambda menu: menu.name == "Home"
         )

@@ -41,7 +41,7 @@
                             <t t-set="additionnal_classes" t-value="'o_wevent_event_main_cover o_wevent_event_main_cover_top overflow-hidden h-auto'"/>
 
                             <a class="text-decoration-none" t-att-href="event.event_url or event.website_url">
-                                <div t-if="not event.is_multi_slots" t-attf-class="o_wevent_event_date position-absolute shadow-sm o_not_editable">
+                                <div t-if="not event.has_slots" t-attf-class="o_wevent_event_date position-absolute shadow-sm o_not_editable">
                                     <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month"/>
                                     <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
                                 </div>
@@ -60,8 +60,8 @@
                             </a>
                         </t>
                         <t t-set="event_attendees" t-value="attendee_ids_per_event.get(event, [])"/>
-                        <div t-if="event_attendees or not event.is_multi_slots" class="m-3">
-                            <t t-if="event_attendees and not event.is_multi_slots">
+                        <div t-if="event_attendees or not event.has_slots" class="m-3">
+                            <t t-if="event_attendees and not event.has_slots">
                                 <t t-call="website_event.registration_ticket_access">
                                     <t t-set="attendees" t-value="event_attendees"/>
                                 </t>
@@ -100,7 +100,7 @@
                                     <t t-set="google_url" t-value="urls_per_event.get(event.id, {}).get(slot.id, {}).get('google_url', '')"/>
                                 </t>
                             </div>
-                            <div t-if="not event.is_multi_slots" class="row my-3">
+                            <div t-if="not event.has_slots" class="row my-3">
                                 <t t-call="website_event.event_calendar_links">
                                     <t t-set="iCal_url" t-value="urls_per_event.get(event.id, {}).get('iCal_url', '')"/>
                                     <t t-set="google_url" t-value="urls_per_event.get(event.id, {}).get('google_url', '')"/>

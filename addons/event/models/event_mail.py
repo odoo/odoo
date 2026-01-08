@@ -112,7 +112,7 @@ class EventMail(models.Model):
         for scheduler in self._filter_template_ref():
             if scheduler.interval_type == 'after_sub':
                 scheduler._execute_attendee_based()
-            elif scheduler.event_id.is_multi_slots:
+            elif scheduler.event_id.has_slots:
                 scheduler._execute_slot_based()
             else:
                 # before or after event -> one shot communication, once done skip

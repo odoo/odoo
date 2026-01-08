@@ -19,7 +19,7 @@ export class EventEvent extends models.ServerModel {
             "specific_question_ids",
             "badge_format",
             "seats_max",
-            "is_multi_slots",
+            "has_slots",
             "event_slot_ids",
         ];
     }
@@ -38,7 +38,7 @@ export class EventEvent extends models.ServerModel {
             specific_question_ids: [],
             badge_format: "A6",
             seats_max: 10,
-            is_multi_slots: true,
+            has_slots: true,
             event_slot_ids: [1],
         },
     ];

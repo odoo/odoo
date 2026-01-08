@@ -8,8 +8,8 @@ patch(ProductCard.prototype, {
     get displayRemainingSeats() {
         return Boolean(this.props.product.event_id);
     },
-    get isEventMultiSlot() {
-        return Boolean(this.props.product.event_id) && this.props.product.event_id.is_multi_slots;
+    get eventHasSlots() {
+        return Boolean(this.props.product.event_id) && this.props.product.event_id.has_slots;
     },
     get totalFutureSlots() {
         return (

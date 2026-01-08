@@ -175,7 +175,7 @@
     </a>
     <button t-elif="event.event_registrations_open" type="button"
         data-bs-toggle="modal" t-attf-class="btn btn-primary {{cta_additional_classes}}"
-        t-attf-data-bs-target="#modal_{{'slot' if event.is_multi_slots else 'ticket'}}_registration">
+        t-attf-data-bs-target="#modal_{{'slot' if event.has_slots else 'ticket'}}_registration">
         Register
     </button>
     <div t-if="registration_error_code == 'insufficient_seats'" class="alert alert-danger my-3" role="alert">
@@ -226,10 +226,10 @@
 
 <!-- Event - Description Dates -->
 <template id="event_description_dates" name="Event Description Dates">
-    <t t-set="is_one_day_without_slots" t-value="not event.is_multi_slots and event.is_one_day"/>
+    <t t-set="is_one_day_without_slots" t-value="not event.has_slots and event.is_one_day"/>
     <div t-attf-class="o_wevent_dates_block {{is_one_day_without_slots and 'd-flex flex-wrap justify-content-between align-items-center gap-2'}}">
         <div t-if="opt_event_dates_block" class="pb-3 flex-wrap gap-3 w-lg-100">
-            <div t-if="event.is_multi_slots">
+            <div t-if="event.has_slots">
                 <small class="d-flex align-items-end justify-content-between gap-2 fw-bold text-nowrap">
                     Next Dates
                     <span t-if="website_visitor_timezone != event.date_tz" class="text-truncate small fw-normal" t-out="event.date_tz"/>
@@ -426,7 +426,7 @@
                             <b>Start</b>
                         </div>
                         <div class="col-auto ps-0">
-                            <span t-out="slot.start_datetime if event.is_multi_slots else event.date_begin"
+                            <span t-out="slot.start_datetime if event.has_slots else event.date_begin"
                                 t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
                         </div>
                     </div>
@@ -435,7 +435,7 @@
                             <b>End</b>
                         </div>
                         <div class="col-auto ps-0">
-                            <span t-out="slot.end_datetime if event.is_multi_slots else event.date_end"
+                            <span t-out="slot.end_datetime if event.has_slots else event.date_end"
                                 t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
                         </div>
                     </div>
@@ -487,7 +487,7 @@
 
 <template id="modal_ticket_registration" name="Modal for tickets registration">
     <!-- Modal -->
-    <div id="modal_ticket_registration" t-attf-class="modal fade {{'o_wevent_modal_slot_ticket_registration' if event.is_multi_slots else ''}}"
+    <div id="modal_ticket_registration" t-attf-class="modal fade {{'o_wevent_modal_slot_ticket_registration' if event.has_slots else ''}}"
         data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelTicket" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -584,7 +584,7 @@
                         </div>
                         <div class="modal-footer flex-lg-row border-top">
                             <button type="button" class="btn btn-light js_goto_event" data-bs-dismiss="modal">
-                                <t t-if="event.is_multi_slots">Cancel</t>
+                                <t t-if="event.has_slots">Cancel</t>
                                 <t t-else="">Close</t>
                             </button>
                             <button type="submit" class="btn btn-primary a-submit" disabled="" t-attf-id="#{event.id}">
@@ -661,7 +661,7 @@
                         </div>
                         <div class="modal-footer flex-lg-row border-top">
                             <button type="button" class="btn btn-light js_goto_event" data-bs-dismiss="modal">
-                                <t t-if="event.is_multi_slots">Cancel</t>
+                                <t t-if="event.has_slots">Cancel</t>
                                 <t t-else="">Close</t>
                             </button>
                             <button type="submit" class="btn btn-primary a-submit" t-attf-id="#{event.id}" disabled="disabled">

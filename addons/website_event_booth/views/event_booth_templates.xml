@@ -29,7 +29,7 @@
                             <p>This event is not open to exhibitors registration at this time.</p>
                             <p>Check our <a class="o_translate_inline" href="/event" title="List of Future Events" aria-label="Link to list of future events">list of future events</a>.</p>
                             <div class="o_not_editable my-3" groups="event.group_event_manager">
-                                <a class="btn o_wevent_cta mb-4" target="_blank" t-attf-href="/odoo/event.event/{{event.id}}">
+                                <a class="btn o_wevent_cta mb-4" target="_blank" t-attf-href="/odoo/event.event/{{event.id}}/action-event_booth.event_booth_action_from_event">
                                     <span class="fa fa-gear me-1"/> Configure Booths
                                 </a>
                             </div>
@@ -56,7 +56,6 @@
                           t-attf-action="/event/#{slug(event)}/booth/register" t-att-data-event-id="event.id">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <div class="row mb-3">
-                            <h5 class="mt-0 mb-3">Choose your type of booth</h5>
                             <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
                                 <t t-set="booth_category_unavailable" t-value="booth_category not in available_booth_category_ids"/>
                                 <div t-attf-class="col-md-6 col-lg-4 mb-4 {{ (len(event.event_booth_category_ids) &gt; 3) and 'col-xxl-3' }}">
@@ -104,10 +103,11 @@
                                     </div>
                                 </div>
                                 <div class="pt24 pb48" name="booth_registration_submit">
-                                    <div class="d-flex align-items-center justify-content-end gap-2">
-                                        <button type="submit" class="o_wbooth_registration_submit btn btn-primary" disabled="true">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button type="submit" class="o_wbooth_registration_submit btn btn-primary">
                                             <span>Book my Booth<small>(s)</small></span>
                                         </button>
+                                        <span class="o_website_event_booth_error text-danger"/>
                                     </div>
                                 </div>
                             </div>
