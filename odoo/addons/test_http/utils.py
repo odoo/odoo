@@ -63,10 +63,14 @@ class MemorySessionStore(SessionStore):
             return self.new()
 
         session = self.store.get(sid)
-        if not session:
+        if session:
+            session.is_new = False
+        elif keep_sid:
             session = self.new()
-            if keep_sid:
-                session.sid = sid
+            session.is_new = False
+        else:
+            session = self.new()
+            session.is_new = True
         return session
 
     def vacuum(self, max_lifetime=None):

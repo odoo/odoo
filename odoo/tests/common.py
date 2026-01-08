@@ -2341,7 +2341,9 @@ class HttpCase(TransactionCase):
         method = method or 'GET'
         if url.startswith('/'):
             url = self.base_url() + url
-        return self.opener.request(method, url, params=params, data=data, json=json, files=files, timeout=timeout, headers=headers, cookies=cookies, allow_redirects=allow_redirects)
+        res = self.opener.request(method, url, params=params, data=data, json=json, files=files, timeout=timeout, headers=headers, cookies=cookies, allow_redirects=allow_redirects)
+        self._upsert_session()
+        return res
 
     def _wait_remaining_requests(self, timeout=10):
 
@@ -2364,19 +2366,52 @@ class HttpCase(TransactionCase):
             self._logger.info('remaining requests')
             odoo.tools.misc.dumpstacks()
 
-    def logout(self, keep_db=True):
-        self.session.logout(keep_db=keep_db)
+    def _upsert_session(self, browser=None):
+        sid = self.opener.cookies.get('session_id', '')
+        if self.session and self.session.sid == sid:
+            return
+        self.session = odoo.http.root.session_store.get(sid)
+        if self.session.sid != sid:
+            self.opener.cookies.set(
+                'session_id',
+                self.session.sid,
+                domain=urlsplit(self.base_url()).hostname,
+            )
+            if browser:
+                self._logger.info('Setting session cookie in browser')
+                browser.set_cookie('session_id', self.session.sid, '/', HOST)
+        if self.session.is_new:
+            self.session.update(odoo.http.get_default_session(), db=get_db_name())
+            self.session.context['lang'] = odoo.http.DEFAULT_LANG
+
+    def update_session(self, **overrides):
+        if not self.session:
+            e = "There is no session, call authenticate(None, None) to create one"
+            raise ValueError(e)
+        self.session.update(overrides)
         odoo.http.root.session_store.save(self.session)
+
+    def update_session_context(self, **overrides):
+        if not self.session:
+            e = "There is no session, call authenticate(None, None) to create one"
+            raise ValueError(e)
+        self.session['context'].update(**overrides)
+        odoo.http.root.session_store.save(self.session)
+
+    def logout(self, keep_db=True, browser=None):
+        self.session.logout(keep_db=keep_db)
+        odoo.http.root.session_store.rotate(self.session, self.env)
+        self._upsert_session(browser=browser)
 
     def authenticate(self, user, password, browser: ChromeBrowser = None):
         if getattr(self, 'session', None):
             odoo.http.root.session_store.delete(self.session)
 
-        self.session = session = odoo.http.root.session_store.new()
-        session.update(odoo.http.get_default_session(), db=get_db_name())
-        session.context['lang'] = odoo.http.DEFAULT_LANG
+        self.opener = Opener(self)
+        self.session = None
+        self._upsert_session(browser=browser)
 
-        if user: # if authenticated
+        if user:  # if authenticated
             # Flush and clear the current transaction.  This is useful, because
             # the call below opens a test cursor, which uses a different cache
             # than this transaction.
@@ -2392,34 +2427,15 @@ class HttpCase(TransactionCase):
                 auth_info = self.env['res.users'].authenticate(credential, {'interactive': False})
             uid = auth_info['uid']
             env = api.Environment(self.cr, uid, {})
-            session['uid'] = uid
-            session['login'] = user
-            session['session_token'] = None
+            self.session['uid'] = uid
+            self.session['login'] = user
+            self.session['session_token'] = None
             if uid:
-                session._update_session_token(env)
-            session['context'] = dict(env['res.users'].context_get())
+                self.session._update_session_token(env)
+            self.session['context'] = dict(env['res.users'].context_get())
+            odoo.http.root.session_store.save(self.session)
 
-        odoo.http.root.session_store.save(session)
-        # Reset the opener: turns out when we set cookies['foo'] we're really
-        # setting a cookie on domain='' path='/'.
-        #
-        # But then our friendly neighborhood server might set a cookie for
-        # domain='localhost' path='/' (with the same value) which is considered
-        # a *different* cookie following ours rather than the same.
-        #
-        # When we update our cookie, it's done in-place, so the server-set
-        # cookie is still present and (as it follows ours and is more precise)
-        # very likely to still be used, therefore our session change is ignored.
-        #
-        # An alternative would be to set the cookie to None (unsetting it
-        # completely) or clear-ing session.cookies.
-        self.opener = Opener(self)
-        self.opener.cookies.set("session_id", session.sid, domain=HOST)
-        if browser:
-            self._logger.info('Setting session cookie in browser')
-            browser.set_cookie('session_id', session.sid, '/', HOST)
-
-        return session
+        return self.session
 
     def fetch_proxy(self, url):
         """
