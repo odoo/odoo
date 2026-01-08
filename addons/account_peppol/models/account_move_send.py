@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 
 from odoo.addons.account.models.company import PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.account_peppol.exceptions import get_peppol_error_message
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -214,7 +215,7 @@ class AccountMoveSend(models.AbstractModel):
                 for invoice, invoice_data in invoices_data_peppol.items():
                     invoice.peppol_move_state = 'error'
                     invoice_data['error'] = {
-                        'error_title': edi_user._get_peppol_error_message(error_vals),
+                        'error_title': get_peppol_error_message(self.env, error_vals),
                     }
             else:
                 # the response only contains message uuids,
