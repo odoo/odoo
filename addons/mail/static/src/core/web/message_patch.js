@@ -55,7 +55,7 @@ patch(Message.prototype, {
         };
     },
     hasAuthorClickable() {
-        return this.message.author_id?.main_user_id;
+        return this.message.author_id;
     },
     onClickAuthor(ev) {
         if (this.hasAuthorClickable()) {
@@ -63,7 +63,8 @@ patch(Message.prototype, {
             const target = ev.currentTarget;
             if (!this.avatarCard.isOpen) {
                 this.avatarCard.open(target, {
-                    id: this.message.author_id.main_user_id.id,
+                    id: this.message.author_id.id,
+                    model: "res.partner"
                 });
             }
         }
