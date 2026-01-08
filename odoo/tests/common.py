@@ -136,6 +136,7 @@ TEST_CURSOR_COOKIE_NAME = 'test_request_key'
 IGNORED_MSGS = re.compile(r"""
     (?: failed\ to\ fetch  # base error
       | connectionlosterror:  # conversion by offlineFailToFetchErrorHandler
+      | assetsloadingerror: # lazy loaded bundle
     )
 """, flags=re.VERBOSE | re.IGNORECASE).search
 
