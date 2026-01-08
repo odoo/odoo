@@ -53,10 +53,10 @@ test("Can invite a partner to a livechat channel", async () => {
     await click("button[title='Members']");
     await click("button[title='Invite People']");
     await click("input", {
-        parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
+        parent: [".o-discuss-SelectableList-selectable", { text: "James" }],
     });
     await contains(
-        ".o-discuss-ChannelInvitation-selectable:contains('James English French German pricing events')"
+        ".o-discuss-SelectableList-selectable:contains('James English French German pricing events')"
     );
     await click("button:enabled", { text: "Invite" });
     await contains(".o-mail-NotificationMessage", {
@@ -94,9 +94,9 @@ test("Available operators come first", async () => {
     await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("button[title='Invite People']");
-    await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
-    await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "Ron" });
-    await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Harry" });
+    await contains(".o-discuss-SelectableList-selectable", { count: 2 });
+    await contains(":nth-child(1 of .o-discuss-SelectableList-selectable)", { text: "Ron" });
+    await contains(":nth-child(2 of .o-discuss-SelectableList-selectable)", { text: "Harry" });
 });
 
 test("Partners invited most frequently by the current user come first", async () => {
@@ -150,14 +150,14 @@ test("Partners invited most frequently by the current user come first", async ()
     await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("button[title='Invite People']");
-    await click("input", { parent: [".o-discuss-ChannelInvitation-selectable", { text: "John" }] });
+    await click("input", { parent: [".o-discuss-SelectableList-selectable", { text: "John" }] });
     await click("button:enabled", { text: "Invite" });
     await contains(".o-discuss-ChannelMember", { text: "John" });
     await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #2" });
     await click("button[title='Invite People']");
-    await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
-    await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "John" });
-    await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Albert" });
+    await contains(".o-discuss-SelectableList-selectable", { count: 2 });
+    await contains(":nth-child(1 of .o-discuss-SelectableList-selectable)", { text: "John" });
+    await contains(":nth-child(2 of .o-discuss-SelectableList-selectable)", { text: "Albert" });
 });
 
 test("shows operators are in call", async () => {
@@ -195,9 +195,9 @@ test("shows operators are in call", async () => {
     await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("[title='Invite People']");
-    await contains(".o-discuss-ChannelInvitation-selectable:contains('bob in a call')");
-    await contains(".o-discuss-ChannelInvitation-selectable:contains('john')");
-    await contains(".o-discuss-ChannelInvitation-selectable:contains('john in a call')", {
+    await contains(".o-discuss-SelectableList-selectable:contains('bob in a call')");
+    await contains(".o-discuss-SelectableList-selectable:contains('john')");
+    await contains(".o-discuss-SelectableList-selectable:contains('john in a call')", {
         count: 0,
     });
 });
@@ -233,6 +233,6 @@ test("Operator invite shows livechat_username", async () => {
     await click("button[title='Members']");
     await click("button[title='Invite People']");
     await contains("input", {
-        parent: [".o-discuss-ChannelInvitation-selectable", { text: "Johnny" }],
+        parent: [".o-discuss-SelectableList-selectable", { text: "Johnny" }],
     });
 });

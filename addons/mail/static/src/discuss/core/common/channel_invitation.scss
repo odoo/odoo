@@ -1,32 +1,7 @@
 .o-discuss-ChannelInvitation {
-    min-height: 0;
-}
-
-.o-discuss-ChannelInvitation-selectable {
-    &.o-odd {
-        background-color: $gray-100 !important;;
-    }
-    &:hover {
-        background-color: mix($gray-100, $gray-200) !important;
-    }
-    &.o-selected {
-        background-color: mix($o-view-background-color, $o-action, 85%) !important;;
-    }
-}
-
-.o-discuss-ChannelInvitation-selectedList {
-    max-height: 100px;
-
-    button {
-        background-color: mix($o-view-background-color, $o-action, 85%);
-
-        &:not(:hover) .oi-close {
-            border-color: transparent !important;
-        }
-
-        &:hover .oi-close {
-            color: $danger;
-            border-color: $danger !important;
+    .o-discuss-SelectableList-selectable {
+        &.o-odd {
+            background-color: $gray-100 !important;
         }
     }
 }
@@ -44,3 +19,24 @@
     top: -4px;
     right: -5px;
 }
+.o-mail-ForwardedMessage-content {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+}
+
+.o-mail-ForwardedMessage-message {
+    p {
+        margin: 0;
+    }
+}
+
+.o-mail-ForwardedAttachment-preview {
+    width: 3rem;
+    height: 3rem;
+    max-width: 3rem;
+    max-height: 3rem;
+    object-fit: cover;
+}
+

@@ -232,7 +232,7 @@ test("Channel member count update after user joined", async () => {
     await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await contains(".o-discuss-ChannelMemberList h6:text('Offline - 1')");
     await click("[title='Invite People']");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('Harry'))");
+    await click(".o-discuss-SelectableList-selectable:has(:text('Harry'))");
     await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(".o-discuss-ChannelMemberList h6:text('Offline - 2')");
