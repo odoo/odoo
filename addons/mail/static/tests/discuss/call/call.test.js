@@ -5,6 +5,7 @@ import {
     defineMailModels,
     dragenterFiles,
     dropFiles,
+    insertText,
     listenStoreFetch,
     makeMockRtcNetwork,
     mockGetMedia,
@@ -301,6 +302,11 @@ test("Create a direct message channel when clicking on start a meeting", async (
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Meeting - Jan 1, 2026')");
     await contains(".o-discuss-Call");
     await contains(".o-mail-Meeting .o-mail-ActionPanel:contains('Invite people')");
+    await contains(".o-mail-MeetingSideActions button", { count: 4 });
+    await contains(".o-mail-MeetingSideActions button[title='Picture in Picture']");
+    await contains(".o-mail-MeetingSideActions button[title='Exit Fullscreen']");
+    await contains(".o-mail-MeetingSideActions button[title='Chat']");
+    await contains(".o-mail-MeetingSideActions button[title='Members']");
 });
 
 test("Can share user camera and screen together", async () => {
@@ -1395,4 +1401,23 @@ test("Escape closes meeting UI layers sequentially", async () => {
     triggerHotkey("Escape");
     await contains(".o-mail-Meeting", { count: 0 });
     await contains(".o-discuss-Call");
+});
+
+test("Access to Pinned Messages from Meeting Chat", async () => {
+    await start();
+    await openDiscuss();
+    await click("[title='New Meeting']");
+    await contains(".o-mail-ActionPanel-header:has(:text('Invite People'))");
+    await click("[title='Chat']");
+    await contains(".o-mail-ActionPanel-header:has(:text('In call messages'))");
+    await insertText(".o-mail-Meeting .o-mail-Composer-input", "hey");
+    await click(".o-mail-Meeting .o-mail-Composer button[title='Send']:enabled");
+    await click(".o-mail-Meeting .o-mail-Message [title='Expand']");
+    await click(".dropdown-item:text('Pin')");
+    await click(".modal-footer button:text('Pin Message')");
+    await contains(
+        ".o-mail-ActionPanel-header:has(:text('In call messages')) button[title='Pinned Messages'] .badge:text('1')"
+    );
+    await click(".o-mail-ActionPanel-header button[title='Pinned Messages']");
+    await contains(".o-mail-ActionPanel-header:has(:text('Pinned Messages'))");
 });

@@ -63,7 +63,8 @@ export class Meeting extends Component {
         this.messageHighlight = useMessageScrolling({ thread: () => this.channel.thread });
         this.messageSearch = useMessageSearch(this.channel.thread);
         useChildSubEnv({
-            closeActionPanel: () => this.threadActions.activeAction?.actionPanelClose(),
+            closeActionPanel: (opts) => this.threadActions.activeAction?.actionPanelClose(opts),
+            hasPreviousActionPanel: () => this.threadActions.actionStack.length > 0,
             messageHighlight: this.messageHighlight,
             messageSearch: this.messageSearch,
         });

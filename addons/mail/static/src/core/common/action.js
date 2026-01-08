@@ -114,10 +114,16 @@ export class Action {
      * @param {Object} [param0={}]
      * @param {Action} [param0.nextActiveAction] When action panel is closed by opening another panel,
      *   this param tells which is the next active action
+     * @param {boolean} [param0.closeAll] When true, all action panels in the stack are closed without returning to a previous panel
      */
-    actionPanelClose({ nextActiveAction } = {}) {
+    actionPanelClose({ nextActiveAction, closeAll = false } = {}) {
         if (this.actions) {
-            this.actions.activeAction = this.actions.actionStack.pop();
+            if (closeAll) {
+                this.actions.actionStack = [];
+                this.actions.activeAction = null;
+            } else {
+                this.actions.activeAction = this.actions.actionStack.pop();
+            }
         }
         this.definition.actionPanelClose?.call(
             this,
