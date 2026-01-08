@@ -969,7 +969,7 @@ class ResCompany(models.Model):
             env.flush_all()
             env.transaction.reset()
             for company in self.filtered(lambda c: c.country_id and not c.chart_template):
-                template_code = company.parent_id.chart_template or self.env['account.chart.template']._guess_chart_template(company.country_id)
+                template_code = company.parent_id.chart_template or company._guess_chart_template()
                 if template_code != 'generic_coa':
                     @self.env.cr.precommit.add
                     def try_loading(template_code=template_code, company=company):
@@ -986,6 +986,12 @@ class ResCompany(models.Model):
 
     def _chart_template_selection(self):
         return self.env['account.chart.template']._select_chart_template(self.country_id)
+
+    def _guess_chart_template(self):
+        self.ensure_one()
+        if self.country_id.code == 'ES' and self.state_id.code in ('TF', 'GC'):
+            return 'es_canary_pymes'
+        return self.env['chart.template']._guess_chart_template(self.country_id)
 
     @api.model
     def _action_check_hash_integrity(self):

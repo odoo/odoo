@@ -172,7 +172,7 @@ class AccountChartTemplate(models.AbstractModel):
         if isinstance(company, int):
             company = self.env['res.company'].browse([company])
 
-        template_code = template_code or company and self._guess_chart_template(company.country_id)
+        template_code = template_code or company and company._guess_chart_template()
 
         if template_code in {'syscohada', 'syscebnl'} and template_code != company.chart_template:
             raise UserError(_("The %s chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country.", template_code))
