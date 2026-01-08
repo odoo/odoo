@@ -244,6 +244,7 @@ registerThreadAction("hide", {
     condition: ({ channel, owner }) =>
         (channel?.canHide ||
             channel?.sub_channel_ids.some((subThread) => subThread.channel.canHide)) &&
+        !channel?.isSelfInCall &&
         !owner.isDiscussContent,
     icon: "fa fa-fw fa-eye-slash",
     /**
