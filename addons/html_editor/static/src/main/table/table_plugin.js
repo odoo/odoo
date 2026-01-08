@@ -139,7 +139,7 @@ export class TablePlugin extends Plugin {
         clean_for_save_processors: (root) => {
             this.deselectTable(root);
         },
-        normalize_processors: this.distributeTableColorsToAllCells.bind(this),
+        normalize_processors: this.normalizeTable.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
         on_undone_handlers: () => {
@@ -349,19 +349,43 @@ export class TablePlugin extends Plugin {
      *
      * @param {Element} root
      */
-    distributeTableColorsToAllCells(root) {
-        [...root.querySelectorAll("table")]
-            .filter((table) => table.style["color"] || table.style["backgroundColor"])
-            .forEach((table) => {
-                const tds = table.querySelectorAll("td");
-                for (const td of tds) {
-                    td.style["color"] = td.style["color"] || table.style["color"];
-                    td.style["backgroundColor"] =
-                        td.style["backgroundColor"] || table.style["backgroundColor"];
+    normalizeTable(root) {
+        const tables = root.querySelectorAll("table");
+        for (const table of tables) {
+            const firstRow = table.rows[0];
+            let colgroup;
+            for (const cell of firstRow?.children || []) {
+                const width = cell.style.width;
+                if (!width) {
+                    continue;
                 }
-                table.style["color"] = "";
-                table.style["backgroundColor"] = "";
-            });
+                if (!colgroup) {
+                    colgroup = this.document.createElement("colgroup");
+                }
+                // Apply width to col
+                const col = this.document.createElement("col");
+                col.style.width = width;
+                colgroup.appendChild(col);
+                // Remove the inline width from the cell
+                cell.style.removeProperty("width");
+            }
+            if (colgroup) {
+                table.prepend(colgroup);
+            }
+
+            // --- Normalize table colors ---
+            const tableColor = table.style.color;
+            const tableBgColor = table.style.backgroundColor;
+
+            if (tableColor || tableBgColor) {
+                for (const td of table.querySelectorAll("td")) {
+                    td.style.color = td.style.color || tableColor;
+                    td.style.backgroundColor = td.style.backgroundColor || tableBgColor;
+                }
+                table.style.color = "";
+                table.style.backgroundColor = "";
+            }
+        }
     }
 
     createTable({ rows = 2, cols = 2 } = {}) {
@@ -406,20 +430,21 @@ export class TablePlugin extends Plugin {
             const referenceCellWidth = reference.style.width
                 ? parseFloat(reference.style.width)
                 : reference.clientWidth;
+
             // Temporarily set widths so proportions are respected.
-            const firstRowCells = [...table.rows[0].cells];
             let totalWidth = 0;
-            if (tableWidth) {
-                for (const cell of firstRowCells) {
-                    const width = parseFloat(cell.style.width);
-                    cell.style.width = width + "px";
+            const colgroup = table.querySelector("colgroup");
+            if (tableWidth && colgroup) {
+                for (const col of colgroup.children) {
+                    const width = parseFloat(col.style.width);
+                    col.style.width = width + "px";
                     // Spread the widths to preserve proportions.
                     // -1 for the width of the border of the new column.
                     const newWidth = Math.max(
                         Math.round((width * tableWidth) / (tableWidth + referenceCellWidth - 1)),
                         13
                     );
-                    cell.style.width = newWidth + "px";
+                    col.style.width = newWidth + "px";
                     totalWidth += newWidth;
                 }
             }
@@ -460,16 +485,23 @@ export class TablePlugin extends Plugin {
                     }
                 }
             }
-            if (tableWidth) {
-                if (totalWidth !== tableWidth - 1) {
-                    // -1 for the width of the border of the new column.
-                    firstRowCells[firstRowCells.length - 1].style.width =
-                        parseFloat(firstRowCells[firstRowCells.length - 1].style.width) +
-                        (tableWidth - totalWidth - 1) +
-                        "px";
+            if (colgroup) {
+                const newcol = document.createElement("col");
+                const children = colgroup.children;
+                const currentCol = children[gridCellIndex];
+                newcol.style.width = currentCol.style.width;
+                totalWidth += parseFloat(newcol.style.width);
+                if (tableWidth) {
+                    if (totalWidth !== tableWidth - 1) {
+                        // -1 for the width of the border of the new column.
+                        const lastCol = colgroup.children[colgroup.children.length - 1];
+                        lastCol.style.width =
+                            parseFloat(lastCol.style.width) + (tableWidth - totalWidth - 1) + "px";
+                    }
+                    // Fix the table and row's width so it doesn't change.
+                    table.style.width = tableWidth + "px";
                 }
-                // Fix the table and row's width so it doesn't change.
-                table.style.width = tableWidth + "px";
+                currentCol[position](newcol);
             }
         }
         this.tableGridMap.delete(table);
@@ -491,6 +523,7 @@ export class TablePlugin extends Plugin {
                 newRow.style.height = referenceRowHeight + "px";
             }
             const gridCells = tableGrid[rowIndex];
+            const referenceRowWidths = [...gridCells].map((cell) => cell.style.width);
 
             for (let columnIndex = 0; columnIndex < gridCells.length; columnIndex++) {
                 const cell = gridCells[columnIndex];
@@ -513,10 +546,11 @@ export class TablePlugin extends Plugin {
             reference[position](newRow);
             // Preserve the width of the columns (applied only on the first row).
             if (getRowIndex(newRow) === 0) {
-                for (let columnIndex = 0; columnIndex < reference.cells.length; columnIndex++) {
-                    newRow.cells[columnIndex].style.width =
-                        reference.cells[columnIndex].style.width;
-                    reference.cells[columnIndex].style.width = "";
+                let columnIndex = 0;
+                for (const column of newRow.children) {
+                    column.style.width = referenceRowWidths[columnIndex];
+                    gridCells[columnIndex].style.width = "";
+                    columnIndex++;
                 }
             }
         }
@@ -555,6 +589,7 @@ export class TablePlugin extends Plugin {
      */
     removeColumn(cell) {
         const table = closestElement(cell, "table");
+        const colgroup = table.querySelector("colgroup");
         const tableGrid = this.buildTableGrid(table);
         const rowIndex = getRowIndex(cell);
         const cells = [...closestElement(cell, "tr").querySelectorAll("th, td")];
@@ -579,6 +614,10 @@ export class TablePlugin extends Plugin {
                 td.remove();
             }
         });
+        if (colgroup) {
+            const children = colgroup.children;
+            children[gridCellIndex].remove();
+        }
         // not sure we should move the cursor?
         siblingCell
             ? this.dependencies.selection.setCursorEnd(lastLeaf(siblingCell))
@@ -658,6 +697,13 @@ export class TablePlugin extends Plugin {
                 index += moveStep;
             }
         });
+        const colgroup = table.querySelector("colgroup");
+        if (colgroup) {
+            const cols = colgroup.children;
+            insertBefore
+                ? cols[targetIndex].before(cols[columnIndex])
+                : cols[targetIndex].after(cols[columnIndex]);
+        }
         this.dependencies.selection.setSelection(selectionToRestore);
         this.tableGridMap.delete(table);
     }
@@ -691,11 +737,6 @@ export class TablePlugin extends Plugin {
         const newFirstRow = table.rows[0];
         // If the moved row becomes the first row
         if (newFirstRow !== oldFirstRow) {
-            // Copy the widths of its td elements from the previous
-            // first row, as td widths are only applied to the first row.
-            [...newFirstRow.cells].forEach((cell, i) => {
-                cell.style.width = oldFirstRow.cells[i].style.width || "";
-            });
             // Maintain header row at top position.
             if (isHeader) {
                 this.turnIntoHeader(newFirstRow);
@@ -736,17 +777,26 @@ export class TablePlugin extends Plugin {
      * @param {HTMLTableElement} table
      */
     normalizeColumnWidth(table) {
-        const rows = [...table.rows];
-        const firstRowCells = [...rows[0].cells];
-        const tableWidth = parseFloat(table.style.width);
-        if (tableWidth) {
-            const expectedCellWidth = tableWidth / firstRowCells.length;
-            firstRowCells.forEach((cell, i) => {
-                const cellWidth = parseFloat(cell.style.width);
-                if (cellWidth && Math.abs(cellWidth - expectedCellWidth) <= 1) {
-                    rows.forEach((row) => (row.cells[i].style.width = ""));
+        const colgroup = table.querySelector("colgroup");
+        if (colgroup) {
+            const columns = Array.from(colgroup.children);
+            const tableWidth = parseFloat(table.style.width);
+            if (tableWidth) {
+                const expectedColWidth = tableWidth / columns.length;
+                const columnsToReset = columns.filter((col) => {
+                    const colWidth = parseFloat(col.style.width) || col.clientWidth;
+                    return colWidth && Math.abs(colWidth - expectedColWidth) <= 1;
+                });
+                // If all columns are default, remove the <colgroup> entirely
+                if (columnsToReset.length === columns.length) {
+                    colgroup.remove();
+                } else {
+                    // Otherwise, reset only the columns that need it
+                    columnsToReset.forEach((col) => {
+                        col.style.width = "";
+                    });
                 }
-            });
+            }
         }
     }
 
@@ -754,75 +804,73 @@ export class TablePlugin extends Plugin {
      * @param {HTMLTableCellElement} cell
      */
     resetColumnWidth(cell) {
-        const currentCellWidth = parseFloat(cell.style.width);
-        if (!currentCellWidth) {
+        const table = closestElement(cell, "table");
+        const colgroup = table.querySelector("colgroup");
+        if (!colgroup) {
             return;
         }
+        const tableWidth = parseFloat(table.style.width) || table.clientWidth;
+        const colElements = Array.from(colgroup.children);
+        const totalCols = colElements.length;
+        const expectedColWidth = tableWidth / totalCols;
 
-        const table = closestElement(cell, "table");
-        const tableWidth = parseFloat(table.style.width);
-        const currentRow = cell.parentElement;
-        const currentRowCells = [...currentRow.cells];
-        const rowCellCount = currentRowCells.length;
-        const expectedCellWidth = tableWidth / rowCellCount;
-        const widthDifference = currentCellWidth - expectedCellWidth;
-        const currentColumnIndex = getColumnIndex(cell);
+        const tableGrid = this.buildTableGrid(table);
+        const cellColIndex = tableGrid[0].indexOf(cell);
+        const cellColSpan = cell.colSpan;
 
-        let totalWidthLeftOfCell = 0,
-            totalWidthRightOfCell = 0;
-        currentRowCells.forEach((rowCell, i) => {
-            const cellWidth = parseFloat(rowCell.style.width) || rowCell.clientWidth;
-            if (i < currentColumnIndex) {
-                totalWidthLeftOfCell += cellWidth;
-            } else if (i > currentColumnIndex) {
-                totalWidthRightOfCell += cellWidth;
+        const getColWidth = (col) => parseFloat(col.style.width) || col.clientWidth;
+
+        const targetCols = colElements.slice(cellColIndex, cellColIndex + cellColSpan);
+        const leftCols = colElements.slice(0, cellColIndex);
+        const rightCols = colElements.slice(cellColIndex + cellColSpan);
+
+        const currentTargetWidth = targetCols.reduce((sum, col) => sum + getColWidth(col), 0);
+        let remainingLeftWidth = leftCols.reduce((sum, col) => sum + getColWidth(col), 0);
+        let remainingRightWidth = rightCols.reduce((sum, col) => sum + getColWidth(col), 0);
+        let expectedLeftColWidth = leftCols.length * expectedColWidth;
+        let expectedRightColWidth = rightCols.length * expectedColWidth;
+        const widthDifference = currentTargetWidth - expectedColWidth * cellColSpan;
+
+        let colsToAdjust = [];
+        for (const col of [...leftCols].reverse()) {
+            if (Math.abs(expectedLeftColWidth - remainingLeftWidth) <= 1) {
+                break;
             }
-        });
-
-        let expectedWidthLeftOfCell = currentColumnIndex * expectedCellWidth;
-        let expectedWidthRightOfCell = (rowCellCount - 1 - currentColumnIndex) * expectedCellWidth;
-        let cellsToAdjust = [];
-        for (
-            let i = currentColumnIndex - 1;
-            i >= 0 && Math.abs(expectedWidthLeftOfCell - totalWidthLeftOfCell) > 1;
-            i--
-        ) {
-            cellsToAdjust.push(currentRowCells[i]);
-            totalWidthLeftOfCell -=
-                parseFloat(currentRowCells[i].style.width) || currentRowCells[i].clientWidth;
-            expectedWidthLeftOfCell -= expectedCellWidth;
+            colsToAdjust.push(col);
+            expectedLeftColWidth -= expectedColWidth;
+            remainingLeftWidth -= getColWidth(col);
         }
-        for (
-            let j = currentColumnIndex + 1;
-            j < rowCellCount && Math.abs(expectedWidthRightOfCell - totalWidthRightOfCell) > 1;
-            j++
-        ) {
-            cellsToAdjust.push(currentRowCells[j]);
-            totalWidthRightOfCell -=
-                parseFloat(currentRowCells[j].style.width) || currentRowCells[j].clientWidth;
-            expectedWidthRightOfCell -= expectedCellWidth;
+        for (const col of rightCols) {
+            if (Math.abs(expectedRightColWidth - remainingRightWidth) <= 1) {
+                break;
+            }
+            colsToAdjust.push(col);
+            expectedRightColWidth -= expectedColWidth;
+            remainingRightWidth -= getColWidth(col);
         }
 
-        cellsToAdjust = cellsToAdjust.filter((adjCell) => {
-            const cellWidth = parseFloat(adjCell.style.width) || adjCell.clientWidth;
+        colsToAdjust = colsToAdjust.filter((adjCol) => {
+            const cellWidth = getColWidth(adjCol);
             return widthDifference > 0
-                ? cellWidth < expectedCellWidth
-                : cellWidth > expectedCellWidth;
+                ? cellWidth < expectedColWidth
+                : cellWidth > expectedColWidth;
         });
 
-        const totalWidthForAdjustment = cellsToAdjust.reduce((width, adjCell) => {
-            const cellWidth = parseFloat(adjCell.style.width) || adjCell.clientWidth;
-            return width + Math.abs(expectedCellWidth - cellWidth);
+        const totalWidthForAdjustment = colsToAdjust.reduce((width, adjCol) => {
+            const cellWidth = getColWidth(adjCol);
+            return width + Math.abs(expectedColWidth - cellWidth);
         }, 0);
 
-        cell.style.width = `${expectedCellWidth}px`;
-        cellsToAdjust.forEach((adjCell) => {
-            const adjCellWidth = parseFloat(adjCell.style.width) || adjCell.clientWidth;
+        targetCols.forEach((col) => {
+            col.style.width = `${expectedColWidth}px`;
+        });
+        colsToAdjust.forEach((adjCol) => {
+            const adjColWidth = parseFloat(adjCol.style.width) || adjCol.clientWidth;
             const adjustmentWidth =
-                (Math.abs(expectedCellWidth - adjCellWidth) / totalWidthForAdjustment) *
+                (Math.abs(expectedColWidth - adjColWidth) / totalWidthForAdjustment) *
                 Math.abs(widthDifference);
-            adjCell.style.width = `${
-                adjCellWidth + (widthDifference > 0 ? adjustmentWidth : -adjustmentWidth)
+            adjCol.style.width = `${
+                adjColWidth + (widthDifference > 0 ? adjustmentWidth : -adjustmentWidth)
             }px`;
         });
         this.normalizeColumnWidth(table);
@@ -833,15 +881,10 @@ export class TablePlugin extends Plugin {
      */
     resetTableSize(table) {
         table.removeAttribute("style");
-        const cells = [...table.querySelectorAll("tr, td, th")];
-        cells.forEach((cell) => {
-            const cStyle = cell.style;
-            if (cell.tagName === "TR") {
-                cStyle.height = "";
-            } else {
-                cStyle.width = "";
-            }
+        table.querySelectorAll("tr").forEach((row) => {
+            row.style.height = "";
         });
+        table.querySelector("colgroup")?.remove();
     }
     /**
      * @param {HTMLTableCellElement} cell
@@ -905,7 +948,6 @@ export class TablePlugin extends Plugin {
             spanAttr,
             tds.reduce((total, td) => total + td[spanAttr], 0)
         );
-
         for (let i = 1; i < tds.length; i++) {
             const currentTd = tds[i];
             if (currentTd.textContent.trim() !== "") {

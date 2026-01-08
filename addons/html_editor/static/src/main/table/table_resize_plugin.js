@@ -4,7 +4,7 @@ import {
     getAdjacentNextSiblings,
     getAdjacentPreviousSiblings,
 } from "@html_editor/utils/dom_traversal";
-import { getColumnIndex } from "@html_editor/utils/table";
+import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
 import { BORDER_SENSITIVITY } from "@html_editor/main/table/table_plugin";
 import { isTableCell } from "@html_editor/utils/dom_info";
 
@@ -80,47 +80,38 @@ export class TableResizePlugin extends Plugin {
         const position = target1 ? (target2 ? "middle" : "last") : "first";
         let [item, neighbor] = [target1 || target2, target2];
         const table = closestElement(item, "table");
+        const tableGrid = this.dependencies.table.buildTableGrid(table);
+        const rowIndex = getRowIndex(item);
+        const itemIndex =
+            position === "middle"
+                ? tableGrid[rowIndex].findLastIndex((cell) => cell === item)
+                : tableGrid[rowIndex].indexOf(item);
+        const neighborIndex = tableGrid[rowIndex].indexOf(neighbor);
         const [sizeProp, positionProp, clientPositionProp] =
             direction === "col" ? ["width", "x", "clientX"] : ["height", "y", "clientY"];
 
         const isRTL = this.config.direction === "rtl";
-        // Preserve current width.
-        if (sizeProp === "width") {
+        let colgroup = table.querySelector("colgroup");
+        if (direction === "col") {
+            // Preserve current width.
             const tableRect = table.getBoundingClientRect();
             table.style[sizeProp] = tableRect[sizeProp] + "px";
-        }
-        const unsizedItemsSelector = `${
-            direction === "col" ? "td" : "tr"
-        }:not([style*=${sizeProp}])`;
-        for (const unsizedItem of table.querySelectorAll(unsizedItemsSelector)) {
-            unsizedItem.style[sizeProp] = unsizedItem.getBoundingClientRect()[sizeProp] + "px";
-        }
 
-        // TD widths should only be applied in the first row. Change targets and
-        // clean the rest.
-        if (direction === "col") {
-            let hostCell = closestElement(table, isTableCell);
-            const hostCells = [];
-            while (hostCell) {
-                hostCells.push(hostCell);
-                hostCell = closestElement(hostCell.parentElement, isTableCell);
-            }
-            const nthColumn = getColumnIndex(item);
-            const firstRow = [...table.querySelector("tr").children];
-            [item, neighbor] = [firstRow[nthColumn], firstRow[nthColumn + 1]];
-            for (const td of hostCells) {
-                if (
-                    td !== item &&
-                    td !== neighbor &&
-                    closestElement(td, "table") === table &&
-                    getColumnIndex(td) !== 0
-                ) {
-                    td.style.removeProperty(sizeProp);
+            if (!colgroup) {
+                const cells = tableGrid[0];
+                colgroup = document.createElement("colgroup");
+                for (const cell of cells) {
+                    const rect = cell.getBoundingClientRect();
+                    const width = rect.width / (cell.colSpan || 1);
+                    const col = document.createElement("col");
+                    col.style.width = `${width}px`;
+                    colgroup.appendChild(col);
                 }
+                table.insertBefore(colgroup, table.firstChild);
             }
-            if (isRTL && position == "middle") {
-                [item, neighbor] = [neighbor, item];
-            }
+            const cols = colgroup.children;
+            item = cols[itemIndex];
+            neighbor = cols[neighborIndex];
         }
 
         const MIN_SIZE = 33; // TODO: ideally, find this value programmatically.
@@ -156,10 +147,12 @@ export class TableResizePlugin extends Plugin {
                     ) {
                         break;
                     }
-                    table.style[marginProp] = newMargin + "px";
-                    item.style[sizeProp] = newSize + "px";
-                    if (sizeProp === "width") {
-                        table.style[sizeProp] = tableRect[sizeProp] + sizeDelta + "px";
+                    table.style[marginProp] = `${newMargin}px`;
+                    if (direction === "col") {
+                        colgroup.children[itemIndex].style[sizeProp] = `${newSize}px`;
+                        table.style[sizeProp] = `${tableRect[sizeProp] + sizeDelta}px`;
+                    } else {
+                        item.style[sizeProp] = `${newSize}px`;
                     }
                 }
                 break;
@@ -202,13 +195,15 @@ export class TableResizePlugin extends Plugin {
                     ) {
                         break;
                     }
-                    item.style[sizeProp] = newSize + "px";
                     if (direction === "col") {
-                        neighbor.style[sizeProp] =
-                            (newNeighborSize > MIN_SIZE ? newNeighborSize : currentNeighborSize) +
-                            "px";
-                    } else if (sizeProp === "width") {
-                        table.style[sizeProp] = tableRect[sizeProp] + sizeDelta + "px";
+                        const cols = colgroup.children;
+                        cols[itemIndex].style[sizeProp] = `${newSize}px`;
+                        cols[neighborIndex].style[sizeProp] = `${Math.max(
+                            newNeighborSize,
+                            MIN_SIZE
+                        )}px`;
+                    } else {
+                        item.style[sizeProp] = `${newSize}px`;
                     }
                 }
                 break;
@@ -220,8 +215,7 @@ export class TableResizePlugin extends Plugin {
                 if (direction === "col" && isRTL) {
                     sizeDelta = itemRect[positionProp] - ev[clientPositionProp];
                 }
-                const currentSize = itemRect[sizeProp];
-                const newSize = currentSize + sizeDelta;
+                const newSize = itemRect[sizeProp] + sizeDelta;
                 if ((newSize >= 0 || direction === "row") && newSize > MIN_SIZE) {
                     const tableRect = table.getBoundingClientRect();
                     // Check if a nested table would overflow its parent cell.
@@ -239,10 +233,13 @@ export class TableResizePlugin extends Plugin {
                     ) {
                         break;
                     }
-                    if (sizeProp === "width") {
+                    if (direction === "col") {
+                        const column = colgroup.querySelectorAll("col");
+                        column[itemIndex].style[sizeProp] = newSize + "px";
                         table.style[sizeProp] = tableRect[sizeProp] + sizeDelta + "px";
+                    } else {
+                        item.style[sizeProp] = `${newSize}px`;
                     }
-                    item.style[sizeProp] = newSize + "px";
                 }
                 break;
             }

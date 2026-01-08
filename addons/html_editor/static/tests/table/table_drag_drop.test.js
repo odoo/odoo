@@ -660,12 +660,12 @@ test("should move last row above the first header row on drag and drop", async (
             <table class="table table-bordered o_table">
                 <tbody>
                     <tr>
-                        <th class="o_table_header">[]5</th>
-                        <th class="o_table_header">6</th>
+                        <th class="e o_table_header">[]5</th>
+                        <th class="f o_table_header">6</th>
                     </tr>
                     <tr class="">
-                        <td>1</td>
-                        <td>2</td>
+                        <td class="a">1</td>
+                        <td class="b">2</td>
                     </tr>
                     <tr>
                         <td class="c">3</td>
