@@ -43,17 +43,34 @@
         </record>
 
         <!-- Scheduler -->
-        <record forcecreate="True" id="ir_cron_scheduler_action" model="ir.cron">
-            <field name="name">Procurement: run scheduler</field>
+        <record forcecreate="True" id="ir_cron_scheduler_orderpoints_action" model="ir.cron">
+            <field name="name">Procurement: Run Orderpoints</field>
             <field name="model_id" ref="model_stock_rule"/>
             <field name="state">code</field>
-            <field name="code">
-model.run_scheduler(True)
-            </field>
-            <field eval="True" name="active"/>
+            <field name="code">model.run_scheduler_orderpoints(True)</field>
             <field name="user_id" ref="base.user_root"/>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
+            <field name="interval_number">15</field>
+            <field name="interval_type">minutes</field>
+        </record>
+
+        <record forcecreate="True" id="ir_cron_scheduler_reservations_action" model="ir.cron">
+            <field name="name">Procurement: Run Reservations</field>
+            <field name="model_id" ref="model_stock_rule"/>
+            <field name="state">code</field>
+            <field name="code">model.run_scheduler_reservations(True)</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">15</field>
+            <field name="interval_type">minutes</field>
+        </record>
+
+        <record forcecreate="True" id="ir_cron_scheduler_clean_quants_action" model="ir.cron">
+            <field name="name">Procurement: Run Clean Quants</field>
+            <field name="model_id" ref="model_stock_rule"/>
+            <field name="state">code</field>
+            <field name="code">model.run_scheduler_clean_quants(True)</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">15</field>
+            <field name="interval_type">minutes</field>
         </record>
 
     </data>
