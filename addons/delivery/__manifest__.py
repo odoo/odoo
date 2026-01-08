@@ -34,8 +34,13 @@ The system is able to add and compute the shipping line.
     ],
     'demo': ['data/delivery_demo.xml'],
     'assets': {
+        'web.assets_backend': [
+            'delivery/static/src/js/pickup_location_many2one/*',
+            'delivery/static/src/js/location_selector/**/*',
+        ],
         'web.assets_frontend': [
             'delivery/static/src/**/*',
+            ('remove', 'delivery/static/src/js/pickup_location_many2one/*')
         ],
     },
     'post_init_hook': 'post_init_hook',

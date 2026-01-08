@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
-
 import psycopg2
+import re
 
 from odoo import SUPERUSER_ID, Command, _, api, fields, models
 from odoo.exceptions import UserError
@@ -56,6 +55,7 @@ class DeliveryCarrier(models.Model):
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete='restrict')
     tracking_url = fields.Char(string='Tracking Link', help="This option adds a link for the customer in the portal to track their package easily. Use <shipmenttrackingnumber> as a placeholder in your URL.")
     currency_id = fields.Many2one(related='product_id.currency_id')
+    is_pickup = fields.Boolean(compute='_compute_is_pickup')
 
     invoice_policy = fields.Selection(
         selection=[('estimated', "Estimated cost")],
@@ -123,6 +123,11 @@ class DeliveryCarrier(models.Model):
         for carrier in self:
             if carrier.must_have_tag_ids & carrier.excluded_tag_ids:
                 raise UserError(_("Delivery method %(name)s cannot have the same tag in both Must Have Tags and Excluded Tags."), name=carrier.name)
+
+    @api.depends('delivery_type')
+    def _compute_is_pickup(self):
+        for carrier in self:
+            carrier.is_pickup = hasattr(carrier, f'{carrier.delivery_type}_use_locations') and getattr(carrier, f'{carrier.delivery_type}_use_locations')
 
     def _compute_weight_uom_name(self):
         self.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -503,3 +508,32 @@ class DeliveryCarrier(models.Model):
             raise UserError(_("Not available for current order"))
 
         return price
+
+    def get_pickup_locations(self, country_id, zip_code=False, **kwargs):
+        """
+        Return the pickup locations of the delivery method close to a given zip code.
+
+        Note: self.ensure_one()
+
+        :param res.country country_id: The country to look up to.
+        :param int zip_code: The zip code to look up to, optional.
+        :return: The close pickup locations data.
+        :rtype: dict
+        """
+        self.ensure_one()
+        partner_address = self.env['res.partner'].new({
+            'active': False,
+            'country_id': country_id,
+            'zip': zip_code,
+        })
+        try:
+            error = {'error': _("No pick-up points are available for this delivery address.")}
+            function_name = f'_{self.delivery_type}_get_close_locations'
+            if not hasattr(self, function_name):
+                return error
+            pickup_locations = getattr(self, function_name)(partner_address, **kwargs)
+            if not pickup_locations:
+                return error
+            return {'pickup_locations': pickup_locations}
+        except UserError as e:
+            return {'error': str(e)}

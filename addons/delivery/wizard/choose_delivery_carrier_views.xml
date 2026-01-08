@@ -24,6 +24,7 @@
                                 <i class="oi oi-arrow-right me-1"/>Get rate
                             </button>
                         </div>
+                        <field string="Pickup Point" invisible="not is_pickup_delivery" name="partner_shipping_id" widget="pickup_location_many2one"/>
                     </group>
                 </group>
                 <div role="alert" class="alert alert-warning" invisible="invoicing_message == ''">

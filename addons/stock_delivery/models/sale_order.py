@@ -6,6 +6,19 @@ from odoo import _, models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    def _remove_delivery_line(self):
+        """ Override to unset the carrier_id on the related pickings when removing the delivery line. """
+        res = super()._remove_delivery_line()
+        for order in self:
+            if order.state != 'sale':
+                continue
+            pending_deliveries = order.picking_ids.filtered(
+                lambda p: p.state not in ('done', 'cancel')
+                          and not any(m.origin_returned_move_id for m in p.move_ids)
+            )
+            pending_deliveries.carrier_id = False
+        return res
+
     def set_delivery_line(self, carrier, amount):
         res = super().set_delivery_line(carrier, amount)
         for order in self:

@@ -17,9 +17,9 @@ class WebsiteSaleCollect(WebsiteSale):
             single_location = len(in_store_dm_sudo.warehouse_ids) == 1
             if (
                 order_sudo.carrier_id.delivery_type == 'in_store'
-                and order_sudo.pickup_location_data
+                and order_sudo.partner_shipping_id.pickup_location_data
             ):
-                selected_location_data = order_sudo.pickup_location_data
+                selected_location_data = order_sudo.partner_shipping_id.pickup_location_data
             elif single_location:
                 selected_location_data = (
                     in_store_dm_sudo.warehouse_ids[0]._prepare_pickup_location_data()
@@ -45,9 +45,9 @@ class WebsiteSaleCollect(WebsiteSale):
             return res
 
         res.update(order_sudo._prepare_in_store_default_location_data())
-        if order_sudo.carrier_id.delivery_type == 'in_store' and order_sudo.pickup_location_data:
+        if order_sudo.carrier_id.delivery_type == 'in_store' and order_sudo.partner_shipping_id.pickup_location_data:
             res['insufficient_stock_data'] = order_sudo._get_insufficient_stock_data(
-                order_sudo.pickup_location_data.get('id')
+                order_sudo.partner_shipping_id.pickup_location_data.get('id')
             )
         return res
 
@@ -56,13 +56,13 @@ class WebsiteSaleCollect(WebsiteSale):
         products are unavailable. """
         errors = super()._get_shop_payment_errors(order)
         if order._has_deliverable_products() and order.carrier_id.delivery_type == 'in_store':
-            if not order.pickup_location_data:
+            if not order.partner_shipping_id.pickup_location_data:
                 errors.append((
                     _("Sorry, we are unable to ship your order."),
                     _("Please choose a store to collect your order."),
                 ))
             else:
-                selected_wh_id = order.pickup_location_data['id']
+                selected_wh_id = order.partner_shipping_id.pickup_location_data['id']
                 if not order._is_in_stock(selected_wh_id):
                     errors.append((
                         _("Sorry, we are unable to ship your order."),
