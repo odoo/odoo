@@ -62,10 +62,16 @@ class ViaSuiteOAuthController(OAuthController):
     def signin(self, **kw):
         """
         Override to catch ViaSuite custom exceptions and redirect with proper error codes.
+        We must verify the logic manually because super().signin catches AccessDenied
+        and swallows our custom error codes.
         """
         from odoo.addons.auth_oauth.controllers.main import fragment_to_query_string
+        from odoo.modules.registry import Registry
+        from odoo import api, http
+        import json
+        import werkzeug.urls
         
-        # Apply the fragment_to_query_string decorator manually
+        # Apply the fragment_to_query_string decorator manually logic
         if not kw:
             from odoo.http import Response
             return Response("""<html><head><script>
@@ -82,15 +88,66 @@ class ViaSuiteOAuthController(OAuthController):
                 window.location = r;
             </script></head><body></body></html>""")
         
+        # Core logic copied from auth_oauth to allow custom exception handling
+        from odoo.addons.web.controllers.utils import ensure_db, _get_login_redirect_url
+        from odoo.tools.misc import clean_context
+        
+        state = json.loads(kw['state'])
+        dbname = state['d']
+        if not http.db_filter([dbname]):
+            return http.request.not_found()
+        
+        ensure_db(db=dbname)
+        request.update_context(**clean_context(state.get('c', {})))
+        
+        provider = state['p']
+        
         try:
-            # Call parent implementation
-            return super(ViaSuiteOAuthController, self).signin(**kw)
+            # Check directly using current implementation
+            _, login, key = request.env['res.users'].with_user(api.SUPERUSER_ID).auth_oauth(provider, kw)
+            
+            # Commit not typically needed with request.env as it auto-commits on success, 
+            # but auth_oauth does it to make user visible to authenticate's transaction if created.
+            request.env.cr.commit()
+            
+            action = state.get('a')
+            menu = state.get('m')
+            redirect = werkzeug.urls.url_unquote_plus(state['r']) if state.get('r') else False
+            url = '/web'
+            if redirect:
+                url = redirect
+            elif action:
+                url = '/web#action=%s' % action
+            elif menu:
+                url = '/web#menu_id=%s' % menu
+            
+            # Correct authentication flow
+            credential = {'login': login, 'token': key, 'type': 'oauth_token'}
+            auth_info = request.session.authenticate(request.env, credential)
+            resp = request.redirect(_get_login_redirect_url(auth_info['uid'], url), 303)
+            resp.autocorrect_location_header = False
+            return resp
+            
         except ViaSuiteAuthError as e:
-            # Catch our custom exceptions and redirect with error code
+            # CATCH CUSTOM ERRORS HERE
             _logger.warning("ViaSuite Auth Error: %s - %s", e.error_code, str(e))
-            redirect = request.redirect(f"/web/login?via_error={e.error_code}", 303)
-            redirect.autocorrect_location_header = False
-            return redirect
+            return request.redirect(f"/web/login?via_error={e.error_code}")
+                
+        except AttributeError as e:
+            # auth_signup not installed
+            _logger.exception("AttributeError during OAuth signin (check if auth_signup is installed or other attribute error): %s", e)
+            _logger.error("auth_signup not installed on database %s: oauth signin cancelled." % (dbname,))
+            return request.redirect("/web/login?oauth_error=1")
+            
+        except http.AccessDenied:
+            # oauth credentials not valid, user not on a specific authorize list
+            _logger.info('OAuth2: access denied, redirect to main page in case a valid session exists, without setting cookies')
+            return request.redirect("/web/login?oauth_error=3")
+            
+        except Exception as e:
+            # oauth providers not correctly configured, etc
+            _logger.exception("OAuth2: %s" % str(e))
+            return request.redirect("/web/login?oauth_error=2")
 
 
 
