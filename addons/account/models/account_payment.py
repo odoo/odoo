@@ -392,7 +392,7 @@ class AccountPayment(models.Model):
             if not bool(payment._origin) and (partner or payment_type):
                 field_name = f'property_{payment_type}_payment_method_line_id'
                 default_payment_method_line = payment.partner_id.with_company(payment.company_id)[field_name]
-                journal = default_payment_method_line.journal_id
+                journal = default_payment_method_line.journal_id or payment.journal_id
                 if journal:
                     payment.journal_id = journal
                     continue
