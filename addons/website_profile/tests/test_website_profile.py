@@ -42,3 +42,32 @@ class TestWebsiteProfile(HttpCaseGamification):
             'email': 'mitchell.admin@example.com',
         })
         self.start_tour("/", 'website_profile_description', login="admin")
+
+    def test_portal_access(self):
+        bob = odoo.tests.new_test_user(self.env, 'Bob', karma=100, website_published=True)
+        alice = odoo.tests.new_test_user(self.env, 'Alice', karma=100, website_published=True)
+        john = odoo.tests.new_test_user(self.env, 'John', karma=100)
+        odoo.tests.new_test_user(self.env, 'test_portal', groups='base.group_portal', karma=1000)
+
+        badge_good_job = self.env.ref("gamification.badge_good_job")
+        badge_problem_solver = self.env.ref("gamification.badge_problem_solver")
+        # Publish the badges otherwise they do not appear on the user profile page
+        # https://github.com/odoo/odoo/blob/a5f053932a73932866e04b05ecbd2c82b84c2c62/addons/website_profile/views/website_profile.xml#L170
+        (badge_good_job + badge_problem_solver).website_published = True
+
+        for wizard in self.env["gamification.badge.user.wizard"].create([{
+            "badge_id": badge_good_job.id,
+            "user_id": bob.id,
+        }, {
+            "badge_id": badge_problem_solver.id,
+            "user_id": bob.id,
+        }, {
+            "badge_id": badge_good_job.id,
+            "user_id": alice.id,
+        }, {
+            "badge_id": badge_good_job.id,
+            "user_id": john.id,
+        }]):
+            wizard.action_grant_badge()
+
+        self.start_tour("/", 'website_profile_portal_access', login="test_portal")

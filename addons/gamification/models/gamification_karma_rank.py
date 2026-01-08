@@ -57,3 +57,16 @@ class GamificationKarmaRank(models.Model):
                 users = self.env['res.users'].sudo().search([('karma', '>=', max(low, 1)), ('karma', '<=', high)])
             users._recompute_rank()
         return res
+
+    def _can_return_content(self, field_name=None, access_token=None):
+        """Make public the rank images so they can be used in `t-field="rank_id.image_1920"`
+        without the need to grant the public/portal ACL to the `gamification.karma.rank` model.
+
+        `t-field="rank_id.image_1920` is converted to, for instance,
+        `<img src="/web/image/gamification.karma.rank/5/image_128/"`
+        The goal of this override is to allow the `/web/image` route to return the images related this model.
+        """
+        if isinstance(self.env['image.mixin']._fields.get(field_name), fields.Image):
+            # Allow to return the field for this model if it's an image coming from the `image.mixin` mixin
+            return True
+        return super()._can_return_content(field_name, access_token)
