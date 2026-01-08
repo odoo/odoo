@@ -2956,3 +2956,19 @@ class TestStockValuation(TestStockValuationCommon):
         product_value_form = Form(product_value)
 
         self.assertFalse(product_value_form.current_value_details)
+
+    def test_valuation_of_fifo_goods_before_delivery(self):
+        """
+        Test that COGS is correctly calculated when invoicing FIFO goods before delivery.
+        """
+        invoice = self._create_invoice(self.product_fifo_auto, quantity=5, price_unit=20)
+        # Sale price: $20 | Cost: $10
+        self.assertRecordValues(
+            invoice.journal_line_ids,
+            [
+                {'account_id': self.category_fifo_auto.property_account_income_categ_id.id, 'credit': 100.0, 'debit': 0.0},  # 5 * $20
+                {'account_id': self.account_receivable.id, 'credit': 0.0, 'debit': 100.0},
+                {'account_id': self.account_stock_valuation.id, 'credit': 50.0, 'debit': 0.0},  # 5 * $10
+                {'account_id': self.account_expense.id, 'credit': 0.0, 'debit': 50.0},
+            ]
+        )
