@@ -233,7 +233,7 @@ class PosOrder(models.Model):
                         'issued': coupon_vals['points'] if coupon_vals['points'] > 0 else 0,
                     })
 
-                if updated:
+                if updated and gift_card.points:
                     updated_gift_cards |= gift_card
 
                 coupon_key_to_remove.append(coupon_id)
