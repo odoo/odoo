@@ -1441,7 +1441,6 @@ export class PosStore extends WithLazyGetterTrap {
             });
             const missingRecords = await this.data.missingRecursive(data);
             const newData = this.models.loadConnectedData(missingRecords);
-            console.log("david", newData);
             logPosMessage(
                 "Store",
                 "syncAllOrders",

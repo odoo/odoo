@@ -276,7 +276,7 @@ class TestFrontend(TestFrontendCommon):
     def test_05_tip_screen(self):
         self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
         self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('PosResTipScreenTour')
+        self.start_pos_tour('PosResTipScreenTour', debug=True, step_delay=500)
 
         orders = self.env['pos.order'].search([], limit=5, order="id desc")
         order_tips = [o.tip_amount for o in orders]

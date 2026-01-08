@@ -1059,7 +1059,7 @@ export class FloorScreen extends Component {
     }
     getChangeCount(table) {
         const order = table.getOrder();
-        const changeCount = order?.getPreparationChanges?.()?.quantity || 0;
+        const changeCount = order?.changes.quantity || 0;
         return { changes: changeCount };
     }
     setColor(hasSelectedTable, color, key) {

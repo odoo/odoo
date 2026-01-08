@@ -147,7 +147,13 @@ patch(PosStore.prototype, {
 
         return await super.sendOrderInPreparationUpdateLastChange(order, opts);
     },
-    handlePreparationHistory(destLine, prepLines) {
+    handlePreparationOrder(destOrder, prepOrders) {
+        for (const prepOrder of prepOrders) {
+            prepOrder.pos_order_id = destOrder;
+            prepOrder.prep_order_group_id = destOrder.prep_order_group_id;
+        }
+    },
+    handlePreparationLine(destLine, prepLines) {
         for (const prepLine of prepLines) {
             prepLine.pos_order_line_id = destLine;
         }
@@ -156,11 +162,9 @@ patch(PosStore.prototype, {
         let whileGuard = 0;
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
         const prepOrders = this.models["pos.prep.order"].filter(
-            (l) => l.pos_order_id.uuid === sourceOrder.uuid
+            (l) => l.pos_order_id?.uuid === sourceOrder.uuid
         );
-        for (const prepOrder of prepOrders) {
-            prepOrder.pos_order_id = destOrder;
-        }
+        this.handlePreparationOrder(destOrder, prepOrders);
         while (sourceOrder.lines.length) {
             const orphanLine = sourceOrder.lines[0];
             const destinationLine = destOrder?.lines?.find((l) => l.canBeMergedWith(orphanLine));
@@ -169,7 +173,7 @@ patch(PosStore.prototype, {
             if (destinationLine) {
                 destinationLine.merge(orphanLine);
                 uuid = destinationLine.uuid;
-                this.handlePreparationHistory(destinationLine, prepLines);
+                this.handlePreparationLine(destinationLine, prepLines);
             } else {
                 const serializedLine = { ...orphanLine.raw };
                 serializedLine.order_id = destOrder.id;
@@ -187,7 +191,7 @@ patch(PosStore.prototype, {
                         );
                     }
                 }
-                this.handlePreparationHistory(newLine, prepLines);
+                this.handlePreparationLine(newLine, prepLines);
             }
 
             if (sourceOrder.table_id) {
@@ -307,9 +311,7 @@ patch(PosStore.prototype, {
                 .filter((pl) => prepLineUuids.includes(pl.uuid))
                 .map((pl) => pl.prep_order_id);
             const newOrder = this.addNewOrder({ table_id: unmergeTable });
-            for (const prepOrder of prepOrders) {
-                prepOrder.pos_order_id = newOrder;
-            }
+            this.handlePreparationOrder(newOrder, prepOrders);
 
             const courseByLines = {};
             if (beforeMergeCourseDetails?.length) {
@@ -335,7 +337,7 @@ patch(PosStore.prototype, {
                 );
                 if (!prepLines.length) {
                     const prepLinesExist = this.models["pos.prep.line"].filter(
-                        (f) => f.pos_order_line_id.id === detail.id
+                        (f) => f.pos_order_line_id?.id === detail.id
                     );
                     if (prepLinesExist.length) {
                         delete order.uiState.unmerge[detail.uuid];
@@ -369,7 +371,7 @@ patch(PosStore.prototype, {
                 } else {
                     line.setQuantity(line.qty - newLine.qty);
                 }
-                this.handlePreparationHistory(newLine, prepLines);
+                this.handlePreparationLine(newLine, prepLines);
 
                 delete order.uiState.unmerge[line.uuid];
             }

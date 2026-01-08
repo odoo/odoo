@@ -160,33 +160,38 @@ const deepSerialization = (
             if (DYNAMIC_MODELS.includes(relatedModel) && record[fieldName]) {
                 if (
                     fieldName !== parentRelInverseName && //mapping not needed for direct child
-                    record.uuid
+                    record.uuid &&
+                    !recordDependencies[field.relation]?.[record[fieldName].uuid]
                 ) {
-                    if (
-                        typeof recordId !== "number" &&
-                        !recordDependencies[field.relation]?.[record[fieldName].uuid]
-                    ) {
-                        //  mapping is only needed for newly created records
-                        if (!recordDependencies[field.relation]) {
-                            recordDependencies[field.relation] = {};
-                        }
-
-                        if (!serialized[relatedModel][record[fieldName].uuid]) {
-                            recordDependencies[field.relation][record[fieldName].uuid] = () =>
-                                deepSerialization(
-                                    record[fieldName],
-                                    {
-                                        ...opts,
-                                        disableRecursive: true,
-                                    },
-                                    { uuidMapping, serialized }
-                                );
+                    if (!serialized[relatedModel][recordId] && record[fieldName]._dirty) {
+                        const relatedUUID = record[fieldName].uuid;
+                        recordDependencies[field.relation] ??= {};
+                        recordDependencies[field.relation][relatedUUID] ??= {
+                            create: [],
+                            update: [],
+                        };
+                        const serializedRecords = () =>
+                            deepSerialization(
+                                record[fieldName],
+                                {
+                                    ...opts,
+                                    disableRecursive: true,
+                                },
+                                { uuidMapping, serialized }
+                            );
+                        if (typeof recordId !== "number") {
+                            recordDependencies[field.relation][relatedUUID]["create"].push(
+                                serializedRecords
+                            );
                             record[fieldName].unmarkDirty();
+                        } else if (typeof recordId === "number" && record[fieldName]._dirty) {
+                            recordDependencies[field.relation][relatedUUID]["update"].push(
+                                serializedRecords
+                            );
                         }
-
-                        uuidMapping[targetModel][record.uuid] ??= {};
-                        uuidMapping[targetModel][record.uuid][fieldName] = record[fieldName].uuid;
                     }
+                    uuidMapping[targetModel][record.uuid] ??= {};
+                    uuidMapping[targetModel][record.uuid][fieldName] = record[fieldName].uuid;
                 }
                 serialized[relatedModel][record[fieldName].uuid] = record[fieldName].uuid;
             }
@@ -251,49 +256,25 @@ export const ormSerialization = (record, opts) => {
     }
 
     if (Object.keys(recordDependencies).length !== 0) {
-        for (const key in recordDependencies) {
-            recordDependencies[key]["create"] = Object.values(recordDependencies[key])
-                .map((fn) => fn())
-                .filter(Boolean);
-        }
-        result.record_dependencies = recordDependencies;
-    }
+        const normalizedDependencies = {};
 
-    /**
-     * Serialization of records is based on order of dependency discovery.
-     * However, some dirty records might not have been serialized if they were not
-     * reachable from the root record. We need to serialize them here to ensure
-     * they are sent to the backend.
-     *
-     * Only update of existing records is handled here, as new records are
-     * already managed during the main serialization pass.
-     */
-    for (const [model, dirtyUUIDSet] of Object.entries(record.models._dirtyRecords)) {
-        for (const uuid of Array.from(dirtyUUIDSet)) {
-            const rec = record.models[model].getBy("uuid", uuid);
-            if (!rec || serialized[model]?.[uuid]) {
-                continue;
+        for (const modelName in recordDependencies) {
+            const create = [];
+            const update = [];
+
+            for (const deps of Object.values(recordDependencies[modelName])) {
+                deps.create?.length && create.push(...deps.create.map((f) => f()).filter(Boolean));
+                deps.update?.length && update.push(...deps.update.map((f) => f()).filter(Boolean));
             }
 
-            result.record_dependencies = result.record_dependencies || {};
-            result.record_dependencies[model] = result.record_dependencies[model] || {};
-            result.record_dependencies[model]["update"] =
-                result.record_dependencies[model]["update"] || [];
-
-            const serializedRecords = deepSerialization(
-                rec,
-                {
-                    ...opts,
-                    disableRecursive: true,
-                },
-                { uuidMapping, serialized }
-            );
-
-            if (serializedRecords && typeof serializedRecords.id === "number") {
-                result.record_dependencies[model]["update"].push(serializedRecords);
-                rec.unmarkDirty();
+            if (create.length || update.length) {
+                normalizedDependencies[modelName] = {
+                    ...(create.length && { create: create }),
+                    ...(update.length && { update: update }),
+                };
             }
         }
+        result.record_dependencies = normalizedDependencies;
     }
 
     return result;

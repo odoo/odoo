@@ -28,9 +28,3 @@ export const getStrNotes = (note) => {
     }
     return "";
 };
-
-export const receiptLineGrouper = {
-    getGroup(orderLine) {
-        // To be overridden
-    },
-};

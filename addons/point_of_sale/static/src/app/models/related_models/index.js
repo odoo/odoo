@@ -491,6 +491,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
             }
 
+            record.unmarkDirty();
             aggregatedUpdates.remove(record);
             aggregatedUpdates.fireEventAndDirty({
                 silentModels: opts.silent ? [record.model.name] : [],

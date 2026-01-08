@@ -320,10 +320,6 @@ export class PosOrder extends Base {
         return this.prep_order_group_id.getChanges({ order: this });
     }
 
-    updateLastOrderChange(opts = {}) {
-        return this.prep_order_group_id.updateLastOrderChange(opts, this);
-    }
-
     async generatePrinterData(opts = { categoryIdsSet: new Set() }) {
         return this.prep_order_group_id.generatePrinterData(this, opts);
     }
@@ -931,6 +927,235 @@ export class PosOrder extends Base {
                 !(line.combo_line_ids?.length || line.combo_parent_id)
         );
     }
+
+    get prepLines() {
+        return this.prep_order_group_id.prep_order_ids.flatMap((po) => po.prep_line_ids);
+    }
+
+    get changes() {
+        const preparationCategories = this.prep_order_group_id.categories;
+        const preparationLines = this.prepLines;
+        const orderlines = this.lines;
+        const existingQuantityStack = {};
+        const changes = {
+            quantity: 0,
+            categoryCount: {},
+            printerData: {
+                addedQuantity: {},
+                removedQuantity: {},
+                noteUpdate: {},
+            },
+        };
+
+        for (const prepLine of preparationLines) {
+            const key = keyMaker(prepLine);
+
+            if (!existingQuantityStack[key]) {
+                existingQuantityStack[key] = {
+                    quantity: 0,
+                    preparationLines: [],
+                };
+            }
+
+            existingQuantityStack[key].preparationLines.push(prepLine);
+            existingQuantityStack[key].quantity += prepLine.quantity - prepLine.cancelled;
+        }
+
+        for (const orderline of orderlines) {
+            const key = keyMaker(orderline);
+            const product = orderline.product_id;
+            const category = product.pos_categ_ids.find((c) => preparationCategories.has(c.id));
+
+            if (!category) {
+                orderline.setHasChange(false);
+                continue;
+            }
+
+            if (existingQuantityStack[key]) {
+                existingQuantityStack[key].quantity -= orderline.qty;
+            }
+
+            if (!existingQuantityStack[key] || existingQuantityStack[key].quantity < 0) {
+                const qty = Math.abs(existingQuantityStack[key]?.quantity || orderline.qty);
+                changes.quantity += qty;
+                changes.printerData.addedQuantity[key] = dataMaker(orderline, qty);
+
+                if (!changes.categoryCount[category.id]) {
+                    changes.categoryCount[category.id] = {
+                        name: category.name,
+                        count: 0,
+                    };
+                }
+
+                changes.categoryCount[category.id].count += qty;
+                orderline.setHasChange(true);
+                continue;
+            }
+
+            if (orderline.changeNote) {
+                changes.printerData.noteUpdate[key] = dataMaker(orderline, 0);
+                orderline.setHasChange(true);
+                continue;
+            }
+
+            orderline.setHasChange(false);
+        }
+
+        for (const [key, data] of Object.entries(existingQuantityStack)) {
+            if (data.quantity <= 0) {
+                continue;
+            }
+            if (this.prep_order_group_id.pos_order_ids.length > 1) {
+                for (const order of this.prep_order_group_id.pos_order_ids) {
+                    if (order.id === this.id) {
+                        continue;
+                    }
+                    for (const orderline of order.lines) {
+                        const key = keyMaker(orderline);
+                        if (existingQuantityStack[key]) {
+                            existingQuantityStack[key].quantity -= orderline.qty;
+                        }
+                    }
+                }
+                if (data.quantity <= 0) {
+                    continue;
+                }
+            }
+            const line = data.preparationLines[0];
+            const product = line.product_id;
+            const category = product.pos_categ_ids.find((c) => preparationCategories.has(c.id));
+
+            if (category) {
+                if (!changes.categoryCount[category.id]) {
+                    changes.categoryCount[category.id] = {
+                        name: category.name,
+                        count: 0,
+                    };
+                }
+
+                changes.quantity += data.quantity;
+                changes.categoryCount[category.id].count -= data.quantity;
+                changes.printerData.removedQuantity[key] = dataMaker(line, -data.quantity);
+            }
+        }
+
+        changes.categoryCount = Object.values(changes.categoryCount);
+        changes.printerData.addedQuantity = Object.values(changes.printerData.addedQuantity);
+        changes.printerData.removedQuantity = Object.values(changes.printerData.removedQuantity);
+        changes.printerData.noteUpdate = Object.values(changes.printerData.noteUpdate);
+
+        if (changes.printerData.noteUpdate.length) {
+            changes.categoryCount.push({
+                count: changes.printerData.noteUpdate.length,
+                name: _t("Note"),
+            });
+        }
+        return changes;
+    }
+
+    /**
+     * Update the prep order group according to the given order changes.
+     * Used after printing the preparation ticket to update the prep lines.
+     */
+    updateLastOrderChange(opts = {}) {
+        if (opts.cancelled) {
+            //TODO: filter prep orders ?
+            this.prep_order_group_id.prep_order_ids?.forEach((po) =>
+                po.prep_line_ids?.forEach((pl) => (pl.cancelled = pl.quantity))
+            );
+        } else {
+            // We don't need to add note updates here since preparation display will always show
+            // the latest notes from the order lines.
+            const changes = this.changes;
+            const allChanges = [
+                ...changes.printerData.addedQuantity,
+                ...changes.printerData.removedQuantity,
+            ];
+
+            let prepOrder = null;
+            for (const change of allChanges) {
+                const line = change.line;
+                const data = change.data;
+
+                if (data.quantity > 0) {
+                    const order = (prepOrder ||= this.models["pos.prep.order"].create({
+                        pos_order_id: this,
+                        prep_order_group_id: this.prep_order_group_id,
+                    }));
+
+                    this.models["pos.prep.line"].create({
+                        prep_order_id: order,
+                        pos_order_line_id: line,
+                        product_id: line.getProduct().id,
+                        quantity: data.quantity,
+                        cancelled: 0,
+                        attribute_value_ids: line.attribute_value_ids,
+                    });
+                } else {
+                    let toCancel = data.quantity;
+                    const mainKey = keyMaker(line);
+                    for (const prepLine of [...this.prepLines].reverse()) {
+                        const key = keyMaker(prepLine);
+                        if (key !== mainKey) {
+                            continue;
+                        }
+
+                        const lineQty = prepLine.quantity - prepLine.cancelled;
+                        const cancellable = Math.min(lineQty, -toCancel);
+                        prepLine.cancelled += cancellable;
+                        toCancel += cancellable;
+                        if (toCancel >= 0) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Update last known state to avoid re-sending changes
+        this.uiState.last_general_customer_note = this.general_customer_note;
+        this.uiState.last_internal_note = this.internal_note;
+        this.lines.map((line) => {
+            line.setHasChange(false);
+            line.uiState.last_internal_note = line.getNote() || "";
+            line.uiState.last_customer_note = line.getCustomerNote() || "";
+            line.uiState.savedQuantity = line.getQuantity();
+        });
+    }
 }
+
+const keyMaker = (line) => {
+    const orderline = line.pos_order_line_id || line;
+    const objectKey = {
+        product_id: orderline.product_id.id,
+        combo_parent_id: orderline.combo_parent_id?.id,
+        combo_line_ids: orderline.combo_line_ids.map((c) => c.id).sort(),
+        attribute_value_ids: orderline.attribute_value_ids.map((a) => a.id).sort(),
+        note: orderline?.getNote?.() || "",
+        customer_note: orderline?.getCustomerNote?.() || "",
+    };
+    return JSON.stringify(objectKey);
+};
+
+const dataMaker = (prepOrPosLine, quantity) => {
+    const line = prepOrPosLine.pos_order_line_id || prepOrPosLine;
+    const product = line.product_id;
+    const attributes = line.attribute_value_ids || [];
+    return {
+        line: line,
+        data: {
+            basic_name: product.name,
+            isCombo: Boolean(line.combo_line_ids?.length || line.combo_parent_id),
+            product_id: product.id,
+            attribute_value_names: attributes.map((a) => a.name),
+            quantity: quantity,
+            note: getStrNotes(line?.getNote?.() || false),
+            customer_note: getStrNotes(line?.getCustomerNote?.() || false),
+            pos_categ_id: product.pos_categ_ids[0]?.id || 0,
+            pos_categ_sequence: product.pos_categ_ids[0]?.sequence || 0,
+            group: line?.getCourse?.() || false,
+        },
+    };
+};
 
 registry.category("pos_available_models").add(PosOrder.pythonModel, PosOrder);

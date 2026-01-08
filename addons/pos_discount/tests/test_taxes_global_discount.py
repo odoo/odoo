@@ -106,7 +106,7 @@ class TestTaxesGlobalDiscountPOS(TestTaxCommonPOS, TestTaxesGlobalDiscount):
 
     def test_pos_global_discount_sell_and_refund(self):
         self.main_pos_config.open_ui()
-        self.start_pos_tour('test_pos_global_discount_sell_and_refund', debug=True)
+        self.start_pos_tour('test_pos_global_discount_sell_and_refund')
         orders = self.main_pos_config.current_session_id.order_ids
         self.assertEqual(len(orders), 2)
         refund_order = orders[0]

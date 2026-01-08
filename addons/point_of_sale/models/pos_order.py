@@ -361,7 +361,7 @@ class PosOrder(models.Model):
         help="List of account moves created when this POS order was reversed and invoiced after session close."
     )
     source = fields.Selection(string="Origin", selection=[('pos', 'Point of Sale')], default='pos')
-    prep_order_group_id = fields.Many2one('pos.prep.order.group', string='Preparation Order Group')
+    prep_order_group_id = fields.Many2one('pos.prep.order.group', string='Preparation Order Group', index='btree_not_null')
     _unique_uuid = models.Constraint('unique (uuid)', 'An order with this uuid already exists')
 
     def get_last_order_change_date(self):
@@ -1148,7 +1148,7 @@ class PosOrder(models.Model):
             order_log_name = self._get_order_log_representation(order)
             _logger.debug("PoS synchronisation #%d processing order %s order full data: %s", sync_token, order_log_name, pformat(order))
 
-            if order.get('record_dependencies'):
+            if 'record_dependencies' in order:
                 record_dependencies = order['record_dependencies']
                 del order['record_dependencies']
 
@@ -1501,7 +1501,7 @@ class PosOrderLine(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         return [
-            'qty', 'attribute_value_ids', 'custom_attribute_value_ids', 'price_unit',
+            'id', 'qty', 'attribute_value_ids', 'custom_attribute_value_ids', 'price_unit',
             'uuid', 'price_subtotal', 'price_subtotal_incl', 'order_id', 'note', 'price_type',
             'product_id', 'discount', 'tax_ids', 'pack_lot_ids', 'customer_note',
             'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id',
