@@ -559,8 +559,7 @@ class TestOrmComputeInverse(models.Model):
 
     @api.constrains('bar', 'baz')
     def _check_constraint(self):
-        if self.env.context.get('log_constraint'):
-            self.env.context.get('log', []).append('constraint')
+        pass  # Only to be patched
 
     @api.depends('foo')
     def _compute_child_ids(self):

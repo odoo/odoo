@@ -647,9 +647,9 @@ class TestMailAliasDomain(TestMailAliasCommon):
             })
 
         # also check write operation
-        with self.assertRaises(exceptions.ValidationError):
+        with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.errors.UniqueViolation):
             new_alias_domain.write({'bounce_alias': alias_domain.bounce_alias})
-        with self.assertRaises(exceptions.ValidationError):
+        with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.errors.UniqueViolation):
             new_alias_domain.write({'catchall_alias': alias_domain.catchall_alias})
 
     @users('admin')

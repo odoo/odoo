@@ -61,7 +61,7 @@ class MailScheduledMessage(models.Model):
         if not all(model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']) for model in self.mapped("model")):
             raise ValidationError(_("A message cannot be scheduled on a model that does not have a mail thread."))
 
-    @api.constrains('scheduled_date')
+    @api.constrains('scheduled_date', deferred=False)
     def _check_scheduled_date(self):
         if any(scheduled_message.scheduled_date < fields.Datetime().now() for scheduled_message in self):
             raise ValidationError(_("A Scheduled Message cannot be scheduled in the past"))

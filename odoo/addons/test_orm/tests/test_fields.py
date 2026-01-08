@@ -8,7 +8,7 @@ from unittest.mock import patch
 import psycopg2
 from PIL import Image
 
-from odoo import Command, fields, models
+from odoo import Command, fields, models, api
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tests import TransactionCase, tagged, users
@@ -149,7 +149,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertFalse(self.registry.field_depends[field])
 
     def test_10_computed_custom_invalid_transitive_depends(self):
-        self.patch(type(self.env["ir.model.fields"]), "_check_depends", lambda self: True)
+        @api.constrains('depends')  # To avoid fail assert in models.py
+        def _empty_check_depends(self):
+            return True
+
+        self.patch(type(self.env["ir.model.fields"]), "_check_depends", _empty_check_depends)
         self.env["ir.model.fields"].create(
             {
                 "name": "x_computed_custom_valid_depends",
@@ -822,35 +826,43 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_15_constraint_inverse(self):
         """ test constraint method on normal field and field with inverse """
-        log = []
-        model = self.env['test_orm.compute.inverse'].with_context(log=log, log_constraint=True)
+        model = self.env['test_orm.compute.inverse']
 
         # create/write with normal field only
-        log.clear()
-        record = model.create({'baz': 'Hi'})
-        self.assertCountEqual(log, ['constraint'])
+        with patch.object(model.__class__, '_check_constraint') as check_constraint_method:
+            record = model.create({'baz': 'Hi'})
+            self.assertEqual(check_constraint_method.call_count, 0)
 
-        log.clear()
-        record.write({'baz': 'Ho'})
-        self.assertCountEqual(log, ['constraint'])
+            self.env.flush_all()
+            self.assertEqual(check_constraint_method.call_count, 1)
 
-        # create/write with inverse field only
-        log.clear()
-        record = model.create({'bar': 'Hi'})
-        self.assertCountEqual(log, ['inverse', 'constraint'])
+            record.write({'baz': 'Ho'})
+            self.env.flush_all()
+            self.assertEqual(check_constraint_method.call_count, 2)
 
-        log.clear()
-        record.write({'bar': 'Ho'})
-        self.assertCountEqual(log, ['inverse', 'constraint'])
+            # create/write with inverse field only
+            record = model.create({'bar': 'Hi'})
+            self.env.flush_all()
+            self.assertEqual(check_constraint_method.call_count, 3)
 
-        # create/write with both fields only
-        log.clear()
-        record = model.create({'bar': 'Hi', 'baz': 'Hi'})
-        self.assertCountEqual(log, ['inverse', 'constraint'])
+            record.write({'bar': 'Ho'})
+            self.env.flush_all()
+            self.assertEqual(check_constraint_method.call_count, 4)
 
-        log.clear()
-        record.write({'bar': 'Ho', 'baz': 'Ho'})
-        self.assertCountEqual(log, ['inverse', 'constraint'])
+            # create/write with both fields only
+            record = model.create({'bar': 'Hi', 'baz': 'Hi'})
+            self.env.flush_all()
+            self.assertEqual(check_constraint_method.call_count, 5)
+
+            record.write({'bar': 'Ho', 'baz': 'Ho'})
+            self.env.flush_all()
+            self.assertEqual(check_constraint_method.call_count, 6)
+
+            # batched
+            record = model.create({'bar': 'Hi', 'baz': 'Hi'})
+            record = model.create({'bar': 'Other'})
+            self.env.flush_all()
+            self.assertEqual(check_constraint_method.call_count, 7)
 
     def test_16_compute_unassigned(self):
         model = self.env['test_orm.compute.unassigned']

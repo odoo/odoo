@@ -96,7 +96,7 @@ class MailAlias(models.Model):
     _name_domain_unique = models.UniqueIndex('(alias_name, COALESCE(alias_domain_id, 0))')
 
     @api.constrains('alias_domain_id', 'alias_force_thread_id', 'alias_parent_model_id',
-                    'alias_parent_thread_id', 'alias_model_id')
+                    'alias_parent_thread_id', 'alias_model_id')  # _init_mail_gateway
     def _check_alias_domain_id_mc(self):
         """ Check for invalid alias domains based on company configuration.
         When having a parent record and/or updating an existing record alias

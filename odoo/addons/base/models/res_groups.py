@@ -79,11 +79,10 @@ class ResGroups(models.Model):
         help="A user may not belong to this group and one of those.  For instance, users may not be portal users and internal users.",
         compute='_compute_disjoint_ids')
 
-    @api.constrains('implied_ids', 'implied_by_ids')
+    @api.constrains('implied_ids', 'implied_by_ids', deferred=False)
     def _check_disjoint_groups(self):
         # check for users that might have two exclusive groups
         self.env.registry.clear_cache('groups')
-
         try:
             if any(
                 group.all_implied_ids & group.all_implied_by_ids.all_implied_ids.disjoint_ids

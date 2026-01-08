@@ -561,7 +561,7 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         with patch.object(
             Partner.__class__, '_commercial_fields',
             lambda self: [c for c in commercial_fields if c != 'industry_id']
-        ), patch.object(Partner.__class__, '_validate_fields'):  # skip industry_id synchronize
+        ):
             partners = Partner.create(
                 [
                     {
