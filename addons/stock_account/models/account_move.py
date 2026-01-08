@@ -170,3 +170,177 @@ class AccountMove(models.Model):
 
     def _get_invoiced_lot_values(self):
         return []
+<<<<<<< 9501f8f97c8ff923eae52ece9b9390706fea63fe
+||||||| d030a7f939b5029ec895edd56d7350d36d76dabe
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_line_id', string='Stock Valuation Layer')
+    cogs_origin_id = fields.Many2one(  # technical field used to keep track in the originating line of the anglo-saxon lines
+        comodel_name="account.move.line",
+        copy=False,
+        index="btree_not_null",
+    )
+
+    def _compute_account_id(self):
+        super()._compute_account_id()
+        input_lines = self.filtered(lambda line: (
+            line._eligible_for_cogs()
+            and line.move_id.company_id.anglo_saxon_accounting
+            and line.move_id.is_purchase_document()
+        ))
+        for line in input_lines:
+            fiscal_position = line.move_id.fiscal_position_id
+            accounts = line.with_company(line.company_id).product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
+            if accounts['stock_input']:
+                line.account_id = accounts['stock_input']
+
+    def _eligible_for_cogs(self):
+        self.ensure_one()
+        return self.product_id.is_storable and self.product_id.valuation == 'real_time'
+
+    def _get_gross_unit_price(self):
+        if float_is_zero(self.quantity, precision_rounding=self.product_uom_id.rounding):
+            return self.price_unit
+
+        if self.discount != 100:
+            if not any(t.price_include for t in self.tax_ids) and self.discount:
+                price_unit = self.price_unit * (1 - self.discount / 100)
+            else:
+                price_unit = self.price_subtotal / self.quantity
+        else:
+            price_unit = 0
+
+        return -price_unit if self.move_id.move_type == 'in_refund' else price_unit
+
+    def _get_stock_valuation_layers(self, move):
+        valued_moves = self._get_valued_in_moves()
+        if move.move_type == 'in_refund':
+            valued_moves = valued_moves.filtered(lambda stock_move: stock_move._is_out())
+        else:
+            valued_moves = valued_moves.filtered(lambda stock_move: stock_move._is_in())
+        return valued_moves.stock_valuation_layer_ids
+
+    def _get_valued_in_moves(self):
+        return self.env['stock.move']
+
+    def _stock_account_get_anglo_saxon_price_unit(self):
+        self.ensure_one()
+        if not self.product_id:
+            return self.price_unit
+        original_line = self.move_id.reversed_entry_id.line_ids.filtered(
+            lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and
+            l.product_uom_id == self.product_uom_id and l.price_unit >= 0)
+        original_line = original_line and original_line[0]
+        return original_line.price_unit if original_line \
+            else self.product_id.with_company(self.company_id)._stock_account_get_anglo_saxon_price_unit(uom=self.product_uom_id)
+
+    @api.onchange('product_id')
+    def _inverse_product_id(self):
+        super(AccountMoveLine, self.filtered(lambda l: l.display_type != 'cogs'))._inverse_product_id()
+
+    def _get_exchange_journal(self, company):
+        if (
+            self and self.move_id.sudo().stock_valuation_layer_ids and
+            self.product_id.categ_id.property_valuation == 'real_time'
+        ):
+            return self.product_id.categ_id.property_stock_journal
+        return super()._get_exchange_journal(company)
+
+    def _get_exchange_account(self, company, amount):
+        if (
+            self and self.move_id.sudo().stock_valuation_layer_ids and
+            self.product_id.categ_id.property_valuation == 'real_time'
+        ):
+            return self.product_id.categ_id.property_stock_valuation_account_id
+        return super()._get_exchange_account(company, amount)
+=======
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_line_id', string='Stock Valuation Layer')
+    cogs_origin_id = fields.Many2one(  # technical field used to keep track in the originating line of the anglo-saxon lines
+        comodel_name="account.move.line",
+        copy=False,
+        index="btree_not_null",
+    )
+
+    def _compute_account_id(self):
+        super()._compute_account_id()
+        input_lines = self.filtered(lambda line: (
+            line._eligible_for_cogs()
+            and line.move_id.company_id.anglo_saxon_accounting
+            and line.move_id.is_purchase_document()
+        ))
+        for line in input_lines:
+            fiscal_position = line.move_id.fiscal_position_id
+            accounts = line.with_company(line.company_id).product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
+            if accounts['stock_input']:
+                line.account_id = accounts['stock_input']
+
+    def _eligible_for_cogs(self):
+        self.ensure_one()
+        return self.product_id.is_storable and self.product_id.valuation == 'real_time'
+
+    def _get_gross_unit_price(self):
+        if float_is_zero(self.quantity, precision_rounding=self.product_uom_id.rounding):
+            return self.price_unit
+
+        if self.discount != 100:
+            if not any(t.price_include for t in self.tax_ids) and self.discount:
+                price_unit = self.price_unit * (1 - self.discount / 100)
+            else:
+                price_unit = self.price_subtotal / self.quantity
+        else:
+            price_unit = 0
+
+        return -price_unit if self.move_id.move_type == 'in_refund' else price_unit
+
+    def _get_stock_valuation_layers(self, move):
+        valued_moves = self._get_valued_in_moves()
+        if move.move_type == 'in_refund':
+            valued_moves = valued_moves.filtered(lambda stock_move: stock_move._is_out())
+        else:
+            valued_moves = valued_moves.filtered(lambda stock_move: stock_move._is_in())
+        return valued_moves.stock_valuation_layer_ids
+
+    def _get_valued_in_moves(self):
+        return self.env['stock.move']
+
+    def _stock_account_get_anglo_saxon_price_unit(self):
+        self.ensure_one()
+        if not self.product_id:
+            return self.price_unit
+        original_line = self.move_id.reversed_entry_id.line_ids.filtered(
+            lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and
+            l.product_uom_id == self.product_uom_id and l.price_unit >= 0)
+        original_line = original_line and original_line[0]
+        return original_line.price_unit if original_line \
+            else self.product_id.with_company(self.company_id)._stock_account_get_anglo_saxon_price_unit(uom=self.product_uom_id)
+
+    @api.onchange('product_id')
+    def _inverse_product_id(self):
+        super(AccountMoveLine, self.filtered(lambda l: l.display_type != 'cogs'))._inverse_product_id()
+
+    def _get_exchange_journal(self, company):
+        if (
+            self and self.move_id.sudo().stock_valuation_layer_ids and
+            self.product_id.categ_id.property_cost_method != 'standard' and
+            self.product_id.categ_id.property_valuation == 'real_time'
+        ):
+            return self.product_id.categ_id.property_stock_journal
+        return super()._get_exchange_journal(company)
+
+    def _get_exchange_account(self, company, amount):
+        if (
+            self and self.move_id.sudo().stock_valuation_layer_ids and
+            self.product_id.categ_id.property_cost_method != 'standard' and
+            self.product_id.categ_id.property_valuation == 'real_time'
+        ):
+            return self.product_id.categ_id.property_stock_valuation_account_id
+        return super()._get_exchange_account(company, amount)
+>>>>>>> 16347be206654451a4d613f9565c076f619cc549
