@@ -964,7 +964,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         new_moves = []
         for move in self:
             # if the move is already chained, there is no need to check push rules
-            if move.move_dest_ids:
+            if move.move_dest_ids and not ('sale_line_id' in move and move['sale_line_id'].is_rental):
                 continue
             # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
             # to receive goods without triggering the push rules again (which would duplicate chained operations)
