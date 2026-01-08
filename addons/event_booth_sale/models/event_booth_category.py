@@ -91,19 +91,11 @@ class EventBoothCategory(models.Model):
         if column_name != "product_id":
             return super(EventBoothCategory, self)._init_column(column_name)
 
-        # fetch void columns
-        self.env.cr.execute("SELECT id FROM %s WHERE product_id IS NULL" % self._table)
-        booth_category_ids = self.env.cr.fetchall()
-        if not booth_category_ids:
-            return
-
         # update existing columns
         _logger.debug("Table '%s': setting default value of new column %s to unique values for each row",
                       self._table, column_name)
         default_booth_product = self._default_product_id()
-        if default_booth_product:
-            product_id = default_booth_product.id
-        else:
+        if not default_booth_product:
             product_id = self.env['product.product'].create({
                 'name': 'Generic Event Booth Product',
                 'categ_id': self.env.ref('event_product.product_category_events').id,
@@ -119,7 +111,7 @@ class EventBoothCategory(models.Model):
                 'model': 'product.product',
                 'res_id': product_id,
             })
-        self.env.cr._obj.execute(
-            f'UPDATE {self._table} SET product_id = %s WHERE id IN %s;',
-            (product_id, tuple(booth_category_ids))
-        )
+            self.env.cr._obj.execute(
+                f'UPDATE {self._table} SET product_id = %s',
+                (product_id,)
+            )
