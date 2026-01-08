@@ -1,7 +1,7 @@
 from base64 import b64encode
 
 from odoo import Command
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import tagged, freeze_time
 from odoo.tools.misc import file_open
 
@@ -15,7 +15,6 @@ class TestPeppolParticipant(PeppolConnectorCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'test')
         cls.private_key = cls.env['certificate.key'].create([{
             'name': 'Test key PEPPOL',
             'content': b64encode(file_open('account_peppol/tests/assets/private_key.pem', 'rb').read()),
@@ -29,13 +28,11 @@ class TestPeppolParticipant(PeppolConnectorCommon):
         })
 
     def test_ignore_archived_edi_users(self):
-        wizard = self.env['peppol.registration'].create({})
         with self._mock_requests([
-            self._mock_create_user(),
-            self._mock_lookup_participant(),
-            self._mock_register_sender(),
-            self._mock_participant_status('sender'),
+            self._mock_can_connect(),
+            self._mock_connect(peppol_state='sender'),
         ]):
+            wizard = self.env['peppol.registration'].create({})
             wizard.button_register_peppol_participant()
 
         self.env['account_edi_proxy_client.user'].create([{
@@ -65,9 +62,9 @@ class TestPeppolParticipant(PeppolConnectorCommon):
     def test_register_participant_for_the_first_time_as_sender_then_receiver_then_unregister(self):
         # Register the use for the very first time as sender.
         with self._mock_requests([
-            self._mock_create_user(),
-            self._mock_lookup_participant(success=False),
-            self._mock_register_sender(),
+            self._mock_can_connect(),
+            self._mock_connect(peppol_state='sender'),
+            self._mock_lookup_participant(already_exists=True),
         ]):
             wizard = self.env['peppol.registration'].create({})
             self.assertRecordValues(wizard, [{'smp_registration': False}])
@@ -95,10 +92,9 @@ class TestPeppolParticipant(PeppolConnectorCommon):
 
     def test_register_participant_already_exists_on_peppol_as_sender(self):
         with self._mock_requests([
-            self._mock_create_user(),
+            self._mock_can_connect(),
+            self._mock_connect(peppol_state='sender'),
             self._mock_lookup_participant(),
-            self._mock_register_sender(),
-            self._mock_participant_status('sender'),
         ]):
             wizard = self.env['peppol.registration'].create({})
             self.assertRecordValues(wizard, [{'smp_registration': True}])
@@ -107,34 +103,33 @@ class TestPeppolParticipant(PeppolConnectorCommon):
 
     def test_register_participant_already_exists_on_peppol_as_receiver(self):
         with self._mock_requests([
-            self._mock_create_user(),
-            self._mock_lookup_participant(),
-            self._mock_register_sender(),
-            self._mock_participant_status('receiver'),
+            self._mock_can_connect(),
+            self._mock_connect(peppol_state='sender'),
+            self._mock_lookup_participant(already_exists=True),
         ]):
             wizard = self.env['peppol.registration'].create({})
-            self.assertRecordValues(wizard, [{'smp_registration': True}])
+            self.assertRecordValues(wizard, [{'smp_registration': False}])
             wizard.button_register_peppol_participant()
-        self.assertRecordValues(self.env.company, [{'account_peppol_proxy_state': 'receiver'}])
+        self.assertRecordValues(self.env.company, [{'account_peppol_proxy_state': 'sender'}])
 
     def test_register_participant_rejected(self):
-        with self._mock_requests([
-            self._mock_create_user(),
-            self._mock_lookup_participant(),
-            self._mock_register_sender(),
-            self._mock_participant_status('rejected'),
-        ]):
+        with (
+            self._mock_requests([
+                self._mock_can_connect(),
+                self._mock_connect(peppol_state='rejected'),
+                self._mock_lookup_participant(),
+            ]),
+            self.assertRaisesRegex(UserError, "There was an issue with the Peppol Participant"),
+        ):
             wizard = self.env['peppol.registration'].create({})
             self.assertRecordValues(wizard, [{'smp_registration': True}])
             wizard.button_register_peppol_participant()
-        self.assertRecordValues(self.env.company, [{'account_peppol_proxy_state': 'rejected'}])
+        self.assertRecordValues(self.env.company, [{'account_peppol_proxy_state': 'not_registered'}])
 
     def test_config_update_email(self):
         with self._mock_requests([
-            self._mock_create_user(),
-            self._mock_lookup_participant(),
-            self._mock_register_sender(),
-            self._mock_participant_status('sender'),
+            self._mock_can_connect(),
+            self._mock_connect(peppol_state='sender'),
         ]):
             wizard = self.env['peppol.registration'].create({})
             wizard.button_register_peppol_participant()
@@ -184,10 +179,8 @@ class TestPeppolParticipant(PeppolConnectorCommon):
 
         wizard.peppol_endpoint = '0477472701'
         with self._mock_requests([
-            self._mock_create_user(),
-            self._mock_lookup_participant(),
-            self._mock_register_sender(),
-            self._mock_participant_status('sender'),
+            self._mock_can_connect(),
+            self._mock_connect(peppol_state='sender'),
         ]):
             wizard.button_register_peppol_participant()
 
@@ -260,10 +253,8 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             'use_parent_connection_selection': 'use_self',
         }])
         with self._mock_requests([
-            self._mock_create_user(),
-            self._mock_lookup_participant(),
-            self._mock_register_sender(),
-            self._mock_participant_status('receiver'),
+            self._mock_can_connect(),
+            self._mock_connect(peppol_state='receiver'),
         ]):
             wizard.button_register_peppol_participant()
 
@@ -287,10 +278,8 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             'contact_email': self.env.company.account_peppol_contact_email,
         }])
         with self._mock_requests([
-            self._mock_create_user(),
-            self._mock_lookup_participant(),
-            self._mock_register_sender(),
-            self._mock_participant_status('sender'),
+            self._mock_can_connect(),
+            self._mock_connect(peppol_state='sender', id_client='test_id_client_branch'),
         ]):
             wizard.button_register_peppol_participant()
 
