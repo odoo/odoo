@@ -218,6 +218,7 @@ class PurchaseEdiXmlUbl_Bis3_OrderChange(models.AbstractModel):
                     'cbc:ID': {'_text': line_vals['line_item_id']},
                     'cbc:LineStatusCode': {'_text': '2'},
                     'cbc:Quantity': {'_text': line_vals['quantity']},
+                    'cbc:LineExtensionAmount': {'_text': 0},  # Importing XML expects line subtotal as mandatory field. See _retrieve_line_vals()
                     'cac:Price': {  # Importing XML throws error if no price information is provided.
                         'cbc:PriceAmount': {'_text': 0},
                     },
