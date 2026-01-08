@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 from odoo import http
 from odoo.http import request
-from odoo.addons.web.controllers.home import Home
-import json
-import werkzeug
+from odoo.addons.auth_oauth.controllers.main import OAuthLogin
 import logging
 
 _logger = logging.getLogger(__name__)
 
 
-class ViaSuiteLogin(Home):
+class ViaSuiteLogin(OAuthLogin):
     """
     Override login to auto-redirect to Keycloak OAuth.
+    
+    Inherits from OAuthLogin to leverage native OAuth flow with
+    fragment_to_query_string decorator for Implicit Flow support.
     """
     
     @http.route('/web/login', type='http', auth="none", website=True)
@@ -23,7 +24,7 @@ class ViaSuiteLogin(Home):
         if request.session.uid:
             return request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
         
-        # If there's an OAuth error return, let super handle it (it translates error codes into messages)
+        # If there's an OAuth error, let super handle it
         if kw.get('oauth_error'):
             return super(ViaSuiteLogin, self).web_login(redirect=redirect, **kw)
         
@@ -35,38 +36,20 @@ class ViaSuiteLogin(Home):
         
         if not provider or not provider.enabled:
             # Fallback to default login if OAuth is not configured
+            _logger.warning("Keycloak OAuth provider not found or disabled, showing standard login")
             return super(ViaSuiteLogin, self).web_login(redirect=redirect, **kw)
         
-        # Ensure auth_endpoint is absolute
-        # Prefer system parameter for base_url if auth_endpoint is relative
-        auth_endpoint = provider.auth_endpoint
-        if auth_endpoint and not auth_endpoint.startswith(('http://', 'https://')):
-            base_url = request.env['ir.config_parameter'].sudo().get_param('via_suite.keycloak.base_url')
-            if not base_url:
-                # Fallback to hardcoded default if parameter is missing
-                base_url = 'https://auth.viafronteira.com'
-            auth_endpoint = f"{base_url.rstrip('/')}/{auth_endpoint.lstrip('/')}"
+        # Auto-redirect to Keycloak by using the auth_link from list_providers
+        providers = self.list_providers()
+        if providers:
+            keycloak_provider = next((p for p in providers if p['id'] == provider.id), None)
+            if keycloak_provider and keycloak_provider.get('auth_link'):
+                _logger.info("Auto-redirecting to Keycloak SSO: %s", keycloak_provider['auth_link'])
+                return request.redirect(keycloak_provider['auth_link'], local=False)
         
-        # Build OAuth URL exactly like the button does
-        # Make redirect_uri dynamic based on the current host
-        base_url_request = request.httprequest.host_url.rstrip('/')
-        redirect_uri = f"{base_url_request}/auth_oauth/signin"
-        
-        _logger.info("Redirecting to Keycloak: %s (redirect_uri: %s)", auth_endpoint, redirect_uri)
-        
-        params = {
-            'response_type': 'token',
-            'client_id': provider.client_id,
-            'redirect_uri': redirect_uri,
-            'scope': provider.scope or 'openid profile email',
-            'state': json.dumps({'d': request.env.cr.dbname, 'p': provider.id, 'r': redirect or '/web'}),
-        }
-        
-        # Build the URL and ensure it's absolute for the redirect
-        oauth_url = f"{auth_endpoint}?{werkzeug.urls.url_encode(params)}"
-        
-        # local=False is CRITICAL for Odoo not to strip the domain
-        return request.redirect(oauth_url, local=False)
+        # Fallback to standard login if something went wrong
+        _logger.warning("Could not build Keycloak auth link, falling back to standard login")
+        return super(ViaSuiteLogin, self).web_login(redirect=redirect, **kw)
 
 
 

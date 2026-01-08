@@ -27,7 +27,6 @@
         'auth_oauth'
     ],
     'data': [
-        'data/ir_config_parameter.xml',
         'data/auth_oauth_provider.xml',
     ],
     # 'assets': {

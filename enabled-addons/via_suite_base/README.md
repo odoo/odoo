@@ -6,13 +6,8 @@ ViaSuite Base Module
         Features:
         ---------
         * Multi-language support (pt_BR, es_PY, en_US, ar_SA, zh_CN)
-
         * Keycloak SSO integration (multi-tenant)
-        * Structured logging with JSON output
-        * Custom branding (ViaSuite/ViaFronteira, LLC)
 
-        * PWA support with custom favicon and manifest
-        
         This module is auto-installed and provides the foundation for all
         ViaSuite tenants.
 

@@ -41,7 +41,7 @@ def configure_oauth(env):
             'auth_endpoint': auth_endpoint,
             'scope': 'openid profile email',
             'validation_endpoint': userinfo_endpoint,
-            'data_endpoint': token_endpoint,
+            'data_endpoint': False,  # Must be False for Implicit Flow
             'enabled': bool(client_secret),
             'css_class': 'btn-primary',
             'sequence': 10,
