@@ -3774,6 +3774,79 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         svls = self.env['stock.valuation.layer'].search([])
         self.assertRecordValues(svls, [{'value': 0, 'quantity': 2}])
 
+    def test_standard_valuation_foreign_currency_several_rates(self):
+        """
+        - Auto Standard
+        - Yesterday, buy and receive
+        - Today, bill
+        - In foreign currency, with different rates
+        The stock valuation account should only be impacted by the standard
+        price defined on the product form, nothing else.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.standard_price = 10
+
+        today = fields.Date.today()
+        yesterday = today - timedelta(days=1)
+
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create([{
+            'name': yesterday,
+            'rate': 2.0,
+            'currency_id': self.eur_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': today,
+            'rate': 2.5,
+            'currency_id': self.eur_currency.id,
+            'company_id': self.env.company.id,
+        }])
+
+        with freeze_time(yesterday):
+            po = self.env['purchase.order'].create({
+                'partner_id': self.partner_id.id,
+                'currency_id': self.eur_currency.id,
+                'order_line': [
+                    (0, 0, {
+                        'name': self.product1.name,
+                        'product_id': self.product1.id,
+                        'product_qty': 1.0,
+                        'product_uom': self.product1.uom_po_id.id,
+                        'price_unit': 20.0,
+                        'taxes_id': False,
+                    }),
+                ],
+            })
+            po.button_confirm()
+
+            receipt = po.picking_ids
+            receipt.move_ids.move_line_ids.quantity = 1.0
+            receipt.button_validate()
+
+        self._bill(po)
+
+        in_stock_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)], order='id')
+        self.assertRecordValues(in_stock_amls, [
+            # Receipt
+            {'debit': 0.0, 'credit': 10.0, 'reconciled': True},
+            # Bill
+            {'debit': 8.0, 'credit': 0.0, 'reconciled': True},
+            # XCH
+            {'debit': 2.0, 'credit': 0.0, 'reconciled': True},
+        ])
+
+        stock_valo_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)], order='id')
+        self.assertRecordValues(stock_valo_amls, [
+            {'debit': 10.0, 'credit': 0.0},
+        ])
+
+        xch_amls = self.env['account.move.line'].search([('account_id', '=', self.env.company.income_currency_exchange_account_id.id)], order='id')
+        self.assertRecordValues(xch_amls, [
+            {'debit': 0.0, 'credit': 2.0},
+        ])
+
     def test_standard_valuation_return_credit_note(self):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
