@@ -504,7 +504,7 @@ class AccountBankStatementLine(models.Model):
         ])
 
         if bank_account:
-            return bank_account.filtered(lambda x: x.company_id.id in (False, self.company_id.id))
+            return bank_account.filtered(lambda x: x.company_id.id in (False, self.company_id.id)).sudo(False)
 
         # Avoid creating a bank account during reconciliation if it already exists on another active partner
         bank_account_on_other_partner = self.env['res.partner.bank'].sudo().search([
