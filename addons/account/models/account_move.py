@@ -3,7 +3,7 @@
 import ast
 import calendar
 from collections import Counter, defaultdict
-from contextlib import ExitStack, contextmanager
+from contextlib import ExitStack, contextmanager, nullcontext
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from hashlib import sha256
@@ -1073,16 +1073,20 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.invoice_date or fields.Date.context_today(self)
 
+    def _get_expected_currency_rate_at(self, date):
+        self.ensure_one()
+        return self.env['res.currency']._get_conversion_rate(
+            from_currency=self.company_currency_id,
+            to_currency=self.currency_id,
+            company=self.company_id,
+            date=date,
+        )
+
     @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date')
     def _compute_expected_currency_rate(self):
         for move in self:
             if move.currency_id:
-                move.expected_currency_rate = move.env['res.currency']._get_conversion_rate(
-                    from_currency=move.company_currency_id,
-                    to_currency=move.currency_id,
-                    company=move.company_id,
-                    date=move._get_invoice_currency_rate_date(),
-                )
+                move.expected_currency_rate = move._get_expected_currency_rate_at(move._get_invoice_currency_rate_date())
             else:
                 move.expected_currency_rate = 1
 
@@ -5334,10 +5338,9 @@ class AccountMove(models.Model):
             # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
             # lines are recomputed accordingly.
             if not invoice.invoice_date and invoice.is_invoice(include_receipts=True):
-                invoice_currency_rate_inserted = invoice.invoice_currency_rate
-                invoice.invoice_date = fields.Date.context_today(self)
-                if invoice_currency_rate_inserted != invoice.expected_currency_rate:
-                    invoice.invoice_currency_rate = invoice_currency_rate_inserted
+                is_manual_rate = invoice.is_sale_document(include_receipts=True) and invoice.invoice_currency_rate != invoice._get_expected_currency_rate_at(invoice.create_date.date())
+                with self.env.protecting([self._fields['invoice_currency_rate']], invoice) if is_manual_rate else nullcontext():
+                    invoice.invoice_date = fields.Date.context_today(self)
 
         for move in self:
             if move.state in ['posted', 'cancel']:
