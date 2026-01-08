@@ -29,7 +29,7 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
          */
         get lastPage() {
             const nItems = this.totalCount;
-            return Math.trunc(nItems / (this.nPerPage + 1)) + 1;
+            return Math.ceil(nItems / this.nPerPage);
         }
         get orderFields(){
           return ['name', 'partner_id', 'amount_total', 'date_order', 'state', 'user_id', 'amount_unpaid'] 
@@ -75,17 +75,18 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
          * @param {number} offset
          */
         async _fetch(limit, offset) {
-            const sale_orders = await this._getOrderIdsForCurrentPage(limit, offset);
+            const sale_orders = await this._getTotalOrdersIds();
+            const page_sale_orders = sale_orders.slice(offset, offset + limit);
 
             this.totalCount = sale_orders.length;
-            return sale_orders;
+            return page_sale_orders;
         }
-        async _getOrderIdsForCurrentPage(limit, offset) {
+        async _getTotalOrdersIds() {
             let domain = [['currency_id', '=', this.comp.env.pos.currency.id]].concat(this.searchDomain || []);
             const saleOrders = await this.rpc({
                 model: 'sale.order',
                 method: 'search_read',
-                args: [domain, this.orderFields, offset, limit],
+                args: [domain, this.orderFields],
                 context: this.comp.env.session.user_context,
             });
 
