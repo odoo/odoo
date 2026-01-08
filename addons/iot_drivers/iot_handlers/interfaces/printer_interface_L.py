@@ -17,7 +17,7 @@ import subprocess
 import time
 
 from odoo.addons.iot_drivers.interface import Interface
-from odoo.addons.iot_drivers.main import iot_devices
+from odoo.addons.iot_drivers.driver import iot_devices
 
 _logger = logging.getLogger(__name__)
 

@@ -5,7 +5,8 @@ import requests
 from threading import Thread
 import time
 
-from odoo.addons.iot_drivers.main import iot_devices, manager
+from odoo.addons.iot_drivers.main import manager
+from odoo.addons.iot_drivers.driver import iot_devices
 from odoo.addons.iot_drivers.tools import helpers, system, upgrade, wifi
 from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_TEST, IOT_IDENTIFIER
 

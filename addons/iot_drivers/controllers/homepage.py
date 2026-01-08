@@ -13,7 +13,8 @@ from pathlib import Path
 from odoo import http
 from odoo.addons.iot_drivers.tools import certificate, helpers, route, system, upgrade, wifi
 from odoo.addons.iot_drivers.tools.system import IS_RPI, IOT_IDENTIFIER, IOT_SYSTEM, ODOO_START_TIME, SYSTEM_START_TIME
-from odoo.addons.iot_drivers.main import iot_devices, unsupported_devices
+from odoo.addons.iot_drivers.driver import iot_devices
+from odoo.addons.iot_drivers.interface import unsupported_devices
 from odoo.addons.iot_drivers.connection_manager import connection_manager
 from odoo.tools.misc import file_path
 from odoo.addons.iot_drivers.server_logger import server_logger
