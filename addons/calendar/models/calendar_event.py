@@ -1634,3 +1634,12 @@ class Meeting(models.Model):
         res = res or ir_default_get('calendar.event', 'duration', company_id=True)
         res = res or ir_default_get('calendar.event', 'duration')
         return res or 1
+
+    def _message_get_default_recipients(self):
+        return {
+            e.id: {
+                'partner_ids': e.attendee_ids.mapped('partner_id.id'),
+                'email_to': False,
+                'email_cc': False,
+            } for e in self
+        }
