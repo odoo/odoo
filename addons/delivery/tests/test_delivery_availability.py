@@ -194,3 +194,40 @@ class TestDeliveryAvailability(DeliveryCommon, SaleCommon):
         }))
         choose_delivery_carrier = delivery_wizard.save()
         self.assertFalse(self.carrier.id in choose_delivery_carrier.available_carrier_ids.ids, "Delivery method's excluded tag is set on one product in the order")
+
+    def test_set_default_carrier_when_partner_delivery_method_is_available(self):
+        """The default carrier is set as property_delivery_carrier_id is in available_carriers."""
+        self.sale_order.partner_shipping_id.property_delivery_carrier_id = (
+            self.non_restricted_carrier
+        )
+        delivery_wizard = self.sale_order.action_open_delivery_wizard()
+        self.assertEqual(
+            delivery_wizard['context']['default_carrier_id'],
+            self.non_restricted_carrier.id,
+        )
+
+    def test_dont_set_default_carrier_when_partner_delivery_method_is_not_available(self):
+        """The default carrier is not set as property_delivery_carrier_id is not in
+        available_carriers."""
+        restricted_carrier = self._prepare_carrier(self.carrier.product_id, max_weight=0.1)
+        self.product.weight = 1.0
+        self.sale_order.partner_shipping_id.property_delivery_carrier_id = restricted_carrier
+        delivery_wizard = self.sale_order.action_open_delivery_wizard()
+        self.assertFalse(delivery_wizard['context']['default_carrier_id'])
+
+    def test_dont_set_default_carrier_when_partner_delivery_method_is_not_set(self):
+        """The default carrier is not set as property_delivery_carrier_id is not set on partner."""
+        self.sale_order.partner_shipping_id.property_delivery_carrier_id = False
+        delivery_wizard = self.sale_order.action_open_delivery_wizard()
+        self.assertFalse(delivery_wizard['context']['default_carrier_id'])
+
+    def test_set_default_carrier_when_sale_order_delivery_method_is_set(self):
+        """The default carrier is set as delivery_carrier_id is set on sale.order."""
+        self.sale_order.carrier_id = self.non_restricted_carrier
+        delivery_wizard = self.sale_order.with_context(
+            carrier_recompute=True
+        ).action_open_delivery_wizard()
+        self.assertEqual(
+            delivery_wizard['context']['default_carrier_id'],
+            self.non_restricted_carrier.id,
+        )
