@@ -187,11 +187,9 @@ patch(TourHelpers.prototype, {
         }
         await hoot.click(element);
         this._set_range(element, "start");
-        await hoot.keyDown("_");
         element.textContent = text;
         await hoot.manuallyDispatchProgrammaticEvent(element, "input");
         this._set_range(element, "stop");
-        await hoot.keyUp("_");
         await hoot.manuallyDispatchProgrammaticEvent(element, "change");
     },
 
