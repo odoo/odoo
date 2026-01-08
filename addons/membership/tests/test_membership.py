@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import time
 from odoo.addons.membership.tests.common import TestMembershipCommon
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 from odoo import fields
 
 
@@ -159,3 +159,57 @@ class TestMembership(TestMembershipCommon):
         self.partner_1._compute_membership_state()
         self.assertEqual(invoice.state, 'cancel')
         self.assertEqual(self.partner_1.membership_state, 'canceled')
+
+    def test_apply_payment_term(self):
+        """
+            Check if the payment term defined on the partner is applied to the invoice
+        """
+        pay_term_15_days_after_today = self.env['account.payment.term'].create({
+            'name': '15 days after today',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'balance',
+                    'days': 15,
+                    'option': 'day_after_invoice_date',
+                }),
+            ],
+        })
+        self.partner_1.write({
+            'property_payment_term_id': pay_term_15_days_after_today.id,
+        })
+        invoice = self.partner_1.create_membership_invoice(self.membership_1, 100.0)
+        self.assertEqual(invoice.invoice_payment_term_id, pay_term_15_days_after_today)
+
+    def test_change_membership_on_account_move_line(self):
+        invoice = self.partner_1.create_membership_invoice(
+            self.membership, self.membership.list_price
+        )
+        with Form(invoice) as invoice_form:
+            line_form = invoice_form.invoice_line_ids.edit(0)
+            line_form.product_id = self.membership_1
+            line_form.save()
+
+        invoice_line = invoice.invoice_line_ids[0]
+        self.assertEqual(
+            invoice_line.price_unit,
+            self.membership_1.list_price
+        )
+        membership_line = self.env["membership.membership_line"].search(
+            [("account_invoice_line", "=", invoice_line.id)]
+        )
+        self.assertEqual(
+            membership_line.membership_id,
+            self.membership_1
+        )
+        self.assertEqual(
+            membership_line.member_price,
+            self.membership_1.list_price
+        )
+        self.assertEqual(
+            membership_line.date_from,
+            self.membership_1.membership_date_from
+        )
+        self.assertEqual(
+            membership_line.date_to,
+            self.membership_1.membership_date_to
+        )
