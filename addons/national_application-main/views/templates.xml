@@ -1,0 +1,128 @@
+<odoo>
+  <data>
+    <record id="menu_website_national_id_applications" model="website.menu">
+      <field name='name'>National ID Application</field>
+      <field name='url'>/national/application</field>
+      <field name='parent_id' ref='website.main_menu'/>
+      <field name='sequence'>55</field>
+    </record>
+    <template id="website_national_id_application_form" name="National ID Application Form">
+      <t t-call='website.layout'>
+        <div id="wrap">
+          <div class="oe_structure">
+            <div class="container">
+              <h4 class='text-center mt-4'>National ID Application</h4>
+              <form role='form' method="post" enctype="multipart/form-data" action="/submit_application" class="needs-validation p-4">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="first_name">Applicant Name:</label>
+                      <input type="text" id='first_name' name="applicant_name" class="form-control" required="True"/>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="last_name">Date of Birth:</label>
+                      <input type="date" id='date_of_birth' name="date_of_birth" class="form-control" required="True"/>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="mobile">Mobile:</label>
+                      <input type="tel" id='mobile' name="applicant_phone" t-att-value="mobile" class="form-control"/>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="email">Email:</label>
+                      <input type="email" id='customer_email' name="email" class="form-control" t-att-value="customer_email" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="address">Address:</label>
+                      <textarea name="address" id='address' class="form-control" t-att-value="address" required="True"></textarea>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="last_name">Village:</label>
+                      <input type="text" id='village' name="village" class="form-control" required="True"/>
+                    </div>
+                    <br/>
+                    <div class="form-group mt-4">
+                      <label for="country">Country:</label>
+                      <select id="country" name="country" class="form-control" required="True">
+                        <t t-foreach="countries" t-as="country">
+                          <option t-att-value="country.id">
+                            <span t-esc="country.name"/>
+                          </option>
+                        </t>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="picture">Picture</label>
+                      <input type="file" required="True" id="picture" accept="image/png, image/jpeg" class="form-control" name="picture"/>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="lc_reference_letter">LC Reference Letter</label>
+                      <input type="file" required="True" id="lc_reference_letter" class="form-control" name="lc_reference_letter"/>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="form-group mt-4">
+                  <div class="clear-fix oe_login_buttons">
+                    <button type="submit" class="btn btn-primary pull-left">SUBMIT APPLICATION</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </t>
+    </template>
+    <record id='client_thanks' model='website.page'>
+      <field name='name'>Client Thanks</field>
+      <field name='type'>qweb</field>
+      <field name='url'>/client-thank-you</field>
+      <field name='website_published'>True</field>
+      <field name='key'>national_application.client_thanks</field>
+      <field name='arch' type='xml'>
+        <t name='Thanks' t-name='national_application.client_thanks'>
+          <t t-call='website.layout'>
+            <div id="wrap">
+              <div class="container">
+                <h1>Thanks</h1>
+                <div class="row">
+                  <div class="col-lg-8">
+                    <div class="alert alert-success">
+                         Your Application has been successfully submitted
+                                            
+                    </div>
+                    <p>We shall contact you for more details </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </t>
+        </t>
+      </field>
+    </record>
+  </data>
+</odoo>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.sequence" id="bid_sequence">
+        <field name="name">Bid Sequence</field>
+        <field name="code">bid.sequence</field>
+        <field name="prefix">BID-</field>
+        <field name="padding">5</field>
+    </record>
+    <record id="view_bid_form" model="ir.ui.view">
+        <field name="name">bid.form</field>
+        <field name="model">bid</field>
+        <field name="arch" type="xml">
+            <form string="Bid">
+                <header>
+                    <button name="action_submitted" type="object" string="Submit" invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_prequalified" type="object" string="Pre Qualified" invisible="state != 'submitted'" class="btn-primary"/>
+                    <button name="action_qualified" type="object" string="Qualified" invisible="state != 'prequalified'" class="btn-primary"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="vendor" required="1"/>
+                            <field name="purchase_id" required="1"/>
+                            <field name="date"/>
+                            <field name="bid_amount"/>
+                        </group>
+                        <group>
+                            <field name="attachments" widget="many2many_binary"/>
+                        </group>
+
+
+                    </group>
+                    <notebook>
+                        <!-- Add attachments tab if needed -->
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_bid_tree" model="ir.ui.view">
+        <field name="name">bid.tree</field>
+        <field name="model">bid</field>
+        <field name="arch" type="xml">
+            <tree string="Bids">
+                <field name="name"/>
+                <field name="vendor"/>
+                <field name="purchase_id"/>
+                <field name="date"/>
+                <field name="bid_amount"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_bid_tree" model="ir.actions.act_window">
+        <field name="name">Bids</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">bid</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+    </record>
+
+    <record id="menu_bid_root" model="ir.ui.menu">
+        <field name="name">Bids</field>
+        <field name="sequence" eval="10"/>
+        <field name="action" ref="action_bid_tree"/>
+        <field name="parent_id" ref="purchase.menu_purchase_root"/>
+        <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+</odoo>
