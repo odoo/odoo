@@ -2567,3 +2567,24 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         delivery.sale_id = sale_order
         self.assertEqual(delivery.reference_ids.sale_ids, sale_order)
         self.assertEqual(delivery.move_ids.reference_ids, delivery.reference_ids)
+
+    def test_sale_partner_propagation_3_step_pull(self):
+        """
+        Check that the customer of an SO is propageted to all moves of the
+        pull chain in multi-step deliveries.
+        """
+        # delivery_route = self.warehouse_3_steps_pull.delivery_route_id
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'warehouse_id':  self.warehouse_3_steps_pull.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+            })]
+        })
+        sale_order.action_confirm()
+        self.assertRecordValues(sale_order.picking_ids.sorted(lambda p: p.picking_type_id.name)[::-1], [
+            {'partner_id': self.partner_a.id, 'picking_type_id': self.warehouse_3_steps_pull.pick_type_id.id},
+            {'partner_id': self.partner_a.id, 'picking_type_id': self.warehouse_3_steps_pull.pack_type_id.id},
+            {'partner_id': self.partner_a.id, 'picking_type_id': self.warehouse_3_steps_pull.out_type_id.id},
+        ])
