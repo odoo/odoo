@@ -487,7 +487,7 @@ class ProductTemplate(models.Model):
         pricelist_price, pricelist_rule_id = pricelist._get_product_price_rule(
             product=product_or_template,
             quantity=quantity,
-            target_currency=currency,
+            currency=currency,
         )
 
         price_before_discount = pricelist_price
