@@ -24,6 +24,11 @@
         <xpath expr="//div[@name='no_shipping']//t[@t-set='address']" position="inside">
             <t t-call="l10n_in.place_of_supply"/>
         </xpath>
+        <xpath expr="//i[hasclass('oe_payment_label')]" position="inside">
+            <t t-if="payment_vals['payment_method_name'] != 'Manual Payment'">
+                using <t t-esc="payment_vals['payment_method_name']"/>
+            </t>
+        </xpath>
 
         <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[1]" position="after">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_is_gst_registered">
