@@ -84,14 +84,13 @@ QUnit.module("Fields", (hooks) => {
         setupViewRegistries();
 
         patchWithCleanup(AutoComplete, {
-            delay: 0,
+            timeout: 0,
         });
 
         // simulate a environment with a camera/webcam
         patchWithCleanup(
             browser,
             Object.assign({}, browser, {
-                setTimeout: (fn) => fn(),
                 navigator: {
                     userAgent: "Chrome/0.0.0 (Linux; Android 13; Odoo TestSuite)",
                     mediaDevices: {
