@@ -137,7 +137,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 download=download,
             )
 
-        if request.env.user.share and access_token:
+        if request.env.user.share and access_token and request.is_frontend:
             # If a public/portal user accesses the order with the access token
             # Log a note on the chatter.
             today = fields.Date.today().isoformat()
