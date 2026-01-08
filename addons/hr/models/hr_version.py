@@ -137,6 +137,18 @@ class HrVersion(models.Model):
                                           groups="hr.group_hr_user", copy=False, ondelete='restrict', tracking=1)
     departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False)
     departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=1)
+    dismissal_date = fields.Date(groups="hr.group_hr_user", copy=False)
+    use_seniority_at_hiring = fields.Boolean(groups="hr.group_hr_user", copy=False)
+    salary_december_2013 = fields.Selection([
+        ('inferior', 'Gross annual salary < 32.254 €'),
+        ('superior', 'Gross annual salary > 32.254 €'),
+        ], groups="hr.group_hr_user", copy=False)
+    salary_visibility = fields.Boolean(groups="hr.group_hr_user", copy=False)
+    notice_respect = fields.Selection([
+        ('with', 'Employee works during his notice period'),
+        ('partial', 'Employee works partially during his notice period'),
+        ('without', "Employee doesn't work during his notice period"),
+        ], groups="hr.group_hr_user", copy=False)
 
     resource_calendar_id = fields.Many2one('resource.calendar', inverse='_inverse_resource_calendar_id', check_company=True, string="Working Hours", tracking=1)
     is_flexible = fields.Boolean(compute='_compute_is_flexible', store=True, groups="hr.group_hr_user")
