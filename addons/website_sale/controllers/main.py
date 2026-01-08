@@ -3,7 +3,7 @@
 import itertools
 from collections import defaultdict
 from datetime import datetime
-from urllib.parse import parse_qs, urlencode, urlparse
+from urllib.parse import parse_qs, urlencode, urlparse, urlsplit
 
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
@@ -13,7 +13,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, route
 from odoo.http.stream import content_disposition
-from odoo.tools import SQL, BinaryBytes, clean_context, float_round, lazy, str2bool
+from odoo.tools import SQL, clean_context, float_round, lazy, str2bool
 from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.payment.controllers import portal as payment_portal
@@ -815,30 +815,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not self.env.user.has_group("website.group_website_restricted_editor"):
             raise NotFound
 
-        if type == "image":  # Image case
-            image_ids = self.env["ir.attachment"].browse(i["id"] for i in media)
-            media_create_data = [
-                Command.create({
-                    "name": image.name,  # Images uploaded from url do not have any datas.
-                    # This recovers them manually.
-                    "image_1920": image.raw
-                    or self.env["ir.qweb.field.image"].load_remote_url(image.url),
-                })
-                for image in image_ids
-            ]
-        elif type == "video":  # Video case
-            video_data = media[0]
-            url = urlparse(video_data["video_url"])
-            if not url.netloc:
-                raise ValidationError(self.env._("Invalid video URL provided."))
-            media_create_data = [
-                Command.create({
-                    "name": video_data.get("name", "Odoo Video"),
-                    "video_url": video_data["video_url"],
-                    "image_1920": video_data.get("image_1920"),
-                })
-            ]
-
         product_product = (
             self.env["product.product"].browse(int(product_product_id))
             if product_product_id
@@ -858,82 +834,81 @@ class WebsiteSale(payment_portal.PaymentPortal):
             product_product = product_template._get_variant_for_combination(combination)
             if not product_product:
                 product_product = product_template._create_product_variant(combination)
-        if (
+
+        is_variant_media = (
             product_template.has_configurable_attributes
             and product_product
             and not all(
                 pa.create_variant == "no_variant"
                 for pa in product_template.attribute_line_ids.attribute_id
             )
-        ):
-            product_product.write({"product_variant_image_ids": media_create_data})
-        else:
-            product_template.write({"product_template_image_ids": media_create_data})
-
-    @route(["/shop/product/clear-images"], type="jsonrpc", auth="user", website=True)
-    def clear_product_images(self, product_product_id, product_template_id):
-        """Unlink all images from the product."""
-        if not self.env.user.has_group("website.group_website_restricted_editor"):
-            raise NotFound
-
-        product_product = (
-            self.env["product.product"].browse(int(product_product_id))
-            if product_product_id
-            else False
         )
-        product_template = (
-            self.env["product.template"].browse(int(product_template_id))
-            if product_template_id
-            else False
-        )
+        variant_media_values = {}
+        if is_variant_media:
+            variant_media_values["attribute_value_ids"] = [Command.set(combination_ids)]
 
-        if product_product and not product_template:
-            product_template = product_product.product_tmpl_id
+        if type == "image":  # Image case
+            image_ids = self.env["ir.attachment"].browse(i["id"] for i in media)
+            media_create_data = [
+                Command.create({
+                    "name": image.name,  # Images uploaded from url do not have any datas.
+                    # This recovers them manually.
+                    "image_1920": image.raw
+                    or self.env["ir.qweb.field.image"].load_remote_url(image.url),
+                    **variant_media_values,
+                })
+                for image in image_ids
+            ]
+        elif type == "video":  # Video case
+            video_data = media[0]
+            url = urlsplit(video_data["video_url"])
+            if not url.netloc:
+                raise ValidationError(self.env._("Invalid video URL provided."))
+            media_create_data = [
+                Command.create({
+                    "name": video_data.get("name", "Odoo Video"),
+                    "video_url": video_data["video_url"],
+                    "image_1920": video_data.get("image_1920"),
+                    **variant_media_values,
+                })
+            ]
 
-        if product_product and product_product.product_variant_image_ids:
-            product_product.product_variant_image_ids.unlink()
-        else:
-            product_template.product_template_image_ids.unlink()
+        product_template.write({"product_template_image_ids": media_create_data})
 
     @route(["/shop/product/resequence-image"], type="jsonrpc", auth="user", website=True)
-    def resequence_product_image(self, image_res_model, image_res_id, move):
+    def resequence_product_image(self, image_res_id, move, product_variant_id):
         """
         Move the product image in the given direction and update all images' sequence.
 
-        :param str image_res_model: The model of the image. It can be 'product.template',
-                                    'product.product', or 'product.image'.
         :param str image_res_id: The record ID of the image to move.
         :param str move: The direction of the move. It can be 'first', 'left', 'right', or 'last'.
+        :param str product_variant_id: The ID of the product variant in whose context the image
+                                       resequencing is performed
         :raises NotFound: If the user does not have the required permissions, if the model of the
                           image is not allowed, or if the move direction is not allowed.
         :raise ValidationError: If the product is not found.
         :raise ValidationError: If the image to move is not found in the product images.
-        :raise ValidationError: If a video is moved to the first position.
         :return: None
         """
-        if (
-            not self.env.user.has_group("website.group_website_restricted_editor")
-            or image_res_model not in {"product.product", "product.template", "product.image"}
-            or move not in {"first", "left", "right", "last"}
-        ):
+        if not self.env.user.has_group("website.group_website_restricted_editor") or move not in {
+            "first",
+            "left",
+            "right",
+            "last",
+        }:
             raise NotFound
 
         image_res_id = int(image_res_id)
-        image_to_resequence = self.env[image_res_model].browse(image_res_id)
-        if image_res_model == "product.product":
-            product = image_to_resequence
-            product_template = product.product_tmpl_id
-        elif image_res_model == "product.template":
-            product_template = image_to_resequence
-            product = product_template.product_variant_id
-        else:
-            product = image_to_resequence.product_variant_id
-            product_template = product.product_tmpl_id or image_to_resequence.product_tmpl_id
+        image_to_resequence = self.env["product.image"].browse(image_res_id)
+
+        product_template = image_to_resequence.product_tmpl_id
+        product = self.env["product.product"].browse(int(product_variant_id))
 
         if not product and not product_template:
             raise ValidationError(self.env._("Product not found"))
 
-        product_images = (product or product_template)._get_images()
+        product_images = list((product or product_template)._get_images())
+
         if image_to_resequence not in product_images:
             raise ValidationError(self.env._("Invalid image"))
 
@@ -952,31 +927,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # Reorder images locally.
         product_images.insert(new_image_idx, product_images.pop(image_idx))
-
-        # If the main image has been reordered (i.e. it's no longer in first position), use the
-        # image that's now in first position as main image instead.
-        # Additional images are product.image records. The main image is a product.product or
-        # product.template record.
-        main_image_idx = next(
-            idx for idx, image in enumerate(product_images) if image._name != "product.image"
-        )
-        if main_image_idx != 0:
-            main_image = product_images[main_image_idx]
-            additional_image = product_images[0]
-            if additional_image.video_url:
-                raise ValidationError(
-                    self.env._("You can't use a video as the product's main image.")
-                )
-            # Swap records.
-            product_images[main_image_idx], product_images[0] = additional_image, main_image
-            # Swap image data. The contents are read eagerly before writing: the images are
-            # stored in attachments, and writing the first field mutates its attachment, which
-            # would invalidate the other value that is still lazily bound to its attachment.
-            main_image_data = main_image.image_1920.content
-            additional_image_data = additional_image.image_1920.content
-            main_image.image_1920 = BinaryBytes(additional_image_data)
-            additional_image.image_1920 = BinaryBytes(main_image_data)
-            additional_image.name = main_image.name  # Update image name but not product name.
 
         # Resequence additional images according to the new ordering.
         for idx, product_image in enumerate(product_images):

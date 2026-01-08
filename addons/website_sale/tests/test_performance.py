@@ -63,7 +63,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "account_account_tag": 2,
             "account_tax": 2,
             "account_tax_repartition_line": 2,
-            "ir_attachment": 2,
             "ir_ui_view": 2,
             "product_attribute": 1,
             "product_attribute_value": 3,

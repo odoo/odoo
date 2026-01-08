@@ -29,9 +29,9 @@ export class SetPositionAction extends BuilderAction {
     }
     async apply({ editingElement: el, value }) {
         const params = {
-            image_res_model: el.parentElement.dataset.oeModel,
             image_res_id: el.parentElement.dataset.oeId,
             move: value,
+            product_variant_id: this.document.querySelector('[data-product-variant-id]').dataset.productVariantId,
         };
 
         await rpc("/shop/product/resequence-image", params);
@@ -46,13 +46,13 @@ export class RemoveMediaAction extends BuilderAction {
         this.reload = {};
     }
     async apply({ editingElement: el }) {
-        if (el.parentElement.dataset.oeModel === "product.image") {
-            // Unlink the "product.image" record as it is not the main product image.
-            await this.services.orm.unlink("product.image", [
-                parseInt(el.parentElement.dataset.oeId),
-            ]);
+        const wrapper = el.closest("[data-oe-model='product.image']");
+        if (wrapper) {
+            await this.services.orm.unlink("product.image", [parseInt(wrapper.dataset.oeId)]);
+            wrapper.remove();
+        } else {
+            el.remove();
         }
-        el.remove();
     }
 }
 
