@@ -2,6 +2,7 @@ import {
     addBuilderAction,
     addBuilderOption,
     setupHTMLBuilder,
+    editBuilderRangeValue,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { describe, expect, test } from "@odoo/hoot";
@@ -17,7 +18,6 @@ import {
 } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, defineModels, models } from "@web/../tests/web_test_helpers";
-import { delay } from "@web/core/utils/concurrency";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
 describe.current.tags("desktop");
@@ -254,14 +254,9 @@ describe("default value", () => {
             <div class="test-options-target">10</div>
         `);
         await contains(":iframe .test-options-target").click();
-        const input = queryFirst(".options-container input");
-        input.value = "";
-        input.dispatchEvent(new Event("input"));
-        await delay();
-        input.dispatchEvent(new Event("change"));
-        await delay();
+        await editBuilderRangeValue(".options-container input", "20");
         expect.verifySteps(["customAction 20", "customAction 20"]);
-        expect(input).toHaveValue(20);
+        expect(".options-container input").toHaveValue(20);
     });
     test("clear BuilderNumberInput without default value", async () => {
         addBuilderAction({
