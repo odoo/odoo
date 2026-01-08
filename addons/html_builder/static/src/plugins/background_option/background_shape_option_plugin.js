@@ -34,9 +34,10 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         ),
         content_not_editable_selectors: ".o_we_shape",
         system_node_selectors: ".o_we_shape",
-        normalize_handlers: this.updateBgShapeColors.bind(this),
+        normalize_handlers: this.normalize.bind(this),
         on_bg_color_updated_handlers: this.handleBgColorUpdated.bind(this),
-        on_mobile_preview_clicked: () => this.updateBgShapeColors(this.editable),
+        // on_mobile_preview_clicked: () => this.updateBgShapeColors(this.editable),
+        handleNewRecords: this.handleMutations.bind(this),
     };
     static shared = [
         "getShapeStyleUrl",
@@ -84,6 +85,68 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             const shapeData = JSON.parse(bgShapeEl.dataset.oeShapeData.replace(/'/g, '"'));
             if (!Object.hasOwn(shapeData, "selectedColor")) {
                 this.markShape(bgShapeEl, { selectedColor: true });
+            }
+        }
+        this.impactedSiblingEls = new Set();
+        this.impactedNodeEls = new Set();
+    }
+    handleMutations(records, stepState) {
+        if (stepState && stepState !== "original") {
+            return;
+        }
+        const isElementSnippet = (el) =>
+            el.nodeType === Node.ELEMENT_NODE && el.matches("[data-snippet]");
+        for (const record of records) {
+            if (record.target && isElementSnippet(record.target)) {
+                this.impactedNodeEls.add(record.target);
+                continue;
+            }
+            if (record.type === "childList") {
+                for (const removedTree of record.removedTrees) {
+                    const nodeEl = removedTree.node;
+                    if (nodeEl && isElementSnippet(nodeEl)) {
+                        let nextSiblingEl, previousSiblingEl;
+                        const nextSibling = record.nextSibling;
+                        if (nextSibling && nextSibling.nodeType === Node.ELEMENT_NODE) {
+                            nextSiblingEl = nextSibling;
+                        }
+                        const previousSibling = record.previousSibling;
+                        if (previousSibling && previousSibling.nodeType === Node.ELEMENT_NODE) {
+                            previousSiblingEl = previousSibling;
+                        }
+                        const neighborEls = this.getNeighborShapeEls(
+                            previousSiblingEl,
+                            nextSiblingEl
+                        );
+                        neighborEls.forEach((neighborEl) =>
+                            this.impactedSiblingEls.add(neighborEl)
+                        );
+                    }
+                }
+                for (const addedTree of record.addedTrees) {
+                    const nodeEl = addedTree.node;
+                    if (nodeEl && isElementSnippet(nodeEl)) {
+                        this.impactedNodeEls.add(nodeEl);
+                    }
+                }
+            }
+        }
+    }
+    normalize() {
+        const impactedNodeEls = this.impactedNodeEls;
+        this.impactedNodeEls = new Set();
+        for (const impactedNodeEl of impactedNodeEls) {
+            // console.log(record.target);
+            if (impactedNodeEl.isConnected) {
+                this.handleBgColorUpdated(impactedNodeEl);
+            }
+        }
+        const impactedSiblingEls = this.impactedSiblingEls;
+        this.impactedSiblingEls = new Set();
+        for (const impactedSiblingEl of impactedSiblingEls) {
+            // console.log(record.target);
+            if (impactedSiblingEl.isConnected) {
+                this.updateBgShapeColors(impactedSiblingEl);
             }
         }
     }
@@ -432,8 +495,11 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         ) {
             return;
         }
-        const neighborShapeEls = this.getNeighborShapeEls(editingElement);
-        for (const neighborShapeEl of neighborShapeEls) {
+        const neighborShapeEls = this.getNeighborShapeEls(
+            editingElement["previousElementSibling"],
+            editingElement["nextElementSibling"]
+        );
+        for (const neighborShapeEl of [...neighborShapeEls, editingElement]) {
             this.updateConnectionShapeColor(neighborShapeEl);
         }
     }
@@ -551,9 +617,8 @@ export class BackgroundShapeOptionPlugin extends Plugin {
      * requested.
      * @returns {HTMLElement[]} List of neighboring shape elements.
      */
-    getNeighborShapeEls(editingElement) {
-        const getBgShapedSnippetSiblingEl = (editingElement, elementSibling) => {
-            let siblingEl = editingElement[elementSibling];
+    getNeighborShapeEls(previousEl, nextEl) {
+        const getBgShapedSnippetSiblingEl = (siblingEl, elementSibling) => {
             while (siblingEl) {
                 if (this.isVisibleSnippet(siblingEl)) {
                     return siblingEl.dataset.oeShapeData ? siblingEl : null;
@@ -562,13 +627,10 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             }
         };
         const aboveShapeSnippetEl = getBgShapedSnippetSiblingEl(
-            editingElement,
+            previousEl,
             "previousElementSibling"
         );
-        const underShapeSnippetEl = getBgShapedSnippetSiblingEl(
-            editingElement,
-            "nextElementSibling"
-        );
+        const underShapeSnippetEl = getBgShapedSnippetSiblingEl(nextEl, "nextElementSibling");
         return [aboveShapeSnippetEl, underShapeSnippetEl].filter(Boolean);
     }
     /**
