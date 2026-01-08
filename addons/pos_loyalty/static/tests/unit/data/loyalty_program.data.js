@@ -136,6 +136,24 @@ export class LoyaltyProgram extends models.ServerModel {
             rule_ids: [],
             reward_ids: [],
         },
+        {
+            id: 7,
+            name: "Loyalty Program Future",
+            trigger: "auto",
+            applies_on: "future",
+            program_type: "loyalty",
+            pricelist_ids: [1],
+            date_from: false,
+            date_to: false,
+            limit_usage: false,
+            max_usage: 0,
+            is_nominative: true,
+            portal_visible: true,
+            portal_point_name: "Points",
+            trigger_product_ids: [],
+            rule_ids: [4],
+            reward_ids: [3],
+        },
     ];
 }
 

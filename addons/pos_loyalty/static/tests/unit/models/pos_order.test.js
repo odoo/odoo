@@ -1,4 +1,5 @@
 import { test, describe, expect } from "@odoo/hoot";
+import { tick } from "@odoo/hoot-mock";
 import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { addProductLineToOrder } from "@pos_loyalty/../tests/unit/utils";
@@ -304,5 +305,37 @@ describe("pos.order - loyalty", () => {
         expect(loyaltyStats[0].points.name).toBe("Points");
         expect(loyaltyStats[0].points.won).toBe(25);
         expect(loyaltyStats[0].points.balance).toBe(10);
+    });
+
+    test("getLoyaltyPoints adapts to qty decreasing", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        const partner1 = models["res.partner"].get(1);
+        order.setPartner(partner1);
+        await store.orderUpdateLoyaltyPrograms();
+        const reward = models["loyalty.reward"].get(3);
+        const loyalty_card = models["loyalty.card"].get(4);
+        const line = await addProductLineToOrder(store, order, {
+            productId: 10,
+            templateId: 10,
+            qty: 3,
+        });
+        await store.orderUpdateLoyaltyPrograms();
+        order._applyReward(reward, loyalty_card.id);
+        const loyaltyStats = order.getLoyaltyPoints();
+        expect(loyaltyStats[0].points.won).toBe(0);
+        expect(loyaltyStats[0].points.spent).toBe(3);
+        expect(loyaltyStats[0].points.total).toBe(0);
+        expect(loyaltyStats[0].points.balance).toBe(3);
+        line.setQuantity(2);
+        await store.updateRewards();
+        await tick();
+        const loyaltyStats2 = order.getLoyaltyPoints();
+        expect(loyaltyStats2[0].points.won).toBe(0);
+        expect(loyaltyStats2[0].points.spent).toBe(2);
+        expect(loyaltyStats2[0].points.total).toBe(1);
+        expect(loyaltyStats2[0].points.balance).toBe(3);
     });
 });

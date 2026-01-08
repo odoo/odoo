@@ -68,6 +68,19 @@ export class LoyaltyRule extends models.ServerModel {
             mode: "with_code",
             code: "EXPIRED",
         },
+        {
+            id: 4,
+            program_id: 7,
+            any_product: true,
+            currency_id: 1,
+            reward_point_amount: 1,
+            reward_point_split: false,
+            reward_point_mode: "unit",
+            minimum_qty: 1,
+            minimum_amount: 0,
+            minimum_amount_tax_mode: "incl",
+            mode: "auto",
+        },
     ];
 }
 
