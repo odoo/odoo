@@ -205,7 +205,7 @@ class PurchaseOrder(models.Model):
         order_xml = self.env['purchase.edi.xml.ubl_bis3_order_cancel'].build_order_cancel_xml(self)
 
         attachment = self.env['ir.attachment'].create({
-            'name': f"{self.name}-ubl_bis3_order.xml",
+            'name': f"{self.name}-ubl_bis3_order_cancel.xml",
             'raw': order_xml,
             'type': 'binary',
             'mimetype': "application/xml",

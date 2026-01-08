@@ -248,10 +248,6 @@ class PurchaseEdiXmlUbl_Bis3_OrderChange(models.AbstractModel):
         }
 
     def build_order_change_xml(self, purchase_order):
-        # order_change_seq = (
-        #     purchase_order.edi_tracker_ids
-        #     .filtered(lambda t: t.document_type == 'order_change')[:1]
-        # )
         order_change_seq = len([t for t in purchase_order.edi_tracker_ids if t.document_type == 'order_change']) + 1
 
         vals = {
@@ -304,20 +300,12 @@ class PurchaseEdiXmlUbl_Bis3_OrderCancel(models.AbstractModel):
         vals = {'purchase_order': purchase_order}
         document_node = self._get_purchase_order_node(vals)
         nsmap = self._get_document_nsmap(vals)
+        nsmap.update({
+            None: "urn:oasis:names:specification:ubl:schema:xsd:OrderCancellation-2",
+        })
         xml_content = dict_to_xml(document_node, template=OrderCancel, nsmap=nsmap)
 
-        now = datetime.datetime.now()
-        timestamp_str = now.strftime("%Y-%m-%d_%H:%M:%S")
-
-        filename = f"/home/odoo/test-generated/order-cancel/AO_{timestamp_str}.xml"
-        try:
-            etree.ElementTree(xml_content).write(filename,
-                              pretty_print=True,
-                              xml_declaration=True,
-                              encoding='utf-8')
-        except OSError as e:
-            print(f"Error writing to file: {e}")
-
+        return etree.tostring(xml_content, xml_declaration=True, pretty_print=True, encoding='utf-8')
 
 class PurchaseEdiXmlUbl_Bis3_OrderResponseAdvanced(models.AbstractModel):
     _name = 'purchase.edi.xml.ubl_bis3_order_response_advanced'
