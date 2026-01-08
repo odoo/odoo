@@ -3527,6 +3527,8 @@ class BaseModel(metaclass=MetaModel):
         with self.env.protecting(self._fields.values(), self):
             self.modified(self._fields, before=True)
 
+        attachment_filters = self._get_attachment_auto_delete_query_and_filter()
+        attachments_data = []
         for sub_ids in split_every(cr.IN_MAX, self.ids):
             records = self.browse(sub_ids)
 
@@ -3549,11 +3551,34 @@ class BaseModel(metaclass=MetaModel):
             # (the search is performed with sql as the search method of
             # ir_attachment is overridden to hide attachments of deleted
             # records)
+            joins = []
+            select_fields = []
+            attachment_model_names = [model_name for model_name, _, _, _ in attachment_filters]
+            assert (len(set(attachment_model_names)) == len(attachment_filters)
+                    and 'ir_attachment' not in attachment_model_names)
+            for model_name, foreign_key, field_names, __ in attachment_filters:
+                table_name = self.env[model_name]._table
+                joins.append(SQL(
+                    "LEFT OUTER JOIN %(table_name)s ON %(table_fkey)s = ir_attachment.id",
+                    table_name=SQL.identifier(table_name),
+                    table_fkey=SQL.identifier(table_name, foreign_key),
+                ))
+                for field_name in field_names:
+                    select_fields.append(
+                        SQL('%(table_column)s AS %(field_name_alias)s',
+                        table_column=SQL.identifier(table_name, field_name),
+                        field_name_alias=SQL.identifier(f'{table_name}_{field_name}')))
             cr.execute(SQL(
-                "SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s",
-                self._name, sub_ids,
-            ))
-            ir_attachment_unlink |= Attachment.browse(row[0] for row in cr.fetchall())
+                """SELECT ir_attachment.id AS ir_attachment_id %(select_fields_clause)s
+                     FROM ir_attachment
+                     %(join_clauses)s
+                    WHERE ir_attachment.res_model = %(res_model)s
+                      AND ir_attachment.res_id IN %(res_ids)s""",
+                select_fields_clause=(
+                    SQL(', %s', SQL(', ').join(field for field in select_fields)) if select_fields else SQL()),
+                join_clauses=SQL('\n').join(joins),
+                res_model=self._name, res_ids=sub_ids))
+            attachments_data.extend(cr.dictfetchall())
 
             # don't allow fallback value in ir.default for many2one company dependent fields to be deleted
             # Exception: when 'force_delete', these fallbacks can be deleted by Defaults.discard_records(records)
@@ -3621,8 +3646,13 @@ class BaseModel(metaclass=MetaModel):
         self.env.invalidate_all(flush=False)
         if ir_model_data_unlink:
             ir_model_data_unlink.unlink()
-        if ir_attachment_unlink:
-            ir_attachment_unlink.unlink()
+        if attachments_data:
+            attachments_to_unlink, attachments_to_keep = partition(
+                lambda row: all(attachment_filter(row) for __, __, __, attachment_filter in attachment_filters),
+                attachments_data)
+            Attachment.browse([a['ir_attachment_id'] for a in attachments_to_unlink]).unlink()
+            if attachments_to_keep:
+                self._post_attachments_auto_delete(attachments_to_keep)
         if cache_name := self._clear_cache_name:
             self.env.registry.clear_cache(cache_name)
 
@@ -3630,6 +3660,39 @@ class BaseModel(metaclass=MetaModel):
         _unlink.info('User #%s deleted %s records with IDs: %r', self.env.uid, self._name, self.ids)
 
         return True
+
+    def _post_attachments_auto_delete(self, attachments_data):
+        """ Process attachments that were not automatically deleted after record deletion.
+
+        This method handles custom post-processing of attachments that were filtered
+        out during the automatic cleanup process defined by
+        `_get_attachment_auto_delete_query_and_filter`. Subclasses should only override
+        this method when they have implemented custom attachment filtering logic.
+        When overriding, implementations must ensure attachments are linked to valid
+        records that still exist, as the original records will be deleted.
+
+        Args:
+            attachments_data (list): Attachment data from joined tables for filtering
+        """
+        pass
+
+    def _get_attachment_auto_delete_query_and_filter(self):
+        """ Get the filters and query components for attachment auto deletion.
+
+        This method returns the necessary filters and query components to identify
+        attachments that should be automatically deleted when records of this model
+        are removed. It is intended to be overridden by subclasses to implement
+        custom logic for determining which related attachments must be considered
+        for automatic deletion.
+
+        :return: List of tuples (model_name, foreign_key, extract_field_names, filter_func)
+            - model_name: name of the related model
+            - foreign_key: foreign key field to join with ir.attachment
+            - extract_field_names: field names needed for filtering
+            - filter_func: function to evaluate if attachment should be deleted
+        :rtype: list[tuple(str, str, list[str], callable)]
+        """
+        return []
 
     def write(self, vals: ValuesType) -> typing.Literal[True]:
         """ Update all records in ``self`` with the provided values.
