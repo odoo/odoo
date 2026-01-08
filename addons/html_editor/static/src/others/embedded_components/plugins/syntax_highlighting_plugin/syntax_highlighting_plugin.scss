@@ -28,6 +28,13 @@
         background: transparent;
         resize: none;
         white-space: pre;
+
+        &::placeholder {
+            opacity: 0;
+        }
+        &:focus::placeholder {
+            opacity: 1;
+        }
     }
 
     .o_code_toolbar {
