@@ -137,6 +137,9 @@ export class ThemeSelectorIframe extends Component {
             loadCSSPromises.push(...cssLibs.map((url) => this.loadCSSSheets(url)));
         }
         const cssTexts = await Promise.all(loadCSSPromises);
+        if (status(this) === "destroyed") {
+            return [];
+        }
         const sheetPromises = [];
         for (const cssText of cssTexts) {
             const sheet = new this.iframeRef.el.contentDocument.defaultView.CSSStyleSheet();
