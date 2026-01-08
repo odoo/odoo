@@ -316,11 +316,11 @@ export class Builder extends Component {
     }
 
     undo() {
-        this.editor.shared.history.undo();
+        this.editor.shared.operation.next(() => this.editor.shared.history.undo());
     }
 
     redo() {
-        this.editor.shared.history.redo();
+        this.editor.shared.operation.next(() => this.editor.shared.history.redo());
     }
 
     onMobilePreviewClick() {
