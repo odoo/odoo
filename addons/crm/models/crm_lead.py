@@ -15,6 +15,7 @@ from odoo.fields import Domain
 from odoo.tools.translate import _
 from odoo.tools import email_normalize_all, is_html_empty, groupby, parse_contact_from_email, SQL
 from odoo.tools.misc import get_lang
+from odoo.tools.safe_eval import safe_eval
 
 from . import crm_stage
 
@@ -718,6 +719,15 @@ class CrmLead(models.Model):
             partner_phone_formatted = self.partner_id._phone_format(fname='phone') or self.partner_id.phone or False
             return lead_phone_formatted != partner_phone_formatted
         return False
+
+    def _evaluate_context_from_action(self, action):
+        if action.get('context', '{}'):
+            try:
+                return safe_eval(action['context'], {'active_id': self.id, 'uid': self.env.uid})
+            except (NameError, ValueError):
+                return {}
+        else:
+            return {}
 
     # ------------------------------------------------------------
     # ORM
