@@ -24,10 +24,10 @@ class PurchaseOrder(models.Model):
 
     @api.depends('order_line.sale_order_id.partner_shipping_id')
     def _compute_dest_address_id(self):
+        super()._compute_dest_address_id()
         po_with_address = self.filtered(lambda po: po.dest_address_id and len(po._get_sale_orders().partner_shipping_id) == 1)
         for order in po_with_address:
             order.dest_address_id = order._get_sale_orders().partner_shipping_id
-        super(PurchaseOrder, self - po_with_address)._compute_dest_address_id()
 
     def action_view_sale_orders(self):
         self.ensure_one()
