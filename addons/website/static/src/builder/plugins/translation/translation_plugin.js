@@ -1,13 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
-import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { AttributeTranslateDialog } from "../../translation_components/attributeTranslateDialog";
 import { SelectTranslateDialog } from "../../translation_components/selectTranslateDialog";
-import {
-    localStorageNoDialogKey,
-    TranslatorInfoDialog,
-} from "../../translation_components/translatorInfoDialog";
 import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
 
@@ -122,10 +117,6 @@ export class TranslationPlugin extends Plugin {
                     ev.preventDefault();
                 }
             });
-        }
-
-        if (!browser.localStorage.getItem(localStorageNoDialogKey)) {
-            this.dialogService.add(TranslatorInfoDialog);
         }
 
         const showNotification = (ev) => {
