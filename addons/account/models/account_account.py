@@ -565,9 +565,6 @@ class AccountAccount(models.Model):
 
     @api.depends_context('company')
     def _compute_opening_debit_credit(self):
-        self.opening_debit = 0
-        self.opening_credit = 0
-        self.opening_balance = 0
         opening_move = self.env.company.account_opening_move_id
         if not self.ids or not opening_move:
             return
@@ -588,9 +585,9 @@ class AccountAccount(models.Model):
         result = {r['account_id']: r for r in self.env.cr.dictfetchall()}
         for record in self:
             res = result.get(record.id) or {'debit': 0, 'credit': 0, 'balance': 0}
-            record.opening_debit = res['debit']
-            record.opening_credit = res['credit']
-            record.opening_balance = res['balance']
+            record.opening_debit = record.opening_debit or res['debit']
+            record.opening_credit = record.opening_credit or res['credit']
+            record.opening_balance = record.opening_balance or res['balance']
 
     @api.depends('code')
     def _compute_account_type(self):
@@ -1156,6 +1153,23 @@ class AccountAccount(models.Model):
             'res_model': 'account.tax',
             'views': [[False, 'list'], [False, 'form']],
             'domain': [('id', 'in', related_taxes_ids)],
+        }
+
+    def action_validate_opening_move(self):
+        if self.env.context.get('company_id') != self.env.company.id:
+            raise UserError(self.env._("You are attempting to validate opening entries belonging to another company. Please switch to the correct company."))
+
+        opening_move = self.env.company.account_opening_move_id
+        if not opening_move:
+            raise UserError(self.env._("Even magicians can't post nothing!"))
+
+        opening_move.action_post()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("Chart of Accounts"),
+            'res_model': 'account.account',
+            'view_mode': 'list',
+            'context': {'no_breadcrumbs': True},
         }
 
     @api.model
