@@ -15,7 +15,7 @@ class AccountPayment(models.Model):
 
     # == Business fields ==
     name = fields.Char(string="Number", compute='_compute_name', store=True)
-    date = fields.Date(default=fields.Date.context_today, required=True, tracking=True)
+    date = fields.Date(default=fields.Date.context_today, required=True, tracking=True, copy=False)
     move_id = fields.Many2one(
         comodel_name='account.move',
         string='Journal Entry',
