@@ -27,22 +27,26 @@ export class ChannelMember extends Component {
         return this.props.member;
     }
 
+    get isClickable() {
+        return this.canOpenChat;
+    }
+
     get attClass() {
-        return { "cursor-pointer": this.canOpenChat, "o-offline": !this.member.isOnline };
+        return { "cursor-pointer": this.isClickable, "o-offline": !this.member.isOnline };
     }
 
     get canOpenChat() {
         if (this.store.inPublicPage) {
             return false;
         }
-        if (this.member.partner_id) {
+        if (this.member.partner_id?.main_user_id) {
             return true;
         }
         return false;
     }
 
     onClickAvatar(ev) {
-        if (!this.canOpenChat) {
+        if (!this.isClickable) {
             return;
         }
         this.store.openChat({ partnerId: this.member.partner_id.id });

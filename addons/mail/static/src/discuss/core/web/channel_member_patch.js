@@ -18,14 +18,18 @@ patch(ChannelMember.prototype, {
     get attClass() {
         return { ...super.attClass, "o-active": this.state.isAvatarCardOpen };
     },
+    get isClickable(){
+        return this.member.partner_id;
+    },
     onClickAvatar(ev) {
-        if (!this.canOpenChat) {
+        if (!this.isClickable) {
             return;
         }
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(ev.currentTarget, {
-                id: this.member.partner_id.main_user_id?.id,
+                id: this.member.partner_id.id,
                 channelMember: this.member,
+                model: "res.partner"
             });
             this.state.isAvatarCardOpen = true;
         }
