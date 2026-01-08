@@ -21,13 +21,14 @@ export class DynamicSnippetCategory extends DynamicSnippet {
     setup(){
         super.setup();
         this.templateKey = 'website_sale.s_dynamic_snippet_category.grid';
+        this.templateData = this.el.querySelector('.dynamic_snippet_template').dataset;
         const nodeData = this.el.dataset;
         nodeData.button = nodeData.button || _t("Explore Now");
         const colsCount = uiUtils.isSmall() ? 1 : parseInt(nodeData.columns);
         const colSpanTwo = colsCount !== 1 && (nodeData.size !== 'small' || colsCount === 5);
         // Pass custom data to the template.
         nodeData.customTemplateData = JSON.stringify({
-            size: SIZE_CONFIG[nodeData.size]?.span,
+            size: SIZE_CONFIG[this.templateData.size]?.span,
             alignmentClass: ALIGNMENT_CLASSES_MAPPING[nodeData.alignment],
             buttonText: nodeData.button,
             colSpanTwo: colSpanTwo,
@@ -37,12 +38,12 @@ export class DynamicSnippetCategory extends DynamicSnippet {
     }
 
     getQWebRenderOptions() {
-        const nodeData = this.el.dataset;
         return Object.assign(super.getQWebRenderOptions(...arguments), {
-            colsCount: uiUtils.isSmall() ? 1 : parseInt(nodeData.columns),
-            rowSize: SIZE_CONFIG[nodeData.size].row,
-            gap: nodeData.gap,
-            rounded: nodeData.rounded,
+            size: SIZE_CONFIG[this.templateData.size]?.span,
+            colsCount: uiUtils.isSmall() ? 1 : parseInt(this.templateData.columns),
+            rowSize: SIZE_CONFIG[this.templateData.size]?.row,
+            gap: this.templateData.gap,
+            rounded: this.templateData.rounded,
         });
     }
 
