@@ -1062,9 +1062,7 @@ class PaymentTransaction(models.Model):
             sibling_txs = child_tx.source_transaction_id.child_transaction_ids.filtered(
                 lambda tx: tx.state in ['done', 'cancel'] and tx.operation == child_tx.operation
             )
-            processed_amount = round(
-                sum(tx.amount for tx in sibling_txs), child_tx.currency_id.decimal_places
-            )
+            processed_amount = child_tx.currency_id.round(sum(sibling_txs.mapped('amount')))
             if child_tx.source_transaction_id.amount == processed_amount:
                 fully_voided = all(tx.state == 'cancel' for tx in sibling_txs)
                 target_state = 'cancel' if fully_voided else 'done'
