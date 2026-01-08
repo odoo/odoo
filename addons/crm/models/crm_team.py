@@ -11,7 +11,6 @@ from odoo import api, exceptions, fields, models, modules, _
 from odoo.addons.crm.models.crm_team_member import MEMBER_MAX_LEAD_ASSIGNMENT_QUOTA
 from odoo.fields import Domain
 from odoo.tools import float_compare, float_round
-from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -726,14 +725,7 @@ class CrmTeam(models.Model):
 
     def action_open_unassigned_opportunities(self):
         action = self.action_open_opportunities()
-        context_str = action.get('context', '{}')
-        if context_str:
-            try:
-                context = safe_eval(action['context'], {'active_id': self.id, 'uid': self.env.uid})
-            except (NameError, ValueError):
-                context = {}
-        else:
-            context = {}
+        context = self.env['crm.lead']._evaluate_context_from_action(action)
         action['context'] = context | {'search_default_unassigned': True}
         return action
 

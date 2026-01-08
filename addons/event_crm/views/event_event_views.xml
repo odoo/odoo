@@ -7,8 +7,8 @@
         <field name="priority" eval="30"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='%(event.act_event_registration_from_event)d']" position="after">
-                <button name="%(crm_lead_action_from_event)d"
-                        type="action"
+                <button name="action_view_leads"
+                        type="object"
                         groups="sales_team.group_sale_salesman"
                         class="oe_stat_button"
                         icon="fa-star"

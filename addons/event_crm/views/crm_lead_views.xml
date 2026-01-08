@@ -30,30 +30,4 @@
             </xpath>
         </field>
     </record>
-
-    <record id="crm_lead_action_from_registration" model="ir.actions.act_window">
-        <field name="name">Leads</field>
-        <field name="res_model">crm.lead</field>
-        <field name="view_mode">list,kanban,graph,pivot,calendar,form,activity</field>
-        <field name="domain">[('registration_ids', 'in', active_id)]</field>
-        <field name="context">{'create': False}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-                No leads found
-            </p>
-        </field>
-    </record>
-
-    <record id="crm_lead_action_from_event" model="ir.actions.act_window">
-        <field name="name">Leads</field>
-        <field name="res_model">crm.lead</field>
-        <field name="view_mode">list,kanban,graph,pivot,calendar,form,activity</field>
-        <field name="domain">[('event_id', '=', active_id)]</field>
-        <field name="context">{'create': False}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-                No leads found
-            </p>
-        </field>
-    </record>
 </odoo>
