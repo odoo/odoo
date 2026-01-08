@@ -35,7 +35,7 @@ class TestStockLot(TestStockCommon):
         self.productAAA = self.ProductObj.create({
             'name': 'Product AAA',
             'is_storable': True,
-            'tracking':'lot',
+            'tracking': 'lot',
             'company_id': self.env.company.id,
         })
 
@@ -87,8 +87,9 @@ class TestStockLot(TestStockCommon):
         ])
         self.assertEqual(activity_count, 1, 'No activity created while there should be one')
 
-        # run the scheduler a second time
-        self.env['stock.lot']._alert_date_exceeded()
+        # run the scheduler a second time, this time from the cron
+        with self.enter_registry_test_mode():
+            self.env.ref('product_expiry.ir_cron_alert_product_lot_expiry').method_direct_trigger()
 
         # check there is still only one activity, no additional activity is created if there is already an existing activity
         activity_count = self.env['mail.activity'].search_count([

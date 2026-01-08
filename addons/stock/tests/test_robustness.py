@@ -310,7 +310,8 @@ class TestRobustness(TransactionCase):
 
         self.env['stock.quant']._update_reserved_quantity(product_reservation_too_high, self.stock_location, -2)
         self.assertEqual(quant.reserved_quantity, 3)
-        self.env['stock.quant']._clean_reservations()
+        with self.enter_registry_test_mode():  # Triggering from cron
+            self.env.ref('stock.ir_cron_clean_stock_reservations').method_direct_trigger()
         self.assertEqual(quant.reserved_quantity, 5)
 
         self.env['stock.quant']._update_reserved_quantity(product_reservation_too_high, self.stock_location, -2)
@@ -389,8 +390,7 @@ class TestRobustness(TransactionCase):
         # create a syncj issue
         product_without_quant.stock_quant_ids.unlink()
         self.assertFalse(product_without_quant.stock_quant_ids)
-        # acces the quant view to provoke a quant synch
-        self.env['stock.quant'].action_view_quants()
+        self.env['stock.quant']._clean_reservations()
         self.assertRecordValues(product_without_quant.stock_quant_ids, [
             {'location_id': self.ref('stock.stock_location_inter_company'), 'reserved_quantity': 5.0}
         ])

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo.tests import Form, tagged
 from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.tools import mute_logger
 
 
 @tagged('post_install', '-at_install')
@@ -36,6 +36,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         product_form.route_ids.clear()
         product_form.route_ids.add(cls.warehouse.mto_pull_id.route_id)
         cls.finished_product = product_form.save()
+        cls.finished_product.write({"route_ids": cls.warehouse.mto_pull_id.route_id})
 
         # Create raw product for manufactured product
         product_form = Form(cls.env['product.product'])
@@ -405,7 +406,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'product_max_qty': 2,
         })
 
-        self.env['stock.rule'].run_scheduler()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
         mo = self.env['mrp.production'].search([('product_id', '=', finished_product.id)])
         pickings = mo.picking_ids
         self.assertEqual(len(pickings), 1)
@@ -429,6 +430,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(byproduct_postprod_move.state, 'assigned')
         self.assertEqual(byproduct_postprod_move.reference_ids.name, mo.name)
 
+    @mute_logger('odoo.addons.stock.models.stock_orderpoint')
     def test_manufacturing_3_steps_trigger_reordering_rules(self):
         with Form(self.warehouse) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
@@ -470,8 +472,10 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         rr_form.location_id = self.warehouse.lot_stock_id
         rr_raw = rr_form.save()
 
-        self.env['stock.rule'].run_scheduler()
+        # Will 'order' finished product, which should trigger raw_stick and wood procurement
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
 
+        # Mute logger warning no valid route for wood product which has no buy route
         pickings_component = self.env['stock.picking'].search(
             [('product_id', '=', self.wood_product.id)])
         self.assertTrue(pickings_component)
@@ -518,7 +522,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         rr_form.product_max_qty = 40
         rr_form.save()
 
-        self.env['stock.rule'].run_scheduler()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
 
         mo = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
         mo_form = Form(mo)
@@ -608,7 +612,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'route_id': manufacturing_route.id,
             'bom_id': bom_2.id,
         })
-        self.env['stock.rule'].run_scheduler()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
         mo = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
         self.assertEqual(len(mo), 1)
         self.assertEqual(mo.product_qty, 1.0)
@@ -794,7 +798,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'product_max_qty': 2,
         })
 
-        self.env['stock.rule'].run_scheduler()
+        self.env['stock.warehouse.orderpoint']._refill_orderpoints()
         mo = self.env['mrp.production'].search([('product_id', '=', demo.id)])
         mo.action_confirm()
 

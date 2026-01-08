@@ -276,7 +276,8 @@ class TestInventory(TransactionCase):
         self.env['stock.quant'].create(dict(**vals, inventory_quantity=1))
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 2.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 2.0)
-        self.env['stock.quant']._quant_tasks()
+        self.env['stock.quant']._merge_quants()
+        self.env.invalidate_all()
         inventory_quant = self.env['stock.quant'].search([
             ('location_id', '=', self.stock_location.id),
             ('product_id', '=', self.product1.id)

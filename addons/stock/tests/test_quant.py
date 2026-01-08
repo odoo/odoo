@@ -789,13 +789,8 @@ class TestStockQuant(TestStockCommon):
         picking.button_validate()
 
         package.unpack()
-
         quant = self.env['stock.quant'].search([('product_id', '=', self.productA.id), ('on_hand', '=', True)])
         self.assertEqual(len(quant), 1)
-        # The quants merging is processed thanks to a SQL query (see StockQuant._merge_quants).
-        # At that point, the ORM is not aware of the new value. So we need to invalidate the
-        # cache to ensure that the value will be the newest
-        quant.invalidate_recordset(['quantity'])
         self.assertEqual(quant.quantity, 11)
 
     def test_quant_display_name(self):
@@ -1648,3 +1643,70 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
             {'product_id': products[0].id, 'location_id':  sublocation.id, 'package_id': packages[0].id, 'quantity': 1.0, 'reserved_quantity': 1.0},
             {'product_id': products[1].id, 'location_id':  sublocation.id, 'package_id': packages[0].id, 'quantity': 1.0, 'reserved_quantity': 1.0},
         ])
+
+    def test_remove_zero_quants_cron(self):
+        """ Quants with quantity = 0, and no reserved_quantity/inventory_quantity removed with cron"""
+
+        # Set ProductA with 0 quant, 0 reserved_quantity, 0 inventory_quantity
+        # Set ProductB with 0 quant, 1 reserved_quantity, 0 inventory_quantity
+        # Set ProductC with 0 quant, 0 reserved_quantity, 1 inventory_quantity
+        # Set ProductD with 1 quant, 0 reserved_quantity, 0 inventory_quantity
+        # --> Only A should be removed
+
+        # ProductA
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, -1.0)
+        quant = self.env['stock.quant'].search([('product_id', '=', self.productA.id)])
+        self.assertEqual(quant.quantity, 0)
+        # ProductB
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, reserved_quantity=1.0)
+        # ProductC
+        self.env['stock.quant']._update_available_quantity(self.productC, self.stock_location, 1.0)
+        self.env['stock.quant']._update_available_quantity(self.productC, self.stock_location, -1.0)
+        quantC = self.env['stock.quant'].search([('product_id', '=', self.productC.id)], limit=1)
+        quantC.write({"inventory_quantity": 1})
+        # ProductD
+        self.env['stock.quant']._update_available_quantity(self.productD, self.stock_location, 1.0)
+
+        with self.enter_registry_test_mode():
+            self.env.ref('stock.ir_cron_unlink_zero_quants').method_direct_trigger()
+
+        self.assertFalse(self.env['stock.quant'].search([('product_id', '=', self.productA.id)]))
+        self.assertTrue(self.env['stock.quant'].search([('product_id', '=', self.productB.id)]))
+        self.assertTrue(self.env['stock.quant'].search([('product_id', '=', self.productC.id)]))
+        self.assertTrue(self.env['stock.quant'].search([('product_id', '=', self.productD.id)]))
+
+    def test_merge_quants_cron(self):
+        """ Duplicated quants merged with cron """
+        query = """
+            INSERT INTO stock_quant (
+                product_id, location_id, quantity, reserved_quantity, in_date
+            )
+            SELECT
+                v.product_id, v.location_id, v.quantity, 0, v.in_date
+            FROM (VALUES %s) AS v(product_id, location_id, quantity, in_date)
+        """
+        values_args = [
+            (self.productB.id, self.stock_location.id, 10.0, fields.Datetime.now()),
+            (self.productB.id, self.stock_location.id, 15.0, fields.Datetime.now()),
+        ]
+        self.env.cr.execute_values(query, values_args)
+        self.env.cr.execute("SELECT COUNT(*) FROM stock_quant")
+        self.env.cr.execute("""
+            SELECT product_id, lot_id, location_id, COUNT(*) AS cnt
+            FROM stock_quant
+            GROUP BY product_id, lot_id, location_id
+            HAVING COUNT(*) > 1
+            ORDER BY cnt DESC;
+        """)
+        dups = self.env.cr.fetchone()
+        self.assertEqual(dups[-1], 2)  # A single duplicated quant with 2 duplicatas
+        self.env.cr.execute("SELECT COUNT(*) FROM stock_quant")
+        self.assertEqual(self.env.cr.fetchone()[0], 2)  # The 2 duplicated quants
+
+        with self.enter_registry_test_mode():
+            self.env.ref('stock.ir_cron_merge_stock_quants').method_direct_trigger()
+        self.env.cr.execute("SELECT COUNT(*) FROM stock_quant")
+        self.assertEqual(self.env.cr.fetchone()[0], 1)  # Duplicated quants merged
+        self.env.cr.execute("SELECT quantity FROM stock_quant")
+        self.assertEqual(self.env.cr.fetchone()[0], 25)  # 10 + 15

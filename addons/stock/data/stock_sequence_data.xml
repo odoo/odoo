@@ -42,19 +42,64 @@
             <field name="company_id" eval="False"/>
         </record>
 
-        <!-- Scheduler -->
-        <record forcecreate="True" id="ir_cron_scheduler_action" model="ir.cron">
-            <field name="name">Procurement: run scheduler</field>
-            <field name="model_id" ref="model_stock_rule"/>
+        <!-- Crons -->
+        <record forcecreate="True" id="ir_cron_merge_stock_quants" model="ir.cron">
+            <field name="name">Stock: Merge Quants</field>
+            <field name="model_id" ref="model_stock_quant"/>
             <field name="state">code</field>
-            <field name="code">
-model.run_scheduler(True)
-            </field>
-            <field eval="True" name="active"/>
+            <field name="code">model._merge_quants()</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
         </record>
 
+        <record forcecreate="True" id="ir_cron_clean_stock_reservations" model="ir.cron">
+            <field name="name">Stock: Clean Reservations</field>
+            <field name="model_id" ref="model_stock_quant"/>
+            <field name="state">code</field>
+            <field name="code">model._clean_reservations()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record forcecreate="True" id="ir_cron_unlink_zero_quants" model="ir.cron">
+            <field name="name">Stock: Clean Quants </field>
+            <field name="model_id" ref="model_stock_quant"/>
+            <field name="state">code</field>
+            <field name="code">model._unlink_zero_quants()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <!-- Crons triggered from menu item : create server action manually to reference it instead of the auto generated one -->
+        <record forcecreate="True" id="ir_actions_server_refill_orderpoints" model="ir.actions.server">
+            <field name="name">Stock: Refill Orderpoints</field>
+            <field name="model_id" ref="model_stock_warehouse_orderpoint"/>
+            <field name="state">code</field>
+            <field name="code">model._refill_orderpoints()</field>
+        </record>
+
+        <record forcecreate="True" id="ir_cron_refill_orderpoints" model="ir.cron">
+            <field name="ir_actions_server_id" ref="ir_actions_server_refill_orderpoints"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record forcecreate="True" id="ir_actions_server_assign_reservations" model="ir.actions.server">
+            <field name="name">Stock: Assign Reservations</field>
+            <field name="model_id" ref="model_stock_move"/>
+            <field name="state">code</field>
+            <field name="code">model._assign_reservations()</field>
+        </record>
+
+        <record forcecreate="True" id="ir_cron_assign_reservations" model="ir.cron">
+            <field name="ir_actions_server_id" ref="ir_actions_server_assign_reservations"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
     </data>
 </odoo>
