@@ -7,6 +7,7 @@ import {
     clickOnSnippet,
     insertSnippet,
     registerWebsitePreviewTour,
+    assertCssVariable,
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('snippet_image_gallery', {
@@ -126,7 +127,23 @@ registerWebsitePreviewTour("snippet_image_gallery_reorder", {
 }, {
     content: "Check that the option is restored",
     trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
-}]);
+}, {
+    content: "Change the height of the snippet",
+    trigger: `.snippet-option-ScrollButton [data-name="fixed_height_opt"] input`,
+    run: "edit 400",
+}, {
+    content: "Click on move to next",
+    trigger: ".snippet-option-GalleryElement we-button[data-position='next']",
+    run: "click",
+}, {
+    content: "Check that the image has been moved",
+    trigger: ":iframe .s_image_gallery .carousel-item.active img[data-index='2']",
+}, {
+    content: "Click on the moved image",
+    trigger: ":iframe .s_image_gallery .carousel-item.active img[data-index='2']",
+},
+    assertCssVariable("height", "400px", ":iframe .s_image_gallery"),
+]);
 
 registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
     url: "/",
