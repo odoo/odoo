@@ -121,3 +121,14 @@ class SupplierInfo(models.Model):
         supplier_min_qty = self.product_uom._compute_quantity(self.min_qty, orderpoint.product_id.uom_id)
         if orderpoint.qty_to_order < supplier_min_qty:
             orderpoint.qty_to_order = supplier_min_qty
+        if self._context.get('replenish_id'):
+            replenish = self.env['product.replenish'].browse(self._context.get('replenish_id'))
+            replenish.supplier_id = self
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Replenish',
+                'res_model': 'product.replenish',
+                'res_id': replenish.id,
+                'target': 'new',
+                'view_mode': 'form',
+            }

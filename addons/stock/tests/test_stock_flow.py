@@ -1803,7 +1803,7 @@ class TestStockFlow(TestStockCommon):
             'route_ids': [(4, route_a.id), (4, route_b.id)]
         })
 
-        replenish_wizard = self.env['product.replenish'].create({
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product.product_tmpl_id.id).create({
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
