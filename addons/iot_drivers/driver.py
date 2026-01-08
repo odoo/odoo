@@ -49,6 +49,7 @@ class Driver(Thread):
         :return: the result of the action method
         """
         if self._check_if_action_is_duplicate(data.get('action_unique_id')):
+            event_manager.device_changed(self, {'status': 'duplicate'})
             return
 
         action = data.get('action', '')
