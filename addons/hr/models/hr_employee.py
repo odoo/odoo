@@ -8,6 +8,7 @@ from string import digits
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
+from dateutil.rrule import rrule, DAILY
 from markupsafe import Markup
 
 from odoo import _, api, fields, models, tools
@@ -1983,7 +1984,13 @@ class HrEmployee(models.Model):
         :param string field: the field mapped over the periods. Returns the versions if left empty
         :param boolean check_contract: true means that we restrict valid versions only to contract periods
         """
-        if field and field not in self:
+        if isinstance(field, list):
+            if any(f not in self for f in field):
+                raise UserError(self.env._(
+                    "Some of these fields %(field_name)s don't exist on this model (hr.version).",
+                    field_name=field,
+                ))
+        elif field and field not in self:
             raise UserError(self.env._(
                 "This field %(field_name)s doesn't exist on this model (hr.version).",
                 field_name=field,
@@ -2004,9 +2011,14 @@ class HrEmployee(models.Model):
             if date_end < start or date_start > stop or date_start > date_end:
                 # not overlapping, this can happen if we check contract versions
                 continue
-            version_periods_by_employee[version.employee_id].append(
-                (date_start, date_end, version[field] if field else version),
-            )
+            if isinstance(field, list):
+                version_periods_by_employee[version.employee_id].append(
+                    (date_start, date_end, tuple(version[f] for f in field)),
+                )
+            else:
+                version_periods_by_employee[version.employee_id].append(
+                    (date_start, date_end, version[field] if field else version),
+                )
         return version_periods_by_employee
 
     def _get_calendar_periods(self, start, stop, check_contract=True):
@@ -2017,6 +2029,91 @@ class HrEmployee(models.Model):
         """
         return self.sudo()._get_version_periods(start, stop, 'resource_calendar_id', check_contract)
 
+    def _adjust_leaves(self, leave_intervals):
+        return leave_intervals
+
+    def _get_flexible_reference_calendar(self, date=fields.Date.today()):
+        self.ensure_one()
+        return self.company_id.resource_calendar_id
+
+    def _get_employee_unavailable_intervals(self, start, stop):
+        """ returns a dict {employee_id: [{start, stop}]} for the unavailability intervals of each employee which is used for _gantt_unavailability """
+
+        unavailability_mapping = defaultdict(list)
+        start_dt = start.astimezone(UTC)
+        stop_dt = stop.astimezone(UTC)
+        full_interval = Intervals([(start_dt, stop_dt, self.env['resource.calendar.attendance'])])
+        calendar_tz_periods_per_employee = self.sudo()._get_version_periods(
+            (start_dt - relativedelta(days=1)).date(),
+            (stop_dt + relativedelta(days=1)).date(),
+            ['resource_calendar_id', 'tz'],
+            check_contract=True,
+        )
+
+        work_resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
+        attendance_resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
+        leave_resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
+        for employee, calendar_periods in calendar_tz_periods_per_employee.items():
+            for period_start, period_stop, (calendar, tz) in calendar_periods:
+                if calendar:
+                    if any(calendar.attendance_ids.mapped('duration_based')):
+                        attendance_resources_per_calendar[calendar, tz] += employee.resource_id
+                        leave_resources_per_calendar[calendar, tz] += employee.resource_id
+                    else:
+                        work_resources_per_calendar[calendar, tz] += employee.resource_id
+                else:
+                    leave_resources_per_calendar[employee._get_flexible_reference_calendar(period_start), tz] += employee.resource_id
+
+        work_intervals_per_calendar = defaultdict()
+        attendance_intervals_per_calendar = defaultdict()
+        leave_intervals_per_calendar = defaultdict()
+        # Standard Calendars
+        for (calendar, tz), resources in work_resources_per_calendar.items():
+            work_intervals_per_calendar[calendar, tz] = calendar._work_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
+
+        # Duration Based Calendars
+        for (calendar, tz), resources in attendance_resources_per_calendar.items():
+            attendance_intervals_per_calendar[calendar, tz] = calendar._attendance_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
+            for resource_id, work_intervals in attendance_intervals_per_calendar[calendar, tz].items():
+                extended_intervals = Intervals([])
+                for att_start, att_end, attendance in work_intervals:
+                    if not attendance.duration_based:
+                        extended_intervals |= Intervals([(att_start, att_end, attendance)])
+                        continue
+                    extended_start = datetime.combine(att_start.date(), time.min, ZoneInfo(tz))
+                    extended_end = datetime.combine(att_end.date() + timedelta(days=1), time.min, ZoneInfo(tz))
+                    extended_intervals |= Intervals([(extended_start, extended_end, attendance)])
+                attendance_intervals_per_calendar[calendar, tz][resource_id] = extended_intervals
+
+        # Flexible and Fully Flexible Calendars
+        for (calendar, tz), resources in leave_resources_per_calendar.items():
+            leave_intervals_per_calendar[calendar, tz] = calendar._leave_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
+
+        for employee, calendar_periods in calendar_tz_periods_per_employee.items():
+            employee_work_intervals = []
+            for period_start, period_stop, (calendar, tz) in calendar_periods:
+                period_start_dt = datetime.combine(period_start, time.min).replace(tzinfo=ZoneInfo(tz))
+                period_stop_dt = datetime.combine(period_stop + timedelta(days=1), time.min).replace(tzinfo=ZoneInfo(tz))
+                period_interval = Intervals([(period_start_dt, period_stop_dt, calendar)])
+                if calendar:
+                    if any(calendar.attendance_ids.mapped('duration_based')):
+                        employee_work_intervals += period_interval & attendance_intervals_per_calendar[calendar, tz][employee.resource_id.id] \
+                                                - employee._adjust_leaves(leave_intervals_per_calendar[calendar, tz][employee.resource_id.id])
+                    else:
+                        employee_work_intervals += period_interval & work_intervals_per_calendar[calendar, tz][employee.resource_id.id]
+                else:
+                    employee_work_intervals += period_interval - leave_intervals_per_calendar[employee._get_flexible_reference_calendar(calendar), tz][employee.resource_id.id]
+            unavailability_mapping[employee.resource_id.id] = full_interval - employee_work_intervals
+
+        result = {}
+        for employee in self:
+            if employee not in calendar_tz_periods_per_employee:
+                result[employee.id] = [{'start': start_dt, 'stop': stop_dt}]
+                continue
+            result[employee.id] = [{'start': interval[0].astimezone(UTC), 'stop': interval[1].astimezone(UTC)} for interval in unavailability_mapping.get(employee.resource_id.id, [])]
+
+        return result
+
     @api.model
     def _get_all_versions_with_contract_overlap_with_period(self, date_from, date_to):
         """
@@ -2026,6 +2123,14 @@ class HrEmployee(models.Model):
         return self.search([])._get_versions_with_contract_overlap_with_period(date_from, date_to)
 
     def _get_unusual_days(self, date_from, date_to=None):
+        def _generate_unusual_days(date_from, date_to):
+            return {
+                day.strftime('%Y-%m-%d'): True
+                for day in rrule(DAILY, date_from, until=date_to - relativedelta(days=1))
+            }
+
+        if self:
+            self.ensure_one()
         date_from_date = datetime.strptime(date_from, '%Y-%m-%d %H:%M:%S').date()
         date_to_date = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S').date() if date_to else None
         employee_versions = self.env['hr.version'].sudo().search([
@@ -2034,23 +2139,24 @@ class HrEmployee(models.Model):
         ]).filtered(
             lambda v: v._is_overlapping_period(date_from_date, date_to_date))
         if not employee_versions:
-            # Checking the calendar directly allows to not grey out the leaves taken
-            # by the employee or fallback to the company calendar
-            return (self.resource_calendar_id or self.env.company.resource_calendar_id)._get_unusual_days(
-                datetime.combine(fields.Date.from_string(date_from), time.min, tzinfo=UTC),
-                datetime.combine(fields.Date.from_string(date_to), time.max, tzinfo=UTC),
-                self.company_id,
-            )
+            return _generate_unusual_days(date_from_date, date_to_date + timedelta(days=1))
         unusual_days = {}
+        next_date_to_generate = date_from_date
         for version in employee_versions:
-            tmp_date_from = max(date_from_date, version.date_start)
+            tmp_date_from = max(date_from_date, version.date_version)
             tmp_date_to = min(date_to_date, version.date_end) if version.date_end else date_to_date
+            if tmp_date_from > next_date_to_generate:
+                unusual_days.update(_generate_unusual_days(next_date_to_generate, tmp_date_from))
             unusual_days.update(version.resource_calendar_id.sudo(False)._get_unusual_days(
-                datetime.combine(fields.Date.from_string(tmp_date_from), time.min, tzinfo=UTC),
-                datetime.combine(fields.Date.from_string(tmp_date_to), time.max, tzinfo=UTC),
+                datetime.combine(tmp_date_from, time.min, tzinfo=UTC),
+                datetime.combine(tmp_date_to, time.max, tzinfo=UTC),
                 self.company_id,
                 self.resource_id,
             ))
+            next_date_to_generate = tmp_date_to + timedelta(days=1)
+
+        if date_to_date and next_date_to_generate <= date_to_date:
+            unusual_days.update(_generate_unusual_days(next_date_to_generate, date_to_date + timedelta(days=1)))
         return unusual_days
 
     def formatted_employee_attendance_intervals(self, start, stop):
