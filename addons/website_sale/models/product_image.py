@@ -37,6 +37,9 @@ class ProductImage(models.Model):
         compute='_compute_can_image_1024_be_zoomed',
         store=True,
     )
+    attribute_value_ids = fields.Many2many(
+        'product.attribute.value',
+    )
 
     #=== COMPUTE METHODS ===#
 

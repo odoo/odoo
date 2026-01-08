@@ -41,6 +41,7 @@
         <field name="arch" type="xml">
             <kanban string="Product Images" default_order="sequence">
                 <field name="sequence" widget="handle"/>
+                <field name="product_tmpl_id" column_invisible="1"/>
                 <templates>
                     <t t-name="card" class="p-0 border-0">
                         <div class="card">
@@ -67,6 +68,7 @@
                             </t>
                             <span t-attf-class="badge #{size_status} o_product_image_size" t-att-title="message"></span>
                         </div>
+                        <field name="attribute_value_ids" widget="variant_image_assignment"/>
                     </t>
                 </templates>
             </kanban>
