@@ -546,6 +546,8 @@ class TestHrEmployee(TestHrCommon):
         ])
         employeeA = self.env['hr.employee'].create({
             'name': 'Employee',
+            'date_version': datetime(2025, 1, 1),
+            'contract_date_start': datetime(2025, 1, 1),
         })
 
         # Testing employeA on regular working schedule
