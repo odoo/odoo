@@ -765,8 +765,9 @@ class Survey(models.Model):
             elif self.questions_layout == 'page_per_section':
                 is_triggering_section = False
                 for question in page_or_question.question_ids:
-                    if any(triggering_answer in triggered_questions_by_answer.keys() for triggering_answer in
-                           question.suggested_answer_ids):
+                    if any(triggering_answer in triggered_questions_by_answer
+                           and page_or_question.sequence < max(triggered_questions_by_answer[triggering_answer].page_id.mapped('sequence'))
+                           for triggering_answer in question.suggested_answer_ids):
                         is_triggering_section = True
                         break
                 next_active_question = False
