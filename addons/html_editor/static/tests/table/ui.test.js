@@ -1473,43 +1473,6 @@ test("move second row to top when first row is header row", async () => {
     );
 });
 
-test("preserve table rows width on move row above operation", async () => {
-    const { el } = await setupEditor(
-        unformat(`
-        <table>
-            <tbody>
-                <tr><td style="width: 100px;" class="a">1[]</td><td style="width: 200px;" class="b">2</td></tr>
-                <tr><td style="width: 150px;" class="c">3</td><td style="width: 150px;" class="d">4</td></tr>
-                <tr><td style="width: 150px;" class="e">5</td><td style="width: 150px;" class="f">6</td></tr>
-            </tbody>
-        </table>`)
-    );
-    await expectElementCount(".o-we-table-menu", 0);
-
-    // hover on td to show row ui
-    await hover(el.querySelector("td.c"));
-    await waitFor("[data-type='row'].o-we-table-menu");
-
-    // click on it to open dropdown
-    await click("[data-type='row'].o-we-table-menu");
-    await waitFor("div[name='move_up']");
-
-    // move row up
-    await click("div[name='move_up']");
-    expect(getContent(el)).toBe(
-        unformat(`
-        <p data-selection-placeholder=""><br></p>
-        <table>
-            <tbody>
-                <tr><td style="width: 100px;" class="c">3</td><td style="width: 200px;" class="d">4</td></tr>
-                <tr><td style="width: 100px;" class="a">1[]</td><td style="width: 200px;" class="b">2</td></tr>
-                <tr><td style="width: 150px;" class="e">5</td><td style="width: 150px;" class="f">6</td></tr>
-            </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
-    );
-});
-
 test("move row below operation", async () => {
     const { el, editor } = await setupEditor(
         unformat(`
@@ -1700,10 +1663,14 @@ test("preserve table rows width on move row below operation", async () => {
     const { el } = await setupEditor(
         unformat(`
         <table>
+            <colgroup>
+                <col style="width: 100px;">
+                <col style="width: 200px;">
+            </colgroup>
             <tbody>
-                <tr><td style="width: 100px;" class="a">1[]</td><td style="width: 200px;" class="b">2</td></tr>
-                <tr><td style="width: 150px;" class="c">3</td><td style="width: 150px;" class="d">4</td></tr>
-                <tr><td style="width: 150px;" class="e">5</td><td style="width: 150px;" class="f">6</td></tr>
+                <tr><td class="a">1[]</td><td class="b">2</td></tr>
+                <tr><td class="c">3</td><td class="d">4</td></tr>
+                <tr><td class="e">5</td><td class="f">6</td></tr>
             </tbody>
         </table>`)
     );
@@ -1723,10 +1690,14 @@ test("preserve table rows width on move row below operation", async () => {
         unformat(`
         <p data-selection-placeholder=""><br></p>
         <table>
+            <colgroup>
+                <col style="width: 100px;">
+                <col style="width: 200px;">
+            </colgroup>
             <tbody>
-                <tr><td style="width: 100px;" class="c">3</td><td style="width: 200px;" class="d">4</td></tr>
-                <tr><td style="width: 100px;" class="a">1[]</td><td style="width: 200px;" class="b">2</td></tr>
-                <tr><td style="width: 150px;" class="e">5</td><td style="width: 150px;" class="f">6</td></tr>
+                <tr><td class="c">3</td><td class="d">4</td></tr>
+                <tr><td class="a">1[]</td><td class="b">2</td></tr>
+                <tr><td class="e">5</td><td class="f">6</td></tr>
             </tbody>
         </table>
         <p data-selection-placeholder=""><br></p>`)
@@ -1737,9 +1708,12 @@ test("reset table size to remove custom width", async () => {
     const { el, editor } = await setupEditor(
         unformat(`
         <table style="width: 150px;">
+            <colgroup>
+            <col style="width: 100px;"><col style="width: 50px;">
+            </colgroup>
             <tbody>
-            <tr><td style="width: 100px;" class="a">1[]</td></tr>
-            <tr><td style="width: 50px;" class="b">2</td></tr>
+            <tr><td class="a">1[]</td></tr>
+            <tr><td class="b">2</td></tr>
             </tbody>
         </table>`)
     );
@@ -1757,8 +1731,8 @@ test("reset table size to remove custom width", async () => {
         <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
-                <tr><td style="" class="a">1[]</td></tr>
-                <tr><td style="" class="b">2</td></tr>
+                <tr><td class="a">1[]</td></tr>
+                <tr><td class="b">2</td></tr>
             </tbody>
         </table>
         <p data-selection-placeholder=""><br></p>`)
@@ -1769,9 +1743,12 @@ test("reset table size to remove custom width", async () => {
         unformat(
             `<p data-selection-placeholder=""><br></p>
             <table style="width: 150px;">
+            <colgroup>
+            <col style="width: 100px;"><col style="width: 50px;">
+            </colgroup>
             <tbody>
-            <tr><td style="width: 100px;" class="a">1[]</td></tr>
-            <tr><td style="width: 50px;" class="b">2</td></tr>
+            <tr><td class="a">1[]</td></tr>
+            <tr><td class="b">2</td></tr>
             </tbody>
         </table>
         <p data-selection-placeholder=""><br></p>`
@@ -1887,20 +1864,27 @@ test("should redistribute excess width from current column to smaller columns", 
     const { el } = await setupEditor(
         unformat(`
             <table class="table table-bordered o_table" style="width: 500px">
+                <colgroup>
+                    <col style="width: 100px;">
+                    <col style="width: 120px;">
+                    <col style="width: 60px;">
+                    <col style="width: 120px;">
+                    <col style="width: 100px;">
+                </colgroup>
                 <tbody>
                     <tr>
-                        <td style="width: 100px;" class="a">1</td>
-                        <td style="width: 120px;" class="b">2</td>
-                        <td style="width: 60px;" class="c">3[]</td>
-                        <td style="width: 120px;" class="d">4</td>
-                        <td style="width: 100px;" class="e">5</td>
+                        <td class="a">1</td>
+                        <td class="b">2</td>
+                        <td class="c">3[]</td>
+                        <td class="d">4</td>
+                        <td class="e">5</td>
                     </tr>
                     <tr>
-                        <td style="width: 100px;" class="f">6</td>
-                        <td style="width: 120px;" class="g">7</td>
-                        <td style="width: 60px;" class="h">8</td>
-                        <td style="width: 120px;" class="i">9</td>
-                        <td style="width: 100px;" class="j">10</td>
+                        <td class="f">6</td>
+                        <td class="g">7</td>
+                        <td class="h">8</td>
+                        <td class="i">9</td>
+                        <td class="j">10</td>
                     </tr>
                 </tbody>
             </table>`)
@@ -1920,18 +1904,18 @@ test("should redistribute excess width from current column to smaller columns", 
             <table class="table table-bordered o_table" style="width: 500px">
                 <tbody>
                     <tr>
-                        <td style="" class="a">1</td>
-                        <td style="" class="b">2</td>
-                        <td style="" class="c">3[]</td>
-                        <td style="" class="d">4</td>
-                        <td style="" class="e">5</td>
+                        <td class="a">1</td>
+                        <td class="b">2</td>
+                        <td class="c">3[]</td>
+                        <td class="d">4</td>
+                        <td class="e">5</td>
                     </tr>
                     <tr>
-                        <td style="" class="f">6</td>
-                        <td style="" class="g">7</td>
-                        <td style="" class="h">8</td>
-                        <td style="" class="i">9</td>
-                        <td style="" class="j">10</td>
+                        <td class="f">6</td>
+                        <td class="g">7</td>
+                        <td class="h">8</td>
+                        <td class="i">9</td>
+                        <td class="j">10</td>
                     </tr>
                 </tbody>
             </table>
@@ -1940,28 +1924,122 @@ test("should redistribute excess width from current column to smaller columns", 
     );
 });
 
+test("should redistribute excess width from the current colspan column when resetting column sizes", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <table class="table table-bordered o_table" style="width: 1182px">
+                <colgroup>
+                    <col style="width: 236.188px;">
+                    <col style="width: 236.188px;">
+                    <col style="width: 312.125px;">
+                    <col style="width: 160.25px;">
+                    <col style="width: 236.25px;">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td class="a" colspan="2">2</td>
+                        <td>3</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>6</td>
+                        <td colspan="2">7</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>10</td>
+                        <td>11</td>
+                        <td>12</td>
+                        <td>13</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td colspan="2">15</td>
+                        <td>16</td>
+                        <td>17</td>
+                    </tr>
+                </tbody>
+            </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+    expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
+
+    await click("[data-type='column'].o-we-table-menu");
+    await waitFor(".dropdown-menu", { timeout: 1000 });
+    await click(queryOne(".dropdown-menu [name='reset_column_size']"));
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder="" class="o-horizontal-caret"><br></p>
+            <table class="table table-bordered o_table" style="width: 1182px">
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td class="a" colspan="2">2</td>
+                        <td>3</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>6</td>
+                        <td colspan="2">7</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>10</td>
+                        <td>11</td>
+                        <td>12</td>
+                        <td>13</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td colspan="2">15</td>
+                        <td>16</td>
+                        <td>17</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+    );
+});
+
 test("should redistribute excess width from larger columns to current column", async () => {
     const { el } = await setupEditor(
         unformat(`
             <table class="table table-bordered o_table" style="width: 700px">
+                <colgroup>
+                    <col style="width: 120px;">
+                    <col style="width: 80px;">
+                    <col style="width: 60px;">
+                    <col style="width: 180px;">
+                    <col style="width: 60px;">
+                    <col style="width: 80px;">
+                    <col style="width: 120px;">
+                </colgroup>
                 <tbody>
                     <tr>
-                        <td style="width: 120px;" class="a">1</td>
-                        <td style="width: 80px;" class="b">2</td>
-                        <td style="width: 60px;" class="c">3</td>
-                        <td style="width: 180px;" class="d">4[]</td>
-                        <td style="width: 60px;" class="e">5</td>
-                        <td style="width: 80px;" class="f">6</td>
-                        <td style="width: 120px;" class="g">7</td>
+                        <td class="a">1</td>
+                        <td class="b">2</td>
+                        <td class="c">3</td>
+                        <td class="d">4[]</td>
+                        <td class="e">5</td>
+                        <td class="f">6</td>
+                        <td class="g">7</td>
                     </tr>
                     <tr>
-                        <td style="width: 120px;" class="h">8</td>
-                        <td style="width: 80px;" class="i">9</td>
-                        <td style="width: 60px;" class="j">10</td>
-                        <td style="width: 180px;" class="k">11</td>
-                        <td style="width: 60px;" class="l">12</td>
-                        <td style="width: 80px;" class="m">13</td>
-                        <td style="width: 120px;" class="n">14</td>
+                        <td class="h">8</td>
+                        <td class="i">9</td>
+                        <td class="j">10</td>
+                        <td class="k">11</td>
+                        <td class="l">12</td>
+                        <td class="m">13</td>
+                        <td class="n">14</td>
                     </tr>
                 </tbody>
             </table>`)
@@ -1979,24 +2057,33 @@ test("should redistribute excess width from larger columns to current column", a
         unformat(
             `<p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table" style="width: 700px">
+                <colgroup>
+                    <col style="width: 120px;">
+                    <col style="width: 80px;">
+                    <col style="">
+                    <col style="">
+                    <col style="">
+                    <col style="width: 80px;">
+                    <col style="width: 120px;">
+                </colgroup>
                 <tbody>
                     <tr>
-                        <td style="width: 120px;" class="a">1</td>
-                        <td style="width: 80px;" class="b">2</td>
-                        <td style="" class="c">3</td>
-                        <td style="" class="d">4[]</td>
-                        <td style="" class="e">5</td>
-                        <td style="width: 80px;" class="f">6</td>
-                        <td style="width: 120px;" class="g">7</td>
+                        <td class="a">1</td>
+                        <td class="b">2</td>
+                        <td class="c">3</td>
+                        <td class="d">4[]</td>
+                        <td class="e">5</td>
+                        <td class="f">6</td>
+                        <td class="g">7</td>
                     </tr>
                     <tr>
-                        <td style="width: 120px;" class="h">8</td>
-                        <td style="width: 80px;" class="i">9</td>
-                        <td style="" class="j">10</td>
-                        <td style="" class="k">11</td>
-                        <td style="" class="l">12</td>
-                        <td style="width: 80px;" class="m">13</td>
-                        <td style="width: 120px;" class="n">14</td>
+                        <td class="h">8</td>
+                        <td class="i">9</td>
+                        <td class="j">10</td>
+                        <td class="k">11</td>
+                        <td class="l">12</td>
+                        <td class="m">13</td>
+                        <td class="n">14</td>
                     </tr>
                 </tbody>
             </table>
@@ -2098,6 +2185,65 @@ test("removes alternating row colors when 'Clear Alternate Colors' option is cli
     expect(
         cells.every((cell) => getComputedStyle(cell).backgroundColor === firstRowCellColor)
     ).toBe(true);
+});
+
+test("should redistribute excess width from the current column to a colspan column when resetting column sizes", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <table class="table table-bordered o_table" style="width: 500px">
+                <colgroup>
+                    <col style="width: 100px;">
+                    <col style="width: 50px;">
+                    <col style="width: 200px">
+                    <col style="width: 50px">
+                    <col style="width: 100px">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <td colspan="2">1</td>
+                        <td class="a">2</td>
+                        <td >3</td>
+                        <td >4</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td colspan="2">8</td>
+                    </tr>
+                </tbody>
+            </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+    expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
+
+    await click("[data-type='column'].o-we-table-menu");
+    await waitFor(".dropdown-menu", { timeout: 1000 });
+    await click(queryOne(".dropdown-menu [name='reset_column_size']"));
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder="" class="o-horizontal-caret"><br></p>
+            <table class="table table-bordered o_table" style="width: 500px">
+                <tbody>
+                    <tr>
+                        <td colspan="2">1</td>
+                        <td class="a">2</td>
+                        <td>3</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td colspan="2">8</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+    );
 });
 
 describe("Disable table merge options", () => {

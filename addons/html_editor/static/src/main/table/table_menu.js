@@ -4,7 +4,7 @@ import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { isEmpty } from "@html_editor/utils/dom_info";
+import { isEmpty, isTableCell } from "@html_editor/utils/dom_info";
 import { getBaseContainerSelector } from "@html_editor/utils/base_container";
 
 export class TableMenu extends Component {
@@ -73,26 +73,33 @@ export class TableMenu extends Component {
             return false;
         }
         const rows = [...table.rows];
-        const firstRowCells = [...rows[0].cells];
         const rowHasHeight = rows.some((row) => row.style.height);
-        const cellHasWidth = firstRowCells.some((cell) => cell.style.width);
-        return rowHasHeight || cellHasWidth;
+        const colgroup = table.querySelector("colgroup");
+        return rowHasHeight || colgroup;
     }
 
-    get hasCustomSize() {
-        return this.props.type === "row"
-            ? !!this.props.target.parentElement.style?.height
-            : !!this.props.target.style?.width;
+    get hasCustomRowHeight() {
+        return !!closestElement(this.props.target, "tr").style.height;
+    }
+
+    get hasCustomColumnWidth() {
+        const table = closestElement(this.props.target, "table");
+        const index = this.tableGrid[0].indexOf(closestElement(this.props.target, isTableCell));
+        const colgroup = table.querySelector("colgroup");
+        if (colgroup) {
+            return colgroup.children[index].style.width;
+        }
+        return false;
     }
 
     get hasContent() {
         const baseContainerSelector = getBaseContainerSelector();
         const cell = this.props.target;
-        const table = closestElement(cell, "table");
+        const colIndex = this.tableGrid[0].indexOf(cell);
         const targetCells =
             this.props.type === "row"
                 ? [...cell.parentElement.children]
-                : [...table.rows].map((row) => row.cells[getColumnIndex(cell)]);
+                : this.tableGrid.map((row) => row[colIndex]);
         return targetCells.some((td) => {
             const { children } = td;
             return !(
@@ -212,17 +219,18 @@ export class TableMenu extends Component {
                 text: _t("Delete"),
                 action: this.props.removeColumn.bind(this),
             },
-            this.hasCustomSize && {
+            this.hasCustomColumnWidth && {
                 name: "reset_column_size",
                 icon: "fa-table",
                 text: _t("Reset column size"),
-                action: (target) => this.props.resetColumnWidth(target.closest("td, th")),
+                action: (target) =>
+                    this.props.resetColumnWidth(closestElement(target, isTableCell)),
             },
             this.hasCustomTableSize && {
                 name: "reset_table_size",
                 icon: "fa-table",
                 text: _t("Reset table size"),
-                action: (target) => this.props.resetTableSize(target.closest("table")),
+                action: (target) => this.props.resetTableSize(closestElement(target, "table")),
             },
             this.hasContent && {
                 name: "clear_content",
@@ -314,17 +322,17 @@ export class TableMenu extends Component {
                 text: _t("Delete"),
                 action: (target) => this.props.removeRow(target.parentElement),
             },
-            this.hasCustomSize && {
+            this.hasCustomRowHeight && {
                 name: "reset_row_size",
                 icon: "fa-table",
                 text: _t("Reset row size"),
-                action: (target) => this.props.resetRowHeight(target.closest("tr")),
+                action: (target) => this.props.resetRowHeight(closestElement(target, "tr")),
             },
             this.hasCustomTableSize && {
                 name: "reset_table_size",
                 icon: "fa-table",
                 text: _t("Reset table size"),
-                action: (target) => this.props.resetTableSize(target.closest("table")),
+                action: (target) => this.props.resetTableSize(closestElement(target, "table")),
             },
             this.hasContent && {
                 name: "clear_content",

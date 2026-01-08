@@ -831,28 +831,36 @@ describe("select columns on cross over", () => {
     describe("reset size", () => {
         test("should remove any height or width of the table and bring it back to it original form", async () => {
             await testEditor({
-                contentBefore: `<table class="table table-bordered o_table" style="height: 980.5px; width: 736px;"><tbody>
-                                    <tr style="height: 306.5px;">
-                                        <td style="width: 356px;"><p>[]<br></p></td>
-                                        <td style="width: 108.5px;"><p><br></p></td>
-                                        <td style="width: 232.25px;"><p><br></p></td>
-                                        <td style="width: 38.25px;"><p><br></p></td>
-                                    </tr>
-                                    <tr style="height: 252px;">
-                                        <td style="width: 232.25px;"><p><br></p></td>
-                                        <td style="width: 232.25px;"><p><br></p></td>
-                                        <td style="width: 232.25px;"><p><br></p></td>
-                                        <td style="width: 232.25px;"><p><br></p></td>
-                                    </tr>
-                                    <tr style="height: 57px;">
-                                        <td style="width: 232.25px;"><p><br></p></td>
-                                        <td style="width: 232.25px;"><p><br></p></td>
-                                        <td style="width: 232.25px;"><p><br></p></td>
-                                        <td style="width: 232.25px;"><p><br></p></td>
-                                    </tr>
-                                </tbody></table>`,
+                contentBefore:
+                    unformat(`<table class="table table-bordered o_table" style="height: 980.5px; width: 736px;">
+                                    <colgroup>
+                                        <col style="width: 356px;">
+                                        <col style="width: 108.5px;">
+                                        <col style="width: 232.25px;">
+                                        <col style="width: 38.25px;">
+                                    </colgroup>
+                                    <tbody>
+                                        <tr style="height: 306.5px;">
+                                            <td><p>[]<br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr style="height: 252px;">
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr style="height: 57px;">
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                </tbody></table>`),
                 stepFunction: resetSize,
-                contentAfter: `<table class="table table-bordered o_table"><tbody>
+                contentAfter: unformat(`<table class="table table-bordered o_table"><tbody>
                                     <tr>
                                         <td><p>[]<br></p></td>
                                         <td><p><br></p></td>
@@ -871,44 +879,52 @@ describe("select columns on cross over", () => {
                                         <td><p><br></p></td>
                                         <td><p><br></p></td>
                                     </tr>
-                                </tbody></table>`,
+                                </tbody></table>`),
             });
         });
 
         test("should remove any height or width of the table without loosing the style of the element inside it.", async () => {
             await testEditor({
-                contentBefore: `<table class="table table-bordered o_table" style="width: 472.182px; height: 465.403px;"><tbody>
-                                    <tr style="height: 104.872px;">
-                                        <td style="width: 191.273px;"><h1>[]TESTTEXT</h1></td>
-                                        <td style="width: 154.009px;"><p><br></p></td>
-                                        <td style="width: 126.003px;">
-                                            <ul>
-                                                <li>test</li>
-                                                <li>test</li>
-                                                <li>test</li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <tr style="height: 254.75px;">
-                                        <td style="width: 229.673px;"><p><br></p></td>
-                                        <td style="width: 229.687px;">
-                                            <blockquote>TESTTEXT</blockquote>
-                                        </td>
-                                        <td style="width: 229.73px;"><p><br></p></td>
-                                    </tr>
-                                    <tr style="height: 104.872px;">
-                                        <td style="width: 229.673px;"><pre>codeTEST</pre></td>
-                                        <td style="width: 229.687px;"><p><br></p></td>
-                                        <td style="width: 229.73px;">
-                                            <ol>
-                                                <li>text</li>
-                                                <li>text</li>
-                                                <li>text</li>
-                                            </ol>
+                contentBefore:
+                    unformat(`<table class="table table-bordered o_table" style="width: 472.182px; height: 465.403px;">
+                                        <colgroup>
+                                        <col style="width: 191.273px;">
+                                        <col style="width: 154.009px;">
+                                        <col style="width: 126.003px;">
+                                    </colgroup>
+                                    <tbody>
+                                        <tr style="height: 104.872px;">
+                                            <td><h1>[]TESTTEXT</h1></td>
+                                            <td><p><br></p></td>
+                                            <td>
+                                                <ul>
+                                                    <li>test</li>
+                                                    <li>test</li>
+                                                    <li>test</li>
+                                                </ul>
                                             </td>
-                                    </tr></tbody></table>`,
+                                        </tr>
+                                        <tr style="height: 254.75px;">
+                                            <td><p><br></p></td>
+                                            <td>
+                                                <blockquote>TESTTEXT</blockquote>
+                                            </td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr style="height: 104.872px;">
+                                            <td><pre>codeTEST</pre></td>
+                                            <td><p><br></p></td>
+                                            <td>
+                                                <ol>
+                                                    <li>text</li>
+                                                    <li>text</li>
+                                                    <li>text</li>
+                                                </ol>
+                                                </td>
+                                        </tr>
+                                    </tbody></table>`),
                 stepFunction: resetSize,
-                contentAfter: `<table class="table table-bordered o_table"><tbody>
+                contentAfter: unformat(`<table class="table table-bordered o_table"><tbody>
                                     <tr>
                                         <td><h1>[]TESTTEXT</h1></td>
                                         <td><p><br></p></td>
@@ -937,31 +953,39 @@ describe("select columns on cross over", () => {
                                                 <li>text</li>
                                             </ol>
                                             </td>
-                                    </tr></tbody></table>`,
+                                    </tr></tbody></table>`),
             });
         });
 
         test("should remove any height or width of the table without removig the style of the table.", async () => {
             await testEditor({
-                contentBefore: `<table class="table table-bordered o_table" style="height: 594.5px; width: 807px;"><tbody>
-                                    <tr style="height: 229.5px;">
-                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 500px;"><p>[]<br></p></td>
-                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 119.328px;"><p><br></p></td>
-                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 186.672px;"><p><br></p></td>
-                                    </tr>
-                                    <tr style="height: 260px;">
-                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 309.656px;"><p><br></p></td>
-                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 309.672px;"><p><br></p></td>
-                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 309.672px;"><p><br></p></td>
-                                    </tr>
-                                    <tr style="height: 104px;">
-                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 309.656px;"><p><br></p></td>
-                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 309.672px;"><p><br></p></td>
-                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 309.672px;"><p><br></p></td>
-                                    </tr>
-                                </tbody></table>`,
+                contentBefore:
+                    unformat(`<table class="table table-bordered o_table" style="height: 594.5px; width: 807px;">
+                    <colgroup>
+                        <col style="width: 500px;">
+                        <col style="width: 119.328px;">
+                        <col style="width: 186.672px;">
+                    </colgroup>
+                    <tbody>
+                        <tr style="height: 229.5px;">
+                            <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p>[]<br></p></td>
+                            <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                            <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                        </tr>
+                        <tr style="height: 260px;">
+                            <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                            <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                            <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                        </tr>
+                        <tr style="height: 104px;">
+                            <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                            <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                            <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`),
                 stepFunction: resetSize,
-                contentAfter: `<table class="table table-bordered o_table"><tbody>
+                contentAfter: unformat(`<table class="table table-bordered o_table"><tbody>
                                     <tr>
                                         <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p>[]<br></p></td>
                                         <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
@@ -977,7 +1001,7 @@ describe("select columns on cross over", () => {
                                         <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
                                         <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
                                     </tr>
-                                </tbody></table>`,
+                                </tbody></table>`),
             });
         });
     });

@@ -299,9 +299,9 @@ describe("row", () => {
                     <table>
                         <tbody>
                             <tr style="height: 30px;">
-                                <th style="width: 20px;" class="o_table_header">gh</th>
-                                <th style="width: 25px;" class="o_table_header">ij</th>
-                                <th style="width: 30px;" class="o_table_header">kl</th>
+                                <th class="o_table_header">gh</th>
+                                <th class="o_table_header">ij</th>
+                                <th class="o_table_header">kl</th>
                             </tr>
                             <tr style="height: 20px;">
                                 <td style="width: 20px;">ab[]</td>
@@ -320,9 +320,9 @@ describe("row", () => {
                     <table>
                         <tbody>
                             <tr style="height: 20px;">
-                                <th class="o_table_header" style="width: 20px;">ab</th>
-                                <th class="o_table_header" style="width: 25px;">cd</th>
-                                <th class="o_table_header" style="width: 30px;">ef</th>
+                                <th class="o_table_header">ab</th>
+                                <th class="o_table_header">cd</th>
+                                <th class="o_table_header">ef</th>
                             </tr>
                             <tr style="height: 30px;">
                                 <td>gh</td>
@@ -337,14 +337,14 @@ describe("row", () => {
                     <table>
                         <tbody>
                             <tr style="height: 30px;">
-                                <th style="width: 20px;" class="o_table_header">gh</th>
-                                <th style="width: 25px;" class="o_table_header">ij</th>
-                                <th style="width: 30px;" class="o_table_header">kl[]</th>
+                                <th class="o_table_header">gh</th>
+                                <th class="o_table_header">ij</th>
+                                <th class="o_table_header">kl[]</th>
                             </tr>
                             <tr style="height: 20px;">
-                                <td style="width: 20px;">ab</td>
-                                <td style="width: 25px;">cd</td>
-                                <td style="width: 30px;">ef</td>
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
                             </tr>
                         </tbody>
                     </table>
@@ -557,10 +557,13 @@ describe("column", () => {
         test("should add a column left of the leftmost column", async () => {
             await testEditor({
                 contentBefore:
-                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 40px;">ab[]</td>' +
-                    '<td style="width: 50px;">cd</td>' +
-                    '<td style="width: 60px;">ef</td>' +
+                    '<table style="width: 150px;">' +
+                    '<colgroup><col style="width: 40px;">' +
+                    '<col style="width: 50px;"><col style="width: 60px;"></colgroup>' +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td>ab[]</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td>ab</td>" +
@@ -569,11 +572,15 @@ describe("column", () => {
                     "</tr></tbody></table>",
                 stepFunction: addColumn("before"),
                 contentAfter:
-                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 32px;"><p><br></p></td>' +
-                    '<td style="width: 32px;">ab[]</td>' +
-                    '<td style="width: 40px;">cd</td>' +
-                    '<td style="width: 45px;">ef</td>' +
+                    '<table style="width: 150px;">' +
+                    '<colgroup><col style="width: 32px;">' +
+                    '<col style="width: 32px;"><col style="width: 40px;">' +
+                    '<col style="width: 45px;"></colgroup>' +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td>ab[]</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td><p><br></p></td>" +
@@ -587,10 +594,13 @@ describe("column", () => {
         test("should add a `TH` column before", async () => {
             await testEditor({
                 contentBefore:
-                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<th style="width: 40px;">ab[]</th>' +
-                    '<th style="width: 50px;">cd</th>' +
-                    '<th style="width: 60px;">ef</th>' +
+                    '<table style="width: 150px;">' +
+                    '<colgroup><col style="width: 40px;">' +
+                    '<col style="width: 50px;"><col style="width: 60px;"></colgroup>' +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<th>ab[]</th>" +
+                    "<th>cd</th>" +
+                    "<th>ef</th>" +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td>ab</td>" +
@@ -599,11 +609,14 @@ describe("column", () => {
                     "</tr></tbody></table>",
                 stepFunction: addColumn("before"),
                 contentAfter:
-                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<th style="width: 32px;"><p><br></p></th>' +
-                    '<th style="width: 32px;">ab[]</th>' +
-                    '<th style="width: 40px;">cd</th>' +
-                    '<th style="width: 45px;">ef</th>' +
+                    '<table style="width: 150px;">' +
+                    '<colgroup><col style="width: 32px;"><col style="width: 32px;">' +
+                    '<col style="width: 40px;"><col style="width: 45px;"></colgroup>' +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<th><p><br></p></th>" +
+                    "<th>ab[]</th>" +
+                    "<th>cd</th>" +
+                    "<th>ef</th>" +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td><p><br></p></td>" +
@@ -617,41 +630,31 @@ describe("column", () => {
         test("should add a column left of the middle column", async () => {
             await testEditor({
                 contentBefore:
-                    '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 50px;">ab</td>' +
-                    '<td style="width: 65px;">cd</td>' +
-                    '<td style="width: 85px;">ef</td>' +
-                    "</tr>" +
-                    '<tr style="height: 30px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd[]</td>" +
-                    "<td>ef</td>" +
-                    "</tr>" +
-                    '<tr style="height: 40px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd</td>" +
-                    "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    '<table style="width: 200px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 50px;">' +
+                    '<col style="width: 65px;">' +
+                    '<col style="width: 85px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><td>ab</td><td>cd</td><td>ef</td></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd[]</td><td>ef</td></tr>' +
+                    '<tr style="height: 40px;"><td>ab</td><td>cd</td><td>ef</td></tr>' +
+                    "</tbody></table>",
                 stepFunction: addColumn("before"),
                 contentAfter:
-                    '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 38px;">ab</td>' +
-                    '<td style="width: 49px;"><p><br></p></td>' +
-                    '<td style="width: 49px;">cd</td>' +
-                    '<td style="width: 63px;">ef</td>' +
-                    "</tr>" +
-                    '<tr style="height: 30px;">' +
-                    "<td>ab</td>" +
-                    "<td><p><br></p></td>" +
-                    "<td>cd[]</td>" +
-                    "<td>ef</td>" +
-                    "</tr>" +
-                    '<tr style="height: 40px;">' +
-                    "<td>ab</td>" +
-                    "<td><p><br></p></td>" +
-                    "<td>cd</td>" +
-                    "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    '<table style="width: 200px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 38px;">' +
+                    '<col style="width: 49px;">' +
+                    '<col style="width: 49px;">' +
+                    '<col style="width: 63px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><td>ab</td><td><p><br></p></td><td>cd</td><td>ef</td></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td><p><br></p></td><td>cd[]</td><td>ef</td></tr>' +
+                    '<tr style="height: 40px;"><td>ab</td><td><p><br></p></td><td>cd</td><td>ef</td></tr>' +
+                    "</tbody></table>",
             });
         });
     });
@@ -660,104 +663,92 @@ describe("column", () => {
         test("should add a column right of the rightmost column", async () => {
             await testEditor({
                 contentBefore:
-                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 40px;">ab</td>' +
-                    '<td style="width: 50px;">cd</td>' +
-                    '<td style="width: 60px;">ef[]</td>' +
-                    "</tr>" +
-                    '<tr style="height: 30px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd</td>" +
-                    "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 40px;">' +
+                    '<col style="width: 50px;">' +
+                    '<col style="width: 60px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><td>ab</td><td>cd</td><td>ef[]</td></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd</td><td>ef</td></tr>' +
+                    "</tbody></table>",
                 stepFunction: addColumn("after"),
                 contentAfter:
-                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 29px;">ab</td>' +
-                    '<td style="width: 36px;">cd</td>' +
-                    '<td style="width: 41px;">ef[]</td>' +
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 29px;">' +
+                    '<col style="width: 36px;">' +
+                    '<col style="width: 41px;">' +
                     // size was slightly adjusted to
                     // preserve table width in view on
                     // fractional division results
-                    '<td style="width: 43px;"><p><br></p></td>' +
-                    "</tr>" +
-                    '<tr style="height: 30px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd</td>" +
-                    "<td>ef</td>" +
-                    "<td><p><br></p></td>" +
-                    "</tr></tbody></table>",
+                    '<col style="width: 43px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><td>ab</td><td>cd</td><td>ef[]</td><td><p><br></p></td></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd</td><td>ef</td><td><p><br></p></td></tr>' +
+                    "</tbody></table>",
             });
         });
 
         test("should add a `TH` column after", async () => {
             await testEditor({
                 contentBefore:
-                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<th style="width: 40px;">ab</th>' +
-                    '<th style="width: 50px;">cd[]</th>' +
-                    '<th style="width: 60px;">ef</th>' +
-                    "</tr>" +
-                    '<tr style="height: 30px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd</td>" +
-                    "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 40px;">' +
+                    '<col style="width: 50px;">' +
+                    '<col style="width: 60px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><th>ab</th><th>cd[]</th><th>ef</th></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd</td><td>ef</td></tr>' +
+                    "</tbody></table>",
                 stepFunction: addColumn("after"),
                 contentAfter:
-                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<th style="width: 30px;">ab</th>' +
-                    '<th style="width: 38px;">cd[]</th>' +
-                    '<th style="width: 38px;"><p><br></p></th>' +
-                    '<th style="width: 43px;">ef</th>' +
-                    "</tr>" +
-                    '<tr style="height: 30px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd</td>" +
-                    "<td><p><br></p></td>" +
-                    "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 30px;">' +
+                    '<col style="width: 38px;">' +
+                    '<col style="width: 38px;">' +
+                    '<col style="width: 43px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><th>ab</th><th>cd[]</th><th><p><br></p></th><th>ef</th></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd</td><td><p><br></p></td><td>ef</td></tr>' +
+                    "</tbody></table>",
             });
         });
 
         test("should add a column right of the middle column", async () => {
             await testEditor({
                 contentBefore:
-                    '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 50px;">ab</td>' +
-                    '<td style="width: 65px;">cd</td>' +
-                    '<td style="width: 85px;">ef</td>' +
-                    "</tr>" +
-                    '<tr style="height: 30px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd[]</td>" +
-                    "<td>ef</td>" +
-                    "</tr>" +
-                    '<tr style="height: 40px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd</td>" +
-                    "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    '<table style="width: 200px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 50px;">' +
+                    '<col style="width: 65px;">' +
+                    '<col style="width: 85px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><td>ab</td><td>cd</td><td>ef</td></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd[]</td><td>ef</td></tr>' +
+                    '<tr style="height: 40px;"><td>ab</td><td>cd</td><td>ef</td></tr>' +
+                    "</tbody></table>",
                 stepFunction: addColumn("after"),
                 contentAfter:
-                    '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 38px;">ab</td>' +
-                    '<td style="width: 49px;">cd</td>' +
-                    '<td style="width: 49px;"><p><br></p></td>' +
-                    '<td style="width: 63px;">ef</td>' +
-                    "</tr>" +
-                    '<tr style="height: 30px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd[]</td>" +
-                    "<td><p><br></p></td>" +
-                    "<td>ef</td>" +
-                    "</tr>" +
-                    '<tr style="height: 40px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd</td>" +
-                    "<td><p><br></p></td>" +
-                    "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    '<table style="width: 200px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 38px;">' +
+                    '<col style="width: 49px;">' +
+                    '<col style="width: 49px;">' +
+                    '<col style="width: 63px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><td>ab</td><td>cd</td><td><p><br></p></td><td>ef</td></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd[]</td><td><p><br></p></td><td>ef</td></tr>' +
+                    '<tr style="height: 40px;"><td>ab</td><td>cd</td><td><p><br></p></td><td>ef</td></tr>' +
+                    "</tbody></table>",
             });
         });
     });
