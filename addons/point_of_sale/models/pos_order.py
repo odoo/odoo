@@ -270,7 +270,7 @@ class PosOrder(models.Model):
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
-            .mapped('picking_ids.move_ids')\
+            ._get_stock_moves()\
             ._filter_anglo_saxon_moves(product)\
             .sorted(lambda x: x.date)
         price_unit = product.with_company(self.company_id)._compute_average_price(0, quantity, moves)
@@ -659,6 +659,9 @@ class PosOrder(models.Model):
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', self.mapped('lines.refund_orderline_ids.order_id').ids)],
         }
+
+    def _get_stock_moves(self):
+        return self.picking_ids.move_ids
 
     def _is_pos_order_paid(self):
         amount_total = self.amount_total
