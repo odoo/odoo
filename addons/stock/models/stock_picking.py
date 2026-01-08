@@ -12,6 +12,7 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain, Command
 from odoo.tools import format_datetime, format_date, groupby, OrderedSet, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.tools.misc import clean_context
 
 
 class StockPickingType(models.Model):
@@ -1202,6 +1203,7 @@ class StockPicking(models.Model):
             'views': [(view_id, 'list')],
             'domain': [('id', 'in', self.move_line_ids.ids)],
             'context': {
+                'sml_specific_default': True,
                 'default_picking_id': self.id,
                 'default_location_id': self.location_id.id,
                 'default_location_dest_id': self.location_dest_id.id,
@@ -1750,6 +1752,8 @@ class StockPicking(models.Model):
 
     def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False):
         self.ensure_one()
+        if self.env.context.get('sml_specific_default'):
+            self = self.with_context(clean_context(self.env.context))
         if self.state not in ('done', 'cancel'):
             return self.move_line_ids.action_put_in_pack(package_id=package_id, package_type_id=package_type_id, package_name=package_name)
 
