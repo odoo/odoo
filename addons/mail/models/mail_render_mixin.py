@@ -310,7 +310,7 @@ class MailRenderMixin(models.AbstractModel):
         if add_context:
             variables.update(**add_context)
 
-        is_restricted = not self._unrestricted_rendering and not self.env.is_admin() and not self.env.user.has_group('mail.group_mail_template_editor')
+        is_restricted = not (self._unrestricted_rendering or (options or {}).get('_unrestricted_rendering', False)) and not self.env.is_admin() and not self.env.user.has_group('mail.group_mail_template_editor')
 
         for record in self.env[model].browse(res_ids):
             variables['object'] = record
