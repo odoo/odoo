@@ -137,9 +137,9 @@
                         <t t-esc="env.utils.formatCurrency(currentOrder.getTip())" />
                     </t>
                 </button>
-                <button t-if="pos.config.iface_cashdrawer" class="button col js_cashdrawer btn btn-light py-3 text-start rounded-0 border-top border-start border-end"
+                <button t-if="pos.config.iface_cashdrawer" class="button js_cashdrawer btn btn-secondary btn-lg py-3 rounded"
                     t-on-click="openCashbox">
-                    <i class="fa fa-archive me-2" />Open Cashbox 
+                    <i class="fa fa-archive me-2" />Open Cashbox
                 </button>
                 <button t-if="pos.config.ship_later" class="button btn btn-secondary btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.getShippingDate() }"
                     t-on-click="toggleShippingDatePicker">
