@@ -91,7 +91,7 @@ class HrVersion(models.Model):
     def _get_resource_calendar_leaves(self, start_dt, end_dt):
         return self.env['resource.calendar.leaves'].search(self._get_leave_domain(start_dt, end_dt))
 
-    def _get_attendance_intervals(self, start_dt, end_dt):
+    def _get_attendance_intervals(self, start_dt, end_dt):  # useless?
         assert start_dt.tzinfo and end_dt.tzinfo, "function expects localized date"
         # {resource: intervals}
         employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
@@ -101,16 +101,19 @@ class HrVersion(models.Model):
             employees_by_calendar[version.resource_calendar_id] |= version.employee_id
         result = dict()
         for calendar, employees in employees_by_calendar.items():
-            if not calendar:
-                for employee in employees:
-                    result.update({employee.resource_id.id: Intervals([(start_dt, end_dt, self.env['resource.calendar.attendance'])])})
-            else:
-                result.update(calendar._attendance_intervals_batch(
-                    start_dt,
-                    end_dt,
-                    resources=employees.resource_id,
-                    tz=ZoneInfo(calendar.tz) if calendar.tz else UTC
-                ))
+            for employee in employees:
+                result.update({employee.resource_id.id: Intervals([])})
+        # for calendar, employees in employees_by_calendar.items():
+        #     if not calendar:
+        #         for employee in employees:
+        #             result.update({employee.resource_id.id: Intervals([(start_dt, end_dt, self.env['resource.calendar.attendance'])])})
+        #     else:
+        #         result.update(calendar._attendance_intervals_batch(
+        #             start_dt,
+        #             end_dt,
+        #             resources=employees.resource_id,
+        #             tz=ZoneInfo(calendar.tz) if calendar.tz else UTC
+        #         ))
         return result
 
     def _get_lunch_intervals(self, start_dt, end_dt):
