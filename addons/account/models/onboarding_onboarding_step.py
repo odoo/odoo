@@ -101,6 +101,7 @@ class OnboardingOnboardingStep(models.Model):
             'search_view_id': [self.env.ref('account.view_account_search').id],
             'views': [[view_id, 'list'], [False, 'form']],
             'domain': domain,
+            'context': {'company_id': company.id},
         }
 
     # STEPS WITHOUT PANEL

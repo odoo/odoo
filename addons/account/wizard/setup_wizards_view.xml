@@ -87,6 +87,15 @@
             <field name="model">account.account</field>
             <field name="arch" type="xml">
                 <list editable="top" create="1" delete="1" decoration-muted="opening_debit == 0 and opening_credit == 0" open_form_view="True">
+                    <header>
+                        <button name="action_validate_opening_move"
+                                type="object"
+                                string="Validate and Post"
+                                display="always"
+                                confirm="This action is irreversible: the credit/debit cannot be modified again from this screen."
+                                confirm-label="Post"
+                                confirm-title="Post Entry?"/>
+                    </header>
                     <field name="code"/>
                     <field name="name"/>
                     <field name="company_ids" column_invisible="True"/>
