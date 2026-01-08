@@ -640,7 +640,7 @@ class MrpProduction(models.Model):
     @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity')
     def _get_produced_qty(self):
         for production in self:
-            done_moves = production.move_finished_ids.filtered(lambda x: x.state != 'cancel' and x.product_id.id == production.product_id.id)
+            done_moves = production.move_finished_ids.filtered(lambda x: x.state == 'done' and x.product_id.id == production.product_id.id)
             qty_produced = sum(done_moves.filtered(lambda m: m.picked).mapped('quantity'))
             production.qty_produced = qty_produced
         return True
