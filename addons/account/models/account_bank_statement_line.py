@@ -453,7 +453,7 @@ class AccountBankStatementLine(models.Model):
                 'partner_id': self.partner_id.id,
                 'journal_id': None,
             })
-        return bank_account.filtered(lambda x: x.company_id.id in (False, self.company_id.id))
+        return bank_account.filtered(lambda x: x.company_id.id in (False, self.company_id.id)).sudo(False)
 
     def _get_amounts_with_currencies(self):
         """
