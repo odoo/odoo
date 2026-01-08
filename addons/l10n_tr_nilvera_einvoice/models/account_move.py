@@ -180,7 +180,7 @@ class AccountMove(models.Model):
                 else:
                     invoice.message_post(body=_("The invoice status couldn't be retrieved from Nilvera."))
 
-    def _l10n_tr_nilvera_get_documents(self, invoice_channel="einvoice", document_category="Purchase", journal_type="in_invoice"):
+    def _l10n_tr_nilvera_get_documents(self, invoice_channel="einvoice", document_category="Purchase", journal_type="purchase"):
         with _get_nilvera_client(self.env.company) as client:
             response = client.request("GET", f"/{invoice_channel}/{quote(document_category)}", params={"StatusCode": ["succeed"]})
             if not response.get('Content'):
