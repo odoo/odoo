@@ -24,10 +24,20 @@
     </BuilderRow>
     <!-- Multi record & common options -->
     <BuilderRow id="section_title_opt_row" label.translate="Section Title" t-if="!isSingleMode">
-        <BuilderButtonGroup applyTo="'.s_dynamic_snippet_title'" id="'section_title_opt'">
-            <BuilderButton label.translate="Top" classAction="dynamicOptionParams.getSnippetTitleClasses('top')"/>
-            <BuilderButton label.translate="Left" classAction="dynamicOptionParams.getSnippetTitleClasses('left')"/>
-            <BuilderButton label.translate="None" title.translate="No title" classAction="dynamicOptionParams.getSnippetTitleClasses('none')"/>
+        <BuilderButtonGroup id="'section_title_opt'" applyTo="'.s_dynamic_snippet_title'">
+            <BuilderButton
+                label.translate="Top"
+                classAction="dynamicOptionParams.getSnippetTitleClasses('top')"
+            />
+            <BuilderButton
+                label.translate="Left"
+                classAction="dynamicOptionParams.getSnippetTitleClasses('left')"
+            />
+            <BuilderButton
+                label.translate="None"
+                title.translate="No title"
+                classAction="dynamicOptionParams.getSnippetTitleClasses('none')"
+            />
         </BuilderButtonGroup>
     </BuilderRow>
     <BuilderRow id="filter_opt_row" label.translate="Filter" t-if="!!dynamicOptionParams.showFilterOption()">
