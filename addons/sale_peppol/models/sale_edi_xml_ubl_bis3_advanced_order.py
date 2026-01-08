@@ -155,22 +155,12 @@ class SaleEdiXmlUbl_Bis3_OrderChange(models.AbstractModel):
         html_output += "</ul>"
         order.message_post(body=html_output)
 
-    def process_peppol_order_change(self, order):
-        """ Apply PEPPOL order change document to `sale_order`. Searches through ir.attachment of
-        the order and applies the latest PEPPOL order change document.
+    def process_peppol_order_change(self, order, attachment):
         """
-        attachments = self.env['ir.attachment'].search([
-            ('res_model', '=', 'sale.order'),
-            ('res_id', '=', order.id),
-        ])
-        customization_target = 'urn:fdc:peppol.eu:poacc:trns:order_change:3'
-        order_change_attachments = attachments.filtered(lambda a: (
-            (self.env['sale.order']._to_files_data(a)[0].get('xml_tree').findtext('.//{*}CustomizationID')
-             if a else None) == customization_target
-        ))
-        attachment = order_change_attachments[0]  # Last received PEPPOL document attachment; attachments are ordered as id desc
+        Apply PEPPOL order change document to `sale_order`. Searches through the sale order's
+        PEPPOL transactions and apply the most recent order change request to the order.
+        """
         tree = self.env['account.move']._to_files_data(attachment)[0]['xml_tree']
-
         order_vals, logs = self._retrieve_order_vals(order, tree)
         order.peppol_order_change_id = order_vals['peppol_order_id']
 
@@ -231,28 +221,15 @@ class SaleEdiXmlUbl_Bis3_OrderCancel(models.AbstractModel):
 
         return order_vals, logs
 
-    def process_peppol_order_cancel(self, order):
-        """ Apply PEPPOL order cancellation document to `sale_order`. Searches through ir.attachment
-        of the order and applies PEPPOL document with highest sequence (`cbc:SequenceNumberID`)
+    def process_peppol_order_cancel(self, order, attachment):
         """
-        attachments = self.env['ir.attachment'].search([
-            ('res_model', '=', 'sale.order'),
-            ('res_id', '=', order.id),
-        ])
-        customization_target = 'urn:fdc:peppol.eu:poacc:trns:order_cancellation:3'
-        order_cancel_attachments = attachments.filtered(lambda a: (
-            (self.env['sale.order']._to_files_data(a)[0].get('xml_tree').findtext('.//{*}CustomizationID')
-             if a else None) == customization_target
-        ))
-        if not order_cancel_attachments:
-            raise UserError(self.env._("There is no order cancellation request document related to this order."))
-        attachment = order_cancel_attachments[0]  # Last received PEPPOL document attachment; attachments are ordered as id desc
-
-        # Call cancellation first to check for UserError
+        Apply PEPPOL order cancellation document to `sale_order`. Searches through the sale order's
+        PEPPOL transactions and apply the most recent order cancellation request to the order.
+        """
+        # Call cancellation first to check for any UserError
         order.action_cancel()
 
         tree = self.env['account.move']._to_files_data(attachment)[0]['xml_tree']
-
         order_vals, logs = self._retrieve_order_vals(order, tree)
         msg = "Applied PEPPOL order cancellation document"
         if order_vals['cancellation_note']:
@@ -274,11 +251,7 @@ class SaleEdiXmlUbl_Bis3_OrderResponseAdvanced(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _get_order_response_node(self, vals, response_code):
-        code_list = [
-            'AB',  # Ack
-            'AP',  # Accepted
-        ]
-        if response_code not in code_list:
+        if response_code not in ['AB', 'AP', 'RE']:
             raise ValidationError(self.env._("Unknown response code %s", response_code))
 
         self._add_sale_order_config_vals(vals)

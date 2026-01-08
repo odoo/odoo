@@ -1,4 +1,6 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
+from base64 import b64encode
 
 
 class SaleOrder(models.Model):
@@ -20,9 +22,14 @@ class SaleOrder(models.Model):
     )
     peppol_order_id = fields.Char(string="PEPPOL order document ID")
     peppol_order_change_id = fields.Char(string="PEPPOL order change document ID")
+    peppol_order_transaction_ids = fields.One2many(
+        'sale.peppol.advanced.order.tracker',
+        'order_id',
+        string="EDI Trackers",
+    )
 
-    l10n_sg_has_peppol_order_change = fields.Boolean(default=True)
-    l10n_sg_has_peppol_order_cancel = fields.Boolean(default=True)
+    l10n_sg_has_pending_order_change = fields.Boolean(compute='_has_pending_order_change')
+    l10n_sg_has_pending_order_cancel = fields.Boolean(compute='_has_pending_order_cancel')
 
     def action_confirm(self):
         super().action_confirm()
@@ -58,15 +65,96 @@ class SaleOrder(models.Model):
         return super()._get_edi_decoder(file_data, new)
 
     def action_apply_peppol_order_change(self):
-        self.env['sale.edi.xml.ubl_bis3_order_change'].process_peppol_order_change(self)
-        self.l10n_sg_has_peppol_order_change = False
+        order_change_tx = self.peppol_order_transaction_ids.search([
+            ('document_type', '=', 'order_change'),
+        ], limit=1)
+        if not order_change_tx:
+            raise UserError(self.env._("There is no pending order change request for this order."))
+
+        attachment = order_change_tx.attachment_id
+        self.env['sale.edi.xml.ubl_bis3_order_change'].process_peppol_order_change(self, attachment)
+
+        self._send_order_response_advanced(order_change_tx, "AP")
+        order_change_tx.state = 'accepted'
 
     def action_reject_peppol_order_change(self):
-        self.l10n_sg_has_peppol_order_cancel = False
+        order_change_tx = self.peppol_order_transaction_ids.search([
+            ('document_type', '=', 'order_change'),
+        ], limit=1)
+        if not order_change_tx:
+            raise UserError(self.env._("There is no pending order change request for this order."))
+
+        self._send_order_response_advanced(order_change_tx, "RE")
+        order_change_tx.state = 'rejected'
 
     def action_apply_peppol_order_cancel(self):
-        self.env['sale.edi.xml.ubl_bis3_order_cancel'].process_peppol_order_cancel(self)
-        self.l10n_sg_has_peppol_order_cancel = False
+        for order in self:
+            order_cancel_tx = order.peppol_order_transaction_ids.search([
+                ('document_type', '=', 'order_cancel'),
+            ], limit=1)
+            if not order_cancel_tx:
+                raise UserError(order.env._("There is no pending order change request for this order."))
+
+            attachment = order_cancel_tx.attachment_id
+            self.env['sale.edi.xml.ubl_bis3_order_cancel'].process_peppol_order_cancel(self, attachment)
+
+            order._send_order_response_advanced(order_cancel_tx, "RE")
+            order_cancel_tx.state = 'accepted'
 
     def action_reject_peppol_order_cancel(self):
-        self.l10n_sg_has_peppol_order_cancel = False
+        for order in self:
+            order_cancel_tx = order.peppol_order_transaction_ids.search([
+                ('document_type', '=', 'order_cancel'),
+            ], limit=1)
+            if not order_cancel_tx:
+                raise UserError(order.env._("There is no pending order change request for this order."))
+
+            order._send_order_response_advanced(order_cancel_tx, "AP")
+            order_cancel_tx.state = 'rejected'
+
+    def _send_order_response_advanced(self, peppol_advanced_order_tx, code):
+        """
+        Docstring for _send_order_response_advanced
+
+        :param peppol_advanced_order_tx: PEPPOL advanced order transaction to respond to
+        :param code: Response code (AP or RE)
+        """
+        attachment = peppol_advanced_order_tx.attachment_id
+        order_response_xml = self.env['sale.edi.xml.ubl_bis3_order_response_advanced'].build_order_response_xml(self, code)
+        partner = self.partner_id.commercial_partner_id.with_company(self.company_id)
+        params = {
+            'documents': [{
+                'filename': f"{attachment.name}-response-{code}",
+                'ubl': b64encode(order_response_xml).decode(),
+                'receiver': f"{partner.peppol_eas}:{partner.peppol_endpoint}",
+            }],
+        }
+
+        edi_user = self.company_id.account_peppol_edi_user
+
+        edi_user._call_peppol_proxy(
+            "/api/peppol/1/send_document",
+            params=params,
+        )
+
+    # -------------------------------------------------------------------------
+    # Compute methods
+    # -------------------------------------------------------------------------
+
+    @api.depends('peppol_order_transaction_ids')
+    def _has_pending_order_change(self):
+        for order in self:
+            order_change_tx = order.peppol_order_transaction_ids.search([
+                ('document_type', '=', 'order_change'),
+                ('state', '=', 'to_reply'),
+            ], limit=1)
+            order.l10n_sg_has_pending_order_change = bool(order_change_tx)
+
+    @api.depends('peppol_order_transaction_ids')
+    def _has_pending_order_cancel(self):
+        for order in self:
+            order_cancel_tx = order.peppol_order_transaction_ids.search([
+                ('document_type', '=', 'order_cancel'),
+                ('state', '=', 'to_reply'),
+            ], limit=1)
+            order.l10n_sg_has_pending_order_cancel = bool(order_cancel_tx)

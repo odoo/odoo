@@ -12,5 +12,7 @@ Receive PEPPOL UBL BIS Advanced Orders and automatically generate sale orders
     'license': 'LGPL-3',
     'data': [
         'views/sale_order_views.xml',
+
+        'security/ir.model.access.csv',
     ],
 }

@@ -52,6 +52,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 'peppol_message_uuid': uuid,
                 'peppol_order_state': peppol_state,
             })
+            attachment.write({'res_model': 'sale.order', 'res_id': order.id})
+            self.env['sale.peppol.advanced.order.tracker'].create({
+                'order_id': order.id,
+                'attachment_id': attachment.id,
+                'state': 'to_reply',
+                'document_type': 'order',
+            })
+
             partner = order.partner_id.commercial_partner_id.with_company(order.company_id)
             order_response_xml = self.env['sale.edi.xml.ubl_bis3_order_response_advanced'].build_order_response_xml(order, 'AB')
             params = {
@@ -67,7 +75,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             )
 
         elif doc_customization_id == customization_id['order_change']:
+            # TODO: If we allow order change request initiated by seller, we need to check if there
+            # is outgoing order response with code CA in the transactions.
             order_ref_id = tree.findtext('.//{*}OrderReference/{*}ID')
+            order_change_seq = tree.findtext('.//{*}SequenceNumberID')
             order = self.env['sale.order'].search([('peppol_order_id', '=', order_ref_id)], limit=1)
             if order:
                 order.message_post(
@@ -75,10 +86,18 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     attachment_ids=[attachment.id],
                 )
                 attachment.write({'res_model': 'sale.order', 'res_id': order.id})
+                self.env['sale.peppol.advanced.order.tracker'].create({
+                    'order_id': order.id,
+                    'attachment_id': attachment.id,
+                    'state': 'to_reply',
+                    'document_type': 'order_change',
+                    'sequence': order_change_seq or 0,
+                })
                 self.env['sale.edi.xml.ubl_bis3_order_change'].log_order_change_diff(order, tree)
-                order.l10n_sg_has_peppol_order_change = True
 
         elif doc_customization_id == customization_id['order_cancel']:
+            # TODO: If we allow order cancel request initiated by seller, we need to check if there
+            # is outgoing order response with code RE in the transactions.
             order_ref_id = tree.findtext('.//{*}OrderReference/{*}ID')
             order = self.env['sale.order'].search([('peppol_order_id', '=', order_ref_id)], limit=1)
             if order:
@@ -86,8 +105,13 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     body=self.env._("Received PEPPOL order change request."),
                     attachment_ids=[attachment.id],
                 )
+                self.env['sale.peppol.advanced.order.tracker'].create({
+                    'order_id': order.id,
+                    'attachment_id': attachment.id,
+                    'state': 'to_reply',
+                    'document_type': 'order_cancel',
+                })
                 attachment.write({'res_model': 'sale.order', 'res_id': order.id})
-                order.l10n_sg_has_peppol_order_cancel = True
 
         else:
             # We did not handle any document
