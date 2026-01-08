@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+    <t t-name="web_hierarchy.HierarchyButtons">
+        <div class="d-flex o_grid_buttons">
+            <div class="me-2" t-if="props.archInfo.activeActions.create and (!props.archInfo.createInline or displayNoContent)">
+                <button class="btn btn-primary o_hierarchy_button_add"
+                        type="button"
+                        t-on-click="props.createRecord">
+                    New
+                </button>
+            </div>
+        </div>
+    </t>
+    <t t-name="web_hierarchy.HierarchyView">
+        <div t-attf-class="o_hierarchy_view {{ isMobile ? 'o_action_delegate_scroll' : '' }} {{ props.className }}" t-ref="root">
+            <Layout className="(model.useSampleModel ? 'o_view_sample_data' : '') + ' d-flex'" display="props.display">
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu/>
+                </t>
+                <t t-set-slot="layout-buttons">
+                    <t t-call="{{ props.buttonTemplate }}"/>
+                </t>
+                <t t-set-slot="layout-actions">
+                    <SearchBar t-if="searchBarToggler.state.showSearchBar"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                </t>
+                <t t-set-slot="default" t-slot-scope="layout">
+                    <t t-if="displayNoContent">
+                        <t t-call="web.ActionHelper">
+                            <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
+                        </t>
+                    </t>
+                    <t t-component="props.Renderer"
+                        model="model"
+                        openRecord.bind="openRecord"
+                        archInfo="props.archInfo"
+                        templates="props.archInfo.templateDocs"
+                    />
+                </t>
+            </Layout>
+        </div>
+    </t>
+</templates>

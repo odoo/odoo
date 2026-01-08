@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallInvitation">
+        <div class="o-discuss-CallInvitation d-flex flex-column m-2 p-5 border border-dark rounded-1 text-bg-900" t-attf-class="{{ className }}" t-ref="root">
+            <div t-if="props.thread.rtcInvitingSession" class="o-discuss-CallInvitation-correspondent d-flex flex-column justify-content-around align-items-center text-nowrap">
+                <img class="o-discuss-CallInvitation-avatar mb-2 rounded-circle cursor-pointer"
+                    t-att-src="threadService.avatarUrl(props.thread.rtcInvitingSession?.channelMember?.persona, props.thread)"
+                    t-on-click="onClickAvatar"
+                    alt="Avatar"/>
+                <span class="w-100 fw-bolder text-truncate text-center overflow-hidden" t-esc="props.thread.rtcInvitingSession.channelMember.persona.name"/>
+                <span class="fst-italic opacity-75">Incoming Call...</span>
+            </div>
+            <div class="d-flex justify-content-around align-items-center w-100 mt-4">
+                <button class="btn user-select-none p-2 rounded-circle border-0 btn-danger"
+                    aria-label="Refuse"
+                    title="Refuse"
+                    t-on-click="onClickRefuse">
+                    <i class="fa fa-lg fa-times m-3"/>
+                </button>
+                <button class="btn user-select-none p-2 rounded-circle border-0 btn-success"
+                    aria-label="Accept"
+                    title="Accept"
+                    t-on-click="onClickAccept">
+                    <i class="fa fa-lg fa-phone m-3"/>
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

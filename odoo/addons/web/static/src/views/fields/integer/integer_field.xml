@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="web.IntegerField">
+        <span t-if="props.readonly" t-esc="formattedValue" />
+        <input 
+            t-else="" 
+            t-ref="numpadDecimal" 
+            t-on-focusin="onFocusIn" 
+            t-on-focusout="onFocusOut" 
+            t-att-id="props.id" 
+            t-att-type="props.inputType" 
+            t-att-placeholder="props.placeholder" 
+            inputmode="numeric" 
+            class="o_input" 
+            autocomplete="off"
+            t-att-step="props.step" />
+    </t>
+
+</templates>

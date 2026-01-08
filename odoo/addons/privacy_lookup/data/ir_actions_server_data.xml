@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_actions_server_archive_all" model="ir.actions.server">
+        <field name="name">Archive Selection</field>
+        <field name="model_id" ref="privacy_lookup.model_privacy_lookup_wizard_line"/>
+        <field name="binding_model_id" ref="privacy_lookup.model_privacy_lookup_wizard_line"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+records.action_archive_all()
+        </field>
+    </record>
+
+    <record id="ir_actions_server_unlink_all" model="ir.actions.server">
+        <field name="name">Delete Selection</field>
+        <field name="model_id" ref="privacy_lookup.model_privacy_lookup_wizard_line"/>
+        <field name="binding_model_id" ref="privacy_lookup.model_privacy_lookup_wizard_line"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+records.action_unlink_all()
+        </field>
+    </record>
+</odoo>

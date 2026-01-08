@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-inherit="hr_skills.ResumeListRenderer.RecordRow" t-inherit-mode="extension">
+    <xpath expr="//t[@id='row']" position='after'>
+        <t t-if="data.display_type === 'certification'">
+            <td t-on-click="(ev) => this.onCellClicked(record, null, ev)"
+                class="o_data_cell container" colspan="2">
+                <div class="o_resume_line row" t-att-data-id="id">
+                    <div class="o_resume_line_dates col-lg-3">
+                        <span><t t-out="formatDate(data.date_end)"/></span>
+                    </div>
+                    <div class="o_resume_line_desc col-lg-8">
+                        <h3>
+                            <i class="fa fa-trophy text-warning me-1"></i>
+                            <t t-esc="data.name"/>
+                        </h3>
+                        <t t-if="data.description" t-out="data.description"/>
+                    </div>
+                </div>
+            </td>
+        </t>
+    </xpath>
+</t>
+
+</templates>

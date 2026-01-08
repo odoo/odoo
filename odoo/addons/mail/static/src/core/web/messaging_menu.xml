@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.MessagingMenu">
+    <Dropdown t-if="!env.inDiscussApp" autoOpen="false" beforeOpen.bind="beforeOpen" onStateChanged="state => this.state.isOpen = state.open" position="'bottom-end'" menuClass="discussSystray.menuClass" class="discussSystray.class">
+        <t t-set-slot="toggler">
+            <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = ui.isSmall and store.discuss.activeTab === 'main' ? 'main' : store.discuss.activeTab"></i>
+            <span t-if="counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-esc="counter"/></span>
+        </t>
+        <t t-set-slot="default">
+            <t t-call="mail.MessagingMenu.content"/>
+        </t>
+    </Dropdown>
+    <t t-else="" t-call="mail.MessagingMenu.content"/>
+</t>
+
+<t t-name="mail.MessagingMenu.content">
+    <div t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu`">
+        <div class="o-mail-MessagingMenu-header d-flex" t-att-class="{'border-start-0 border-end-0': ui.isSmall, 'bg-view border-bottom': !ui.isSmall, 'd-flex flex-shrink-0': !env.inDiscussApp }">
+            <t t-if="!ui.isSmall">
+                <button class="btn btn-link py-2 rounded-0" t-att-class="store.discuss.activeTab === 'main' ? 'fw-bold' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
+                <button class="btn btn-link py-2 rounded-0" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
+                <button class="btn btn-link py-2 rounded-0" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
+            </t>
+        </div>
+        <div t-if="!env.inDiscussApp or store.discuss.activeTab !== 'main'" class="d-flex flex-column overflow-auto flex-grow-1 list-group-flush">
+            <div class="d-flex justify-content-center py-4 px-2 text-muted" t-if="!hasPreviews">
+                No conversation yet...
+            </div>
+            <t t-if="store.odoobot and installationRequest.isShown">
+                <NotificationItem
+                    body="installationRequest.body"
+                    displayName="installationRequest.displayName"
+                    iconSrc="installationRequest.iconSrc"
+                    onClick="installationRequest.onClick"
+                    onSwipeRight="hasTouch() ? { action: () => this.installPrompt.decline(), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
+                >
+                    <t t-set-slot="icon">
+                        <ImStatus persona="installationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+                    </t>
+                    <t t-set-slot="requestContent">
+                        <a t-if="ui.isSmall" class="btn fa fa-cloud-download" />
+                        <t t-else="">
+                            <a class="btn btn-primary">Install</a>
+                            <span t-if="!hasTouch()" t-on-click.stop="() => this.installPrompt.decline()" class="text-dark bg-transparent fa fa-close opacity-50 opacity-100-hover" title="Dismiss"></span>
+                        </t>
+                    </t>
+                </NotificationItem>
+            </t>
+            <t t-if="store.odoobot and notificationRequest.isShown">
+                <NotificationItem
+                    body="notificationRequest.body"
+                    displayName="notificationRequest.displayName"
+                    iconSrc="notificationRequest.iconSrc"
+                    onClick="() => notification.requestPermission()"
+                >
+                    <t t-set-slot="icon">
+                        <ImStatus persona="notificationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+                    </t>
+                </NotificationItem>
+            </t>
+            <t t-if="store.discuss.activeTab === 'main' and !env.inDiscussApp">
+                <t t-foreach="store.failures" t-as="failure" t-key="failure.id">
+                    <NotificationItem
+                        body="failure.body"
+                        counter="failure.notifications.length > 1 ? failure.notifications.length : undefined"
+                        datetime="failure.datetime"
+                        displayName="failure.modelName"
+                        iconSrc="failure.iconSrc"
+                        hasMarkAsReadButton="true"
+                        onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
+                        onSwipeRight="hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
+                    />
+                </t>
+            </t>
+            <t t-foreach="threads" name="threads" t-as="thread" t-key="thread.localId">
+                <t t-set="message" t-value="thread.isChatChannel or (thread.type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentNotEmptyOfAllMessage : thread.needactionMessages.at(-1)"/>
+                <NotificationItem
+                    body="message?.inlineBody or message?.subtype_description"
+                    counter="thread.needactionCounter"
+                    datetime="message?.datetime"
+                    displayName="thread.displayName"
+                    iconSrc="thread.imgUrl"
+                    hasMarkAsReadButton="thread.isUnread"
+                    muted="thread.muteUntilDateTime ? 2 : !thread.isUnread ? 1 : 0"
+                    onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread)"
+                    onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
+                    onSwipeLeft="hasTouch() and threadService.canUnpin(thread) ? { action: () => this.threadService.unpin(thread), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
+                >
+                    <t t-set-slot="icon">
+                        <ImStatus t-if="thread.type === 'chat'" persona="thread.chatPartner" thread="thread" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+                    </t>
+                    <t t-if="message" t-set-slot="body-icon">
+                        <t t-if="message.isSelfAuthored">
+                            <i class="fa fa-mail-reply me-1"/>You:
+                        </t>
+                        <t t-elif="message.author and !message.author?.eq(thread.correspondent)">
+                            <t t-esc="message.author.name"/>:
+                        </t>
+                    </t>
+                </NotificationItem>
+            </t>
+        </div>
+    </div>
+    <div t-if="ui.isSmall" class="o-mail-MessagingMenu-navbar d-flex border-top bg-view shadow-lg w-100 btn-group">
+        <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2 mx-0" t-att-class="{
+            'text-primary fw-bolder o-active': store.discuss.activeTab === tab.id,
+            'border-end': !tab_last,
+        }" t-on-click="() => this.onClickNavTab(tab.id)">
+            <i t-attf-class="p-2 fs-4 {{ tab.icon }}"/>
+            <span class="small" t-esc="tab.label"/>
+        </button>
+    </div>
+</t>
+
+</templates>

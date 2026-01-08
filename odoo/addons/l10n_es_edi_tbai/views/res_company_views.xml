@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_company_form_l10n_es_edi_tbai" model="ir.ui.view">
+        <field name="name">res.company.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="account.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_info']/group/group[last()]" position="after">
+                <group>
+                    <field name="l10n_es_tbai_license_html" type="object"
+                        invisible="country_code != 'ES'"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- TicketBAI specifies there needs to be a menu link to display the license information -->
+    <menuitem id="menu_l10n_es_edi_tbai_license"
+        name="Licenses (TicketBAI)"
+        action="base.action_res_company_form"
+        sequence="90"
+        parent="l10n_es_edi_sii.menu_l10n_es_edi_root"
+        groups="account.group_account_manager">
+    </menuitem>
+</odoo>

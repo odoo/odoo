@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-name="web.DefaultFooter" owl="1">
+    <span>
+      <span class="fw-bolder text-primary">TIP</span> — search for
+      <t t-foreach="elements" t-as="element" t-key="element.namespace">
+          <t t-if="!(element_first || element_last)">, </t>
+          <t t-if="element_last and !element_first"> and </t>
+          <span class="o_namespace btn-link text-primary cursor-pointer" t-on-click="() => this.onClick(element.namespace)">
+              <span t-out="element.namespace" class="fw-bolder text-primary"/><t t-out="element.name"/>
+          </span>
+      </t>
+    </span>
+  </t>
+
+  <t t-name="web.DefaultCommandItem">
+    <div class="o_command_default d-flex align-items-center justify-content-between px-4 py-2 cursor-pointer">
+      <t t-slot="name"/>
+      <t t-slot="focusMessage"/>
+    </div>
+  </t>
+
+  <t t-name="web.HotkeyCommandItem">
+    <div class="o_command_hotkey d-flex align-items-center justify-content-between px-4 py-2 cursor-pointer">
+      <t t-slot="name"/>
+      <span>
+        <t t-foreach="getKeysToPress(props)" t-as="key" t-key="key_index">
+          <kbd t-out="key" class="d-inline-block px-3 py-1" />
+          <span t-if="!key_last"> + </span>
+        </t>
+      </span>
+    </div>
+  </t>
+
+</templates>

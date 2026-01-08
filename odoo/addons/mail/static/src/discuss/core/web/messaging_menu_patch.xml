@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-MessagingMenu-header')]" position="inside">
+            <div class="flex-grow-1"/>
+            <t name="searchBar" t-if="ui.isSmall and (store.discuss.activeTab !== 'main' or !env.inDiscussApp)">
+                <div t-if="displayChannelSelector" class="w-100 p-1 bg-light" t-ref="selector">
+                    <t t-if="state.addingChat" t-set="category" t-value="store.discuss.chats"/>
+                    <t t-if="state.addingChannel" t-set="category" t-value="store.discuss.channels"/>
+                    <ChannelSelector category="category" autofocus="true"/>
+                </div>
+            </t>
+            <button t-if="displayStartConversation" t-att-class="ui.isSmall ? 'w-100 p-2 btn btn-secondary m-1' : 'btn btn-link p-2'" t-on-click.stop="onClickNewMessage">
+                <t t-if="ui.isSmall">Start a conversation</t>
+                <t t-elif="!store.discuss.isActive">New Message</t>
+            </button>
+            <button t-if="ui.isSmall and store.discuss.activeTab === 'channel' and !state.addingChannel" class="w-100 p-2 btn btn-secondary m-1" t-on-click.stop="() => this.state.addingChannel = true">
+                New Channel
+            </button>
+        </xpath>
+    </t>
+</templates>

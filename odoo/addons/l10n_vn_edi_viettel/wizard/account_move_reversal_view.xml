@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_move_reversal_inherit_l10n_vn_edi" model="ir.ui.view">
+            <field name="name">account.move.reversal.form.inherit.l10n_vn_edi</field>
+            <field name="model">account.move.reversal</field>
+            <field name="inherit_id" ref="account.view_account_move_reversal"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='reason']" position="after">
+                    <field name="country_code" invisible="True"/>
+                    <field name="l10n_vn_edi_adjustment_type" placeholder="Adjustment type..." invisible="country_code != 'VN'" required="country_code == 'VN'"/>
+                    <field name="l10n_vn_edi_agreement_document_name" invisible="country_code != 'VN'" placeholder="Agreement document name..."/>
+                    <field name="l10n_vn_edi_agreement_document_date" invisible="country_code != 'VN'" placeholder="Agreement document date..."/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

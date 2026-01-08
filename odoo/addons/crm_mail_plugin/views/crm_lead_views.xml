@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <odoo>
+    <!-- Called by the plugin to open a lead in edit mode -->
+        <record id="crm_lead_action_form_edit" model="ir.actions.act_window">
+              <field name="name">Lead: redirect form in edit mode</field>
+              <field name="res_model">crm.lead</field>
+              <field name="view_mode">form</field>
+              <field name="view_id" ref="crm.crm_lead_view_form"/>
+        </record>
+    </odoo>

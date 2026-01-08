@@ -1,0 +1,43 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="project.ChatterMessages">
+        <div class="o_portal_chatter_messages">
+            <t t-foreach="props.messages" t-as="message" t-key="message.id">
+                <div class="d-flex o_portal_chatter_message">
+                    <img class="o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
+                    <div class="flex-grow-1">
+                        <t t-if="props.isUserEmployee">
+                            <div t-if="message.is_message_subtype_note" class="float-end">
+                                <button class="btn btn-secondary" title="Internal notes are only displayed to internal users." disabled="true">Internal Note</button>
+                            </div>
+                            <div t-else=""
+                                 t-attf-class="float-end {{message.is_internal ? 'o_portal_message_internal_on' : 'o_portal_message_internal_off'}}"
+                                 t-on-click="() => this.toggleMessageVisibility(message)"
+                            >
+                                <button class="btn btn-danger"
+                                       title="Currently restricted to internal employees, click to make it available to everyone viewing this document."
+                                >
+                                    Employees Only
+                                </button>
+                                <button class="btn btn-success"
+                                       title="Currently available to everyone viewing this document, click to restrict to internal employees."
+                                >
+                                    Visible
+                                </button>
+                            </div>
+                        </t>
+                        <div class="o_portal_chatter_message_title">
+                            <h5 class='mb-1'><t t-out="message.author_id[1]"/></h5>
+                            <p class="o_portal_chatter_puslished_date">Published on <t t-out="message.published_date_str"/></p>
+                        </div>
+                        <t t-out="message.body"/>
+                        <div class="o_portal_chatter_attachments">
+                            <ChatterAttachmentsViewer attachments="message.attachment_ids"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

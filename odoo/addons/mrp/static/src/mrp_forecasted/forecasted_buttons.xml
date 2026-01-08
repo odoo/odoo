@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp.ForecastedButtons" t-inherit="stock.ForecastedButtons" t-inherit-mode="extension">
+        <xpath expr="//button[@title='Replenish']" position="after">
+            <button t-if="bomId" t-name="mrp_replenish_report_buttons"
+                class="btn btn-primary o_bom_overview_report"
+                type="button" title="Manufacturing Forecast"
+                t-on-click="_onClickBom">
+                Manufacturing Forecast
+            </button>
+        </xpath>
+    </t>
+</templates>

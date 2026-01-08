@@ -1,0 +1,245 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_purchase
+# 
+# Translators:
+# Jumshud Sultanov <cumshud@gmail.com>, 2024
+# erpgo translator <jumshud@erpgo.az>, 2024
+# Nurlan Farajov <coolinuxoid@gmail.com>, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2025\n"
+"Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: az\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid ""
+".\n"
+"            Manual actions may be needed."
+msgstr ""
+".\n"
+"            Əllə hərəkətlərin edilməsi lazım ola bilər."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
+msgid "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "<span class=\"o_stat_text\">Purchase</span>"
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
+msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
+msgid ""
+"<span id=\"display_invoice_alert\" position=\"after\">\n"
+"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
+"                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>\n"
+"                </span>\n"
+"            </span>"
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "Exception(s) occurred on the purchase order(s):"
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+msgid "Exception(s) occurred on the sale order(s):"
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "Exception(s):"
+msgstr "İstisna(lar)"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
+msgid "Generated Purchase Lines"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,help:sale_purchase.field_product_template__service_to_purchase
+msgid ""
+"If ticked, each time you sell this product through a SO, a RfQ is "
+"automatically created to buy the product. Tip: don't forget to set a vendor "
+"on the product."
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+msgid "Manual actions may be needed."
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
+msgid "Number of Purchase Order Generated"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
+msgid "Number of Source Sale"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
+msgid "Number of generated purchase items"
+msgstr ""
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/sale_order_line.py:0
+#, python-format
+msgid "Ordered quantity decreased!"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
+msgid "Origin Sale Item"
+msgstr ""
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/product_template.py:0
+#, python-format
+msgid ""
+"Please define the vendor from whom you would like to purchase this service "
+"automatically."
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_product_template
+msgid "Product"
+msgstr "Məhsul"
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/product_template.py:0
+#, python-format
+msgid "Product that is not a service can not create RFQ."
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_purchase_order
+msgid "Purchase Order"
+msgstr "Satın Alma Sifarişi"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_cancel__display_purchase_orders_alert
+msgid "Purchase Order Alert"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Satınalma Sifariş Xətti"
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
+msgid ""
+"Purchase line generated by this Sales item on order confirmation, or when "
+"the quantity was increased."
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
+msgid "Reordering"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
+msgid "Sale Order"
+msgstr "satış sifarişi"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order
+msgid "Sales Order"
+msgstr "Satış Sifarişi"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr "Satış Sifarişini Ləğv et"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Satış Sifarişi Sətri"
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/purchase_order.py:0
+#, python-format
+msgid "Sources Sale Orders %s"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
+msgid "Subcontract Service"
+msgstr ""
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"There is no vendor associated to the product %s. Please define a vendor for "
+"this product."
+msgstr ""
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"You are decreasing the ordered quantity! Do not forget to manually update "
+"the purchase order if needed."
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "cancelled"
+msgstr "Ləğv olundu"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "of"
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+msgid "ordered instead of"
+msgstr "əvəzinə sifariş verildi"

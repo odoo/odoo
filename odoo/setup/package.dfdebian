@@ -1,0 +1,63 @@
+# Please note that this Dockerfile is used for testing nightly builds and should
+# not be used to deploy Odoo
+FROM debian:bookworm
+MAINTAINER Odoo S.A. <info@odoo.com>
+
+RUN apt-get update && \
+    apt-get install -y locales && \
+    rm -rf /var/lib/apt/lists/*
+
+# Reconfigure locales such that postgresql uses UTF-8 encoding
+RUN dpkg-reconfigure locales && \
+    locale-gen C.UTF-8 && \
+    /usr/sbin/update-locale LANG=C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update -qq &&  \
+    apt-get upgrade -qq -y && \
+    apt-get install -qq -y\
+        adduser \
+        dh-python \
+        packaging-dev \
+        postgresql \
+        postgresql-client \
+        python3 \
+        python3-babel \
+        python3-dateutil \
+        python3-decorator \
+        python3-docutils \
+        python3-geoip2 \
+        python3-gevent \
+        python3-pil \
+        python3-jinja2 \
+        python3-libsass \
+        python3-lxml \
+        python3-ofxparse \
+        python3-passlib \
+        python3-polib \
+        python3-psutil \
+        python3-psycopg2 \
+        python3-pydot \
+        python3-openssl \
+        python3-pypdf2 \
+        python3-rjsmin \
+        python3-qrcode \
+        python3-renderpm \
+        python3-reportlab \
+        python3-requests \
+        python3-serial \
+        python3-setuptools \
+        python3-stdnum \
+        python3-tz \
+        python3-usb \
+        python3-vobject \
+        python3-werkzeug \
+        python3-xlsxwriter \
+        python3-zeep \
+        rsync && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc
+
+USER odoo

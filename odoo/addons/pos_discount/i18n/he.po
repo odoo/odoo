@@ -1,0 +1,133 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_discount
+# 
+# Translators:
+# ExcaliberX <excaliberx@gmail.com>, 2023
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
+# tomerlayline, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: tomerlayline, 2024\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: he\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+
+#. module: pos_discount
+#. odoo-python
+#: code:addons/pos_discount/models/pos_config.py:0
+#, python-format
+msgid ""
+"A discount product is needed to use the Global Discount feature. Go to Point"
+" of Sale > Configuration > Settings to set it."
+msgstr ""
+"דרוש מוצר הנחה כדי להשתמש בתכונת ההנחה הגלובלית, עבור אל קופה> תצורה> הגדרות"
+" כדי להגדיר זאת."
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
+msgid "Allow the cashier to give discounts on the whole order."
+msgstr "אפשר לקופאי לתת הנחה לכל ההזמנה."
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_res_config_settings
+msgid "Config Settings"
+msgstr "הגדר הגדרות"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.xml:0
+#, python-format
+msgid "Discount"
+msgstr "הנחה"
+
+#. module: pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
+msgid "Discount %"
+msgstr " % הנחה"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
+#, python-format
+msgid "Discount Percentage"
+msgstr "אחוז הנחה"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
+msgid "Discount Product"
+msgstr "מוצר הנחה"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#, python-format
+msgid "No discount product found"
+msgstr "לא נמצא מוצר הנחה"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#, python-format
+msgid "No tax"
+msgstr ""
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
+msgid "Order Discounts"
+msgstr "הנחות בהזמנה"
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "תצורת קופה"
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_pos_session
+msgid "Point of Sale Session"
+msgstr "משמרת קופה "
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
+msgid "Pos Discount Product"
+msgstr "pos מוצר הנחה"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#, python-format
+msgid "Tax: %s"
+msgstr ""
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
+msgid "The default discount percentage when clicking on the Discount button"
+msgstr "אחוז ההנחה ברירת המחדל כאשר לוחצים על כפתור ההנחה"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#, python-format
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
+"נראה כי מוצר ההנחה מוגדר בצורה שגויה. ודא שהוא מסומן כ- 'ניתן למכירה' ו'זמין"
+" בקופה'."
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
+msgid "The product used to apply the discount on the ticket."
+msgstr "המוצר המשמש להחלת ההנחה על הכרטיס."

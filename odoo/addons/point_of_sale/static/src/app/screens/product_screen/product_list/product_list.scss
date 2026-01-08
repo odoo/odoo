@@ -1,0 +1,22 @@
+.product-list {
+    grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
+}
+
+@media only screen and (max-width: 768px) {
+    .product-list.grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.button-no-demo {
+    color: #017e84 !important;
+}
+
+.scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}

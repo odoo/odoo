@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.mrp</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="35"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <app data-string="Manufacturing" string="Manufacturing" name="mrp" groups="mrp.group_mrp_manager">
+                        <block title="Operations" name="process_operations_setting_container">
+                            <setting id="work_order" string="Work Orders" help="Process operations at specific work centers" documentation="/applications/inventory_and_mrp/manufacturing/management/bill_configuration.html#adding-a-routing" title="Work Order Operations allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required components.">
+                                <field name="group_mrp_routings"/>
+                                <div id="workorder_settings_workcenters" class="content-group" invisible="not group_mrp_routings">
+                                    <div class="mt8">
+                                        <div>
+                                            <button name="%(mrp.mrp_workcenter_action)d" icon="oi-arrow-right" type="action" string="Work Centers" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="workorder_settings_dependencies" class="row mt-2" invisible="not group_mrp_routings">
+                                    <field name="group_mrp_workorder_dependencies" class="col flex-grow-0 ml16 mr0 pe-2"/>
+                                    <div class="col ps-0">
+                                        <label for="group_mrp_workorder_dependencies"/>
+                                        <div class="text-muted">
+                                            Set the order that work orders should be processed in. Activate the feature within each BoM's Miscellaneous tab
+                                        </div>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting help="Subcontract the production of some products" documentation="/applications/inventory_and_mrp/manufacturing/management/subcontracting.html">
+                                <field name="module_mrp_subcontracting"/>
+                            </setting>
+                            <setting id="process_mrp_barcodes" help="Process manufacturing orders from the barcode application">
+                                <field name="module_stock_barcode" widget="upgrade_boolean"/>
+                            </setting>
+                            <setting id="quality_control_mrp" help="Add quality checks to your work orders">
+                                <field name="module_quality_control" widget="upgrade_boolean"/>
+                                <div class="row mt-2" invisible="not module_quality_control">
+                                    <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col flex-grow-0 ml16 mr0 pe-2"/>
+                                    <div class="col ps-0">
+                                        <label for="module_quality_control_worksheet"/>
+                                        <div class="text-muted">
+                                            Create customizable worksheets for your quality checks
+                                        </div>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting help="Allow manufacturing users to modify quantities to consume, without the need for prior approval" id="mrp_lock">
+                                <field name="group_unlocked_by_default"/>
+                            </setting>
+                            <setting id="mrp_byproduct" help="Produce residual products (A + B -> C + D)" title="Add by-products to bills of materials. This can be used to get several finished products as well. Without this option you only do: A + B = C. With the option: A + B = C + D.">
+                                <field name="group_mrp_byproducts"/>
+                            </setting>
+                            <setting id="mrp_reception_report" help="View and allocate manufactured quantities">
+                                <field name="group_mrp_reception_report"/>
+                            </setting>
+                        </block>
+                        <block title="Planning">
+                            <setting id="mrp_mps" help="Plan manufacturing or purchase orders based on forecasts" documentation="/applications/inventory_and_mrp/manufacturing/management/use_mps.html" title="Using a MPS report to schedule your reordering and manufacturing operations is useful if you have long lead time and if you produce based on sales forecasts.">
+                                <field name="module_mrp_mps" widget="upgrade_boolean"/>
+                            </setting>
+                            <setting id="security_lead_time" string="Security Lead Time" company_dependent="1" help="Schedule manufacturing orders earlier to avoid delays" documentation="/applications/inventory_and_mrp/inventory/management/planning/scheduled_dates.html">
+                                <field name="use_manufacturing_lead"/>
+                                <div class="content-group" invisible="not use_manufacturing_lead">
+                                    <div class="mt16" >
+                                        <field name="manufacturing_lead" class="oe_inline"/> days
+                                    </div>
+                                </div>
+                            </setting>
+                        </block>
+                    </app>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_mrp_configuration" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'mrp', 'bin_size': False}</field>
+        </record>
+
+        <menuitem id="menu_mrp_config" name="Settings" parent="menu_mrp_configuration"
+            sequence="0" action="action_mrp_configuration" groups="base.group_system"/>
+    </data>
+</odoo>

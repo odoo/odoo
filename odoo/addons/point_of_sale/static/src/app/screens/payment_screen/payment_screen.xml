@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.PaymentScreen">
+        <t t-if="ui.isSmall">
+            <div class="payment-screen screen d-flex flex-column h-100 bg-100" t-att-class="{ 'd-none': !props.isShown }">
+                <PaymentScreenStatus order="currentOrder" />
+                <t t-call="point_of_sale.PaymentScreenMethods" />
+                <t t-call="point_of_sale.PaymentScreenButtons" />
+                <t t-call="point_of_sale.PaymentScreenValidate" />
+            </div>
+        </t>
+        <t t-else="">
+            <div class="payment-screen screen d-flex flex-column h-100 bg-100" t-att-class="{ 'd-none': !props.isShown }">
+                <t t-call="point_of_sale.PaymentScreenTop" />
+                <div class="main-content d-flex overflow-auto h-100">
+                    <div class="left-content d-flex flex-column w-25 bg-400">
+                        <t t-call="point_of_sale.PaymentScreenMethods" />
+                        <t t-call="point_of_sale.PaymentScreenValidate" />
+                    </div>
+                    <div class="center-content d-flex flex-column w-50 p-1 border-start border-end bg-300" >
+                        <PaymentScreenStatus order="currentOrder" />
+                        <Numpad class="'flex-grow-1'"  buttons="getNumpadButtons()" />
+                    </div>
+                    <div class="right-content w-25 bg-400">
+                        <t t-call="point_of_sale.PaymentScreenButtons" />
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="point_of_sale.PaymentScreenTop">
+        <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
+            <div class="button back btn btn-lg btn-secondary" t-on-click="() => pos.showScreen('ProductScreen')">
+                <i class="fa fa-angle-double-left me-2" />
+                <span class="back_text">Back</span>
+            </div>
+            <div class="top-content-center flex-grow-1">
+                <h2 class="mb-0">Payment</h2>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.PaymentScreenValidate">
+        <t t-if="ui.isSmall">
+            <div class="switchpane d-flex h-12">
+                <button class="btn-switchpane validation-button btn btn-primary flex-fill py-4 rounded-0 fw-bolder fs-1"
+                    t-att-class="{ secondary: !(currentOrder.is_paid() and currentOrder._isValidEmptyOrder()) }"
+                    t-on-click="() => this.validateOrder()">
+                    <span>Validate</span>
+                </button>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="button next validation btn btn-primary btn-lg py-5 rounded-0 d-flex flex-column align-items-center justify-content-center fw-bolder" 
+                t-attf-class="{{currentOrder.is_paid() and currentOrder._isValidEmptyOrder() ? 'highlight' : 'disabled'}}"
+                t-on-click="() => this.validateOrder()">
+                <div class="pay-circle d-flex align-items-center justify-content-center mb-2">
+                    <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
+                </div>
+                <span class="next_text">Validate</span>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="point_of_sale.PaymentScreenButtons">
+        <div class="payment-buttons d-flex flex-column flex-wrap">
+            <button class="button partner-button btn btn-light py-3 text-start rounded-0 border-bottom" 
+                t-att-class="{ 'highlight text-bg-primary': currentOrder.get_partner() }" 
+                t-on-click="() => this.selectPartner(false, [])">
+                <i class="fa fa-user me-2" role="img" title="Customer" />
+                <span class="partner-name">
+                    <t t-if="currentOrder.get_partner()" t-esc="currentOrder.get_partner().name"/>
+                    <t t-else="">Customer</t>
+                </span> 
+            </button>
+            <button class="button js_invoice btn btn-light py-3 text-start rounded-0 border-bottom" t-att-class="{ 'highlight text-bg-primary': currentOrder.is_to_invoice() }" 
+                t-on-click="toggleIsToInvoice">
+                <i class="fa fa-file-text-o me-2" />Invoice 
+            </button>
+            <button t-if="pos.config.iface_tipproduct and pos.config.tip_product_id" class="button js_tip btn btn-light py-3 text-start rounded-0 border-bottom" t-att-class="{ 'highlight text-bg-primary': currentOrder.get_tip() }" 
+                t-on-click="addTip">
+                <i class="fa fa-heart me-2" />Tip 
+                <t t-if="currentOrder.get_tip() != 0">
+                    (<t t-esc="env.utils.formatCurrency(currentOrder.get_tip())" />)
+                </t>
+            </button>
+            <button t-if="pos.config.iface_cashdrawer" class="button js_cashdrawer btn btn-light py-3 text-start rounded-0 border-bottom" 
+                t-on-click="openCashbox">
+                <i class="fa fa-archive me-2" />Open Cashbox 
+            </button>
+            <button t-if="pos.config.ship_later" class="button btn btn-light py-3 text-start rounded-0 border-bottom" t-att-class="{ 'highlight text-bg-primary': currentOrder.getShippingDate() }" 
+                t-on-click="toggleShippingDatePicker">
+                <i class="fa fa-clock-o me-2" />Ship Later 
+                <span t-if="currentOrder.getShippingDate()">
+                    (<t t-esc="currentOrder.getShippingDate()" />)
+                </span>
+            </button>
+        </div>
+    </t>
+
+
+    <t t-name="point_of_sale.PaymentScreenMethods">
+        <div class="paymentmethods-container overflow-y-auto flex-grow-1">
+            <div class="paymentmethods d-flex flex-column">
+                <h4 class="title-category pt-3 pb-2 px-3 m-0 bg-view border-bottom border-2">Payment method</h4>
+                <t t-foreach="payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
+                    <div class="button paymentmethod btn btn-light rounded-0 border-bottom" t-on-click="() => this.addNewPaymentLine(paymentMethod)">
+                        <div class="payment-method-display d-flex align-items-center flex-grow-1">
+                            <div>
+                                <img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)" />
+                            </div>
+                            <span class="payment-name" t-esc="paymentMethod.name" />
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <PaymentScreenPaymentLines paymentLines="paymentLines" deleteLine.bind="deletePaymentLine" sendForceDone.bind="sendForceDone" sendPaymentReverse.bind="sendPaymentReverse" sendPaymentCancel.bind="sendPaymentCancel" sendPaymentRequest.bind="sendPaymentRequest" selectLine.bind="selectPaymentLine" updateSelectedPaymentline.bind="updateSelectedPaymentline" />
+        </div>
+    </t>
+</templates>

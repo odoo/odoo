@@ -1,0 +1,137 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* purchase_mrp
+# 
+# Translators:
+# Tina Milas, 2024
+# Bole <bole@dajmi5.com>, 2024
+# Martin Trigaux, 2024
+# Vladimir Vrgoč, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Vladimir Vrgoč, 2024\n"
+"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.purchase_order_form_mrp
+msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+msgstr "<span class=\"o_stat_text\">Proizvodnja</span>"
+
+#. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.mrp_production_form_view_purchase
+msgid "<span class=\"o_stat_text\">Purchases</span>"
+msgstr "<span class=\"o_stat_text\">Nabave</span>"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_report_mrp_report_bom_structure
+msgid "BOM Overview Report"
+msgstr "Izvještaj sastavnice"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Sastavnica"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_bom_line
+msgid "Bill of Material Line"
+msgstr "Stavka sastavnice"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_bom.py:0
+#, python-format
+msgid "Components cost share have to be positive or equals to zero."
+msgstr ""
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__cost_share
+msgid "Cost Share (%)"
+msgstr ""
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
+msgid "Count of MO Source"
+msgstr "Broj izvornih PN"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__purchase_order_count
+msgid "Count of generated PO"
+msgstr "Broj generiranih naloga za nabavu"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_account_move_line
+msgid "Journal Item"
+msgstr "Stavka dnevnika"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_report_mrp_report_mo_overview
+msgid "MO Overview Report"
+msgstr ""
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/purchase.py:0
+#, python-format
+msgid "Manufacturing Source of %s"
+msgstr "Proizvodni izvor za %s"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/stock_move.py:0
+#, python-format
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
+msgstr ""
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_production
+msgid "Production Order"
+msgstr "Proizvodni nalog"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_purchase_order
+msgid "Purchase Order"
+msgstr "Nalog za nabavu"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Stavka naloga nabave"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_production.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr "Nalog za nabavu generiran iz %s"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "Skladišni prijenos"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,help:purchase_mrp.field_mrp_bom_line__cost_share
+msgid ""
+"The percentage of the component repartition cost when purchasing a kit.The "
+"total of all components' cost have to be equal to 100."
+msgstr ""
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_bom.py:0
+#, python-format
+msgid "The total cost share for a BoM's component have to be 100"
+msgstr ""

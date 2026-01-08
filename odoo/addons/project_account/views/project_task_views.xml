@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_task_form_view_account_inherit" model="ir.ui.view">
+        <field name="name">project.task.form.view.account.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </field>
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="attributes">
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='partner_id']" position="attributes">
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_tree_view_account_inherit" model="ir.ui.view">
+        <field name="name">project.task.tree.view.account.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_task_view_tree_base"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>

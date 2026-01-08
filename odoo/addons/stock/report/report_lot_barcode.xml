@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<template id="report_lot_label">
+    <t t-call="web.basic_layout">
+        <t t-set='nRows' t-value='12'/>
+        <t t-set='nCols' t-value='4'/>
+        <div class="oe_structure"></div>
+        <div t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]" t-as="page_docs" class="o_label_sheet" t-att-style="'padding: 20mm 8mm'">
+            <table class="my-0 table table-sm table-borderless">
+                <t t-foreach="range(nRows)" t-as="row">
+                    <tr>
+                        <t t-foreach="range(nCols)" t-as="col">
+                            <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                            <t t-if="barcode_index &lt; len(page_docs)">
+                                <t t-set="o" t-value="page_docs[barcode_index]"/>
+                            </t>
+                            <t t-else="">
+                                <t t-set="o" t-value="page_docs[0]"/>
+                            </t>
+                            <td t-att-style="barcode_index &gt;= len(page_docs) and 'visibility:hidden'">
+                                <div t-att-style="'position:relative; width:43mm; height:19mm; border: 1px solid %s;' % (o.env.user.company_id.primary_color or 'black')">
+                                    <t t-set="final_barcode" t-value="''"/>
+                                    <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
+                                        <t t-if="o.product_id.valid_ean" t-set="final_barcode" t-value="'01' + '0' * (14 - len(o.product_id.barcode)) + o.product_id.barcode"/>
+                                        <t name="gs1_datamatrix_lot" t-if="o.product_id.tracking == 'lot'" t-set="final_barcode" t-value="(final_barcode or '') + '10' + o.name"/>
+                                        <t t-elif="o.product_id.tracking == 'serial'" t-set="final_barcode" t-value="(final_barcode or '') + '21' + o.name"/>
+                                    </t>
+                                    <div t-if="o.product_id.default_code" class="o_label_4x12" t-att-style="'width:22mm' if final_barcode else ''">
+                                        <span class="o_label_4x12 lh-1">[<t t-out="o.product_id.default_code"/>]</span>
+                                    </div>
+                                    <div class="o_label_4x12" t-att-style="'width:22mm' if final_barcode else ''">
+                                        <span class="o_label_4x12 lh-1" t-field="o.product_id.name" >Demo Product</span>
+                                    </div>
+                                    <div class="o_label_4x12" name="lot_name" t-att-style="'width:22mm; ' if final_barcode else ''">
+                                        <span class="o_label_4x12 lh-1" name="lot_name" t-field="o.name">Demo Name</span>
+                                    </div>
+                                    <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
+                                        <div t-if="final_barcode" t-att-style="'position:absolute; right:.5px; bottom:.5px'">
+                                            <span t-out="final_barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'img_style': 'width:17mm; height:17mm'}">12345678901</span>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-field="o.name" t-options="{'widget': 'barcode', 'img_style': 'width:100%; height:35%'}">Customizable Desk</span>
+                                    </t>
+                                </div>
+                            </td>
+                        </t>
+                    </tr>
+                </t>
+            </table>
+            <div class="oe_structure"></div>
+        </div>
+    </t>
+</template>
+</data>
+</odoo>

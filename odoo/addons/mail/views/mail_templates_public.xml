@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mail.public_layout">
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+            <t t-set="head">
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+                <title t-translation="off">
+                    <t t-if="additional_title"><t t-out="additional_title"/> | </t><t t-out="res_company.name"/>
+                </title>
+            </t>
+            <t t-out="0"/>
+        </t>
+    </template>
+
+    <template id="mail.message_document_unfollowed">
+        <t t-call="mail.public_layout">
+            <t t-set="additional_title">&quot;<t t-out="name"/>&quot; no longer followed</t>
+            <div class="h-100 d-flex align-items-center justify-content-center">
+                <div>
+                    <h1 t-out="model_name"/>
+                    <div class="alert alert-success text-center p-5" role="status">
+                        <strong>You are no longer following the document:</strong>
+                        <div class="pt-4">
+                            <a t-if="access_url" class="o_access_record_link" t-att-href="access_url" t-out="name"/>
+                            <i t-else="" t-out="name"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

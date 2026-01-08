@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="modal_ticket_registration" inherit_id="website_event.modal_ticket_registration">
+    <!-- Change pricelist -->
+    <xpath expr="//div[hasclass('o_wevent_price_range')]" position="after">
+        <div id="o_wevent_tickets_pricelist" class="collapse show">
+            <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
+            <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
+            <t t-call="website_sale.pricelist_list">
+                <t t-set="_classes" t-valuef="d-inline p-0 ms-2 my-1"/>
+            </t>
+        </div>
+    </xpath>
+    <!-- Add price information on tickets (multi tickets, aka in collapse) -->
+    <xpath expr="//div[hasclass('o_wevent_registration_multi_select')]" position="inside">
+        <t t-if="ticket.price">
+            <t t-if="(ticket.price - ticket.price_reduce) &gt; 0 and website.pricelist_id.discount_policy == 'without_discount'">
+                <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                     class="text-danger me-1"
+                     t-field="ticket.price"
+                     t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                <del t-else=""
+                     class="text-danger me-1"
+                     t-field="ticket.price_incl"
+                     t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+            </t>
+            <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                  class="fs-6"
+                  t-field="ticket.price_reduce"
+                  t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+            <span t-else=""
+                  t-field="ticket.price_reduce_taxinc"
+                  class="fs-6"
+                  t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+            <span itemprop="price" class="d-none" t-out="ticket.price"/>
+            <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
+        </t>
+        <span t-else="" class="badge text-bg-success rounded-pill p-2 px-3">Free</span>
+    </xpath>
+    <xpath expr="//div[hasclass('o_wevent_price_range')]" position="inside">
+        <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" t-set="all_prices" t-value="event.event_ticket_ids.mapped('price_reduce')"/>
+        <t t-else="" t-set="all_prices" t-value="event.event_ticket_ids.mapped('price_reduce_taxinc')"/>
+        <t t-set="lowest_price" t-value="min(all_prices)"/>
+        <t t-set="highest_price" t-value="max(all_prices)"/>
+        <t t-if="highest_price > 0">
+            <small class="text-muted">
+                From
+                <span t-out="lowest_price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                <t t-if="lowest_price != highest_price">
+                    to
+                    <span t-out="highest_price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                </t>
+            </small>
+        </t>
+    </xpath>
+    <!-- Add price information on tickets (mono ticket, aka not in collapse) -->
+    <xpath expr="//div[hasclass('o_wevent_registration_single_select')]" position="before">
+        <div class="flex-md-grow-1 me-2 text-end">
+            <t t-if="tickets.price">
+                <t t-if="(tickets.price - tickets.price_reduce) &gt;0 and website.pricelist_id.discount_policy == 'without_discount'">
+                    <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                         class="text-danger me-1"
+                         t-field="tickets.price"
+                         t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                    <del t-else=""
+                         class="text-danger me-1"
+                         t-field="tickets.price_incl"
+                         t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                </t>
+                <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                      class="badge text-bg-secondary fs-6"
+                      t-field="tickets.price_reduce"
+                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                <span t-else=""
+                      class="badge text-bg-secondary fs-6"
+                      t-field="tickets.price_reduce_taxinc"
+                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                <span itemprop="price" class="d-none" t-out="tickets.price"/>
+                <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
+            </t>
+            <span t-else="" class="badge text-bg-secondary fs-6 text-uppercase">Free</span>
+        </div>
+    </xpath>
+</template>
+
+<template id="registration_attendee_details" inherit_id="website_event.registration_attendee_details">
+    <!-- Change 'continue' button to use the website login settings -->
+    <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-primary')]" position="replace">
+        <t t-if="website.account_on_checkout == 'mandatory' and website.is_public_user()">
+            <a class="btn btn-primary" t-attf-href="/web/login?redirect=/event/#{slug(event)}">
+                <span>Sign In</span>
+                <span class="fa fa-sign-in"/>
+            </a>
+        </t>
+        <t t-else="">
+            <t t-set="has_paying_ticket" t-value="any(ticket.get('price', 0) > 0 for ticket in tickets)"/>
+            <button t-if="availability_check" type="submit" class="btn btn-primary">
+                <span t-if="has_paying_ticket">Go to Payment</span>
+                <span t-else="">Confirm Registration</span>
+            </button>
+        </t>
+    </xpath>
+</template>
+
+</odoo>

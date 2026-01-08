@@ -1,0 +1,338 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_stripe
+# 
+# Translators:
+# Iran Villalobos López, 2023
+# Fernanda Alvarez, 2024
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_419\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+#, python-format
+msgid "Cannot display the payment form"
+msgstr "No se puede mostrar el formulario de pago"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__code
+msgid "Code"
+msgstr "Código"
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
+msgid "Connect Stripe"
+msgstr "Conectar a Stripe"
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "No se pudo establecer la conexión con la API."
+
+#. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "Delivery"
+msgstr "Entrega"
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
+msgid "Enable Apple Pay"
+msgstr "Habilitar Apple Pay"
+
+#. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Envío gratis"
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
+msgid "Generate your webhook"
+msgstr "Genere su webhook"
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
+msgid "Get your Secret and Publishable keys"
+msgstr "Obtenga sus claves secreta y pública"
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_webhook_secret
+msgid ""
+"If a webhook is enabled on your Stripe account, this signing secret must be "
+"set to authenticate the messages sent from Stripe to Odoo."
+msgstr ""
+"Si cuenta con un webhook habilitado en su cuenta de Stripe, debe "
+"configurarlo para que autentifique los mensajes enviados desde Stripe a "
+"Odoo."
+
+#. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+#, python-format
+msgid "Incorrect payment details"
+msgstr "Detalles de pago incorrectos "
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "No se encontró ninguna transacción que coincida con la referencia %s."
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid "Other Payment Providers"
+msgstr "Otros proveedores de pago"
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_provider
+msgid "Payment Provider"
+msgstr "Proveedor de pago"
+
+#. module: payment_stripe
+#: model:ir.actions.act_window,name:payment_stripe.action_payment_provider_onboarding
+msgid "Payment Providers"
+msgstr "Proveedores de pago"
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_token
+msgid "Payment Token"
+msgstr "Token de pago"
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transacción de pago"
+
+#. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+#, python-format
+msgid "Payment processing failed"
+msgstr "Error al procesar el pago"
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid "Please use live credentials to enable Apple Pay."
+msgstr "Use datos reales para habilitar Apple Pay."
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_publishable_key
+msgid "Publishable Key"
+msgstr "Clave pública"
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid intent status: %s"
+msgstr "Datos recibidos con estado de intento no válido: %s"
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing intent status."
+msgstr "Datos recibidos sin estado de intento."
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing merchant reference"
+msgstr "Datos recibidos en los que falta la referencia del vendedor"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_secret_key
+msgid "Secret Key"
+msgstr "Clave secreta"
+
+#. module: payment_stripe
+#: model:ir.model.fields.selection,name:payment_stripe.selection__payment_provider__code__stripe
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
+msgstr ""
+"Stripe Connect no está disponible en su país, use otro proveedor de pago."
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_mandate
+msgid "Stripe Mandate"
+msgstr "Mandato de Stripe"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
+msgid "Stripe Payment Method ID"
+msgstr "ID del método de pago de Stripe"
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid "Stripe Proxy error: %(error)s"
+msgstr "Error del proxy de Stripe: %(error)s"
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid "Stripe Proxy: An error occurred when communicating with the proxy."
+msgstr "Proxy de Stripe: ocurrió un error al comunicarse con el proxy."
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid "Stripe Proxy: Could not establish the connection."
+msgstr "Proxy de Stripe: no se pudo establecer la conexión."
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The communication with the API failed.\n"
+"Stripe gave us the following info about the problem:\n"
+"'%s'"
+msgstr ""
+"La comunicación con la API falló.\n"
+"Stripe proporcionó la siguiente información sobre el problema:\n"
+"'%s'"
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "The customer left the payment page."
+msgstr "El cliente salió de la página de pago."
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_publishable_key
+msgid "The key solely used to identify the account with Stripe"
+msgstr "La clave que se utiliza solo para identificar la cuenta con Stripe"
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The refund did not go through. Please log into your Stripe Dashboard to get "
+"more information on that matter, and address any accounting discrepancies."
+msgstr ""
+"No se pudo realizar el reembolso. Para obtener más información y solucionar "
+"cualquier problema, inicie sesión y vaya a su tablero en Stripe."
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "El código técnico de este proveedor de pagos."
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr "La transacción no está vinculada a un token."
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_token.py:0
+#, python-format
+msgid "Unable to convert payment token to new API."
+msgstr "No se puede convertir el token de pago a la nueva API."
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_webhook_secret
+msgid "Webhook Signing Secret"
+msgstr "Secreto de webhook"
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid "You Stripe Webhook was successfully set up!"
+msgstr "¡Se configuró con éxito su webhook de Stripe!"
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
+msgstr ""
+"No puede crear un webhook de Stripe si no ha establecido su clave secreta de"
+" Stripe."
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot set the provider state to Enabled until your onboarding to Stripe"
+" is completed."
+msgstr ""
+"No es posible establecer el estado del proveedor como habilitado hasta que "
+"termine su integración con Stripe."
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot set the provider to Test Mode while it is linked with your Stripe"
+" account."
+msgstr ""
+"No puede establecer al proveedor en modo de prueba mientras esté vinculado a"
+" su cuenta de Stripe."
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid "Your Stripe Webhook is already set up."
+msgstr "Se configuró su webhook de Stripe."
+
+#. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "Your order"
+msgstr "Su orden"
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid "Your web domain was successfully verified."
+msgstr "Se verificó con éxito su dominio de sitio web."

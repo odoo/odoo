@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.ThemePreviewForm.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_control_panel_navigation')]" position="replace">
+        <div class="d-none d-md-flex align-items-end justify-content-end order-2 order-lg-1 w-100 gap-1" role="group">
+                <input class="btn-check" id="themeViewerDesktop" type="radio" name="viewer" data-mode='desktop' autocomplete="off" checked='checked'/>
+                <label class="btn btn-secondary" for="themeViewerDesktop" t-on-click="this.onDesktopClick">Desktop</label>
+                <input class="btn-check"  id="themeViewerMobile" type="radio" name="viewer" data-mode='mobile' autocomplete="off"/>
+                <label class="btn btn-secondary" for="themeViewerMobile" t-on-click="this.onMobileClick">Mobile</label>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="website.ThemePreviewFormController" t-inherit="web.FormView" t-inherit-mode="primary">
+        <xpath expr="//Layout" position="inside">
+            <t t-set-slot="layout-actions">
+                <div>
+                    <div class="o_form_buttons_view" role="toolbar" aria-label="Main actions">
+                        <ViewButton className="'btn btn-primary o_use_theme'"
+                                    clickParams="{type: 'object', name: 'button_choose_theme'}"
+                                    record="this.model.root">
+                            <t t-set-slot="contents">Start Now</t>
+                        </ViewButton>
+                        <button class="btn btn-link o_switch_theme" t-on-click.stop="this.back">
+                            Choose another theme
+                        </button>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="website.ThemePreviewKanban.ControlPanel.BreadCrumbs">
+            <div class="o_breadcrumb d-flex gap-1">
+                <div class="active d-flex flex-column">
+                    <div class="text-truncate">Pick a Theme</div>
+                    <div class="text-muted small">Don't worry, you can switch later.</div>
+                </div>
+            </div>
+    </t>
+
+    <t t-name="website.ThemePreviewKanban.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='web.Breadcrumbs']" position="replace">
+            <t t-call="website.ThemePreviewKanban.ControlPanel.BreadCrumbs"/>
+        </xpath>
+        <xpath expr="//div[contains(@class,'o_control_panel_navigation')]" position="replace">
+            <div>
+                <a class="btn btn-secondary" t-on-click="this.close" aria-label="Close" data-tooltip="Close">
+                    <i class="fa fa-times" />
+                </a>
+            </div>
+        </xpath>
+    </t>
+</templates>

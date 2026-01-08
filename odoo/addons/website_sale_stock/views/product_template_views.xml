@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_inherit_website_sale_stock" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.website.sale.stock</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="website_sale.product_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='public_categ_ids']" position="after">
+                <label for="allow_out_of_stock_order" invisible="type in ['service', 'consu']" string="Out-of-Stock"/>
+                <div invisible="type in ['service', 'consu']">
+                    <field name="allow_out_of_stock_order" class="oe_inline" /> Continue Selling
+                </div>
+
+                <label for="show_availability" invisible="type in ['service', 'consu']" string="Show Available Qty"/>
+                <div invisible="type in ['service', 'consu']">
+                    <field name="show_availability" class="oe_inline" />
+                    <span invisible="not show_availability">
+                        <label for="available_threshold" string="only if below" class="o_light_label"/>
+                        <field name="available_threshold" class="oe_inline col-1" widget="integer"/>
+                        Units
+                    </span>
+                </div>
+                <field name="out_of_stock_message" invisible="type in ['service', 'consu']"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

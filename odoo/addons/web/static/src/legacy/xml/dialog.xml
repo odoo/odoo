@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<!-- These templates are accessible in backend and frontend -->
+
+<t t-name="web.DialogWidget">
+    <div role="dialog"
+        t-attf-class="modal o_legacy_dialog #{ technical ? ' o_technical_modal' : '' } #{ fullscreen ? ' o_modal_full': '' }"
+        tabindex="-1"
+        data-bs-backdrop="static"
+        t-att-id="uniqueId"
+        aria-hidden="true"
+        >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <header t-if="renderHeader" class="modal-header">
+                    <h4 class="modal-title"><t t-out="title"/><span class="o_subtitle text-muted small" t-out="subtitle"/></h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" tabindex="-1"></button>
+                </header>
+                <main class="modal-body"/>
+                <footer t-if="renderFooter" class="modal-footer justify-content-around justify-content-md-start flex-wrap gap-1"/>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

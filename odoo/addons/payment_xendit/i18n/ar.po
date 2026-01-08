@@ -1,0 +1,107 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_xendit
+# 
+# Translators:
+# Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-29 10:46+0000\n"
+"PO-Revision-Date: 2024-01-23 08:23+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"An error occurred during the processing of your payment (status %s). Please "
+"try again."
+msgstr "حدث خطأ أثناء معالجة عملية الدفع (الحالة %s). يرجى المحاولة مجدداً. "
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__code
+msgid "Code"
+msgstr "رمز "
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "تعذر إنشاء الاتصال بالواجهة البرمجية للتطبيق. "
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "لم يتم العثور على معاملة تطابق المرجع %s. "
+
+#. module: payment_xendit
+#: model:ir.model,name:payment_xendit.model_payment_provider
+msgid "Payment Provider"
+msgstr "مزود الدفع "
+
+#. module: payment_xendit
+#: model:ir.model,name:payment_xendit.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "معاملة الدفع "
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference."
+msgstr "تم استلام البيانات دون مرجع. "
+
+#. module: payment_xendit
+#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
+msgid "Secret Key"
+msgstr "المفتاح السري "
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+#, python-format
+msgid ""
+"The communication with the API failed. Xendit gave us the following "
+"information: '%s'"
+msgstr ""
+"فشل التواصل مع الواجهة البرمجية للتطبيق. لقد منحنا Xendit المعلومات التالية:"
+" '%s' "
+
+#. module: payment_xendit
+#: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "الكود التقني لمزود الدفع هذا. "
+
+#. module: payment_xendit
+#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
+msgid "Webhook Token"
+msgstr "رمز Webhook "
+
+#. module: payment_xendit
+#: model:ir.model.fields.selection,name:payment_xendit.selection__payment_provider__code__xendit
+msgid "Xendit"
+msgstr "Xendit"
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_secret_key
+msgid "Xendit Secret Key"
+msgstr "المفتاح السري لـ Xendit "
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_webhook_token
+msgid "Xendit Webhook Token"
+msgstr "رمز ويب هوك Xendit "

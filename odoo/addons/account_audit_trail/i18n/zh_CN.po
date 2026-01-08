@@ -1,0 +1,227 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_audit_trail
+# 
+# Translators:
+# Martin Trigaux, 2023
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
+# Wil Odoo, 2024
+# Chloe Wang, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"PO-Revision-Date: 2023-12-23 23:00+0000\n"
+"Last-Translator: Chloe Wang, 2025\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_account_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_account_id
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Account"
+msgstr "账户"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_display_name
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_display_name
+msgid "Account Audit Log Display Name"
+msgstr "账户审计日志显示名称"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Activate Audit Trail"
+msgstr "激活审计跟踪"
+
+#. module: account_audit_trail
+#: model:ir.actions.act_window,name:account_audit_trail.action_account_audit_trail_report
+#: model:ir.model.fields,field_description:account_audit_trail.field_res_company__check_account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_res_config_settings__check_account_audit_trail
+#: model:ir.ui.menu,name:account_audit_trail.account_audit_trail_menu
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Audit Trail"
+msgstr "审计跟踪"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "银行对账单行"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/res_config_settings.py:0
+#, python-format
+msgid "Can't disable audit trail when there are existing records."
+msgstr "当已有记录时，无法禁用审计跟踪。"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Changed"
+msgstr "已修改"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Company"
+msgstr "公司"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_company_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_company_id
+msgid "Company "
+msgstr "公司"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设定"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Create Only"
+msgstr "只限创建"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Date"
+msgstr "日期"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_preview
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_preview
+msgid "Description"
+msgstr "描述"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Go to Audit Trail"
+msgstr "转到审计跟踪"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Group By"
+msgstr "分组方式"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_account_move
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_move_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_move_id
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Journal Entry"
+msgstr "日记账分录"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_mail_tracking_value
+msgid "Mail Tracking Value"
+msgstr "邮件追踪值"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "合并业务伙伴向导"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_mail_message
+msgid "Message"
+msgstr "消息"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Messages Search"
+msgstr "消息搜索"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log
+msgid "Name"
+msgstr "名称"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "操作不支持"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_partner_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_partner_id
+msgid "Partner"
+msgstr "业务伙伴"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Partners"
+msgstr "合作伙伴"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Record"
+msgstr "记录"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__show_audit_log
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__show_audit_log
+msgid "Show Audit Log"
+msgstr "显示审计日志"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_tax_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_tax_id
+msgid "Tax"
+msgstr "税金"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Taxes"
+msgstr "税金"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/account_move.py:0
+#, python-format
+msgid ""
+"To keep the audit trail, you can not delete journal entries once they have been posted.\n"
+"Instead, you can cancel the journal entry."
+msgstr ""
+"为保留审计线索，日记账分录发布后不能删除。\n"
+"相反，您可以取消日记账分录。"
+
+#. module: account_audit_trail
+#: model_terms:ir.actions.act_window,help:account_audit_trail.action_account_audit_trail_report
+msgid ""
+"To see the audit log you have to enable the audit trail option from settings"
+msgstr "要查看审计日志，必须从设置中启用审计跟踪选项"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Update Only"
+msgstr "仅更新"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Updated"
+msgstr "已更新"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "You cannot remove parts of the audit trail."
+msgstr "不能删除审计追踪的部分。"

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <!--
+        Inherited templates from portal to custom chatter with rating
+    -->
+    <t t-inherit="portal.Composer" t-inherit-mode="extension">
+        <xpath expr="//textarea" position="inside"><t t-esc="widget.options['default_message'] ? widget.options['default_message'].trim() : ''"/></xpath><!-- need to be one line to avoid \t in textarea -->
+        <xpath expr="//button[hasclass('o_portal_chatter_composer_btn')]" position="attributes">
+            <attribute name="t-attf-data-action">#{widget.options['force_submit_url'] || '/mail/chatter_post'}</attribute>
+        </xpath>
+        <xpath expr="//*[hasclass('o_portal_chatter_composer_input')]/div[hasclass('o_portal_chatter_composer_body')]" position="before">
+            <t t-call="portal_rating.rating_star_input">
+                <t t-set="default_rating" t-value="widget.options['default_rating_value']"/>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-inherit="portal.chatter_messages" t-inherit-mode="extension">
+        <xpath expr="//t[@t-out='message.body']" position="before">
+            <t t-if="message['rating_value']">
+                <t t-call="portal_rating.rating_stars_static">
+                    <t t-set="val" t-value="message.rating_value"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//*[hasclass('o_portal_chatter_attachments')]" position="after">
+            <!--Only possible if a rating is link to the message, for now we can't comment if no rating
+                is link to the message (because publisher comment data
+                is on the rating.rating model - one comment max) -->
+            <t t-if="message.rating and message.rating.id" t-call="portal_rating.chatter_rating_publisher">
+                <t t-set="is_publisher" t-value="widget.options['is_user_publisher']"/>
+                <t t-set="rating" t-value="message.rating"/>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-inherit="portal.Chatter" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='portal.chatter_message_count']" position="replace">
+            <t t-if="widget.options['display_rating']">
+                <t t-call="portal_rating.rating_card"/>
+            </t>
+            <t t-if="!widget.options['display_rating']">
+                <t t-call="portal.chatter_message_count"/>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-call='portal.chatter_messages']" position="before">
+            <div class="o_portal_chatter_messages_loading d-none">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+    <!--
+        New templates specific of rating in Chatter
+    -->
+    <t t-name="portal_rating.chatter_rating_publisher">
+        <div class="o_wrating_publisher_container">
+            <button t-if="is_publisher"
+                t-attf-class="btn px-2 mb-2 btn-sm border o_wrating_js_publisher_comment_btn {{ rating.publisher_comment !== '' ? 'd-none' : '' }}"
+                t-att-data-mes_index="rating.mes_index">
+                <i class="fa fa-comment text-muted me-1"/>Comment
+            </button>
+            <div class="o_wrating_publisher_comment mt-2 mb-2">
+                <t t-if="rating.publisher_comment" t-call="portal_rating.chatter_rating_publisher_comment"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="portal_rating.chatter_rating_publisher_comment">
+        <div class="d-flex o_portal_chatter_message gap-2">
+            <img class="o_avatar o_portal_chatter_avatar" t-att-src="rating.publisher_avatar" alt="avatar"/>
+            <div class="flex-grow-1">
+                <div class="o_portal_chatter_message_title">
+                    <div class="d-inline-block">
+                        <h5 class="mb-1"><t t-esc="rating.publisher_name"/></h5>
+                    </div>
+                    <div t-if="is_publisher" class="dropdown d-inline-block">
+                        <button class="btn py-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-ellipsis-v"/>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <button class="dropdown-item o_wrating_js_publisher_comment_edit" t-att-data-mes_index="rating.mes_index">
+                                <i class="fa fa-fw fa-pencil me-1"/>Edit
+                            </button>
+                            <button class="dropdown-item o_wrating_js_publisher_comment_delete" t-att-data-mes_index="rating.mes_index">
+                                <i class="fa fa-fw fa-trash-o me-1"/>Delete
+                            </button>
+                        </div>
+                    </div>
+                    <p>Published on <t t-esc="rating.publisher_datetime"/></p>
+                </div>
+                <t t-out="rating.publisher_comment"/>
+            </div>
+        </div>
+    </t>
+    <t t-name="portal_rating.chatter_rating_publisher_form">
+        <div t-if="is_publisher" class="d-flex o_portal_chatter_message shadow bg-white rounded px-3 py-3 my-1 gap-2">
+            <img class="o_avatar o_portal_chatter_avatar" t-att-src="rating.publisher_avatar" alt="avatar"/>
+            <div class="flex-grow-1">
+                <div class="o_portal_chatter_message_title">
+                    <h5 class='mb-1'><t t-esc="rating.publisher_name"/></h5>
+                </div>
+                <textarea rows="3" class="form-control o_portal_rating_comment_input"><t t-esc="rating.publisher_comment"/></textarea>
+                <div>
+                    <button class="btn btn-primary mt-2 o_wrating_js_publisher_comment_submit me-1" t-att-data-mes_index="rating.mes_index">
+                        <t t-if="rating.publisher_comment === ''">
+                            Post comment
+                        </t><t t-else="">
+                            Update comment
+                        </t>
+                    </button>
+                    <button class="border btn btn-light mt-2 bg-white o_wrating_js_publisher_comment_cancel" t-att-data-mes_index="rating.mes_index">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

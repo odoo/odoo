@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- MEMBERSHIP/CURRENT MEMBERS -->
+
+        <record model="ir.ui.view" id="membership_members_tree">
+            <field name="name">Members</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Members">
+                    <field name="name"/>
+                    <field name="membership_state" widget="badge" decoration-info="membership_state =='waiting'"
+                           decoration-success="membership_state in ['invoiced', 'free', 'paid']"/>
+                    <field name="associate_member"/>
+                    <field name="membership_start"/>
+                    <field name="membership_stop"/>
+                    <field name="user_id" column_invisible="True"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_res_partner_member_filter" model="ir.ui.view">
+            <field name="name">res.partner.select</field>
+            <field name="model">res.partner</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <search string="Membership Partners">
+                    <field name="name"
+                       filter_domain="['|', '|', ('name', 'ilike', self), ('parent_id', 'ilike', self), ('ref' , '=', self)]"/>
+                    <field name="category_id"/>
+                    <field name="membership_start" invisible="1"/>
+                    <field name="membership_stop" string="End Membership Date"/>
+                    <filter name="customer" string="Customers" domain="[('customer_rank' ,'>', 0)]"/>
+                    <filter name="supplier" string="Vendors" domain="[('supplier_rank', '>', 0)]"/>
+                    <separator/>
+                    <filter name="all_members" string="Members" domain="[('membership_state', 'in', ['invoiced', 'paid', 'free'])]" help="Invoiced/Paid/Free"/>
+                    <separator/>
+                    <filter string="Start Date" name="start_date" date="membership_start"/>
+                    <filter string="End Date" name="end_date" date="membership_stop"/>
+                    <group expand="0" string="Group By" colspan="10" col="8">
+                        <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by' : 'user_id'}"/>
+                        <filter string="Associate Member" name = "associate" domain="[]" context="{'group_by': 'associate_member'}"/>
+                        <filter string="Membership State" name="membership_state" domain="[]" context="{'group_by': 'membership_state'}"/>
+                        <filter string="Start Date" name="start_month" help="Starting Date Of Membership" domain="[]" context="{'group_by': 'membership_start'}"/>
+                        <filter string="End Date" name="end_month" help="Ending Date Of Membership" domain="[]" context="{'group_by': 'membership_stop'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_membership_members">
+            <field name="name">Members</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form,activity</field>
+            <field name="search_view_id" ref="view_res_partner_member_filter"/>
+            <field name="context">{"search_default_all_members": 1, "default_free_member": True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                  Add a new member
+                </p><p>
+                  Odoo helps you easily track all activities related to a member: 
+                  Current Membership Status, Discussions and History of Membership, etc.
+                </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_membership_members_view_tree">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="membership_members_tree"/>
+            <field name="act_window_id" ref="action_membership_members"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_membership_members_view_form">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+            <field name="act_window_id" ref="action_membership_members"/>
+        </record>
+         <record model="ir.actions.act_window.view" id="action_membership_members_view_kanban">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="action_membership_members"/>
+        </record>
+        <menuitem name="Members" id="menu_membership" sequence="0" parent="menu_association" action="action_membership_members"/>
+
+        <!-- PARTNERS -->
+
+        <record model="ir.ui.view" id="view_partner_tree">
+            <field name="name">res.partner.tree.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <field name="category_id" position="after">
+                    <field name="membership_state" optional="hide" decoration-info="membership_state =='waiting'"
+                           decoration-success="membership_state in ['invoiced', 'free', 'paid']" widget="badge"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_partner_form">
+            <field name="name">res.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Membership" name="membership">
+                        <group>
+                            <group>
+                                <field name="free_member"/>
+                                <label for="membership_state"/>
+                                <div class="d-flex align-items-center justify-content-start gap-3">
+                                    <field name="membership_state" class="oe_inline mb-0"/>
+                                    <button name="%(action_membership_invoice_view)d" type="action" string="Buy Membership"
+                                        invisible="free_member" class="oe_link"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="associate_member" invisible="free_member"/>
+                                <field name="membership_start" invisible="not membership_start"/>
+                                <field name="membership_stop" invisible="not membership_stop"/>
+                                <field name="membership_cancel" invisible="not membership_cancel"/>
+                            </group>
+                        </group>
+                        <field name="member_lines" nolabel="1" colspan="4" readonly="1">
+                            <tree string="Memberships">
+                                <field name="date"/>
+                                <field name="membership_id"/>
+                                <field name="member_price"/>
+                                <field name="account_invoice_id"/>
+                                <field name="state"/>
+                            </tree>
+                            <form string="Memberships">
+                                <group col="2">
+                                    <group>
+                                        <field name="membership_id"/>
+                                        <field name="date"/>
+                                        <field name="state"/>
+                                    </group>
+                                    <group>
+                                        <field name="member_price"/>
+                                        <field name="account_invoice_id" context="{'form_view_ref': 'account.view_move_form'}"/>
+                                    </group>
+                                </group>
+                            </form>
+                        </field>
+
+                    </page>
+                </notebook>
+            </field>
+        </record>
+</odoo>

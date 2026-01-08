@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- iap Client Account Views -->
+    <record id="iap_account_view_form" model="ir.ui.view">
+        <field name="name">iap.account.form</field>
+        <field name="model">iap.account</field>
+        <field name="arch" type="xml">
+            <form string="IAP Account">
+                <sheet>
+                    <group name="account" string="Account Information">
+                        <group>
+                            <field name="name" />
+                            <field name="service_name" />
+                            <field name="description" />
+                            <field name="company_ids" widget="many2many_tags"
+                                domain="[('id', 'in', allowed_company_ids)]" />
+                            <field name="show_token" invisible="1" />
+                            <label for="account_token" />
+                            <div class="o_row">
+                                <field name="account_token" password="False"
+                                    invisible="not show_token"/>
+                                <field name="account_token" password="True"
+                                    invisible="show_token"/>
+                                <button name="action_toggle_show_token" icon="fa-eye"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    invisible="show_token"
+                                    title="Show Token"/>
+                                <button name="action_toggle_show_token" icon="fa-eye-slash"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    invisible="not show_token"
+                                    title="Hide Token"/>
+                            </div>
+                            <field name="warn_me" />
+                            <field name="warning_threshold"
+                                invisible="not warn_me"/>
+                            <field name="warning_email"
+                                invisible="not warn_me"/>
+                        </group>
+                        <group class="d-flex flex-column">
+                            <group class="d-flex">
+                                <button name="action_buy_credits" type="object" string="Buy Credit"
+                                    class="oe_highlight"/>
+                            </group>
+                            <group>
+                                <field name="balance" class="oe-inline"/>
+                            </group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="iap_account_view_tree" model="ir.ui.view">
+        <field name="name">iap.account.tree</field>
+        <field name="model">iap.account</field>
+        <field name="arch" type="xml">
+            <tree string="IAP Accounts">
+                <field name="name" />
+                <field name="service_name" />
+                <field name="company_ids" widget="many2many_tags" />
+                <field name="account_token" readonly="1" password="True" />
+                <field name="balance" />
+                <field name="warning_threshold" optional="hidden" />
+                <field name="description" optional="hidden" />
+            </tree>
+        </field>
+    </record>
+    <!-- Actions -->
+    <record id="iap_account_action" model="ir.actions.act_window">
+        <field name="name">IAP Account</field>
+        <field name="res_model">iap.account</field>
+        <field name='view_mode'>tree,form</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem
+        id="iap_root_menu"
+        name="IAP"
+        parent="base.menu_custom"
+        sequence="5"/>
+
+    <menuitem
+        id="iap_account_menu"
+        name="IAP Accounts"
+        parent="iap_root_menu"
+        action="iap_account_action"
+        sequence="10"/>
+
+</odoo>

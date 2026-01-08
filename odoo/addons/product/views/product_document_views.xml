@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_document_form" model="ir.ui.view">
+        <field name="name">product.document.form</field>
+        <field name="model">product.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="res_model" invisible="True"/>
+                    <label for="name"/>
+                    <h1>
+                        <field name="name" readonly="not datas and type != 'url'"/>
+                    </h1>
+                    <group>
+                        <field name="type" readonly="datas or id" class="oe_inline"/>
+                        <field name="datas"
+                               filename="name"
+                               invisible="type == 'url'"
+                               required="type == 'binary'"
+                               class="oe_inline"/>
+                        <field name="url" widget="url" invisible="type == 'binary'" required="type == 'url'"/>
+                        <field name="res_name" string="Product Variant" invisible="res_model != 'product.product'"/>
+                    </group>
+                    <group string="Attached To" groups="base.group_no_one">
+                        <field name="res_name"/>
+                        <field name="company_id"
+                               groups="base.group_multi_company"
+                               options="{'no_create': True}"
+                               class="oe_inline"/>
+                    </group>
+                    <group string="History" groups="base.group_no_one" invisible="not create_date">
+                        <label for="create_uid" string="Creation"/>
+                        <div name="creation_div">
+                            <field name="create_uid" readonly="1" class="oe_inline"/> on
+                            <field name="create_date" readonly="1" class="oe_inline"/>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_document_kanban" model="ir.ui.view">
+        <field name="name">product.document.kanban</field>
+        <field name="model">product.document</field>
+        <field name="arch" type="xml">
+            <kanban js_class="product_documents_kanban">
+                <field name="ir_attachment_id"/>
+                <field name="mimetype"/>
+                <field name="type"/>
+                <field name="name"/>
+                <field name="create_uid"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="kanban-menu">
+                        <a t-if="widget.editable" type="edit" class="dropdown-item">Edit</a>
+                        <a t-if="widget.deletable" type="delete" class="dropdown-item">Delete</a>
+                        <a t-attf-href="/web/content/#{record.ir_attachment_id.raw_value}?download=true" download="" class="dropdown-item">Download</a>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_area o_kanban_attachment">
+                            <field name="res_model" invisible="True"/>
+                            <div class="ribbon ribbon-top-right" invisible="active">
+                                <span class="text-bg-danger">Archived</span>
+                            </div>
+                            <div class="ribbon ribbon-top-right" invisible="not active or res_model != 'product.product'">
+                                <span class="text-bg-secondary">Variant</span>
+                            </div>
+                            <div class="o_kanban_image">
+                                <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png|webp)').test(record.mimetype.value)"/>
+                                <t t-set="binaryPreviewable"
+                                   t-value="new RegExp('(image|video|application/pdf|text)').test(record.mimetype.value) &amp;&amp; record.type.raw_value === 'binary'"/>
+                                <div t-attf-class="o_kanban_image_wrapper #{(webimage or binaryPreviewable) ? 'o_kanban_previewer' : ''}">
+                                    <div t-if="record.type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted" aria-label="Image is a link"/>
+                                    <img t-elif="webimage" t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
+                                    <div t-else="" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_details h-100">
+                                <div class="o_kanban_details_wrapper h-100 justify-content-between">
+                                    <div class="o_kanban_record_title">
+                                        <field name="name" class="o_text_overflow"/>
+                                    </div>
+                                    <div class="o_kanban_record_body"
+                                         name="body"
+                                         t-if="record.type.raw_value == 'url'">
+                                        <field name="url" widget="url" invisible="type == 'binary'"/>
+                                    </div>
+                                    <div class="o_kanban_record_bottom flex-column" name="bottom">
+                                        <div class="mt-2" invisible="res_model != 'product.product'">
+                                            <span>Variant </span>
+                                            <field name="res_name" style="font-style: italic; text-decoration-line: underline;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="product_document_list" model="ir.ui.view">
+        <field name="name">product.document.list</field>
+        <field name="model">product.document</field>
+        <field name="arch" type="xml">
+            <tree editable="top" multi_edit="true">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_document_search" model="ir.ui.view">
+        <field name="name">product.document.search</field>
+        <field name="model">product.document</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <filter
+                    string="Documents of this variant"
+                    name="context_variant"
+                    domain="[('res_model', '=', 'product.product'), ('res_id', '=', context.get('default_res_id'))]"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>

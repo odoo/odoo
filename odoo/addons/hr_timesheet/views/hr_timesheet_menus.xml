@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="timesheet_menu_root"
+              name="Timesheets"
+              sequence="75"
+              groups="group_hr_timesheet_user"
+              web_icon="hr_timesheet,static/description/icon_timesheet.png"
+    >
+        <menuitem id="timesheet_menu_activity_user"
+                  name="My Timesheets"
+                  groups="group_hr_timesheet_user"
+                  action="act_hr_timesheet_line"
+        />
+        <menuitem id="menu_hr_time_tracking"
+                  name="Timesheets"
+                  groups="group_hr_timesheet_approver"
+                  sequence="5"
+        >
+            <menuitem id="timesheet_menu_activity_mine"
+                      name="My Timesheets"
+                      groups="group_hr_timesheet_approver"
+                      action="act_hr_timesheet_line"
+            />
+            <menuitem id="timesheet_menu_activity_all"
+                      name="All Timesheets"
+                      action="timesheet_action_all"
+                      groups="hr_timesheet.group_hr_timesheet_approver"
+            />
+        </menuitem>
+        <menuitem id="menu_timesheets_reports"
+                  name="Reporting"
+                  groups="group_hr_timesheet_approver"
+                  sequence="99"
+        >
+            <menuitem id="menu_timesheets_reports_timesheet"
+                      name="Timesheets"
+                      sequence="10"
+            >
+                <menuitem id="menu_hr_activity_analysis"
+                          action="act_hr_timesheet_report"
+                          groups="hr_timesheet.group_hr_timesheet_approver"
+                          name="By Employee"
+                          sequence="10"
+                />
+                <menuitem id="timesheet_menu_report_timesheet_by_project"
+                          action="timesheet_action_report_by_project"
+                          name="By Project"
+                          sequence="15"
+                />
+                <menuitem id="timesheet_menu_report_timesheet_by_task"
+                          action="timesheet_action_report_by_task"
+                          name="By Task"
+                          sequence="20"
+                />
+            </menuitem>
+        </menuitem>
+        <menuitem id="hr_timesheet_menu_configuration"
+                  name="Configuration"
+                  action="hr_timesheet_config_settings_action"
+                  groups="base.group_system"
+                  sequence="100"
+        />
+    </menuitem>
+</odoo>

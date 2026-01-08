@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_currency_form_inherit" model="ir.ui.view">
+            <field name="name">res.currency.form.inherit</field>
+            <field name="model">res.currency</field>
+            <field name="inherit_id" ref="base.view_currency_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='is_current_company_currency']" position="after">
+                    <field name="fiscal_country_codes" invisible="1"/>
+                </xpath>
+                <xpath expr="//sheet" position="before">
+                    <field name="display_rounding_warning" invisible="1"/>
+                    <div class="alert alert-warning" role="alert" invisible="not display_rounding_warning">
+                        <strong>This currency has already been used to generate accounting entries.</strong> <br/>
+                        Changing its rounding factor now will not change the rounding made on previous entries; possibly causing an inconsistency with the new ones.
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

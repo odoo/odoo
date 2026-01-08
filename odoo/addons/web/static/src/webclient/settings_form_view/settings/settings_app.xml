@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.SettingsApp">
+        <div class="app_settings_block" t-if="props.selectedTab === props.key or state.search.value.length !== 0" t-att-string="props.string" t-att-data-key="props.key" t-ref="settingsApp">
+            <div class="settingSearchHeader h4" t-if="state.search.value.length !== 0" role="search">
+                <img class="icon" t-att-src="props.imgurl" alt="Search"></img>
+                <span class="appName"><t t-esc="props.string"/></span>
+            </div>
+            <t t-slot="default"/>
+        </div>
+    </t>
+</templates>

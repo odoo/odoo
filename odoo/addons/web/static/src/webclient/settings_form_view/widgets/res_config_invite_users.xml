@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name='res_config_invite_users'>
+        <p class="o_form_label">Invite New Users</p>
+
+        <div class="d-flex">
+            <input t-model="state.emails" t-att-disabled="state.status != 'idle'" class="o_user_emails o_input mt8 text-truncate" t-on-keydown="onKeydownUserEmails" type="text" placeholder="Enter e-mail address"/>
+            <button t-att-disabled="state.status != 'idle'" class="btn btn-primary o_web_settings_invite flex-shrink-0" t-on-click="sendInvite"><strong><t t-esc="inviteButtonText"/></strong></button>
+        </div>
+        <t t-if="state.invite.pending_users.length">
+            <p class="o_form_label pt-3">Pending Invitations:</p>
+            <span t-foreach="state.invite.pending_users" t-as="pending" t-key="pending[0]">
+                <a href="#" class="badge rounded-pill text-primary border border-primary o_web_settings_user" t-on-click.prevent="(ev) => this.onClickUser(ev, pending)"> <t t-esc="pending[1]"/> </a>
+            </span>
+            <t t-if="state.invite.pending_users.length &lt; state.invite.pending_count">
+                <br/>
+                <a href="#" class="o_web_settings_more" t-on-click.prevent="onClickMore"><t t-esc="state.invite.pending_count - state.invite.pending_users.length"/> more </a>
+            </t>
+        </t>
+    </div>
+</templates>

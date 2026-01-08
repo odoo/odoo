@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <!-- POST REASON VIEWS -->
+    <record id="forum_post_reason_view_list" model="ir.ui.view">
+        <field name="name">forum.post.reason.list</field>
+        <field name="model">forum.post.reason</field>
+        <field name="arch" type="xml">
+            <tree string="Reasons" editable="bottom">
+                <field name="name"/>
+                <field name="reason_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="forum_post_reason_action" model="ir.actions.act_window">
+        <field name="name">Post Close Reason</field>
+        <field name="res_model">forum.post.reason</field>
+        <field name="view_mode">tree</field>
+    </record>
+</data></odoo>

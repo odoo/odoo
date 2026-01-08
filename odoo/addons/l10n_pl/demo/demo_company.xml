@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_demo_company_pl" model="res.partner">
+        <field name="name">PL Company</field>
+        <field name="vat">PL5795955811</field>
+        <field name="street"/>
+        <field name="city">Racibórz</field>
+        <field name="country_id" ref="base.pl"/>
+        
+        <field name="zip">47-400</field>
+        <field name="phone">+48 512 345 678</field>
+        <field name="email">info@company.plexample.com</field>
+        <field name="website">www.plexample.com</field>
+    </record>
+
+    <record id="demo_company_pl" model="res.company">
+        <field name="name">PL Company</field>
+        <field name="partner_id" ref="partner_demo_company_pl"/>
+    </record>
+
+    <record id="demo_bank_pl" model="res.partner.bank">
+        <field name="acc_number">PL47109024022846836723239796</field>
+        <field name="partner_id" ref="partner_demo_company_pl"/>
+        <field name="company_id" ref="demo_company_pl"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('demo_company_pl')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('l10n_pl.demo_company_pl'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>pl</value>
+        <value model="res.company" eval="obj().env.ref('l10n_pl.demo_company_pl')"/>
+    </function>
+</odoo>

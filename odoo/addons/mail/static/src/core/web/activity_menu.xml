@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ActivityMenu">
+    <Dropdown position="'bottom-end'" autoOpen="false" beforeOpen.bind="onBeforeOpen" menuClass="discussSystray.menuClass" class="discussSystray.class">
+        <t t-set-slot="toggler">
+            <i class="fa fa-lg fa-clock-o" role="img" aria-label="Activities"></i>
+            <span t-if="store.activityCounter" class="o-mail-ActivityMenu-counter badge rounded-pill"><t t-esc="store.activityCounter"/></span>
+        </t>
+        <t t-set-slot="default">
+            <div t-att-class="`${discussSystray.contentClass} o-mail-ActivityMenu`">
+                <div t-if="store.activityGroups.length === 0" class="o-mail-ActivityMenu-empty align-items-center text-muted p-2 opacity-50 d-flex justify-content-center">
+                    <span>Congratulations, you're done with your activities.</span>
+                </div>
+                <div class="d-flex flex-column list-group-flush" name="activityGroups">
+                    <t t-foreach="store.activityGroups" t-as="group" t-key="group_index" name="activityGroupLoop">
+                        <div class="o-mail-ActivityGroup list-group-item list-group-item-action d-flex p-2 cursor-pointer"
+                             t-att-data-model_name="group.model" t-on-click="() => this.openActivityGroup(group)">
+                            <img alt="Activity" t-att-src="group.icon"/>
+                            <div class="flex-grow-1 overflow-hidden">
+                                <div class="d-flex px-2" name="activityTitle" t-out="group.name"/>
+                                <div t-if="group.type === 'activity'" class="d-flex">
+                                    <span t-attf-class="#{group.overdue_count ? 'btn btn-link' : 'text-muted'} py-0 px-2 text-truncate" t-on-click.stop="() => this.openActivityGroup(group, 'overdue')">
+                                        <t t-out="group.overdue_count"/> Late
+                                    </span>
+                                    <span t-attf-class="#{group.today_count ? 'btn btn-link' : 'text-muted'} py-0 px-2 text-truncate" t-on-click.stop="() => this.openActivityGroup(group, 'today')">
+                                        <t t-out="group.today_count"/> Today
+                                    </span>
+                                    <span class="flex-grow-1"/>
+                                    <span t-attf-class="#{group.planned_count ? 'btn btn-link' : 'text-muted'} py-0 px-2 text-truncate" t-on-click.stop="() => this.openActivityGroup(group, 'upcoming_all')">
+                                        <t t-out="group.planned_count"/> Future
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </Dropdown>
+</t>
+
+</templates>

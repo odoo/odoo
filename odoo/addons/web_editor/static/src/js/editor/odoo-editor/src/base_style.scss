@@ -1,0 +1,80 @@
+li.oe-nested {
+    display: block;
+}
+.o_table tr {
+    border-color: $o-gray-300;
+
+    td {
+        padding: 0.5rem;
+    }
+}
+$sizes: '', 'xs-', 'sm-', 'md-', 'lg-', 'xl-', 'xxl-';
+.o_text_columns {
+    max-width: 100% !important;
+    padding: 0 !important;
+}
+// TODO adapt in master. Those following `.o_text_column` CSS rules were added
+// as an attempt to align those columns with the rest of the edited text in
+// backend form views, etc. It was not needed, something else fixed the issue.
+// But removing them would actually display an horizontal scrollbar in backend
+// html fields displayed in form views now... as somehow the edited text relies
+// on a combination of `overflow: auto` and `padding: 0` (or too small...
+// depends on the form view...)... this should be refactored to be possible to
+// remove. We keep the bug they introduce: the columns are not properly sized,
+// the first and last ones are bigger because of this. Also columns wrapping on
+// multiple rows is buggy. However, we allow to disable the rule with a variable
+// so that the bug can be fixed for the website, where this is more important
+// and can rely on the external paddings being right.
+// grep: FIXED_TEXT_COLUMNS
+$--enable-no-overflow-of-text-columns: true !default;
+@if $--enable-no-overflow-of-text-columns {
+    @media screen {
+        .o_text_columns > .row {
+            margin: 0 !important;
+            @each $size in $sizes {
+                @for $i from 1 through 12 {
+                    & > .col-#{$size}#{$i}:first-of-type {
+                        padding-left: 0;
+                    }
+                    & > .col-#{$size}#{$i}:last-of-type {
+                        padding-right: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+.oe-tabs {
+    display: inline-block;
+    white-space: pre-wrap;
+    max-width: 40px;
+    width: 40px;
+}
+$max-depth: 25;
+@for $depth from 0 through $max-depth {
+    $selectorOl: "";
+    $selectorUl: "";
+    @for $i from 0 through $depth {
+        $selectorOl: $selectorOl + "ol ";
+        $selectorUl: $selectorUl + "ul ";
+    }
+    $remainder: $depth % 3;
+    #{$selectorOl} {
+        @if $remainder == 0 {
+            list-style-type: decimal;
+        } @else if $remainder == 1 {
+            list-style-type: lower-alpha;
+        } @else if $remainder == 2 {
+            list-style-type: lower-roman;
+        }
+    }
+    #{$selectorUl} {
+        @if $remainder == 0 {
+            list-style-type: disc;
+        } @else if $remainder == 1 {
+            list-style-type: circle;
+        } @else if $remainder == 2 {
+            list-style-type: square;
+        }
+    }
+}

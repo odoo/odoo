@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_milestone_view_form" model="ir.ui.view">
+        <field name="name">project.milestone.view.form</field>
+        <field name="model">project.milestone</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(project.action_view_task_from_milestone)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-tasks"
+                                context="{'default_project_id': project_id}"
+                                groups="project.group_project_milestone"
+                                close="1"
+                        >
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="task_count" nolabel="1"/>
+                                    <span class="fw-normal"> Tasks</span>
+                                </span>
+                                <span class="o_stat_value" invisible="done_task_count == 0">
+                                    <field name="done_task_count" nolabel="1"/>
+                                    <span class="fw-normal"> Done</span>
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group name="main_details">
+                            <field name="project_id" invisible="1"/>
+                            <field name="name" placeholder="e.g: Product Launch"/>
+                            <field name="deadline"/>
+                            <field name="is_reached"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_milestone_view_tree" model="ir.ui.view">
+        <field name="name">project.milestone.view.tree</field>
+        <field name="model">project.milestone</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="can_be_marked_as_done" decoration-danger="is_deadline_exceeded and not can_be_marked_as_done" decoration-muted="is_reached" editable="bottom" sample="1">
+                <field name="name"/>
+                <field name="deadline" optional="show"/>
+                <field name="is_reached" optional="show"/>
+                <field name="is_deadline_exceeded" column_invisible="True"/>
+                <field name="task_count" column_invisible="True" />
+                <field name="can_be_marked_as_done" column_invisible="True"/>
+                <button name="action_view_tasks"
+                        type="object"
+                        title="View Tasks"
+                        string="View Tasks"
+                        class="btn btn-link float-end"
+                        invisible="task_count == 0"
+                        groups="project.group_project_milestone"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

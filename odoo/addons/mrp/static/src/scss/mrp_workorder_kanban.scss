@@ -1,0 +1,25 @@
+.o_kanban_dashboard{
+    &.o_mrp_workorder_kanban {
+        .o_kanban_record {
+            flex-basis: 40%;
+            @include media-breakpoint-down(lg) {
+                flex-basis: 100%
+            }
+        }
+        .o_kanban_group .o_kanban_record_top {
+            flex-direction: column;
+        }
+        .o_kanban_record_top {
+            justify-content: space-between;
+            .o_kanban_workorder_title {
+                flex-basis: 40%;
+            }
+            .o_kanban_workorder_status {
+                flex-basis: 20%;
+            }
+        }
+    }
+    &.o_workcenter_kanban {
+        --KanbanRecord-width: 400px;
+    }
+}

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="user_input_session" name="Survey User Input Session" inherit_id="web.frontend_layout" primary="True">
+        <xpath expr="//head/*[1]" position="before">
+            <!--TODO DBE Fix me : If one day, there is a survey_livechat bridge module, put this in that module-->
+            <t t-set="no_livechat" t-value="True"/>
+        </xpath>
+        <xpath expr="//div[@id='wrapwrap']" position="attributes">
+            <attribute name="t-att-style"
+                       add="(('background-image: url(' + survey.session_question_id.background_image_url + ');')
+                             if survey.session_question_id and survey.session_question_id.background_image_url
+                             else ('background-image: url(' + survey.background_image_url + ');')
+                             if survey.background_image_url
+                             else '')"/>
+            <attribute name="t-att-class" add="'o_survey_background'"/>
+        </xpath>
+        <xpath expr="//head/t[@t-call-assets][last()]" position="after">
+            <t t-call-assets="survey.survey_assets" lazy_load="True"/>
+            <t t-call-assets="survey.survey_user_input_session_assets" lazy_load="True"/>
+        </xpath>
+        <xpath expr="//header" position="before">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+        </xpath>
+        <xpath expr="//header" position="after">
+            <div id="wrap" class="oe_structure oe_empty"/>
+        </xpath>
+    </template>
+
+    <template id="user_input_session_open" name="Survey: Open Session">
+        <t t-call="survey.user_input_session">
+            <div class="wrap py-3 min-vh-100 align-items-center justify-content-center d-flex o_survey_session_open o_survey_session_manage"
+                t-att-data-survey-access-token="survey.access_token"
+                t-att-data-survey-id="survey.id"
+                t-att-data-is-start-screen="True">
+                <div class="w-75 p-4">
+                    <div class="text-center">
+                        <h1 class="mb-4" t-field="survey.title" />
+                        <h2 class="mb-5 fw-normal">
+                            <span class="text-break">To join: <span class="text-info o_survey_session_copy" t-esc="survey.session_link"/></span>
+                            <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
+                        </h2>
+                        <h2 class="fw-normal"><span>Waiting for attendees...</span>
+                            <span class="ms-1 fw-bold o_survey_session_attendees_count" t-esc="survey.session_answer_count" />
+                        </h2>
+                    </div>
+                    <a role="button"
+                        class="o_survey_session_navigation o_survey_session_navigation_next p-2">
+                        <span class="o_survey_session_navigation_next_label me-2 fw-bold">Start</span>
+                        <i class="fw-bold oi oi-chevron-right"/>
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="user_input_session_manage" name="Survey: Manage Session">
+        <t t-call="survey.user_input_session">
+            <t t-call="survey.user_input_session_manage_content" />
+        </t>
+    </template>
+
+    <template id="user_input_session_manage_content" name="Survey User Input Session Manage">
+        <t t-set="question" t-value="survey.session_question_id" />
+        <t t-set="is_scored_question" t-value="any(answer.answer_score for answer in question.suggested_answer_ids)" />
+        <t t-set="show_bar_chart" t-value="question.question_type in ['simple_choice', 'multiple_choice']" />
+        <t t-set="show_text_answers" t-value="question.question_type in ['char_box', 'date', 'datetime'] and not question.save_as_email and not question.save_as_nickname" />
+        <div class="wrap min-vh-100 align-items-center justify-content-center d-flex flex-column o_survey_session_manage invisible"
+            t-att-style="'display: none;' if is_rpc_call else ''"
+            t-att-data-is-rpc-call="is_rpc_call"
+            t-att-data-survey-id="survey.id"
+            t-att-data-survey-has-conditional-questions="survey.has_conditional_questions"
+            t-att-data-attendees-count="survey.session_answer_count"
+            t-att-data-survey-access-token="survey.access_token"
+            t-att-data-timer="survey.session_question_start_time.isoformat()"
+            t-att-data-time-limit-minutes="question.time_limit / 60"
+            t-att-data-is-scored-question="is_scored_question"
+            t-att-data-session-show-leaderboard="survey.session_show_leaderboard"
+            t-att-data-question-statistics="question_statistics_graph"
+            t-att-data-question-type="question.question_type"
+            t-att-data-has-correct-answers="any(answer.is_correct for answer in question.suggested_answer_ids)"
+            t-att-data-answers-validity="answers_validity"
+            t-att-data-is-first-question="is_first_question"
+            t-att-data-is-last-question="is_last_question"
+            t-att-data-current-screen="'question' if is_scored_question else 'userInputs'"
+            t-att-data-show-bar-chart="show_bar_chart"
+            t-att-data-show-text-answers="show_text_answers"
+            t-att-data-refresh-background="any(page.background_image for page in survey.page_ids)"
+            t-att-data-is-session-closed="is_session_closed">
+            <div t-if="not is_session_closed" class="o_survey_question_header flex-wrap px-3 w-100 d-flex justify-content-between align-items-center position-absolute">
+                <h3>
+                    <span>To join: <span class="text-info o_survey_session_copy" t-esc="survey.session_link"/></span>
+                    <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
+                </h3>
+                <h1 t-if="question.is_time_limited" class="o_survey_timer_container">
+                    <span class="o_survey_timer d-inline-block"/>
+                </h1>
+                <div class="text-end d-flex flex-column justify-content-center">
+                    <div t-if="show_bar_chart or show_text_answers">
+                        <div class="progress" title="Attendees are answering the question...">
+                            <div class="progress-bar o_survey_session_progress_small fw-bold"
+                                 style="overflow: visible" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Progress bar">
+                                <span class="px-2">0 / <t t-esc="survey.session_answer_count" /></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="px-sm-4 pb-3 pt96 d-flex flex-column o_survey_session_manage_container">
+                <div class="o_survey_session_description_done d-none o_container_small">
+                    <h1 class="fs-2">Thank you!</h1>
+                    <div t-field="survey.description_done"/>
+                </div>
+                <a role="button"
+                    class="o_survey_session_navigation o_survey_session_navigation_next p-2">
+                    <span class="o_survey_session_navigation_next_label me-2 fw-bold d-none d-md-inline"/>
+                    <i class="fw-bold oi oi-chevron-right"/>
+                </a>
+                <a role="button"
+                    class="fw-bold oi oi-chevron-left o_survey_session_navigation o_survey_session_navigation_previous p-3" />
+                <div class="o_survey_session_results flex-column flex-grow-1 mx-5">
+                    <div class="row">
+                        <div class="col-lg-12"><h1 t-esc="question.title"></h1></div>
+                    </div>
+                    <div t-attf-class="d-flex flex-column flex-grow-1 #{'justify-content-center' if not show_text_answers else ''} #{'align-items-center' if show_bar_chart else ''}">
+                        <!-- Has to stay in 'style' attribute for Chartjs -->
+                        <div t-if="show_bar_chart" class="p-2 o_survey_session_chart"
+                            style="position: relative; width: 75vw; height: 70vh;">
+                            <!-- canvas element for drawing bar chart -->
+                            <canvas />
+                        </div>
+                        <div t-elif="show_text_answers" class="p-2 pt-4 o_survey_session_text_answers_container">
+                        </div>
+                        <div t-elif="question.is_page and not is_html_empty(question.description)" class="mb-6 o_survey_manage_fontsize_14" t-field="question.description" />
+                        <div t-else="" class="mb-6">
+                            <h2 class="fw-normal mb-3">
+                                <span>Waiting for attendees...</span>
+                                <span>
+                                    <span class="o_survey_session_answer_count">0</span>
+                                     /
+                                    <span t-esc="survey.session_answer_count" />
+                                </span>
+                            </h2>
+                            <div class="progress">
+                                <div class="progress-bar fw-bold" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Progress bar"></div>
+                            </div>
+                            <fieldset disabled="disabled" class="mt-5" t-if="question.question_type == 'matrix'" t-call="survey.question_container">
+                                <t t-set="hide_question_title" t-value="true" />
+                                <t t-set="answer" t-value="env['survey.user_input']" />
+                                <t t-set="survey_form_readonly" t-value="True"/>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_survey_session_leaderboard w-100 flex-column flex-grow-1 min-vw-75" style="display: none; max-height: 80vh;">
+                    <!--Set question to false to avoid background miss match when no question are displayed.-->
+                    <t t-set="question" t-value="False"/>
+                    <div class="d-flex flex-wrap">
+                        <h1 class="o_survey_session_leaderboard_title flex-grow-1 me-4 ms-1">
+                            <span t-if="is_last_question">Final Leaderboard</span>
+                            <span t-else="">Leaderboard</span>
+                        </h1>
+                        <div t-att-class="'o_survey_leaderboard_buttons fw-bold %s' % 'd-none' if not is_last_question else 'ms-2'">
+                            <a href="#" role="button" class="o_survey_session_close btn btn-primary mt-1"><i class="fa fa-close"/> Close</a>
+                            <a href="#" role="button" class="o_survey_session_close btn btn-primary mt-1" t-att-data-show-results="True"><i class="fa fa-bar-chart"/> Results</a>
+                        </div>
+                    </div>
+                    <div class="justify-content-center d-flex flex-column flex-grow-1 mt-5 mb-5 pb-5 o_survey_session_leaderboard_container"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="user_input_session_leaderboard" name="Survey User Input Leaderboard">
+        <div t-if="leaderboard" class="position-relative mb-5" t-attf-style="height: calc(3.8rem * #{len(leaderboard)});">
+            <t t-set="max_score" t-value="max(score.get('scoring_total', 1) for score in leaderboard) or 1" />
+            <t t-set="max_updated_score" t-value="max(score.get('updated_score', 1) for score in leaderboard)" />
+            <t t-foreach="leaderboard" t-as="score">
+                <div class="o_survey_session_leaderboard_item ms-2 d-flex position-absolute"
+                    t-attf-style="top: calc(#{score_index} * 3.8rem);"
+                    t-att-data-current-position="str(score_index)"
+                    t-att-data-new-position="str(score.get('leaderboard_position', score_index))"
+                    t-att-data-question-score="str(round(score.get('question_score', 0)))"
+                    t-att-data-current-score="str(round(score.get('scoring_total', 0)))"
+                    t-att-data-updated-score="str(round(score.get('updated_score', 0)))"
+                    t-att-data-max-question-score="round(score.get('max_question_score', 1))"
+                    t-att-data-max-updated-score="round(max_updated_score)">
+                    <div class="d-inline-block fw-bold align-top">
+                        <div class="d-inline-block me-2 o_survey_session_leaderboard_score" t-esc="'%.0f p' % score['scoring_total']" />
+                    </div>
+                    <!-- We keep "18rem" of space to display the points / nickname.
+                    Then, the length of the bar is a percentage of the attendee's score compared to the max_score. -->
+                    <t t-set="width_ratio" t-value="round(round(score['scoring_total'], 3) / round(max_score, 3), 3)"/>
+                    <t t-set="width_ratio_question" t-value="str(round(round(score.get('question_score', 0), 3) / round(score.get('max_question_score', 1), 3), 3))"/>
+                    <div class="o_survey_session_leaderboard_bar ms-2 align-top d-inline-block text-end fw-bold"
+                        t-att-style="'width: calc(calc(%s - 18rem) * %s)' % ('100%', width_ratio)"
+                        t-att-data-width-ratio="width_ratio">
+                    </div>
+                    <div class="o_survey_session_leaderboard_bar_question me-2 align-top d-inline-block text-end fw-bold position-relative"
+                        style="width: 0px;"
+                        t-att-data-width-ratio="width_ratio_question"
+                        t-att-data-max-question-score="str(score.get('max_question_score', 1))"
+                        t-att-data-question-score="str(score.get('question_score', 0))">
+                        <div class="o_survey_session_leaderboard_bar_question_score position-absolute"></div>
+                    </div>
+                    <div class="o_survey_session_leaderboard_name d-inline-block">
+                        <span t-if="score.get('nickname')" t-esc="score['nickname']" />
+                        <span t-else="">Anonymous</span>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </template>
+</data>
+</odoo>

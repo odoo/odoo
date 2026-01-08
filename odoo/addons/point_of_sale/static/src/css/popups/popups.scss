@@ -1,0 +1,75 @@
+.modal-footer > * {
+    margin: 0.25rem;
+}
+
+.pos .dialog{
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    text-align: center;
+}
+
+.pos .modal-dialog .popup{
+    margin: auto;
+    max-width:500px;
+    width: 100%;
+    text-align:center;
+    background-color: #fff;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
+    z-index:1060;
+    border-radius: 4px;
+}
+
+.pos .modal-dialog .popup-med{
+    max-width: 700px;
+    max-height: 600px;
+    height: auto;
+}
+
+.pos .popup-med .body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.pos .popup .body.traceback {
+    height: 238px;
+    overflow: auto;
+    font-size: 14px;
+    white-space: pre-wrap;
+    text-align: left;
+    font-family: 'Inconsolata';
+    -webkit-user-select: text;
+       -moz-user-select: text;
+            user-select: text;
+}
+
+.pos .popup .button.big-left{
+    position:absolute;
+    top: 120px;
+    left:40px;
+    width: 180px;
+    height: 180px;
+    line-height:180px;
+}
+
+.pos .popup .button.big-right{
+    position:absolute;
+    top: 120px;
+    right:40px;
+    width: 180px;
+    height: 180px;
+    line-height:180px;
+}
+
+.pos .popup.offline {
+    max-width: 600px;
+}
+
+.popup-numpad {
+    direction: ltr/*rtl:ignore*/; /* rtlcss forced to keep ltr */
+}
+
+.pos .popup-textinput main {
+    margin-bottom: 20px;
+}

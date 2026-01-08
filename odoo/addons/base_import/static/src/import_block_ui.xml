@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="base_import.BlockUI">
+        <div class="o_blockUI fixed-top d-flex justify-content-center align-items-center flex-column vh-100 bg-black-50">
+            <div class="o_spinner mb-4">
+                <img src="/web/static/img/spin.svg" alt="Loading..."/>
+            </div>
+            <div t-if="props.message or props.blockComponent">
+                <div class="o_message text-center px-4" t-esc="props.message" />
+                <t t-if="props.blockComponent" t-component="props.blockComponent.class" t-props="props.blockComponent.props"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

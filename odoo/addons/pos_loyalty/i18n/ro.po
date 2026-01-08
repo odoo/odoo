@@ -1,0 +1,886 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_loyalty
+# 
+# Translators:
+# Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Martin Trigaux, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Betty Keresztesi, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Betty Keresztesi, 2024\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_identifier_code
+msgid ""
+"\n"
+"        Technical field used to link multiple reward lines from the same reward together.\n"
+"    "
+msgstr ""
+"\n"
+"     Câmp tehnic folosit pentru a lega mai multe linii de recompensă din aceeași recompensă.\n"
+"    "
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/partner_line/partner_line.js:0
+#, python-format
+msgid "%s Points"
+msgstr "%s Puncte"
+
+#. module: pos_loyalty
+#: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
+msgid "15% on next order"
+msgstr "15% la comanda următoare"
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
+msgid "15% on your order"
+msgstr "15% la comanda dvs"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "A better global discount is already applied."
+msgstr "Un discount global mai bun este deja aplicat."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid "A reward could not be loaded"
+msgstr "Nu s-a putut încărca o recompensă"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
+msgid ""
+"A technical field used as an alternative to the promo code. This is "
+"automatically generated when the promo code is changed."
+msgstr ""
+"Un câmp tehnic utilizat ca alternativă la codul promoțional. Acesta este "
+"generat automat atunci când codul promoțional este modificat."
+
+#. module: pos_loyalty
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
+msgid "All PoS"
+msgstr "Toate POS-urile"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__any_product
+msgid "Any Product"
+msgstr "Orice produs"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.js:0
+#, python-format
+msgid ""
+"Are you sure you want to remove %s from this order?\n"
+" You will still be able to claim it through the reward button."
+msgstr ""
+"Sunteți sigur că doriți să eliminați %s din această comandă?\n"
+" Veți putea în continuare să îl revendicați prin intermediul butonului de recompensă."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Balance"
+msgstr "Sold"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__promo_barcode
+#, python-format
+msgid "Barcode"
+msgstr "Cod de bare"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_barcode_rule
+msgid "Barcode Rule"
+msgstr "Regulă cod de bare"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_res_config_settings
+msgid "Config Settings"
+msgstr "Setări de configurare"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__coupon_id
+#: model:ir.model.fields.selection,name:pos_loyalty.selection__barcode_rule__type__coupon
+msgid "Coupon"
+msgstr "Cupon"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Coupon Codes"
+msgstr "Coduri promoționale"
+
+#. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
+msgid "Coupon point(s)"
+msgstr "Punct(e) promoționale"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
+#, python-format
+msgid "Current Balance:"
+msgstr "Sold curent:"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Customer"
+msgstr "ClientClient"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "Customer needed"
+msgstr "Completare Client necesar"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.js:0
+#, python-format
+msgid "Deactivating reward"
+msgstr "Dezactivarea recompensei"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_pos_config__gift_card_settings
+#: model:ir.model.fields,help:pos_loyalty.field_res_config_settings__pos_gift_card_settings
+msgid "Defines the way you want to set your gift cards."
+msgstr "Definește modul în care doriți să vă setați cardurile cadou."
+
+#. module: pos_loyalty
+#: model:ir.ui.menu,name:pos_loyalty.menu_discount_loyalty_type_config
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
+msgid "Discount & Loyalty"
+msgstr "Discount și loialitate"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/promo_code_button/promo_code_button.js:0
+#: code:addons/pos_loyalty/static/src/app/control_buttons/promo_code_button/promo_code_button.xml:0
+#, python-format
+msgid "Enter Code"
+msgstr "Introduceți codul"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid "Enter the gift card code"
+msgstr "Introduceți codul cardului cadou"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "Error"
+msgstr "Eroare"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/payment_screen/payment_screen.js:0
+#, python-format
+msgid "Error validating rewards"
+msgstr "Eroare la validarea recompenselor"
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
+msgid "Free Product - Simple Pen"
+msgstr "Produs gratuit - Pix simplu"
+
+#. module: pos_loyalty
+#: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__create_set
+msgid "Generate PDF cards"
+msgstr "Generați carduri PDF"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid "Generate a Gift Card"
+msgstr "Generați un card cadou"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid ""
+"Gift Card: %s\n"
+"Balance: %s"
+msgstr ""
+"Card cadou: %s\n"
+"Sold: %s"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__gift_card_settings
+#: model:ir.model.fields,field_description:pos_loyalty.field_res_config_settings__pos_gift_card_settings
+msgid "Gift Cards settings"
+msgstr "Setări carduri cadou"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/promo_code_button/promo_code_button.js:0
+#, python-format
+msgid "Gift card or Discount code"
+msgstr "Card cadou sau cod de reducere"
+
+#. module: pos_loyalty
+#: model:ir.ui.menu,name:pos_loyalty.menu_gift_ewallet_type_config
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
+msgid "Gift cards & eWallet"
+msgstr "Carduri cadou și eWallet"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__points_cost
+msgid "How many point this reward cost on the coupon."
+msgstr "Câte puncte valorează această recompensă pe cupon."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "Invalid gift card program reward. Use 1 currency per point discount."
+msgstr ""
+"Recompensă card cadou invalidă. Utilizați 1 monedă per punct de reducere."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "Invalid gift card program rule. Use 1 point per currency spent."
+msgstr ""
+"Regulă card cadou invalidă. Utilizați 1 punct pentru fiecare monedă "
+"cheltuită."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "Invalid gift card program. More than one reward."
+msgstr "Card cadou invalid. Mai mult de o recompensă."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "Invalid gift card program. More than one rule."
+msgstr "Card cadou invalid. Mai mult de o singură regulă."
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
+msgid "Is Reward Line"
+msgstr "Este o linie de recompensă"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_loyalty_mail
+msgid "Loyalty Communication"
+msgstr "Comunicare loialitate"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_loyalty_card
+msgid "Loyalty Coupon"
+msgstr "Cupon de loialitate"
+
+#. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
+msgid "Loyalty Points"
+msgstr "Puncte de Loialitate"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_loyalty_program
+#: model:loyalty.program,name:pos_loyalty.loyalty_program
+msgid "Loyalty Program"
+msgstr "Program de fidelitate"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_loyalty_reward
+msgid "Loyalty Reward"
+msgstr "Recompensă Loialitate"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_loyalty_rule
+msgid "Loyalty Rule"
+msgstr "Regulă Loialitate"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
+#, python-format
+msgid "New Total"
+msgstr "Total nou"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.js:0
+#, python-format
+msgid "No"
+msgstr "Nu"
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "No reward can be claimed with this coupon."
+msgstr "Nici o recompensă nu poate fi revendicată cu acest cupon."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "No valid eWallet found"
+msgstr "Nu s-a găsit niciun eWallet valid"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/reward_button/reward_button.js:0
+#, python-format
+msgid "Please select a product for this reward"
+msgstr "Selectați un produs pentru această recompensă"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/reward_button/reward_button.js:0
+#, python-format
+msgid "Please select a reward"
+msgstr "Vă rugăm să selectați o recompensă"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_order_count
+msgid "PoS Order Count"
+msgstr "Numărul de comenzi PoS"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_id
+msgid "PoS Order Reference"
+msgstr "Referință comandă PoS"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_card__source_pos_order_id
+msgid "PoS order where this coupon was generated."
+msgstr "Comanda PoS în care a fost generat acest cupon."
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_ok
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
+msgid "Point of Sale"
+msgstr "Punct de vânzare"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Configurarea Punctului de Vânzare"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "Liniile Punctului de vânzare"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Comenzile Punctului de vânzare"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sesiune Punct de vânzare"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_config_ids
+msgid "Point of Sales"
+msgstr "Punct de Vânzare"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "Points"
+msgstr "Puncte"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
+#, python-format
+msgid "Points Balance"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__points_cost
+msgid "Points Cost"
+msgstr "Costul în puncte"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
+#, python-format
+msgid "Points Spent"
+msgstr "Puncte cheltuite 0"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
+#, python-format
+msgid "Points Won"
+msgstr "Puncte câștigate"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__pos_report_print_id
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_report_print_id
+msgid "Print Report"
+msgstr "Tipărire raport"
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "Program: %(name)s, Reward Product: `%(reward_product)s`"
+msgstr "Program: %(name)s, Produs recompensă: `%(reward_product)s``"
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "Program: %(name)s, Rule Product: `%(rule_product)s`"
+msgstr "Program: %(name)s, Regulă produs: `%(rule_product)s`"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "Refund with eWallet"
+msgstr "Rambursare cu portofel electronic (eWallet)"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/ticket_screen/ticket_screen.js:0
+#, python-format
+msgid ""
+"Refunding a top up or reward product for an eWallet or gift card program is "
+"not allowed."
+msgstr ""
+"Nu este permisă rambursarea unui produs returnat sau plătit cu puncte de "
+"loialitate cu eWallet sau cu card cadou."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/reset_programs_button/reset_programs_button.xml:0
+#, python-format
+msgid "Reset Programs"
+msgstr "Resetare programe"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_config_ids
+msgid "Restrict publishing to those shops."
+msgstr "Limitați publicarea la magazinele respective."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/reward_button/reward_button.xml:0
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_id
+#, python-format
+msgid "Reward"
+msgstr "Recompensă"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_identifier_code
+msgid "Reward Identifier Code"
+msgstr "Cod identificare recompensă"
+
+#. module: pos_loyalty
+#: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__scan_use
+msgid "Scan existing cards"
+msgstr "Scanează cardurile existente"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid "Select program"
+msgstr "Selectare program"
+
+#. module: pos_loyalty
+#: model:product.template,name:pos_loyalty.simple_pen_product_template
+msgid "Simple Pen"
+msgstr "Pix simplu"
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_order.py:0
+#, python-format
+msgid ""
+"Some coupons are invalid. The applied coupons have been updated. Please "
+"check the order."
+msgstr ""
+"Unele cupoane nu sunt valabile. Cupoanele folosite au fost actualizate. Vă "
+"rugăm să verificați comanda."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Spent:"
+msgstr "Cheltuit:"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__any_product
+msgid "Technical field, whether all product match"
+msgstr "Domeniul tehnic, dacă toate produsele coincid"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "That coupon code has already been scanned and activated."
+msgstr "Acest cod promoțional a fost deja scanat și activat."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "That promo code program has already been activated."
+msgstr "Acest program de coduri promoționale a fost deja activat."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "That promo code program is expired."
+msgstr "Acest program de cod promoțional a expirat."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "That promo code program is not yet valid."
+msgstr "Acest cod promoțional nu este încă valabil."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "That promo code program requires a specific pricelist."
+msgstr ""
+"Acest program de coduri promoționale necesită o listă de prețuri specifică."
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__coupon_id
+msgid "The coupon used to claim that reward."
+msgstr "Cuponul utilizat pentru a revendica acea recompensă."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_order.py:0
+#, python-format
+msgid ""
+"The following codes already exist in the database, perhaps they were already sold?\n"
+"%s"
+msgstr ""
+"Următoarele coduri există deja în baza de date, poate au fost deja vândute?\n"
+"%s"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_mail__pos_report_print_id
+msgid ""
+"The report action to be executed when creating a coupon/gift card/loyalty "
+"card in the PoS."
+msgstr ""
+"Acțiunea de raportare care trebuie executată la crearea unui cupon/card "
+"cadou/card de fidelitate în PoS."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid ""
+"The reward \"%s\" contain an error in its domain, your domain must be "
+"compatible with the PoS client"
+msgstr ""
+"Recompensa \"%s\" conține o eroare în domeniul său, domeniul dumneavoastră "
+"trebuie să fie compatibil cu clientul PoS"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
+msgid "The reward associated with this line."
+msgstr "Recompensa asociată acestei linii."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "The reward could not be applied."
+msgstr "Recompensa nu poate fi aplicată."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_order.py:0
+#, python-format
+msgid "There are not enough points for the coupon: %s."
+msgstr "Nu există suficiente puncte pentru cuponul: %s."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "There are not enough points on the coupon to claim this reward."
+msgstr ""
+"Nu există suficiente puncte pe cupon pentru a revendica această recompensă."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "There are not enough products in the basket to claim this reward."
+msgstr ""
+"Nu există suficiente produse în coș pentru a revendica această recompensă."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid ""
+"There is no email template on the gift card program and your pos is set to "
+"print them."
+msgstr ""
+"Nu există niciun șablon de e-mail în programul de carduri cadou, iar pos-ul "
+"dvs. este setat să le tipărească."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid ""
+"There is no print report on the gift card program and your pos is set to "
+"print them."
+msgstr ""
+"Nu există niciun raport de tipărire pentru programul de carduri cadou, iar "
+"pos-ul dvs. este setat să le tipărească."
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
+msgid "These are the products that are valid for this rule."
+msgstr "Acestea sunt produsele care sunt valabile pentru această regulă."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "This coupon is expired (%s)."
+msgstr "Acest cupon este expirat (%s)."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "This coupon is invalid (%s)."
+msgstr "Acest cupon este nevalid (%s)."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "This coupon is not available with the current pricelist."
+msgstr "Acest cupon nu este disponibil cu lista de prețuri curentă."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid "This coupon is not yet valid (%s)."
+msgstr "Acest cupon nu este încă valabil (%s)."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid "This gift card has already been sold"
+msgstr "Acest card cadou a fost vândut deja"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid ""
+"This gift card is not linked to any order. Do you really want to apply its "
+"reward?"
+msgstr ""
+"Acest card cadou nu este asociat cu nicio comandă. Chiar doriți să aplicați "
+"recompensa acesteia?"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
+msgid "This is used to print the generated gift cards from PoS."
+msgstr ""
+"Aceasta este utilizată pentru a imprima cardurile cadou generate de la PoS."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_config.py:0
+#, python-format
+msgid ""
+"To continue, make the following reward products available in Point of Sale."
+msgstr ""
+"Pentru a continua, puneți la dispoziție următoarele produse de recompensare "
+"în punctul de vânzare."
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
+msgid "Type"
+msgstr "Tip"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "Unknown discount type"
+msgstr "Tip de reducere necunoscut"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "Unpaid gift card"
+msgstr "Card cadou neachitat"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "Unpaid gift card rejected."
+msgstr "Card cadou neachitat respins."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "Use eWallet to pay"
+msgstr "Utilizați eWallet pentru a plăti"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__valid_product_ids
+msgid "Valid Product"
+msgstr "Produs valabil"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Valid until:"
+msgstr "Valabil până la:"
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__is_reward_line
+msgid "Whether this line is part of a reward or not."
+msgstr "Indiferent dacă această linie face parte dintr-o recompensă sau nu."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Won:"
+msgstr "Câștigător:"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.js:0
+#, python-format
+msgid "Yes"
+msgstr "Da"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
+#, python-format
+msgid "You cannot sell a gift card that has already been sold."
+msgstr "Nu puteți vinde un card cadou care a fost deja vândut."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.js:0
+#, python-format
+msgid "You cannot set negative quantity or price to gift card or ewallet."
+msgstr ""
+"Nu puteți seta o cantitate sau un preț negativ pentru cardul cadou sau "
+"ewallet."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid ""
+"You either have not created an eWallet or all your eWallets have expired."
+msgstr ""
+"Fie nu ați creat un portofel electronic, fie toate portofelele dvs. "
+"electronice au expirat."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "You must set '%s' before setting '%s'."
+msgstr "Trebuie să setați \"%s\" înainte de a seta \"%s\"."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "eWallet"
+msgstr "eWallet"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "eWallet Pay"
+msgstr "plată eWallet"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
+#, python-format
+msgid "eWallet Refund"
+msgstr "rambursare eWallet"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "eWallet requires a customer to be selected"
+msgstr "eWallet solicită selectarea unui client"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "no expiration"
+msgstr "fără dată de expirare"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
+#, python-format
+msgid "the gift cards"
+msgstr "carduri cadou"

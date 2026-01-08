@@ -1,0 +1,41 @@
+<odoo>
+    <record id="view_partner_property_form" model="ir.ui.view">
+        <field name="name">res.partner.property.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='banks']" position="after">
+                <group string="Electronic Invoicing" name="electronic_invoicing">
+                    <field name="hide_peppol_fields" invisible="True"/>
+                    <field name="ubl_cii_format" widget="selection"/>
+                    <field name="peppol_eas" widget="selection"
+                           invisible="hide_peppol_fields"/>
+                    <field name="peppol_endpoint"
+                           invisible="hide_peppol_fields"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_view_search" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_by']" position="after">
+                <filter name="ubl_cii_format" string="EDI Format" context="{'group_by':'ubl_cii_format'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_view_tree" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="ubl_cii_format" string="EDI Format" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

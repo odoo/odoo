@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+
+    <t t-name="web.SignatureWidget">
+        <button t-attf-class="btn o_sign_button #{props.highlight ? 'btn-primary' : 'btn-secondary'}" t-on-click="onClickSignature">
+            <span class="o_sign_label" t-esc="props.string" />
+        </button>
+    </t>
+
+</template>

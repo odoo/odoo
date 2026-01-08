@@ -1,0 +1,24 @@
+.o_attendee_tags_list {
+    --Avatar-size: 24px;
+
+    position: relative;
+
+    .attendee_tag_status {
+        @include o-position-absolute($bottom: -0.375em, $right: -0.375em);
+        aspect-ratio: 1;
+        border: 1px $o-view-background-color solid;
+    }
+
+    .o_attendee_status_accepted {
+        background-color: tint-color($success, 80%);
+        color: $success;
+    }
+    .o_attendee_status_declined {
+        background-color: tint-color($danger, 80%);
+        color: $danger;
+    }
+    .o_attendee_status_tentative {
+        background-color: $gray-200;
+        color: $dark;
+    }
+}

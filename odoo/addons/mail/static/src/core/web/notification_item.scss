@@ -1,0 +1,29 @@
+.o-mail-NotificationItem {
+    &.o-important {
+        background-color: mix($o-gray-100, $o-gray-200) !important;
+    }
+    &:hover {
+        background-color: $o-gray-200 !important;
+    }
+}
+
+
+.o-mail-NotificationItem-badge {
+    padding: 3px 6px !important;
+}
+
+.o-mail-NotificationItem-markAsRead {
+    background-color: transparent !important;
+    font-size: 0.85rem !important;
+    color: $success !important;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.075) !important;
+    }
+}
+
+.o-mail-NotificationItem-text:before {
+    // invisible character so that typing status bar has constant height, regardless of text content.
+    content: "\200b"; /* unicode zero width space character */
+}
+

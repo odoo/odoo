@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+<t t-name="website.AddPageConfirmDialog">
+    <WebsiteDialog
+        title="title"
+        primaryTitle="primaryTitle"
+        primaryClick="() => this.addPage()"
+        close="props.close">
+        <div class="row gy-4">
+            <label class="col-form-label col-md-3">
+                Page Title
+            </label>
+            <div class="col-md-9">
+                <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
+            </div>
+            <Switch extraClasses="'offset-md-3 col-md-9 text-start'" label="switchLabel" value="state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>
+        </div>
+    </WebsiteDialog>
+</t>
+
+<t t-name="website.AddPageTemplatePreviewWrapper">
+    <div t-ref="holder" class="o_page_template position-relative placeholder-glow mx-auto transition-base" t-att-class="{ 'mt-4': !props.firstRow }">
+        <div t-ref="preview" class="o_page_template_preview border border-white bg-white rounded shadow" t-out="0"/>
+        <span class="placeholder position-absolute top-0 w-100 h-100 rounded" t-attf-style="animation-duration: #{props.animationDelay + 500}ms"/>
+        <div class="o_button_area position-absolute top-0 w-100 h-100 d-flex align-items-center justify-content-center">
+            <button class="btn btn-primary" t-on-click="select">Use this template</button>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.AddPageTemplateBlank">
+    <t t-call="website.AddPageTemplatePreviewWrapper">
+        <div class="mt-5 h1 text-center">Blank Page</div>
+    </t>
+</t>
+
+<t t-name="website.AddPageTemplatePreview">
+    <t t-call="website.AddPageTemplatePreviewWrapper">
+        <iframe class="border-0 pe-none transition-base" t-ref="iframe" src="about:blank" aria-label="Add page template"/>
+    </t>
+</t>
+
+<t t-name="website.AddPageTemplatePreviews">
+    <div class="container-fluid py-3 py-xl-4">
+        <div class="row g-0">
+            <t t-foreach="[...this.columns.entries()]" t-as="column" t-key="column[0]">
+                <div class="col-lg-4 col-12">
+                    <t t-foreach="[...column[1].entries()]" t-as="template" t-key="template[0]">
+                        <AddPageTemplateBlank t-if="template[1].isBlank" firstRow="template_first"/>
+                        <AddPageTemplatePreview t-else="" template="template[1]" firstRow="template_first"
+                            animationDelay="(column_index * 500) + (template_index * 350)"
+                        />
+                    </t>
+                    <t t-if="column[1].length === 0">
+                        <div class="o_page_template position-relative"/>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.AddPageTemplates">
+    <div class="overflow-hidden w-100" t-att-class="{o_loading: state.loading}">
+        <!-- Do not rely on Notebook to avoid pages from needing reload -->
+        <div class="d-flex w-100 h-100 vertical flex-row">
+            <ul t-ref="tabs" class="nav nav-pills flex-column flex-nowrap overflow-y-auto">
+                <t t-foreach="state.pages" t-as="page" t-key="page.id">
+                    <li class="nav-item">
+                        <a t-att-data-id="page.id"
+                            t-on-click="() => this.onTabClick(page.id)"
+                            class="nav-link p-3 rounded-0"
+                            t-att-class="{active: page_first}"
+                            href="#"
+                            role="tab"
+                            tabindex="0"
+                        >
+                            <span t-if="page.isPreloading" class="fa fa-spin fa-spinner me-1"/>
+                            <t t-out="page.title"/>
+                        </a>
+                    </li>
+                </t>
+            </ul>
+            <div t-ref="panes" class="position-relative flex-grow-1 flex-shrink-1 bg-200">
+                <t t-foreach="state.pages" t-as="page" t-key="page.id">
+                    <div t-att-data-id="page.id"
+                        class="o_website_page_templates_pane position-absolute top-0 start-0 w-100 h-100 overflow-y-scroll bg-200"
+                        t-att-class="{active: page_first}"
+                    >
+                        <AddPageTemplatePreviews t-if="page_first or page.isAccessed"
+                            templates="page.props.templates"
+                        />
+                    </div>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.AddPageDialog">
+    <WebsiteDialog
+        title="title"
+        contentClass="'o_website_page_templates_dialog h-100'"
+        showFooter="false"
+        footer="false"
+        size="'xl'"
+        close="props.close">
+        <AddPageTemplates
+            onTemplatePageChanged="name => this.onTemplatePageChanged(name)"
+        />
+    </WebsiteDialog>
+</t>
+
+</templates>

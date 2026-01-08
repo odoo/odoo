@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!--
+        Resource: res.partner.category
+        -->
+        <record id="res_partner_category_0" model="res.partner.category">
+            <field name="name">Vendor</field>
+            <field name="color" eval="2"/>
+        </record>
+        <record id="res_partner_category_2" model="res.partner.category">
+            <field name="name">Prospects</field>
+            <field name="color" eval="3"/>
+        </record>
+        <record id="res_partner_category_3" model="res.partner.category">
+            <field name="name">Employees</field>
+            <field name="color" eval="4"/>
+        </record>
+        <record id="res_partner_category_8" model="res.partner.category">
+            <field name="name">Consulting Services</field>
+            <field name="color" eval="5"/>
+        </record>
+        <record id="res_partner_category_11" model="res.partner.category">
+            <field name="name">Services</field>
+            <field name="color" eval="7"/>
+        </record>
+        <record id="res_partner_category_12" model="res.partner.category">
+            <field name="name">Office Supplies</field>
+            <field name="parent_id" ref="res_partner_category_0"/>
+            <field name="color" eval="8"/>
+        </record>
+        <record id="res_partner_category_14" model="res.partner.category">
+            <field name="name">Desk Manufacturers</field>
+            <field name="color" eval="10"/>
+            <field name="parent_id" ref="res_partner_category_0"/>
+        </record>
+
+       <!--
+        Resource: res.partner
+        -->
+        <record id="res_partner_1" model="res.partner">
+            <field name="name">Wood Corner</field>
+            <field eval="[Command.set([ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="street">1839 Arbor Way</field>
+            <field name="city">Turlock</field>
+            <field name="state_id" ref='state_us_5'/>
+            <field name="zip">95380</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">wood.corner26@example.com</field>
+            <field name="phone">(623)-853-7197</field>
+            <field name="website">http://www.wood-corner.com</field>
+            <field name="image_1920" type="base64" file="base/static/img/res_partner_1-image.png"/>
+            <field name="vat">US12345672</field>
+        </record>
+        <record id="res_partner_2" model="res.partner">
+            <field name="name">Deco Addict</field>
+            <field eval="[Command.set([ref('base.res_partner_category_14')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="street">77 Santa Barbara Rd</field>
+            <field name="city">Pleasant Hill</field>
+            <field name="state_id" ref='state_us_5'/>
+            <field name="zip">94523</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">deco_addict@yourcompany.example.com</field>
+            <field name="phone">(603)-996-3829</field>
+            <field name="website">http://www.deco-addict.com</field>
+            <field name="image_1920" type="base64" file="base/static/img/res_partner_2-image.png"/>
+            <field name="vat">US12345673</field>
+        </record>
+        <record id="res_partner_3" model="res.partner">
+            <field name="name">Gemini Furniture</field>
+            <field eval="[Command.set([ref('res_partner_category_8'), ref('res_partner_category_14')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="street">317 Fairchild Dr</field>
+            <field name="city">Fairfield</field>
+            <field name="state_id" ref='state_us_5'/>
+            <field name="zip">94535</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">gemini_furniture@fake.geminifurniture.com</field>
+            <field name="phone">(941)-284-4875</field>
+            <field name="website">http://www.gemini-furniture.com/</field>
+            <field name="image_1920" type="base64" file="base/static/img/res_partner_3-image.png"/>
+            <field name="vat">US12345674</field>
+        </record>
+
+        <record id="res_partner_4" model="res.partner">
+            <field name="name">Ready Mat</field>
+            <field eval="[Command.set([ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="street">7500 W Linne Road</field>
+            <field name="city">Tracy</field>
+            <field name="state_id" ref='state_us_5'/>
+            <field name="zip">95304</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">ready.mat28@example.com</field>
+            <field name="phone">(803)-873-6126</field>
+            <field name="website">http://www.ready-mat.com/</field>
+            <field name="image_1920" type="base64" file="base/static/img/res_partner_4-image.png"/>
+            <field name="vat">US12345675</field>
+        </record>
+
+        <record id="res_partner_10" model="res.partner">
+            <field name="name">The Jackson Group</field>
+            <field name="is_company">1</field>
+            <field name="street">1611 Peony Dr</field>
+            <field name="city">Tracy</field>
+            <field name="state_id" ref='state_us_5'/>
+            <field name="zip">95377</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">jackson.group82@example.com</field>
+            <field name="phone">(334)-502-1024</field>
+            <field name="image_1920" type="base64" file="base/static/img/res_partner_10-image.jpg"/>
+            <field name="vat">US12345676</field>
+        </record>
+
+        <record id="res_partner_12" model="res.partner">
+            <field name="name">Azure Interior</field>
+            <field eval="[Command.set([ref('res_partner_category_11')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="street">4557 De Silva St</field>
+            <field name="city">Fremont</field>
+            <field name="state_id" ref='state_us_5'/>
+            <field name="zip">94538</field>
+            <field name="phone">(870)-931-0505</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">azure.Interior24@example.com</field>
+            <field name="website">http://www.azure-interior.com</field>
+            <field name="image_1920" type="base64" file="base/static/img/res_partner_12-image.png"/>
+            <field name="vat">US12345677</field>
+        </record>
+
+        <record id="res_partner_18" model="res.partner">
+            <field name="name">Lumber Inc</field>
+            <field name="is_company">1</field>
+            <field name="street">1337 N San Joaquin St</field>
+            <field name="city">Stockton</field>
+            <field name="state_id" ref='state_us_5'/>
+            <field name="zip">95202</field>
+            <field name="email">lumber-inv92@example.com</field>
+            <field name="phone">(828)-316-0593</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="website">http://www.lumber-inc.com</field>
+            <field name="image_1920" type="base64" file="base/static/img/res_partner_18-image.png"/>
+            <field name="vat">US12345678</field>
+        </record>
+
+        <record id="res_partner_address_1" model="res.partner">
+            <field name="name">Willie Burke</field>
+            <field name="parent_id" ref="res_partner_1"/>
+            <field name="function">Service Manager</field>
+            <field name="email">willie.burke80@example.com</field>
+            <field name="phone">(846)-523-2111</field>
+        </record>
+        <record id="res_partner_address_2" model="res.partner">
+            <field name="name">Ron Gibson</field>
+            <field name="parent_id" ref="res_partner_1"/>
+            <field name="function">Store Manager</field>
+            <field name="email">ron.gibson76@example.com</field>
+            <field name="phone">(976)-397-4091</field>
+        </record>
+        <record id="res_partner_address_3" model="res.partner">
+            <field name="name">Douglas Fletcher</field>
+            <field name="parent_id" ref="res_partner_2"/>
+            <field name="function">Functional Consultant</field>
+            <field name="email">douglas.fletcher51@example.com</field>
+            <field name="phone">(132)-553-7242</field>
+        </record>
+        <record id="res_partner_address_4" model="res.partner">
+            <field name="name">Floyd Steward</field>
+            <field name="parent_id" ref="res_partner_2"/>
+            <field name="function">Analyst</field>
+            <field name="email">floyd.steward34@example.com</field>
+            <field name="phone">(145)-138-3401</field>
+        </record>
+        <record id="res_partner_address_5" model="res.partner">
+            <field name="name">Edwin Hansen</field>
+            <field name="parent_id" ref="res_partner_3"/>
+            <field name="function">Marketing Manager</field>
+            <field name="email">edwin.hansen58@example.com</field>
+            <field name="phone">(943)-352-2555</field>
+        </record>
+        <record id="res_partner_address_7" model="res.partner">
+            <field name="name">Billy Fox</field>
+            <field name="parent_id" ref="res_partner_4"/>
+            <field name="function">Production Supervisor</field>
+            <field name="email">billy.fox45@example.com</field>
+            <field name="phone">(915)-498-5611</field>
+        </record>
+        <record id="res_partner_address_10" model="res.partner">
+            <field name="name">Jesse Brown</field>
+            <field name="parent_id" ref="res_partner_3"/>
+            <field name="function">Senior Consultant</field>
+            <field name="email">jesse.brown74@example.com</field>
+            <field name="phone">(829)-386-3277</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="res_partner_address_11" model="res.partner">
+            <field name="name">Soham Palmer</field>
+            <field name="parent_id" ref="res_partner_3"/>
+            <field name="function">Director</field>
+            <field name="email">soham.palmer15@example.com</field>
+            <field name="phone">(379)-167-2040</field>
+        </record>
+        <record id="res_partner_address_13" model="res.partner">
+            <field name="name">Kim Snyder</field>
+            <field name="parent_id" ref="res_partner_4"/>
+            <field name="function">Senior Associate</field>
+            <field name="email">kim.snyder96@example.com</field>
+            <field name="phone">(215)-379-4865</field>
+        </record>
+        <record id="res_partner_address_14" model="res.partner">
+            <field name="name">Edith Sanchez</field>
+            <field name="parent_id" ref="res_partner_4"/>
+            <field name="function">Analyst</field>
+            <field name="email">edith.sanchez68@example.com</field>
+            <field name="phone">(938)-175-2048</field>
+        </record>
+        <record id="res_partner_address_15" model="res.partner">
+            <field name="name">Brandon Freeman</field>
+            <field name="function">Creative Director</field>
+            <field name="parent_id" ref="res_partner_12"/>
+            <field name="email">brandon.freeman55@example.com</field>
+            <field name="phone">(355)-687-3262</field>
+        </record>
+        <record id="res_partner_address_16" model="res.partner">
+            <field name="name">Nicole Ford</field>
+            <field name="function">Director</field>
+            <field name="parent_id" ref="res_partner_12"/>
+            <field name="email">nicole.ford75@example.com</field>
+            <field name="phone">(946)-638-6034</field>
+        </record>
+        <record id="res_partner_address_17" model="res.partner">
+            <field name="name">Toni Rhodes</field>
+            <field name="function">Managing Partner</field>
+            <field name="parent_id" ref="res_partner_10"/>
+            <field name="email">toni.rhodes11@example.com</field>
+            <field name="phone">(198)-539-4948</field>
+        </record>
+        <record id="res_partner_address_18" model="res.partner">
+            <field name="name">Gordon Owens</field>
+            <field name="function">Senior Consultant</field>
+            <field name="parent_id" ref="res_partner_10"/>
+            <field name="email">gordon.owens47@example.com</field>
+            <field name="phone">(336)-723-6569</field>
+        </record>
+        <record id="res_partner_address_24" model="res.partner">
+            <field name="name">Theodore Gardner</field>
+            <field name="function">System Analyst</field>
+            <field name="parent_id" ref="res_partner_4"/>
+            <field name="email">theodore.gardner36@example.com</field>
+            <field name="phone">(186)-612-6561</field>
+        </record>
+        <record id="res_partner_address_25" model="res.partner">
+            <field name="name">Oscar Morgan</field>
+            <field name="parent_id" ref="res_partner_3"/>
+            <field name="function">Order Clerk</field>
+            <field name="email">oscar.morgan11@example.com</field>
+            <field name="phone">(561)-239-1744</field>
+        </record>
+        <record id="res_partner_address_27" model="res.partner">
+            <field name="name">Tom Ruiz</field>
+            <field name="parent_id" ref="res_partner_1"/>
+            <field name="function">Software Developer</field>
+            <field name="email">tom.ruiz89@example.com</field>
+            <field name="phone">(102)-834-1602</field>
+        </record>
+        <record id="res_partner_address_28" model="res.partner">
+            <field name="name">Colleen Diaz</field>
+            <field name="function">Business Executive</field>
+            <field name="parent_id" ref="res_partner_12"/>
+            <field name="email">colleen.diaz83@example.com</field>
+            <field name="phone">(255)-595-8393</field>
+        </record>
+        <record id="res_partner_address_30" model="res.partner">
+            <field name="name">Lorraine Douglas</field>
+            <field name="function">Functional Consultant</field>
+            <field name="parent_id" ref="res_partner_18"/>
+            <field name="email">lorraine.douglas35@example.com</field>
+            <field name="phone">(443)-648-9155</field>
+        </record>
+        <record id="res_partner_address_31" model="res.partner">
+            <field name="name">Addison Olson</field>
+            <field name="parent_id" ref="res_partner_2"/>
+            <field name="function">Sales Representative</field>
+            <field name="email">addison.olson28@example.com</field>
+            <field name="phone">(223)-399-7637</field>
+        </record>
+        <record id="res_partner_address_32" model="res.partner">
+            <field name="name">Sandra Neal</field>
+            <field name="parent_id" ref="res_partner_4"/>
+            <field name="function">Sales Manager</field>
+            <field name="email">sandra.neal80@example.com</field>
+            <field name="phone">(430)-371-7293</field>
+        </record>
+        <record id="res_partner_address_33" model="res.partner">
+            <field name="name">Julie Richards</field>
+            <field name="parent_id" ref="res_partner_4"/>
+            <field name="function">Financial Manager</field>
+            <field name="email">julie.richards84@example.com</field>
+            <field name="phone">(225)-148-7811</field>
+        </record>
+        <record id="res_partner_address_34" model="res.partner">
+            <field name="name">Travis Mendoza</field>
+            <field name="parent_id" ref="res_partner_4"/>
+            <field name="function">Knowledge Manager</field>
+            <field name="email">travis.mendoza24@example.com</field>
+            <field name="phone">(840)-944-8661</field>
+        </record>
+        <record id="res_partner_main1" model="res.partner">
+            <field name="name">Chester Reed</field>
+            <field name="parent_id" ref="main_partner"/>
+            <field name="function">Chief Executive Officer (CEO)</field>
+            <field name="email">chester.reed79@example.com</field>
+            <field name="phone">(979)-904-8902</field>
+        </record>
+        <record id="res_partner_main2" model="res.partner">
+            <field name="name">Dwayne Newman</field>
+            <field name="function">Chief Operations Officer (COO)</field>
+            <field name="parent_id" ref="main_partner"/>
+            <field name="email">dwayne.newman28@example.com</field>
+            <field name="phone">(614)-177-4937</field>
+        </record>
+    </data>
+</odoo>

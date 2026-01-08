@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="hr_attendance_holidays_hr_leave_allocation_view_form_inherit" model="ir.ui.view">
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="(//div[@name='duration_display']/span)[last()]" position="after">
+                <field name="hr_attendance_overtime" invisible="1" />
+                <field name="overtime_deductible" invisible="1" />
+                <field name="employee_overtime" invisible="1" />
+                <div class="oe_inline"
+                    invisible="not hr_attendance_overtime or not employee_id or not overtime_deductible or employee_overtime &lt;= 0">
+                    <field name="employee_overtime" nolabel="1" widget="float_time" class="text-success" /> Extra Hours Available
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_overtime_view_form" model="ir.ui.view">
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="hr_attendance_holidays_hr_leave_allocation_view_form_inherit" />
+        <field name="mode">primary</field>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <div name="button_box" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </div>
+            <xpath expr="//field[@name='holiday_status_id']" position="attributes">
+                <attribute name="domain">[('overtime_deductible', '=', True), ('requires_allocation', '=', 'yes'), ('employee_requests', '=', 'yes')]</attribute>
+                <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="after">
+                <footer>
+                    <button string="Save" special="save" class="btn btn-primary" close="1" />
+                    <button string="Discard" special="cancel" class="btn-secondary" close="1" />
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_overtime_manager_view_form" model="ir.ui.view">
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="hr_leave_allocation_overtime_view_form" />
+        <field name="mode">primary</field>
+        <field name="priority">70</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='holiday_status_id']" position="attributes">
+                <attribute name="domain">[('overtime_deductible', '=', True), ('requires_allocation', '=', 'yes')]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_overtime_action" model="ir.actions.act_window">
+        <field name="name">New Allocation Request</field>
+        <field name="res_model">hr.leave.allocation</field>
+        <field name="view_mode">form</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'form', 'view_id': ref('hr_leave_allocation_overtime_view_form')})]"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="hr_leave_allocation_overtime_manager_action" model="ir.actions.act_window">
+        <field name="name">New Allocation Request</field>
+        <field name="res_model">hr.leave.allocation</field>
+        <field name="view_mode">form</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'form', 'view_id': ref('hr_leave_allocation_overtime_manager_view_form')})]"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

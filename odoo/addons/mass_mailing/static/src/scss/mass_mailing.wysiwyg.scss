@@ -1,0 +1,33 @@
+// padding for snippets only if editor has snippets (not on mobile)
+// (not reactive as hiding the menu itself isn't reactive)
+.o_mass_mailing_iframe body.editor_has_snippets {
+    padding-right: $o-we-sidebar-width !important;
+
+    #web_editor-top-edit .note-popover .popover {
+        right: $o-we-sidebar-width !important;
+    }
+}
+.o_mass_mailing_iframe body {
+    #oe_manipulators {
+       // Sidebar is already in + 1
+       z-index: $o-we-overlay-zindex + 2;
+    }
+
+    .modal:not(.o_technical_modal) {
+        top: 0 !important;
+        // set z-index so customize options visible on dialog.
+        z-index: $o-we-overlay-zindex - 1;
+        // just for fake backdrop effect
+        background-color: rgba(66, 66, 66, 0.4);
+    }
+
+    .oe_structure .oe_drop_zone {
+
+        &:first-child {
+            transform: translateY(50%);
+        }
+        &:last-child {
+            transform: translateY(-50%);
+        }
+    }
+}

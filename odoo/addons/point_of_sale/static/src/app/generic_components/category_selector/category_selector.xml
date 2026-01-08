@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.CategorySelector">
+        <div t-attf-class="{{props.class}} d-flex overflow-auto w-100 flex-grow-1">
+            <div class="d-flex p-1 bg-view">
+                <div t-foreach="props.categories" t-as="category" t-key="category.id"
+                    class="d-flex align-items-center">
+                    <i t-if="category_index != 0" t-attf-class="px-2 fa {{category.separator}}"
+                        t-att-style="`opacity: ${category.showSeparator ? 1 : 0};`"
+                        aria-hidden="true" />
+                    <button
+                        class="category-button btn btn-light d-flex flex-column align-items-center justify-content-center category-item p-1 h-100"
+                        style="max-width: 100px;"
+                        t-on-click="() => props.onClick(category.id)">
+                        <t t-if="props.showImage">
+                            <img t-if="category.imageUrl"
+                                class="rounded h-75"
+                                t-att-src="category.imageUrl"
+                                alt="Category" />
+                        </t>
+                        <i t-if="category.icon"
+                            t-attf-class="fa {{category.icon}}"
+                            aria-hidden="true" />
+                        <span t-if="category.name" class="w-100 text-center fs-5 inline-block text-truncate" t-esc="category.name" style="min-height: 1.2rem" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

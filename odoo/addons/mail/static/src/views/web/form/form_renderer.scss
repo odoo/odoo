@@ -1,0 +1,47 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o-mail-ChatterContainer, .o-mail-Form-chatter {
+    --ChatterTopbar-padding-v: #{map-get($spacers, 2)};
+    --ChatterTopbar-padding-left: #{$o-horizontal-padding};
+    --ChatterTopbar-padding-right: #{$o-horizontal-padding};
+    --Chatter-asideExtraWidth: 0px; // to take into account more items, e.g. "close" chatter feature
+
+    &.o-aside {
+        flex-shrink: 0;
+        flex-grow: 1;
+        padding: map-get($spacers, 0);
+        width: calc(#{$o-mail-Chatter-minWidth} + var(--Chatter-asideExtraWidth));
+
+        .o-mail-Message.o-not-discussion {
+            border-width: $border-width 0;
+        }
+    }
+
+    &.o-isInFormSheetBg {
+        margin-left: calc(var(--formView-sheetBg-padding-x) * -1);
+        margin-right: calc(var(--formView-sheetBg-padding-x) * -1);
+    }
+
+    &:not(.o-aside):not(.o-full-width) .o-mail-Chatter {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o-mail-ChatterContainer, .o-mail-Form-chatter {
+    display: flex;
+    margin: 0 auto;
+    padding-bottom: map-get($spacers, 5);
+    width: 100%;
+}
+
+// FIX to hide chatter in dialogs when they are opened from an action returned by python code
+.modal .modal-dialog .o_form_view .o-mail-Form-chatter {
+    display: none;
+}

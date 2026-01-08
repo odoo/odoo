@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_userlabel">
+    <t t-call="web.basic_layout">
+        <div class="page">
+            <div class="oe_structure"></div>
+            <t t-foreach="docs" t-as="user">
+                <div class="col-6 mb92">
+                    <div class="oe_structure"></div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="col-4 danger">Badge ID</th>
+                                <th class="active">Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span t-if="user.sudo().barcode" t-field="user.sudo().barcode" t-options="{'widget': 'barcode', 'symbology': 'EAN13', 'width': 300, 'height': 50, 'img_style': 'width:100%;height:35%;'}">1234567890</span>
+                                </td>
+                                <td><strong><span t-field="user.name">Marc Demo</span></strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="oe_structure"></div>
+                </div>
+            </t>
+            <div class="oe_structure"></div>
+        </div>
+    </t>
+</template>
+</odoo>

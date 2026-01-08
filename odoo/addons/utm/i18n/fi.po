@@ -1,0 +1,759 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* utm
+# 
+# Translators:
+# Jussi Lehto <jussi@gulfeo.com>, 2023
+# Johanna Valkonen <miujohanna@gmail.com>, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Anni Saarelainen, 2023
+# Martin Trigaux, 2023
+# Miku Laitinen <miku.laitinen@gmail.com>, 2023
+# Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2023
+# Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+#, python-format
+msgid "%(content)s (%(model_description)s created on %(create_date)s)"
+msgstr "%(content)s (%(model_description)s luotu %(create_date)s)"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__active
+#: model:ir.model.fields,field_description:utm.field_utm_medium__active
+msgid "Active"
+msgstr "Aktiivinen"
+
+#. module: utm
+#: model:ir.model.fields,help:utm.field_utm_campaign__is_auto_campaign
+msgid "Allows us to filter relevant Campaigns"
+msgstr "Mahdollistaa merkityksellisten kampanjoiden suodattamisen"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Approval-based Flow"
+msgstr "Hyväksyntään perustuva kulku"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Approved"
+msgstr "Hyväksytty"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Archive"
+msgstr "Arkistoi"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Archived"
+msgstr "Arkistoitu"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
+msgid "Assign tags to your campaigns to organize, filter and track them."
+msgstr ""
+"Määritä kampanjoillesi tunnisteita niiden järjestämiseksi, suodattamiseksi "
+"ja seuraamiseksi."
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Audience-driven Flow"
+msgstr "Yleisölähtöinen kulku"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__is_auto_campaign
+msgid "Automatically Generated Campaign"
+msgstr "Automaattisesti luotu kampanja"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__campaign_id
+msgid "Campaign"
+msgstr "Kampanja"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__name
+msgid "Campaign Identifier"
+msgstr "Kampanjan tunniste"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__title
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form_quick_create
+msgid "Campaign Name"
+msgstr "Kampanjan nimi"
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_stage
+msgid "Campaign Stage"
+msgstr "Kampanjavaihe"
+
+#. module: utm
+#: model:ir.actions.act_window,name:utm.action_view_utm_tag
+#: model_terms:ir.ui.view,arch_db:utm.utm_tag_view_tree
+msgid "Campaign Tags"
+msgstr "Kampanjan tunnisteet"
+
+#. module: utm
+#: model:ir.actions.act_window,name:utm.utm_campaign_action
+#: model:ir.ui.menu,name:utm.menu_utm_campaign_act
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Campaigns"
+msgstr "Kampanjat"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
+msgid ""
+"Campaigns are used to centralize your marketing efforts and track their "
+"results."
+msgstr ""
+"Kampanjoita käytetään markkinointitoimien keskittämiseen ja niiden tulosten "
+"seurantaan."
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Campaigns that are assigned to me"
+msgstr "Minulle osoitetut kampanjat"
+
+#. module: utm
+#: model:utm.campaign,title:utm.utm_campaign_christmas_special
+msgid "Christmas Special"
+msgstr "Joulutarjous"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Collect ideas, design creative content and publish it once reviewed."
+msgstr ""
+"Kerää ideoita, suunnittele luovaa sisältöä ja julkaise se tarkistettuna."
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__color
+#: model:ir.model.fields,field_description:utm.field_utm_tag__color
+msgid "Color Index"
+msgstr "Väri-indeksi"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Copywriting"
+msgstr "Haamukirjoitus"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_medium_action
+msgid "Create a Medium"
+msgstr "Luo media"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
+msgid "Create a Tag"
+msgstr "Luo tunniste"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
+msgid "Create a campaign"
+msgstr "Luo kampanja"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
+msgid "Create a stage for your campaigns"
+msgstr "Luo vaihe kampanjoillesi"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__create_uid
+#: model:ir.model.fields,field_description:utm.field_utm_medium__create_uid
+#: model:ir.model.fields,field_description:utm.field_utm_source__create_uid
+#: model:ir.model.fields,field_description:utm.field_utm_stage__create_uid
+#: model:ir.model.fields,field_description:utm.field_utm_tag__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__create_date
+#: model:ir.model.fields,field_description:utm.field_utm_medium__create_date
+#: model:ir.model.fields,field_description:utm.field_utm_source__create_date
+#: model:ir.model.fields,field_description:utm.field_utm_stage__create_date
+#: model:ir.model.fields,field_description:utm.field_utm_tag__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Creative Flow"
+msgstr "Luova kulku"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Delete"
+msgstr "Poista"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Deploy"
+msgstr "Käyttöönota"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Deployed"
+msgstr "Käytössä"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: model:utm.stage,name:utm.campaign_stage_2
+#, python-format
+msgid "Design"
+msgstr "Suunnittelu"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__display_name
+#: model:ir.model.fields,field_description:utm.field_utm_medium__display_name
+#: model:ir.model.fields,field_description:utm.field_utm_source__display_name
+#: model:ir.model.fields,field_description:utm.field_utm_stage__display_name
+#: model:ir.model.fields,field_description:utm.field_utm_tag__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Done"
+msgstr "Valmis"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Edit"
+msgstr "Muokkaa"
+
+#. module: utm
+#: model:utm.campaign,title:utm.utm_campaign_email_campaign_products
+msgid "Email Campaign - Products"
+msgstr "Sähköpostikampanja - Tuotteet"
+
+#. module: utm
+#: model:utm.campaign,title:utm.utm_campaign_email_campaign_services
+msgid "Email Campaign - Services"
+msgstr "Sähköpostikampanja - Palvelut"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Event-driven Flow"
+msgstr "Tapahtumapohjainen kulku"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Gather Data"
+msgstr "Kerää tietoja"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid ""
+"Gather data, build a recipient list and write content based on your "
+"Marketing target."
+msgstr ""
+"Kerää tietoja, rakenna vastaanottajaluettelo ja kirjoita sisältöä "
+"markkinointikohteesi perusteella."
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Group By"
+msgstr "Ryhmittely"
+
+#. module: utm
+#: model:ir.model,name:utm.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-reititys"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__id
+#: model:ir.model.fields,field_description:utm.field_utm_medium__id
+#: model:ir.model.fields,field_description:utm.field_utm_source__id
+#: model:ir.model.fields,field_description:utm.field_utm_stage__id
+#: model:ir.model.fields,field_description:utm.field_utm_tag__id
+msgid "ID"
+msgstr "ID"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Ideas"
+msgstr "Ideat"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__write_uid
+#: model:ir.model.fields,field_description:utm.field_utm_medium__write_uid
+#: model:ir.model.fields,field_description:utm.field_utm_source__write_uid
+#: model:ir.model.fields,field_description:utm.field_utm_stage__write_uid
+#: model:ir.model.fields,field_description:utm.field_utm_tag__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__write_date
+#: model:ir.model.fields,field_description:utm.field_utm_medium__write_date
+#: model:ir.model.fields,field_description:utm.field_utm_source__write_date
+#: model:ir.model.fields,field_description:utm.field_utm_stage__write_date
+#: model:ir.model.fields,field_description:utm.field_utm_tag__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Later"
+msgstr "Myöhemmin"
+
+#. module: utm
+#: model:ir.ui.menu,name:utm.menu_link_tracker_root
+msgid "Link Tracker"
+msgstr "Klikkiseuranta"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "List-Building"
+msgstr "Luettelon rakentaminen"
+
+#. module: utm
+#: model:utm.tag,name:utm.utm_tag_1
+msgid "Marketing"
+msgstr "Markkinointi"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
+msgid "Medium"
+msgstr "Media"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_medium__name
+msgid "Medium Name"
+msgstr "Median Nimi"
+
+#. module: utm
+#: model:ir.actions.act_window,name:utm.utm_medium_action
+#: model:ir.ui.menu,name:utm.menu_utm_medium
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
+msgid "Mediums"
+msgstr "Mediat"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "My Campaigns"
+msgstr "Omat kampanjat"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
+#: model:ir.model.fields,field_description:utm.field_utm_stage__name
+#: model:ir.model.fields,field_description:utm.field_utm_tag__name
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
+msgid "Name"
+msgstr "Nimi"
+
+#. module: utm
+#: model:utm.stage,name:utm.default_utm_stage
+msgid "New"
+msgstr "Uusi"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_source_action
+msgid "No Sources yet!"
+msgstr "Ei lähteitä vielä!"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Pre-Launch"
+msgstr "Käynnistystä edeltävä"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Prepare Campaigns and get them approved before making them go live."
+msgstr "Valmistele kampanjat ja hyväksy ne ennen niiden käyttöönottoa."
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid ""
+"Prepare your Campaign, test it with part of your audience and deploy it "
+"fully afterwards."
+msgstr ""
+"Valmistele kampanja, testaa sitä osalla yleisöstäsi ja ota se sen jälkeen "
+"kokonaan käyttöön."
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Report"
+msgstr "Raportti"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__user_id
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Responsible"
+msgstr "Vastuuhenkilö"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Restore"
+msgstr "Palauta"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Review"
+msgstr "Tarkasta"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Running"
+msgstr "Käynnissä olevat"
+
+#. module: utm
+#: model:utm.campaign,title:utm.utm_campaign_fall_drive
+msgid "Sale"
+msgstr "Ale"
+
+#. module: utm
+#: model:utm.stage,name:utm.campaign_stage_1
+msgid "Schedule"
+msgstr "Aikatauluta"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
+msgid "Search UTM Medium"
+msgstr "Hae UTM-media"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Send"
+msgstr "Lähetä"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: model:utm.stage,name:utm.campaign_stage_3
+#, python-format
+msgid "Sent"
+msgstr "Lähetetty"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_stage__sequence
+msgid "Sequence"
+msgstr "Järjestys"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Soft-Launch"
+msgstr "Soft-Launch"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Soft-Launch Flow"
+msgstr "Soft-Launch kulku"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
+#: model:ir.model.fields,field_description:utm.field_utm_source_mixin__source_id
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
+msgid "Source"
+msgstr "Lähde"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_source__name
+msgid "Source Name"
+msgstr "Lähdenimi"
+
+#. module: utm
+#: model:ir.actions.act_window,name:utm.utm_source_action
+#: model:ir.ui.menu,name:utm.menu_utm_source
+msgid "Sources"
+msgstr "Lähteet"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__stage_id
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Stage"
+msgstr "Vaihe"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_search
+#: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_tree
+msgid "Stages"
+msgstr "Vaiheet"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
+msgid ""
+"Stages allow you to organize your workflow  (e.g. plan, design, in progress,"
+" done, …)."
+msgstr ""
+"Vaiheiden avulla voit järjestää työnkulun (esim. suunnitelma, suunnittelu, "
+"käynnissä, valmis, ...)."
+
+#. module: utm
+#: model:ir.model.fields,help:utm.field_utm_tag__color
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
+msgstr ""
+"Tunnisteen väri. Ei väriä tarkoittaa, että kanbanissa ei näytetä sisäisiä "
+"tunnisteita, jotta ne voitaisiin erottaa julkisista luokittelutunnisteista."
+
+#. module: utm
+#: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
+msgid "Tag name already exists!"
+msgstr "Tunniste on jo olemassa!"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Tags"
+msgstr "Tunnisteet"
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_medium.py:0
+#, python-format
+msgid ""
+"The UTM medium '%s' cannot be deleted as it is used in some main functional "
+"flows, such as the recruitment and the mass mailing."
+msgstr ""
+"UTM-mediaa \"%s\" ei voi poistaa, koska sitä käytetään joissakin "
+"tärkeimmissä toiminnallisissa virroissa, kuten rekrytoinnissa ja "
+"massapostituksessa."
+
+#. module: utm
+#: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
+#: model:ir.model.constraint,message:utm.constraint_utm_medium_unique_name
+#: model:ir.model.constraint,message:utm.constraint_utm_source_unique_name
+msgid "The name must be unique"
+msgstr "Nimen on oltava yksilöllinen"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "This Month"
+msgstr "Kuluva kuukausi"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "This Week"
+msgstr "Tällä viikolla"
+
+#. module: utm
+#: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"Nimi, joka auttaa luokittelemaan erilaiset kampanjatoimet esim. "
+"joulutervehdys, kesäkampanja"
+
+#. module: utm
+#: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr "Toimitustapa, esim. postitus, sähköposti tai mainosbanneri"
+
+#. module: utm
+#: model:ir.model.fields,help:utm.field_utm_mixin__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"Linkin lähde, esim. hakukone, toinen verkkotunnus tai sähköpostilistan nimi"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "To be Approved"
+msgstr "Hyväksyttävä"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid ""
+"Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely"
+" content."
+msgstr ""
+"Seuraa tulevia tapahtumia (esim. joulu, musta perjantai, ...) ja julkaise "
+"oikea-aikaista sisältöä."
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_campaign
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
+msgid "UTM Campaign"
+msgstr "UTM-kampanja"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "UTM Campaigns"
+msgstr "UTM-kampanjat"
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_medium
+msgid "UTM Medium"
+msgstr "UTM-media"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_medium_action
+msgid ""
+"UTM Mediums track the mean that was used to attract traffic (e.g. "
+"\"Website\", \"Twitter\", ...)."
+msgstr ""
+"UTM-mediat seuraavat keinoa, jota käytettiin liikenteen houkuttelemiseen "
+"(esim. \"Verkkosivusto\", \"Twitter\", ...)."
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_mixin
+msgid "UTM Mixin"
+msgstr "UTM Mixin"
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_source
+msgid "UTM Source"
+msgstr "UTM-lähde"
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_source_mixin
+msgid "UTM Source Mixin"
+msgstr "UTM lähde Mixin"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_source_action
+msgid ""
+"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
+"...)."
+msgstr ""
+"UTM-lähteet seuraavat, mistä liikenne tulee (esim. \"Toukokuun uutiskirje\","
+" \"\", ...)."
+
+#. module: utm
+#: model:ir.actions.act_window,name:utm.action_view_utm_stage
+msgid "UTM Stages"
+msgstr "UTM-vaiheet"
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_tag
+msgid "UTM Tag"
+msgstr "UTM-tunniste"
+
+#. module: utm
+#: model:ir.ui.menu,name:utm.marketing_utm
+msgid "UTMs"
+msgstr "UTM:t"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Use This For My Campaigns"
+msgstr "Käytä tätä kampanjoihini"
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+#, python-format
+msgid ""
+"You cannot update multiple records with the same name. The name should be "
+"unique!"
+msgstr ""
+"Et voi päivittää useita samannimisiä tietueita. Nimen on oltava "
+"yksilöllinen!"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
+msgid "e.g. \"Brainstorming\""
+msgstr "esim. \"Aivoriihi\""
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
+msgid "e.g. \"Christmas Mailing\""
+msgstr "esim. \"Joulupostitus\""
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
+msgid "e.g. \"Email\""
+msgstr "esim. \"Sähköposti\""
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form_quick_create
+msgid "e.g. Black Friday"
+msgstr "esim. musta perjantai"
