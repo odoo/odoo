@@ -376,3 +376,19 @@ class TestVirtualAvailable(TestStockCommon):
         self.picking_out.button_validate()
         with self.assertRaises(UserError):
             self.product_3.write({'is_storable': False})
+
+    def test_change_product_product_type(self):
+        """Test that changing the product type directly in a `product.product` record
+        doesn't bypass existing moves check.
+        """
+        self.picking_out.action_confirm()
+        self.picking_out.action_assign()
+
+        # Should not be possible to change the product type when quantities are reserved
+        with self.assertRaises(UserError):
+            self.product_3.write({'type': 'service'})
+
+        # Should not be possible to change the product type when moves are done.
+        self.picking_out.button_validate()
+        with self.assertRaises(UserError):
+            self.product_3.write({'type': 'service'})

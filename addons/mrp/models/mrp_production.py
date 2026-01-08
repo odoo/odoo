@@ -2419,6 +2419,7 @@ class MrpProduction(models.Model):
             'picking_type_id': self.picking_type_id.id,
             'product_qty': sum(production.product_uom_qty for production in self),
             'product_uom_id': product_id.uom_id.id,
+            'location_final_id': all(mo.location_final_id for mo in self) and len(self.location_final_id) == 1 and self.location_final_id.id,
             'user_id': user_id.id,
             'origin': ",".join(sorted([production.name for production in self])),
         })
@@ -2476,16 +2477,16 @@ class MrpProduction(models.Model):
         workorders_to_unlink = self.env['mrp.workorder']
         # For draft MO, all the work will be done by compute methods.
         # For cancelled and done MO, we don't want to do anything more than assinging the BoM.
-        if self.state == 'draft' and self.bom_id == bom:
-            # Empties `bom_id` field so when the BoM is reassigns to this field, depending computes
-            # will be triggered (doesn't happen if the field's value doesn't change).
-            self.bom_id = False
+        if self.state == 'draft':
+            # Don't straight up delete the moves/workorders but keep them for deletion after
+            # the BoM has been assigned (and thus after new moves/WO have been created).
+            moves_to_unlink = self.move_raw_ids
+            workorders_to_unlink = self.workorder_ids
+            if self.bom_id == bom:
+                # Empty the `bom_id` field so that, when the BoM is reassigned to this field, depending
+                # computes are re-triggered (it doesn't happen if the value of the field doesn't change).
+                self.bom_id = False
         if self.state in ['cancel', 'done', 'draft']:
-            if self.state == 'draft':
-                # Don't straight delete the moves/workorders to avoid to cancel the MO, those will
-                # be deleted once the BoM is assigned (and thus after new moves/WO were created).
-                moves_to_unlink = self.move_raw_ids
-                workorders_to_unlink = self.workorder_ids
             self.bom_id = bom
             moves_to_unlink.unlink()
             workorders_to_unlink.unlink()

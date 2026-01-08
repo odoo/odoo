@@ -235,7 +235,12 @@ export class LinkPopover extends Component {
                 value: `https://www.google.com/s2/favicons?sz=16&domain=${encodeURIComponent(url)}`,
             };
 
-            const externalMetadata = await this.props.getExternalMetaData(this.state.url);
+            const externalMetadata = await this.props
+                .getExternalMetaData(this.state.url)
+                .catch((error) => {
+                    console.warn(`Error fetching external metadata for ${url.href}:`, error);
+                    return {};
+                });
 
             this.state.urlTitle = externalMetadata?.og_title || this.state.url;
             this.state.urlDescription = externalMetadata?.og_description || "";
@@ -251,7 +256,12 @@ export class LinkPopover extends Component {
             // Set state based on cached link meta data
             // for record missing errors, we push a warning that the url is likely invalid
             // for other errors, we log them to not block the ui
-            const internalMetadata = await this.props.getInternalMetaData(this.state.url);
+            const internalMetadata = await this.props
+                .getInternalMetaData(this.state.url)
+                .catch((error) => {
+                    console.warn(`Error fetching internal metadata for ${url.href}:`, error);
+                    return {};
+                });
             if (internalMetadata.favicon) {
                 this.state.previewIcon = {
                     type: "imgSrc",

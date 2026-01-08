@@ -268,10 +268,10 @@ class AccountEdiProxyClientUser(models.Model):
                 move.peppol_move_state = content['state']
                 move._message_log(body=_('Peppol status update: %s', content['state']))
 
-                edi_user._call_peppol_proxy(
-                    "/api/peppol/1/ack",
-                    params={'message_uuids': list(message_uuids.keys())},
-                )
+            edi_user._call_peppol_proxy(
+                "/api/peppol/1/ack",
+                params={'message_uuids': list(message_uuids.keys())},
+            )
         if need_retrigger:
             self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger()
 

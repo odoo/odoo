@@ -116,4 +116,8 @@ export class ComboConfiguratorPopup extends Component {
         this.props.getPayload(this.getSelectedComboItems());
         this.props.close();
     }
+
+    getAvailableComboLines(combo) {
+        return combo.combo_item_ids.filter((line) => line.product_id?.active);
+    }
 }

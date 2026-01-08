@@ -300,6 +300,14 @@ class AccountMove(models.Model):
             'total_tax': invoice_vals['vals']['tax_total_vals'][-1]['tax_amount'],
         }
 
+    def _retry_edi_documents_error_hook(self):
+        ''' Overriden to reset the attachment and allow re-submission of ZATCA invoices,
+            Ensures that reciepts on POS are updated after a failed submission.
+        '''
+        zatca = self.env.ref('l10n_sa_edi.edi_sa_zatca')
+        self.filtered(lambda m: m._get_edi_document(zatca))._detach_attachments()
+        return super()._retry_edi_documents_error_hook()
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

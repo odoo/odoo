@@ -191,7 +191,11 @@ def split_partner_name(partner_name):
     :return: The splitted first name and last name
     :rtype: tuple
     """
-    return " ".join(partner_name.split()[:-1]), partner_name.split()[-1]
+    parts = partner_name.split()
+    if len(parts) == 1:
+        return parts[0], ""
+
+    return " ".join(parts[:-1]), parts[-1]
 
 
 # Security
