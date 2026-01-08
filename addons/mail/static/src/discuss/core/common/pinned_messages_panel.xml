@@ -2,7 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="discuss.PinnedMessagesPanel">
         <ActionPanel title.translate="Pinned Messages" minWidth="200" initialWidth="400" icon="'fa fa-thumb-tack'">
-            <MessageCardList emptyText="emptyText" messages="props.channel.pinnedMessages" thread="props.channel.thread" mode="'pin'"/>
+            <div t-if="props.channel.pinnedMessagesState === 'loading'" class="d-flex w-100 h-100 align-items-center justify-content-center mt-3"><i class="fa fa-circle-o-notch fa-spin opacity-50"/></div>
+            <MessageCardList t-else="" emptyText="emptyText" messages="props.channel.pinnedMessages" thread="props.channel.thread" mode="'pin'"/>
         </ActionPanel>
     </t>
 </templates>

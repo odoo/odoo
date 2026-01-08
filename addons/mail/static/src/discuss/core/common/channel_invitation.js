@@ -32,6 +32,7 @@ export class ChannelInvitation extends Component {
         this.inputRef = useRef("input");
         this.sequential = useSequential();
         this.state = useState({
+            fetching: false,
             searchResultCount: 0,
             searchStr: "",
             selectableEmails: [],
@@ -118,12 +119,14 @@ export class ChannelInvitation extends Component {
     }
 
     async fetchPartnersToInvite() {
+        this.state.fetching = true;
         const results = await this.sequential(() =>
             this.orm.call("res.partner", "search_for_channel_invite", [
                 this.searchStr,
                 this.props.channel?.id ?? false,
             ])
         );
+        this.state.fetching = false;
         if (!results) {
             return;
         }

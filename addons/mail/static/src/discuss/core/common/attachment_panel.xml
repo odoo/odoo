@@ -7,7 +7,8 @@
                 <div class="flex-grow-1" t-att-class="{
                     'd-flex justify-content-center align-items-center': props.channel.attachments.length === 0,
                 }">
-                    <p t-if="props.channel.attachments.length === 0" class="text-center fst-italic text-500">
+                    <div t-if="props.channel.isLoadingAttachments" class="d-flex align-items-center justify-content-center"><i class="fa fa-circle-o-notch fa-spin opacity-50" title="Loading attachments..."/></div>
+                    <p t-if="!props.channel.isLoadingAttachments and props.channel.attachments.length === 0" class="text-center fst-italic text-500">
                         <t t-if="props.channel.channel_type === 'channel'">This channel doesn't have any attachments.</t>
                         <t t-else="">This conversation doesn't have any attachments.</t>
                     </p>

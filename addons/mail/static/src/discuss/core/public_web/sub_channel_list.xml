@@ -19,7 +19,8 @@
                 </div>
             </t>
             <div class="o-mail-SubChannelList o-mail-Discuss-threadActionPopover mw-100 w-100 h-100" t-att-class="{ 'align-items-center justify-content-center': state.subChannels.length === 0 }">
-                <div t-if="state.subChannels.length === 0" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+                <div t-if="state.loading or !props.channel.loadSubChannelsDone" class="o-discuss-ChannelMemberList-loading d-flex align-items-center justify-content-center my-2 position-absolute top-0 end-0 m-2 me-3"><i class="fa fa-circle-o-notch fa-spin opacity-50"/></div>
+                <div t-if="state.subChannels.length === 0 and !state.loading and props.channel.loadSubChannelsDone" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
                     <p class="my-1 text-center fst-italic text-500">
                         <t t-if="state.searching" t-esc="NO_THREAD_FOUND"/>
                         <t t-else="">This channel has no thread yet.</t>
