@@ -752,6 +752,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         - Create a product with no taxes
         - Enable the global discount feature, and make sure the Discount product
             has a tax set on it.
+        - Test that customer get correct loyalty points after discount
         """
 
         if not self.env["ir.module.module"].search([("name", "=", "pos_discount"), ("state", "=", "installed")]):
@@ -811,6 +812,13 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'discount_mode': 'percent',
                 'discount_applicability': 'order',
             })],
+        })
+        loyalty_program2 = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        partner = self.env['res.partner'].create({'name': 'AAAA'})
+        self.env['loyalty.card'].create({
+            'program_id': loyalty_program2.id,
+            'partner_id': partner.id,
+            'points': 0,
         })
 
         self.product = self.env["product.product"].create(
