@@ -108,26 +108,8 @@
     <div class="oe_product_image position-relative flex-grow-0 overflow-hidden">
         <!-- Fetch Images Data -->
         <t
-            t-if="product_variant and product_variant.with_context(bin_size=True).image_128"
-            t-set="all_images_list"
-            t-value="product_variant._get_images()"
-        />
-        <t
-            t-else=""
-            t-set="all_images_list"
-            t-value="product._get_images()"
-        />
-        <!--
-            Image holders are records of different types (`product.template`, `product.product`
-            or `product.image`) and are returned as a list.
-            -->
-        <t
-            t-set="primary_image_holder"
-            t-value="(all_images_list[:1]+[product])[0]"
-        />
-        <t
             t-set="secondary_image_holder"
-            t-value="(all_images_list[1:2]+[False])[0]"
+            t-value="product.product_template_image_ids.filtered(lambda i: i.image_type == 'secondary')[:1]"
         />
 
         <a
@@ -138,7 +120,7 @@
         >
             <!-- Primary image -->
             <span
-                t-field="primary_image_holder.image_1920"
+                t-field="product.image_1920"
                 t-options="{'widget': 'image', 'preview_image': 'image_1024', 'class': 'oe_product_image_img h-100 w-100'}"
                 class="oe_product_image_img_wrapper oe_product_image_img_wrapper_primary d-flex h-100 justify-content-center align-items-center"
             />

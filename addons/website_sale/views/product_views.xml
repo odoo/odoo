@@ -180,8 +180,6 @@
                             </div>
                             <field name="out_of_stock_message" placeholder="e.g. 'Will be back soon'"/>
                         </group>
-                    </group>
-                    <group>
                         <group string="Long Description" name="ecom_description">
                             <field
                                 colspan="2"
@@ -190,19 +188,19 @@
                                 placeholder="A detailed, formatted description to promote your product on your eCommerce."
                             />
                         </group>
-                        <group name="product_template_images" string="Media" invisible="not sale_ok">
-                            <field
-                                name="product_template_image_ids"
-                                class="o_website_sale_image_list"
-                                context="{'default_name': name}"
-                                mode="kanban"
-                                add-label="Add Media"
-                                nolabel="1"
-                                colspan="2"
-                                widget="x2_many_media_viewer"
-                                options="{'convert_to_webp': True}"
-                            />
-                        </group>
+                    </group>
+                    <group name="product_template_images" string="Media">
+                        <field
+                            add-label="Add Media"
+                            name="product_template_image_ids"
+                            class="o_website_sale_image_list"
+                            context="{'default_name': name}"
+                            mode="kanban"
+                            nolabel="1"
+                            colspan="2"
+                            widget="product_image_x2_many_media_viewer"
+                            options="{'convert_to_webp': True}"
+                        />
                     </group>
                 </page>
             </notebook>
@@ -220,19 +218,25 @@
                         <group string="Ribbon" name="ribbon">
                             <field name="variant_ribbon_id" options="{'no_quick_create': True}"/>
                         </group>
-                        <group string="Extra Variant Media" name="product_template_images">
-                            <field
-                                name="product_variant_image_ids"
-                                class="o_website_sale_image_list"
-                                context="{'default_name': name}"
-                                mode="kanban"
-                                add-label="Add Media"
-                                nolabel="1"
-                                colspan="2"
-                                widget="x2_many_media_viewer"
-                                options="{'convert_to_webp': True}"
-                            />
-                        </group>
+                    </group>
+                    <group name="product_template_images" string="Media">
+                        <field
+                            add-label="Add Media"
+                            name="product_template_image_ids"
+                            class="o_website_sale_image_list"
+                            context="{
+                                'default_name': name,
+                                'default_product_variant_ids': [id],
+                                'default_attribute_value_ids': product_template_attribute_value_ids,
+                                'default_product_tmpl_id': product_tmpl_id,
+                                'variant_image_ids': variant_image_ids,
+                            }"
+                            mode="kanban"
+                            nolabel="1"
+                            colspan="2"
+                            widget="product_image_x2_many_media_viewer"
+                            options="{'convert_to_webp': True}"
+                        />
                     </group>
                 </page>
             </page>

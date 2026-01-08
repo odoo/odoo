@@ -13,6 +13,7 @@ from . import (
     payment_transaction,
     product_attribute,
     product_attribute_category,
+    product_attribute_value,
     product_combo,
     product_document,
     product_feed,

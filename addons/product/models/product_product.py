@@ -129,7 +129,13 @@ class ProductProduct(models.Model):
     all_product_tag_ids = fields.Many2many('product.tag', compute='_compute_all_product_tag_ids', search='_search_all_product_tag_ids')
 
     # all image_variant fields are technical and should not be displayed to the user
-    image_variant_1920 = fields.Image("Variant Image", max_width=1920, max_height=1920)
+    image_variant_1920 = fields.Image(
+        "Variant Image",
+        compute='_compute_image_variant_1920',
+        store=True,
+        max_width=1920,
+        max_height=1920,
+    )
 
     # resized fields stored (as attachment) for performance
     image_variant_1024 = fields.Image("Variant Image 1024", related="image_variant_1920", max_width=1024, max_height=1024, store=True)
@@ -256,6 +262,9 @@ class ProductProduct(models.Model):
             record.write_date = max(
                 record.write_date or now, record.product_tmpl_id.write_date or now
             )
+
+    def _compute_image_variant_1920(self):
+        return
 
     def _compute_image_1920(self):
         """Get the image from the template if no image is set on the variant."""

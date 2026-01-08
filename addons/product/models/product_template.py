@@ -213,6 +213,7 @@ class ProductTemplate(models.Model):
     product_document_count = fields.Integer(
         string="Documents Count", compute='_compute_product_document_count')
 
+    image_1920 = fields.Image(compute="_compute_image_1920", store=True, readonly=False)
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed', store=True)
     has_configurable_attributes = fields.Boolean("Is a configurable product", compute='_compute_has_configurable_attributes', store=True)
 
@@ -268,6 +269,9 @@ class ProductTemplate(models.Model):
             template.product_document_count = template.env['product.document'].search_count(
                 template._get_product_document_domain()
             )
+
+    def _compute_image_1920(self):
+        return
 
     @api.depends('image_1920', 'image_1024')
     def _compute_can_image_1024_be_zoomed(self):

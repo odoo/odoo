@@ -39,35 +39,39 @@
         <field name="name">product.image.view.kanban</field>
         <field name="model">product.image</field>
         <field name="arch" type="xml">
-            <kanban string="Product Images" default_order="sequence">
-                <!-- We need the hidden video_url to be able to create new `product.image` records with video_url. (see: x2many_media_viewer.js) -->
-                <field name="video_url" invisible="1"/>
+            <kanban string="Product Images" default_order="has_attribute_value desc, sequence, id">
+                <field name="has_attribute_value"/>
                 <field name="sequence" widget="handle"/>
+                 <!-- Needed to create new `product.image` records with default values. (see: x2many_media_viewer.js) -->
+                <field name="name"/>
+                <field name="video_url" invisible="1"/>
+                <!-- Needed in attribute_value_selector.js -->
+                <field name="image_type"/>
+                <field name="product_tmpl_id"/>
                 <templates>
                     <t t-name="card" class="p-0 border-0">
-                        <div class="card">
-                            <div class="o_squared_image">
-                                <field class="card-img-top" name="image_1920" widget="x2_many_image"/>
+                        <t
+                            t-set="isApplicable"
+                            t-value="(
+                                !context.variant_image_ids
+                                || context.variant_image_ids?.includes(record.id.raw_value)
+                                || !record.has_attribute_value.raw_value
+                            )"
+                        />
+                        <div t-attf-class="card flex-row h-100 border rounded-0 #{!isApplicable ? 'opacity-50' : ''}">
+                            <div class="o_website_sale_image_list_card_image ratio ratio-1x1">
+                                <field name="image_1920" widget="x2_many_image"/>
                             </div>
-                            <div class="p-2 m-0 bg-200" t-attf-title="#{record.name.value}">
-                                <field name="name" class="small fs-5 text-truncate d-block"/>
-                            </div>
-                            <!-- below 100 Kb: good -->
-                            <t t-if="record.image_1920.raw_value.length &lt; 100*1000">
-                                <t t-set="size_status" t-value="'text-bg-success'"/>
-                                <t t-set="message">Acceptable file size</t>
-                            </t>
-                            <!-- below 1000 Kb: decent -->
-                            <t t-elif="record.image_1920.raw_value.length &lt; 1000*1000">
-                                <t t-set="size_status" t-value="'text-bg-warning'" />
-                                <t t-set="message">Huge file size. The image should be optimized/reduced.</t>
-                            </t>
-                            <!-- above 1000 Kb: bad -->
-                            <t t-else="1">
-                                <t t-set="size_status" t-value="'text-bg-danger'"/>
-                                <t t-set="message">Optimization required! Reduce the image size or increase your compression settings.</t>
-                            </t>
-                            <span t-attf-class="badge #{size_status} o_product_image_size" t-att-title="message"></span>
+
+                            <field
+                                name="attribute_value_ids"
+                                class="overflow-y-auto p-2"
+                                widget="many2many_tags_color_dot"
+                                options="{'color_field': 'html_color', 'tag_limit': 11}"
+                            />
+                        </div>
+                        <div t-att-class="!isApplicable ? 'opacity-50' : ''">
+                            <field name="attribute_value_ids" widget="attribute_value_selector"/>
                         </div>
                     </t>
                 </templates>

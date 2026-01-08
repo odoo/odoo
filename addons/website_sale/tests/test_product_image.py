@@ -21,7 +21,9 @@ def _create_image(color="black", dims=(1920, 1080), format="JPEG"):
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
-    def test_01_admin_shop_zoom_tour(self):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         color_red = "#CD5C5C"
         name_red = "Indian Red"
 
@@ -31,10 +33,8 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         color_blue = "#4169E1"
         name_blue = "Royal Blue"
 
-        self.env["product.pricelist"].sudo().search([]).action_archive()
-
         # create the color attribute
-        product_attribute = self.env["product.attribute"].create({
+        cls.product_attribute = cls.env["product.attribute"].create({
             "name": "Beautiful Color",
             "display_type": "color",
             "value_ids": [
@@ -44,14 +44,32 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
             ],
         })
 
-        # first image (blue) for the template
-        blue_image = _create_image(color=color_blue)
+        cls.blue_image = _create_image(color=color_blue)
+        cls.red_image = _create_image(color=color_red, dims=(800, 500))
+        cls.green_image = _create_image(color=color_green)
 
-        # second image (red) for the variant 1, small image (no zoom)
-        red_image = _create_image(color=color_red, dims=(800, 500))
+        cls.template = cls.env["product.template"].create({
+            "name": "A Colorful Image",
+            "attribute_line_ids": [
+                Command.create({
+                    "attribute_id": cls.product_attribute.id,
+                    "value_ids": [Command.set(cls.product_attribute.value_ids.ids)],
+                })
+            ],
+            "image_1920": cls.blue_image,
+        })
 
-        # second image (green) for the variant 2, big image (zoom)
-        green_image = _create_image(color=color_green)
+        line = cls.template.attribute_line_ids
+        cls.value_red = line.product_template_value_ids[0]
+        cls.value_green = line.product_template_value_ids[1]
+        cls.value_blue = line.product_template_value_ids[2]
+
+        cls.product_red = cls.template._get_variant_for_combination(cls.value_red)
+        cls.product_green = cls.template._get_variant_for_combination(cls.value_green)
+        cls.product_blue = cls.template._get_variant_for_combination(cls.value_blue)
+
+    def test_01_admin_shop_zoom_tour(self):
+        self.env["product.pricelist"].sudo().search([]).action_archive()
 
         # Template Extra Image 1
         image_gif = _create_image(dims=(124, 147), format="GIF")
@@ -66,64 +84,70 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         image_png = _create_image(dims=(2147, 3251), format="PNG")
 
         # create the template, without creating the variants
-        template = self.env["product.template"].create({
-            "name": "A Colorful Image",
+        self.template.write({
             "product_template_image_ids": [
                 Command.create({"name": "image 1", "image_1920": image_gif}),
                 Command.create({"name": "image 4", "image_1920": image_svg}),
-            ],
-            "attribute_line_ids": [
-                Command.create({
-                    "attribute_id": product_attribute.id,
-                    "value_ids": [Command.set(product_attribute.value_ids.ids)],
-                })
-            ],
+            ]
         })
-
-        line = template.attribute_line_ids
-        value_red = line.product_template_value_ids[0]
-        value_green = line.product_template_value_ids[1]
 
         # set a different price on the variants to differentiate them
         product_template_attribute_values = self.env["product.template.attribute.value"].search([
-            ("product_tmpl_id", "=", template.id)
+            ("product_tmpl_id", "=", self.template.id)
         ])
 
         for val in product_template_attribute_values:
-            if val.name == name_red:
+            if val.name == "Indian Red":
                 val.price_extra = 10
             else:
                 val.price_extra = 20
 
-        # Get RED variant, and set image to blue (will be set on the template
-        # because the template image is empty and there is only one variant)
-        product_red = template._get_variant_for_combination(value_red)
-        product_red.write({
-            "image_1920": blue_image,
-            "product_variant_image_ids": [(0, 0, {"name": "image 2", "image_1920": image_bmp})],
+        # Set image to blue for red variant
+        self.product_red.write({
+            "image_1920": self.blue_image,
+            "product_template_image_ids": [
+                Command.create({
+                    "name": "image 2",
+                    "image_1920": image_bmp,
+                    "attribute_value_ids": [Command.link(self.value_red.id)],
+                })
+            ],
         })
 
-        self.assertEqual(template.image_1920.content, blue_image.content)
+        self.assertEqual(self.template.image_1920.content, self.blue_image.content)
 
-        # Get the green variant
-        product_green = template._get_variant_for_combination(value_green)
-        product_green.write({
-            "image_1920": green_image,
-            "product_variant_image_ids": [(0, 0, {"name": "image 3", "image_1920": image_png})],
+        # Set image to green for green variant
+        self.product_green.write({
+            "image_1920": self.green_image,
+            "product_template_image_ids": [
+                Command.create({
+                    "name": "image 3",
+                    "image_1920": image_png,
+                    "attribute_value_ids": [Command.link(self.value_green.id)],
+                })
+            ],
         })
 
         # now set the red image on the first variant, that works because
         # template image is not empty anymore and we have a second variant
-        product_red.image_1920 = red_image
+        self.product_red.image_1920 = self.red_image
 
         # Verify image_1920 size > 1024 can be zoomed
-        self.assertTrue(template.can_image_1024_be_zoomed)
-        self.assertFalse(template.product_template_image_ids[0].can_image_1024_be_zoomed)
-        self.assertFalse(template.product_template_image_ids[1].can_image_1024_be_zoomed)
-        self.assertFalse(product_red.can_image_1024_be_zoomed)
-        self.assertFalse(product_red.product_variant_image_ids[0].can_image_1024_be_zoomed)
-        self.assertTrue(product_green.can_image_1024_be_zoomed)
-        self.assertTrue(product_green.product_variant_image_ids[0].can_image_1024_be_zoomed)
+        self.assertTrue(self.template.can_image_1024_be_zoomed)
+        self.assertFalse(self.template.product_template_image_ids[0].can_image_1024_be_zoomed)
+        self.assertFalse(self.template.product_template_image_ids[1].can_image_1024_be_zoomed)
+        self.assertFalse(self.product_red.can_image_1024_be_zoomed)
+        self.assertFalse(
+            self.product_red.variant_image_ids.filtered(lambda img: img.attribute_value_ids)[
+                0
+            ].can_image_1024_be_zoomed
+        )
+        self.assertTrue(self.product_green.can_image_1024_be_zoomed)
+        self.assertTrue(
+            self.product_green.variant_image_ids.filtered(lambda img: img.attribute_value_ids)[
+                0
+            ].can_image_1024_be_zoomed
+        )
 
         # jpeg encoding is changing the color a bit
         jpeg_blue = (65, 105, 227)
@@ -131,65 +155,65 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         jpeg_green = (34, 139, 34)
 
         # Verify original size: keep original
-        image = binary_to_image(template.image_1920)
+        image = binary_to_image(self.template.image_1920)
         self.assertEqual(image.size, (1920, 1080))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
-        image = binary_to_image(product_red.image_1920)
+        image = binary_to_image(self.product_red.image_1920)
         self.assertEqual(image.size, (800, 500))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
-        image = binary_to_image(product_green.image_1920)
+        image = binary_to_image(self.product_green.image_1920)
         self.assertEqual(image.size, (1920, 1080))
         self.assertEqual(
             image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green"
         )
 
         # Verify 1024 size: keep aspect ratio
-        image = binary_to_image(template.image_1024)
+        image = binary_to_image(self.template.image_1024)
         self.assertEqual(image.size, (1024, 576))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
-        image = binary_to_image(product_red.image_1024)
+        image = binary_to_image(self.product_red.image_1024)
         self.assertEqual(image.size, (800, 500))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
-        image = binary_to_image(product_green.image_1024)
+        image = binary_to_image(self.product_green.image_1024)
         self.assertEqual(image.size, (1024, 576))
         self.assertEqual(
             image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green"
         )
 
         # Verify 512 size: keep aspect ratio
-        image = binary_to_image(template.image_512)
+        image = binary_to_image(self.template.image_512)
         self.assertEqual(image.size, (512, 288))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
-        image = binary_to_image(product_red.image_512)
+        image = binary_to_image(self.product_red.image_512)
         self.assertEqual(image.size, (512, 320))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
-        image = binary_to_image(product_green.image_512)
+        image = binary_to_image(self.product_green.image_512)
         self.assertEqual(image.size, (512, 288))
         self.assertEqual(
             image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green"
         )
 
         # Verify 256 size: keep aspect ratio
-        image = binary_to_image(template.image_256)
+        image = binary_to_image(self.template.image_256)
         self.assertEqual(image.size, (256, 144))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
-        image = binary_to_image(product_red.image_256)
+        image = binary_to_image(self.product_red.image_256)
         self.assertEqual(image.size, (256, 160))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
-        image = binary_to_image(product_green.image_256)
+        image = binary_to_image(self.product_green.image_256)
         self.assertEqual(image.size, (256, 144))
         self.assertEqual(
             image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green"
         )
 
         # Verify 128 size: keep aspect ratio
-        image = binary_to_image(template.image_128)
+        image = binary_to_image(self.template.image_128)
         self.assertEqual(image.size, (128, 72))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
-        image = binary_to_image(product_red.image_128)
+        image = binary_to_image(self.product_red.image_128)
         self.assertEqual(image.size, (128, 80))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
-        image = binary_to_image(product_green.image_128)
+        image = binary_to_image(self.product_green.image_128)
         self.assertEqual(image.size, (128, 72))
         self.assertEqual(
             image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green"
@@ -212,76 +236,46 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
             login="website_user",
         )
 
-        # CASE: unlink move image to fallback if fallback image empty
-        template.image_1920 = False
-        product_red.unlink()
-        self.assertEqual(template.image_1920.content, red_image.content)
+        # CASE: If the template image is removed, the first image without attribute values from
+        # product_template_image_ids is used as fallback
+        self.template.image_1920 = False
+        self.assertEqual(
+            self.template.image_1920.content,
+            self.template.product_template_image_ids.filtered(
+                lambda image: not image.attribute_value_ids
+            )[0].image_1920.content,
+        )
 
         # CASE: unlink does nothing special if fallback image already set
         self.env["product.product"].create({
-            "product_tmpl_id": template.id,
-            "image_1920": green_image,
+            "product_tmpl_id": self.template.id,
+            "image_1920": self.green_image,
         }).unlink()
-        self.assertEqual(template.image_1920.content, red_image.content)
+        self.assertEqual(
+            self.template.image_1920.content,
+            self.template.product_template_image_ids.filtered(
+                lambda image: not image.attribute_value_ids
+            )[0].image_1920.content,
+        )
 
         # CASE: display variant image first if set
-        self.assertEqual(product_green._get_images()[0].image_1920.content, green_image.content)
+        self.assertEqual(
+            self.product_green._get_images()[0].image_1920.content, self.green_image.content
+        )
 
         # CASE: display variant fallback after variant o2m, correct fallback
         # write on the variant field, otherwise it will write on the fallback
-        product_green.image_variant_1920 = False
-        images = product_green._get_images()
+        self.product_green.image_variant_1920 = False
+        images = self.product_green._get_images()
         # images on fields are resized to max 1920
         image_png = binary_to_image(images[1].image_1920)
-        self.assertEqual(images[0].image_1920.content, red_image.content)
+        self.assertEqual(images[0].image_1920.content, image_gif.content)
         self.assertEqual(image_png.size, (1268, 1920))
         self.assertEqual(images[2].image_1920.content, image_gif.content)
         self.assertEqual(images[3].image_1920.content, image_svg.content)
 
-        # CASE: When uploading a product variant image
-        # we don't want the default_product_tmpl_id from the context to be applied if we have a
-        # product_variant_id set we want the default_product_tmpl_id from the context to be applied
-        # if we don't have a product_variant_id set
-
-        additionnal_context = {"default_product_tmpl_id": template.id}
-
-        product = self.env["product.product"].create({"product_tmpl_id": template.id})
-
-        product_image = (
-            self
-            .env["product.image"]
-            .with_context(**additionnal_context)
-            .create([
-                {"name": "Template image", "image_1920": red_image},
-                {
-                    "name": "Variant image",
-                    "image_1920": blue_image,
-                    "product_variant_id": product.id,
-                },
-            ])
-        )
-
-        template_image = product_image.filtered(lambda i: i.name == "Template image")
-        variant_image = product_image.filtered(lambda i: i.name == "Variant image")
-
-        self.assertEqual(template_image.product_tmpl_id.id, template.id)
-        self.assertFalse(template_image.product_variant_id.id)
-        self.assertFalse(variant_image.product_tmpl_id.id)
-        self.assertEqual(variant_image.product_variant_id.id, product.id)
-
     def test_02_image_holder(self):
         image = _create_image(color="#FF0000", dims=(800, 500))
-
-        # create the color attribute
-        product_attribute = self.env["product.attribute"].create({
-            "name": "Beautiful Color",
-            "display_type": "color",
-            "value_ids": [
-                Command.create({"name": "Red", "sequence": 1}),
-                Command.create({"name": "Green", "sequence": 2}),
-                Command.create({"name": "Blue", "sequence": 3}),
-            ],
-        })
 
         # create the template, without creating the variants
         template = (
@@ -297,9 +291,9 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         # set the color attribute and values on the template
         line = self.env["product.template.attribute.line"].create([
             {
-                "attribute_id": product_attribute.id,
+                "attribute_id": self.product_attribute.id,
                 "product_tmpl_id": template.id,
-                "value_ids": [Command.set(product_attribute.value_ids.ids)],
+                "value_ids": [Command.set(self.product_attribute.value_ids.ids)],
             }
         ])
         value_red = line.product_template_value_ids[0]
@@ -324,6 +318,72 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
 
         # when there is a template image, the image must be obtained from the template
         self.assertEqual(template, template._get_image_holder())
+
+    def test_03_assign_image_to_variants(self):
+        self.template.write({
+            "product_template_image_ids": [
+                Command.create({
+                    "name": "green",
+                    "image_1920": self.green_image,
+                    "attribute_value_ids": [Command.set([self.value_green.id, self.value_blue.id])],
+                })
+            ]
+        })
+
+        self.assertEqual(
+            self.product_green.variant_image_ids[0].image_1920.content, self.green_image.content
+        )
+
+        self.assertEqual(
+            self.product_blue.variant_image_ids[0].image_1920.content, self.green_image.content
+        )
+
+    def test_04_remove_main_image_fallback_to_extra_image(self):
+        self.template.write({
+            "product_template_image_ids": [
+                Command.create({"name": "green", "image_1920": self.green_image})
+            ]
+        })
+
+        self.template.image_1920 = False
+
+        self.assertEqual(self.template.image_1920.content, self.green_image.content)
+
+        # If we remove the main image which is same as first extra image then it will remove extra
+        # image also.
+        self.template.image_1920 = False
+        self.assertFalse(self.template.product_template_image_ids)
+
+    def test_05_remove_main_image_fallback_to_variant_extra_image(self):
+        self.template.write({
+            "product_template_image_ids": [
+                Command.create({
+                    "name": "red",
+                    "image_1920": self.red_image,
+                    "attribute_value_ids": [Command.link(self.value_red.id)],
+                })
+            ]
+        })
+        self.template.image_1920 = False
+
+        self.assertEqual(self.template.image_1920.content, self.red_image.content)
+
+    def test_06_remove_main_variant_image_fallback_to_extra_image(self):
+        self.product_red.image_1920 = self.green_image
+
+        self.product_red.write({
+            "product_template_image_ids": [
+                Command.create({
+                    "name": "red",
+                    "image_1920": self.red_image,
+                    "attribute_value_ids": [Command.link(self.value_red.id)],
+                })
+            ]
+        })
+
+        self.product_red.image_1920 = False
+
+        self.assertEqual(self.product_red.image_1920.content, self.red_image.content)
 
 
 @tagged("post_install", "-at_install")

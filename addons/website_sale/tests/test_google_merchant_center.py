@@ -193,8 +193,15 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
     def test_gmc_items_additional_images_limit_to_10(self):
         image = self._create_image("blue")
         self.blue_sofa.write({
-            "product_variant_image_ids": [
-                Command.create({"name": f"image {i}", "image_1920": image}) for i in range(12)
+            "product_template_image_ids": [
+                Command.create({
+                    "name": f"image {i}",
+                    "image_1920": image,
+                    "attribute_value_ids": [
+                        Command.set(self.blue_sofa.product_template_attribute_value_ids.ids)
+                    ],
+                })
+                for i in range(12)
             ]
         })
 

@@ -14,10 +14,14 @@ class ProductProduct(models.Model):
     variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name="product.ribbon")
     website_id = fields.Many2one(related="product_tmpl_id.website_id", readonly=False)
 
-    product_variant_image_ids = fields.One2many(
-        string="Extra Variant Images",
+    product_template_image_ids = fields.One2many(
+        related="product_tmpl_id.product_template_image_ids", readonly=False
+    )
+    variant_image_ids = fields.Many2many(
+        string="Variant Extra Images",
         comodel_name="product.image",
-        inverse_name="product_variant_id",
+        compute="_compute_variant_image_ids",
+        store=True,
     )
 
     website_url = fields.Char(
@@ -34,6 +38,37 @@ class ProductProduct(models.Model):
 
     # === COMPUTE METHODS ===#
 
+    @api.depends("product_template_image_ids", "product_template_image_ids.attribute_value_ids")
+    def _compute_variant_image_ids(self):
+        for product in self:
+            variant_ptavs = product.product_template_attribute_value_ids
+            product.variant_image_ids = product.product_template_image_ids.filtered(
+                lambda image: (
+                    image.has_attribute_value
+                    and all(
+                        variant_ptavs.filtered(lambda v: v.attribute_line_id == attribute_line)
+                        & image.attribute_value_ids.filtered(
+                            lambda v: v.attribute_line_id == attribute_line
+                        )
+                        for attribute_line in image.attribute_value_ids.attribute_line_id
+                    )
+                )
+            )
+
+    @api.depends("variant_image_ids")
+    def _compute_image_variant_1920(self):
+        super()._compute_image_variant_1920()
+        for product in self:
+            product_images_content = [
+                image.image_1920.content
+                for image in product.variant_image_ids.filtered("image_1920")
+            ]
+            if product.variant_image_ids and (
+                not product.image_variant_1920
+                or product.image_variant_1920.content in product_images_content
+            ):
+                product.image_variant_1920 = product.variant_image_ids[0].image_1920
+
     @api.depends_context("lang")
     @api.depends("product_tmpl_id.website_url", "product_template_attribute_value_ids")
     def _compute_product_website_url(self):
@@ -46,6 +81,38 @@ class ProductProduct(models.Model):
                 query_params = {slug(pav.attribute_id): slug(pav) for pav in pavs}
                 url = url._replace(query=urlencode(query_params))
             product.website_url = url.geturl()
+
+    # === CRUD METHODS === #
+
+    def write(self, vals):
+        if not vals.get("active"):
+            # unlink draft lines containing the archived product
+            self.env["sale.order.line"].sudo().search([
+                ("state", "=", "draft"),
+                ("product_id", "in", self.ids),
+                ("order_id", "any", [("website_id", "!=", False)]),
+            ]).unlink()
+
+        images_before_update = {product: product.image_variant_1920.content for product in self}
+        res = super().write(vals)
+
+        if "image_1920" in vals and not vals["image_1920"]:
+            images_to_unlink = self.env["product.image"]
+            for product in self:
+                removed_image = product.variant_image_ids.filtered(
+                    lambda image: (
+                        image.image_1920
+                        and image.image_1920.content == images_before_update[product]
+                    )
+                )
+                if removed_image:
+                    images_to_unlink |= removed_image
+                else:
+                    self.env.add_to_compute(product._fields["image_variant_1920"], product)
+
+            images_to_unlink.unlink()
+
+        return res
 
     # === BUSINESS METHODS ===#
 
@@ -70,13 +137,15 @@ class ProductProduct(models.Model):
         This returns a list and not a recordset because the records might be
         from different models (template, variant and image).
 
-        It contains in this order: the main image of the variant (which will fall back on the main
-        image of the template, if unset), the Variant Extra Images, and the Template Extra Images.
+        It contains in this order: the main image of the variant (which will fall back on the first
+        extra image of variant, if unset), the Variant Extra Images.
         """
         self.ensure_one()
-        variant_images = list(self.product_variant_image_ids)
-        template_images = list(self.product_tmpl_id.product_template_image_ids)
-        return [self] + variant_images + template_images
+        extra_images = list(self._get_all_extra_images_to_display())
+        if extra_images and extra_images[0].image_1920.content == self.image_1920.content:
+            extra_images = extra_images[1:]
+
+        return [self] + extra_images
 
     def _get_combination_info_variant(self, **kwargs):
         """Return the variant info based on its combination.
@@ -187,19 +256,26 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return [
             self.env["website"].image_url(extra_image, "image_1920")
-            for extra_image in self.product_variant_image_ids + self.product_template_image_ids
+            for extra_image in self._get_all_extra_images_to_display()
             if extra_image.image_128  # only images, no video urls
         ]
 
-    def write(self, vals):
-        if "active" in vals and not vals["active"]:
-            # unlink draft lines containing the archived product
-            self.env["sale.order.line"].sudo().search([
-                ("state", "=", "draft"),
-                ("product_id", "in", self.ids),
-                ("order_id", "any", [("website_id", "!=", False)]),
-            ]).unlink()
-        return super().write(vals)
+    def _get_all_extra_images_to_display(self):
+        """Return the extra images to display for this variant on the website.
+
+        The returned images are ordered with variant-specific images first,
+        followed by template-level images that are not associated with any
+        attribute values.
+
+        Note: ``self.ensure_one()``
+
+        :rtype: product.image
+        :return: Recordset of extra images to display.
+        """
+        self.ensure_one()
+        return self.variant_image_ids.sorted("sequence") + self.product_template_image_ids.filtered(
+            lambda image: not image.has_attribute_value
+        ).sorted("sequence")
 
     def _is_in_wishlist(self):
         if not self:
@@ -295,9 +371,9 @@ class ProductProduct(models.Model):
             return self._get_available_uoms()[:1] or self.uom_id
         return super()._get_main_uom()
 
-    def _get_extra_tracking_values(self, **kwargs):
+    def _get_extra_tracking_values(self, *, res_model=None, res_id=None, **_kwargs):
         extra_tracking_values = {}
-        if kwargs.get("res_model") == self._name and (res_id := kwargs.get("res_id")):
+        if res_model == self._name and res_id:
             extra_tracking_values["product_id"] = res_id
         return extra_tracking_values
 

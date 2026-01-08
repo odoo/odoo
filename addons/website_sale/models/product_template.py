@@ -268,6 +268,17 @@ class ProductTemplate(models.Model):
                 template.product_variant_ids.filtered("default_code").mapped("default_code")
             )
 
+    @api.depends("product_template_image_ids.image_type")
+    def _compute_image_1920(self):
+        super()._compute_image_1920()
+        for template in self:
+            template_images = template.product_template_image_ids
+            template_images_content = [image.image_1920.content for image in template_images]
+            if not template.image_1920 or template.image_1920.content in template_images_content:
+                template.image_1920 = template_images.filtered(
+                    lambda image: image.image_type == "primary"
+                ).image_1920
+
     # === CRUD METHODS ===#
 
     @api.model_create_multi
@@ -280,6 +291,8 @@ class ProductTemplate(models.Model):
                 "suggest_accessory_products": not vals.get("accessory_product_ids"),
                 "suggest_alternative_products": not vals.get("alternative_product_ids"),
             })
+            if vals.get("product_template_image_ids"):
+                record._update_images_type()
         return records
 
     def write(self, vals):
@@ -295,7 +308,32 @@ class ProductTemplate(models.Model):
                     else v
                 ),
             )
-        return super().write(vals)
+        images_before_update = {template: template.image_1920.content for template in self}
+        res = super().write(vals)
+
+        if "image_1920" in vals and not vals["image_1920"]:
+            images_to_unlink = self.env["product.image"]
+            templates_to_update = self.env["product.template"]
+
+            for template in self:
+                removed_image = template.product_template_image_ids.filtered(
+                    lambda image: (
+                        image.image_1920
+                        and image.image_1920.content == images_before_update[template]
+                    )
+                )
+                if removed_image:
+                    images_to_unlink |= removed_image
+                else:
+                    templates_to_update |= template
+
+            images_to_unlink.unlink()
+            templates_to_update._update_images_type()
+
+        if vals.get("image_1920") and not self.env.context.get("skip_updating_type"):
+            self._update_images_type()
+
+        return res
 
     # === BUSINESS METHODS ===#
 
@@ -341,6 +379,48 @@ class ProductTemplate(models.Model):
             "suggest_alternative_products": True,
         })
         self._update_suggested_products()
+
+    def _update_images_type(self):
+        """Update primary and secondary image assignments for the template.
+
+        If the template does not have a distinct main image, the first non-attribute
+        image is marked as primary and the second non-attribute image, if any, is
+        marked as secondary. If no non-attribute image exists, the first image of
+        the first product variant is used as the primary image.
+
+        If the template already has a distinct main image, the first non-attribute
+        image is marked as secondary.
+        """
+        for template in self:
+            template_images = template.product_template_image_ids
+            if not template_images:
+                continue
+            template_images.image_type = False
+
+            non_attribute_images = template_images.filtered(
+                lambda image: not image.has_attribute_value
+            ).sorted("sequence")[:2]
+
+            template_images_content = [
+                image.image_1920.content for image in template_images.filtered("image_1920")
+            ]
+
+            if not template.image_1920 or template.image_1920.content in template_images_content:
+                images_to_assign = non_attribute_images
+
+                if not images_to_assign:
+                    images_to_assign = (
+                        template._create_first_product_variant().variant_image_ids.sorted(
+                            "sequence"
+                        )[:1]
+                    )
+
+                if images_to_assign:
+                    images_to_assign[0].image_type = "primary"
+                    images_to_assign[1:2].image_type = "secondary"
+
+            elif non_attribute_images:
+                non_attribute_images[0].image_type = "secondary"
 
     def _update_suggested_products(self):
         """Update the current product templates' optional, accessory, and alternative products.
@@ -1208,7 +1288,7 @@ class ProductTemplate(models.Model):
         Template Extra Images.
         """
         self.ensure_one()
-        return [self] + list(self.product_template_image_ids)
+        return list({self} | set(self.product_template_image_ids))
 
     def _get_attribute_value_domain(self, attribute_value_dict):  # noqa: PLR6301
         return [
@@ -1513,6 +1593,26 @@ class ProductTemplate(models.Model):
         self.ensure_one()
 
         return bool(self.valid_product_template_attribute_line_ids)
+
+    def get_attribute_value_mapping(self):
+        """Return variant attribute values grouped by attribute.
+
+        :return: A list of dictionaries with the keys `id` (attribute id) and
+                `values` (list of active PTAV ids and names).
+        :rtype: list[dict]
+        """
+        attribute_value_mapping = []
+        for line in self.attribute_line_ids:
+            if line.attribute_id.create_variant == "no_variant":
+                continue
+            values = [
+                {"id": ptav.id, "name": ptav.name}
+                for ptav in line.product_template_value_ids
+                if ptav.ptav_active
+            ]
+            if values:
+                attribute_value_mapping.append({"id": line.attribute_id.id, "values": values})
+        return attribute_value_mapping
 
     def _has_multiple_uoms(self) -> bool:
         """Check if the product has multiple available uoms for the current website.

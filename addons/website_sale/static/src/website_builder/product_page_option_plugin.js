@@ -24,9 +24,7 @@ export class ProductPageOptionPlugin extends Plugin {
             ProductPageImageRoundnessAction,
             ProductPageImageGridSpacingAction,
             ProductPageImageGridColumnsAction,
-            ProductReplaceMainImageAction,
             ProductAddExtraImageAction,
-            ProductRemoveAllExtraImagesAction,
         },
         clean_for_save_processors: (el) => {
             // TODO the content of this clean_for_save_processors should probably
@@ -326,52 +324,6 @@ export class ProductPageImageGridColumnsAction extends BaseProductPageAction {
         });
     }
 }
-export class ProductReplaceMainImageAction extends BaseProductPageAction {
-    static id = "productReplaceMainImage";
-    static dependencies = [...super.dependencies, "media"];
-    setup() {
-        super.setup();
-        this.reload = false;
-        this.canTimeout = false;
-    }
-    async apply({ editingElement }) {
-        await this.dependencies.media.openMediaDialog(this.getMediaDialogProps({ editingElement }));
-    }
-
-    getMediaDialogProps({ editingElement: productDetailMainEl }){
-        // Emulate click on the main image of the carousel.
-        const image = productDetailMainEl.querySelector(
-            `[data-oe-model="${this.model}"][data-oe-field=image_1920] img`
-        );
-        return {
-            multiImages: false,
-            visibleTabs: ["IMAGES"],
-            node: image,
-            save: (imgEl, selectedMedia) => {
-                const attachment = selectedMedia[0];
-                if (["image/gif", "image/svg+xml"].includes(attachment.mimetype)) {
-                    image.src = attachment.image_src;
-                    return;
-                }
-                const originalSize = Math.max(imgEl.width, imgEl.height);
-                const ratio = Math.min(originalSize, 1920) / originalSize;
-                const canvas = document.createElement("canvas");
-                canvas.width = parseInt(imgEl.width * ratio);
-                canvas.height = parseInt(imgEl.height * ratio);
-                const ctx = canvas.getContext("2d")
-                ctx.fillStyle = "transparent";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(imgEl, 0, 0);
-                image.src = canvas.toDataURL("image/webp");
-                const { model, productProductID: productID, productTemplateID: templateID } = this;
-                const resID = parseInt(model === "product.product" ? productID : templateID);
-                this.services.orm.write(model, [resID], {
-                    image_1920: image.src.split(",")[1],
-                });
-            },
-        }
-    }
-}
 
 export class ProductAddExtraImageAction extends BaseProductPageAction {
     static id = "productAddExtraImage";
@@ -417,18 +369,6 @@ export class ProductAddExtraImageAction extends BaseProductPageAction {
         }
         const { imgEls, selectedMedia, type } = loadResult;
         await this.extraMediaSave(el, type, selectedMedia, imgEls);
-    }
-}
-export class ProductRemoveAllExtraImagesAction extends BaseProductPageAction {
-    static id = "productRemoveAllExtraImages";
-    async apply({ editingElement: el }) {
-        // Removes all extra-images from the product.
-        await rpc(`/shop/product/clear-images`, {
-            model: this.model,
-            product_product_id: this.productProductID,
-            product_template_id: this.productTemplateID,
-            combination_ids: this.getSelectedVariantValues(el),
-        })
     }
 }
 
