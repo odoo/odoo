@@ -628,7 +628,7 @@ class TestProcurement(TestMrpCommon):
         create_run_procurement(product, 10, {
             'reference_ids': reference,
             'warehouse_id': self.warehouse_1,
-            'partner_id': vendor,
+            'partner_id': vendor.id,
         })
         customer_move = self.env['stock.move'].search([('reference_ids', 'in', reference.id), ('picking_type_id', '=', self.picking_type_out.id)])
         manufacturing_order = self.env['mrp.production'].search([('product_id', '=', product.id)])
@@ -641,7 +641,7 @@ class TestProcurement(TestMrpCommon):
         create_run_procurement(product, -5.00, {
             'reference_ids': reference,
             'warehouse_id': self.warehouse_1,
-            'partner_id': vendor,
+            'partner_id': vendor.id,
         })
         self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should have been decreased when merged with the procurement.')
         self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the manufacturing order should not have been decreased.')
