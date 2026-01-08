@@ -111,6 +111,15 @@ class MailAlias(models.Model):
         )
         if not tocheck:
             return
+        # transient state or remaining aliases linked to removed models -> skip
+        # MC validation as it would crash without added value
+        tocheck = tocheck.filtered(
+            lambda a: (
+                not a.alias_parent_model_id.model or a.alias_parent_model_id.model in self.env
+            ) and (
+                not a.alias_model_id.model or a.alias_model_id.model in self.env
+            )
+        )
 
         # helpers to find owner / target models
         def _owner_model(alias):
