@@ -28,7 +28,7 @@ registerThreadAction("pinned-messages", {
     setup() {
         useChildSubEnv({
             pinMenu: {
-                open: () => this.actionPanelOpen(),
+                open: () => this.actionPanelOpen({ keepPrevious: true }),
                 close: () => {
                     if (this.isActive) {
                         this.actionPanelClose();

@@ -42,14 +42,18 @@ export class ChannelMemberList extends Component {
     }
 
     openInviteDialog() {
-        this.dialogService.add(ChannelActionDialog, {
-            contentClass: "o-discuss-ChannelInvitation",
-            contentComponent: ChannelInvitation,
-            contentProps: {
-                channel: this.props.channel,
-                close: () => this.store.env.services.dialog.closeAll(),
-            },
-            title: this.props.channel.displayName,
-        });
+        if (this.env.inMeetingView) {
+            this.props.openChannelInvitePanel?.({ keepPrevious: true });
+        } else {
+            this.dialogService.add(ChannelActionDialog, {
+                contentClass: "o-discuss-ChannelInvitation",
+                contentComponent: ChannelInvitation,
+                contentProps: {
+                    channel: this.props.channel,
+                    close: () => this.store.env.services.dialog.closeAll(),
+                },
+                title: this.props.channel.displayName,
+            });
+        }
     }
 }
