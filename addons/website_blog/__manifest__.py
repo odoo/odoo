@@ -21,6 +21,7 @@
         'views/snippets/snippets.xml',
         'views/snippets/s_blog_posts.xml',
         'views/snippets/s_dynamic_snippet_blog_posts_preview_data.xml',
+        'views/snippets/s_text_block.xml',
         'views/website_pages_views.xml',
         'views/blog_post_add.xml',
         'security/website_blog_security.xml',
@@ -46,6 +47,7 @@
         ],
         'web.assets_frontend': [
             'website_blog/static/src/interactions/**/*',
+            ('remove', 'website_blog/static/src/interactions/**/*.edit.js'),
             'website_blog/static/src/scss/website_blog.scss',
             'website_blog/static/src/snippets/**/*.js',
         ],
@@ -55,6 +57,10 @@
         'website.website_builder_assets': [
             'website_blog/static/src/website_builder/**/*',
         ],
+        'website.assets_inside_builder_iframe': [
+            'website_blog/static/src/**/*.edit.*',
+        ],
+
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
