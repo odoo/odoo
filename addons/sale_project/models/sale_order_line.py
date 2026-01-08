@@ -454,6 +454,7 @@ class SaleOrderLine(models.Model):
             })
             if self.task_id and not self.task_id.milestone_id:
                 self.task_id.milestone_id = milestone.id
+        return milestones
 
     def _prepare_invoice_line(self, **optional_values):
         """
