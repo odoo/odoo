@@ -23,7 +23,7 @@ export function goToProductPage({
 export function increaseProductPageQuantity() {
     return {
         content: "Increase product quantity",
-        trigger: '.css_quantity a.js_add_cart_json i.oi-plus',
+        trigger: '.css_quantity button.js_add_cart_json i.oi-plus',
         run: "click",
     }
 }
@@ -384,7 +384,7 @@ export function selectPriceList(pricelist) {
     return [
         {
             content: "Click on pricelist dropdown",
-            trigger: "div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
+            trigger: "div.o_pricelist_dropdown button[data-bs-toggle=dropdown]",
             run: "click",
         },
         {

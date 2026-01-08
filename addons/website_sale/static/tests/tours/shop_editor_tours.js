@@ -13,11 +13,11 @@ registerWebsitePreviewTour(
     () => [
         {
             content: "Click on pricelist dropdown",
-            trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
+            trigger: ":iframe div.o_pricelist_dropdown button[data-bs-toggle=dropdown]",
             run: "click",
         },
         {
-            trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=true]",
+            trigger: ":iframe div.o_pricelist_dropdown button[data-bs-toggle=dropdown][aria-expanded=true]",
         },
         {
             trigger: ":iframe input[name=search]",
@@ -25,14 +25,14 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=false]",
+            trigger: ":iframe div.o_pricelist_dropdown button[data-bs-toggle=dropdown][aria-expanded=false]",
         },
         {
-            trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
+            trigger: ":iframe div.o_pricelist_dropdown button[data-bs-toggle=dropdown]",
             content: "Click on the pricelist again.",
             run: "click",
         }, {
-            trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=true]",
+            trigger: ":iframe div.o_pricelist_dropdown button[data-bs-toggle=dropdown][aria-expanded=true]",
             content: "Check pricelist dropdown opened",
         }
     ]
