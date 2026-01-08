@@ -34,6 +34,7 @@ import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
 import { Priority } from "@mail/core/common/priority";
+import { ForwardDialog } from "@mail/core/common/forward_dialog";
 
 /**
  * @typedef {Object} Props
@@ -188,7 +189,7 @@ export class Message extends Component {
                         this.message.showTranslation
                             ? this.message.richTranslationValue
                             : this.props.messageSearch?.highlight(this.message.richBody) ??
-                                  this.message.richBody
+                            this.message.richBody
                     );
                     this.prepareMessageBody(bodyEl);
                     this.shadowRoot.appendChild(bodyEl);
@@ -326,7 +327,7 @@ export class Message extends Component {
         return (
             this.message.subtype_id?.description &&
             this.message.subtype_id.description.toLowerCase() !==
-                htmlToTextContentInline(this.message.body || "").toLowerCase()
+            htmlToTextContentInline(this.message.body || "").toLowerCase()
         );
     }
 
@@ -551,6 +552,28 @@ export class Message extends Component {
             !this.message.isSubjectSimilarToThreadName &&
             !this.message.isSubjectDefault
         );
+    }
+
+    openForwardDialog() {
+        this.dialog.add(ForwardDialog, {
+            sourceMessage: this.props.message,
+        });
+    }
+
+    openForwardedConversation() {
+        const showAccessError = () =>
+            this.env.services.notification.add(_t("This conversation isn't available."), {
+                type: "danger",
+            });
+        const thread = this.message.forwarded_from_id.thread;
+        thread.checkReadAccess().then((hasAccess) => {
+            if (hasAccess) {
+                thread.highlightMessage = this.message.forwarded_from_id;
+                thread.open({ focus: true });
+            } else {
+                showAccessError();
+            }
+        });
     }
 }
 

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ForwardDialog">
+        <Dialog size="'sm'" title.translate="Forward To" withBodyPadding="false" footer="false"
+            contentClass="'o-bg-body d-flex flex-column mh-75'" bodyClass="'p-2 d-flex flex-column o-min-height-0'">
+            <div class="d-flex flex-column flex-grow-1 bg-inherit o-min-height-0">
+                <div class="d-flex flex-column flex-grow-1 overflow-hidden o-min-height-0">
+                    <t t-call="discuss.SelectableList"/>
+                </div>
+                <div class="flex-shrink-0 bg-inherit">
+                    <div t-if="props.sourceMessage">
+                        <t t-call="mail.ForwardDialog.forwardPreview"/>
+                        <textarea t-if="selectedOptions.length" class="form-control border rounded"
+                            t-model="state.optionalMsgBody" placeholder="Add an optional message..." rows="3"/>
+                    </div>
+                    <div class="pt-0 pb-1 bg-inherit">
+                        <t t-if="store.self_user">
+                            <button t-if="selectedOptions.length" class="btn btn-primary w-100 my-2" t-att-title="forwardButtonText" t-on-click="onClickForward">
+                                <t t-out="forwardButtonText"/>
+                            </button>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+
+    <t t-name="mail.ForwardDialog.forwardPreview">
+        <div class="o-mail-Forward-core position-relative px-2 py-1 rounded-3 rounded-start-0 mb-2">
+            <small>
+                <div class="text-muted fst-italic mb-1"><i class="fa fa-share"/> Forwarded</div>
+                <div t-if="!props.sourceMessage.isBodyEmpty" class="d-inline-flex align-items-center">
+                    <span class="o-mail-ForwardedMessage-content overflow-hidden smaller o-mail-ForwardedMessage-message ms-1 text-break" t-out="sourceMessageDisplayBody"/>
+                </div>
+                <div t-if="sourceMessageAttachments.length" class="d-flex align-items-center gap-2 mt-1 w-100">
+                    <small class="text-muted flex-grow-1">
+                        <t t-out="sourceMessageAttachments.length"/> attachment(s)
+                    </small>
+                    <div class="position-relative">
+                        <t t-set="firstAttachment" t-value="sourceMessageAttachments[0]"/>
+                        <Gif
+                            t-if="firstAttachment.mimetype === 'image/gif'"
+                            src="getImageUrl(firstAttachment)"
+                            paused="firstAttachment.gifPaused"
+                            alt="firstAttachment.name"
+                            class="'o-mail-ForwardedAttachment-preview rounded border'"
+                        />
+                        <img
+                            t-elif="firstAttachment.isImage"
+                            t-att-src="getImageUrl(firstAttachment)"
+                            t-att-alt="firstAttachment.name"
+                            class="o-mail-ForwardedAttachment-preview rounded border"
+                            draggable="false"
+                        />
+                        <div
+                            t-else=""
+                            class="o-mail-ForwardedAttachment-preview rounded border d-flex align-items-center justify-content-center bg-200 w-100"
+                        >
+                            <div class="o_image" t-att-data-mimetype="firstAttachment.mimetype"/>
+                        </div>
+                        <div
+                            t-if="sourceMessageAttachments.length > 1"
+                            class="position-absolute o-text-white bottom-0 end-0 bg-primary p-1 rounded"
+                        >
+                            +<t t-out="sourceMessageAttachments.length - 1"/>
+                        </div>
+                    </div>
+                </div>
+            </small>
+        </div>
+    </t>
+
+</templates>

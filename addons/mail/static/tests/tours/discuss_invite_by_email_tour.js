@@ -10,13 +10,13 @@ registry.category("web_tour.tours").add("discuss.invite_by_email", {
             run: "click",
         },
         {
-            trigger: ".o-discuss-ChannelInvitation-search[placeholder='Enter name or email']",
+            trigger: ".o-discuss-SelectableList-search[placeholder='Enter name or email']",
             run: "edit john@test.com",
         },
         {
-            trigger: ".o-discuss-ChannelInvitation-selectable:contains('john (base.group_user)')",
+            trigger: ".o-discuss-SelectableList-selectable:contains('john (base.group_user)')",
             async run({ waitFor, click }) {
-                await waitFor(".o-discuss-ChannelInvitation-selectable", {
+                await waitFor(".o-discuss-SelectableList-selectable", {
                     only: true,
                     timeout: 5000,
                 });
@@ -24,20 +24,18 @@ registry.category("web_tour.tours").add("discuss.invite_by_email", {
             },
         },
         {
-            trigger:
-                ".o-discuss-ChannelInvitation-selectedList :contains('john (base.group_user)')",
+            trigger: ".o-discuss-SelectableList-selectedList :contains('john (base.group_user)')",
         },
         {
-            trigger: ".o-discuss-ChannelInvitation-search",
+            trigger: ".o-discuss-SelectableList-search",
             run: "edit unknown_email@test.com",
         },
         {
-            trigger: ".o-discuss-ChannelInvitation-selectable:contains('unknown_email@test.com')",
+            trigger: ".o-discuss-SelectableList-selectable:contains('unknown_email@test.com')",
             run: "click",
         },
         {
-            trigger:
-                ".o-discuss-ChannelInvitation-selectedList :contains('unknown_email@test.com')",
+            trigger: ".o-discuss-SelectableList-selectedList :contains('unknown_email@test.com')",
         },
         {
             trigger: "button:contains(Invite to Group Chat)",
