@@ -59,7 +59,11 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             run: "click",
         },
         {
-            trigger: ".o_tree_editor_row:contains(New Rule) > button",
+            trigger: ".o_model_field_selector",
+            run: "click",
+        },
+        {
+            trigger: '.o_model_field_selector_popover_item[data-name="id"] .o_model_field_selector_popover_item_name',
             run: "click",
         },
         {
