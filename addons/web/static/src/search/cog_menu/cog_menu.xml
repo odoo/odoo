@@ -40,7 +40,7 @@
                                 <div role="separator" class="dropdown-divider"/>
                             </t>
 
-                            <t t-if="item.Component" t-component="item.Component" t-props="item.props"/>
+                            <t t-if="item.Component" t-component="item.Component"/>
 
                             <DropdownItem t-else="" class="item.class ? item.class + ' o_menu_item' : 'o_menu_item'" onSelected="() => this.onItemSelected(item)">
                                 <i t-if="item.icon" t-att-class="item.icon" class="fa-fw oi-fw me-1"/>
