@@ -36,3 +36,8 @@ class ProductTemplateAttributeValue(models.Model):
             )
 
         return price_extra
+
+    def write(self, vals):
+        res = super().write(vals)
+        self.env.registry.clear_cache()
+        return res
