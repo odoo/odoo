@@ -332,7 +332,7 @@ class StockRule(models.Model):
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
         )
         date_deadline = values.get('date_deadline') and (fields.Datetime.to_datetime(values['date_deadline']) - relativedelta(days=self.delay or 0)) or False
-        partner = self.partner_address_id or values.get('partner', False)
+        partner = self.partner_address_id.id or values.get('partner_id', False)
         # it is possible that we've already got some move done, so check for the done qty and create
         # a new move with the correct qty
         qty_left = product_qty
@@ -345,7 +345,7 @@ class StockRule(models.Model):
             if location_dest_id == company_id.internal_transit_location_id:
                 partners = move_dest.location_dest_id.warehouse_id.partner_id
                 if len(partners) == 1:
-                    partner = partners
+                    partner = partners.id
                 move_dest.partner_id = self.location_src_id.warehouse_id.partner_id or self.company_id.partner_id
 
         # If the quantity is negative the move should be considered as a refund
@@ -357,7 +357,7 @@ class StockRule(models.Model):
             'product_id': product_id.id,
             'uom_id': uom_id.id,
             'product_uom_qty': qty_left,
-            'partner_id': partner.id if partner else False,
+            'partner_id': partner,
             'location_id': self.location_src_id.id,
             'location_final_id': location_dest_id.id,
             'move_dest_ids': move_dest_ids,
