@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
 import { CUSTOMIZE_MAILING_VARIABLES } from "@mass_mailing/builder/plugins/customize_mailing_variables";
 import { CUSTOMIZE_MAILING_VARIABLES_DEFAULTS } from "./customize_mailing_variables";
-import { splitSelectorAroundCommasOutsideParentheses } from "@mail/views/web/fields/html_mail_field/convert_inline";
+import { splitSelectorList } from "@mail/convert_inline/style_utils";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 
 const RE_SELECTOR_ENDS_WITH_GT_STAR = />\s*\*\s*$/;
@@ -114,7 +114,7 @@ export class CustomizeMailingPlugin extends Plugin {
     parseDesignElement(styleEl) {
         const rules = [...styleEl.sheet.cssRules];
         for (const rule of rules) {
-            for (const selector of splitSelectorAroundCommasOutsideParentheses(rule.selectorText)) {
+            for (const selector of splitSelectorList(rule.selectorText)) {
                 for (const property of rule.style) {
                     const selectors =
                         property !== "font-family"
