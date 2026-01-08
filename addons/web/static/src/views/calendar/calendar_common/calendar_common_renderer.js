@@ -119,8 +119,6 @@ export class CalendarCommonRenderer extends Component {
             eventDragStart: this.onEventDragStart,
             eventDragStop: this.onEventDragStop,
             eventDrop: this.onEventDrop,
-            eventMouseEnter: this.onEventMouseEnter,
-            eventMouseLeave: this.onEventMouseLeave,
             eventClassNames: this.eventClassNames,
             eventDidMount: this.onEventDidMount,
             eventContent: this.onEventContent,
@@ -254,11 +252,6 @@ export class CalendarCommonRenderer extends Component {
             el.classList.add(className);
         }
     }
-    unhighlightEvent(event, className) {
-        for (const el of this.fc.api.el.querySelectorAll(this.computeEventSelector(event))) {
-            el.classList.remove(className);
-        }
-    }
     mapRecordsToEvents() {
         const { records } = this.props.model.data;
         return Object.values(records).map((r) => this.convertRecordToEvent(r));
@@ -286,7 +279,6 @@ export class CalendarCommonRenderer extends Component {
 
     onClick(info) {
         this.openPopover(info.el, this.props.model.records[info.event.id]);
-        this.highlightEvent(info.event, "o_cw_custom_highlight");
     }
     onDateClick(info) {
         this.props.createRecord(this.fcEventToRecord(info));
@@ -461,15 +453,6 @@ export class CalendarCommonRenderer extends Component {
             res.id = existingRecord.id;
         }
         return res;
-    }
-    onEventMouseEnter(info) {
-        this.highlightEvent(info.event, "o_cw_custom_highlight");
-    }
-    onEventMouseLeave(info) {
-        if (!info.event.id) {
-            return;
-        }
-        this.unhighlightEvent(info.event, "o_cw_custom_highlight");
     }
     onEventDragStart(info) {
         this.props.cleanSquareSelection();
