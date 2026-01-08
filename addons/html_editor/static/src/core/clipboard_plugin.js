@@ -16,6 +16,7 @@ import {
 } from "@html_editor/utils/base_container";
 import { DIRECTIONS } from "../utils/position";
 import { isHtmlContentSupported } from "./selection_plugin";
+import { getRowIndex } from "@html_editor/utils/table";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -62,6 +63,8 @@ export const CLIPBOARD_WHITELISTS = {
         "TBODY",
         "TR",
         "TD",
+        "COLGROUP",
+        "COL",
         // Miscellaneous
         "IMG",
         "BR",
@@ -94,8 +97,8 @@ export const CLIPBOARD_WHITELISTS = {
         /^btn/,
         /^fa/,
     ],
-    attributes: ["class", "href", "src", "target"],
-    styledTags: ["SPAN", "B", "STRONG", "I", "S", "U", "FONT", "TD"],
+    attributes: ["class", "href", "src", "target", "colspan", "rowspan"],
+    styledTags: ["SPAN", "B", "STRONG", "I", "S", "U", "FONT", "TD", "COL", "TR", "TH"],
 };
 
 const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
@@ -498,7 +501,7 @@ export class ClipboardPlugin extends Plugin {
                     // Otherwise, replace the <thead> with <tbody>
                     node = this.dependencies.dom.setTagName(node, "TBODY");
                 }
-            } else if (["TD", "TH"].includes(node.nodeName)) {
+            } else if (["TD", "TH", "COL"].includes(node.nodeName)) {
                 // Insert base container into empty TD.
                 if (isEmptyBlock(node)) {
                     const baseContainer = this.dependencies.baseContainer.createBaseContainer();
@@ -508,6 +511,10 @@ export class ClipboardPlugin extends Plugin {
 
                 if (node.hasAttribute("bgcolor") && !node.style["background-color"]) {
                     node.style["background-color"] = node.getAttribute("bgcolor");
+                }
+
+                if (node.hasAttribute("width")) {
+                    node.style["width"] = node.getAttribute("width") + "px";
                 }
             } else if (node.nodeName === "FONT") {
                 // FONT tags have some style information in custom attributes,
@@ -554,7 +561,25 @@ export class ClipboardPlugin extends Plugin {
                     CLIPBOARD_WHITELISTS.styledTags.includes(node.nodeName) &&
                     attribute.name === "style"
                 ) {
+                    const width = node.style.width;
+                    const height = node.style.height;
                     node.removeAttribute(attribute.name);
+                    if (["TD", "TH"].includes(node.nodeName) && getRowIndex(node) === 0 && width) {
+                        const table = closestElement(node, "table");
+                        let colgroup = table.querySelector("colgroup");
+                        if (!colgroup) {
+                            colgroup = this.document.createElement("colgroup");
+                            table.prepend(colgroup);
+                        }
+                        const col = this.document.createElement("col");
+                        colgroup.append(col);
+                        col.style.width = width;
+                    } else if (node.nodeName === "COL" && width) {
+                        node.style.width = width;
+                    }
+                    if (node.nodeName === "TR" && height) {
+                        node.style.height = height;
+                    }
                     if (["SPAN", "FONT"].includes(node.tagName)) {
                         for (const unwrappedNode of unwrapContents(node)) {
                             this.cleanForPaste(unwrappedNode);
