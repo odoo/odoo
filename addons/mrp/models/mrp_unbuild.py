@@ -179,6 +179,9 @@ class MrpUnbuild(models.Model):
         produce_moves._action_confirm()
         produce_moves.quantity = 0
 
+        # Collect component lots already restored by previous unbuilds on the same MO
+        previously_unbuilt_lots = (self.mo_id.unbuild_ids - self).produce_line_ids.filtered(lambda ml: ml.product_id != self.product_id and ml.product_id.tracking == 'serial').lot_ids
+
         finished_moves = consume_moves.filtered(lambda m: m.product_id == self.product_id)
         consume_moves -= finished_moves
         error_message = _(
@@ -210,7 +213,9 @@ class MrpUnbuild(models.Model):
             needed_quantity = move.product_uom_qty
             moves_lines = original_move.mapped('move_line_ids')
             if move in produce_moves and self.lot_id:
-                moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.produce_line_ids.lot_id)  # FIXME sle: double check with arm
+                moves_lines = moves_lines.filtered(
+                    lambda ml: self.lot_id in ml.produce_line_ids.lot_id and ml.lot_id not in previously_unbuilt_lots
+                )
             for move_line in moves_lines:
                 # Iterate over all move_lines until we unbuilded the correct quantity.
                 taken_quantity = min(needed_quantity, move_line.quantity - qty_already_used[move_line])
