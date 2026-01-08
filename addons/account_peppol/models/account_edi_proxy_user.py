@@ -69,7 +69,7 @@ class AccountEdiProxyClientUser(models.Model):
         # explicitly check with active_test, see https://github.com/odoo/odoo/commit/4c46b696f3af73c982ba92f25d71afe8fc825ed0
         if any((
             company.with_context(active_test=True).account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol'),
-            company.account_peppol_migration_key,
+            company.sudo().account_peppol_migration_key,
             company.account_peppol_proxy_state != 'not_registered',
         )):
             return
