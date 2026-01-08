@@ -299,12 +299,17 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             };
             setup() {
                 this.modalRef = useChildRef();
-                this.state = useState({ apiKey: apiKey });
+                this.state = useState({ apiKey: apiKey, mapId: "" });
                 this.apiKeyInput = useRef("apiKeyInput");
                 onMounted(() => this.props.onMounted(this.modalRef));
             }
             onClickSave() {
-                this.props.confirm(this.modalRef, this.state.apiKey, this.props.close);
+                this.props.confirm(
+                    this.modalRef,
+                    this.state.apiKey,
+                    this.state.mapId,
+                    this.props.close
+                );
             }
         };
 
@@ -316,7 +321,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                         applyError.call($(modalRef.el), apiKeyValidation.message);
                     }
                 },
-                confirm: async (modalRef, valueAPIKey, close = undefined) => {
+                confirm: async (modalRef, valueAPIKey, valueMapId, close = undefined) => {
                     if (!valueAPIKey) {
                         applyError.call($(modalRef.el), _t("Enter an API Key"));
                         return;
@@ -326,6 +331,12 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                     const res = await this._validateGMapAPIKey(valueAPIKey);
                     if (res.isValid) {
                         await this.orm.write("website", [websiteId], {google_maps_api_key: valueAPIKey});
+                        // Set map ID on all Google Map snippets
+                        if (valueMapId) {
+                            for (const mapEl of this.$body[0].querySelectorAll(".s_google_map")) {
+                                mapEl.dataset.mapId = valueMapId;
+                            }
+                        }
                         invalidated = true;
                         if (close) {
                             close();
