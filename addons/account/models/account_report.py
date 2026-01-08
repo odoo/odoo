@@ -555,7 +555,15 @@ class AccountReportExpression(models.Model):
         required=True
     )
     formula = fields.Char(string="Formula", required=True)
-    subformula = fields.Char(string="Subformula")
+    subformula = fields.Char(
+        string="Subformula",
+        help=(
+            "Defines how the result of the formula is computed, depending on the "
+            "selected computation engine (e.g. sum, sum_if_pos, count_rows). \n"
+            "Use 'ignore_zero_division' to return '0' instead of raising an error "
+            "when a division by zero occurs."
+        ),
+    )
     date_scope = fields.Selection(
         string="Date Scope",
         selection=[
