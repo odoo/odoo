@@ -112,6 +112,21 @@
     }
 }
 
+.o-mail-ForwardedMessage-link {
+    transition: background-color 0.15s ease;
+    font-size: 10px;
+    line-height: 1.2;
+    min-width: 150px;
+
+    &:hover {
+        background-color: rgba($body-color, 0.2);
+    }
+
+    span {
+        max-width: fit-content;
+    }
+}
+
 .o-mail-ChatWindow .o-mail-Message.o-selfAuthored {
     flex-direction: row-reverse;
 

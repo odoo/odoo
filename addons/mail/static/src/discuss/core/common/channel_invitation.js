@@ -1,15 +1,26 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
+import { SelectableList } from "@mail/discuss/core/common/selectable_list";
+import { AttachmentList } from "@mail/core/common/attachment_list";
+import { MessageLinkPreviewList } from "@mail/core/common/message_link_preview_list";
+import { Gif } from "@mail/core/common/gif";
 
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { onMounted, onWillStart, useEffect, useState } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
-export class ChannelInvitation extends Component {
-    static components = { ActionPanel, DiscussAvatar };
+export class ChannelInvitation extends SelectableList {
+    static components = {
+        ...SelectableList.components,
+        ActionPanel,
+        DiscussAvatar,
+        AttachmentList,
+        MessageLinkPreviewList,
+        Gif,
+    };
     static defaultProps = { hasSizeConstraints: false };
     static props = [
         "autofocus?",
@@ -17,7 +28,8 @@ export class ChannelInvitation extends Component {
         "channel?",
         "close?",
         "className?",
-        "state?",
+        "searchStr?",
+        "onSelectionChange?",
     ];
     static template = "discuss.ChannelInvitation";
 
@@ -28,72 +40,128 @@ export class ChannelInvitation extends Component {
         this.rtc = useService("discuss.rtc");
         this.notification = useService("notification");
         this.suggestionService = useService("mail.suggestion");
+        this.ui = useService("ui");
         this.sequential = useSequential();
         this.state = useState({
             searchResultCount: 0,
-            searchStr: "",
+            searchStr: this.props.searchStr ?? "",
             selectableEmails: [],
             selectablePartners: [],
-            selectedEmails: [],
-            selectedPartners: [],
             sentEmails: new Set(),
         });
+        this.internalState.search = this.state.searchStr;
         this.debouncedFetchPartnersToInvite = useDebounced(
             this.fetchPartnersToInvite.bind(this),
             250
         );
         this.inputRef = useAutofocus({ refName: "input" });
+        const originalToggleSelection = this.toggleSelection;
+        this.toggleSelection = (option) => {
+            originalToggleSelection.call(this, option);
+            if (this.props.onSelectionChange) {
+                this.props.onSelectionChange(this.selectedPartners);
+            }
+        };
         onWillStart(() => {
             if (this.store.self_user) {
                 this.fetchPartnersToInvite();
             }
         });
-    }
-
-    get selectablePartners() {
-        return this.props.state?.selectablePartners ?? this.state.selectablePartners;
-    }
-
-    set selectablePartners(partners) {
-        if (this.props.state?.selectablePartners) {
-            this.props.state.selectablePartners = partners;
-        } else {
-            this.state.selectablePartners = partners;
-        }
+        onMounted(() => {
+            if (this.store.self_user && this.props.channel) {
+                this.inputRef.el.focus();
+            }
+        });
+        useEffect(
+            () => {
+                if (this.props.autofocus) {
+                    this.inputRef.el?.focus();
+                }
+            },
+            () => [this.props.autofocus]
+        );
+        useEffect(
+            () => {
+                if (this.props.onSelectionChange) {
+                    this.props.onSelectionChange(this.selectedPartners);
+                }
+            },
+            () => []
+        );
     }
 
     get selectedPartners() {
-        return this.props.state?.selectedPartners ?? this.state.selectedPartners;
+        return this.internalState.selectedOptions
+            .filter((option) => option.isPartner && option.partner)
+            .map((option) => option.partner);
     }
 
-    set selectedPartners(partners) {
-        if (this.props.state?.selectedPartners) {
-            this.props.state.selectedPartners = partners;
-        } else {
-            this.state.selectedPartners = partners;
-        }
+    get selectedEmails() {
+        return this.internalState.selectedOptions
+            .filter((option) => option.email)
+            .map((option) => option.email);
     }
 
     get searchStr() {
-        return this.props.state?.searchStr ?? this.state.searchStr;
+        return this.state.searchStr;
     }
 
     set searchStr(newSearchStr) {
-        if (this.props.state?.searchStr !== undefined) {
-            this.props.state.searchStr = newSearchStr;
-        } else {
-            this.state.searchStr = newSearchStr;
-        }
+        this.state.searchStr = newSearchStr;
+        this.internalState.search = newSearchStr;
     }
 
     get showingResultNarrowText() {
         return _t(
             "Showing %(result_count)s results out of %(total_count)s. Narrow your search to see more choices.",
             {
-                result_count: this.selectablePartners.length,
+                result_count: this.state.selectablePartners.length,
                 total_count: this.state.searchResultCount,
             }
         );
+    }
+
+    _buildOptions(partners, emails) {
+        return [
+            ...partners.map((partner) => ({
+                id: partner.id,
+                isPartner: true,
+                partner,
+                displayName: partner.name ?? "",
+                avatarUrl: partner.avatarUrl ?? "",
+            })),
+            ...emails.map((email) => ({
+                id: `email_${email}`,
+                isPartner: false,
+                email,
+                displayName: email,
+                avatarUrl: "",
+            })),
+        ];
+    }
+
+    get options() {
+        return this._buildOptions(this.state.selectablePartners, this.state.selectableEmails);
+    }
+
+    getOptionDisplayName(option) {
+        if (option.isPartner && option.partner) {
+            return option.partner.name ?? "";
+        }
+        return option.email ?? super.getOptionDisplayName(option);
+    }
+
+    getOptionAvatarUrl(option) {
+        return option.isPartner && option.partner
+            ? option.partner.avatarUrl ?? ""
+            : super.getOptionAvatarUrl(option);
+    }
+
+    get emptyStateText() {
+        if (this.props.channel) {
+            return _t("No people found to invite.");
+        }
+        return _t("No user found.");
     }
 
     get searchPlaceholder() {
@@ -117,13 +185,13 @@ export class ChannelInvitation extends Component {
         const selectablePartners = results.partner_ids.map((id) =>
             this.store["res.partner"].get(id)
         );
-        this.selectablePartners = this.suggestionService.sortPartnerSuggestions(
+        this.state.selectablePartners = this.suggestionService.sortPartnerSuggestions(
             selectablePartners,
             this.searchStr,
             this.props.channel?.thread
         );
         this.state.searchResultCount = results["count"];
-        const selectableEmails = this.state.selectedEmails.filter((addr) =>
+        const selectableEmails = this.selectedEmails.filter((addr) =>
             addr.includes(this.searchStr)
         );
         if (results.selectable_email) {
@@ -136,38 +204,14 @@ export class ChannelInvitation extends Component {
     }
 
     onInput() {
-        this.searchStr = this.inputRef.el.value;
+        const value = this.inputRef.el.value;
+        this.searchStr = value;
         this.debouncedFetchPartnersToInvite();
     }
 
-    onClickSelectablePartner(partner) {
-        if (partner.in(this.selectedPartners)) {
-            const index = this.selectedPartners.indexOf(partner);
-            if (index !== -1) {
-                this.selectedPartners.splice(index, 1);
-            }
-            return;
-        }
-        this.selectedPartners.push(partner);
-    }
-
-    onClickSelectableEmail(email) {
-        const index = this.state.selectedEmails.indexOf(email);
-        if (index !== -1) {
-            this.state.selectedEmails.splice(index, 1);
-            return;
-        }
-        this.state.selectedEmails.push(email);
-    }
-
-    onClickSelectedPartner(partner) {
-        const index = this.selectedPartners.indexOf(partner);
-        this.selectedPartners.splice(index, 1);
-    }
-
-    onClickSelectedEmail(email) {
-        const index = this.state.selectedEmails.indexOf(email);
-        this.state.selectedEmails.splice(index, 1);
+    clearSearch() {
+        this.searchStr = "";
+        this.debouncedFetchPartnersToInvite();
     }
 
     onFocusInvitationLinkInput(ev) {
@@ -211,7 +255,7 @@ export class ChannelInvitation extends Component {
                 })
             );
         }
-        if (this.state.selectedEmails.length) {
+        if (this.selectedEmails.length) {
             invitePromises.push(
                 this.orm.call("discuss.channel", "invite_by_email", [channelId], {
                     emails: this.state.selectedEmails,
@@ -219,8 +263,7 @@ export class ChannelInvitation extends Component {
             );
         }
         await Promise.all(invitePromises);
-        this.state.selectedEmails = [];
-        this.state.selectedPartners = [];
+        this.internalState.selectedOptions = [];
         this.props.close?.();
     }
 

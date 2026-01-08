@@ -57,7 +57,7 @@ test("can invite users in channel from chat window", async () => {
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item:text('Invite People')");
     await contains(".o-discuss-ChannelInvitation");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
+    await click(".o-discuss-SelectableList-selectable:has(:text('TestPartner'))");
     await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(
@@ -89,8 +89,8 @@ test("should be able to search for a new user to invite from an existing chat", 
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await click("button[title='Invite People']");
-    await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
-    await contains(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2'))");
+    await insertText(".o-discuss-SelectableList-search", "TestPartner2");
+    await contains(".o-discuss-SelectableList-selectable:has(:text('TestPartner2'))");
 });
 
 test("Invitation form should display channel group restriction", async () => {
@@ -144,8 +144,8 @@ test("should be able to create a new group chat from an existing chat", async ()
     await openDiscuss(channelId);
     await click(".o-mail-DiscussContent-header button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation");
-    await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2'))");
+    await insertText(".o-discuss-SelectableList-search", "TestPartner2");
+    await click(".o-discuss-SelectableList-selectable:has(:text('TestPartner2'))");
     await click("button[title='Create Group Chat']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(
@@ -226,8 +226,8 @@ test("invite user to self chat opens DM chat with user", async () => {
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('TestGuest and Mitchell Admin')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('TestPartner')");
     await click(".o-mail-DiscussContent-header button[title='Invite People']");
-    await insertText(".o-discuss-ChannelInvitation-search", "TestPartner");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
+    await insertText(".o-discuss-SelectableList-search", "TestPartner");
+    await click(".o-discuss-SelectableList-selectable:has(:text('TestPartner'))");
     await click("button:contains('Go to Conversation'):enabled");
     await contains(".o-mail-DiscussSidebarChannel.o-active:text('TestPartner')");
 });

@@ -70,7 +70,7 @@
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': isEditing }">
                                     <t t-set="showTextVisually" t-value="!message.linkPreviewSquash and (message.hasTextContent or message.subtype_id?.description or message.isEmpty)"/>
                                     <t t-if="message.message_type === 'notification' and message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
-                                    <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_id?.description or isEditing or message.parent_id))">
+                                    <t t-if="message.forwarded_from_id or message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_id?.description or isEditing or message.parent_id))">
                                         <MessageLinkPreviewList t-if="!isEditing and message.linkPreviewSquash and !message.parent_id" messageLinkPreviews="message.message_link_preview_ids"/>
                                         <t t-else="">
                                             <div t-if="message.bubbleColor and !props.squashed" class="o-mail-Message-bubbleTail position-absolute d-flex" t-att-style="isAlignedRight ? 'right: -4px; transform: rotateY(180deg);' : 'left: -4px;'" t-att-class="{
@@ -100,7 +100,44 @@
                                                     'o-orange': message.bubbleColor === 'orange',
                                                 }"/>
                                                 <MessageInReply t-if="message.parent_id" class="'mx-2 p-1 pb-0 ' + (showTextVisually ? 'mt-1' : 'my-1')" message="message" onClick="props.onParentMessageClick"/>
-                                                <div class="position-relative text-break o-mail-Message-body" t-att-class="{
+                                                <t t-if="message.forwarded_from_id">
+                                                    <div class="o-mail-Message-bubble" t-att-class="{ 'o-blue': message.bubbleColor === 'blue', 'o-green': message.bubbleColor === 'green', 'o-orange': message.bubbleColor === 'orange'}">
+                                                        <div class="o-mail-MessageInReply-core mx-2 mt-2 border-start position-relative px-2 py-1 rounded-start-0 o-rounded-end-bubble">
+                                                            <small class="text-muted fst-italic">
+                                                                <i class="fa fa-share"/> Forwarded
+                                                            </small>
+                                                            <t t-call="mail.Message-bodyContent">
+                                                                <t t-set="bodyAttClass" t-value="{
+                                                                    'position-relative text-break o-mail-Message-body': true,
+                                                                    'p-1': message.isNote,
+                                                                    'fs-1': !isEditing and !env.inChatter and message.onlyEmojis,
+                                                                    'mb-0': !message.isNote,
+                                                                    'pt-2 pb-1': !message.isNote and isEditing,
+                                                                    'o-note': message.isNote,
+                                                                    'flex-grow-1': isEditing,
+                                                                }"/>
+                                                                <t t-set="showAttachmentsInside" t-value="true"/>
+                                                            </t>
+                                                        </div>
+                                                        <div
+                                                            t-att-title="message.forwarded_from_id.thread.displayName"
+                                                            class="o-mail-ForwardedMessage-link position-relative d-flex gap-1 p-1 text-muted rounded-1"
+                                                            role="button"
+                                                            t-on-click="openForwardedConversation"
+                                                        >
+                                                            <span
+                                                                class="flex-grow-1 flex-shrink-1 flex-basis-0 w-0 text-truncate"
+                                                                t-out="message.forwarded_from_id.thread.displayName"
+                                                            />
+                                                            <i class="fa fa-chevron-right"/>
+                                                            <span t-out="message.forwarded_from_id.dateSimpleWithDay"/>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-call="mail.Message-bodyContent">
+                                                        <t t-set="bodyAttClass" t-value="{
+                                                            'position-relative text-break o-mail-Message-body': true,
                                                             'p-1': message.isNote,
                                                             'fs-1': !isEditing and !env.inChatter and message.onlyEmojis,
                                                             'mb-0': !message.isNote,
@@ -110,24 +147,10 @@
                                                             'o-rounded-bubble': props.squashed,
                                                             'align-self-start o-rounded-end-bubble o-rounded-bottom-bubble': !isEditing and !message.isNote and !props.squashed,
                                                             'flex-grow-1': isEditing,
-                                                            }" t-ref="body">
-                                                    <i t-if="message.isEmpty" class="text-muted opacity-75" t-out="message.inlineBody"/>
-                                                    <Composer t-elif="isEditing" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'" sidebar="false"/>
-                                                    <t t-else="">
-                                                        <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="d-block text-muted smaller">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
-                                                        <div class="overflow-x-auto" t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
-                                                        <t t-elif="message.showTranslation" t-out="message.richTranslationValue"/>
-                                                        <div class="o-mail-Message-richBody overflow-x-auto" t-elif="message.hasTextContent and message.richBody and !message.linkPreviewSquash" t-out="props.messageSearch?.highlight(message.richBody) ?? message.richBody"/>
-                                                        <p class="fst-italic text-muted small" t-if="message.showTranslation">
-                                                            <t t-if="message.translationSource" t-esc="translatedFromText"/>
-                                                        </p>
-                                                        <p class="fst-italic text-muted small" t-if="message.translationErrors">
-                                                            <i class="text-danger fa fa-warning" role="img" aria-label="Translation Failure"/>
-                                                            <t t-if="message.translationErrors" t-esc="translationFailureText"/>
-                                                        </p>
-                                                        <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_id?.description) ?? message.subtype_id?.description"/>
+                                                        }"/>
+                                                        <t t-set="showAttachmentsInside" t-value="false"/>
                                                     </t>
-                                                </div>
+                                                </t>
                                             </div>
                                         </t>
                                     </t>
@@ -135,7 +158,7 @@
                                     <PollResult t-if="message.ended_poll_ids.length" poll="message.poll"/>
                                     <Poll t-elif="message.poll" poll="message.poll"/>
                                 </div>
-                                <div class="position-relative">
+                                <div class="position-relative" t-if="!message.forwarded_from_id">
                                     <AttachmentList
                                         t-if="message.attachment_ids.length > 0"
                                         attachments="message.attachment_ids.map((a) => a)"
@@ -224,7 +247,7 @@
     <i t-att-class="icon"/>
 </t>
 
-<t t-name="mail.Message.sidebarStarred">
+    <t t-name="mail.Message.sidebarStarred">
     <small class="text-center lh-1 o-opacity-35" t-att-class="{ 'align-self-start ms-1': isAlignedRight, 'align-self-end me-1': !isAlignedRight, 'mt-2': props.squashed, 'mt-1': !props.squashed }" title="Starred message">
         <i class="fa fa-star o-mail-starred"/>
     </small>
@@ -236,6 +259,34 @@
             <span class="fa fa-angle-right me-1" aria-hidden="true"/>
             <span class="fa fa-comment" aria-hidden="true"/>
         </span>
+    </t>
+
+    <t t-name="mail.Message-bodyContent">
+        <div t-att-class="bodyAttClass" t-ref="body">
+            <i t-if="message.isEmpty" class="text-muted opacity-75" t-out="message.inlineBody"/>
+            <Composer t-elif="isEditing" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'" sidebar="false"/>
+            <t t-else="">
+                <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="d-block text-muted smaller">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
+                <div class="overflow-x-auto" t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
+                <t t-elif="message.showTranslation" t-out="message.richTranslationValue"/>
+                <div class="o-mail-Message-richBody overflow-x-auto" t-elif="message.hasTextContent and message.richBody and !message.linkPreviewSquash" t-out="props.messageSearch?.highlight(message.richBody) ?? message.richBody"/>
+                <p class="fst-italic text-muted small" t-if="message.showTranslation">
+                    <t t-if="message.translationSource" t-out="translatedFromText"/>
+                </p>
+                <p class="fst-italic text-muted small" t-if="message.translationErrors">
+                    <i class="text-danger fa fa-warning" role="img" aria-label="Translation Failure"/>
+                    <t t-if="message.translationErrors" t-out="translationFailureText"/>
+                </p>
+                <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_id?.description) ?? message.subtype_id?.description"/>
+            </t>
+        </div>
+        <div t-if="showAttachmentsInside" class="position-relative">
+            <AttachmentList
+                t-if="message.attachment_ids.length > 0"
+                attachments="message.attachment_ids.map((a) => a)"
+                unlinkAttachment.bind="onClickAttachmentUnlink"
+                messageSearch="props.messageSearch"/>
+        </div>
     </t>
 
 </templates>

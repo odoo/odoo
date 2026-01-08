@@ -235,6 +235,29 @@ class ThreadController(http.Controller):
         )
         return Store().add(message, "_store_message_fields").get_result()
 
+    @http.route("/mail/message/forward", methods=["POST"], type="jsonrpc", auth="user")
+    def mail_message_forward_to(
+        self,
+        forwarded_from_id,
+        target_channels_ids,
+        optional_msg_body=False,
+        optional_msg_has_link=False,
+        source_msg_has_link=False,
+        **kwargs
+    ):
+        source_message = self._get_message_with_access(forwarded_from_id, mode="create", **kwargs)
+        channels = request.env["discuss.channel"].browse(target_channels_ids).filtered(
+            lambda c: self._get_thread_with_access_for_post("discuss.channel", c.id, **kwargs)
+        )
+        if not channels:
+            return
+        channels._forward_message(
+            source_message,
+            optional_msg_body,
+            optional_msg_has_link,
+            source_msg_has_link,
+        )
+
     # side check for access
     # ------------------------------------------------------------
 
