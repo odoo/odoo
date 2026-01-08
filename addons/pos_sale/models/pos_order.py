@@ -185,6 +185,10 @@ class PosOrder(models.Model):
             }
         return order_line
 
+    def _get_stock_moves(self):
+        res = super()._get_stock_moves()
+        return res | self.lines.sale_order_line_id.move_ids
+
     def _get_invoice_lines_values(self, line_values, pos_line, move_type):
         inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line, move_type)
 
