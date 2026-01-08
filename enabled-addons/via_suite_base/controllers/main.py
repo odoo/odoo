@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from odoo import http
 from odoo.http import request
-from odoo.addons.auth_oauth.controllers.main import OAuthLogin
+from odoo.addons.auth_oauth.controllers.main import OAuthLogin, OAuthController
+from odoo.addons.via_suite_base.exceptions import ViaSuiteAuthError
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -25,7 +26,7 @@ class ViaSuiteLogin(OAuthLogin):
             return request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
         
         # If there's an OAuth error, let super handle it
-        if kw.get('oauth_error'):
+        if kw.get('oauth_error') or kw.get('via_error'):
             return super(ViaSuiteLogin, self).web_login(redirect=redirect, **kw)
         
         # Get the OAuth provider (use sudo since auth="none")
@@ -50,6 +51,46 @@ class ViaSuiteLogin(OAuthLogin):
         # Fallback to standard login if something went wrong
         _logger.warning("Could not build Keycloak auth link, falling back to standard login")
         return super(ViaSuiteLogin, self).web_login(redirect=redirect, **kw)
+
+
+class ViaSuiteOAuthController(OAuthController):
+    """
+    Override OAuth controller to catch custom exceptions and show branded error pages.
+    """
+    
+    @http.route('/auth_oauth/signin', type='http', auth='none', readonly=False)
+    def signin(self, **kw):
+        """
+        Override to catch ViaSuite custom exceptions and redirect with proper error codes.
+        """
+        from odoo.addons.auth_oauth.controllers.main import fragment_to_query_string
+        
+        # Apply the fragment_to_query_string decorator manually
+        if not kw:
+            from odoo.http import Response
+            return Response("""<html><head><script>
+                var l = window.location;
+                var q = l.hash.substring(1);
+                var r = l.pathname + l.search;
+                if(q.length !== 0) {
+                    var s = l.search ? (l.search === '?' ? '' : '&') : '?';
+                    r = l.pathname + l.search + s + q;
+                }
+                if (r == l.pathname) {
+                    r = '/';
+                }
+                window.location = r;
+            </script></head><body></body></html>""")
+        
+        try:
+            # Call parent implementation
+            return super(ViaSuiteOAuthController, self).signin(**kw)
+        except ViaSuiteAuthError as e:
+            # Catch our custom exceptions and redirect with error code
+            _logger.warning("ViaSuite Auth Error: %s - %s", e.error_code, str(e))
+            redirect = request.redirect(f"/web/login?via_error={e.error_code}", 303)
+            redirect.autocorrect_location_header = False
+            return redirect
 
 
 

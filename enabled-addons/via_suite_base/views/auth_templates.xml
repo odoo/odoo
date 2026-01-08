@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Override login template to show ViaSuite branded error messages -->
+    <template id="web_login_viasuite" name="ViaSuite Login Errors" inherit_id="web.login">
+        
+        <!-- Replace error messages section -->
+        <xpath expr="//p[@t-if='error']" position="replace">
+            <!-- ViaSuite Custom Errors -->
+            <div t-if="request.params.get('via_error')" class="alert alert-danger" role="alert">
+                <t t-set="via_error" t-value="request.params.get('via_error')"/>
+                
+                <!-- Tenant Mismatch Error -->
+                <div t-if="via_error == 'tenant_mismatch'">
+                    <h4 class="alert-heading">
+                        <i class="fa fa-exclamation-triangle"/> Acesso Negado
+                    </h4>
+                    <p class="mb-2">Você está tentando acessar um tenant diferente do configurado em sua conta.</p>
+                    <hr/>
+                    <p class="mb-0" style="font-size: 0.9rem;">
+                        <strong>O que fazer?</strong><br/>
+                        • Verifique se está acessando o endereço correto<br/>
+                        • Entre em contato com o administrador para verificar suas permissões<br/>
+                        • Email: <a href="mailto:suporte@viafronteira.com" class="alert-link">suporte@viafronteira.com</a>
+                    </p>
+                </div>
+                
+                <!-- User Not Found Error -->
+                <div t-if="via_error == 'user_not_found'">
+                    <h4 class="alert-heading">
+                        <i class="fa fa-user-times"/> Usuário Não Encontrado
+                    </h4>
+                    <p class="mb-2">Sua conta foi autenticada com sucesso, mas você ainda não foi cadastrado neste sistema.</p>
+                    <hr/>
+                    <p class="mb-0" style="font-size: 0.9rem;">
+                        <strong>O que fazer?</strong><br/>
+                        • Solicite ao administrador que crie seu usuário no sistema<br/>
+                        • Email: <a href="mailto:suporte@viafronteira.com" class="alert-link">suporte@viafronteira.com</a>
+                    </p>
+                </div>
+                
+                <!-- Account Disabled Error -->
+                <div t-if="via_error == 'account_disabled'">
+                    <h4 class="alert-heading">
+                        <i class="fa fa-ban"/> Conta Desativada
+                    </h4>
+                    <p class="mb-2">Sua conta existe no sistema mas está atualmente desativada.</p>
+                    <hr/>
+                    <p class="mb-0" style="font-size: 0.9rem;">
+                        <strong>O que fazer?</strong><br/>
+                        • Entre em contato com o administrador para reativar sua conta<br/>
+                        • Email: <a href="mailto:suporte@viafronteira.com" class="alert-link">suporte@viafronteira.com</a>
+                    </p>
+                </div>
+                
+                <!-- Generic Error -->
+                <div t-if="via_error not in ['tenant_mismatch', 'user_not_found', 'account_disabled']">
+                    <h4 class="alert-heading">
+                        <i class="fa fa-lock"/> Acesso Negado
+                    </h4>
+                    <p class="mb-2">Ocorreu um erro durante a autenticação.</p>
+                    <hr/>
+                    <p class="mb-0" style="font-size: 0.9rem;">
+                        <strong>O que fazer?</strong><br/>
+                        • Tente fazer login novamente<br/>
+                        • Se o problema persistir, entre em contato com o suporte<br/>
+                        • Email: <a href="mailto:suporte@viafronteira.com" class="alert-link">suporte@viafronteira.com</a>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Keep original error handling for non-ViaSuite errors -->
+            <p t-if="error and not request.params.get('via_error')" class="alert alert-danger">
+                <t t-esc="error"/>
+            </p>
+        </xpath>
+        
+    </template>
+</odoo>

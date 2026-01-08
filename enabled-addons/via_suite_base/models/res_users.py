@@ -14,7 +14,10 @@ class ResUsers(models.Model):
         Override signin to:
         1. Validate tenant claim (if present)
         2. Disable JIT Provisioning (only allow existing Odoo users)
+        3. Raise custom exceptions for better error handling
         """
+        from odoo.addons.via_suite_base.exceptions import TenantMismatchError, UserNotFoundError
+        
         # 1. Tenant Validation (optional - only if tenant claim exists)
         _logger.info("OAuth Validation Data: %s", validation)
         token_tenant = validation.get('tenant')
@@ -23,12 +26,12 @@ class ResUsers(models.Model):
         if token_tenant:
             # If tenant claim exists, validate it
             # Support both "via-suite-{tenant}" and plain tenant name formats
-            expected_db = f"via-suite-{token_tenant}" if token_tenant else False
+            expected_db = f"via-suite-{token_tenant}"
             
             if current_db != expected_db and current_db != token_tenant:
                 _logger.error("Tenant mismatch: current_db=%s, token_tenant=%s, expected_db=%s", 
                               current_db, token_tenant, expected_db)
-                raise AccessDenied("Invalid tenant or permission denied for this database.")
+                raise TenantMismatchError(token_tenant, current_db)
             _logger.info("Tenant validation passed: %s", token_tenant)
         else:
             _logger.warning("No tenant claim in token for database %s. Proceeding without tenant validation.", current_db)
@@ -52,17 +55,29 @@ class ResUsers(models.Model):
             ], limit=1)
             
             if user:
-                # Link existing user
                 _logger.info("Linking existing user %s (id=%s) to OAuth", email, user.id)
-                user.sudo().write({
-                    'oauth_uid': oauth_uid,
-                    'oauth_provider_id': provider,
-                    'oauth_access_token': params.get('access_token')
-                })
+        
+        if user:
+            # Check if user is active
+            if not user.active:
+                _logger.warning("User %s exists but is inactive", email)
+                from odoo.addons.via_suite_base.exceptions import AccountDisabledError
+                raise AccountDisabledError(email)
+            
+            # ALWAYS update the token to allow authentication via _check_credentials
+            user.sudo().write({
+                'oauth_uid': oauth_uid,
+                'oauth_provider_id': provider,
+                'oauth_access_token': params.get('access_token')
+            })
         
         if not user:
-            _logger.warning("OAuth login failed: User %s not found in Odoo and JIT is disabled.", email)
-            raise AccessDenied("User not found. Please contact your administrator.")
+            _logger.warning("OAuth login failed: User %s not found in system (JIT disabled)", email)
+            raise UserNotFoundError(email)
+        
+        if not user:
+            _logger.warning("OAuth login failed: User %s not found in system (JIT disabled)", email)
+            raise UserNotFoundError(email)
         
         _logger.info("OAuth signin successful for user %s (id=%s)", user.login, user.id)
         return user.login  # Must return login, not user.id

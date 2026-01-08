@@ -28,6 +28,7 @@
     ],
     'data': [
         'data/auth_oauth_provider.xml',
+        'views/auth_templates.xml',
     ],
     # 'assets': {
     #     'web.assets_backend': [
