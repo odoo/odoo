@@ -212,10 +212,15 @@ registry.category("web_tour.tours").add("PosCouponTour5", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
             ProductScreen.addOrderline("Test Product 1", "1", "100"),
+            PosLoyalty.pointsAwardedAre("115"),
             PosLoyalty.clickDiscountButton(),
             Dialog.confirm(),
             ProductScreen.totalAmountIs("92.00"),
+            PosLoyalty.pointsAwardedAre("92"),
+            Chrome.endTour(),
         ].flat(),
 });
 
