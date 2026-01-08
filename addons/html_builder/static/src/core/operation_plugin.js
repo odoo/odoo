@@ -16,6 +16,13 @@ export class OperationPlugin extends Plugin {
 
     setup() {
         this.operation = new Operation(this.document);
+
+        // Revert any potential preview as soon as the user does anything, to
+        // avoid losing what the user will have done when they ends the preview.
+        // If there is async action ongoing, like an async apply from a preview,
+        // this may lose the user input while the apply was running
+        this.addDomListener(this.editable, "keydown", () => this.next());
+        this.addDomListener(this.editable, "beforeinput", () => this.next());
     }
 
     /**
