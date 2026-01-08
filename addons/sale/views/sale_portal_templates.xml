@@ -782,6 +782,16 @@
                                         t-att-class="'fw-bolder o_line_section' if is_section else 'fw-bold o_line_subsection'"
                                     >
                                         <t
+                                            t-set="show_section_total"
+                                            t-value="(
+                                                (
+                                                    is_section
+                                                    or not line.parent_id.collapse_prices
+                                                )
+                                                and not line.is_downpayment
+                                            )"
+                                        />
+                                        <t
                                             t-set="section_name_colspan"
                                             t-value="3 + (1 if display_discount else 0) + (1 if display_taxes else 0)"
                                         />
@@ -919,8 +929,8 @@
                                         <td t-if="display_taxes" name="td_product_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                             <span t-out="', '.join(map(lambda x: (x.name), line.tax_ids))"/>
                                         </td>
-                                        <td t-if="not line.is_downpayment" name="td_product_subtotal" class="text-end">
-                                            <t t-if="not collapse_prices">
+                                        <td name="td_product_subtotal" class="text-end">
+                                            <t t-if="not line.is_downpayment and not collapse_prices">
                                                 <span
                                                     t-if="price_field == 'price_subtotal'"
                                                     t-field="line.price_subtotal"
