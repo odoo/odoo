@@ -11,6 +11,7 @@ import json
 import logging
 import os
 import time
+import typing
 from functools import wraps
 from hashlib import sha256
 from itertools import chain
@@ -33,6 +34,9 @@ from odoo.tools import (
     reset_cached_properties,
 )
 from odoo.tools.date_utils import all_timezones
+
+if typing.TYPE_CHECKING:
+    from odoo.models import BaseModel
 
 _logger = logging.getLogger(__name__)
 
@@ -1301,6 +1305,89 @@ class ResUsers(models.Model):
     def _mfa_url(self):
         """ If an MFA method is enabled, returns the URL for its second step. """
         return
+
+    # =================
+    # Access tokens API
+    # =================
+
+    @api.model
+    @api.private
+    def use_access_token(self, token: str, scope: str) -> BaseModel:
+        """ Use the token and get the referenced record (sudoed). """
+        return self.env['ir.access.token'].sudo().use(token, scope)
+
+    @api.model
+    @api.private
+    def grant_access_token(self, record: BaseModel, scope: str, *,
+        expiration: datetime | None = None, owner: BaseModel | None = None,
+        value: str | None = None) -> str:
+        """ Generates a token to grant access to record for the given scope.
+
+        :param record: Single record for which access is granted.
+        :param scope: Access scope associated with the token.
+        :param expiration: Optional expiration datetime for the token.
+                           If False, the token does not expire.
+        :param owner: Optional single record identifying the token owner.
+        :param value: Optional token value which must be forced.
+        :return: Signed access token string.
+        """
+        if not self.env.is_admin():
+            raise AccessError(_("Only administrators can grant access tokens."))
+
+        record.ensure_one()
+        access_token = self.env['ir.access.token'].sudo().create({
+            'res_model': record._name,
+            'res_id': record.id,
+            'scope': scope,
+            'expiration': expiration.replace(microsecond=0) if expiration else False,
+            'owner_id': owner.id if owner else False,
+            'manual_token': value,
+        })
+        return access_token.token
+
+    @api.model
+    @api.private
+    def revoke_access_token(self, records: BaseModel, scope: str, *,
+        owners: BaseModel | None = None) -> int:
+        """ Ensures that tokens for the records and scope are invalidated. """
+        if not self.env.is_admin():
+            raise AccessError(_("Only administrators can revoke access tokens."))
+
+        access_tokens = self.env['ir.access.token'].sudo().search([
+            ('res_model', '=', records._name),
+            ('res_id', 'in', records._ids),
+            ('scope', '=', scope),
+            ('owner_id', 'in', owners._ids if owners else [False]),
+        ])
+        if access_tokens:
+            access_tokens.unlink()
+            _logger.info('User %d revokes access tokens (%s)', self.env.uid, ', '.join(map(str, access_tokens._ids)))
+        return len(access_tokens)
+
+    @api.model
+    @api.private
+    def retrieve_access_token(self, record: BaseModel, scope: str, *,
+        owner: BaseModel | None = None, create: bool = False) -> str | typing.Literal[False]:
+        """ Retrieve a token for the record and scope. """
+        if not self.env.is_admin():
+            raise AccessError(_("Only administrators can retrieve access tokens."))
+
+        record.ensure_one()
+
+        access_token = self.env['ir.access.token'].sudo().search([
+            ('res_model', '=', record._name),
+            ('res_id', '=', record.id),
+            ('scope', '=', scope),
+            ('owner_id', '=', owner.id if owner else False),
+            '|',
+                ('expiration', '>=', fields.Datetime.now()),
+                ('expiration', '=', False),
+        ], order='expiration desc nulls first', limit=1)
+
+        if not access_token and create:
+            return self.grant_access_token(record, scope, owner=owner)
+
+        return access_token.token
 
 
 ResUsersPatchedInTest = ResUsers
