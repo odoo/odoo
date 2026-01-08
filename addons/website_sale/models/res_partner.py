@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models
+from odoo.fields import Domain
 from odoo.http import request
 
 
@@ -45,20 +46,29 @@ class ResPartner(models.Model):
 
         return frontend_writable_fields
 
+    def _get_order_fiscal_position_recompute_domain(self):
+        """Return a domain of sale orders for which we should recompute fiscal position after address update."""
+        return Domain([
+            ('state', '=', 'draft'),
+            ('website_id', '!=', False),
+            '|', ('partner_id', 'in', self.ids),
+                 ('partner_shipping_id', 'in', self.ids),
+        ])
+
     def write(self, vals):
         res = super().write(vals)
-        if {'country_id', 'vat', 'zip'} & vals.keys():
+        if {'country_id', 'vat', 'zip'} & vals.keys() and self:
             # Recompute fiscal position for open website orders
-            if orders_sudo := self.env['sale.order'].sudo().search([
-                ('state', '=', 'draft'),
-                ('website_id', '!=', False),
-                '|', ('partner_id', 'in', self.ids), ('partner_shipping_id', 'in', self.ids),
-            ]):
+            order_fpos_recompute_domain = self._get_order_fiscal_position_recompute_domain()
+            if orders_sudo := self.env['sale.order'].sudo().search(order_fpos_recompute_domain):
                 orders_by_fpos = orders_sudo.grouped('fiscal_position_id')
                 self.env.add_to_compute(orders_sudo._fields['fiscal_position_id'], orders_sudo)
                 if fpos_changed := orders_sudo.filtered(
                     lambda so: so not in orders_by_fpos.get(so.fiscal_position_id, []),
                 ):
                     fpos_changed._recompute_taxes()
-                    fpos_changed._recompute_prices()
+                    # other modules may extend the orders to recompute for
+                    # non-draft orders (for ex. sale_subscription), we need
+                    # to ensure to only recompute prices for draft orders
+                    fpos_changed.filtered(lambda order: order.state == 'draft')._recompute_prices()
         return res
