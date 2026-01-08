@@ -7,8 +7,9 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
-from odoo.addons.account_peppol.exceptions import get_ebms_message, get_exception_message
+from odoo.addons.account_peppol.exceptions import get_peppol_error_message
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+from odoo.addons.account_peppol.tools.peppol_iap_connector import PEPPOL_PROXY_URLS
 
 _logger = logging.getLogger(__name__)
 BATCH_SIZE = 50
@@ -26,34 +27,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     def _get_proxy_urls(self):
         urls = super()._get_proxy_urls()
         urls['peppol'] = {
-            'prod': 'https://peppol.api.odoo.com',
-            'test': 'https://peppol.test.odoo.com',
+            **PEPPOL_PROXY_URLS,
             'demo': 'demo',
         }
         return urls
-
-    @api.model
-    def _get_peppol_error_message(self, error_vals):
-        """
-        Helper to process the error dictionary returned from the IAP response.
-        It will only get the code (or EBMS code) and map it to the correct translated message.
-        :param dict error_vals: the dictionary of encoded error json generated from the `_json` method in `peppol_proxy`
-        :return: the translated error message
-        :rtype: str
-        """
-        if (ebms_code := error_vals.get('ebms_code')) and ebms_code != 4:
-            # Error with ebMS code is originally from PeppolInboundError
-            # In most case, ebMS message will be better and more specific, except for when the code is 4 (general "Other" message)
-            error_message = get_ebms_message(error_vals)
-        else:
-            error_message = get_exception_message(error_vals)
-
-        return _(
-            "Peppol Error [code=%(error_code)s]: %(error_subject)s\n%(error_message)s",
-            error_code=error_vals['code'],
-            error_subject=error_vals['subject'],
-            error_message=error_message,
-        )
 
     @handle_demo
     def _call_peppol_proxy(self, endpoint, params=None):
@@ -98,7 +75,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             raise UserError(e.message)
 
         if error_vals := response.get('error'):
-            error_message = self._get_peppol_error_message(error_vals)
+            error_message = get_peppol_error_message(self.env, error_vals)
             raise UserError(error_message)
 
         return response
@@ -371,7 +348,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                         continue
 
                     move.peppol_move_state = 'error'
-                    error_message = self._get_peppol_error_message(error_vals)
+                    error_message = get_peppol_error_message(self.env, error_vals)
                     move._message_log(body=error_message)
                     continue
 
@@ -406,40 +383,6 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
-
-    @handle_demo
-    def _register_proxy_user(self, company, proxy_type, edi_mode):
-        # EXTENDS 'account_edi_ubl_cii' - add handle_demo
-        return super()._register_proxy_user(company, proxy_type, edi_mode)
-
-    def _get_company_details(self):
-        self.ensure_one()
-        return {
-            'peppol_company_name': self.company_id.display_name,
-            'peppol_company_vat': self.company_id.vat,
-            'peppol_company_street': self.company_id.street,
-            'peppol_company_city': self.company_id.city,
-            'peppol_company_zip': self.company_id.zip,
-            'peppol_country_code': self.company_id.country_id.code,
-            'peppol_phone_number': self.company_id.account_peppol_phone_number,
-            'peppol_contact_email': self.company_id.account_peppol_contact_email,
-            'peppol_migration_key': self.company_id.sudo().account_peppol_migration_key,
-            'peppol_webhook_endpoint': self.company_id._get_peppol_webhook_endpoint(),
-            'peppol_webhook_token': self._generate_webhook_token(),
-        }
-
-    def _peppol_register_sender(self, peppol_external_provider=None):
-        self.ensure_one()
-        params = {
-            'company_details': self._get_company_details(),
-        }
-        self._call_peppol_proxy(
-            endpoint='/api/peppol/1/register_sender',
-            params=params,
-        )
-        self.company_id.account_peppol_proxy_state = 'sender'
-        if peppol_external_provider:
-            self.company_id.peppol_external_provider = peppol_external_provider
 
     def _peppol_register_sender_as_receiver(self):
         self.ensure_one()
@@ -504,70 +447,15 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         self._call_peppol_proxy(endpoint='/api/peppol/1/unregister_to_sender')
         self.company_id.account_peppol_proxy_state = 'sender'
 
-    @api.model
-    def _peppol_auto_register_services(self, module):
-        """Register new document types for all recipient users.
-
-        This function should be run in the post init hook of any module that extends the supported
-        document types.
-
-        :param module: Module from which this function is being called, allows us to determine which
-            document types are now supported.
-        """
-        receivers = self.search([
-            ('proxy_type', '=', 'peppol'),
-            ('company_id.account_peppol_proxy_state', '=', 'receiver')
-        ])
-        supported_identifiers = list(self.env['res.company']._peppol_modules_document_types().get(module, {}))
-        for receiver in receivers:
-            try:
-                receiver._call_peppol_proxy(
-                    '/api/peppol/2/add_services',
-                    params={'document_identifiers': supported_identifiers},
-                )
-            # Broad exception case, so as not to block execution of the rest of the _post_init hook.
-            except (AccountEdiProxyError, UserError) as exception:
-                _logger.error(
-                    'Auto registration of peppol services for module: %s failed on the user: %s, with exception: %s',
-                    module, receiver.edi_identification, exception,
-                )
-
-    @api.model
-    def _peppol_auto_deregister_services(self, module):
-        """Unregister a set of document types for all recipient users.
-
-        This function should be run in the uninstall hook of any module that extends the supported
-        document types.
-
-        :param module: Module from which this function is being called, allows us to determine which
-            document types are no longer supported.
-        """
-        receivers = self.search([
-            ('proxy_type', '=', 'peppol'),
-            ('company_id.account_peppol_proxy_state', '=', 'receiver')
-        ])
-        unsupported_identifiers = list(self.env['res.company']._peppol_modules_document_types().get(module, {}))
-        for receiver in receivers:
-            try:
-                receiver._call_peppol_proxy(
-                    '/api/peppol/2/remove_services',
-                    params={'document_identifiers': unsupported_identifiers},
-                )
-            except (AccountEdiProxyError, UserError) as exception:
-                _logger.error(
-                    'Auto deregistration of peppol services for module: %s failed on the user: %s, with exception: %s',
-                    module, receiver.edi_identification, exception,
-                )
-
     def _peppol_get_services(self):
         """Get information from the IAP regarding the Peppol services."""
         self.ensure_one()
         return self._call_peppol_proxy("/api/peppol/2/get_services")
 
-    def _generate_webhook_token(self):
-        self.ensure_one()
+    @api.model
+    def _generate_webhook_token(self, company):
         expiration = 30 * 24  # in 30 days
-        msg = [self.id, self.company_id._get_peppol_webhook_endpoint()]
+        msg = [company.id, company._get_peppol_webhook_endpoint()]
         payload = tools.hash_sign(self.sudo().env, 'account_peppol_webhook', msg, expiration_hours=expiration)
         return payload
 
@@ -582,8 +470,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             id, endpoint = payload
             if not url.startswith(endpoint):
                 return None
-            return self.browse(id).exists()
+            company = self.env['res.company'].browse(id).exists()
+            if company and company.account_peppol_edi_user:
+                return company.account_peppol_edi_user
 
     def _peppol_reset_webhook(self):
         for edi_user in self:
-            edi_user._call_peppol_proxy('/api/peppol/2/set_webhook', params={'webhook_url': edi_user.company_id._get_peppol_webhook_endpoint(), 'token': edi_user._generate_webhook_token()})
+            edi_user._call_peppol_proxy('/api/peppol/2/set_webhook', params={'webhook_url': edi_user.company_id._get_peppol_webhook_endpoint(), 'token': self._generate_webhook_token(edi_user.company_id)})

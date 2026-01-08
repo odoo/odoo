@@ -45,26 +45,45 @@
                                        readonly="use_parent_connection"
                                        string="Phone"/>
                             </group>
-
-                            <group>
-                                <div class="text-muted col" invisible="edi_mode != 'prod'">
-                                    By clicking the button below I accept that Odoo may process my e-invoices.
-                                </div>
-                                <div class="text-muted col" invisible="edi_mode != 'test'">
-                                    Test mode allows sending e-invoices through the test Peppol network.
-                                    By clicking the button below I accept that Odoo may process my e-invoices.
-                                </div>
-                            </group>
                         </group>
+                        <div class="text-muted col" invisible="edi_mode != 'prod'">
+                            By clicking the button below:
+                            <ul>
+                                <li>I accept that Odoo may process my e-invoices,</li>
+                                <li>I reckon I'm allowed to register this company.</li>
+                            </ul>
+                        </div>
+                        <div class="text-muted col" invisible="not display_itsme_login">
+                            If you don't have Itsme, please contact
+                            <a href="https://www.odoo.com/help" target="_blank">support</a>.
+                        </div>
+                        <div class="text-muted col" invisible="edi_mode != 'test'">
+                            Test mode allows sending e-invoices through the test Peppol network.<br/>
+                            By clicking the button below I accept that Odoo may process my e-invoices.
+                        </div>
                     </div>
                 </sheet>
                 <footer>
+
+                    <!-- itsme auth button -->
+                    <button class="btn btn-secondary itsme_button"
+                            name="button_register_with_itsme"
+                            type="object"
+                            invisible="not display_itsme_login">
+                            <img src="/account_peppol/static/img/itsme.svg"
+                                 id="itsme_logo"
+                                 alt="Itsme"
+                            />
+                        <b>Authentify with itsme</b>
+                    </button>
+
+                    <!-- No auth buttons -->
                     <button string="Activate Peppol" name="button_register_peppol_participant" type="object"
-                            class="btn-primary" data-hotkey="q" invisible="edi_mode != 'prod'"/>
+                            class="btn-primary" data-hotkey="q" invisible="edi_mode != 'prod' or not display_no_auth_buttons"/>
                     <button string="Activate Peppol (Test)" name="button_register_peppol_participant" type="object"
-                            class="btn-primary" data-hotkey="q" invisible="edi_mode != 'test'"/>
+                            class="btn-primary" data-hotkey="q" invisible="edi_mode != 'test' or not display_no_auth_buttons"/>
                     <button string="Activate Peppol (Demo)" name="button_register_peppol_participant" type="object"
-                            class="btn-primary" data-hotkey="q" invisible="edi_mode != 'demo'"/>
+                            class="btn-primary" data-hotkey="q" invisible="edi_mode != 'demo' or not display_no_auth_buttons"/>
                     <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
