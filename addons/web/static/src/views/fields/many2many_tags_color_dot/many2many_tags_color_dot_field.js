@@ -12,7 +12,7 @@ import { BadgeTagDot } from "@web/core/tags_list/badge_tag_dot";
  * tag to keep its regular appearance while visually indicating its color
  * through the small dot.
  */
-class Many2ManyTagsColorDotField extends Many2ManyTagsField {
+export class Many2ManyTagsColorDotField extends Many2ManyTagsField {
     static components = {
         ...Many2ManyTagsField.components,
         Tag: BadgeTagDot,

@@ -2,7 +2,10 @@
 
 import base64
 import binascii
+import io
 import logging
+
+from PIL import Image
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
@@ -35,11 +38,17 @@ class TestProductPictureController(HttpCase):
         super().setUpClass()
         cls.website = cls.env.ref("base.default_website")
         cls.WebsiteSaleController = WebsiteSale()
+
+        f = io.BytesIO()
+        Image.new("RGB", (1920, 1080), "#4169E1").save(f, "JPEG")
+        f.seek(0)
+        cls.image = BinaryBytes(f.read())
         cls.product = cls.env["product.product"].create({
             "name": "Storage Test Box",
             "standard_price": 70.0,
             "list_price": 79.0,
             "website_published": True,
+            "image_1920": cls.image,
         })
 
         cls.attachments = cls.env["ir.attachment"].create([
@@ -67,27 +76,13 @@ class TestProductPictureController(HttpCase):
         self._create_product_images()
 
         # Check if the media now exists on the product :
-        for i, image in enumerate(self.product.product_template_image_ids):
+        for i, image in enumerate(self.product.product_template_image_ids[1:]):
             # Check if all names are now in the product
             self.assertIn(image.name, self.attachments.mapped("name"))
             # Check if image content are the same
             self.assertEqual(image.image_1920.content, ATTACHMENT_DATA[i].content)
         # Check if exactly ATTACHMENT_COUNT images were saved (no dupes/misses?)
-        self.assertEqual(ATTACHMENT_COUNT, len(self.product.product_template_image_ids))
-
-    def test_image_clear(self):
-        # First create some images
-        self._create_product_images()
-        self.assertEqual(ATTACHMENT_COUNT, len(self.product.product_template_image_ids))
-
-        # Remove all images
-        # (Exception raised if error)
-        with MockRequest(self.product.env, website=self.website):
-            self.WebsiteSaleController.clear_product_images(
-                self.product.id, self.product.product_tmpl_id.id
-            )
-        # According to the product, there are no variants images.
-        self.assertEqual(0, len(self.product.product_template_image_ids))
+        self.assertEqual(ATTACHMENT_COUNT, len(self.product.product_template_image_ids[1:]))
 
     def test_extra_images_with_new_variant(self):
         # Test that adding images for a variant that is not yet created works
@@ -125,10 +120,11 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, "first"
+                images[2].id, "first", self.product.id
             )
             # Trigger the reordering of product.image records based on their sequence.
             self.env["product.image"].invalidate_model()
+            self.product.invalidate_recordset()
             self.assertListEqual(self._get_product_image_data(), [i3, i1, i2, i4, i5, i6])
             self.assertEqual(self.product.image_1920.content, i3)
 
@@ -138,7 +134,7 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, "left"
+                images[2].id, "left", self.product.id
             )
             self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i3, i2, i4, i5, i6])
@@ -149,7 +145,7 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, "right"
+                images[2].id, "right", self.product.id
             )
             self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i4, i3, i5, i6])
@@ -160,7 +156,7 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, "last"
+                images[2].id, "last", self.product.id
             )
             self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i4, i5, i6, i3])
@@ -172,9 +168,10 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[0]._name, images[0].id, "last"
+                images[0].id, "last", self.product.id
             )
             self.env["product.image"].invalidate_model()
+            self.product.invalidate_recordset()
             self.assertListEqual(self._get_product_image_data(), [i2, i3, i4, i5, i6, i1])
             self.assertEqual(self.product.image_1920.content, i2)
 
@@ -182,9 +179,6 @@ class TestProductPictureController(HttpCase):
         """Check that reordering an extra image to the first position on a product
         template updates the template's main image accordingly."""
         self._create_product_images()
-        # Set a main image whose content differs from the additional image moved to first,
-        # so the swap actually replaces the underlying attachment.
-        self.product.product_tmpl_id.image_1920 = ATTACHMENT_DATA[4]
         images = self.product._get_images()
         i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
         # Invalidate the cached image values so they are read lazily from their attachments
@@ -193,7 +187,7 @@ class TestProductPictureController(HttpCase):
         self.product.product_template_image_ids.invalidate_recordset(["image_1920"])
         with MockRequest(self.product.env, website=self.website):
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, "first"
+                images[2].id, "first", self.product.id
             )
         self.env["product.image"].invalidate_model()
         self.product.invalidate_recordset()
@@ -207,7 +201,7 @@ class TestProductPictureController(HttpCase):
             images[2].video_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, "left"
+                images[2].id, "left", self.product.id
             )
             self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i3, i2, i4, i5, i6])
@@ -221,7 +215,7 @@ class TestProductPictureController(HttpCase):
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             with self.assertRaises(ValidationError):
                 self.WebsiteSaleController.resequence_product_image(
-                    images[2]._name, images[2].id, "first"
+                    images[2].id, "first", self.product.id
                 )
             self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
@@ -235,7 +229,7 @@ class TestProductPictureController(HttpCase):
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             with self.assertRaises(ValidationError):
                 self.WebsiteSaleController.resequence_product_image(
-                    images[0]._name, images[0].id, "right"
+                    images[0].id, "right", self.product.id
                 )
             self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
@@ -320,19 +314,29 @@ class TestProductVideoUpload(HttpCase):
             )
 
     def test_video_upload(self):
+        self.product.image_1920 = self.mock_b64_image
+
         # Upload a video to the product
         self._upload_video()
 
         # Retrieve the product's media data
-        video_url = self.product.product_template_image_ids[0].video_url
-        image_1920 = self.product.product_template_image_ids[0].image_1920
+        video_url = self.product.product_template_image_ids[1].video_url
+        image_1920 = self.product.product_template_image_ids[1].image_1920
 
         # Check that the video URL and thumbnail are correctly saved
         self.assertEqual(video_url, self.video_data["embed_url"])
         self.assertIsNotNone(image_1920)  # Ensure a thumbnail was generated
 
         # Verify that the video was added as part of the media
-        self.assertEqual(len(self.product.product_template_image_ids), 1)
+        self.assertEqual(len(self.product.product_template_image_ids), 2)
+
+    def test_upload_video_without_main_image(self):
+        """Uploading a video without a main image should raise a validation error.
+
+        A video cannot become the product's main media.
+        """
+        with self.assertRaises(ValidationError):
+            self._upload_video()
 
     def test_video_upload_invalid(self):
         # Try to upload invalid video data (e.g., empty src)
