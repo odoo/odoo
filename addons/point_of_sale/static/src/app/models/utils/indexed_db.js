@@ -3,96 +3,156 @@ import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 const BATCH_SIZE = 500; // Can be adjusted based on performance testing
 const TRANSACTION_TIMEOUT = 5000; // 5 seconds timeout for transactions
 const CONSOLE_COLOR = "#3ba9ff";
+const INITIALIZATION_TIMEOUT = 20000; // 20 seconds timeout for initialization
+const MAX_OPEN_RETRIES = 3; // Maximum retries for opening the database
+
+class IDBError extends Error {
+    constructor(type, message) {
+        super(message);
+        this.name = "IDBError";
+        this.type = type;
+    }
+}
 
 export default class IndexedDB {
     constructor(dbName, dbVersion, dbStores, whenReady) {
         this.db = null;
         this.dbName = dbName;
-        this.dbVersion = dbVersion;
         this.dbStores = dbStores;
-        this.dbInstance = null;
+        this.dbInstance =
+            window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
         this.activeTransactions = new Set();
         this.databaseEventListener(whenReady);
     }
 
-    databaseEventListener(whenReady) {
-        const indexedDB =
-            window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    async databaseEventListener(whenReady) {
+        if (!this.dbInstance) {
+            whenReady({ success: false, instance: this });
+            return false;
+        }
 
-        if (!indexedDB) {
+        let isInitialized = false;
+        const timeout = setTimeout(() => {
+            if (!isInitialized) {
+                whenReady({ success: false, instance: this, timeout: true });
+            }
+        }, INITIALIZATION_TIMEOUT);
+        let error = null;
+        try {
+            this.db = await this.openDatabase();
+        } catch (err) {
+            this.db = null;
+            error = err;
             logPosMessage(
                 "IndexedDB",
-                "databaseEventListener",
-                "Your browser does not support IndexedDB. Data will not be saved.",
-                CONSOLE_COLOR
+                "method",
+                `Failed to open database: ${err.message}`,
+                CONSOLE_COLOR,
+                [err]
+            );
+        } finally {
+            isInitialized = true;
+            clearTimeout(timeout);
+            whenReady({ success: Boolean(this.db), instance: this, error });
+        }
+    }
+
+    async openDatabase(version, retryCount = 0) {
+        if (retryCount >= MAX_OPEN_RETRIES) {
+            throw new IDBError(
+                "OpenError",
+                "Failed to open database: max upgrade retries exceeded"
             );
         }
 
-        this.dbInstance = indexedDB;
-        let dbInstance;
-        if (this.dbVersion) {
-            dbInstance = indexedDB.open(this.dbName, this.dbVersion);
-        } else {
-            dbInstance = indexedDB.open(this.dbName);
-        }
-        dbInstance.onerror = (event) => {
-            logPosMessage(
-                "IndexedDB",
-                "databaseEventListener",
-                `Error opening IndexedDB: ${event.target.errorCode}`,
-                CONSOLE_COLOR
-            );
-        };
-        dbInstance.onsuccess = (event) => {
-            this.db = event.target.result;
+        const indexedDB = this.dbInstance;
+        const name = this.dbName;
+        const request = version != null ? indexedDB.open(name, version) : indexedDB.open(name);
+        return new Promise((resolve, reject) => {
+            let settled = false;
+            const safeReject = (error) => {
+                if (!settled) {
+                    settled = true;
+                    reject(error);
+                }
+            };
 
-            const actualStoreNames = this.db.objectStoreNames;
-            let needsUpgrade = false;
-
-            for (const [, storeName] of this.dbStores) {
-                if (!actualStoreNames.contains(storeName)) {
+            request.onsuccess = (event) => {
+                const db = event.target.result;
+                db.onversionchange = () => {
                     logPosMessage(
                         "IndexedDB",
-                        "onsuccess",
-                        `Schema mismatch: Store '${storeName}' is missing. Triggering upgrade.`,
+                        "onversionchange",
+                        "Database upgrade requested by another tab",
                         CONSOLE_COLOR
                     );
-                    needsUpgrade = true;
-                    break;
+                    db.close();
+                };
+
+                const storeNames = Array.from(db.objectStoreNames);
+                const expectedStoreNames = this.dbStores.map((store) => store[1]);
+                const storesMismatch =
+                    storeNames.length !== expectedStoreNames.length ||
+                    !expectedStoreNames.every((name) => storeNames.includes(name)) ||
+                    !storeNames.every((name) => expectedStoreNames.includes(name));
+
+                if (storesMismatch) {
+                    const dbVersion = db.version;
+                    db.close();
+                    resolve(this.openDatabase(dbVersion + 1, retryCount + 1));
+                    return;
                 }
-            }
 
-            if (needsUpgrade) {
-                const newVersion = this.db.version + 1;
-                this.db.close();
-                this.dbVersion = newVersion;
+                settled = true;
+                resolve(db);
+            };
 
+            request.onerror = (event) => {
+                const error = event.target.error;
+                safeReject(
+                    new IDBError("RequestError", error?.message || "Database request failed")
+                );
+            };
+
+            request.onblocked = () => {
+                safeReject(
+                    new IDBError(
+                        "BlockedError",
+                        "Database upgrade blocked by another open connection"
+                    )
+                );
+            };
+
+            request.onupgradeneeded = (event) => {
+                const { oldVersion, newVersion } = event;
                 logPosMessage(
                     "IndexedDB",
-                    "onsuccess",
-                    `Upgrading from v${newVersion - 1} to v${newVersion}...`,
+                    "onupgradeneeded",
+                    `Upgrading database from version ${oldVersion} to ${newVersion}`,
                     CONSOLE_COLOR
                 );
 
-                this.databaseEventListener(whenReady);
-                return;
-            }
+                const db = event.target.result;
+                const tx = event.target.transaction;
 
-            logPosMessage(
-                "IndexedDB",
-                "databaseEventListener",
-                `IndexedDB ${this.dbVersion} Ready`,
-                CONSOLE_COLOR
-            );
-            whenReady();
-        };
-        dbInstance.onupgradeneeded = (event) => {
-            for (const [id, storeName] of this.dbStores) {
-                if (!event.target.result.objectStoreNames.contains(storeName)) {
-                    event.target.result.createObjectStore(storeName, { keyPath: id });
+                tx.onabort = () =>
+                    safeReject(new IDBError("AbortError", tx.error?.message || "Upgrade aborted"));
+
+                const allNames = new Set();
+                for (const [id, storeName] of this.dbStores) {
+                    allNames.add(storeName);
+                    if (!db.objectStoreNames.contains(storeName)) {
+                        db.createObjectStore(storeName, { keyPath: id });
+                    }
                 }
-            }
-        };
+
+                for (const name of db.objectStoreNames) {
+                    if (!allNames.has(name)) {
+                        db.deleteObjectStore(name);
+                    }
+                }
+            };
+        });
     }
 
     async promises(storeName, arrData, method) {
@@ -108,10 +168,15 @@ export default class IndexedDB {
             let finished = false;
 
             const batch = arrData.slice(i, i + BATCH_SIZE);
-            const transaction = this.getNewTransaction([storeName], "readwrite");
+            const transaction = await this.getNewTransaction([storeName], "readwrite");
 
             if (!transaction) {
-                results.push(Promise.reject("Transaction could not be created"));
+                logPosMessage(
+                    "IndexedDB",
+                    method,
+                    `Failed to create transaction for store ${storeName}`,
+                    CONSOLE_COLOR
+                );
                 continue;
             }
 
@@ -144,6 +209,7 @@ export default class IndexedDB {
                                 `Error aborting transaction: ${e.message}`,
                                 CONSOLE_COLOR
                             );
+                            doneMethod();
                         }
                     }
                 }, TRANSACTION_TIMEOUT);
@@ -156,6 +222,18 @@ export default class IndexedDB {
                 );
 
                 for (const data of batch) {
+                    const onRequestError = (error) => {
+                        hasError = true;
+                        clearTimeout(timeoutId);
+                        logPosMessage(
+                            "IndexedDB",
+                            method,
+                            `Error processing ${method} for ${storeName}: ${error.message}`,
+                            CONSOLE_COLOR
+                        );
+                        reject(error || "Unknown error");
+                    };
+
                     try {
                         const deepCloned = JSON.parse(JSON.stringify(data));
                         const request = store[method](deepCloned);
@@ -169,23 +247,11 @@ export default class IndexedDB {
                         };
 
                         request.onerror = (event) => {
+                            onRequestError(event.target?.error);
                             hasError = true;
-                            clearTimeout(timeoutId);
-                            logPosMessage(
-                                "IndexedDB",
-                                method,
-                                `Error processing ${method} for ${storeName}: ${event.target?.error}`,
-                                CONSOLE_COLOR
-                            );
-                            reject(event.target?.error || "Unknown error");
                         };
                     } catch {
-                        logPosMessage(
-                            "IndexedDB",
-                            method,
-                            `Error processing ${method} for ${storeName}: Invalid data format`,
-                            CONSOLE_COLOR
-                        );
+                        onRequestError(new Error("Invalid data format"));
                     }
                 }
             });
@@ -199,13 +265,13 @@ export default class IndexedDB {
         return results;
     }
 
-    getNewTransaction(dbStore) {
+    async getNewTransaction(dbStore, mode = "readwrite") {
         try {
             if (!this.db) {
                 return false;
             }
 
-            const transaction = this.db.transaction(dbStore, "readwrite");
+            const transaction = this.db.transaction(dbStore, mode);
             this.activeTransactions.add(transaction);
             return transaction;
         } catch (e) {
@@ -213,18 +279,56 @@ export default class IndexedDB {
                 "IndexedDB",
                 "getNewTransaction",
                 `Error creating transaction: ${e.message}`,
-                CONSOLE_COLOR
+                CONSOLE_COLOR,
+                [e]
             );
             return false;
         }
     }
 
-    reset() {
+    async reset() {
         if (!this.dbInstance) {
             return false;
         }
-        this.dbInstance.deleteDatabase(this.dbName);
-        return true;
+
+        // Close existing connection
+        if (this.db) {
+            this.db.close();
+            this.db = null;
+        }
+
+        return new Promise((resolve) => {
+            const request = this.dbInstance.deleteDatabase(this.dbName);
+
+            request.onsuccess = () => {
+                logPosMessage(
+                    "IndexedDB",
+                    "reset",
+                    `Database ${this.dbName} deleted successfully`,
+                    CONSOLE_COLOR
+                );
+                resolve(true);
+            };
+
+            request.onerror = (event) => {
+                logPosMessage(
+                    "IndexedDB",
+                    "reset",
+                    `Failed to delete database: ${event.target.error}`,
+                    CONSOLE_COLOR
+                );
+                resolve(false);
+            };
+
+            request.onblocked = () => {
+                logPosMessage(
+                    "IndexedDB",
+                    "reset",
+                    "Database deletion blocked by open connections",
+                    CONSOLE_COLOR
+                );
+            };
+        });
     }
 
     create(storeName, arrData) {
@@ -234,14 +338,15 @@ export default class IndexedDB {
         return this.promises(storeName, arrData, "put");
     }
 
-    readAll(store = [], retry = 0) {
+    async readAll(store = [], retry = 0) {
         const storeNames = store.length > 0 ? store : this.dbStores.map((store) => store[1]);
-        const transaction = this.getNewTransaction(storeNames, "readonly");
+        const transaction = await this.getNewTransaction(storeNames, "readonly");
 
         if (!transaction && retry < 5) {
+            await new Promise((r) => setTimeout(r, 100));
             return this.readAll(store, retry + 1);
         } else if (!transaction) {
-            return new Promise((reject) => reject(false));
+            return false;
         }
 
         const removeTransaction = () => {
