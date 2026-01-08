@@ -141,8 +141,8 @@ class IotBoxOwlHomePage(Controller):
         if IS_RPI:
             ssid = wifi.get_current() or wifi.get_access_point_ssid()
             for iface_id in netifaces.interfaces():
-                if iface_id == 'lo':
-                    continue  # Skip loopback interface (127.0.0.1)
+                if iface_id == 'lo' or 'tailscale' in iface_id:
+                    continue  # Skip loopback interface (127.0.0.1) and Tailscale interfaces
 
                 is_wifi = 'wlan' in iface_id
                 network_interfaces.extend([{
