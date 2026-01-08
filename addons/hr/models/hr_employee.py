@@ -210,8 +210,6 @@ class HrEmployee(models.Model):
     contract_date_start = fields.Date(readonly=False, related="version_id.contract_date_start", inherited=True, groups="hr.group_hr_manager")
     contract_date_end = fields.Date(readonly=False, related="version_id.contract_date_end", inherited=True, groups="hr.group_hr_manager")
     trial_date_end = fields.Date(readonly=False, related="version_id.trial_date_end", inherited=True, groups="hr.group_hr_manager")
-    date_start = fields.Date(related='version_id.date_start', inherited=True, groups="hr.group_hr_manager")
-    date_end = fields.Date(related='version_id.date_end', inherited=True, groups="hr.group_hr_manager")
     is_current = fields.Boolean(related='version_id.is_current', inherited=True, groups="hr.group_hr_manager")
     is_past = fields.Boolean(related='version_id.is_past', inherited=True, groups="hr.group_hr_manager")
     is_future = fields.Boolean(related='version_id.is_future', inherited=True, groups="hr.group_hr_manager")
@@ -508,9 +506,10 @@ class HrEmployee(models.Model):
 
     def _get_first_versions(self):
         self.ensure_one()
-        versions = self.version_ids
         if self.env.context.get('before_date'):
-            versions = versions.filtered(lambda c: c.date_start <= self.env.context['before_date'])
+            versions = self.version_ids.filtered(lambda c: c.contract_date_start and c.contract_date_start <= self.env.context['before_date'])
+        else:
+            versions = self.version_ids.filtered(lambda c: c.contract_date_start)
         return versions
 
     def _get_first_version_date(self, no_gap=True):
@@ -527,19 +526,19 @@ class HrEmployee(models.Model):
                 return versions
             current_version = versions[0]
             older_versions = versions[1:]
-            current_date = current_version.date_start
+            current_date = current_version.contract_date_start
             for i, other_version in enumerate(older_versions):
-                # Consider current_version.date_end being false as an error and cut the loop
-                gap = (current_date - (other_version.date_end or date(2100, 1, 1))).days
-                current_date = other_version.date_start
+                # Consider current_version.contract_date_end being false as an error and cut the loop
+                gap = (current_date - (other_version.contract_date_end or date(2100, 1, 1))).days
+                current_date = max(other_version.date_version, other_version.contract_date_start)
                 if gap >= 4:
                     return older_versions[0:i] + current_version
             return older_versions + current_version
 
-        versions = self._get_first_versions().sorted('date_start', reverse=True)
+        versions = self._get_first_versions().sorted('contract_date_start', reverse=True)
         if no_gap:
             versions = remove_gap(versions)
-        return min(versions.mapped('date_start')) if versions else False
+        return min(versions.mapped('contract_date_start')) if versions else False
 
     @api.depends('name')
     def _compute_legal_name(self):
@@ -1817,15 +1816,14 @@ class HrEmployee(models.Model):
             versions = self._get_versions_with_contract_overlap_with_period(start, stop)
         else:
             versions = self.version_ids.filtered_domain([
-                ('date_start', '<=', stop),
+                ('date_version', '<=', stop),
                 '|',
-                    ('date_end', '=', False),
-                    ('date_end', '>=', start),
+                    ('next_version', '=', False),
+                    ('next_version.date_version', '>', start),
             ])
         for version in versions:
-            date_end = version.date_end or stop
             version_periods_by_employee[version.employee_id].append(
-                (max(version.date_start, start), min(date_end, stop), version[field] if field else version),
+                (max(version.date_version, start), min(version._get_version_validity_end_date(), stop), version[field] if field else version),
             )
         return version_periods_by_employee
 
@@ -1861,8 +1859,8 @@ class HrEmployee(models.Model):
             )
         unusual_days = {}
         for version in employee_versions:
-            tmp_date_from = max(date_from_date, version.date_start)
-            tmp_date_to = min(date_to_date, version.date_end) if version.date_end else date_to_date
+            tmp_date_from = max(date_from_date, version.contract_date_start, version.date_version)
+            tmp_date_to = min(date_to_date, version._get_version_validity_end_date())
             unusual_days.update(version.resource_calendar_id.sudo(False)._get_unusual_days(
                 datetime.combine(fields.Date.from_string(tmp_date_from), time.min, tzinfo=UTC),
                 datetime.combine(fields.Date.from_string(tmp_date_to), time.max, tzinfo=UTC),
@@ -1882,8 +1880,9 @@ class HrEmployee(models.Model):
             employee_tz = ZoneInfo(self.tz) if self.tz else None
             duration_data = Intervals()
             for version in valid_versions:
-                version_start = datetime.combine(version.date_start, time.min, employee_tz)
-                version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
+                date_start = max(version.date_version, version.contract_date_start) if version.contract_date_start else version.date_version
+                version_start = datetime.combine(date_start, time.min, employee_tz)
+                version_end = datetime.combine(version._get_version_validity_end_date(), time.max, employee_tz)
                 calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
                 lunch_intervals = calendar._attendance_intervals_batch(
                     max(start, version_start),
@@ -1916,11 +1915,12 @@ class HrEmployee(models.Model):
                 domain=[('company_id', 'in', [False, self.company_id.id])])[self.resource_id.id]
             return calendar_intervals
         duration_data = Intervals()
-        version_prev = datetime.combine(valid_versions[0].date_start, time.min, employee_tz)
+        version_prev = datetime.combine(valid_versions[0].date_version, time.min, employee_tz)
         for version in valid_versions:
-            version_start = datetime.combine(version.date_start, time.min, employee_tz)
+            date_start = max(version.contract_date_start, version.date_version)
             contract_start = datetime.combine(version.contract_date_start, time.min, employee_tz)
-            version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
+            version_start = datetime.combine(date_start, time.min, employee_tz)
+            version_end = datetime.combine(version._get_version_validity_end_date(), time.max, employee_tz)
             calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
             start_date = version_start if version_prev < version_start else contract_start
             version_intervals = calendar._work_intervals_batch(
@@ -1945,8 +1945,8 @@ class HrEmployee(models.Model):
                 domain=[('company_id', 'in', [False, self.company_id.id])])
         duration_data = {'days': 0, 'hours': 0}
         for version in valid_versions:
-            version_start = datetime.combine(version.date_start, time.min, employee_tz)
-            version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
+            version_start = datetime.combine(version.contract_date_start, time.min, employee_tz)
+            version_end = datetime.combine(version.contract_date_end or date.max, time.max, employee_tz)
             calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
             version_duration_data = calendar\
                 .with_context(employee_timezone=employee_tz)\
@@ -1975,7 +1975,7 @@ class HrEmployee(models.Model):
         # Primarily used in the archive wizard
         # to pick a good default for the departure date
         self.ensure_one()
-        if self.date_end and self.date_end < fields.Date.today():
+        if self.contract_date_end and self.contract_date_end < fields.Date.today():
             return self.departure_date
         return False
 

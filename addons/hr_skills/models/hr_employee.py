@@ -168,7 +168,7 @@ class HrEmployee(models.Model):
             current_version = employee_versions[i]
             next_version = employee_versions[i + 1]
             current_date_start = max(current_version.date_version, current_version.contract_date_start or date.min)
-            current_date_end = min(next_version.date_version + relativedelta(days=-1), current_version.contract_date_end or date.max)
+            current_date_end = current_version._get_version_validity_end_date()
             if not current_version.job_title:
                 if interval_date_start:
                     previous_version = employee_versions[i - 1]

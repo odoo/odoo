@@ -43,7 +43,7 @@ class MailActivitySchedule(models.TransientModel):
         todo = self.filtered(lambda s: s.res_model == 'hr.employee')
         for scheduler in todo:
             selected_employees = scheduler._get_applied_on_records()
-            start_dates = selected_employees.filtered('date_start').mapped('date_start')
+            start_dates = selected_employees.filtered('contract_date_start').mapped('contract_date_start')
             if start_dates:
                 today = fields.Date.today()
                 planned_due_date = min(start_dates)
