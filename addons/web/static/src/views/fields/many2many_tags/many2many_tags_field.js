@@ -87,6 +87,7 @@ export class Many2ManyTagsField extends Component {
             isEnabled: () => !this.props.readonly,
             delete: (index) => this.deleteTagByIndex(index),
         });
+        this.rootRef = useRef("many2ManyTagsField");
         this.autoCompleteRef = useRef("autoComplete");
         this.mutex = new Mutex();
 
@@ -260,6 +261,38 @@ export class Many2ManyTagsField extends Component {
         await tagRecord.update({ [this.props.colorField]: colorIndex });
         await tagRecord.save();
         this.popover.close();
+    }
+
+    onAutoCompleteKeydown(ev) {
+        const triggeringKeys = ["ArrowLeft","ArrowRight"]
+        if (!triggeringKeys.includes(ev.key)) return
+
+        const dropdown = document.querySelector(".o-autocomplete--dropdown-menu");
+        if (!dropdown || !this.tags.length) return 
+
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        // 1. Close the dropdown
+        const autoCompleteEl = this.autoCompleteRef && this.autoCompleteRef.el;
+        if (autoCompleteEl) {
+            const input = autoCompleteEl.querySelector("input");
+            if (input) {
+                input.blur();
+                input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+            }
+        }
+
+        // 2. Select the last tag
+        const fieldContainer = ev.target.closest(".o_field_tags");
+        if (fieldContainer) {
+            const tags = fieldContainer.querySelectorAll(".o_tag");
+            if (tags.length > 0) {
+                const lastTag = tags[tags.length - 1];
+                lastTag.setAttribute("tabindex", "-1");
+                lastTag.focus();
+            }
+        }
     }
 }
 
