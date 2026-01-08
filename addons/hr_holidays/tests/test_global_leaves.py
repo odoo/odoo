@@ -325,6 +325,50 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         })
         self.assertEqual(employee_leave.number_of_days, 2, 'Leave duration should be reduced because of public holiday day 3')
 
+    def test_get_unusual_days_for_leaves(self):
+        """
+        Test that get_unusual_days return True
+        for out of contract days so they get greyed out in calendar view
+        """
+        test_emp = self.env['hr.employee'].create({
+            'name': 'Test Emp',
+            'date_version': date(2026, 1, 8),
+            'contract_date_start': date(2026, 1, 8),
+            'contract_date_end': date(2026, 1, 13),
+        })
+        test_emp.create_version({
+            'date_version': date(2026, 1, 16),
+            'contract_date_start': date(2026, 1, 16),
+            'contract_date_end': date(2026, 1, 21),
+        })
+        start = '2026-01-05 00:00:00'
+        end = '2026-01-24 00:00:00'
+
+        unusual_days = self.env['hr.leave'].with_context(employee_id=test_emp.id).get_unusual_days(start, end)
+        expected = {
+            '2026-01-05': True,
+            '2026-01-06': True,
+            '2026-01-07': True,
+            '2026-01-08': False,
+            '2026-01-09': False,
+            '2026-01-10': True,
+            '2026-01-11': True,
+            '2026-01-12': False,
+            '2026-01-13': False,
+            '2026-01-14': True,
+            '2026-01-15': True,
+            '2026-01-16': False,
+            '2026-01-17': True,
+            '2026-01-18': True,
+            '2026-01-19': False,
+            '2026-01-20': False,
+            '2026-01-21': False,
+            '2026-01-22': True,
+            '2026-01-23': True,
+            '2026-01-24': True,
+        }
+        self.assertDictEqual(unusual_days, expected)
+
     def test_multi_day_public_holidays_for_flexible_schedule(self):
         """
         Test that _get_unusual_days return correct value for
