@@ -61,9 +61,10 @@ class ProductLabelLayout(models.TransientModel):
                     if (line.lot_id or line.lot_name) and int(line.quantity):
                         custom_barcodes[line.product_id.id].append((line.lot_id.name or line.lot_name, int(line.quantity)))
                         continue
-                    quantities[line.product_id.id] += line.quantity
-                else:
-                    quantities[line.product_id.id] = 1
+                    if self.env.context.get('qty_producing', False):
+                        quantities[line.product_id.id] = self.env.context.get('qty_producing')
+                    else:
+                        quantities[line.product_id.id] += line.quantity
             # Pass only products with some quantity done to the report
             data['quantity_by_product'] = {p: int(q) for p, q in quantities.items() if q}
             data['custom_barcodes'] = custom_barcodes
