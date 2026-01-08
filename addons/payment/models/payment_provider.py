@@ -788,7 +788,10 @@ class PaymentProvider(models.Model):
         try:
             response.raise_for_status()
         except requests.exceptions.HTTPError:
-            error_msg = self._parse_response_error(response)
+            try:
+                error_msg = self._parse_response_error(response)
+            except requests.exceptions.JSONDecodeError:  # The provider failed to parse plain text.
+                error_msg = response.text
             raise ValidationError(_("The payment provider rejected the request.\n%s", error_msg))
         return self._parse_response_content(response, **kwargs)
 
