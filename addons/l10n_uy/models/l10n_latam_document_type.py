@@ -20,17 +20,20 @@ class L10nAccountDocumentType(models.Model):
         if self.code == "0":
             return document_number
 
+        # in CFE v25, CFE series now support numbers. The document number sequence could be
+        # 2 alphanumeric + 7 digits OR 1 alphanumeric + 7 digits
+        # Users are now expected to input a valid document number
         document_number = document_number.strip()
-        number_part = re.findall(r'[\d]+', document_number)
-        serie_part = re.findall(r'^[A-Za-z]+', document_number)
-        if not serie_part or len(serie_part) > 1 or len(serie_part[0]) > 2 \
-           or not number_part or len(number_part) > 1 or len(number_part[0]) > 7:
+        if match := re.match(r'^([A-Za-z0-9]{1,2}) *(\d{7})$', document_number):
+            series, number = match.group(1, 2)
+            document_number = series.upper() + number
+        else:
             raise UserError(_(
                 "%(document_number)s is not a valid value for %(document_type)s.\n"
-                "The document number must be entered with a maximum of 2 letters for the first part "
-                "and 7 numbers for the second. The following are examples of valid document numbers:\n"
-                "- XX0000001\n - YY0000123\n - A0000001",
+                "The document number must be entered with a maximum of 2 alphanumeric characters for the first part "
+                "and exactly 7 numbers for the second. The following are examples of valid document numbers:\n"
+                "- XX0000001\n- YY0000123\n- A0000001\n- 1A0000007\n- 880000001\n- 80000001",
                 document_number=document_number,
                 document_type=self.name,
             ))
-        return serie_part[0].upper() + number_part[0].zfill(7)
+        return document_number
