@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from odoo.fields import Command
+from odoo.fields import Command, Date
 from odoo.tests import tagged
 
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
@@ -85,6 +85,23 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
                 ),
             )
 
+    def test_markup_data_converts_price_to_website_currency(self):
+        company_currency = self.env.company.currency_id
+        # Find a currency different from the company currency.
+        self.website.currency_id = self.env['res.currency'].with_context(active_test=False).search([
+            ('name', '!=', company_currency.name)
+        ], limit=1)
+        with MockRequest(self.env, website=self.website):
+            markup = self.product._to_markup_data(self.website)
+        # Expected converted price
+        expected_price = company_currency._convert(
+            self.product.list_price,
+            self.website.currency_id,
+            company=self.env.company,
+            date=Date.from_string('2020-01-01'),
+        )
+        self.assertAlmostEqual(markup['offers']['price'], expected_price, places=2)
+
     def test_remove_archived_products_from_cart(self):
         """Archived products shouldn't appear in carts"""
         self.product.action_archive()
@@ -97,3 +114,22 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             self.service_product, self.cart.order_line.product_id,
             "All products from archived product templates should be removed from the cart.",
         )
+
+    def test_get_additionnal_combination_info_converts_price_to_website_currency(self):
+        company_currency = self.env.company.currency_id
+        # Find a currency different from the company currency.
+        self.website.currency_id = self.env['res.currency'].with_context(active_test=False).search([
+            ('name', '!=', company_currency.name)
+        ], limit=1)
+        with MockRequest(self.env, website=self.website):
+            result = self.env['product.template']._get_additionnal_combination_info(
+                self.product, 1.0, self.product.uom_id, Date.from_string('2020-01-01'), self.website
+            )
+        # Expected converted price
+        expected_price = company_currency._convert(
+            self.product.list_price,
+            self.website.currency_id,
+            company=self.env.company,
+            date=Date.from_string('2020-01-01'),
+        )
+        self.assertAlmostEqual(result['price'], expected_price, places=2)
