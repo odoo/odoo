@@ -415,8 +415,50 @@ class IrModuleModule(models.Model):
                 'length': len(modules_list) + offset,
                 'records': modules_list[:(limit or 80)],
             }
-        else:
+        elif _domain_asks_for_apps(domain):
             return super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)
+        else:
+            # Count official apps
+            official_length = self.search_count(domain, limit=count_limit)
+
+            # Fetch industries
+            fields_name = list(specification.keys())
+            industries = self._get_modules_from_apps(
+                fields_name, 'industries', False, domain, offset=0
+            )
+            industries_length = len(industries)
+
+            all_length = official_length + industries_length
+
+            # If offset is within official apps
+            if offset < official_length:
+                official = super().web_search_read(
+                    domain,
+                    specification,
+                    offset=offset,
+                    limit=limit,
+                    order=order,
+                    count_limit=count_limit,
+                )
+
+                remaining = (limit or 80) - len(official['records'])
+
+                if remaining > 0:
+                    records = official['records'] + industries[:remaining]
+                else:
+                    records = official['records']
+
+                return {
+                    'length': all_length,
+                    'records': records,
+                }
+
+            # Offset is inside industries
+            offset_industries = offset - official_length
+            return {
+                'length': all_length,
+                'records': industries[offset_industries: offset_industries + (limit or 80)],
+            }
 
     def more_info(self):
         return {
@@ -439,6 +481,9 @@ class IrModuleModule(models.Model):
 
     @api.model
     def _get_modules_from_apps(self, fields, module_type, module_name, domain=None, limit=None, offset=None):
+        # To Display all Industries while click on All->Industry
+        if domain and ['category_id', 'child_of', 'industry'] in domain:
+            domain = [d for d in domain if d != ['category_id', 'child_of', 'industry']]
         if 'name' not in fields:
             fields = fields + ['name']
         payload = {
@@ -599,11 +644,34 @@ class IrModuleModule(models.Model):
 
     @api.model
     def search_panel_select_range(self, field_name, **kwargs):
-        if field_name == 'category_id' and _domain_asks_for_industries(kwargs.get('category_domain', [])):
-            categories = self._get_industry_categories_from_apps()
+        if field_name == 'category_id':
+            if _domain_asks_for_industries(kwargs.get('category_domain', [])):
+                categories = self._get_industry_categories_from_apps()
+                for categ in categories:
+                    if categ.get('parent_id') == 'industry':
+                        categ['parent_id'] = False
+                return {
+                    'parent_field': 'parent_id',
+                    'values': categories,
+                }
+            elif _domain_asks_for_apps(kwargs.get('category_domain', [])):
+                return super().search_panel_select_range(field_name, **kwargs)
+
+            official = super().search_panel_select_range(field_name, **kwargs)
+            industry_categories = self._get_industry_categories_from_apps()
+            industry_parent = {
+                'id': 'industry',
+                'display_name': 'Industry',
+                'parent_id': False,
+                '__count': sum(c.get('__count', 0) for c in industry_categories),
+            }
+
+            for categ in industry_categories:
+                categ['parent_id'] = 'industry'
+
             return {
                 'parent_field': 'parent_id',
-                'values': categories,
+                'values': official['values'] + [industry_parent] + industry_categories,
             }
         return super().search_panel_select_range(field_name, **kwargs)
 
@@ -692,6 +760,20 @@ class IrModuleModule(models.Model):
                         yield (module, 'code', display_path, lineno, message, comments + [JAVASCRIPT_TRANSLATION_COMMENT], None, value)
             except Exception:  # noqa: BLE001
                 _logger.exception("Failed to extract terms from attachment with url %s", attachment.url)
+
+
+def _domain_asks_for_apps(domain):
+    for condition in Domain(domain).iter_conditions():
+        if condition.field_expr == 'module_type':
+            if condition.operator == '=':
+                if condition.value == 'official':
+                    return True
+            elif condition.operator == 'in' and len(condition.value) == 1:
+                if 'official' in condition.value:
+                    return True
+            else:
+                raise UserError(f'Unsupported domain condition {condition!r}')  # pylint: disable=missing-gettext
+    return False
 
 
 def _domain_asks_for_industries(domain):
