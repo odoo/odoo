@@ -57,6 +57,73 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         self.assertFalse(partner2_info['persona']['out_of_office_date_end'], "current user should not be out of office")
         self.assertEqual(partner_info['persona']['out_of_office_date_end'], leave_date_end.strftime(DEFAULT_SERVER_DATE_FORMAT), "correspondent should be out of office")
 
+    def test_leave_ooo_multi_company(self):
+        leave_date_end = date.today() + relativedelta(days=2)
+        leave = self.env["hr.leave"].create(
+            {
+                "name": "Christmas",
+                "employee_id": self.employee_hruser.id,
+                "holiday_status_id": self.leave_type.id,
+                "request_date_from": (date.today() - relativedelta(days=1)),
+                "request_date_to": leave_date_end,
+            }
+        )
+        leave.action_approve()
+        company_2 = self.env["res.company"].create(
+            {
+                "name": "TestCompany2",
+                "country_id": self.env.ref("base.be").id,
+            }
+        )
+        test_user_company2 = self.env["res.users"].create(
+            {
+                "name": "TestUser2",
+                "login": "testuser2",
+                "password": "testuser2",
+                "company_id": company_2.id,
+                "company_ids": [(6, 0, [company_2.id])],
+                "partner_id": self.env["res.partner"].create(
+                    {
+                        "name": "TestUser2",
+                        "company_id": company_2.id,
+                    }
+                ).id,
+            }
+        )
+        channel = (
+            self.env["discuss.channel"]
+            .with_user(test_user_company2)
+            .with_context(
+                {
+                    "mail_create_nolog": True,
+                    "mail_create_nosubscribe": True,
+                }
+            )
+            .create(
+                {
+                    "channel_partner_ids": [
+                        (4, test_user_company2.partner_id.id),
+                        (4, self.employee_hruser.user_id.partner_id.id),
+                    ],
+                    "channel_type": "chat",
+                    "name": "test",
+                }
+            )
+        )
+        channel_info = channel.with_company(company_2).with_user(test_user_company2)._channel_info()[0]
+        members_data = channel_info["channelMembers"][0][1]
+        self.assertEqual(len(members_data), 2, "Channel info should get info for the 2 members")
+        partner_info = next(
+            member
+            for member in members_data
+            if member["persona"]["email"] == self.employee_hruser.user_id.partner_id.email
+        )
+        self.assertEqual(
+            partner_info["persona"]["out_of_office_date_end"],
+            leave_date_end.strftime(DEFAULT_SERVER_DATE_FORMAT),
+            "correspondent should be out of office",
+        )
+
 
 @tagged('out_of_office')
 class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDemo):
