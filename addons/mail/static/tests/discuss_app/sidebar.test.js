@@ -861,6 +861,38 @@ test("Can unpin chat channel", async () => {
     await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
 });
 
+test("No 'Hide Until New Message' on conversation with self in call", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["partner_id", "=", partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_id: channelId,
+        channel_member_id: memberId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Join Call']");
+    await contains(".o-discuss-Call.o-selfInCall");
+    await click("[title='Chat Actions']");
+    await contains(".o-dropdown-item:text('Invite People')");
+    await contains(".o-dropdown-item:text('Hide Until New Message')", { count: 0 });
+    await click("button[title='Disconnect']");
+    await contains(".o-discuss-Call.o-selfInCall", { count: 0 });
+    await click("[title='Chat Actions']");
+    await contains(".o-dropdown-item:text('Hide Until New Message')");
+});
+
 test("opening a hidden channel re-pins it", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
