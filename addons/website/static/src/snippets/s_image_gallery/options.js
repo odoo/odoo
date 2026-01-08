@@ -119,7 +119,9 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      */
     async _setMode(modeName) {
         modeName = modeName || 'slideshow'; // FIXME should not be needed
-        this.$target.css('height', '');
+        if (modeName !== "slideshow") {
+            this.$target.css("height", "");
+        }
         this.$target
             .removeClass('o_nomode o_masonry o_grid o_slideshow')
             .addClass('o_' + modeName);
@@ -192,7 +194,6 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         this.$("img").toArray().forEach((img, index) => {
             $(img).attr({contenteditable: true, 'data-index': index});
         });
-        this.$target.css('height', Math.round(window.innerHeight * 0.7));
 
         // Apply layout animation
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
