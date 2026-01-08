@@ -9,8 +9,8 @@ const resPartnerPatch = {
         /** @type {String[]} */
         this.livechat_languages = [];
     },
-    _computeDisplayName() {
-        return super._computeDisplayName() || this.user_livechat_username;
+    get displayName() {
+        return super.displayName || this.user_livechat_username;
     },
 };
 patch(ResPartner.prototype, resPartnerPatch);
