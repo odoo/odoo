@@ -370,8 +370,8 @@ class AccountPaymentRegister(models.TransientModel):
                 vals = batches[key]
                 lines = vals['lines']
                 merge = (
-                    batch_key['partner_id'] in partner_unique_inbound
-                    and batch_key['partner_id'] in partner_unique_outbound
+                    key['partner_id'] in partner_unique_inbound
+                    and key['partner_id'] in partner_unique_outbound
                 )
                 if merge:
                     for other_key in list(batches)[i + 1:]:
