@@ -223,6 +223,7 @@ class HrExpense(models.Model):
     selectable_payment_method_line_ids = fields.Many2many(
         comodel_name='account.payment.method.line',
         compute='_compute_selectable_payment_method_line_ids',
+        compute_sudo=True,
     )
     payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
@@ -681,6 +682,7 @@ class HrExpense(models.Model):
                     # The journal is the source of the payment method line company
                     *self.env['account.journal']._check_company_domain(expense.company_id),
                     ('payment_type', '=', 'outbound'),
+                    ('journal_id.active', '=', True),
                 ])
 
     @api.depends('product_id', 'company_id')
