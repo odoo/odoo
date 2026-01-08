@@ -1255,7 +1255,7 @@ class PosOrder(models.Model):
         account_moves = self.sudo().account_move | self.sudo().payment_ids.account_move_id
         return {
             'pos.order': self._load_pos_data_read(self, config) if config else [],
-            'pos.session': self.env['pos.session']._load_pos_data_read(self.session_id, config) if config else [],
+            'pos.session': [],
             'pos.payment': self.env['pos.payment']._load_pos_data_read(self.payment_ids, config) if config else [],
             'pos.order.line': self.env['pos.order.line']._load_pos_data_read(self.lines, config) if config else [],
             'pos.pack.operation.lot': self.env['pos.pack.operation.lot']._load_pos_data_read(self.lines.pack_lot_ids, config) if config else [],
