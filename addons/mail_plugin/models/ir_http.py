@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import Unauthorized
+from werkzeug.datastructures import WWWAuthenticate
 
 from odoo import models
 from odoo.http import request
@@ -17,16 +18,14 @@ class IrHttp(models.AbstractModel):
     def _auth_method_outlook(cls):
         access_token = request.httprequest.headers.get('Authorization')
         if not access_token:
-            _logger.error('Access token missing')
-            raise BadRequest('Access token missing')
+            raise Unauthorized('Access token missing', www_authenticate=WWWAuthenticate('bearer'))
 
         if access_token.startswith('Bearer '):
             access_token = access_token[7:]
 
         user_id = request.env["res.users.apikeys"]._check_credentials(scope='odoo.plugin.outlook', key=access_token)
         if not user_id:
-            _logger.error('Access token invalid')
-            raise BadRequest('Access token invalid')
+            raise Unauthorized('Access token invalid', www_authenticate=WWWAuthenticate('bearer'))
 
         # take the identity of the API key user
         request.update_env(user=user_id)
