@@ -478,6 +478,10 @@
             <label class="col-form-label" for="street">Street</label>
             <input type="text" name="street" t-attf-class="form-control #{error.get('street') and 'is-invalid' or ''}" t-att-value="street or partner.street"/>
         </div>
+        <div t-attf-class="mb-3 #{error.get('street2') and 'o_has_error' or ''} col-xl-6">
+            <label class="col-form-label label-optional" for="street2">Apartment, suite, etc.</label>
+            <input type="text" name="street2" t-attf-class="form-control #{error.get('street2') and 'is-invalid' or ''}" t-att-value="street2 or partner.street2"/>
+        </div>
         <div t-attf-class="mb-3 #{error.get('city') and 'o_has_error' or ''} col-xl-6">
             <label class="col-form-label" for="city">City</label>
             <input type="text" name="city" t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" t-att-value="city or partner.city" />
