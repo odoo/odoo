@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="ga_ruta_list" >
+            <field name="name">Ga Ruta List</field>
+            <field name="model">ga.ruta</field>
+            <field name="arch" type="xml">
+                <tree string="Chofer " create="true" edit="true">
+                    <field name="codigo"/>
+                    <field name="descripcion"/>
+                    <field name="hora_inicio"/>
+                </tree>
+            </field>
+        </record>
+
+      
+        <record model="ir.ui.view" id="ga_ruta" >
+            <field name="name">Ga Ruta Form</field>
+            <field name="model">ga.ruta</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                    <field name="codigo"/>
+                    <field name="descripcion"/>
+                    <field name="hora_inicio"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
