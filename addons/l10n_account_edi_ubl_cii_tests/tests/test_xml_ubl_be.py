@@ -107,7 +107,6 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
     ####################################################
 
     def test_export_import_invoice(self):
-        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
         invoice = self._generate_move(
             self.partner_1,
             self.partner_2,
@@ -167,7 +166,6 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
-        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
         refund = self._generate_move(
             self.partner_1,
             self.partner_2,
