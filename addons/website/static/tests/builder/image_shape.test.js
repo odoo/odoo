@@ -539,3 +539,83 @@ test("Should have the correct active shape in the image shape selector", async (
     await waitSidebarUpdated();
     expect("[data-action-value='html_builder/geometric/geo_tetris']").toHaveClass("active");
 });
+
+test("Should keep colors when changing speed and vice versa", async () => {
+    const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(
+        `<div class="test-options-target">
+            ${testImg}
+        </div>`,
+        {
+            loadIframeBundles: true,
+        }
+    );
+    const editor = getEditor();
+
+    // Select image and apply shape
+    await contains(":iframe .test-options-target img").click();
+    await waitSidebarUpdated();
+
+    await contains("[data-label='Shape'] .dropdown").click();
+    await contains("[data-action-value='html_builder/pattern/pattern_wave_4']").click();
+    await waitSidebarUpdated();
+
+    const imgSelector = ":iframe .test-options-target img";
+    const initialColors = [
+        queryFirst(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).style.backgroundColor,
+        queryFirst(`[data-label="Colors"] .o_we_color_preview:nth-child(2)`).style.backgroundColor,
+        queryFirst(`[data-label="Colors"] .o_we_color_preview:nth-child(3)`).style.backgroundColor,
+        queryFirst(`[data-label="Colors"] .o_we_color_preview:nth-child(4)`).style.backgroundColor,
+    ];
+    const rangeInput = queryFirst(`[data-action-id="setImageShapeSpeed"] input`);
+
+    // Change speed
+    rangeInput.value = -1;
+    rangeInput.dispatchEvent(new Event("input"));
+    await delay();
+    rangeInput.dispatchEvent(new Event("change"));
+    await delay();
+    await editor.shared.operation.next(() => {});
+
+    // Change first color and verify speed unchanged
+    await contains(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).click();
+    await contains(`.o_font_color_selector [data-color="#FF0000"]`).click();
+    await waitSidebarUpdated();
+
+    expect(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).toHaveStyle({
+        backgroundColor: "rgb(255, 0, 0)",
+    });
+    expect(`[data-label="Colors"] .o_we_color_preview:nth-child(2)`).toHaveStyle({
+        backgroundColor: initialColors[1],
+    });
+    expect(`[data-label="Colors"] .o_we_color_preview:nth-child(3)`).toHaveStyle({
+        backgroundColor: initialColors[2],
+    });
+    expect(`[data-label="Colors"] .o_we_color_preview:nth-child(4)`).toHaveStyle({
+        backgroundColor: initialColors[3],
+    });
+
+    expect(imgSelector).toHaveAttribute("data-shape-animation-speed", "-1");
+
+    // Change speed and verify colors unchanged
+    rangeInput.value = 2;
+    rangeInput.dispatchEvent(new Event("input"));
+    await delay();
+    rangeInput.dispatchEvent(new Event("change"));
+    await delay();
+    await editor.shared.operation.next(() => {});
+
+    expect(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).toHaveStyle({
+        backgroundColor: "rgb(255, 0, 0)",
+    });
+    expect(`[data-label="Colors"] .o_we_color_preview:nth-child(2)`).toHaveStyle({
+        backgroundColor: initialColors[1],
+    });
+    expect(`[data-label="Colors"] .o_we_color_preview:nth-child(3)`).toHaveStyle({
+        backgroundColor: initialColors[2],
+    });
+    expect(`[data-label="Colors"] .o_we_color_preview:nth-child(4)`).toHaveStyle({
+        backgroundColor: initialColors[3],
+    });
+
+    expect(imgSelector).toHaveAttribute("data-shape-animation-speed", "2");
+});
