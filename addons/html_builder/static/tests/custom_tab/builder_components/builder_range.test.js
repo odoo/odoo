@@ -2,23 +2,14 @@ import {
     addBuilderAction,
     addBuilderOption,
     setupHTMLBuilder,
+    editBuilderRangeValue,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import { expect, test, describe } from "@odoo/hoot";
-import {
-    advanceTime,
-    animationFrame,
-    click,
-    edit,
-    fill,
-    freezeTime,
-    press,
-    waitFor,
-} from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, click, edit, fill, freezeTime, press } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { delay } from "@web/core/utils/concurrency";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
 describe.current.tags("desktop");
@@ -46,13 +37,7 @@ test("should commit changes", async () => {
         <div class="test-options-target">10</div>
     `);
     await contains(":iframe .test-options-target").click();
-
-    const input = await waitFor(".options-container input");
-    input.value = 50;
-    input.dispatchEvent(new Event("input"));
-    await delay();
-    input.dispatchEvent(new Event("change"));
-    await delay();
+    await editBuilderRangeValue(".options-container input", "50");
 
     expect.verifySteps(["customAction 50", "customAction 50"]);
     expect(":iframe .test-options-target").toHaveInnerHTML("50");
