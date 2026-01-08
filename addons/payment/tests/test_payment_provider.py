@@ -2,8 +2,12 @@
 
 from unittest.mock import patch
 
+import requests
+
+from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 from odoo.addons.payment.tests.common import PaymentCommon
@@ -406,3 +410,23 @@ class TestPaymentProvider(PaymentCommon):
         )._get_validation_currency()
         self.assertIn(validation_currency, self.provider.available_currency_ids)
         self.assertIn(validation_currency, self.payment_method.supported_currency_ids)
+
+    @mute_logger('odoo.addons.payment.models.payment_provider')
+    def test_parsing_non_json_response_falls_back_to_text_response(self):
+        """Test that a non-JSON response is smoothly parsed as a text response."""
+        response = requests.Response()
+        response.status_code = 502
+        response._content = b"<html><body>Cloudflare Error</body></html>"
+        with (
+            patch('requests.request', return_value=response),
+            patch(
+                'odoo.addons.payment.models.payment_provider.PaymentProvider._parse_response_error',
+                new=lambda _self, response_: response_.json(),
+            ),
+        ):
+            try:
+                self.provider._send_api_request('GET', '/dummy')
+            except Exception as e:  # noqa: BLE001
+                self.assertNotIsInstance(e, requests.exceptions.JSONDecodeError)
+                self.assertIsInstance(e, ValidationError)
+                self.assertIn("Cloudflare Error", e.args[0])
