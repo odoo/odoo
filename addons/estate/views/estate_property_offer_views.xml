@@ -1,0 +1,58 @@
+<odoo>
+    <!-- Vue Liste pour les offres de propriété -->
+    <record id="view_estate_property_offer_tree" model="ir.ui.view">
+        <field name="name">estate.property.offer.list</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="status == 'refused'"
+                decoration-success="status == 'accepted'"
+                string="Offers" editable="bottom">
+                <field name="price" string="Offer Price" />
+                <field name="status" string="Status" />
+                <field name="partner_id" string="Partner" />
+                <field name="property_type_id" string="Property Type" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Vue Formulaire pour les offres de propriété -->
+    <record id="view_estate_property_offer_form" model="ir.ui.view">
+        <field name="name">estate.property.offer.form</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <form string="Offer">
+                <header>
+                    <!-- Bouton Accepter uniquement si l'état est "pending" -->
+                    <button name="action_accept"
+                        type="object"
+                        string="Accept"
+                        class="btn btn-primary"
+                        modifiers="{'invisible': [['status', '!=', 'pending']]}" />
+
+                    <!-- Bouton Refuser uniquement si l'état est "pending" -->
+                    <button name="action_refuse"
+                        type="object"
+                        string="Refuse"
+                        class="btn btn-danger"
+                        modifiers="{'invisible': [['status', '!=', 'pending']]}" />
+                </header>
+
+                <sheet>
+                    <group>
+                        <field name="price" string="Price" />
+                        <field name="status" string="Status" />
+                        <field name="partner_id" string="Partner" />
+                        <field name="property_id" string="Property" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action pour ouvrir la vue des offres de propriété -->
+    <record id="estate_property_offer_action" model="ir.actions.act_window">
+        <field name="name">Offers</field>
+        <field name="res_model">estate.property.offer</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
