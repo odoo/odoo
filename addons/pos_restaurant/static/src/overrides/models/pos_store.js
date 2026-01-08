@@ -307,50 +307,48 @@ patch(PosStore.prototype, {
             this.set_order(order);
             this.addPendingOrder([order.id]);
         } else {
-            for (const orphanLine of order.lines) {
-                const adoptingLine = destinationOrder.lines.find((l) =>
-                    l.can_be_merged_with(orphanLine)
-                );
-                if (adoptingLine) {
-                    adoptingLine.merge(orphanLine);
-                    this.mergePreparationLines(
-                        order.last_order_preparation_change.lines[orphanLine.preparationKey],
-                        destinationOrder.last_order_preparation_change.lines[
-                            adoptingLine.preparationKey
-                        ],
-                        destinationOrder,
-                        adoptingLine
-                    );
-                } else {
-                    const serialized = orphanLine.serialize();
-                    serialized.order_id = destinationOrder.id;
-                    delete serialized.uuid;
-                    delete serialized.id;
-                    const newOrderLine = this.models["pos.order.line"].create(
-                        serialized,
-                        false,
-                        true
-                    );
-
-                    const preparationLine =
-                        order.last_order_preparation_change.lines[orphanLine.preparationKey];
-                    if (preparationLine) {
-                        const preparationLineCopy = { ...preparationLine };
-                        preparationLineCopy.order_id = destinationOrder.id;
-                        destinationOrder.last_order_preparation_change.lines[
-                            newOrderLine.preparationKey
-                        ] = preparationLineCopy;
-                        preparationLine.quantity = 0;
-                    }
-                }
-            }
-
-            this.set_order(destinationOrder);
-            await this.deleteOrders([order]);
+            this.mergeOrders(order, destinationOrder);
         }
 
         await this.syncAllOrders({ orders: [destinationOrder || order] });
         await this.setTable(destinationTable);
+    },
+    async mergeOrders(sourceOrder, destinationOrder) {
+        for (const orphanLine of sourceOrder.lines) {
+            const adoptingLine = destinationOrder.lines.find((l) =>
+                l.can_be_merged_with(orphanLine)
+            );
+            if (adoptingLine) {
+                adoptingLine.merge(orphanLine);
+                await this.mergePreparationLines(
+                    sourceOrder.last_order_preparation_change.lines[orphanLine.preparationKey],
+                    destinationOrder.last_order_preparation_change.lines[
+                        adoptingLine.preparationKey
+                    ],
+                    destinationOrder,
+                    adoptingLine
+                );
+            } else {
+                const serialized = orphanLine.serialize();
+                serialized.order_id = destinationOrder.id;
+                const orphanPreparationKey = orphanLine.preparationKey;
+                orphanLine.delete();
+                const newOrderLine = this.models["pos.order.line"].create(serialized, false, true);
+                const preparationLine =
+                    sourceOrder.last_order_preparation_change.lines[orphanPreparationKey];
+                if (preparationLine) {
+                    const preparationLineCopy = { ...preparationLine };
+                    preparationLineCopy.order_id = destinationOrder.id;
+                    destinationOrder.last_order_preparation_change.lines[
+                        newOrderLine.preparationKey
+                    ] = preparationLineCopy;
+                }
+            }
+        }
+
+        this.set_order(destinationOrder);
+        this.doNotSendOrderInPreparation = true;
+        await this.deleteOrders([sourceOrder]);
     },
     getCustomerCount(tableId) {
         const tableOrders = this.getTableOrders(tableId).filter((order) => !order.finalized);
