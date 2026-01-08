@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { deserializeDate, serializeDate } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
@@ -8,11 +9,14 @@ import {
     ConfirmationDialog,
 } from "@web/core/confirmation_dialog/confirmation_dialog";
 
+const { DateTime } = luxon;
+
 export class AttendeeCalendarModel extends CalendarModel {
     static services = [...CalendarModel.services, "dialog", "orm"];
 
     setup(params, services) {
         super.setup(...arguments);
+        this.activityEventId = 0;
         this.dialog = services.dialog;
         this.rpc = rpc;
     }
@@ -36,8 +40,16 @@ export class AttendeeCalendarModel extends CalendarModel {
         return res;
     }
 
+    get activities() {
+        return this.data.activities;
+    }
+
     get attendees() {
         return this.data.attendees;
+    }
+
+    get showActivities() {
+        return user.settings.calendar_default_show_activities;
     }
 
     /**
@@ -71,6 +83,35 @@ export class AttendeeCalendarModel extends CalendarModel {
         return result;
     }
 
+    createActivityEventAt(day, activities) {
+        const event = {
+            id: `activity-event-${this.activityEventId++}`,
+            colorIndex: user.partnerId || 0,
+            duration: 1,
+            start: day,
+            end: day.plus({ hours: 1 }),
+            isActivity: true,
+            isAllDay: true,
+            resModel: "mail.activity",
+        };
+        if (activities.length > 1) {
+            // Multiple activities for the day
+            return {
+                ...event,
+                title: _t("%s pending activities", activities.length),
+                isMultiActivity: true,
+                rawRecord: activities,
+            };
+        }
+        // Single activity for the day
+        return {
+            ...event,
+            title: activities[0].display_name,
+            isMultiActivity: false,
+            rawRecord: activities[0],
+        };
+    }
+
     /**
      * Load the filter section and add both 'user' and 'everybody' filters to the context.
      * @override
@@ -94,6 +135,51 @@ export class AttendeeCalendarModel extends CalendarModel {
     async updateData(data) {
         await super.updateData(...arguments);
         await this.updateAttendeeData(data);
+        data.activities = await this.updateActivityData(data);
+    }
+
+    async updateActivityData(data) {
+        // Fetch activities
+        const activities = await this.orm.webSearchRead(
+            "mail.activity",
+            [
+                ["automated", "=", false],
+                [
+                    "date_deadline",
+                    ">=",
+                    serializeDate(DateTime.max(DateTime.now(), data.range.start)),
+                ],
+                ["date_deadline", "<=", serializeDate(data.range.end)],
+                ["date_done", "=", false],
+                ["user_id", "=", user.userId],
+            ],
+            {
+                specification: {
+                    can_write: {},
+                    date_deadline: {},
+                    display_name: {},
+                    icon: {},
+                },
+            }
+        );
+        if (!activities.length) {
+            return {};
+        }
+        // Create activity events
+        const activitiesPerDueDate = activities.records.reduce((acc, activity) => {
+            const key = activity.date_deadline;
+            if (!acc[key]) {
+                acc[key] = [];
+            }
+            acc[key].push(activity);
+            return acc;
+        }, {});
+        const activityEvents = {};
+        for (const [date, activities] of Object.entries(activitiesPerDueDate)) {
+            const activityEvent = this.createActivityEventAt(deserializeDate(date), activities);
+            activityEvents[activityEvent.id] = activityEvent;
+        }
+        return activityEvents;
     }
 
     /**

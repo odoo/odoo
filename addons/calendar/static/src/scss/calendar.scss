@@ -78,6 +78,19 @@
             text-decoration: line-through;
         }
     }
+
+    &.o_activity_event {
+        @for $i from 1 through length($o-colors-complete) {
+            $color: nth($o-colors-complete, $i);
+            &.o_calendar_color_#{$i - 1} {
+                --fc-event-bg-color: #{mix($o-white, $color, 80%)};
+            }
+        }
+    }
+
+    #mark_activity_done_checkbox {
+        border-color: var(--o-border-color);
+    }
 }
 
 .btn:hover .o_calendar_check {
