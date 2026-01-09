@@ -19,6 +19,7 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getMimetype } from "@html_editor/utils/image";
+import { applyFunDependOnSelectorAndExclude } from "../utils";
 
 /**
  * @typedef {((dataset: DOMStringMap) => string)[]} default_shape_handlers
@@ -59,6 +60,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         "isTogglableRatioShape",
         "getShapeLabel",
         "loadShape",
+        "cleanImageShapeDataset",
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -82,6 +84,16 @@ export class ImageShapeOptionPlugin extends Plugin {
             const oldShapeId = shapeId.replace("html_builder", "web_editor");
             this.imageShapes[oldShapeId] = this.imageShapes[shapeId];
         }
+        // if some unnecessary data had been previously saved on the image, we
+        // should clean it up
+        applyFunDependOnSelectorAndExclude(
+            this.cleanImageShapeDataset.bind(this),
+            this.document.documentElement,
+            {
+                selector: "img",
+                exclude: "[data-oe-type='image'] > img",
+            }
+        );
     }
     async canHaveHoverEffect(imgEl) {
         const dataset = Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl));
@@ -415,6 +427,47 @@ export class ImageShapeOptionPlugin extends Plugin {
             }
         }
     }
+    cleanImageShapeDataset(imgEl) {
+        const shapeId = imgEl.dataset.shape;
+        // if there's no shape, remove the shape related values
+        if (!shapeId) {
+            delete imgEl.dataset.fileName;
+            // A crop is applied to the image at the same time as certain shapes,
+            // which is why we reset the crop here or when the shape is removed.
+            // However, we don’t reset it when the crop was applied intentionally.
+            // In that case, there are crop values; otherwise, there are none,
+            // only a 'data-aspect-ratio'.
+            if (!cropperDataFields.some((field) => field in imgEl.dataset)) {
+                delete imgEl.dataset.aspectRatio;
+            }
+        }
+        if (!this.isAnimableShape(shapeId)) {
+            delete imgEl.dataset.shapeAnimationSpeed;
+        }
+
+        if (
+            imgEl.dataset.shapeColors &&
+            !imgEl.dataset.shapeColors.split(";").some((color) => color)
+        ) {
+            delete imgEl.dataset.shapeColors;
+        }
+
+        if (!this.isTransformableShape(shapeId)) {
+            delete imgEl.dataset.shapeFlip;
+            delete imgEl.dataset.shapeRotate;
+        }
+        if (imgEl.dataset.hoverEffect) {
+            this.canHaveHoverEffect(imgEl).then((res) => {
+                if (!res) {
+                    delete imgEl.dataset.hoverEffect;
+                    delete imgEl.dataset.hoverEffectColor;
+                    delete imgEl.dataset.hoverEffectStrokeWidth;
+                    delete imgEl.dataset.hoverEffectIntensity;
+                    imgEl.classList.remove("o_animate_on_hover");
+                }
+            });
+        }
+    }
 }
 
 export class SetImageShapeAction extends BuilderAction {
@@ -422,25 +475,15 @@ export class SetImageShapeAction extends BuilderAction {
     static dependencies = ["imageShapeOption"];
     async load({ editingElement: img, value: shapeId }) {
         const params = { shape: shapeId };
-        // A crop is applied to the image at the same time as certain shapes,
-        // which is why we reset the crop here or when the shape is removed.
-        // However, we don’t reset it when the crop was applied intentionally.
-        // In that case, there are crop values; otherwise, there are none,
-        // only a 'data-aspect-ratio'.
-        if (
-            !shapeId &&
-            img.dataset.aspectRatio &&
-            !cropperDataFields.some((field) => field in img.dataset)
-        ) {
-            params["aspectRatio"] = undefined;
-        }
-        // todo nby: re-read the old option method `setImgShape` and be sure all the logic is in there
+
         return this.dependencies.imageShapeOption.loadShape(img, params);
     }
     apply({ editingElement: img, loadResult: updateImageAttributes }) {
         updateImageAttributes();
+
         const imgFilename = img.dataset.originalSrc.split("/").pop().split(".")[0];
         img.dataset.fileName = `${imgFilename}.svg`;
+        this.dependencies.imageShapeOption.cleanImageShapeDataset(img);
     }
     isApplied({ editingElement: img, value }) {
         const datasetShape = img.dataset.shape;

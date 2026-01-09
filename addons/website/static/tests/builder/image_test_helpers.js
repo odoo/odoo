@@ -2,7 +2,7 @@ import { before, globals } from "@odoo/hoot";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position_overlay";
 
-function onRpcReal(route) {
+export function onRpcReal(route) {
     onRpc(route, () => globals.fetch.call(window, route));
 }
 
