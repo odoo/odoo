@@ -563,9 +563,7 @@ class ProductTemplate(models.Model):
                 in product_or_template.sudo().combo_ids.combo_item_ids.product_id.taxes_id
             )
         ):
-            combination_info['tax_disclaimer'] = _(
-                "Final price may vary based on selection. Tax will be calculated at checkout."
-            )
+            combination_info["tax_disclaimer"] = _("Taxes calculated at checkout.")
 
         return combination_info
 

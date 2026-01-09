@@ -204,29 +204,50 @@
                         <page
                             string="Prices"
                             name="sales_price"
-                            groups="product.group_product_pricelist"
-                            invisible="not sale_ok"
+                            invisible="not show_sales_price_page"
                         >
                             <field
-                                name="pricelist_rule_ids"
+                                name="fixed_pricelist_rule_ids"
                                 context="{
+                                    'default_compute_price': 'fixed',
+                                    'default_applied_on': '1_product',
                                     'form_view_ref': 'product.product_pricelist_item_product_template_form_view',
                                 }"
                             >
-                                <list>
+                                <list editable="bottom">
                                     <control>
                                         <create name="add_product_price" string="Add a price"/>
                                     </control>
-                                    <field name="pricelist_id" required="is_pricelist_required"/>
-                                    <field name="name" string="Applied On" column_invisible="parent.product_variant_count &lt; 2"/>
-                                    <field name="price"/>
-                                    <field name="min_quantity"/>
-                                    <field name="date_start" optional="hide"/>
-                                    <field name="date_end" optional="hide"/>
+                                    <field
+                                        name="product_id"
+                                        string="Variant"
+                                        column_invisible="parent.product_variant_count &lt; 2"
+                                        optional="hide"
+                                    />
+                                    <field
+                                        name="pricelist_id"
+                                        required="is_pricelist_required"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field name="min_quantity" optional="show"/>
+                                    <field
+                                        name="date_start"
+                                        string="Validity"
+                                        widget="daterange"
+                                        options="{'end_date_field': 'date_end'}"
+                                        optional="hide"
+                                    />
+                                    <field
+                                        name="fixed_price"
+                                        string="Price"
+                                        widget="monetary"
+                                        options="{'currency_field': 'currency_id'}"
+                                    />
                                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
 
                                     <!-- Needed for rule edition & creation on product.product form -->
                                     <field name="product_tmpl_id" column_invisible="True"/>
+                                    <field name="currency_id" column_invisible="True"/>
                                 </list>
                             </field>
                         </page>
@@ -536,11 +557,13 @@
             <field eval="7" name="priority"/>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@name='sales_price']/field[@name='pricelist_rule_ids']" position="attributes">
+                <xpath expr="//field[@name='fixed_pricelist_rule_ids']" position="attributes">
                     <attribute name="context">
                         {
                             'default_product_id': id,
-                            'form_view_ref': 'product.product_pricelist_item_product_product_form_view'
+                            'default_compute_price': 'fixed',
+                            'default_applied_on': '1_product',
+                            'form_view_ref': 'product.product_pricelist_item_product_product_form_view',
                         }
                     </attribute>
                 </xpath>

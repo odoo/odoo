@@ -5,10 +5,10 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="website_sale.product_template_form_view" />
         <field name="arch" type="xml">
-            <group name="description" position="after">
+            <group name="shop" position="after">
                 <group
                     name="ecommerce_inventory"
-                    string="Ecommerce Inventory"
+                    string="Inventory"
                     invisible="not is_storable"
                 >
                     <field name="allow_out_of_stock_order"/>

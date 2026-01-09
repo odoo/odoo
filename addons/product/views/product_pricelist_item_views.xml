@@ -9,6 +9,16 @@
                 <filter name="Product Rule" domain="[('applied_on', '=', '1_product')]"/>
                 <filter name="Variant Rule" domain="[('applied_on', '=', '0_product_variant')]" groups="product.group_product_variant"/>
                 <separator/>
+                <filter
+                    name="filter_to_sell"
+                    string="Sales"
+                    domain="[
+                        '|',
+                        ('product_tmpl_id', '=', False),
+                        ('product_tmpl_id.sale_ok', '=', True),
+                    ]"
+                />
+                <separator/>
                 <field name="pricelist_id" groups="product.group_product_pricelist"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
@@ -45,10 +55,15 @@
             <list string="Price Rules">
                 <field name="pricelist_id" groups="product.group_product_pricelist" required="is_pricelist_required"/>
                 <field name="name" string="Applied On"/>
-                <field name="price"/>
                 <field name="min_quantity" colspan="4"/>
-                <field name="date_start" optional="hide"/>
-                <field name="date_end" optional="hide"/>
+                <field
+                    name="date_start"
+                    string="Validity"
+                    widget="daterange"
+                    options="{'end_date_field': 'date_end'}"
+                    optional="show"
+                />
+                <field name="price"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </list>
         </field>
@@ -165,7 +180,7 @@
                         <group name="pricelist_rule_limits">
                             <field name="min_quantity" string="Min Qty"/>
                             <field name="date_start"
-                                string="Validity Period"
+                                string="Validity"
                                 widget="daterange"
                                 options="{'end_date_field': 'date_end'}"/>
                             <field name="date_end" invisible="1"/>
