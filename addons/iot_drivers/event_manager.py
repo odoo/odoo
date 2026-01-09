@@ -62,9 +62,7 @@ class EventManager:
         }
         send_to_controller({
             **event,
-            'session_id': data.get('owner', ''),
             'iot_box_identifier': IOT_IDENTIFIER,
-            **data,
         })
         self.events.append(event)
         for session in self.sessions:
