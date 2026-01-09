@@ -204,26 +204,26 @@ class ProductPricelist(models.Model):
         for product in products:
             suitable_rule = self.env['product.pricelist.item']
 
-            product_uom = product.uom_id
-            target_uom = uom or product_uom  # If no uom is specified, fall back on the product uom
-
-            # Compute quantity in product uom because pricelist rules are specified
-            # w.r.t product default UoM (min_quantity, price_surchage, ...)
-            if target_uom != product_uom:
-                qty_in_product_uom = target_uom._compute_quantity(
-                    quantity, product_uom, raise_if_failure=False
-                )
-            else:
-                qty_in_product_uom = quantity
+            quantity_uom = uom or product.uom_id
+            qty_to_consider = self._compute_qty_to_consider(
+                product,
+                quantity,
+                quantity_uom,
+                currency=currency,
+                date=date,
+                compute_price=compute_price,
+                **kwargs,
+            )
 
             for rule in rules:
-                if rule._is_applicable_for(product, qty_in_product_uom):
+                if rule._is_applicable_for(product, qty_to_consider):
                     suitable_rule = rule
                     break
 
             if compute_price:
                 price = suitable_rule._compute_price(
-                    product, quantity, target_uom, date=date, currency=currency, **kwargs)
+                    product, quantity, quantity_uom, date=date, currency=currency, **kwargs
+                )
             else:
                 # Skip price computation when only the rule is requested.
                 price = 0.0
@@ -259,6 +259,14 @@ class ProductPricelist(models.Model):
             '|', ('date_start', '=', False), ('date_start', '<=', date),
             '|', ('date_end', '=', False), ('date_end', '>=', date),
         ]
+
+    def _compute_qty_to_consider(self, product, quantity, uom, **_kwargs):
+        """Compute quantity in product UoM because the min quantity on pricelist rules are specified
+        w.r.t. product default UoM."""
+        product_uom = product.uom_id
+        if uom != product_uom:
+            return uom._compute_quantity(quantity, product_uom, raise_if_failure=False)
+        return quantity
 
     # Multi pricelists price|rule computation
     def _price_get(self, product, quantity, **kwargs):
