@@ -382,7 +382,7 @@ class ProductTemplate(models.Model):
         if not self:
             return {}
 
-        pricelist = request.pricelist
+        pricelist = request.pricelist.with_context(self.env.context)
         currency = website.currency_id
         fiscal_position_sudo = request.fiscal_position
         date = fields.Date.context_today(self)
