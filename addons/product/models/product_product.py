@@ -137,7 +137,10 @@ class ProductProduct(models.Model):
 
     is_favorite = fields.Boolean(related='product_tmpl_id.is_favorite', readonly=False, store=True)
     _is_favorite_index = models.Index("(is_favorite) WHERE is_favorite IS TRUE")
-    is_in_selected_section_of_order = fields.Boolean(search='_search_is_in_selected_section_of_order')
+    is_in_selected_section_of_order = fields.Boolean(
+        search='_search_is_in_selected_section_of_order',
+        store=False,
+    )
 
     @api.depends('image_variant_1920', 'image_variant_1024')
     def _compute_can_image_variant_1024_be_zoomed(self):
