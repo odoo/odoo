@@ -254,7 +254,7 @@ export class SurveySessionLeaderboard extends Interaction {
         const translateYValue = `${-(contentHeight - containerHeight)}px`;
         const duration = (contentHeight / containerHeight) * 11;
         document.documentElement.style.setProperty(
-            "--surveyLeaderboardTranslateY",
+            "--SurveySession__leaderboard-translateY",
             translateYValue
         );
         content.style.animationDuration = `${duration}s`;

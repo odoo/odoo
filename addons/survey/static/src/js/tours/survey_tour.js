@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add('survey_tour', {
     run: "click",
 },
 {
-    trigger: '.js_question-wrapper span:contains("How frequently")',
+    trigger: '.o_survey_question span:contains("How frequently")',
 },
 {
     trigger: 'button[type=submit]',
@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add('survey_tour', {
     run: "click",
 },
 {
-    trigger: '.js_question-wrapper span:contains("How many")',
+    trigger: '.o_survey_question span:contains("How many")',
 },
 {
     trigger: 'button[type=submit]',
@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add('survey_tour', {
     run: "click",
 },
 {
-    trigger: '.js_question-wrapper span:contains("How likely")',
+    trigger: '.o_survey_question span:contains("How likely")',
 },
 {
     trigger: 'button[value=finish]',
