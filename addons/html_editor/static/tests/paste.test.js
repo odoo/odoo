@@ -3887,6 +3887,15 @@ describe("youtube video with embedded components", () => {
             `<p><a href="${videoUrl}">${videoUrl}</a>[]</p>`
         );
     });
+    test("should close powerbox after an undo", async () => {
+        const { el, editor } = await setupEditor("<p>a[]b</p>", { config });
+        pasteText(editor, videoUrl);
+        await waitFor(".o-we-powerbox");
+        // Pick the second command (Paste as URL)
+        await undo(editor);
+        await waitForNone(".o-we-powerbox");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(`<p>a[]b</p>`);
+    });
 });
 describe("others video providers", () => {
     const config = {

@@ -124,6 +124,7 @@ export class PowerboxPlugin extends Plugin {
             selector: baseContainerGlobalSelector,
             text: _t('Type "/" for commands'),
         }),
+        post_undo_handlers: () => this.closeOnUndo && this.closePowerbox(),
     };
 
     setup() {
@@ -194,14 +195,16 @@ export class PowerboxPlugin extends Plugin {
      * @param {PowerboxCategory[]} [params.categories]
      * @param {Function} [params.onApplyCommand=() => {}]
      * @param {Function} [params.onClose=() => {}]
+     * @param {boolean} [params.closeOnUndo=false]
      */
-    openPowerbox({ commands, categories, onApplyCommand = () => {}, onClose = () => {} } = {}) {
+    openPowerbox({ commands, categories, onApplyCommand = () => {}, onClose = () => {}, closeOnUndo = false } = {}) {
         this.closePowerbox();
         if (!commands.length) {
             return;
         }
         this.onApplyCommand = onApplyCommand;
         this.onClose = onClose;
+        this.closeOnUndo = closeOnUndo;
         this.updatePowerbox(commands, categories);
     }
 
@@ -231,6 +234,7 @@ export class PowerboxPlugin extends Plugin {
         if (!this.overlay.isOpen) {
             return;
         }
+        this.closeOnUndo = false;
         this.onClose();
         this.overlay.close();
     }
