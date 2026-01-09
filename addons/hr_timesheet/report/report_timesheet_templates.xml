@@ -116,7 +116,7 @@
     </template>
 
     <template id="report_timesheet">
-        <t t-call="web.html_container">
+        <t t-call="web.html_container" docs="docs">
             <t t-set="show_task" t-value="bool(docs.task_id)"/>
             <t t-set="show_project" t-value="len(docs.project_id) > 1"/>
             <t t-call="web.internal_layout"
@@ -134,7 +134,7 @@
                             </h2>
                         </div>
                     </div>
-                    <t t-call="hr_timesheet.timesheet_table" lines="docs"/>
+                    <t t-call="hr_timesheet.timesheet_table" lines="docs" show_project="show_project" show_task="show_task"/>
                     <div class="oe_structure"/>
                 </div>
             </t>
@@ -143,7 +143,7 @@
 
     <!-- Project Task Timesheet Report for given timesheets -->
     <template id="report_timesheet_task">
-        <t t-call="web.html_container">
+        <t t-call="web.html_container" docs="docs">
             <t t-set="show_task" t-value="len(docs.task_id) > 1"/>
             <t t-set="show_project" t-value="False"/>
             <t t-call="web.internal_layout"
@@ -161,7 +161,7 @@
                             </h2>
                         </div>
                     </div>
-                    <t t-call="hr_timesheet.timesheet_table" lines="docs"/>
+                    <t t-call="hr_timesheet.timesheet_table" lines="docs" show_task="show_task" show_project="show_project"/>
                     <div class="oe_structure"/>
                 </div>
             </t>

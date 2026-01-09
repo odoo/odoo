@@ -2579,8 +2579,6 @@ class IrQweb(models.AbstractModel):
 
         # values from content (t-out="0")
         if bool(list(el) or el.text):
-            is_deprecated_version = not any(not key.startswith('t-') for key in el.attrib) and any(n.attrib.get('t-set') for n in el)
-
             def_name = compile_context['make_name']('t_call')
             code_content = [f"def {def_name}(self, values):"]
             code_content.append(indent_code('attrs = None', 1))
@@ -2596,14 +2594,6 @@ class IrQweb(models.AbstractModel):
                 qwebContent = QwebContent(self, QwebCallParameters(self.env.context, {compile_context['ref']!r}, {def_name!r}, t_call_content_values, 'root', 't-call-content', (template_options['ref'], {path!r}, {xml!r})))
                 t_call_values = {{ {T_CALL_SLOT}: qwebContent}}
             """, level))
-
-            if is_deprecated_version:
-                # force the loading of the content to get values from t-set
-                code.append(indent_code(f"""
-                    str(qwebContent)
-                    new_values = {{k: v for k, v in t_call_content_values.items() if k != {T_CALL_SLOT} and k != '__qweb_attrs__' and values.get(k) is not v}}
-                    t_call_values.update(new_values)
-                """, level))
         else:
             code.append(indent_code(f"t_call_values = {{ {T_CALL_SLOT}: '' }}", level))
 
