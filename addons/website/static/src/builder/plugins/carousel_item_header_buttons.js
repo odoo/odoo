@@ -40,8 +40,10 @@ export class CarouselItemHeaderMiddleButtons extends Component {
     }
 
     removeSlide() {
-        this.callOperation(async () => {
-            await this.props.removeSlide(this.env.getEditingElement());
-        });
+        if (this.state.hasMultiItems) {
+            this.callOperation(async () => {
+                await this.props.removeSlide(this.env.getEditingElement());
+            });
+        }
     }
 }
