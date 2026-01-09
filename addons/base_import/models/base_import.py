@@ -119,12 +119,11 @@ class ResUsers(models.Model):
     def _can_import_remote_urls(self):
         """ Hook to decide whether the current user is allowed to import
         images via URL (as such an import can DOS a worker). By default,
-        allows the administrator group.
+        allows every internal user.
 
         :rtype: bool
         """
-        self.ensure_one()
-        return self._is_admin()
+        return True
 
 
 class Base_ImportImport(models.TransientModel):
@@ -1292,9 +1291,10 @@ class Base_ImportImport(models.TransientModel):
                 with requests.Session() as session:
                     session.stream = True
 
+                    can_import_urls = self.env.user._can_import_remote_urls()
                     for num, line in enumerate(data):
                         if re.match(config.get("import_url_regex"), line[index]):
-                            if not self.env.user._can_import_remote_urls():
+                            if not can_import_urls:
                                 raise ImportValidationError(
                                     _("You can not import file via URL, check with your administrator or support for the reason."),
                                     field=name, field_type=field['type']

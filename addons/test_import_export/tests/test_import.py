@@ -5,6 +5,7 @@ import difflib
 import io
 import pprint
 import unittest
+from unittest.mock import patch
 
 from PIL import Image
 
@@ -1346,3 +1347,115 @@ class test_failures(TransactionCase):
             [],
             {'has_headers': True, 'separator': ',', 'quoting': '"'})
         self.assertFalse(results['messages'], "results should be empty on successful import")
+
+
+@tagged('at_install', '-post_install')
+class TestUrlImport(TransactionCase):
+    @unittest.skipUnless(
+        can_import("openpyxl"), "openpyxl not available",
+    )
+    def test_import_image_by_url_as_non_admin_user(self):
+        img_buf = io.BytesIO()
+        Image.new('RGB', (1, 1), '#FF0000').save(img_buf, 'PNG')
+        image_data = img_buf.getvalue()
+
+        with patch(
+            "odoo.addons.base_import.models.base_import.Base_ImportImport._import_file_by_url",
+            return_value=image_data,
+        ):
+            demo_user = self.env['res.users'].create({
+                'name': 'Demo User',
+                'login': 'demo_user',
+                'group_ids': [
+                    (6, 0, [
+                        self.env.ref('base.group_user').id,
+                        self.env.ref('base.group_partner_manager').id,
+                    ]),
+                ],
+            })
+            self.env = self.env(user=demo_user)
+
+            file_content = generate_xlsx({
+                'name': ['Test Partner'],
+                'image_1920': ['https://example.com/logo.png'],
+            })
+            import_wizard = self.env["base_import.import"].create(
+                {
+                    "res_model": "res.partner",
+                    "file": BinaryBytes(file_content),
+                    "file_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                }
+            )
+            results = import_wizard.execute_import(
+                ['name', 'image_1920'],
+                ['Name', 'Image'],
+                {
+                    "has_headers": True,
+                    "limit": 1,
+                },
+            )
+
+        self.assertFalse(
+            results["messages"],
+            f"Non-admin user should be able to import images via URL, but got errors: {results['messages']}",
+        )
+        self.assertEqual(results['name'], ['Test Partner'])
+
+    @unittest.skipUnless(
+        can_import("openpyxl"), "openpyxl not available",
+    )
+    def test_import_svg_by_url_mimetype(self):
+        """SVG imported via URL: text/plain for non-admin (XSS prevention), image/svg+xml for admin."""
+        svg_data = b'<svg xmlns="http://www.w3.org/2000/svg"></svg>'
+
+        def _run_import(env):
+            file_content = generate_xlsx({
+                'name': ['Test Partner'],
+                'image_1920': ['https://example.com/logo.svg'],
+            })
+            import_wizard = env["base_import.import"].create({
+                "res_model": "res.partner",
+                "file": BinaryBytes(file_content),
+                "file_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            })
+            return import_wizard.execute_import(
+                ['name', 'image_1920'],
+                ['Name', 'Image'],
+                {"has_headers": True, "limit": 1},
+            )
+
+        with patch(
+            "odoo.addons.base_import.models.base_import.Base_ImportImport._import_file_by_url",
+            return_value=svg_data,
+        ):
+            # Non-admin user
+            demo_user = self.env['res.users'].create({
+                'name': 'Demo User',
+                'login': 'demo_user',
+                'group_ids': [(6, 0, [
+                    self.env.ref('base.group_user').id,
+                    self.env.ref('base.group_partner_manager').id,
+                ])],
+            })
+            results = _run_import(self.env(user=demo_user))
+            self.assertEqual(results['name'], ['Test Partner'])
+
+            partner = self.env['res.partner'].search([('name', '=', 'Test Partner')], limit=1)
+            attachment = self.env['ir.attachment'].search([
+                ('res_model', '=', 'res.partner'),
+                ('res_id', '=', partner.id),
+                ('res_field', '=', 'image_1920'),
+            ], limit=1)
+            self.assertEqual(attachment.mimetype, 'text/plain',
+                "SVG should be stored as text/plain for non-admin users to prevent XSS")
+
+            # Admin user
+            results = _run_import(self.env)
+            partner = self.env['res.partner'].search([('name', '=', 'Test Partner')], order='id desc', limit=1)
+            attachment = self.env['ir.attachment'].search([
+                ('res_model', '=', 'res.partner'),
+                ('res_id', '=', partner.id),
+                ('res_field', '=', 'image_1920'),
+            ], limit=1)
+            self.assertEqual(attachment.mimetype, 'image/svg+xml',
+                "SVG should be stored as image/svg+xml for admin users")
