@@ -72,6 +72,7 @@ beforeEach(async () => {
         },
     });
     patchWithCleanup(browser.console, {
+        groupCollapsed: () => {},
         log: () => {},
         error: () => {},
         warn: (s) => {
