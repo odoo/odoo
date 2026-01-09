@@ -3067,6 +3067,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_order_invoice_search(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.pos_user.group_ids = [Command.link(self.env.ref('account.group_account_invoice').id)]
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'test_order_invoice_search', login="pos_user")
 
     def test_automatic_receipt_printing(self):
