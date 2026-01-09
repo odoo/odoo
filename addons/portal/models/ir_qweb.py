@@ -4,6 +4,7 @@
 from markupsafe import Markup
 
 from odoo import models
+from odoo.models import BaseModel
 from odoo.tools import is_html_empty, lazy
 from odoo.tools.json import scriptsafe, json_default
 
@@ -28,7 +29,6 @@ def owl_props(value, fields=None, **extra):
     :return: JSON string safe for HTML attribute embedding
     """
     def serialize(obj, flds=None):
-        from odoo.models import BaseModel
         if isinstance(obj, BaseModel):
             if not obj:
                 return None if len(obj) <= 1 else []
@@ -68,18 +68,17 @@ def owl_component(name, props=None, **attrs):
                   remaining underscores are converted to hyphens (e.g., data_test -> data-test).
     :return: Markup-safe HTML string
     """
-    attr_parts = [f'name="{Markup.escape(name)}"']
+    attr_parts = [Markup('name="{}"').format(name)]
     if props:
         props_json = scriptsafe.dumps(props, default=json_default)
-        attr_parts.append(f'props="{Markup.escape(props_json)}"')
+        attr_parts.append(Markup('props="{}"').format(props_json))
     for attr_name, attr_value in attrs.items():
         if attr_value is not None:
             # Strip trailing underscore (Python convention to avoid reserved words like class_)
             # then convert remaining underscores to hyphens (data_test -> data-test)
-            escaped_name = attr_name.rstrip("_").replace("_", "-")
-            escaped_value = Markup.escape(str(attr_value))
-            attr_parts.append(f'{escaped_name}="{escaped_value}"')
-    return Markup(f'<owl-component {" ".join(attr_parts)}></owl-component>')
+            html_name = attr_name.rstrip("_").replace("_", "-")
+            attr_parts.append(Markup('{}="{}"').format(html_name, attr_value))
+    return Markup('<owl-component {}></owl-component>').format(Markup(' ').join(attr_parts))
 
 
 class IrQweb(models.AbstractModel):
@@ -92,7 +91,7 @@ class IrQweb(models.AbstractModel):
         irQweb = super()._prepare_frontend_environment(values)
         values.update(
             is_html_empty=is_html_empty,
-            frontend_languages=lazy(lambda: irQweb.env['res.lang']._get_frontend()),
+            frontend_languages=lazy(irQweb.env['res.lang']._get_frontend),
             # OWL component helpers for embedding OWL components in server-rendered templates
             owl_props=owl_props,
             owl_component=owl_component,
