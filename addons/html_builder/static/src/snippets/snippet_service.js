@@ -25,6 +25,7 @@ export class SnippetModel extends Reactive {
             snippet_content: [],
             snippet_custom_content: [],
         };
+        this.originalSnippets = {};
     }
 
     get hasCustomGroup() {
@@ -238,6 +239,13 @@ export class SnippetModel extends Reactive {
             this.snippetsByCategory[snippetCategory.id] = snippets;
         }
 
+        this.originalSnippets = {};
+        for (const category of ["snippet_content", "snippet_structure"]) {
+            for (const snippet of this.snippetsByCategory[category]) {
+                this.originalSnippets[snippet.name] ??= snippet;
+            }
+        }
+
         // Extract the custom inner content from the custom snippets and remove
         // those whose module is not installed.
         const customInnerContent = [];
@@ -402,9 +410,7 @@ export class SnippetModel extends Reactive {
         if (!snippetKey) {
             return;
         }
-        return [...this.snippetInnerContents, ...this.snippetStructures].find(
-            (snippet) => snippet.name === snippetKey
-        );
+        return this.originalSnippets[snippetKey];
     }
 
     /**
