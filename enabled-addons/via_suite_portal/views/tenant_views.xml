@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_via_suite_tenant_tree" model="ir.ui.view">
+        <field name="name">via_suite.tenant.tree</field>
+        <field name="model">via_suite.tenant</field>
+        <field name="arch" type="xml">
+            <list string="Tenants">
+                <field name="name"/>
+                <field name="subdomain"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="full_url" widget="url"/>
+                <button name="action_go_to_tenant" string="Open Tenant" type="object" icon="fa-external-link" class="btn-primary"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_via_suite_tenant_form" model="ir.ui.view">
+        <field name="name">via_suite.tenant.form</field>
+        <field name="model">via_suite.tenant</field>
+        <field name="arch" type="xml">
+            <form string="Tenant">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_go_to_tenant" type="object" class="oe_stat_button" icon="fa-external-link" string="Open Tenant"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Client Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="subdomain"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="full_url" widget="url" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Notes about this tenant..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_via_suite_tenant" model="ir.actions.act_window">
+        <field name="name">Tenants</field>
+        <field name="res_model">via_suite.tenant</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first tenant!
+            </p>
+            <p>
+                Manage your customer environments and their subdomains here.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_via_suite_portal_root" 
+              name="ViaSuite Portal" 
+              web_icon="via_suite_base,static/src/img/via-logo.png"
+              sequence="1"/>
+
+    <menuitem id="menu_via_suite_tenant" 
+              name="Tenants" 
+              parent="menu_via_suite_portal_root" 
+              action="action_via_suite_tenant" 
+              sequence="10"/>
+</odoo>
