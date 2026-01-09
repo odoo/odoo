@@ -57,21 +57,20 @@ class BusSyncMixin(models.AbstractModel):
         result = super().write(vals)
         stores = lazymapping(lambda param: Store(bus_channel=param[0], bus_subchannel=param[1]))
         for record in self:
-            for (channels, subchannel), values in get_vals(record).items():
+            for (channel, subchannel), values in get_vals(record).items():
                 diff = defaultdict(Store.FieldList)
                 for field_name, (value, field_description) in values.items():
-                    if value != old_vals[record][channels, subchannel][field_name][0]:
-                        diff[channels, subchannel].append(field_description)
+                    if value != old_vals[record][channel, subchannel][field_name][0]:
+                        diff[channel, subchannel].append(field_description)
                 if diff:
-                    for (channels, subchannel), diff_fields in diff.items():
-                        for channel in channels:
-                            stores[channel, subchannel].add(
-                                record,
-                                lambda res, diff_fields=diff_fields: (
-                                    res.extend(diff_fields),
-                                    res.from_method("_store_sync_extra_fields"),
-                                ),
-                            )
+                    for (channel, subchannel), diff_fields in diff.items():
+                        stores[channel, subchannel].add(
+                            record,
+                            lambda res, diff_fields=diff_fields: (
+                                res.extend(diff_fields),
+                                res.from_method("_store_sync_extra_fields"),
+                            ),
+                        )
         for store in stores.values():
             store.bus_send()
         return result
