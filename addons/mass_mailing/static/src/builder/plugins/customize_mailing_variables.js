@@ -104,7 +104,7 @@ export const CUSTOMIZE_MAILING_VARIABLES = Object.assign(
 
 export const CUSTOMIZE_MAILING_VARIABLES_DEFAULTS = {
     "--wrapper-background-color": {
-        "background-color": "",
+        "background-color": "#FFFFFF",
     },
     "--h1-font-size": {
         "font-size": "28px",

@@ -93,6 +93,7 @@
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
+            'web/static/lib/bootstrap/scss/_alert.scss',
             ('include', 'web._assets_bootstrap_frontend'),
             ('include', 'web.icons_fonts'),
             'web/static/src/scss/animation.scss',
@@ -122,6 +123,7 @@
             ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
 
             'html_editor/static/src/scss/bootstrap_overridden.scss',
+            'html_builder/static/src/scss/background.scss',
 
             ('include', 'mass_mailing.assets_mail_themes'),
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
