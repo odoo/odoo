@@ -91,7 +91,7 @@ test("Drag and drop a column toggles the grid mode", async () => {
 });
 
 test("Drag and drop an image should drag the closest draggable element but not if it is a section", async () => {
-    const { getEditableContent } = await setupWebsiteBuilderWithSnippet(
+    const { getEditableContent, waitSidebarUpdated } = await setupWebsiteBuilderWithSnippet(
         ["s_text_image", "s_three_columns"],
         { loadIframeBundles: true }
     );
@@ -104,6 +104,7 @@ test("Drag and drop an image should drag the closest draggable element but not i
     expect(":iframe section.s_text_image").not.toHaveClass("o_draggable");
 
     await contains(":iframe section.s_text_image img").click();
+    await waitSidebarUpdated();
     expect(".overlay .o_overlay_options .o_move_handle").toHaveClass("o_draggable");
     expect(":iframe section.s_text_image .row > div:nth-child(2)").toHaveClass("o_draggable");
 

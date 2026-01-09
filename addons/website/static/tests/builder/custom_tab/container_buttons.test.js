@@ -15,7 +15,7 @@ import {
     getSnippetView,
 } from "@html_builder/../tests/helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { animationFrame, Deferred, queryText, tick, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, Deferred, queryText, tick } from "@odoo/hoot-dom";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -40,7 +40,7 @@ const dummySnippet = `
 `;
 
 test("Use the sidebar 'remove' buttons", async () => {
-    await setupWebsiteBuilder(dummySnippet);
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(dummySnippet);
 
     const removeSectionSelector =
         ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_remove";
@@ -50,7 +50,7 @@ test("Use the sidebar 'remove' buttons", async () => {
         ".o_customize_tab .options-container > div:contains('Image') button.oe_snippet_remove";
 
     await contains(":iframe .col-lg-7 img").click();
-    await waitFor(".options-container");
+    await waitSidebarUpdated();
     expect(removeSectionSelector).toHaveCount(1);
     expect(removeColumnSelector).toHaveCount(1);
     expect(removeImageSelector).toHaveCount(1);
