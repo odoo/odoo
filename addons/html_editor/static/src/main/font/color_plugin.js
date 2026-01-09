@@ -232,7 +232,10 @@ export class ColorPlugin extends Plugin {
                         '[style*="color"]:not(li), [style*="background-color"]:not(li), [style*="background-image"]:not(li)'
                     ) ||
                     closestElement(node, "span") ||
-                    closestElement(node, (node) => hasTextColorClass(node, mode));
+                    closestElement(
+                        node,
+                        (node) => node.nodeName !== "LI" && hasTextColorClass(node, mode)
+                    );
 
                 const faNodes = font?.querySelectorAll(".fa");
                 if (faNodes && Array.from(faNodes).some((faNode) => faNode.contains(node))) {
