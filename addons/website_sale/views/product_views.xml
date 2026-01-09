@@ -181,53 +181,62 @@
             <field name="description_sale" position="attributes">
                 <attribute name="placeholder">This note is added to sales orders, invoices, eCommerce listing and SEO descriptions.</attribute>
             </field>
-            <group name="expense_info" position="before">
-                <group string="Long Description" name="ecom_description">
-                   <field
-                        colspan="2"
-                        name="description_ecommerce"
-                        nolabel="1"
-                        placeholder="A detailed, formatted description to promote your product on this page."
-                    />
-                </group>
-                <group name="product_template_images" string="Media" invisible="not sale_ok">
-                    <field
-                        name="product_template_image_ids"
-                        class="o_website_sale_image_list"
-                        context="{'default_name': name}"
-                        mode="kanban"
-                        add-label="Add Media"
-                        nolabel="1"
-                        colspan="2"
-                        widget="x2_many_media_viewer"
-                        options="{'convert_to_webp': True}"
-                    />
-                </group>
-            </group>
-            <field name="product_tag_ids" position="before">
-                <field name="publish_on" invisible="1"/> <!-- Needed for next fields and elements -->
-                <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"/>
-                <label invisible="website_published" for="publish_on" string="Publish on"/>
-                <div invisible="website_published" class="o_row">
-                    <field name="publish_on" widget="datetime"/>
-                    <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
-                </div>
-                <field name="website_sequence" groups="base.group_no_one"/>
-                <field
-                    name="website_id"
-                    options="{'no_create': True}"
-                    groups="website.group_multi_website"
-                    placeholder="All"
-                />
-                <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
-                <field
-                    name="website_ribbon_id"
-                    options="{'no_quick_create': True}"
-                />
-            </field>
+            <!-- Move all extra info fields into "eCommerce" page -->
             <group name="extra_info" position="attributes">
-                <attribute name="string">Ecommerce Shop</attribute>
+                <attribute name="invisible" add="True" separator="or"/>
             </group>
+            <notebook position="inside">
+                <page name="website_sale" string="eCommerce" invisible="not sale_ok">
+                    <group>
+                        <group name="shop" string="Shop">
+                            <field name="publish_on" invisible="1"/> <!-- Needed for next fields and elements -->
+                            <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"/>
+                            <label invisible="website_published" for="publish_on" string="Publish on"/>
+                            <div invisible="website_published" class="o_row">
+                                <field name="publish_on" widget="datetime"/>
+                                <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
+                            </div>
+                            <field name="website_sequence" groups="base.group_no_one"/>
+                            <field
+                                name="website_id"
+                                options="{'no_create': True}"
+                                groups="website.group_multi_website"
+                                placeholder="All"
+                            />
+                            <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
+                            <field
+                                name="website_ribbon_id"
+                                options="{'no_quick_create': True}"
+                            />
+                            <!-- From hidden "Extra Info" group -->
+                            <field name="product_tag_ids" widget="many2many_tags" context="{'product_template_id': id}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Long Description" name="ecom_description">
+                            <field
+                                colspan="2"
+                                name="description_ecommerce"
+                                nolabel="1"
+                                placeholder="A detailed, formatted description to promote your product on your eCommerce."
+                            />
+                        </group>
+                        <group name="product_template_images" string="Media" invisible="not sale_ok">
+                            <field
+                                name="product_template_image_ids"
+                                class="o_website_sale_image_list"
+                                context="{'default_name': name}"
+                                mode="kanban"
+                                add-label="Add Media"
+                                nolabel="1"
+                                colspan="2"
+                                widget="x2_many_media_viewer"
+                                options="{'convert_to_webp': True}"
+                            />
+                        </group>
+                    </group>
+                </page>
+            </notebook>
         </field>
     </record>
 
