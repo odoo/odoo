@@ -455,6 +455,9 @@ export class ListPlugin extends Plugin {
         newList.style.removeProperty("list-style");
         for (const li of newList.children) {
             li.style.removeProperty("list-style");
+            if (!isListElement(li.firstChild)) {
+                li.classList.remove("oe-nested");
+            }
         }
         removeClass(newList, "o_checklist");
         if (newMode === "CL") {
