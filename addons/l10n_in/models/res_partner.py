@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 
 TEST_GST_NUMBER = "36AABCT1332L011"
+TEST_GST_NUMBER_BVM = "29AAGCB1286Q000"
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -53,6 +54,6 @@ class ResPartner(models.Model):
             but this is not a valid number as per the regular expression
             so TEST_GST_NUMBER is considered always valid
         """
-        if vat == TEST_GST_NUMBER:
+        if vat in (TEST_GST_NUMBER, TEST_GST_NUMBER_BVM):
             return True
         return super().check_vat_in(vat)

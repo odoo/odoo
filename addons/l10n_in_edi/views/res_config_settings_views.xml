@@ -37,6 +37,25 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="gsp_selection">
+                        <div class="o_setting_right_pane">
+                            <t class="o_form_label">Select GSP Provider</t>
+                            <div class="text-muted">
+                                Changes to this configuration will be automatically applied to all Indian companies.
+                                Please refer to the <a href="https://www.odoo.com/documentation/16.0/applications/finance/fiscal_localizations/india.html#nic-e-invoice-registration">documentation</a> for detailed guidance on accurate configuration.
+                                <div class="text-warning" attrs="{'invisible': [('l10n_in_gsp','=', 'bvm')]}">
+                                    The current GSP is scheduled for deprecation soon.
+                                    We strongly recommend switching to BVM GSP at the earliest to ensure uninterrupted service.
+                                </div>
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16 row">
+                                    <label for="l10n_in_gsp" string="GSP" class="col-3 col-lg-3 o_light_label"/>
+                                    <field name="l10n_in_gsp" nolabel="1"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </field>
