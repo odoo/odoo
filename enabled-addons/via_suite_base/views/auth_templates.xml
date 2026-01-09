@@ -66,9 +66,16 @@
                         <h4 class="alert-heading text-dark font-weight-bold mb-3">Account Disabled</h4>
                         <p class="text-muted mb-4">Your account exists but is currently disabled. Please contact support.</p>
                     </div>
+
+                    <!-- Tenant Inactive Error -->
+                    <div t-if="via_error == 'tenant_inactive'">
+                        <h3 class="text-danger mb-4"><i class="fa fa-server fa-3x"/></h3>
+                        <h4 class="alert-heading text-dark font-weight-bold mb-3">Service Suspended</h4>
+                        <p class="text-muted mb-4">This tenant environment is currently inactive. Please contact your administrator.</p>
+                    </div>
                     
                     <!-- Generic Error -->
-                    <div t-if="via_error not in ['tenant_mismatch', 'user_not_found', 'account_disabled']">
+                    <div t-if="via_error not in ['tenant_mismatch', 'user_not_found', 'account_disabled', 'tenant_inactive']">
                         <h3 class="text-danger mb-4"><i class="fa fa-lock fa-3x"/></h3>
                         <h4 class="alert-heading text-dark font-weight-bold mb-3">Access Denied</h4>
                         <p class="text-muted mb-4">An unexpected error occurred during authentication.</p>

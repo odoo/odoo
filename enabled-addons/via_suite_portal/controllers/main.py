@@ -47,21 +47,23 @@ class ViaSuitePortalDispatcher(ViaSuiteOAuthController):
                     # Use sudo to call validation since auth='none'
                     Users = request.env['res.users'].sudo()
                     validation = Users._auth_oauth_validate(provider_id, access_token)
-                    tenant = validation.get('tenant')
+                    tenant_code = validation.get('tenant')
                     
-                    if tenant:
+                    if tenant_code:
+                        # Find the tenant record to check if it's active
+                        tenant_record = request.env['via_suite.tenant'].sudo().search([
+                            ('subdomain', '=', tenant_code)
+                        ], limit=1)
+                        
+                        if tenant_record and not tenant_record.active:
+                            _logger.warning("Global Dispatcher: Blocked access to inactive tenant '%s'", tenant_code)
+                            # Redirect to a branded error page with a specific code
+                            return request.redirect('/web/login?via_error=tenant_inactive', local=True)
+
                         # DISPATCH: Redirect to the tenant subdomain
-                        # We reconstruct the URL with all original query params AND the fragment
-                        tenant_url = f"https://{tenant}.{global_domain}/auth_oauth/signin"
+                        tenant_url = f"https://{tenant_code}.{global_domain}/auth_oauth/signin"
+                        _logger.info("Global Dispatcher: Redirecting user to tenant '%s' at %s", tenant_code, tenant_url)
                         
-                        # Preserve original redirect if present
-                        _logger.info("Global Dispatcher: Redirecting user to tenant '%s' at %s", tenant, tenant_url)
-                        
-                        # We use 303 to ensure the browser follows the redirect with the new URL
-                        # Crucially, we MUST pass the fragment back because standard Odoo flow
-                        # expects fragments for Implicit Flow.
-                        
-                        # Re-encode kw into fragment
                         fragment = werkzeug.urls.url_encode(kw)
                         return request.redirect(f"{tenant_url}#{fragment}", local=False, keep_hash=True)
                         

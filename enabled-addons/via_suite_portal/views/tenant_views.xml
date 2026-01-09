@@ -7,9 +7,10 @@
             <list string="Tenants">
                 <field name="name"/>
                 <field name="subdomain"/>
+                <field name="db_name"/>
                 <field name="active" widget="boolean_toggle"/>
                 <field name="full_url" widget="url"/>
-                <button name="action_go_to_tenant" string="Open Tenant" type="object" icon="fa-external-link" class="btn-primary"/>
+                <button name="action_go_to_tenant" string="Open" type="object" icon="fa-external-link" class="btn-primary"/>
             </list>
         </field>
     </record>
@@ -34,6 +35,7 @@
                             <field name="active"/>
                         </group>
                         <group>
+                            <field name="db_name" readonly="1"/>
                             <field name="full_url" widget="url" readonly="1"/>
                         </group>
                     </group>

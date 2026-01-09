@@ -49,3 +49,13 @@ class AccountDisabledError(ViaSuiteAuthError):
             'account_disabled',
             f"Account '{email}' is disabled"
         )
+
+class TenantInactiveError(ViaSuiteAuthError):
+    """Raised when the tenant account is inactive."""
+    
+    def __init__(self, tenant_code):
+        self.tenant_code = tenant_code
+        super().__init__(
+            'tenant_inactive',
+            f"Tenant environment '{tenant_code}' is currently inactive"
+        )
