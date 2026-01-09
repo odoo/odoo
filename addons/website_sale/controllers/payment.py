@@ -8,18 +8,11 @@ from odoo.fields import Command
 from odoo.http import request, route
 from odoo.tools import SQL
 
-from odoo.addons.payment.controllers import portal as payment_portal
+from odoo.addons.sale.controllers import portal as payment_portal
 
 # TODO ANVFE part of payment routes ? /shop/payment ? express_checkout ?
 
 class PaymentPortal(payment_portal.PaymentPortal):
-
-    def _validate_transaction_for_order(self, transaction, sale_order):
-        """
-        Perform final checks against the transaction & sale_order.
-        Override me to apply payment unrelated checks & processing
-        """
-        return
 
     @route('/shop/payment/transaction/<int:order_id>', type='json', auth='public', website=True)
     def shop_payment_transaction(self, order_id, access_token, **kwargs):
