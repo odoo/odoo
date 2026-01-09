@@ -435,7 +435,7 @@ class DiscussChannel(models.Model):
                         "partner_id": pid,
                         "channel_role": (
                             "owner"
-                            if vals.get("channel_type") in ["channel", "group"]
+                            if vals.get("channel_type", "channel") in ["channel", "group"]
                             and pid == self.env.user.partner_id.id
                             and not self.env.user._is_public()
                             else None
