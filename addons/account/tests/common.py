@@ -407,8 +407,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def group_of_taxes(self, taxes, **kwargs):
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"group_({self.tax_number})",
+            **kwargs,
             'amount_type': 'group',
             'children_tax_ids': [Command.set(taxes.ids)],
         })
@@ -416,8 +416,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def percent_tax(self, amount, **kwargs):
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"percent_{amount}_({self.tax_number})",
+            **kwargs,
             'amount_type': 'percent',
             'amount': amount,
         })
@@ -425,8 +425,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def division_tax(self, amount, **kwargs):
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"division_{amount}_({self.tax_number})",
+            **kwargs,
             'amount_type': 'division',
             'amount': amount,
         })
@@ -434,8 +434,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def fixed_tax(self, amount, **kwargs):
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"fixed_{amount}_({self.tax_number})",
+            **kwargs,
             'amount_type': 'fixed',
             'amount': amount,
         })
@@ -444,8 +444,8 @@ class AccountTestInvoicingCommon(ProductCommon):
         self.ensure_installed('account_tax_python')
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"code_({self.tax_number})",
+            **kwargs,
             'amount_type': 'code',
             'amount': 0.0,
             'formula': formula,
