@@ -766,7 +766,7 @@ class AccountEdiUBL(models.AbstractModel):
         return {
             '_currency': currency,
             'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
-            'cbc:AllowanceChargeReasonCode': {'_text': 'ZZZ' if is_charge else '66'},
+            'cbc:AllowanceChargeReasonCode': {'_text': 'ZZZ' if is_charge else '64'},
             'cbc:AllowanceChargeReason': {'_text': _("Conditional cash/payment discount")},
             'cbc:Amount': {
                 '_text': currency.round(abs(amount)),
