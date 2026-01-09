@@ -12,15 +12,15 @@
                 <!-- Optional Product Line -->
                 <div class="optional-product-line d-flex justify-content-between align-items-center">
                     <!-- Product Details -->
-                    <div class="d-flex flex-column align-items-left">
+                    <div class="d-flex flex-column align-items-left overflow-hidden">
                         <div class="d-flex align-items-center flex-grow-1">
-                            <img t-att-src="optional_product.product_tmpl_id.getImageUrl()" alt="Product Image"
-                                class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;"/>
-                            <div>
-                                <h5 class="product-name mb-1">
+                            <img t-if="pos.config.show_product_images" t-att-src="optional_product.product_tmpl_id.getImageUrl()" alt="Product Image"
+                                class="product-img rounded me-3" style="width: 60px; height: 60px; object-fit: cover;"/>
+                            <div class="overflow-hidden">
+                                <h5 class="product-name mb-1 text-truncate">
                                     <t t-out="optional_product.product_tmpl_id.display_name"/>
                                 </h5>
-                                <p class="text-muted small mb-1">
+                                <p class="text-muted small mb-1 text-truncate">
                                     <t t-out="optional_product.product_tmpl_id.productDescriptionMarkup"/>
                                 </p>
                             </div>
@@ -28,7 +28,7 @@
                     </div>
 
                     <!-- Add to Cart Buttons -->
-                    <div class="cart-buttons btn-group d-flex align-items-center" role="group">
+                    <div class="cart-buttons btn-group d-flex align-items-center ms-2 flex-shrink-0" role="group">
                         <t t-if="!optional_product.qty">
                             <button
                                 type="button"
