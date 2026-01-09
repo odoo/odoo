@@ -9,20 +9,26 @@
                     <label for="date_from" string="Dates"/>
                     <field
                         name="date_from"
-                        widget="daterange"
-                        options="{'end_date_field': 'date_to'}"
+                        widget="hr_holidays_daterange"
+                        options="{
+                            'end_date_field': 'date_to',
+                            'always_range': '1',
+                            'end_period_field': 'date_from_period',
+                            'start_period_field': 'date_to_period',
+                            'hour_from_field': 'hour_from',
+                            'hour_to_field': 'hour_to',
+                        }"
                         class="w-50" nolabel="1"/>
                     <field name="date_to" invisible="1" />
                     <!-- half day or custom hours-->
-                    <label for="date_from_period" invisible="work_entry_type_request_unit != 'half_day'" string="Day Period"/>
                     <div class="o_row" invisible="work_entry_type_request_unit != 'half_day'">
-                        <field name="date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" class="o_hr_narrow_field me-2"/>
-                        <field name="date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" class="o_hr_narrow_field"/>
+                        <field name="date_from_period" invisible="1"/>
+                        <field name="date_to_period" invisible="1"/>
                     </div>
                     <label for="hour_from" invisible="work_entry_type_request_unit != 'hour'" string="Hours"/>
                     <div class="o_row" invisible="work_entry_type_request_unit != 'hour'">
-                        <field name="hour_from" required="work_entry_type_request_unit != 'hour'" widget="float_time_selection" class="o_hr_narrow_field me-2"/>
-                        <field name="hour_to" required="work_entry_type_request_unit != 'hour'" widget="float_time_selection" class="o_hr_narrow_field"/>
+                        <field name="hour_from"  invisible="1"/>
+                        <field name="hour_to"  invisible="1"/>
                     </div>
                     <field name="work_entry_type_id" class="w-100"/>
                 </group>

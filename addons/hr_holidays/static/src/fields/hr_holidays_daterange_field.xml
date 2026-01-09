@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays.HrHolidaysDateRangeField"
+       t-inherit="web.DateTimeField"
+       t-inherit-mode="primary">
+
+        <xpath expr="//t[@t-elif='isRange(values) or isRequired(startDateField) or !isEmpty(startDateField) or startDateField === props.name']" position="inside">
+            <t t-if="leaveType.request_unit == 'half_day' and props.startPeriodField">
+                <Field
+                    name="props.startPeriodField"
+                    record="props.record"
+                    class="'o_input ms-2'"
+                />
+            </t>
+            <t t-if="leaveType.request_unit == 'hour' and props.hourFromField">
+                <Field
+                    name="props.hourFromField"
+                    record="props.record"
+                    class="'o_input ms-2'"
+                    type="'float_time'"
+                    t-on-click="(ev) => this.onCharHoursClick(ev, props.hourFromField)"
+                />
+            </t>
+        </xpath>
+
+        <xpath expr="//t[@t-elif='isRange(values) or isRequired(endDateField) or !isEmpty(endDateField) or (isEmpty(startDateField) and endDateField === props.name)']" position="inside">
+            <t t-if="leaveType.request_unit == 'half_day' and props.endPeriodField">
+                <Field
+                    name="props.endPeriodField"
+                    record="props.record"
+                    class="'o_input ms-2'"
+                />
+            </t>
+            <t t-if="leaveType.request_unit == 'hour' and props.hourToField">
+                <Field
+                    name="props.hourToField"
+                    record="props.record"
+                    class="'o_input ms-2'"
+                    type="'float_time'"
+                    t-on-click="(ev) => this.onCharHoursClick(ev, props.hourToField)"
+                />
+            </t>
+        </xpath>
+
+    </t>
+</templates>
