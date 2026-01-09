@@ -1394,7 +1394,7 @@ test("navigation in tags (mode 'readonly') on desktop", async () => {
 });
 
 test.tags("desktop");
-test.skip("navigation in tags (mode 'edit') on desktop", async () => {
+test("navigation in tags (mode 'edit') on desktop", async () => {
     // keep a single line with 2 badges
     Partner._records = Partner._records.slice(0, 1);
     Partner._records[0].timmy = [12, 14];
@@ -2079,4 +2079,66 @@ test("Many2ManyTagsField: press backspace multiple times to remove tag", async (
     await animationFrame();
     expect(".o_field_many2many_tags .badge").toHaveCount(1);
     expect.verifySteps(["onchange [[3,14]]"]);
+});
+
+test.tags("desktop");
+test("Many2ManyTagsField: keyboard navigation", async () => {
+    // 1. Setup the records with the value already present
+    PartnerType._records = [
+        { id: 12, name: "gold", color: 2 },
+        { id: 14, name: "silver", color: 5 },
+        { id: 15, name: "platinium", color: 10 },
+    ];
+
+    Partner._records[0].timmy = [12, 14];
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="timmy" widget="many2many_tags"/>
+            </form>`,
+        resId: 1,
+    });
+
+    const input = ".o_field_many2many_tags input";
+
+    // 2. Test RIGHT arrow: Should close dropdown and focus the FIRST tag
+    await contains(input).click();
+    expect(".o-autocomplete--dropdown-menu").toHaveCount(1);
+    await press("ArrowRight");
+    expect(".o_tag:eq(0)").toBeFocused();
+
+    // Ensure dropdown closed
+    await animationFrame();
+    expect(".o-autocomplete--dropdown-menu").toHaveCount(0);
+
+    // 3. Test LEFT arrow: Should close dropdown and focus the LAST tag
+    await contains(input).click();
+    await press("ArrowLeft");
+    expect(".o_tag:eq(1)").toBeFocused();
+
+    // Ensure dropdown closed
+    await animationFrame();
+    expect(".o-autocomplete--dropdown-menu").toHaveCount(0);
+
+    // 4. Test with non-empty input: Focus should NOT move to tags
+    await fieldInput("timmy").focus();
+    await fieldInput("timmy").click();
+    await fieldInput("timmy").edit("gold", { confirm: false });
+
+    // Press ArrowLeft while typing
+    await press("ArrowLeft");
+    expect(input).toBeFocused();
+    expect(".o_tag").not.toBeFocused();
+
+    // Press ArrowRight while typing
+    await press("ArrowRight");
+    await press("ArrowRight");
+    expect(input).toBeFocused();
+    expect(".o_tag").not.toBeFocused();
+
+    // Dropdown should still be visible (filtering)
+    expect(".o-autocomplete--dropdown-menu").toHaveCount(1);
 });

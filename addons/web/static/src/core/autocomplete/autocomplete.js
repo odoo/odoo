@@ -443,6 +443,15 @@ export class AutoComplete extends Component {
                 }
                 this.scroll();
                 break;
+            case "arrowleft":
+            case "arrowright":
+                if (!this.isOpened || this.inputRef.el.value.length) {
+                    return;
+                }
+                this.cancel();
+                // Let ArrowLeft/ArrowRight propagate to ensure focus transition
+                // from the options dropdown to the neighbor element
+                return;
             default:
                 return;
         }
