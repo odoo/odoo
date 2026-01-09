@@ -41,19 +41,20 @@ class PaymentTransaction(models.Model):
 
         customer_id = self._razorpay_create_customer().get('id')
         order_id = self._razorpay_create_order(customer_id).get('id')
-
-        return {
+        processing_values = {
             'razorpay_key_id': self.provider_id.razorpay_key_id,
             'razorpay_public_token': self.provider_id.razorpay_public_token,
             'razorpay_customer_id': customer_id,
             'is_tokenize_request': self.tokenize,
             'razorpay_order_id': order_id,
-            'callback_url': url_join(
+        }
+        if self.payment_method_id.code in const.REDIRECT_PAYMENT_METHOD_CODES:
+            processing_values['callback_url'] = url_join(
                 self.provider_id.get_base_url(),
                 f'{RazorpayController._return_url}?{url_encode({"reference": self.reference})}'
-            ),
-            'redirect': self.payment_method_id.code in const.REDIRECT_PAYMENT_METHOD_CODES,
-        }
+            )
+
+        return processing_values
 
     def _razorpay_create_customer(self):
         """ Create and return a Customer object.
