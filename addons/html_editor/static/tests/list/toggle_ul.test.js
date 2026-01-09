@@ -48,6 +48,22 @@ describe("Range collapsed", () => {
             });
         });
 
+        test("should turn a ordered list without marker into an unordered list", async () => {
+            await testEditor({
+                contentBefore: '<ol><li class="oe-nested">ab[]cd</li></ol>',
+                stepFunction: toggleUnorderedList,
+                contentAfter: "<ul><li>ab[]cd</li></ul>",
+            });
+        });
+
+        test("should turn a checklist without marker into a unordered list", async () => {
+            await testEditor({
+                contentBefore: '<ul class="o_checklist"><li class="oe-nested">ab[]cd</li></ul>',
+                stepFunction: toggleUnorderedList,
+                contentAfter: "<ul><li>ab[]cd</li></ul>",
+            });
+        });
+
         test("should turn a heading into a list", async () => {
             await testEditor({
                 contentBefore: "<h1>ab[]cd</h1>",
