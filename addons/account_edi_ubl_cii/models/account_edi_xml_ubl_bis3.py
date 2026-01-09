@@ -170,6 +170,10 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                         'cbc:ID': {'_text': commercial_partner.peppol_endpoint}
                     }
                 ]
+        elif commercial_partner.country_code == 'BE' and commercial_partner.company_registry:
+            party_node['cac:PartyIdentification'] = {
+                'cbc:ID': {'_text': commercial_partner.company_registry}
+            }
 
         party_node['cac:PartyTaxScheme'] = party_tax_scheme = [
             {
@@ -211,6 +215,10 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {
                 '_text': ''.join(char for char in commercial_partner.company_registry if char.isdigit
                 ())
+            }
+        elif commercial_partner.country_code == 'BE' and commercial_partner.company_registry:
+            party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {
+                '_text': commercial_partner.company_registry
             }
         else:
             party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {
