@@ -271,6 +271,7 @@ class HrEmployee(models.Model):
     def _get_schedules_by_employee_by_work_type(self, start, stop, version_periods_by_employee):
         employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
         leave_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
+        public_leave_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
         attendance_intervals_by_employee = defaultdict(Intervals)
 
         for employee, intervals in version_periods_by_employee.items():
@@ -288,6 +289,11 @@ class HrEmployee(models.Model):
                 stop,
                 resources_per_tz=resources_per_tz,
             )
+            cal_public_leave_intervals_by_resource = cal._public_leave_intervals_batch(
+                start,
+                stop,
+                resources_per_tz=resources_per_tz,
+            )
             for resource, leave_intervals in cal_leave_intervals_by_resource.items():
                 naive_leave_intervals = Intervals([(
                     i_start.replace(tzinfo=None),
@@ -295,6 +301,14 @@ class HrEmployee(models.Model):
                     i_model
                 ) for (i_start, i_stop, i_model) in leave_intervals])
                 leave_intervals_by_cal_by_resource[cal][resource] = naive_leave_intervals
+
+            for resource, public_leave_intervals in cal_public_leave_intervals_by_resource.items():
+                naive_public_leave_intervals = Intervals([(
+                    i_start.replace(tzinfo=None),
+                    i_stop.replace(tzinfo=None),
+                    i_model
+                ) for (i_start, i_stop, i_model) in public_leave_intervals])
+                public_leave_intervals_by_cal_by_resource[cal][resource] = naive_public_leave_intervals
 
             cal_attendance_intervals_by_resource = cal._attendance_intervals_batch(
                 start,
@@ -311,7 +325,8 @@ class HrEmployee(models.Model):
         full_schedule_by_employee = {
             'leave': defaultdict(Intervals),
             'schedule': defaultdict(Intervals),
-            'fully_flexible': defaultdict(Intervals)
+            'fully_flexible': defaultdict(Intervals),
+            'public_leave': defaultdict(Intervals),
         }
         for employee, intervals in version_periods_by_employee.items():
             employee_attendances = attendance_intervals_by_employee[employee]
@@ -322,6 +337,8 @@ class HrEmployee(models.Model):
                     continue
                 calendar = version.resource_calendar_id
                 employee_leaves = leave_intervals_by_cal_by_resource[calendar][employee.resource_id.id]
+                employee_public_leaves = public_leave_intervals_by_cal_by_resource[calendar][employee.resource_id.id]
+                full_schedule_by_employee['public_leave'][employee] |= employee_public_leaves & interval
                 full_schedule_by_employee['leave'][employee] |= employee_leaves & interval
                 full_schedule_by_employee['schedule'][employee] |= employee_attendances & interval
 

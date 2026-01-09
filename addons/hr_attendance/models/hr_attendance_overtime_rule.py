@@ -93,6 +93,7 @@ class HrAttendanceOvertimeRule(models.Model):
         ('work_days', "On any working day"),
         ('non_work_days', "On any non-working day"),
         ('leave', "When employee is off"),
+        ('public_leave', "On a Public holiday"),
         ('schedule', "Outside of a specific schedule"),
         # ('employee', "Outside the employee's working schedule"),
         # ('off_time', "When employee is off"),  # TODO in ..._holidays
@@ -463,7 +464,8 @@ class HrAttendanceOvertimeRule(models.Model):
             'leave': schedules_intervals_by_employee['leave'],
             'schedule': defaultdict(lambda: defaultdict(Intervals)),
             'work_days': defaultdict(),
-            'non_work_days': defaultdict()
+            'non_work_days': defaultdict(),
+            'public_leave': defaultdict(),
         }
 
         for employee in employees:
@@ -479,6 +481,9 @@ class HrAttendanceOvertimeRule(models.Model):
                         datetime.combine(max_check_out, datetime.max.time())
                     )
                 )
+            if 'public_leave' in timing_type_set:
+                intervals_by_timing_type['public_leave'][employee] = _generate_days_intervals(schedules_intervals_by_employee['public_leave'][employee])
+
         if 'schedule' in timing_type_set:
             for calendar in timing_rule_by_timing_type['schedule'].resource_calendar_id:
                 start_datetime = datetime.combine(min_check_in, datetime.min.time()).replace(tzinfo=UTC) - relativedelta(days=1)  # to avoid timezone shift
