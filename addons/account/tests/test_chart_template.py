@@ -86,13 +86,6 @@ def test_get_data(self, template_code, demo=False):
                 ('Tax 2', 'test_tax_2_template', 0, 'test_fiscal_position_template', 'test_tax_1_template'),
             ]
         },
-        'account.group': {
-            'test_account_group_1': {
-                'name': 'test_account_group_name_1',
-                'code_prefix_start': 222220,
-                'code_prefix_end': 222229,
-            }
-        },
         'account.account': {
             'test_account_receivable_template': {
                 'name': 'property_receivable_account',
@@ -108,7 +101,6 @@ def test_get_data(self, template_code, demo=False):
                 'name': 'property_income_account',
                 'code': '222221',
                 'account_type': 'income',
-                'group_id': 'test_account_group_1',
             },
             'test_account_expense_template': {
                 'name': 'property_expense_account',
@@ -719,7 +711,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
     def test_update_reload_no_new_data(self):
         """ Tests that the reload does nothing when data are left unchanged.
-        Tested models: account.group, account.account, account.tax.group, account.tax, account.journal,
+        Tested models: account.account, account.tax.group, account.tax, account.journal,
         account.reconcile.model, account.fiscal.position, account.tax.repartition.line,
         account.account.tag.
         """
@@ -882,15 +874,6 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         # The module used to source the translation is the module from the xml_id or 'account' (as fallback)
 
         non_chart_data = {
-            'account.group': {
-                # try module 'no_translation'; fallback to 'account'
-                'no_translation.test_chart_template_company_test_free_account_group': {
-                    'name': 'Free Account Group',
-                    'code_prefix_start': 333330,
-                    'code_prefix_end': 333339,
-                    'company_id': company.id,
-                },
-            },
             'account.account': {
                 # translate via 'translation' module
                 'translation.test_chart_template_company_test_free_account': {
@@ -985,7 +968,6 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             ('translation', 'fr', "Free Tax", "Free Tax FR"),
             ('translation', 'fr', "Free Tax Description", "Free Tax Description FR"),
             ('translation2', 'fr', "Tax 1 Description", "Tax 1 Description translation2/FR"),
-            ('account', 'fr', "Free Account Group", "Free Account Group account/FR"),
         ]:
             mock_python_translations.setdefault((module, lang), {})[value] = translation
 
@@ -1015,8 +997,6 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             'bank.code@fr_BE': 'B FR',
             'bank.name@en_US': 'Bank',
             'bank.name@fr_BE': 'Bank FR',
-            'no_translation.test_chart_template_company_test_free_account_group.name@en_US': 'Free Account Group',
-            'no_translation.test_chart_template_company_test_free_account_group.name@fr_BE': 'Free Account Group account/FR',  # fallback to account
             'tax_group_taxes.name@en_US': 'Taxes',
             'tax_group_taxes.name@fr_BE': 'Taxes FR',
             'test_tax_1_template.description@en_US': Markup('<div>Tax 1 Description</div>'),

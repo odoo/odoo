@@ -170,7 +170,7 @@ class AccountReport(models.Model):
         precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_hierarchy = fields.Selection(
-        string="Account Groups",
+        string="Account Parents",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
         compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'optional'), readonly=False,
         precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],

@@ -18,7 +18,7 @@ class AccountChartTemplate(models.AbstractModel):
             "property_stock_account_production_cost_id": "lb_account_370004",
             "tax_payable_account_id": "lb_account_442001",
             "tax_receivable_account_id": "lb_account_442201",
-            "code_digits": "6",
+            "code_digits": "0",
         }
 
     @template("lb", "res.company")

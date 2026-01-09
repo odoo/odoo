@@ -11,7 +11,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'l10n_pk_1121001',
             'property_account_payable_id': 'l10n_pk_2221001',
-            'code_digits': '7',
+            'code_digits': '0',
         }
 
     @template('pk', 'res.company')

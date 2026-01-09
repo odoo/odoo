@@ -15,7 +15,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_valuation_account_id': 'ec110306',
             'loss_stock_valuation_account': 'ec510112',
             'production_stock_valuation_account': 'ec110302',
-            'code_digits': '4',
+            'code_digits': '0',
         }
 
     @template('ec', 'res.company')

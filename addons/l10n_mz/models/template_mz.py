@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('mz')
     def _get_mz_template_data(self):
         return {
-            'code_digits': '7',
+            'code_digits': '0',
             'property_account_receivable_id': 'l10n_mz_account_411',
             'property_account_payable_id': 'l10n_mz_account_421',
         }
