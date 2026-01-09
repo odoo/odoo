@@ -57,14 +57,14 @@ class Driver(Thread):
         if session_id:
             self.data["owner"] = session_id
         try:
-            response = {'status': 'success', 'result': self._actions[action](data)}
+            response = {'status': 'success', 'result': self._actions[action](data), 'session_id': session_id}
             # printers and payment terminals handle their own events (low on paper, waiting for card, etc.)
             # we don't return `True` for them not to trigger `onSuccess` on the db: to let it wait for events
             if self.device_type in ["printer", "payment"]:
                 response['result'] = "pending"
         except Exception as e:
             _logger.exception("Error while executing action %s with params %s", action, data)
-            response = {'status': 'error', 'result': str(e)}
+            response = {'status': 'error', 'result': str(e), 'session_id': session_id}
 
         # Make response available to /event route or websocket
         # printers and payment terminals handle their own events (low on paper, waiting for card, etc.)
