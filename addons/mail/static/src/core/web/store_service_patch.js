@@ -186,5 +186,6 @@ const StorePatch = {
 patch(Store.prototype, StorePatch);
 
 registry.category("actions").add("mail.store_insert", function storeInsertAction(env, action) {
-    env.services["mail.store"].insert(action.params);
+    env.services["mail.store"].insert(action.params.store_values);
+    return action.params.next_action;
 });
