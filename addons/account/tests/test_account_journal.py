@@ -518,7 +518,10 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
     def test_alias_uniqueness_without_domain(self):
         """Ensure alias_name is unique even if alias_domain is not defined."""
         default_account = self.env['account.account'].search(
-            domain=[('account_type', 'in', ('income', 'income_other'))],
+            domain=[
+                *self.env['account.account']._check_company_domain(self.env.company),
+                ('account_type', 'in', ('income', 'income_other')),
+            ],
             limit=1,
         )
         with Form(self.env['account.journal']) as journal_form:

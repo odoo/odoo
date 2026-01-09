@@ -13,7 +13,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'ua_psbp_631',
             'property_stock_valuation_account_id': 'ua_psbp_281',
             'name': _('IFRS Chart of Accounts'),
-            'code_digits': '6',
+            'code_digits': '0',
             'use_storno_accounting': True,
             'display_invoice_amount_total_words': True,
         }

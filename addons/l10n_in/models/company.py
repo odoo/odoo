@@ -157,7 +157,7 @@ class ResCompany(models.Model):
         if vals.get('vat'):
             # Enable GST(l10n_in_is_gst_registered) when a valid GSTIN(vat) is applied.
             self._update_l10n_in_is_gst_registered()
-        if (vals.get('state_id') or vals.get('country_id')) and not self.env.context.get('delay_account_group_sync'):
+        if vals.get('state_id') or vals.get('country_id'):
             # Update Fiscal Positions for companies setting up state for the first time
             self._update_l10n_in_fiscal_position()
         return res

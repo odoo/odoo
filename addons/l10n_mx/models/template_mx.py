@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('mx')
     def _get_mx_template_data(self):
         return {
-            'code_digits': '9',
+            'code_digits': '0',
             'display_invoice_amount_total_words': True,
             'property_account_receivable_id': 'cuenta105_01',
             'property_account_payable_id': 'cuenta201_01',

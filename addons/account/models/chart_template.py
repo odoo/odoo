@@ -19,7 +19,6 @@ from odoo.tools.translate import _, code_translations, TranslationImporter
 _logger = logging.getLogger(__name__)
 
 TEMPLATE_MODELS = (
-    'account.group',
     'account.account',
     'account.fiscal.position',
     'account.tax.group',
@@ -210,7 +209,6 @@ class AccountChartTemplate(models.AbstractModel):
             default_company_id=company.id,
             allowed_company_ids=[company.id],
             tracking_disable=True,
-            delay_account_group_sync=True,
             lang='en_US',
             chart_template_load=True,
         )
@@ -246,10 +244,6 @@ class AccountChartTemplate(models.AbstractModel):
         self._load_data(data)
         self._post_load_data(template_code, company, template_data)
         self._load_translations(companies=company)
-
-        # Manual sync because disable above (delay_account_group_sync)
-        AccountGroup = self.env['account.group'].with_context(delay_account_group_sync=False)
-        AccountGroup._adapt_parent_account_group(company=company)
 
         # Install the demo data when the first localization is instanciated on the company
         if install_demo and not reload_template:
@@ -320,10 +314,6 @@ class AccountChartTemplate(models.AbstractModel):
                         'record': journal,
                         'noupdate': True,
                     }])
-
-        account_group_count = self.env['account.group'].search_count([])
-        if account_group_count:
-            data.pop('account.group', None)
 
         current_taxes = self.env['account.tax'].with_context(active_test=False).search([
             *self.env['account.tax']._check_company_domain(company),
@@ -449,7 +439,9 @@ class AccountChartTemplate(models.AbstractModel):
                     if 'code' in values:
                         normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
                         if not account or not re.match(f'^{values["code"]}0*$', account.code):
-                            query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
+                            query = self.env['account.account'].with_context(active_test=False)._search(
+                                self.env['account.account']._check_company_domain(company)
+                            )
                             account_code = self.with_company(company).env['account.account']._field_to_sql('account_account', 'code', query)
                             query.add_where(SQL("%s SIMILAR TO %s", account_code, f'{values["code"]}0*'))
                             accounts = self.env['account.account'].browse(query)
@@ -1164,10 +1156,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template(model='account.account')
     def _get_account_account(self, template_code):
         return self._parse_csv(template_code, 'account.account')
-
-    @template(model='account.group')
-    def _get_account_group(self, template_code):
-        return self._parse_csv(template_code, 'account.group')
 
     @template(model='account.tax.group')
     def _get_account_tax_group(self, template_code):

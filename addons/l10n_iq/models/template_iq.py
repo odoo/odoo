@@ -15,7 +15,7 @@ class AccountChartTemplate(models.AbstractModel):
             "property_account_income_id": "iq_account_400101",
             "property_stock_valuation_account_id": "iq_account_100502",
             "property_stock_account_production_cost_id": "iq_account_100505",
-            "code_digits": "6",
+            "code_digits": "0",
         }
 
     @template("iq", "res.company")
