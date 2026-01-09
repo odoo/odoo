@@ -26,7 +26,7 @@
                     class="form-check-input cursor-pointer me-1"
                     title="Mark Done"
                     t-att-data-activity-id="rawRecord.id"
-                    t-on-change="onActivityMarkedDone"/>
+                    t-on-change="() => markDoneActivityRecord(rawRecord.id)"/>
                 <i t-attf-class="fa {{rawRecord.icon}} me-1"/>
             </div>
             <span class="text-truncate" t-out="title" t-att-title="title"/>

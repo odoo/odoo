@@ -159,6 +159,9 @@ export class AttendeeCalendarModel extends CalendarModel {
                     date_deadline: {},
                     display_name: {},
                     icon: {},
+                    res_id: {},
+                    res_model: {},
+                    res_name: {},
                 },
             }
         );

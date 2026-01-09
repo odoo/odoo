@@ -1,8 +1,10 @@
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
+import { AttendeeCalendarActivityPopover } from "@calendar/views/attendee_calendar/attendee_calendar_activity_popover/attendee_calendar_activity_popover";
 import { AttendeeCalendarCommonPopover } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_popover";
 import { renderToFragment } from "@web/core/utils/render";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
 
 export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
     static activityTemplate = "calendar.AttendeeCalendarCommonRenderer.activity";
@@ -10,12 +12,15 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
     static components = {
         ...CalendarCommonRenderer.components,
         Popover: AttendeeCalendarCommonPopover,
+        ActivityPopover: AttendeeCalendarActivityPopover,
     };
 
     setup() {
         super.setup(...arguments);
+        this.action = useService("action");
         this.notification = useService("notification");
         this.orm = useService("orm");
+        this.activityPopover = useCalendarPopover(this.constructor.components.ActivityPopover);
     }
 
     /**
@@ -90,24 +95,13 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
         return events;
     }
 
-    /**
-     * Mark activity event related mail.activity as done.
-     */
-    async onActivityMarkedDone(ev) {
-        const activityId = parseInt(ev.target.dataset.activityId);
-        if (!activityId) {
+    onClick(info) {
+        if (info.jsEvent?.target.id === "mark_activity_done_checkbox") {
+            // Do not handle checkbox click as event click
             return;
         }
-        await this.orm.call("mail.activity", "action_done", [[activityId]]);
-        this.notification.add(_t("Activity successfully marked as done."), {
-            type: "success",
-        });
-        await this.props.model.debouncedLoad();
-    }
-
-    onClick(info) {
         if (info.event.extendedProps.isActivity) {
-            this.openActivityPopover(info);
+            this.openActivityPopover(info.el, this.props.model.data.activities[info.event.id]);
             return;
         }
         super.onClick(info);
@@ -115,7 +109,6 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
 
     onDblClick(info) {
         if (info.event.extendedProps.isActivity) {
-            this.openActivityPopover(info);
             return;
         }
         super.onDblClick(info);
@@ -133,7 +126,7 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
                     ...activityEvent,
                     startTime: this.getStartTime(activityEvent),
                     endTime: this.getEndTime(activityEvent),
-                    onActivityMarkedDone: this.onActivityMarkedDone.bind(this),
+                    markDoneActivityRecord: this.markDoneActivityRecord.bind(this),
                 });
                 return { domNodes: fragment.children };
             }
@@ -155,10 +148,6 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
         }
     }
 
-    openActivityPopover(info) {
-        return; // todo
-    }
-
     /**
      * @override
      *
@@ -166,5 +155,41 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
      */
     isSelectionAllowed(event) {
         return true;
+    }
+
+    /* --------------------------------------------------------
+     * Activities
+     * -------------------------------------------------------- */
+
+    getActivityPopoverProps(activityEvent) {
+        return {
+            record: {
+                titleIcon: "fa fa-clock-o",
+                activities: activityEvent.isMultiActivity
+                    ? activityEvent.rawRecord
+                    : [activityEvent.rawRecord],
+                isMultiActivity: activityEvent.isMultiActivity,
+            },
+            model: this.props.model,
+            markDoneActivityRecord: this.markDoneActivityRecord.bind(this),
+        };
+    }
+
+    openActivityPopover(target, activityEvent) {
+        this.activityPopover.open(
+            target,
+            this.getActivityPopoverProps(activityEvent),
+            `o_cw_popover card o_calendar_color_${activityEvent.colorIndex}`
+        );
+    }
+
+    async markDoneActivityRecord(activityId, showNotification = true) {
+        await this.orm.call("mail.activity", "action_done", [[activityId]]);
+        if (showNotification) {
+            this.notification.add(_t("Activity marked as done."), {
+                type: "success",
+            });
+        }
+        await this.props.model.debouncedLoad();
     }
 }

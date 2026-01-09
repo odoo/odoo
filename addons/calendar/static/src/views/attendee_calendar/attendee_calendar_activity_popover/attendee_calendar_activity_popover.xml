@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="calendar.AttendeeCalendarActivityPopover" t-inherit="web.CalendarCommonPopover" t-inherit-mode="primary">
+        <xpath expr="//Dialog" position="attributes">
+            <attribute name="title">title</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="calendar.AttendeeCalendarActivityPopover.popover" t-inherit="web.CalendarCommonPopover.popover" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('popover-header')]/span" position="replace">
+            <span t-out="title" t-att-data-tooltip="title"/>
+        </xpath>
+    </t>
+
+    <t t-name="calendar.AttendeeCalendarActivityPopover.body">
+        <ul class="list-group list-group-flush">
+            <li t-foreach="activitiesPerResRecord" t-as="activities" t-key="activities_index"
+                t-attf-class="list-group-item {{activities_index === 0 ? 'pt-2' : 'pt-0'}}">
+                <a
+                    t-if="activities[0].res_name"
+                    href="#"
+                    t-on-click="() => this.openResRecord(activities[0].id)"
+                    t-out="activities[0].res_name"/>
+                <t t-foreach="activities" t-as="activity" t-key="activity_index">
+                    <div class="d-flex align-items-center justify-content-between gap-4">
+                        <div>
+                            <i t-attf-class="fa {{activity.icon}} me-1"/>
+                            <span t-out="activity.display_name"/>
+                        </div>
+                        <div t-if="activity.can_write" class="text-nowrap lh-lg">
+                            <button class="btn btn-link btn-success p-0 me-3" t-on-click="() => this.markDoneActivityRecord(activity.id)">
+                                <i class="fa fa-check" title="Mark Done"/>
+                            </button>
+                            <button class="btn btn-link text-action p-0 me-3" t-on-click="() => this.editActivityRecord(activity.id)">
+                                <i class="fa fa-pencil" title="Edit"/>
+                            </button>
+                            <button class="btn btn-link btn-danger p-0" t-on-click="() => this.cancelActivityRecord(activity.id)">
+                                <i class="fa fa-times" title="Cancel"/>
+                            </button>
+                        </div>
+                    </div>
+                </t>
+            </li>
+            <li t-if="moreActivitiesCount > 0" class="list-group-item">
+                <a href="#" t-on-click="openActivitiesListView">
+                    ...and <t t-out="moreActivitiesCount"/> more
+                </a>
+            </li>
+        </ul>
+    </t>
+
+    <t t-name="calendar.AttendeeCalendarActivityPopover.footer"/>
+
+</templates>
