@@ -12,11 +12,18 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
-import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    getService,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 import { Store } from "@mail/core/common/store_service";
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
 import { rpc } from "@web/core/network/rpc";
+import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -211,6 +218,15 @@ test('[text composer] other member typing status "is typing" refreshes of assumi
             Command.create({ partner_id: partnerId }),
         ],
     });
+    patchWithCleanup(ChannelMember.prototype, {
+        registerTypingTimeout(...args) {
+            expect.step("register_typing_timeout");
+            super.registerTypingTimeout(...args);
+        },
+    });
+    onRpcBefore("/discuss/channel/notify_typing", () => {
+        expect.step("notify_typing");
+    });
     await start();
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
@@ -223,19 +239,22 @@ test('[text composer] other member typing status "is typing" refreshes of assumi
             is_typing: true,
         })
     );
+    await expect.waitForSteps(["notify_typing", "register_typing_timeout"]);
     await contains(".o-discuss-Typing:text('Demo is typing...')");
     // simulate receive typing notification from demo "is typing" again after long time.
     await advanceTime(LONG_TYPING);
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
     await withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
             is_typing: true,
         })
     );
+    await expect.waitForSteps(["notify_typing", "register_typing_timeout"]);
     await advanceTime(LONG_TYPING);
     await contains(".o-discuss-Typing:text('Demo is typing...')");
     await advanceTime(Store.OTHER_LONG_TYPING - LONG_TYPING);
-    await contains(".o-discuss-Typing:text('Demo is typing...')");
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
 });
 
 test.tags("html composer");
@@ -250,6 +269,15 @@ test('other member typing status "is typing" refreshes of assuming no longer typ
             Command.create({ partner_id: partnerId }),
         ],
     });
+    patchWithCleanup(ChannelMember.prototype, {
+        registerTypingTimeout(...args) {
+            expect.step("register_typing_timeout");
+            super.registerTypingTimeout(...args);
+        },
+    });
+    onRpcBefore("/discuss/channel/notify_typing", () => {
+        expect.step("notify_typing");
+    });
     await start();
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
@@ -263,18 +291,21 @@ test('other member typing status "is typing" refreshes of assuming no longer typ
             is_typing: true,
         })
     );
+    await expect.waitForSteps(["notify_typing", "register_typing_timeout"]);
     await contains(".o-discuss-Typing:text('Demo is typing...')");
     await advanceTime(LONG_TYPING);
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
     await withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
             is_typing: true,
         })
     );
+    await expect.waitForSteps(["notify_typing", "register_typing_timeout"]);
     await advanceTime(LONG_TYPING);
     await contains(".o-discuss-Typing:text('Demo is typing...')");
     await advanceTime(Store.OTHER_LONG_TYPING - LONG_TYPING);
-    await contains(".o-discuss-Typing:text('Demo is typing...')");
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
 });
 
 test('[text composer] receive several other members typing status "is typing"', async () => {

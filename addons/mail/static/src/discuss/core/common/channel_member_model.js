@@ -100,13 +100,17 @@ export class ChannelMember extends Record {
                 this.isTyping = false;
             }
             if (this.isTyping) {
-                this.typingTimeoutId = browser.setTimeout(
-                    () => (this.isTyping = false),
-                    Store.OTHER_LONG_TYPING
-                );
+                this.registerTypingTimeout();
             }
         },
     });
+    /** To be patched in test, to detect when this timeout is registered. */
+    registerTypingTimeout() {
+        this.typingTimeoutId = browser.setTimeout(
+            () => (this.isTyping = false),
+            Store.OTHER_LONG_TYPING
+        );
+    }
     channelAsTyping = fields.One("discuss.channel", {
         compute() {
             return this.isTyping ? this.channel_id : undefined;
