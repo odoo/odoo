@@ -31,15 +31,15 @@ def owl_props(value, fields=None, **extra):
     def serialize(obj, flds=None):
         if isinstance(obj, BaseModel):
             if not obj:
-                return None if len(obj) <= 1 else []
+                return []
             read_fields = flds or ['display_name']
             if 'id' not in read_fields:
                 read_fields = ['id'] + list(read_fields)
             return obj.read(read_fields)[0] if len(obj) == 1 else obj.read(read_fields)
         elif isinstance(obj, dict):
-            return {k: serialize(v) for k, v in obj.items()}
+            return {k: serialize(v, flds) for k, v in obj.items()}
         elif isinstance(obj, (list, tuple)):
-            return [serialize(item) for item in obj]
+            return [serialize(item, flds) for item in obj]
         return obj
 
     serialized = serialize(value, fields)
@@ -47,7 +47,9 @@ def owl_props(value, fields=None, **extra):
         serialized.update(extra)
     elif extra:
         serialized = {'value': serialized, **extra}
-    return scriptsafe.dumps(serialized, default=json_default)
+    # Escape < and > for safe embedding in HTML script contexts
+    json_str = scriptsafe.dumps(serialized, default=json_default)
+    return json_str.replace('<', '\\u003c').replace('>', '\\u003e')
 
 
 def owl_component(name, props=None, **attrs):
@@ -70,7 +72,8 @@ def owl_component(name, props=None, **attrs):
     """
     attr_parts = [Markup('name="{}"').format(name)]
     if props:
-        props_json = scriptsafe.dumps(props, default=json_default)
+        # Ensure JSON is treated as plain string for proper HTML escaping
+        props_json = str(scriptsafe.dumps(props, default=json_default))
         attr_parts.append(Markup('props="{}"').format(props_json))
     for attr_name, attr_value in attrs.items():
         if attr_value is not None:
