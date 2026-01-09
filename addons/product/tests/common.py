@@ -35,6 +35,13 @@ class ProductCommon(UomCommon):
         cls.env['product.pricelist'].search([
             ('id', '!=', cls.pricelist.id),
         ]).action_archive()
+        
+        cls.product_product_4 = cls.env['product.product'].create({
+            'name': 'Customizable Desk',
+            'default_code': 'FURN_0096',
+            'standard_price': 500.0,
+            'weight': 0.01,
+        })
 
     @classmethod
     def get_default_groups(cls):
