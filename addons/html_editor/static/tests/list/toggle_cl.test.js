@@ -97,6 +97,22 @@ describe("Range collapsed", () => {
             });
         });
 
+        test("should turn a ordered list without marker into a checklist", async () => {
+            await testEditor({
+                contentBefore: '<ol><li class="oe-nested">ab[]cd</li></ol>',
+                stepFunction: toggleCheckList,
+                contentAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
+            });
+        });
+
+        test("should turn a unordered list without marker into a checklist", async () => {
+            await testEditor({
+                contentBefore: '<ul><li class="oe-nested">ab[]cd</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
+            });
+        });
+
         test("should turn an empty heading into a checklist and display the right hint", async () => {
             const { el, editor } = await setupEditor("<h1>[]</h1>");
             expect(getContent(el)).toBe(`<h1 o-we-hint-text="Heading 1" class="o-we-hint">[]</h1>`);
