@@ -70,15 +70,20 @@
                         </group>
                     </group>
                     <notebook>
-                        <page name="pricelist_rules" string="Sales Prices">
+                        <page name="pricelist_rules" string="Rules">
                             <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
                                 <list string="Pricelist Rules">
                                     <field name="product_tmpl_id" column_invisible="True"/>
                                     <field name="name" string="Apply on"/>
-                                    <field name="price" string="Price"/>
                                     <field name="min_quantity"/>
-                                    <field name="date_start"/>
-                                    <field name="date_end"/>
+                                    <field
+                                        name="date_start"
+                                        string="Validity"
+                                        widget="daterange"
+                                        options="{'end_date_field': 'date_end'}"
+                                        optional="show"
+                                    />
+                                    <field name="price" string="Price"/>
                                     <field name="base" column_invisible="True"/>
                                     <field name="price_discount" column_invisible="True"/>
                                     <field name="applied_on" column_invisible="True"/>
