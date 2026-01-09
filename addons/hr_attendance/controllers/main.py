@@ -3,11 +3,19 @@
 from odoo.service.common import exp_version
 from odoo import http, _
 from odoo.http import request
+<<<<<<< 9501f8f97c8ff923eae52ece9b9390706fea63fe
 from odoo.fields import Domain
+||||||| 573866c552194d00edc00c56d1d026ed86d49bf0
+from odoo.osv import expression
+=======
+from odoo.exceptions import UserError
+from odoo.osv import expression
+>>>>>>> 0df891b14d2d8307787d6d48377026654fbd4499
 from odoo.tools import float_round, py_to_js_locale, SQL
 from odoo.tools.image import image_data_uri
 
 import datetime
+from requests.exceptions import RequestException
 
 class HrAttendance(http.Controller):
     @staticmethod
@@ -52,6 +60,7 @@ class HrAttendance(http.Controller):
         return response
 
     @staticmethod
+<<<<<<< 9501f8f97c8ff923eae52ece9b9390706fea63fe
     def _get_geoip_response(mode, latitude=False, longitude=False, device_tracking_enabled=True):
         response = {'mode': mode}
 
@@ -74,6 +83,33 @@ class HrAttendance(http.Controller):
                 location = _('Unknown')
 
         response.update({
+||||||| 573866c552194d00edc00c56d1d026ed86d49bf0
+    def _get_geoip_response(mode, latitude=False, longitude=False):
+        # First try to reverse lookup the country and city through coordinates
+        if latitude and longitude:
+            geo_obj = request.env['base.geocoder']
+            location_request = geo_obj._call_openstreetmap_reverse(latitude, longitude)
+            if location_request and location_request.get('display_name'):
+                location = location_request.get('display_name')
+            else:
+                location = _('Unknown')
+        else:
+            city = request.geoip.city.name
+            country = request.geoip.country.name
+            if city and country:
+                location = f"{city}, {country}"
+            else:
+                location = _('Unknown')
+        return {
+=======
+    def _get_geoip_response(mode, latitude=False, longitude=False):
+        # First try to reverse lookup the country and city through coordinates
+        try:
+            location = request.env['base.geocoder']._get_localisation(latitude, longitude)
+        except (UserError, RequestException):
+            location = _("Unknown")
+        return {
+>>>>>>> 0df891b14d2d8307787d6d48377026654fbd4499
             'location': location,
             'latitude': latitude or request.geoip.location.latitude or False,
             'longitude': longitude or request.geoip.location.longitude or False,
