@@ -7,6 +7,10 @@ const SUPPORTED_DOMAINS = [
     "vimeo.com",
     "dailymotion.com",
     "facebook.com",
+    "clips.twitch.tv",
+    "player.twitch.tv",
+    "drive.google.com",
+    "loom.com",
 ];
 
 /**

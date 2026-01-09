@@ -58,6 +58,9 @@ import { TextDirectionPlugin } from "./main/text_direction_plugin";
 import { ToolbarPlugin } from "./main/toolbar/toolbar_plugin";
 import { VideoPlugin } from "./main/media/video/video_plugin";
 import { YoutubePlugin } from "./main/media/video/youtube_plugin";
+import { GDriveVideoPlugin } from "./main/media/video/gdrive_video_plugin";
+import { TwitchPlugin } from "@html_editor/main/media/video/twitch_plugin";
+import { LoomPlugin } from "@html_editor/main/media/video/loom_plugin";
 import { PlaceholderPlugin } from "./main/placeholder_plugin";
 import { CollaborationOdooPlugin } from "./others/collaboration/collaboration_odoo_plugin";
 import { CollaborationPlugin } from "./others/collaboration/collaboration_plugin";
@@ -68,6 +71,9 @@ import { TableOfContentPlugin } from "@html_editor/others/embedded_components/pl
 import { ToggleBlockPlugin } from "@html_editor/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin";
 import { EmbeddedVideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/embedded_video_plugin";
 import { EmbeddedYoutubePlugin } from "./others/embedded_components/plugins/video_plugin/embedded_youtube_plugin";
+import { EmbeddedGDriveVideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/embedded_gdrive_video_plugin";
+import { EmbeddedTwitchPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/embedded_twitch_plugin";
+import { EmbeddedLoomPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/embedded_loom_plugin";
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
 import { EmbeddedFilePlugin } from "@html_editor/others/embedded_components/plugins/embedded_file_plugin/embedded_file_plugin";
 import { SyntaxHighlightingPlugin } from "@html_editor/others/embedded_components/plugins/syntax_highlighting_plugin/syntax_highlighting_plugin";
@@ -162,12 +168,22 @@ export const EMBEDDED_COMPONENT_PLUGINS = [
     ToggleBlockPlugin,
     EmbeddedVideoPlugin,
     EmbeddedYoutubePlugin,
+    EmbeddedGDriveVideoPlugin,
+    EmbeddedTwitchPlugin,
+    EmbeddedLoomPlugin,
     CaptionPlugin,
     EmbeddedFilePlugin,
     SyntaxHighlightingPlugin,
 ];
 
-export const NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS = [FilePlugin, VideoPlugin, YoutubePlugin];
+export const NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS = [
+    FilePlugin,
+    VideoPlugin,
+    YoutubePlugin,
+    GDriveVideoPlugin,
+    TwitchPlugin,
+    LoomPlugin,
+];
 
 export const EXTRA_PLUGINS = [
     ...COLLABORATION_PLUGINS,

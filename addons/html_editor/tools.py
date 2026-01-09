@@ -21,11 +21,14 @@ valid_url_regex = r'^(http://|https://|//)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{
 
 # Regex for few of the widely used video hosting services
 player_regexes = {
-    'youtube': r'^(?:(?:https?:)?//)?(?:www\.|m\.)?(?:youtu\.be/|youtube(-nocookie)?\.com/(?:embed/|v/|shorts/|live/|watch\?v=|watch\?.+&v=))((?:\w|-){11})\S*$',
+    'youtube': r'^(?:(?:https?:)?//)?(?:www\.|m\.)?(?:youtu\.be/|youtube(-nocookie)?\.com/(?:embed/|v/|shorts/|live/|watch\?v=|watch\?.+&v=))(?P<id>(?:\w|-){11})\S*$',
+    "gdrive": r'^https:\/\/drive\.google\.com\/file\/d\/(?P<id>.*?)\/.*?(?:\?[0-9a-z_\-=&]+)?$',
+    'instagram': r'(?:(.*)instagram\.com|instagr\.am)/(?:p|reel)/(?P<id>[a-zA-Z0-9\-_\.]+)',
+    "facebook": r'^(?:(?:https?:)?//)?(?:www\.)?facebook\.com(?:/(?:[^/]+/)?videos/|/watch/?\?v=|/reel/|/plugins/video\.php\?[^ ]*?href=.*?(?:videos|reel)%2[Ff])(?P<id>\d+)',
     'vimeo': r'//(player.)?vimeo.com/([a-z]*/)?(?P<id>[^/\?]+)(?:/(?P<hash>[^/\?]+))?(?:\?(?P<params>[^\s]+))?$',
     'dailymotion': r'(https?:\/\/)(www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|hub\/.*#video=)|geo\.dailymotion\.com\/player\.html\?video=|dai\.ly\/)(?P<id>[A-Za-z0-9]{6,7})',
-    'instagram': r'(?:(.*)instagram\.com|instagr\.am)/(?:p|reel)/([a-zA-Z0-9\-_\.]+)',
-    "facebook": r'^(?:(?:https?:)?//)?(?:www\.)?facebook\.com(?:/(?:[^/]+/)?videos/|/watch/?\?v=|/reel/|/plugins/video\.php\?[^ ]*?href=.*?(?:videos|reel)%2[Ff])(?P<id>\d+)',
+    'twitch': r'^https:\/\/(?:www\.|player\.|clips\.)?twitch\.tv\/(?:\??(?:video|embed\?clip)(?:s\/|=)|(?:[0-9a-zA-Z_]{4,25}\/clip\/))(?P<id>[0-9a-zA-Z_\-]+)(?:(?:\?|&)([0-9a-zA-Z]+)=([0-9a-zA-Z_\-\.]+))*$',
+    'loom': r'^https:\/\/(?:www\.)?loom\.com\/[a-z]+\/(?P<id>[0-9a-z]+)(?:(?:\?|&)([0-9a-zA-Z]+)=([0-9a-zA-Z_\-]+))*$'
 }
 
 
@@ -37,21 +40,10 @@ def get_video_source_data(video_url):
         return None
 
     if re.search(valid_url_regex, video_url):
-        youtube_match = re.search(player_regexes['youtube'], video_url)
-        if youtube_match:
-            return ('youtube', youtube_match[2], youtube_match)
-        vimeo_match = re.search(player_regexes['vimeo'], video_url)
-        if vimeo_match:
-            return ('vimeo', vimeo_match.group('id'), vimeo_match)
-        dailymotion_match = re.search(player_regexes['dailymotion'], video_url)
-        if dailymotion_match:
-            return ('dailymotion', dailymotion_match.group("id"), dailymotion_match)
-        instagram_match = re.search(player_regexes['instagram'], video_url)
-        if instagram_match:
-            return ('instagram', instagram_match[2], instagram_match)
-        facebook_match = re.search(player_regexes["facebook"], video_url)
-        if facebook_match:
-            return ("facebook", facebook_match.group("id"), facebook_match)
+        for platform, regex in player_regexes.items():
+            match = re.search(regex, video_url)
+            if match:
+                return platform, match.group('id'), match
     return None
 
 
@@ -94,6 +86,27 @@ def get_video_url_data(video_url, autoplay=False, loop=False,
             params['fs'] = 0
         yt_extra = platform_match[1] or ''
         embed_url = f"//www.youtube{yt_extra}.com/embed/{video_id}?{url_encode(params)}"
+    if platform == 'twitch':
+        # @doc https://dev.twitch.tv/docs/embed/video-and-clips/
+        params['autoplay'] = autoplay and 1 or 0
+        if start_from:
+            params["time"] = start_from.rstrip("s")
+        if autoplay:
+            params['muted'] = 1
+        is_clip = 'clip' in video_url
+        parent_domain_name = urlparse(request.httprequest.url_root).hostname
+        if is_clip:
+            embed_url = f"//clips.twitch.tv/embed?clip={video_id}&parent={parent_domain_name}&{url_encode(params)}"
+        else:
+            embed_url = f"//player.twitch.tv/?video={video_id}&parent={parent_domain_name}&{url_encode(params)}"
+    if platform == 'loom':
+        # @doc https://support.atlassian.com/loom/docs/embed-your-video-into-a-webpage/
+        params['autoplay'] = autoplay and 1 or 0
+        if start_from:
+            params["time"] = start_from.rstrip("s")
+        if autoplay:
+            params['muted'] = 1
+        embed_url = f"//www.loom.com/embed/{video_id}?{url_encode(params)}"
     elif platform == 'vimeo':
         params['autoplay'] = autoplay and 1 or 0
         # Always enable "do not track" parameter.
@@ -123,6 +136,8 @@ def get_video_url_data(video_url, autoplay=False, loop=False,
         embed_url = f'//www.instagram.com/p/{video_id}/embed/'
     elif platform == "facebook":
         embed_url = f"//facebook.com/plugins/video.php?href=https://www.facebook.com/username/videos/{video_id}/"
+    elif platform == "gdrive":
+        embed_url = f"//drive.google.com/file/d/{video_id}/preview"
 
     return {
         'platform': platform,

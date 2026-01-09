@@ -1,4 +1,4 @@
-import { VideoPlugin } from "@html_editor/main/media/video_plugin";
+import { VideoPlugin } from "@html_editor/main/media/video/video_plugin";
 import { EmbeddedVideoSelector } from "./video_selector_dialog/embedded_video_selector";
 
 /**

@@ -75,12 +75,16 @@ export class VideoSelector extends Component {
             vimeo: "vimeo",
             instagram: "instagram",
             facebook: "facebook",
+            twitch: "twitch",
+            loom: "loom",
         };
 
         this.platformParams = {
             youtube: "start",
             dailymotion: "startTime",
             vimeo: "#t=",
+            twitch: "time",
+            loom: "time",
         };
 
         this.OPTIONS = {
@@ -90,6 +94,8 @@ export class VideoSelector extends Component {
                 platforms: [
                     this.PLATFORMS.youtube,
                     this.PLATFORMS.vimeo,
+                    this.PLATFORMS.twitch,
+                    this.PLATFORMS.loom,
                 ],
                 urlParameter: () => "autoplay=1",
             },
@@ -100,10 +106,7 @@ export class VideoSelector extends Component {
             },
             hide_controls: {
                 label: _t("Hide player controls"),
-                platforms: [
-                    this.PLATFORMS.youtube,
-                    this.PLATFORMS.vimeo,
-                ],
+                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo],
                 urlParameter: () => "controls=0",
             },
             hide_fullscreen: {
@@ -128,6 +131,8 @@ export class VideoSelector extends Component {
                     this.PLATFORMS.youtube,
                     this.PLATFORMS.vimeo,
                     this.PLATFORMS.dailymotion,
+                    this.PLATFORMS.twitch,
+                    this.PLATFORMS.loom,
                 ],
                 urlParameter: () => this.platformParams[this.state.platform],
             },
@@ -252,7 +257,6 @@ export class VideoSelector extends Component {
                 options[option.id] = option.value;
             }
         }
-
         const {
             embed_url: src,
             video_id: videoId,

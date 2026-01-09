@@ -1,6 +1,11 @@
 import { CLIPBOARD_WHITELISTS } from "@html_editor/core/clipboard_plugin";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent as dispatch, press, waitFor } from "@odoo/hoot-dom";
+import {
+    manuallyDispatchProgrammaticEvent as dispatch,
+    press,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "./_helpers/editor";
@@ -3881,6 +3886,69 @@ describe("youtube video with embedded components", () => {
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             `<p><a href="${videoUrl}">${videoUrl}</a>[]</p>`
         );
+    });
+});
+describe("others video providers", () => {
+    const config = {
+        Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
+        resources: { embedded_components: MAIN_EMBEDDINGS },
+    };
+    test("should allow embeding google drive video", async () => {
+        onRpc("/html_editor/video_url/data", async (request) => {
+            const { params } = await request.json();
+            return { platform: "gdrive", video_id: params.video_url.split("/d/")[1].split("/")[0] };
+        });
+        const { editor } = await setupEditor("<p>a[]b</p>", { config });
+        const videoUrl = "https://drive.google.com/file/d/10jOIwi9YGC6ivZU8tDc5Vxt7yjmI2jr0/view";
+        pasteText(editor, videoUrl);
+        await waitFor(".o-we-powerbox");
+        // Pick first command (Embed video)
+        await press("Enter");
+        await waitFor(`[data-embedded="video"] iframe`);
+        expect(`[data-embedded="video"] iframe`).toHaveCount(1);
+    });
+    test("should allow embeding loom video", async () => {
+        onRpc("/html_editor/video_url/data", async (request) => {
+            const { params } = await request.json();
+            return { platform: "loom", video_id: params.video_url.split("/share/")[1] };
+        });
+        const { editor } = await setupEditor("<p>a[]b</p>", { config });
+        const videoUrl = "https://www.loom.com/share/e5b8c04bca094dd8a5507925ab887002";
+        pasteText(editor, videoUrl);
+        await waitFor(".o-we-powerbox");
+        // Pick first command (Embed video)
+        await press("Enter");
+        await waitFor(`[data-embedded="video"] iframe`);
+        expect(`[data-embedded="video"] iframe`).toHaveCount(1);
+    });
+    test("should allow embeding twitch video", async () => {
+        onRpc("/html_editor/video_url/data", async (request) => {
+            const { params } = await request.json();
+            return { platform: "twitch", video_id: params.video_url.split("/videos/")[1] };
+        });
+        const { editor } = await setupEditor("<p>a[]b</p>", { config });
+        const videoUrl = "https://www.twitch.tv/videos/2657950748";
+        pasteText(editor, videoUrl);
+        await waitFor(".o-we-powerbox");
+        // Pick first command (Embed video)
+        await press("Enter");
+        await waitFor(`[data-embedded="video"] iframe`);
+        expect(`[data-embedded="video"] iframe`).toHaveCount(1);
+    });
+    test("should allow embeding twitch clips video", async () => {
+        onRpc("/html_editor/video_url/data", async (request) => {
+            const { params } = await request.json();
+            return { platform: "twitch", video_id: params.video_url.split("/clip/")[1] };
+        });
+        const { editor } = await setupEditor("<p>a[]b</p>", { config });
+        const videoUrl =
+            "https://www.twitch.tv/twitch/clip/SucculentInnocentCodPoooound-SxBpb8Gcpo3EOMi_";
+        pasteText(editor, videoUrl);
+        await waitFor(".o-we-powerbox");
+        // Pick first command (Embed video)
+        await press("Enter");
+        await waitFor(`[data-embedded="video"] iframe`);
+        expect(`[data-embedded="video"] iframe`).toHaveCount(1);
     });
 });
 
