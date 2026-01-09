@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
 
+from odoo.addons.mail.tools.discuss import Store
+
 
 class BasePartnerMergeAutomaticWizard(models.TransientModel):
     _inherit = 'base.partner.merge.automatic.wizard'
@@ -17,3 +19,14 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                 ],
             )
         )
+
+    def _action_next_screen(self):
+        """Clear all partner threads from the client store then proceed as in super.
+
+        Clearing the destination record ensures the messages are fetched again.
+        As the thread may otherwise keep previously cached values.
+
+        Other threads were actually deleted so they should be cleared either way.
+        """
+        action = super()._action_next_screen()
+        return Store().delete(self.partner_ids | self.dst_partner_id, as_thread=True).get_client_action(next_action=action)
