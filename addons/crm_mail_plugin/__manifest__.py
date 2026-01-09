@@ -11,10 +11,6 @@
         'crm',
         'mail_plugin',
     ],
-    'data': [
-        'views/crm_mail_plugin_lead.xml',
-        'views/crm_lead_views.xml'
-    ],
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

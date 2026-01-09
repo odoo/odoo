@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -31,7 +30,7 @@ class TestMailPluginProjectController(TestMailPluginControllerCommon):
                 "id": 0,
                 "jsonrpc": "2.0",
                 "method": "call",
-                "params": {"search_term": "Test Mail Plugin"},
+                "params": {"query": "Test Mail Plugin"},
             }
 
             with patch.object(
@@ -40,7 +39,7 @@ class TestMailPluginProjectController(TestMailPluginControllerCommon):
                 new=lambda *args, **kwargs: self.user_test.id,
             ):
                 result = self.url_open(
-                    "/mail_plugin/project/search",
+                    "/mail_plugin/search_records/project.project",
                     data=json.dumps(data).encode(),
                     headers={
                         "Content-Type": "application/json",
@@ -48,7 +47,8 @@ class TestMailPluginProjectController(TestMailPluginControllerCommon):
                     },
                 )
 
-            result = result.json().get("result")
+            result, total_count = result.json().get("result")
             self.assertEqual(len(result), 1)
-            self.assertEqual(result[0]["project_id"], project.id)
+            self.assertEqual(total_count, 1)
+            self.assertEqual(result[0]["id"], project.id)
             self.assertEqual(result[0]["name"], expected)
