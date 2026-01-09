@@ -204,15 +204,6 @@ test("throws error on wrong properties default value", async () => {
     `);
 });
 
-test("throws error on missing default value with a custom itemShape", async () => {
-    await testBuilderListFaultyProps(`
-        <BuilderList
-            dataAttributeAction="'list'"
-            itemShape="{ a: 'number', b: 'text' }"
-        />
-    `);
-});
-
 test("throws error if itemShape contains reserved key '_id'", async () => {
     await testBuilderListFaultyProps(`
         <BuilderList

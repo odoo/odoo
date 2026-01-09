@@ -43,7 +43,6 @@ export class BuilderList extends Component {
     static defaultProps = {
         addItemTitle: _t("Add"),
         itemShape: { value: "text" },
-        default: { value: _t("Item") },
         sortable: true,
         hiddenProperties: [],
         mode: "button",
@@ -55,7 +54,9 @@ export class BuilderList extends Component {
     static components = { BuilderComponent, SelectMenu };
 
     setup() {
-        this.validateProps();
+        if (this.props.default) {
+            this.validateProps();
+        }
         this.dialog = useService("dialog");
         useBuilderComponent();
         const { state, commit, preview } = useInputBuilderComponent({
