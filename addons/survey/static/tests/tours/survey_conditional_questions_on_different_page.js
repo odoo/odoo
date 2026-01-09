@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add('test_survey_conditional_question_on_dif
             run: "click",
         }, {
             content: 'Answer Q1 with Answer 1',
-            trigger: 'div.js_question-wrapper:contains("Q1") label:contains("Answer 1")',
+            trigger: 'div.o_survey_question:contains("Q1") label:contains("Answer 1")',
             run: "click",
         }, {
             content: 'Go to next page',
@@ -18,21 +18,21 @@ registry.category("web_tour.tours").add('test_survey_conditional_question_on_dif
             run: "click",
         }, {
             content: 'Check that Q3 is visible',
-            trigger: 'div.js_question-wrapper:contains("Q3")',
+            trigger: 'div.o_survey_question:contains("Q3")',
         }, {
             content: 'Answer Q2 with Answer 2',
-            trigger: 'div.js_question-wrapper:contains("Q2") label:contains("Answer 2")',
+            trigger: 'div.o_survey_question:contains("Q2") label:contains("Answer 2")',
             run: "click",
         }, {
             content: 'Check that Q3 is still visible',
-            trigger: 'div.js_question-wrapper:contains("Q3")',
+            trigger: 'div.o_survey_question:contains("Q3")',
         }, {
             content: 'Go back',
             trigger: 'button[value="previous"]',
             run: "click",
         }, {
             content: 'Answer Q1 with Answer 2',
-            trigger: 'div.js_question-wrapper:contains("Q1") label:contains("Answer 2")',
+            trigger: 'div.o_survey_question:contains("Q1") label:contains("Answer 2")',
             run: "click",
         }, {
             content: 'Go to next page',
@@ -40,15 +40,15 @@ registry.category("web_tour.tours").add('test_survey_conditional_question_on_dif
             run: "click",
         }, {
             content: 'Check that Q3 is hidden',
-            trigger: 'div.js_question-wrapper:contains("Q2")',
+            trigger: 'div.o_survey_question:contains("Q2")',
             run : () => expectHiddenQuestion("Q3", "Q3 should be hidden as q1_a1 trigger is not selected anymore"),
         }, {
             content: 'Answer Q2 with Answer 1',
-            trigger: 'div.js_question-wrapper:contains("Q2") label:contains("Answer 1")',
+            trigger: 'div.o_survey_question:contains("Q2") label:contains("Answer 1")',
             run: "click",
         }, {
             content: 'Check that Q3 is now visible again',
-            trigger: 'div.js_question-wrapper:contains("Q3")',
+            trigger: 'div.o_survey_question:contains("Q3")',
         }
     ],
 });

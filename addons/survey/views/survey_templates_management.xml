@@ -25,14 +25,14 @@
         <t t-call="survey.layout">
             <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
             <div class="wrap">
-                <div class="container">
-                    <div class="jumbotron mt32">
-                        <h1><span t-field="survey.title"/> survey is empty</h1>
+                <div class="o_container_small">
+                    <div class="border rounded mt-5 p-5 bg-body text-center">
+                        <h1 class="h3"><span t-field="survey.title"/> survey is empty</h1>
                         <p t-if="env.user.has_group('survey.group_survey_user')">
-                            Please make sure you have at least one question in your survey. You also need at least one section if you chose the "Page per section" layout.<br />
+                            Please make sure you have at least one question in your survey. You also need at least one section to use the "Page per section" layout.
                             <a t-att-href="'/odoo/action-survey.action_survey_form/%s' % survey.id"
-                                class="btn btn-secondary"
-                                groups="survey.group_survey_manager">Edit in backend</a>
+                                class="btn btn-primary mt-4"
+                                groups="survey.group_survey_manager"><i class="fa fa-edit me-2"/>Edit the survey</a>
                         </p>
                         <p t-else="">
                             No question yet, come back later.
@@ -47,9 +47,9 @@
     <template id="survey_auth_required" name="Survey: login required">
         <t t-call="survey.layout">
             <div class="wrap">
-                <div class="container">
-                    <div class="jumbotron mt32">
-                        <h1>Login required</h1>
+                <div class="o_container_small">
+                    <div class="border rounded mt-5 p-5 bg-body text-center">
+                        <h1 class="h3">Login required</h1>
                         <p>This survey is open only to registered people. Please
                             <a t-att-href="redirect_url">log in</a>.
                         </p>
@@ -63,9 +63,9 @@
     <template id="survey_closed_expired" name="Survey: expired">
         <t t-call="survey.layout">
             <div class="wrap">
-                <div class="container">
-                    <div class="jumbotron mt32">
-                        <h1><span t-field="survey.title"/> survey expired</h1>
+                <div class="o_container_small">
+                    <div class="border rounded mt-5 p-5 bg-body text-center">
+                        <h1 class="h3"><span t-field="survey.title"/> survey expired</h1>
                         <p>This survey is now closed. Thank you for your interest!</p>
                     </div>
                 </div>
@@ -77,12 +77,12 @@
     <template id="survey_access_error" name="Survey: access error">
         <t t-call="survey.layout">
             <div class="wrap">
-                <div class="container">
-                    <div class="jumbotron mt32">
-                        <h1>Survey Access Error</h1>
+                <div class="o_container_small">
+                    <div class="border rounded mt-5 p-5 bg-body text-center">
+                        <h1 class="h3">Survey Access Error</h1>
                         <p>Oopsie! We could not let you open this survey. Make sure you are using the correct link and are allowed to
                         participate or get in touch with its organizer.</p>
-                        <a class="btn btn-secondary" href="/">
+                        <a class="btn btn-primary" href="/">
                             Leave
                         </a>
                     </div>
@@ -99,7 +99,7 @@
         <div t-ignore="true" t-if="answer and answer.test_entry" class="alert alert-info p-2 border-0 rounded-0 d-print-none css_editable_mode_hidden mb-0 text-center">
             <p class="mb-1">This is a Test Survey Entry.</p>
             <div class="survey_button_form_view_hook d-inline-block">
-                <a t-if="env.user.has_group('survey.group_survey_user')" t-attf-href="/odoo/action-survey.action_survey_form/{{survey.id}}">
+                <a t-if="env.user.has_group('survey.group_survey_user')" class="alert-link" t-attf-href="/odoo/action-survey.action_survey_form/{{survey.id}}">
                     <i class="oi oi-fw oi-arrow-right"/>Go to Survey</a>
             </div>
         </div>
@@ -113,18 +113,18 @@
         <div t-if="not answer.is_session_answer and not (survey.certification and answer.scoring_success)" class="d-print-none">
             <t t-if="survey.is_attempts_limited">
                 <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email, answer.invite_token)" />
-                <p t-if="attempts_left > 0">
-                    <span>Number of attempts left</span>: <span t-out="attempts_left"/>
-                    <a role="button" class="btn btn-primary btn-lg ms-3" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
+                <div class="d-flex flex-column flex-md-row-reverse align-items-center" t-if="attempts_left > 0">
+                    <span class="d-inline-block mb-2 mb-md-0">Attempts left: <span t-out="attempts_left"/></span>
+                    <a role="button" class="btn btn-primary w-100 w-md-auto me-2" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
                         Retry
                     </a>
-                </p>
+                </div>
             </t>
-            <p t-else="">
-                <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
-                    Take Again
+            <div t-else="">
+                <a role="button" class="btn btn-primary w-100" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
+                    <i class="fa fa-fw fa-repeat me-2" role="img" aria-label="Take Again" title="Take Again"/>Take Again
                 </a>
-            </p>
+            </div>
         </div>
     </template>
 
@@ -132,31 +132,25 @@
     Used in 'session mode' to give an easy access to the survey through the '/s' route. -->
     <template id="survey_session_code" name="Survey: Access Code page">
         <t t-call="survey.layout">
-            <div class="wrap o_survey_wrap pb16 d-flex">
-                <div class="container o_survey_quick_access d-flex flex-column">
-                    <div class="d-flex flex-grow-1 align-items-center">
-                        <div class="w-100 px-4 px-md-0">
-                            <div class="text-center mb32">
-                                <h3>Enter Session Code</h3>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-md-4 offset-md-4 text-center">
-                                    <input id="session_code"
-                                        type="text" placeholder="e.g. 4812"
-                                        autocomplete="off"
-                                        t-attf-value="{{session_code if session_code else ''}}"
-                                        class="form-control o_survey_question_text_box fw-bold bg-transparent text-primary text-center rounded-0 p-2 w-100"/>
-                                </div>
-                                <div class="col-12 col-md-4 offset-md-4 text-center o_survey_error text-danger h4 pt-2 px-0" role="alert">
-                                    <span t-attf-class="o_survey_session_error_invalid_code {{'d-none' if error != 'survey_wrong' else ''}}">Oops! No survey matches this code.</span>
-                                    <span t-attf-class="o_survey_session_error_not_launched {{'d-none' if error != 'survey_session_not_launched' else ''}}">The session did not start yet.</span>
-                                </div>
-                            </div>
-                            <div class="text-center mt32 p-2">
-                                <button groups="survey.group_survey_user" type="button" t-attf-class="o_survey_launch_session btn btn-primary {{'d-none' if error != 'survey_session_not_launched' else ''}}" t-att-data-survey-id="survey_id">Launch Session</button>
-                                <button type="submit" t-attf-class="btn btn-primary {{'d-none' if error == 'survey_session_not_launched' and env.user.has_group('survey.group_survey_user') else ''}}">Join Session</button>
-                            </div>
+            <div class="wrap o_survey_wrap d-flex align-items-center justify-content-center vh-100">
+                <div class="o_survey_quick_access container w-100 px-4 px-md-0 text-center">
+                    <h1 class="h2 mb-3">Enter Session Code</h1>
+                    <div class="row">
+                        <div class="col-12 col-md-4 offset-md-4">
+                            <input id="session_code"
+                                type="text" placeholder="e.g. 4812"
+                                autocomplete="off"
+                                t-attf-value="{{session_code if session_code else ''}}"
+                                class="form-control o_survey_question_text_box fw-bold text-primary text-center fs-1"/>
                         </div>
+                        <span class="pt-2 px-0">
+                            <span t-attf-class="o_survey_session_error_invalid_code text-danger {{'d-none' if error != 'survey_wrong' else ''}}">Oops! No survey matches this code.</span>
+                            <span t-attf-class="o_survey_session_error_not_launched text-muted {{'d-none' if error != 'survey_session_not_launched' else ''}}">The session did not start yet.</span>
+                        </span>
+                    </div>
+                    <div class="mt-4">
+                        <button groups="survey.group_survey_user" type="button" t-attf-class="o_survey_launch_session btn btn-primary {{'d-none' if error != 'survey_session_not_launched' else ''}}" t-att-data-survey-id="survey_id">Launch Session</button>
+                        <button type="submit" t-attf-class="btn btn-primary {{'d-none' if error == 'survey_session_not_launched' and env.user.has_group('survey.group_survey_user') else ''}}">Join Session</button>
                     </div>
                 </div>
             </div>
@@ -164,20 +158,18 @@
     </template>
 
     <template id="survey_navigation" name="Survey: Navigation">
-        <div class="d-inline-block">
+        <div t-attf-class="px-3 {{'border-start' if answer and answer.state == 'in_progress' else ''}}">
             <button
-                t-if="survey and survey.users_can_go_back"
                 t-att-disabled="not can_go_back"
-                type="submit" class="btn border-0 p-0 shadow-none o_survey_navigation_submit" name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">
-                <i class="oi oi-chevron-left p-2" />
+                type="submit" class="o_survey_navigation_submit btn border-0 p-0" name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">
+                <i class="oi oi-chevron-left p-2"/>
             </button>
             <t t-set="can_go_forward"
                 t-value="survey and survey.questions_layout in ['page_per_question', 'page_per_section'] and answer and answer.state != 'done' and not answer.is_session_answer"/>
             <button
                 t-att-disabled="not can_go_forward"
-                type="submit" class="btn border-0 p-0 shadow-none o_survey_navigation_submit" t-att-value="'next' if not survey_last else 'finish'">
-                <t t-if="survey_last">Submit</t>
-                <i class="oi oi-chevron-right p-2" />
+                type="submit" t-attf-class="o_survey_navigation_submit btn border-0 p-0" value="next">
+                <i t-attf-class="oi oi-chevron-right p-2"/>
             </button>
         </div>
     </template>
