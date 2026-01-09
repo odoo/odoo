@@ -179,9 +179,23 @@ export class SearchBar extends Interaction {
         if (this.searchType === "all" && !this.inputEl.value.trim().length) {
             this.render();
         } else {
+            // Show loading skeleton only if dropdown is not currently shown
+            if (!this.hasDropdown) {
+                this.renderLoading();
+            }
             const res = await this.keepLast.add(this.waitFor(this.fetch()));
             this.render(res);
         }
+    }
+
+    renderLoading() {
+        if (this.menuEl) {
+            this.services["public.interactions"].stopInteractions(this.menuEl);
+        }
+        const prevMenuEl = this.menuEl;
+        this.menuEl = this.renderAt("website.s_searchbar.autocomplete.skeleton.loader", {}, this.el)[0];
+        this.hasDropdown = true;
+        prevMenuEl?.remove();
     }
 
     onFocusOut() {

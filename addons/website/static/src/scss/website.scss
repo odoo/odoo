@@ -2431,7 +2431,7 @@ $ribbon-padding: 100px;
         margin-top: var(--o-search-tags-highlight-margin-top, map-get($spacers, 1));
     }
 
-    &:hover {
+    &:not(.o_search_result_item_placeholder):hover {
         background-color: $gray-200;
     }
 

@@ -38,6 +38,22 @@
     </t>
 </t>
 
+<div t-name="website.s_searchbar.autocomplete.skeleton.loader" class="o_dropdown_menu show w-100 rounded-top-0">
+    <ul class="list-unstyled mb-0">
+        <li class="o_search_result_item o_search_result_item_placeholder" t-foreach="[1, 2, 3]" t-as="i" t-key="i">
+            <div class="d-flex align-items-center justify-content-between gap-3 py-2 px-3">
+                <div class="o_search_result_image flex-shrink-0 rounded-2 placeholder-glow">
+                    <span class="placeholder rounded-2 w-100 h-100 d-block bg-500"/>
+                </div>
+                <div class="o_search_result_content d-flex justify-content-between flex-grow-1 placeholder-glow gap-1">
+                    <div class="placeholder col-4 bg-500"/>
+                    <div t-attf-class="placeholder col-{{ i % 2 ? '6' : '4' }} bg-500"/>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
 <!-- Search Bar autocomplete item -->
 <div t-name="website.s_searchbar.autocomplete" class="o_dropdown_menu show position-absolute w-100 rounded-top-0">
     <!-- Fuzzy search fallback -->
