@@ -20,17 +20,6 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
     get options(){
         return {
             ...super.options,
-            eventOrder: function(event1, event2){
-                if (event1.extendedProps.worklocation){
-                    return -1;
-                } else {
-                    if(event2.extendedProps.worklocation){
-                        return 1;
-                    } else {
-                        return event1.start < event2.start ? -1 : 1;
-                    }
-                }
-            },
             dayCellDidMount: this.onDayCellDidMount,
             dayHeaderDidMount: this.onDayHeaderDidMount,
             dayHeaderWillUnmount: this.onDayHeaderWillUnmount,
