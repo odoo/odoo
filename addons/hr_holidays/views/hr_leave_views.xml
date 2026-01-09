@@ -166,13 +166,13 @@
                                                     </t>
                                                     <t t-elif="leave_unit == 'hour'">
                                                         <span class="mx-1">-</span>
-                                                        <field name="request_hour_from" widget="float_time_selection"/>
+                                                        <field name="request_hour_from"/>
                                                         <span class="mx-1">–</span>
                                                         <t t-if="!same_day">
                                                             <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
                                                             <span class="mx-1">-</span>
                                                         </t>
-                                                        <field name="request_hour_to" widget="float_time_selection"/>
+                                                        <field name="request_hour_to"/>
                                                     </t>
                                                 </div>
                                             </div>
@@ -259,13 +259,13 @@
                                                 </t>
                                                 <t t-elif="leave_unit == 'hour'">
                                                     <span class="mx-1">-</span>
-                                                    <field name="request_hour_from" widget="float_time_selection"/>
+                                                    <field name="request_hour_from"/>
                                                     <span class="mx-1">–</span>
                                                     <t t-if="!same_day">
                                                         <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
                                                         <span class="mx-1">-</span>
                                                     </t>
-                                                    <field name="request_hour_to" widget="float_time_selection"/>
+                                                    <field name="request_hour_to"/>
                                                 </t>
                                         </div>
                                     </div>
