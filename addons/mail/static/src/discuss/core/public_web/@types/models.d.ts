@@ -7,6 +7,7 @@ declare module "models" {
         _computeDiscussAppCategory: () => unknown;
         _computeIsDisplayInSidebar: () => boolean;
         appAsUnreadChannels: DiscussApp;
+        autoOpenChatWindowOnNewMessage: Readonly<boolean>;
         categoryAsChannelWithCounter: DiscussAppCategory;
         createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
         discuss_category_id: DiscussCategory;

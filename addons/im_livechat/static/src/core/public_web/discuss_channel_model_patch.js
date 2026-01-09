@@ -55,6 +55,15 @@ const discussChannelPatch = {
             this.livechat_channel_id?.appCategory ?? this.appAsLivechats?.defaultLivechatCategory
         );
     },
+    get autoOpenChatWindowOnNewMessage() {
+        return (
+            (this.channel_type === "livechat" &&
+                !this.store.chatHub.compact &&
+                this.self_member_id) ||
+            super.autoOpenChatWindowOnNewMessage
+        );
+    },
+
     get livechatStatusLabel() {
         if (this.livechat_end_dt) {
             return _t("Conversation has ended");

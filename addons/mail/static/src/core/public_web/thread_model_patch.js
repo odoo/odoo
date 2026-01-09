@@ -20,9 +20,6 @@ const threadModelPatch = {
     get inChathubOnNewMessage() {
         return !this.store.discuss.isActive;
     },
-    get autoOpenChatWindowOnNewMessage() {
-        return false;
-    },
     /** @param {boolean} pushState */
     setAsDiscussThread(pushState) {
         if (pushState === undefined) {
