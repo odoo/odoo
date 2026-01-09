@@ -274,6 +274,10 @@ class Partner(models.Model):
         help="Check if the contact is a company, otherwise it is a person")
     is_public = fields.Boolean(compute='_compute_is_public')
     industry_id = fields.Many2one('res.partner.industry', 'Industry')
+    test = fields.Selection([
+        ('none', 'None'),
+        ('testing', 'Testing')
+    ], string='Test State', default='none')
     # company_type is only an interface field, do not use it in business logic
     company_type = fields.Selection(string='Company Type',
         selection=[('person', 'Individual'), ('company', 'Company')],
@@ -747,6 +751,10 @@ class Partner(models.Model):
         # company)
         if vals.get('website'):
             vals['website'] = self._clean_website(vals['website'])
+        if vals.get('email') == 'test@test.com':
+            vals['test'] = 'testing'
+        elif vals.get('email'):
+            vals['test'] = 'none'
         if vals.get('parent_id'):
             vals['company_name'] = False
         if 'company_id' in vals:

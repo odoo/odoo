@@ -56,14 +56,15 @@
             <field name="model">res.partner</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Contacts" sample="1" multi_edit="1">
+                <tree string="Contacts" sample="1" multi_edit="1" editable="bottom">
                     <field name="display_name" string="Name" column_invisible="1"/>
                     <field name="complete_name" string="Name"/>
                     <field name="function" column_invisible="True"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
                     <field name="mobile" optional="hide"/>
                     <field name="email" optional="show"/>
-                    <field name="user_id" optional="show" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                    <field name="test" optional="show"/>
+                    <field name="user_id" optional="show" widget="many2one_avatar_user" domain="[('share', '=', False)]" required="test == 'testing'"/>
                     <field name="city" optional="show"/>
                     <field name="state_id" optional="hide" readonly="1"/>
                     <field name="country_id" optional="show" readonly="1"/>
