@@ -1,15 +1,16 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
-import { AlertDialog, ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
 
 import { serializeDate } from "@web/core/l10n/dates";
 
 import { TimeOffCalendarSidePanel } from "./calendar_side_panel/calendar_side_panel";
 import { TimeOffCalendarMobileFilterPanel } from "./calendar_filter_panel/calendar_mobile_filter_panel";
+import { TimeOffNewDropdown } from "../../components/time_off_new_dropdown/time_off_new_dropdown";
 import { TimeOffFormViewDialog } from "../view_dialog/form_view_dialog";
-import { useLeaveCancelWizard } from "../hooks";
+import { useLeaveCancelWizard, useNewAllocationRequest } from "../hooks";
 import { EventBus, onWillStart } from "@odoo/owl";
 
 export class TimeOffCalendarController extends CalendarController {
@@ -17,6 +18,7 @@ export class TimeOffCalendarController extends CalendarController {
         ...CalendarController.components,
         CalendarSidePanel: TimeOffCalendarSidePanel,
         MobileFilterPanel: TimeOffCalendarMobileFilterPanel,
+        NewButton: TimeOffNewDropdown,
     };
     static template = "hr_holidays.CalendarController";
     setup() {
@@ -25,6 +27,7 @@ export class TimeOffCalendarController extends CalendarController {
             timeOffBus: new EventBus(),
         });
         this.leaveCancelWizard = useLeaveCancelWizard();
+        this.newAllocRequest = useNewAllocationRequest();
 
         onWillStart(async () => {
             this.hasEmployee = await userHasEmployeeInCurrentCompany(this.orm);
@@ -79,6 +82,23 @@ export class TimeOffCalendarController extends CalendarController {
             size: "md",
             context: context,
         });
+    }
+
+    newAllocationRequest() {
+        if (!this.employeeId && !this.hasEmployee) {
+            this.displayDialog(AlertDialog, {
+                title: _t("UserError"),
+                body: _t("This operation is not allowed as you are not linked to an employee in the current company."),
+            });
+            return;
+        }
+        let empId;
+        if (this.props.context.active_id && this.props.context.active_model === "hr.employee") {
+            empId = this.props.context.active_id;
+        } else if (this.employeeId) {
+            empId = this.employeeId;
+        }
+        this.newAllocRequest({ employeeId: empId, forceLargeDialog: this.props.context.hide_employee_name ?? false })
     }
 
     _deleteRecord(resId, canCancel) {

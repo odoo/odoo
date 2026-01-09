@@ -1,7 +1,7 @@
 import { onWillRender } from "@web/owl2/utils";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
-import { formatNumber, useNewAllocationRequest } from "@hr_holidays/views/hooks";
+import { formatNumber } from "@hr_holidays/views/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 
@@ -20,7 +20,6 @@ export class TimeOffCardPopover extends Component {
         "close?",
         "allows_negative",
         "max_allowed_negative",
-        "onClickNewAllocationRequest?",
         "errorLeaves",
         "accrualExcess",
         "timeOffType",
@@ -77,9 +76,11 @@ export class TimeOffCardPopover extends Component {
         const context = isInHolidaysUserGroup
             ? {
                   search_default_group_date_from: true,
+                  expand_leave_list: true,
               }
             : {
                   search_default_group_date_from: true,
+                  expand_leave_list: true,
                   list_view_ref: "hr_holidays.hr_leave_view_tree_my",
                   form_view_ref: "hr_holidays.hr_leave_view_form",
               };
@@ -97,7 +98,6 @@ export class TimeOffCard extends Component {
             position: "bottom",
             popoverClass: "bg-view",
         });
-        this.newAllocationRequest = useNewAllocationRequest();
         this.actionService = useService("action");
         this.lang = user.lang;
         this.formatNumber = formatNumber;
@@ -136,7 +136,7 @@ export class TimeOffCard extends Component {
         const accrualExcess = this.getAccrualExcess(data);
         const closeExpire =
             data.closest_allocation_duration &&
-            data.closest_allocation_duration < data.virtual_remaining_leaves;
+            data.closest_allocation_duration < data.closest_allocation_remaining;
         this.warning = errorLeavesSignificant || accrualExcess || closeExpire;
     }
 
@@ -154,7 +154,6 @@ export class TimeOffCard extends Component {
             exceeding_duration: data.exceeding_duration,
             allows_negative: data.allows_negative,
             max_allowed_negative: data.max_allowed_negative,
-            onClickNewAllocationRequest: this.newAllocationRequestFrom.bind(this),
             errorLeaves: this.errorLeaves,
             accrualExcess: this.getAccrualExcess(data),
             timeOffType: holidayStatusId,
@@ -170,11 +169,6 @@ export class TimeOffCard extends Component {
             : -data.exceeding_duration > 0;
     }
 
-    async newAllocationRequestFrom() {
-        this.popover.close();
-        await this.newAllocationRequest(this.props.employeeId, this.props.holidayStatusId);
-    }
-
     async navigateTimeOffType() {
         const { employeeId, holidayStatusId, data } = this.props;
         const isInHolidaysUserGroup = await user.hasGroup("hr_holidays.group_hr_holidays_user");
@@ -188,11 +182,13 @@ export class TimeOffCard extends Component {
         const context = isInHolidaysUserGroup
             ? {
                   search_default_group_date_from: true,
+                  expand_leave_list: true,
               }
             : {
                   list_view_ref: "hr_holidays.hr_leave_view_tree_my",
                   form_view_ref: "hr_holidays.hr_leave_view_form",
                   search_default_group_date_from: true,
+                  expand_leave_list: true,
               };
 
         openLeaveWindow(this.actionService, resModel, name, domain, context);

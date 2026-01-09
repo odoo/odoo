@@ -595,7 +595,7 @@
         <field name="name">hr.holidays.view.list</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <list string="Time Off Requests" sample="1" duplicate="false" js_class="hr_holidays_payslip_list">
+            <list string="Time Off Requests" sample="1" expand="context.get('expand_leave_list', False)" duplicate="false" js_class="hr_holidays_payslip_list">
                 <header>
                     <button type="action"
                         name="%(hr_holidays.action_hr_leave_generate_multi_wizard)d"

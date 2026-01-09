@@ -13,7 +13,13 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             run: "click",
         },
         {
-            trigger: "button.btn-time-off",
+            trigger: ".o_timeoff_buttons .o-dropdown-caret",
+            content: _t("Click on this button to request time-off or allocation"),
+            tooltipPosition: "bottom",
+            run: "click",
+        },
+        {
+            trigger: ".o-dropdown-item:nth-child(1)",
             content: _t("Click on this button to request a time-off"),
             tooltipPosition: "bottom",
             run: "click",
