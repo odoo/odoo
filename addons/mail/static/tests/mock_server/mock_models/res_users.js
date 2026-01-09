@@ -56,6 +56,7 @@ export class ResUsers extends webModels.ResUsers {
                                         "is_admin",
                                         mailDataHelpers.Store.one("main_user_id", []),
                                         "name",
+                                        "tz",
                                         "user",
                                     ],
                                 })

@@ -45,7 +45,7 @@
                         <a t-if="phone" class="o-mail-avatar-card-tel text-truncate" t-att-title="phone" t-att-href="'tel:'+phone">
                             <i class="fa fa-fw fa-phone me-1"/><t t-esc="phone"/>
                         </a>
-                        <div t-if="state.partnerLocalDateTimeFormatted" class="text-muted">
+                        <div t-if="state.partnerLocalDateTimeFormatted" class="o-mail-avatar-card-localtime text-muted">
                             <i class="fa fa-fw fa-clock-o me-1"/><t t-out="state.partnerLocalDateTimeFormatted"/>
                         </div>
                         <div class="o_avatar_card_buttons d-flex gap-2 mt-2">
