@@ -2,11 +2,15 @@ import {
     click,
     contains,
     defineMailModels,
+    listenStoreFetch,
     openDiscuss,
     start,
     startServer,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
+
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -107,6 +111,39 @@ test("chat with member should be opened after clicking on channel member", async
     await click(".o-discuss-ChannelMember:has(:text('Demo')).o-active");
     await click(".o_avatar_card button:text('Send message')");
     await contains(".o-mail-AutoresizeInput[title='Demo']");
+});
+
+test("Avatar card shows local timezone", async () => {
+    mockDate("2026-01-01 12:00:00");
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].write([serverState.partnerId], { tz: "Europe/Brussels" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", tz: "Asia/Kolkata" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChannel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+    });
+    listenStoreFetch(["avatar_card"]);
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList");
+    // Case 1: When correspondent tz differs
+    await click(".o-discuss-ChannelMember:has(:text('Demo'))");
+    await waitStoreFetch(["avatar_card"]);
+    await contains(".o-mail-avatar-card-name:text('Demo')");
+    await contains(".o-mail-avatar-card-localtime:contains('17:30 local time')");
+    await click(".o-mail-Thread");
+    await contains(".o-mail-avatar-card-name:text('Demo')", { count: 0 });
+    // Case 2: When correspondent tz resolves to current user's tz
+    pyEnv["res.partner"].write([partnerId], { tz: "localtime" });
+    await click(".o-discuss-ChannelMember:has(:text('Demo'))");
+    await waitStoreFetch(["avatar_card"]);
+    await contains(".o-mail-avatar-card-name:text('Demo')");
+    await contains(".o-mail-avatar-card-localtime", { text: "" });
 });
 
 test("should show a button to load more members if they are not all loaded", async () => {

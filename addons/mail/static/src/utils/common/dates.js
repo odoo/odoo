@@ -3,6 +3,10 @@ import { localization } from "@web/core/l10n/localization";
 
 const { DateTime } = luxon;
 
+function resolveTimeZoneName(tz) {
+    return tz === "localtime" ? "local" : tz;
+}
+
 /**
  * @param {luxon.DateTime} datetime
  */
@@ -19,12 +23,18 @@ export function computeDelay(datetime) {
  * @param {string} currentUserTz
  */
 export function formatLocalDateTime(partnerTz, currentUserTz) {
-    if (!partnerTz || !currentUserTz || partnerTz === currentUserTz) {
+    const resolvedCurrentUserTz = resolveTimeZoneName(currentUserTz);
+    const resolvedPartnerTz = resolveTimeZoneName(partnerTz);
+    if (
+        !resolvedPartnerTz ||
+        !resolvedCurrentUserTz ||
+        [resolvedPartnerTz, resolvedCurrentUserTz].includes("local")
+    ) {
         return null;
     }
     const now = DateTime.now();
-    const partnerDateTime = now.setZone(partnerTz);
-    const currentUserDateTime = now.setZone(currentUserTz);
+    const partnerDateTime = now.setZone(resolvedPartnerTz);
+    const currentUserDateTime = now.setZone(resolvedCurrentUserTz);
     const format = currentUserDateTime.hasSame(partnerDateTime, "day")
         ? localization.timeFormat.replace(":ss", "")
         : localization.dateTimeFormat.replace(":ss", "");
