@@ -10,12 +10,14 @@ export class ProductPricelist extends Base {
         this.uiState = {
             generalRulesIdsByCateg: {},
             generalRulesIds: {},
+            rulesByProductId: {},
+            rulesByTmplId: {},
         };
 
         // General rules can be computed only on starting since they
         // are loaded by default, if a new pricelist is created
         // after the POS is started, it will be computed during the setup
-        this.computeGeneralRulesByCateg();
+        this.computeRuleIndexes();
     }
 
     getGeneralRulesIdsByCategories(categoryIds) {
@@ -31,11 +33,35 @@ export class ProductPricelist extends Base {
         return Object.values(rules);
     }
 
-    computeGeneralRulesByCateg() {
-        for (const idx in this.item_ids) {
-            const index = parseInt(idx);
-            const item = this.item_ids[index];
-            if (item.product_id || item.product_tmpl_id) {
+    getRulesByProductId(productId) {
+        return this.uiState.rulesByProductId[productId] || [];
+    }
+
+    getRulesByTmplId(tmplId) {
+        return this.uiState.rulesByTmplId[tmplId] || [];
+    }
+
+    computeRuleIndexes() {
+        for (let i = 0; i < this.item_ids.length; i++) {
+            const item = this.item_ids[i];
+
+            // Index by product_id (variant rules)
+            if (item.product_id) {
+                const prodId = item.product_id.id;
+                if (!this.uiState.rulesByProductId[prodId]) {
+                    this.uiState.rulesByProductId[prodId] = [];
+                }
+                this.uiState.rulesByProductId[prodId].push(item);
+                continue;
+            }
+
+            // Index by product_tmpl_id (template rules)
+            if (item.product_tmpl_id) {
+                const tmplId = item.product_tmpl_id.id;
+                if (!this.uiState.rulesByTmplId[tmplId]) {
+                    this.uiState.rulesByTmplId[tmplId] = [];
+                }
+                this.uiState.rulesByTmplId[tmplId].push(item);
                 continue;
             }
 
@@ -44,11 +70,11 @@ export class ProductPricelist extends Base {
                     this.uiState.generalRulesIdsByCateg[item.categ_id.id] = {};
                 }
 
-                this.uiState.generalRulesIdsByCateg[item.categ_id.id][index] = item.id;
+                this.uiState.generalRulesIdsByCateg[item.categ_id.id][i] = item.id;
                 continue;
             }
 
-            this.uiState.generalRulesIds[index] = item.id;
+            this.uiState.generalRulesIds[i] = item.id;
         }
     }
 }
