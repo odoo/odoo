@@ -1,7 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
+import { reactive } from "@odoo/owl";
 import { EmojiPicker, loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
+import { debounce } from "@web/core/utils/timing";
+import { fuzzyLookup } from "@web/core/utils/search";
 import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
+import { SuggestionList } from "@html_editor/components/suggestion/suggestion_list";
 
 /**
  * @typedef { Object } EmojiShared
@@ -10,12 +14,15 @@ import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 
 export class EmojiPlugin extends Plugin {
     static id = "emoji";
-    static dependencies = ["history", "overlay", "dom", "selection"];
+    static dependencies = ["history", "overlay", "dom", "selection", "delete"];
     static shared = ["showEmojiPicker"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
-        input_handlers: this.detect.bind(this),
+        input_handlers: this.onInput.bind(this),
+        delete_handlers: () => this.updateEmojiList(),
+        post_undo_handlers: () => this.updateEmojiList(),
+        post_redo_handlers: () => this.updateEmojiList(),
         user_commands: [
             {
                 id: "addEmoji",
@@ -39,8 +46,14 @@ export class EmojiPlugin extends Plugin {
             hasAutofocus: true,
             className: "popover",
         });
+        this.emojiListOverlay = this.dependencies.overlay.createOverlay(SuggestionList, {
+            className: "popover",
+        });
         this.match = undefined;
-        await loadEmoji();
+        const { emojis } = await loadEmoji();
+        this.allEmojis = emojis;
+        this.emojiListState = reactive({ list: [] });
+        this.addDomListener(this.document, "keydown", this.onKeyDown);
     }
 
     get emojiDict() {
@@ -55,7 +68,7 @@ export class EmojiPlugin extends Plugin {
         }
     }
 
-    detect() {
+    onInput(ev) {
         const selection = this.dependencies.selection.getEditableSelection();
         if (
             !isTextNode(selection.startContainer) ||
@@ -91,12 +104,32 @@ export class EmojiPlugin extends Plugin {
                 focusNode: selection.focusNode,
                 focusOffset: start,
             });
+            this.emojiListOverlay.close();
             this.dependencies.dom.insert(emoji.codepoints);
             this.dependencies.history.addStep();
             this.match = match;
             return;
         }
         this.match = undefined;
+        if (ev.data === ":") {
+            this.emojiListOverlay.close();
+            const selection = this.dependencies.selection.getEditableSelection();
+            this.offset = start - 1;
+            this.shouldUpdateEmojiList = true;
+            this.searchNode = selection.startContainer;
+        } else if (this.isSearching(selection)) {
+            this.updateEmojiList();
+        } else {
+            this.emojiListOverlay.close();
+            this.shouldUpdateEmojiList = false;
+        }
+    }
+
+    onKeyDown(ev) {
+        if (ev.key === "Escape") {
+            this.emojiListOverlay.close();
+            this.shouldUpdateEmojiList = false;
+        }
     }
 
     /**
@@ -123,5 +156,51 @@ export class EmojiPlugin extends Plugin {
             },
             target,
         });
+    }
+
+    updateEmojiList = debounce(this._updateEmojiList, 100);
+    _updateEmojiList() {
+        if (!this.shouldUpdateEmojiList) {
+            return;
+        }
+
+        const selection = this.dependencies.selection.getEditableSelection();
+        const searchTerm = this.searchNode.nodeValue.slice(this.offset, selection.endOffset) || "";
+        const emojis = fuzzyLookup(searchTerm, this.allEmojis, (e) => [
+            e.name,
+            ...e.shortcodes,
+            ...e.keywords,
+        ]).slice(0, 8);
+        this.emojiListState.list = emojis.map((e) => ({
+            value: e.codepoints,
+            label: e.shortcodes[0],
+        }));
+        if (searchTerm.length > 2 && emojis.length) {
+            this.emojiListOverlay.open({
+                props: {
+                    state: this.emojiListState,
+                    onSelect: ({ value }) => {
+                        const selection = this.document.getSelection();
+                        selection.extend(this.searchNode, this.offset);
+                        this.dependencies.delete.deleteSelection();
+                        this.dependencies.dom.insert(value);
+                        this.dependencies.history.addStep();
+                        this.emojiListOverlay.close();
+                    },
+                    overlay: this.emojiListOverlay,
+                },
+            });
+        } else {
+            this.emojiListOverlay.close();
+        }
+    }
+
+    isSearching(selection) {
+        return (
+            selection.endContainer === this.searchNode &&
+            this.searchNode.nodeValue &&
+            this.searchNode.nodeValue[this.offset] === ":" &&
+            selection.endOffset > this.offset
+        );
     }
 }

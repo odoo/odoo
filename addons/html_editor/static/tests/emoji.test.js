@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { click, press, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { loadBundle } from "@web/core/assets";
@@ -68,4 +68,44 @@ test("close emoji picker with escape", async () => {
     await animationFrame();
     await expectElementCount(".o-EmojiPicker", 0);
     expect(getContent(el)).toBe("<p>ab[]</p>");
+});
+
+describe("Emoji list picker", () => {
+    test("should open emoji list picker on typing : followed by two chars", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        await loadBundle("web.assets_emoji");
+        await insertText(editor, ":");
+        await animationFrame();
+        expect(".o-we-SuggestionList").toHaveCount(0);
+        await insertText(editor, "w");
+        await animationFrame();
+        expect(".o-we-SuggestionList").toHaveCount(0);
+        await insertText(editor, "a");
+        await expectElementCount(".o-we-SuggestionList", 1);
+    });
+
+    test("should insert emoji using emoji list picker", async () => {
+        const { el, editor } = await setupEditor("<p>[]<br></p>");
+        await loadBundle("web.assets_emoji");
+        await insertText(editor, ":wave");
+        await expectElementCount(".o-we-SuggestionList", 1);
+        await animationFrame();
+        press("enter");
+        expect(getContent(el)).toBe("<p>👋[]</p>");
+        await expectElementCount(".o-we-SuggestionList", 0);
+        await insertText(editor, ":burger");
+        await expectElementCount(".o-we-SuggestionList", 1);
+        await animationFrame();
+        await click(".o-we-SuggestionList > div");
+        expect(getContent(el)).toBe("<p>👋🍔[]</p>");
+    });
+
+    test("should close emoji list picker on escape", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        await loadBundle("web.assets_emoji");
+        await insertText(editor, ":wave");
+        await expectElementCount(".o-we-SuggestionList", 1);
+        press("escape");
+        await expectElementCount(".o-we-SuggestionList", 0);
+    });
 });
