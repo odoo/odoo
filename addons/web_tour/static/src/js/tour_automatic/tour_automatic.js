@@ -58,7 +58,7 @@ export class TourAutomatic {
                             ? 9999999
                             : step.timeout || this.timeout || 10000,
                     action: async (trigger) => {
-                        if (step.observe) {
+                        if (step.observe && this.debugMode) {
                             await step.checkForUndeterminisms(trigger, observeDelay);
                         }
                         this.allowUnload = false;
