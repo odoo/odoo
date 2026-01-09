@@ -879,3 +879,17 @@ class TestRepair(common.TransactionCase):
         sale_order = repair_order.sale_order_id
         sale_order.action_confirm()
         self.assertEqual(sale_order.order_line.qty_delivered, 1.0)
+
+    def test_sale_order_line_discount_on_repair_order(self):
+        """
+        Test that the discount on the sale order line created from a repair order is correctly set.
+        """
+        repair_order = self.repair0
+        repair_order.action_create_sale_order()
+        sale_line = repair_order.move_ids.sale_line_id
+        sale_line.order_id.pricelist_id.discount_policy = 'without_discount'
+        sale_line.discount = 15
+        repair_order.action_validate()
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        self.assertEqual(sale_line.discount, 15)

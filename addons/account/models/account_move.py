@@ -3295,7 +3295,7 @@ class AccountMove(models.Model):
 
         base_lines = [
             x._convert_to_tax_base_line_dict()
-            for x in self.line_ids.filtered(lambda x: x.display_type == 'product' and (not filter_invl_to_apply or filter_invl_to_apply(x)))
+            for x in self.line_ids.filtered(lambda x: x.display_type == 'product')
         ]
 
         to_process = []
@@ -3313,13 +3313,13 @@ class AccountMove(models.Model):
         # This difference is then distributed evenly across the 'tax_values_list' in 'to_process'
         # such that the manual and computed tax amounts match.
         # The updated tax information is later used by '_aggregate_taxes' to compute the right tax amounts (consistently on all levels).
-        tax_lines = self._get_tax_lines_to_aggregate()
+        tax_lines = self.line_ids.filtered('tax_repartition_line_id')
         sign = -1 if self.is_inbound(include_receipts=True) else 1
 
         # Collect the tax_amount_currency/balance from tax lines.
-        current_tax_amount_per_rep_line = {}
+        current_tax_amount_per_tax = {}
         for tax_line in tax_lines:
-            tax_rep_amounts = current_tax_amount_per_rep_line.setdefault(tax_line.tax_repartition_line_id.id, {
+            tax_rep_amounts = current_tax_amount_per_tax.setdefault(tax_line.tax_line_id.id, {
                 'tax_amount_currency': 0.0,
                 'tax_amount': 0.0,
             })
@@ -3327,15 +3327,12 @@ class AccountMove(models.Model):
             tax_rep_amounts['tax_amount'] += sign * tax_line.balance
 
         # Collect the computed tax_amount_currency/tax_amount from the taxes computation.
-        tax_details_per_rep_line = {}
-        aggregated_taxes = self.env['account.tax'].with_company(self.company_id)._aggregate_taxes(
-            to_process,
-            filter_tax_values_to_apply=filter_tax_values_to_apply,
-        )
+        tax_details_per_tax = {}
+        aggregated_taxes = self.env['account.tax'].with_company(self.company_id)._aggregate_taxes(to_process)
         for tax_index, tax_values in aggregated_taxes['tax_details'].items():
             group_tax_details = tax_values['group_tax_details']
-            tax_rep_id = group_tax_details[0]['tax_repartition_line'].id
-            tax_rep_amounts = tax_details_per_rep_line.setdefault(tax_rep_id, {
+            tax_id = tax_index['tax'].id
+            tax_rep_amounts = tax_details_per_tax.setdefault(tax_id, {
                 'tax_amount_currency': 0.0,
                 'tax_amount': 0.0,
                 'distribute_on': [],
@@ -3347,8 +3344,8 @@ class AccountMove(models.Model):
 
         # Dispatch the delta on tax_values.
         for key, currency in (('tax_amount_currency', self.currency_id), ('tax_amount', self.company_currency_id)):
-            for tax_rep_id, computed_tax_rep_amounts in tax_details_per_rep_line.items():
-                current_tax_rep_amounts = current_tax_amount_per_rep_line.get(tax_rep_id, computed_tax_rep_amounts)
+            for tax_id, computed_tax_rep_amounts in tax_details_per_tax.items():
+                current_tax_rep_amounts = current_tax_amount_per_tax.get(tax_id, computed_tax_rep_amounts)
                 diff = current_tax_rep_amounts[key] - computed_tax_rep_amounts[key]
                 abs_diff = abs(diff)
 
@@ -3373,6 +3370,13 @@ class AccountMove(models.Model):
                     abs_delta_to_add = min(abs_diff, currency.rounding * nb_amount_curr_cent)
                     tax_values[key] += diff_sign * abs_delta_to_add
                     abs_diff -= abs_delta_to_add
+
+        # Filter base lines.
+        to_process = [
+            (base_line, to_update_vals, tax_values_list)
+            for base_line, to_update_vals, tax_values_list in to_process
+            if not filter_invl_to_apply or filter_invl_to_apply(base_line['record'])
+        ]
 
         return self.env['account.tax'].with_company(self.company_id)._aggregate_taxes(
             to_process,

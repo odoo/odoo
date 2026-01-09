@@ -609,6 +609,51 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self.assertEqual(invoice.amount_total, 218.042)
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/bis3_ecotaxes_case4.xml')
 
+    def test_export_with_percentage_tax_multiple_repartition_lines(self):
+        tax = self.env['account.tax'].create({
+            'name': 'test_export_with_percentage_tax_multiple_repartition_lines',
+            'amount_type': 'percent',
+            'amount': 21.0,
+            'country_id': self.env.company.account_fiscal_country_id.id,
+            'invoice_repartition_line_ids': [
+                Command.create({'repartition_type': 'base'}),
+                Command.create({
+                    'factor_percent': 80,
+                    'repartition_type': 'tax',
+                }),
+                Command.create({
+                    'factor_percent': 20,
+                    'repartition_type': 'tax',
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({'repartition_type': 'base'}),
+                Command.create({
+                    'factor_percent': 80,
+                    'repartition_type': 'tax',
+                }),
+                Command.create({
+                    'factor_percent': 20,
+                    'repartition_type': 'tax',
+                }),
+            ],
+        })
+
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 100,
+                    'tax_ids': [Command.set(tax.ids)],
+                }
+            ],
+        )
+        self.assertEqual(invoice.amount_total, 121.0)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/bis3_test_export_with_percentage_tax_multiple_repartition_lines.xml')
+
     def test_export_payment_terms(self):
         """
         Tests the early payment discount using the example case from the VBO/FEB.
