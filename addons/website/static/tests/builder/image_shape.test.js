@@ -1,7 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst, advanceTime, animationFrame, setInputRange } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import { Plugin } from "@html_editor/plugin";
+import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { testImg } from "./image_test_helpers";
 
 defineWebsiteModels();
@@ -589,4 +590,75 @@ test("Should keep colors when changing speed and vice versa", async () => {
     });
 
     expect(imgSelector).toHaveAttribute("data-shape-animation-speed", "2");
+});
+
+test("Be able to add and remove shape from custom groups", async () => {
+    class CustomImageShapeGroupsPlugin extends Plugin {
+        static id = "customImageShapeGroups";
+        resources = {
+            image_shape_groups_providers: (shapeGroups) => {
+                const geometrics = shapeGroups.basic.subgroups.geometrics.shapes;
+                const customShapes = {
+                    "html_builder/geometric/geo_shuriken": {
+                        ...geometrics["html_builder/geometric/geo_shuriken"],
+                        selectLabel: "Custom Shuriken",
+                    },
+                    "html_builder/geometric/geo_diamond": {
+                        ...geometrics["html_builder/geometric/geo_diamond"],
+                        selectLabel: "Custom Diamond",
+                    },
+                };
+                const extraShapes = {
+                    "html_builder/geometric/geo_triangle": {
+                        ...geometrics["html_builder/geometric/geo_triangle"],
+                        selectLabel: "Extra Triangle",
+                    },
+                };
+                delete geometrics["html_builder/geometric/geo_shuriken"];
+                delete geometrics["html_builder/geometric/geo_diamond"];
+                return {
+                    basic: {
+                        subgroups: {
+                            custom: {
+                                label: "Custom",
+                                shapes: customShapes,
+                            },
+                        },
+                    },
+                    extra: {
+                        label: "Extra",
+                        subgroups: {
+                            extra: {
+                                label: "Extra",
+                                shapes: extraShapes,
+                            },
+                        },
+                    },
+                };
+            },
+        };
+    }
+    addPlugin(CustomImageShapeGroupsPlugin);
+
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+    await contains(":iframe .test-options-target img").click();
+    await waitSidebarUpdated();
+    await contains("[data-label='Media'] ~ [data-label='Shape'] button.o-hb-btn").click();
+    expect(".o_pager_container").toHaveText(/Custom/);
+    expect("button.o-hb-select-pager-tab[data-group-id='extra']").toHaveCount(1);
+    expect("[data-action-value='html_builder/geometric/geo_shuriken']").toHaveCount(1);
+    expect("[data-action-value='html_builder/geometric/geo_diamond']").toHaveCount(1);
+    await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
+    await waitSidebarUpdated();
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-shape",
+        "html_builder/geometric/geo_shuriken"
+    );
+    expect(
+        "[data-label='Media'] ~ [data-label='Shape'] button.o-hb-btn:not([data-action-id])"
+    ).toHaveText("Custom Shuriken");
 });
