@@ -18,13 +18,28 @@ class ResUsers(models.Model):
         """
         from odoo.addons.via_suite_base.exceptions import TenantMismatchError, UserNotFoundError
         
-        # 1. Tenant Validation (optional - only if tenant claim exists)
+        # 1. Tenant Validation
         _logger.info("OAuth Validation Data: %s", validation)
         token_tenant = validation.get('tenant')
         current_db = self.env.cr.dbname
         
-        if token_tenant:
-            # If tenant claim exists, validate it
+        # Check for Super-Admin / Support bypass roles
+        user_roles = validation.get('roles', [])
+        if not isinstance(user_roles, list):
+            user_roles = [user_roles] if user_roles else []
+            
+        # Also check standard Keycloak location if not found in top-level 'roles'
+        if not any(role in ['via-suite-administrator', 'via-support'] for role in user_roles):
+            realm_access = validation.get('realm_access', {})
+            if isinstance(realm_access, dict):
+                user_roles.extend(realm_access.get('roles', []))
+        
+        is_bypass = any(role in ['via-suite-administrator', 'via-support'] for role in user_roles)
+        
+        if is_bypass:
+            _logger.info("Super-admin/Support bypass active for login. Skipping tenant validation.")
+        elif token_tenant:
+            # If tenant claim exists and not a super-admin, validate it
             # Support both "via-suite-{tenant}" and plain tenant name formats
             expected_db = f"via-suite-{token_tenant}"
             
@@ -34,7 +49,7 @@ class ResUsers(models.Model):
                 raise TenantMismatchError(token_tenant, current_db)
             _logger.info("Tenant validation passed: %s", token_tenant)
         else:
-            _logger.warning("No tenant claim in token for database %s. Proceeding without tenant validation.", current_db)
+            _logger.warning("No tenant claim in token for database %s and no bypass role detected.", current_db)
 
         oauth_uid = validation['user_id']
         email = validation.get('email')
