@@ -79,13 +79,6 @@
                         <field class="d-inline-block" name="l10n_es_edi_verifactu_warning"/>
                     </div>
                 </xpath>
-                <xpath expr="//button[@name='button_cancel']" position="after">
-                    <button name="l10n_es_edi_verifactu_button_cancel"
-                            string="Request Veri*Factu Cancellation"
-                            type="object"
-                            groups="account.group_account_invoice"
-                            invisible="not l10n_es_edi_verifactu_show_cancel_button"/>
-                </xpath>
                 <xpath expr="//notebook" position="inside">
                     <page
                         id="verifactu_tab"
@@ -123,6 +116,18 @@
                         </group>
                     </page>
                 </xpath>
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_l10n_es_edi_verifactu_button_cancel">
+            <field name="name">Request Veri*Factu Cancellation</field>
+            <field name="model_id" ref="l10n_es_edi_verifactu.model_account_move"/>
+            <field name="group_ids" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+            <field name="binding_model_id" ref="l10n_es_edi_verifactu.model_account_move" />
+            <field name="state">code</field>
+            <field name="binding_view_types">form</field>
+            <field name="code">
+                record.l10n_es_edi_verifactu_button_cancel()
             </field>
         </record>
     </data>
