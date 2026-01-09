@@ -512,7 +512,7 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
                 {k: v for k, v in expected_values.items() if not check_id_needed and k != 'id'},
             )
 
-    def create_send_and_print(self, invoices, default=False, *, as_user=None, **kwargs):
+    def create_send_and_print(self, invoices, default=False, *, as_user=None, no_invoice_reminder=False, **kwargs):
         invoices.with_user(as_user).action_send_and_print()
         if len(invoices) == 1:
             if not default and not kwargs.get('sending_methods'):
@@ -520,7 +520,7 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
                 # Therefore by default we deactivate sending methods, unless default parameter is set to True,
                 # or they are explicitly given.
                 kwargs['sending_methods'] = []
-            return self._create_account_move_send_wizard_single(invoices, as_user=as_user, **kwargs)
+            return self._create_account_move_send_wizard_single(invoices, as_user=as_user, no_invoice_reminder=no_invoice_reminder, **kwargs)
         else:
             return self._create_account_move_send_wizard_multi(invoices, as_user=as_user, **kwargs)
 
@@ -584,7 +584,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(self._get_mail_message(invoice))
 
         # Send it again. The PDF must not be created again.
-        wizard = self.create_send_and_print(invoice, sending_methods=['email', 'manual'])
+        wizard = self.create_send_and_print(invoice, no_invoice_reminder=True, sending_methods=['email', 'manual'])
         with patch('odoo.addons.account.models.account_move_send.AccountMoveSend._hook_invoice_document_after_pdf_report_render') as mocked_method:
             results = wizard.action_send_and_print()
             mocked_method.assert_not_called()
@@ -852,7 +852,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         ])
 
         # Resend.
-        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
+        wizard = self.create_send_and_print(invoice, no_invoice_reminder=True, sending_methods=['email'])
         pdf_report_values['id'] = invoice.invoice_pdf_report_id.id
         self._assert_mail_attachments_widget(wizard, [
             pdf_report_values,

@@ -764,10 +764,10 @@ class AccountTestInvoicingCommon(ProductCommon):
         )
 
     @classmethod
-    def _create_account_move_send_wizard_single(cls, move, *, as_user=None, **kwargs):
+    def _create_account_move_send_wizard_single(cls, move, *, as_user=None, no_invoice_reminder=False, **kwargs):
         return cls.env['account.move.send.wizard']\
             .with_user(as_user)\
-            .with_context(active_model='account.move', active_ids=move.ids)\
+            .with_context(active_model='account.move', active_ids=move.ids, no_invoice_reminder=no_invoice_reminder)\
             .create(kwargs)
 
     @classmethod

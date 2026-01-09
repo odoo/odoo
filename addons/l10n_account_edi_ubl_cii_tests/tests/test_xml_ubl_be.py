@@ -583,7 +583,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self.assertEqual(len(invoice_attachments), 2)
 
         # Send again.
-        wizard = self.create_send_and_print(invoice, sending_methods=['manual'])
+        wizard = self.create_send_and_print(invoice, no_invoice_reminder=True, sending_methods=['manual'])
         self.assertRecordValues(wizard, [{
             'sending_methods': ['manual'],
             'invoice_edi_format': 'ubl_bis3',
