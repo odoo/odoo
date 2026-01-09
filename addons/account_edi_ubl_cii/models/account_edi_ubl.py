@@ -721,10 +721,14 @@ class AccountEdiUBL(models.AbstractModel):
         currency = recycling_contribution_values['currency']
         amount = recycling_contribution_values['amount']
         tax = recycling_contribution_values['tax']
+        if 'bebat' in tax.name.lower():
+            charge_reason_code = 'CAV'
+        else:
+            charge_reason_code = 'AEO'
         return {
             '_currency': currency,
             'cbc:ChargeIndicator': {'_text': 'true' if amount > 0.0 else 'false'},
-            'cbc:AllowanceChargeReasonCode': {'_text': 'AEO'},
+            'cbc:AllowanceChargeReasonCode': {'_text': charge_reason_code},
             'cbc:AllowanceChargeReason': {'_text': tax.name},
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
