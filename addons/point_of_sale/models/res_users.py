@@ -17,6 +17,6 @@ class ResUsers(models.Model):
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
         if read_records:
-            read_records[0]['role'] = 'manager' if config.group_pos_manager_id.id in read_records[0]['all_group_ids'] else 'cashier'
+            read_records[0]['_role'] = 'manager' if config.group_pos_manager_id.id in read_records[0]['all_group_ids'] else 'cashier'
             del read_records[0]['all_group_ids']
         return read_records
