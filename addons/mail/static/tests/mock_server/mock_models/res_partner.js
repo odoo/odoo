@@ -19,6 +19,7 @@ export class ResPartner extends webModels.ResPartner {
         string: "Main attachment",
     });
     is_in_call = fields.Boolean({ compute: "_compute_is_in_call" });
+    tz = fields.Char();
 
     _views = {
         form: /* xml */ `
@@ -445,6 +446,6 @@ export class ResPartner extends webModels.ResPartner {
     }
 
     _get_store_avatar_card_fields() {
-        return ["email", "partner_share", "name", "phone"];
+        return ["email", "partner_share", "name", "phone", "tz"];
     }
 }
