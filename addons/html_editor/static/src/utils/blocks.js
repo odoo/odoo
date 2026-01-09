@@ -72,7 +72,7 @@ export function isBlock(node) {
     // We won't call `getComputedStyle(node).display` more than once per node.
     let display = computedStyleDisplayCache.get(node);
     if (display === undefined) {
-        const style = node.ownerDocument.defaultView.getComputedStyle(node);
+        const style = (node.ownerDocument.defaultView ?? window).getComputedStyle(node);
         display = style.display;
         computedStyleDisplayCache.set(node, display);
     }
