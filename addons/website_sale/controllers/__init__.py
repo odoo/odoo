@@ -3,6 +3,7 @@
 from . import (
     cart,
     combo_configurator,
+    comparison,
     delivery,
     main,
     payment,
