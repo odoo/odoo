@@ -6,6 +6,7 @@ import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
 import { registry } from "@web/core/registry";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
 import { OptionsContainerWithSnippetVersionControl } from "./options/options_container";
+import { PowerButtonsPlugin } from "@html_editor/main/power_buttons_plugin";
 
 class CustomizeTabWithSnippetVersionControl extends CustomizeTab {
     static components = {
@@ -45,8 +46,12 @@ export class MassMailingBuilder extends Component {
             "EmbeddedFilePlugin",
             "FilePlugin",
             "AddDocumentsAttachmentPlugin",
+            "BannerPlugin",
         ];
-        const builderEditorPlugins = removePlugins([...CORE_PLUGINS], pluginsToRemove);
+        const builderEditorPlugins = removePlugins(
+            [...CORE_PLUGINS, PowerButtonsPlugin],
+            pluginsToRemove
+        );
         const optionalPlugins = [
             ...(this.props.builderProps.config.dynamicPlaceholder
                 ? removePlugins(

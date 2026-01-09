@@ -162,9 +162,9 @@ export class PowerButtonsPlugin extends Plugin {
             clone.innerText = clone.getAttribute("o-we-hint-text");
             clone.style.width = "fit-content";
             clone.style.visibility = "hidden";
-            this.editable.appendChild(clone);
+            block.after(clone);
             width = clone.getBoundingClientRect().width;
-            this.editable.removeChild(clone);
+            clone.remove();
         });
         return width;
     }
@@ -180,15 +180,37 @@ export class PowerButtonsPlugin extends Plugin {
         overlayStyles.top = "0px";
         overlayStyles.left = "0px";
         const buttonsRect = this.powerButtonsContainer.getBoundingClientRect();
+        let iframeRect = { top: 0, left: 0, right: Infinity };
+        let frameElement;
+        try {
+            frameElement = this.document.defaultView.frameElement;
+        } catch {
+            // We don't access the frameElement if we don't have access to it.
+            // (i.e. iframe origin or sandbox restriction)
+        }
+        if (frameElement) {
+            iframeRect = frameElement.getBoundingClientRect();
+        }
         const placeholderWidth = this.getPlaceholderWidth(block) + 20;
         if (direction === "rtl") {
             overlayStyles.left =
-                blockRect.right - buttonsRect.width - buttonsRect.x - placeholderWidth + "px";
+                blockRect.right -
+                buttonsRect.width -
+                (buttonsRect.x + iframeRect.left) -
+                placeholderWidth +
+                "px";
         } else {
-            overlayStyles.left = blockRect.left - buttonsRect.x + placeholderWidth + "px";
+            overlayStyles.left =
+                blockRect.left - (buttonsRect.x - iframeRect.left) + placeholderWidth + "px";
         }
-        overlayStyles.top = blockRect.top - buttonsRect.top + "px";
+        overlayStyles.top = blockRect.top - (buttonsRect.top - iframeRect.top) + "px";
         overlayStyles.height = blockRect.height + "px";
+        const newButtonRight = this.powerButtonsContainer.getBoundingClientRect().right;
+        if (newButtonRight >= iframeRect.right) {
+            this.powerButtonsContainer
+                .querySelectorAll(".power_button:not(:last-child)")
+                .forEach((el) => el.classList.add("d-none"));
+        }
     }
 
     /**

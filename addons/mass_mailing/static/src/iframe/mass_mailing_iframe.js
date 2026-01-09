@@ -293,6 +293,10 @@ export class MassMailingIframe extends Component {
         if (status(this) === "destroyed") {
             return;
         }
+        this.editor.config.localOverlayContainers = {
+            key: this.env.localOverlayContainerKey,
+            ref: this.overlayRef,
+        };
         this.editor.attachTo(
             this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
         );

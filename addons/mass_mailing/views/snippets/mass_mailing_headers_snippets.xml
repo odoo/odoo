@@ -3,7 +3,7 @@
     <section class="s_header_social o_mail_block_header_social o_mail_snippet_general pt16 pb16" data-name="Left Logo" data-vxml="001">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 pt16 pb16">
+                <div class="col-md-6 pt16 pb16">
                     <div class="o_not_editable">
                         <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;" target="_blank">
                             <img t-if="company_id.logo or user_id.company_id.logo" class="o_b64_image_to_save o_editable_media"
@@ -11,7 +11,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-md-8 o_mail_header_social" style="text-align: right;">
+                <div class="col-md-6 o_mail_header_social" style="text-align: right;">
                     <t t-call="mass_mailing.social_links"/>
                 </div>
             </div>

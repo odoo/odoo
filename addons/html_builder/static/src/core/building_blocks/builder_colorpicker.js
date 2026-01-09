@@ -121,11 +121,13 @@ export class BuilderColorPicker extends Component {
         selectedTab: { type: String, optional: true },
         defaultColor: { type: String, optional: true },
         defaultOpacity: { type: Number, optional: true },
+        colorPrefix: { type: String, optional: true },
     };
     static defaultProps = {
         enabledTabs: ["theme", "gradient", "custom"],
         defaultColor: "#FFFFFF00",
         selectedTab: "theme",
+        colorPrefix: "color-prefix-",
     };
     static components = {
         ColorSelector: ColorSelector,
@@ -146,7 +148,7 @@ export class BuilderColorPicker extends Component {
                 applyColorResetPreview: onPreviewRevert,
                 getUsedCustomColors:
                     this.props.getUsedCustomColors || this.getUsedCustomColors.bind(this),
-                colorPrefix: "color-prefix-",
+                colorPrefix: this.props.colorPrefix,
                 cssVarColorPrefix: "hb-cp-",
                 noTransparency: this.props.noTransparency,
                 enabledTabs: this.props.enabledTabs,

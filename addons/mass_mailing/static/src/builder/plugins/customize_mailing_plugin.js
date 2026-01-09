@@ -73,7 +73,7 @@ export class CustomizeMailingPlugin extends Plugin {
             if (previewRule.includes("> [data-snippet]")) {
                 previewRule = previewRule.replace(
                     "> [data-snippet]",
-                    ".o_snippet_preview_wrap > [data-snippet]"
+                    ".o_snippet_preview_wrap [data-snippet]"
                 );
             }
             newStyleSheet.insertRule(previewRule);
@@ -188,7 +188,7 @@ export class CustomizeMailingPlugin extends Plugin {
 
 export class CustomizeMailingVariable extends BuilderAction {
     static id = "mass_mailing.CustomizeMailingVariable";
-    static dependencies = ["builderActions", "mass_mailing.CustomizeMailingPlugin", "history"];
+    static dependencies = ["builderActions", "color", "mass_mailing.CustomizeMailingPlugin", "history"];
     isApplied({ value }) {
         return this.getValue(...arguments) === value;
     }
@@ -198,9 +198,19 @@ export class CustomizeMailingVariable extends BuilderAction {
      * @param { string } params.property
      */
     getValue({ params }) {
-        return this.dependencies["mass_mailing.CustomizeMailingPlugin"].getVariableValue(
+        const variable = this.dependencies["mass_mailing.CustomizeMailingPlugin"].getVariableValue(
             params.variable
         );
+        if (!params.variable.includes("color") || !/(var|calc)/g.test(variable)) {
+            return variable;
+        }
+        const canvas = this.document.createElement("div");
+        const match = variable.match(/var\(--([\w-]+)\)/)[1];
+        this.dependencies.color.colorElement(canvas, `bg-${match}`, "backgroundColor");
+        this.editable.appendChild(canvas)
+        const color = this.dependencies.color.getElementColors(canvas)["backgroundColor"];
+        canvas.remove();
+        return color;
     }
     apply({ params, value }) {
         const oldValue = this.getValue(...arguments);
