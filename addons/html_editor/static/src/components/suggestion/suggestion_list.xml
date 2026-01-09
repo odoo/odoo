@@ -1,0 +1,12 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.SuggestionList">
+        <div class="o-we-SuggestionList" t-ref="suggestionList">
+            <t t-foreach="props.state.list" t-as="item" t-key="item.value">
+                <div class="d-flex align-items-center py-1 px-2 w-100 cursor-pointer o-navigable" t-on-click.stop="() => this.onClick(item)">
+                    <strong class="px-2 fs-3" t-esc="item.value" />
+                    <em class="text-600 text-truncate" t-esc="item.label" />
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>
