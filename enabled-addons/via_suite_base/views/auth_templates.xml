@@ -1,78 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Override login template to show ViaSuite branded error messages -->
-    <template id="web_login_viasuite" name="ViaSuite Login Errors" inherit_id="web.login">
+    <!-- Override login layout for Odoo 19 + Via Branding -->
+    <template id="web_login_viasuite_layout" name="ViaSuite Login Layout" inherit_id="web.login_layout">
         
-        <!-- Replace error messages section -->
-        <xpath expr="//p[@t-if='error']" position="replace">
-            <!-- ViaSuite Custom Errors -->
-            <div t-if="request.params.get('via_error')" class="alert alert-danger" role="alert">
+        <!-- Replace Logo -->
+        <xpath expr="//img[contains(@t-attf-src, 'company_logo')]" position="replace">
+            <img src="/via_suite_base/static/src/img/via-logo.png" alt="Via" style="max-height: 120px; display: block; margin: 0 auto 2rem;"/>
+        </xpath>
+
+        <!-- Custom Error Display Area & Body Hiding -->
+        <xpath expr="//t[@t-out='0']" position="replace">
+            <t t-if="not request.params.get('via_error')">
+                <t t-out="0"/>
+            </t>
+            
+            <div t-else="" class="text-center">
+                <style>
+                    /* Odoo 19 Branding Cleanup &amp; Adjustments */
+                    .o_login_footer, .o_footer, .figure-caption {
+                        display: none !important;
+                    }
+                    /* Hide 'Powered by Odoo' links */
+                    a[href*="odoo.com"] {
+                        display: none !important;
+                    }
+                    /* Container aesthetics */
+                    .o_database_list {
+                        max-width: 450px !important;
+                    }
+                    .card-body {
+                        padding: 3rem !important;
+                        box-shadow: none !important;
+                        border: none !important;
+                    }
+                    .btn-primary {
+                        background-color: #FF5A1F !important;
+                        border-color: #FF5A1F !important;
+                    }
+                    /* Remove border from the hidden footer area */
+                    .border-top {
+                        border-top: none !important;
+                    }
+                </style>
+
                 <t t-set="via_error" t-value="request.params.get('via_error')"/>
                 
-                <!-- Tenant Mismatch Error -->
-                <div t-if="via_error == 'tenant_mismatch'">
-                    <h4 class="alert-heading">
-                        <i class="fa fa-exclamation-triangle"/> Acesso Negado
-                    </h4>
-                    <p class="mb-2">Você está tentando acessar um tenant diferente do configurado em sua conta.</p>
-                    <hr/>
-                    <p class="mb-0" style="font-size: 0.9rem;">
-                        <strong>O que fazer?</strong><br/>
-                        • Verifique se está acessando o endereço correto<br/>
-                        • Entre em contato com o administrador para verificar suas permissões<br/>
-                        • Email: <a href="mailto:suporte@viafronteira.com" class="alert-link">suporte@viafronteira.com</a>
-                    </p>
+                <div class="alert alert-danger border-0 bg-transparent mb-0" role="alert">
+                    <!-- Tenant Mismatch Error -->
+                    <div t-if="via_error == 'tenant_mismatch'">
+                        <h3 class="text-danger mb-4"><i class="fa fa-exclamation-circle fa-3x"/></h3>
+                        <h4 class="alert-heading text-dark font-weight-bold mb-3">Access Denied</h4>
+                        <p class="text-muted mb-4">You are trying to access a different tenant than the one configured for your account.</p>
+                    </div>
+                    
+                    <!-- User Not Found Error -->
+                    <div t-if="via_error == 'user_not_found'">
+                        <h3 class="text-danger mb-4"><i class="fa fa-user-times fa-3x"/></h3>
+                        <h4 class="alert-heading text-dark font-weight-bold mb-3">User Not Found</h4>
+                        <p class="text-muted mb-4">Your account was authenticated successfully, but you are not registered in this system yet.</p>
+                    </div>
+                    
+                    <!-- Account Disabled Error -->
+                    <div t-if="via_error == 'account_disabled'">
+                        <h3 class="text-danger mb-4"><i class="fa fa-user-lock fa-3x"/></h3>
+                        <h4 class="alert-heading text-dark font-weight-bold mb-3">Account Disabled</h4>
+                        <p class="text-muted mb-4">Your account exists but is currently disabled. Please contact support.</p>
+                    </div>
+                    
+                    <!-- Generic Error -->
+                    <div t-if="via_error not in ['tenant_mismatch', 'user_not_found', 'account_disabled']">
+                        <h3 class="text-danger mb-4"><i class="fa fa-lock fa-3x"/></h3>
+                        <h4 class="alert-heading text-dark font-weight-bold mb-3">Access Denied</h4>
+                        <p class="text-muted mb-4">An unexpected error occurred during authentication.</p>
+                    </div>
+                    
+                    <div class="text-left bg-light p-4 rounded mb-5" style="font-size: 0.95rem;">
+                        <strong class="d-block mb-3 text-dark">What to do?</strong>
+                        <ul class="pl-3 mb-0 text-muted" style="list-style-type: disc;">
+                            <li class="mb-2">Ensure you're using the correct login URL.</li>
+                            <li class="mb-2">Verify your account status with the administrator.</li>
+                            <li>Support: <a href="mailto:suporte@viafronteira.com" class="font-weight-bold" style="color: #FF5A1F;">suporte@viafronteira.com</a></li>
+                        </ul>
+                    </div>
+
+                    <a href="/web/login" class="btn btn-secondary btn-block font-weight-bold py-3 text-uppercase" style="letter-spacing: 1px;">
+                         Back to Login
+                    </a>
                 </div>
-                
-                <!-- User Not Found Error -->
-                <div t-if="via_error == 'user_not_found'">
-                    <h4 class="alert-heading">
-                        <i class="fa fa-user-times"/> Usuário Não Encontrado
-                    </h4>
-                    <p class="mb-2">Sua conta foi autenticada com sucesso, mas você ainda não foi cadastrado neste sistema.</p>
-                    <hr/>
-                    <p class="mb-0" style="font-size: 0.9rem;">
-                        <strong>O que fazer?</strong><br/>
-                        • Solicite ao administrador que crie seu usuário no sistema<br/>
-                        • Email: <a href="mailto:suporte@viafronteira.com" class="alert-link">suporte@viafronteira.com</a>
-                    </p>
-                </div>
-                
-                <!-- Account Disabled Error -->
-                <div t-if="via_error == 'account_disabled'">
-                    <h4 class="alert-heading">
-                        <i class="fa fa-ban"/> Conta Desativada
-                    </h4>
-                    <p class="mb-2">Sua conta existe no sistema mas está atualmente desativada.</p>
-                    <hr/>
-                    <p class="mb-0" style="font-size: 0.9rem;">
-                        <strong>O que fazer?</strong><br/>
-                        • Entre em contato com o administrador para reativar sua conta<br/>
-                        • Email: <a href="mailto:suporte@viafronteira.com" class="alert-link">suporte@viafronteira.com</a>
-                    </p>
-                </div>
-                
-                <!-- Generic Error -->
-                <div t-if="via_error not in ['tenant_mismatch', 'user_not_found', 'account_disabled']">
-                    <h4 class="alert-heading">
-                        <i class="fa fa-lock"/> Acesso Negado
-                    </h4>
-                    <p class="mb-2">Ocorreu um erro durante a autenticação.</p>
-                    <hr/>
-                    <p class="mb-0" style="font-size: 0.9rem;">
-                        <strong>O que fazer?</strong><br/>
-                        • Tente fazer login novamente<br/>
-                        • Se o problema persistir, entre em contato com o suporte<br/>
-                        • Email: <a href="mailto:suporte@viafronteira.com" class="alert-link">suporte@viafronteira.com</a>
-                    </p>
+
+                <!-- Branded Footer (Inside the Card) -->
+                <div class="text-center mt-5 pt-3 border-top" style="color: #adb5bd; font-size: 0.75rem; letter-spacing: 0.5px;">
+                    <p class="mb-1 text-uppercase font-weight-bold" style="color: #6c757d;">ViaSuite</p>
+                    <p class="mb-0">© 2026 ViaFronteira, LLC</p>
                 </div>
             </div>
-            
-            <!-- Keep original error handling for non-ViaSuite errors -->
-            <p t-if="error and not request.params.get('via_error')" class="alert alert-danger">
-                <t t-esc="error"/>
-            </p>
         </xpath>
-        
+
+        <!-- Hide standard Odoo footer elements on Error -->
+        <xpath expr="//div[hasclass('text-center')][hasclass('small')][hasclass('mt-4')]" position="attributes">
+            <attribute name="t-if">not request.params.get('via_error')</attribute>
+        </xpath>
     </template>
 </odoo>
+
+
+
