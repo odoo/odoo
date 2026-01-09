@@ -2181,6 +2181,10 @@ export class ListRenderer extends Component {
         if (this.rootRef.el.closest(".o-overlay-item") !== target.closest(".o-overlay-item")) {
             return;
         }
+        // Specific data attribute to explicitly ignore clicks
+        if (target.closest("[data-list-ignore-click]")) {
+            return;
+        }
         this.props.list.leaveEditMode();
     }
 

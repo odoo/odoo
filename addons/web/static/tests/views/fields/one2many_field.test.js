@@ -4356,6 +4356,35 @@ test("unselecting a line with missing required data", async () => {
     expect("tr.o_data_row").toHaveCount(0);
 });
 
+test("keep focus when click must be ignored", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="turtles">
+                    <list editable="top">
+                        <field name="turtle_int"/>
+                    </list>
+                </field>
+                <div data-list-ignore-click="">
+                    Click me
+                </div>
+            </form>`,
+        resId: 1,
+    });
+
+    // edit the first row
+    await contains(".o_data_cell").click();
+    expect(".o_data_row").toHaveClass("o_selected_row");
+
+    // click on the element on which clicks should be ignored
+    await contains("div[data-list-ignore-click]").click();
+
+    // the line should still be selected
+    expect("tr.o_data_row.o_selected_row").toHaveCount(1);
+});
+
 test("pressing enter in a o2m with a required empty field", async () => {
     Turtle._fields.turtle_foo = fields.Char({ required: true });
     onRpc((args) => {
