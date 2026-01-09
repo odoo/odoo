@@ -515,6 +515,7 @@ test("Should have the correct active shape in the image shape selector", async (
     `);
 
     await contains(":iframe .test-options-target img").click();
+    await waitSidebarUpdated();
     await contains("[data-label='Shape'] .dropdown").click();
     await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
     await waitSidebarUpdated();
