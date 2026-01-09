@@ -12,7 +12,7 @@
     <section class="s_link_list o_mail_snippet_general pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row">
-                <div class="col-12">
+                <div class="col-md-12 col-12">
                     <h1>Popular Links</h1>
                     <ul>
                         <li><a href="#" target="_blank" data-original-title="" title="">7 Design Secrets of the World's Most Beautiful Homes</a></li>
@@ -90,11 +90,11 @@
 </template>
 
 <template id="s_pricelist_boxed" name="Pricelist Boxed">
-    <section class="s_pricelist_boxed o_mail_snippet_general pt72 pb72 o_colored_level" data-scroll-background-ratio="1">
+    <section class="s_pricelist_boxed o_mail_snippet_general pt72 pb72 o_colored_level">
         <div class="container">
             <div class="row">
-                <div class="offset-md-2 col-md-8 px-3 pt48 pb48 o_cc o_cc1 col-12" data-name="Menu">
-                    <div class="row">
+                <div class="col-md-12 px-3 pt48 pb48 o_cc col-12" data-name="Menu">
+                    <div class="row mx-auto">
                         <div class="col-md-12" data-name="Menu Heading">
                             <h2 style="text-align:center;">Our Menu</h2>
                             <p style="text-align:center;">Savor our fresh, local cuisine with a modern twist.<br/>Deliciously crafted for every taste!</p>
@@ -166,14 +166,12 @@
                 </div>
             </div>
             <div class="col-md-2 col-3">
-                <p t-out="price"></p>
+                <p t-out="price" style="text-align: right;"></p>
             </div>
         </div>
         <div t-if="description" class="row">
             <div class="col-md-12 col-12">
-                <p>
-                    <font style="color: rgb(99, 99, 99);" t-out="description"></font>
-                </p>
+                <p t-out="description"/>
             </div>
         </div>
     </div>

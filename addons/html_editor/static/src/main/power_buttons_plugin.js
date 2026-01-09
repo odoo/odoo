@@ -161,9 +161,9 @@ export class PowerButtonsPlugin extends Plugin {
             clone.innerText = clone.getAttribute("o-we-hint-text");
             clone.style.width = "fit-content";
             clone.style.visibility = "hidden";
-            this.editable.appendChild(clone);
+            block.after(clone);
             width = clone.getBoundingClientRect().width;
-            this.editable.removeChild(clone);
+            clone.remove();
         });
         return width;
     }
@@ -179,14 +179,44 @@ export class PowerButtonsPlugin extends Plugin {
         overlayStyles.top = "0px";
         overlayStyles.left = "0px";
         const buttonsRect = this.powerButtonsContainer.getBoundingClientRect();
-        const placeholderWidth = this.getPlaceholderWidth(block) + 20;
-        if (direction === "rtl") {
-            overlayStyles.left =
-                blockRect.right - buttonsRect.width - buttonsRect.x - placeholderWidth + "px";
-        } else {
-            overlayStyles.left = blockRect.left - buttonsRect.x + placeholderWidth + "px";
+        let referenceRect = { top: 0, left: 0 };
+        let frameElement;
+        try {
+            frameElement = this.document.defaultView.frameElement;
+        } catch {
+            // We don't access the frameElement if we don't have access to it.
+            // (i.e. iframe origin or sandbox restriction)
         }
-        overlayStyles.top = blockRect.top - buttonsRect.top + "px";
+        if (frameElement) {
+            referenceRect = frameElement.getBoundingClientRect();
+        }
+        const placeholderWidth = this.getPlaceholderWidth(block) + 20;
+        let newButtonContainerLeft;
+        const editableRect = this.editable.getBoundingClientRect();
+        if (direction === "rtl") {
+            newButtonContainerLeft =
+                blockRect.right + referenceRect.left - buttonsRect.right - placeholderWidth;
+            if (newButtonContainerLeft <= 0) {
+                this.powerButtonsContainer
+                    .querySelectorAll(".power_button:not(:last-child)")
+                    .forEach((el) => el.classList.add("d-none"));
+                const buttonRect = this.powerButtonsContainer
+                    .querySelector(".power_button:last-child")
+                    .getBoundingClientRect();
+                newButtonContainerLeft =
+                    blockRect.right + referenceRect.left - buttonRect.right - placeholderWidth;
+            }
+        } else {
+            newButtonContainerLeft =
+                blockRect.left + referenceRect.left - buttonsRect.left + placeholderWidth;
+            if (newButtonContainerLeft + buttonsRect.width >= editableRect.width) {
+                this.powerButtonsContainer
+                    .querySelectorAll(".power_button:not(:last-child)")
+                    .forEach((el) => el.classList.add("d-none"));
+            }
+        }
+        overlayStyles.left = newButtonContainerLeft + "px";
+        overlayStyles.top = blockRect.top - (buttonsRect.top - referenceRect.top) + "px";
         overlayStyles.height = blockRect.height + "px";
     }
 

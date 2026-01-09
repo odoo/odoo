@@ -1,8 +1,8 @@
 <odoo>
 <template id="s_three_columns" name="Columns">
-    <section class="s_three_columns o_mail_snippet_general o_cc o_cc2 pt32 pb32" data-vxml="001">
+    <section class="s_three_columns o_mail_snippet_general o_cc pt32 pb32" data-vxml="001">
         <div class="container">
-            <div class="row d-flex align-items-stretch">
+            <div class="row">
                 <div class="col-md-4 o_mail_no_colorpicker pt16 pb16 col-12">
                     <div class="card text-bg-white h-100">
                         <div class="o_not_editable">
@@ -61,38 +61,38 @@
 </template>
 
 <template name="Media List" id="s_media_list">
-    <section class="s_media_list pt32 pb32 o_colored_level o_cc o_cc2 o_mail_snippet_general" data-vcss="001" data-vxml="001">
+    <section class="s_media_list pt32 pb32 o_colored_level o_cc o_mail_snippet_general" data-vcss="001" data-vxml="001">
         <div class="container">
             <div class="row s_nb_column_fixed">
                 <div class="col-md-12 s_media_list_item pt16 pb16 col-12" data-name="Media item">
-                    <div class="row s_col_no_resize o_mail_no_colorpicker g-0 align-items-center o_colored_level o_cc o_cc1">
+                    <div class="row s_col_no_resize o_mail_no_colorpicker g-0 align-items-center o_colored_level o_cc">
                         <div class="col-md-4 align-self-stretch s_media_list_img_wrapper o_not_editable col-12">
-                            <img src="/web/image/mass_mailing.s_media_list_default_image_1" class="s_media_list_img o_editable_media h-100 w-100" alt=""/>
+                            <img src="/web/image/mass_mailing.s_media_list_default_image_1" class="s_media_list_img img-fluid o_editable_media" alt=""/>
                         </div>
-                        <div class="col-md-8 s_media_list_body ps-md-4 col-12">
+                        <div class="col-md-8 s_media_list_body ps-md-4 col-12 o_cc">
                             <h2>Media heading</h2>
-                            <p>Use this snippet to build various types of components that feature a left- or right-aligned image alongside textual content. Duplicate the element to create a list that fits your needs.</p>
-                            <p><a href="#">Discover more <span class="fa fa-long-arrow-right align-middle ms-1"/></a></p>
+                            <p>Use this snippet to build various types of components that feature a left- or right-aligned image alongside textual content. Duplicate the element to create a list that fits your needs.
+                            <br/><a href="#">Discover more <span class="fa fa-long-arrow-right align-middle ms-1"/></a></p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12 s_media_list_item pt16 pb16" data-name="Media item">
-                    <div class="row s_col_no_resize o_mail_no_colorpicker g-0 align-items-center o_colored_level o_cc o_cc1">
+                    <div class="row s_col_no_resize o_mail_no_colorpicker g-0 align-items-center o_colored_level o_cc">
                         <div class="col-md-4 align-self-stretch s_media_list_img_wrapper o_not_editable  col-12">
-                            <img src="/web/image/mass_mailing.s_media_list_default_image_2" class="s_media_list_img o_editable_media h-100 w-100" alt=""/>
+                            <img src="/web/image/mass_mailing.s_media_list_default_image_2" class="s_media_list_img o_editable_media img-fluid" alt=""/>
                         </div>
-                        <div class="col-md-8 s_media_list_body ps-md-4 col-12">
+                        <div class="col-md-8 s_media_list_body ps-md-4 col-12 o_cc">
                             <h2>Event heading</h2>
                             <p>Speakers from all over the world will join our experts to give inspiring talks on various topics. Stay on top of the latest business management trends &amp; technologies</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12 s_media_list_item pt16 pb16" data-name="Media item">
-                    <div class="row s_col_no_resize o_mail_no_colorpicker g-0 align-items-center o_colored_level o_cc o_cc1">
+                    <div class="row s_col_no_resize o_mail_no_colorpicker g-0 align-items-center o_colored_level o_cc">
                         <div class="col-md-4 align-self-stretch s_media_list_img_wrapper o_not_editable">
-                            <img src="/web/image/mass_mailing.s_media_list_default_image_3" class="s_media_list_img o_editable_media h-100 w-100" alt=""/>
+                            <img src="/web/image/mass_mailing.s_media_list_default_image_3" class="s_media_list_img o_editable_media img-fluid" alt=""/>
                         </div>
-                        <div class="col-md-8 s_media_list_body ps-md-4 col-12">
+                        <div class="col-md-8 s_media_list_body ps-md-4 col-12 o_cc">
                             <h2>Post heading</h2>
                             <p>Use this component for creating a list of featured elements to which you want to bring attention.</p>
                             <p><a href="#">Continue reading <span class="fa fa-long-arrow-right align-middle ms-1"/></a></p>
@@ -121,8 +121,8 @@
                                     />
                             </div>
                         </div>
-                        <div class="col-10 col-md-9 d-flex flex-column pe-0">
-                            <h6><strong>Easy returns</strong></h6>
+                        <div class="col-10 col-md-9 pe-0">
+                            <p><strong>Easy returns</strong></p>
                         </div>
                     </div>
                 </div>
@@ -139,8 +139,8 @@
                                     />
                             </div>
                         </div>
-                        <div class="col-10 col-md-9 d-flex flex-column pe-0">
-                            <h6><strong>Free shipping</strong></h6>
+                        <div class="col-10 col-md-9 pe-0">
+                            <p><strong>Free shipping</strong></p>
                         </div>
                     </div>
                 </div>
@@ -157,8 +157,8 @@
                                     />
                             </div>
                         </div>
-                        <div class="col-10 col-md-9 d-flex flex-column pe-0">
-                            <h6><strong>Secure payment</strong></h6>
+                        <div class="col-10 col-md-9 pe-0">
+                            <p><strong>Secure payment</strong></p>
                         </div>
                     </div>
                 </div>
@@ -168,10 +168,10 @@
 </template>
 
 <template id="s_numbers" name="Numbers">
-    <section class="s_numbers o_mail_snippet_general o_cc o_cc1" data-vxml="001">
+    <section class="s_numbers o_mail_snippet_general o_cc" data-vxml="001">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 pt24 pb24 o_cc o_cc2 col-12" style="text-align: center;">
+                <div class="col-md-4 pt24 pb24 o_cc col-12" style="text-align: center;">
                     <p><strong><font style="font-size: 48px;">12</font></strong></p>
                     <p>Useful options</p>
                 </div>
@@ -179,7 +179,7 @@
                     <p><strong><font style="font-size: 48px; color: white;">45</font></strong></p>
                     <p><font style="color: white;">Beautiful snippets</font></p>
                 </div>
-                <div class="col-md-4 pt24 pb24 o_cc o_cc2 col-12" style="text-align: center;">
+                <div class="col-md-4 pt24 pb24 o_cc col-12" style="text-align: center;">
                     <p><strong><font style="font-size: 48px;">8</font></strong></p>
                     <p>Amazing pages</p>
                 </div>
@@ -189,7 +189,7 @@
 </template>
 
 <template id="s_event" name="Event">
-    <section class="s_mail_block_event o_mail_snippet_general bg-100" data-vxml="001">
+    <section class="s_mail_block_event o_mail_snippet_general" data-vxml="001">
         <div class="container">
             <div class="row align-items-center">
                 <div class="o_mail_no_colorpicker col-md-6 pt32 pb32 col-12">
@@ -235,7 +235,9 @@
 <template id="s_product_list" name="Items">
     <section class="s_mail_product_list o_mail_snippet_general" data-vxml="001">
         <div class="container pt16">
-            <h2><span class="h3-fs">Our finest selection</span></h2>
+            <div class="ps-3">
+                <h2><span class="h3-fs">Our finest selection</span></h2>
+            </div>
             <div class="row">
                 <div class="col-md-4 o_cc pt16 pb16 col-12">
                     <div class="o_not_editable mb-3">

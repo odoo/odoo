@@ -96,6 +96,7 @@
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
+            'web/static/lib/bootstrap/scss/_alert.scss',
             ('include', 'web._assets_bootstrap_frontend'),
 
             # useful scss from /html_editor web.assets_frontend
@@ -110,6 +111,7 @@
             ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
 
             'html_editor/static/src/scss/bootstrap_overridden.scss',
+            'html_builder/static/src/scss/background.scss',
 
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/odoo_ui_icons/*',

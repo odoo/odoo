@@ -34,9 +34,12 @@ export class PositionPlugin extends Plugin {
         if (this.window !== window) {
             this.addDomListener(this.window, "resize", this.layoutGeometryChange);
         }
-        const scrollableElements = [this.editable, ...ancestors(this.editable)].filter(
-            (node) => couldBeScrollableX(node) || couldBeScrollableY(node)
-        );
+        const scrollableElements = [
+            this.editable,
+            ...ancestors(this.editable).filter(
+                (node) => couldBeScrollableX(node) || couldBeScrollableY(node)
+            ),
+        ];
         for (const scrollableElement of scrollableElements) {
             this.addDomListener(scrollableElement, "scroll", () => {
                 this.layoutGeometryChange();
