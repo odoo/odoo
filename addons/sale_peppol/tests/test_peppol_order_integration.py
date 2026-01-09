@@ -26,46 +26,10 @@ class TestPeppolOrderIntegration(TestPeppolMessage):
 
         cls.test_product_a = cls.env["product.product"].create(
             {
-                "name": "Test Product A",
-                "default_code": "PROD-A-001",
+                "name": "Needle 4mm",
+                "default_code": "121212",
                 "type": "consu",
-                "list_price": 50.0,
-            },
-        )
-
-        cls.laptop_product = cls.env["product.product"].create(
-            {
-                "name": "Laptop Pro X1",
-                "default_code": "LAPTOP-PRO-X1",
-                "type": "consu",
-                "list_price": 100.0,
-            },
-        )
-
-        cls.mouse_product = cls.env["product.product"].create(
-            {
-                "name": "Wireless Mouse Pro",
-                "default_code": "MOUSE-WIRELESS-PRO",
-                "type": "consu",
-                "list_price": 30.0,
-            },
-        )
-
-        cls.service_product = cls.env["product.product"].create(
-            {
-                "name": "IT Consulting Service",
-                "default_code": "SERVICE-IT-CONSULTING",
-                "type": "service",
-                "list_price": 35.0,
-            },
-        )
-
-        cls.startup_product = cls.env["product.product"].create(
-            {
-                "name": "Startup Package Premium",
-                "default_code": "STARTUP-PKG-PREMIUM",
-                "type": "consu",
-                "list_price": 100.0,
+                "list_price": 50,
             },
         )
 
@@ -80,12 +44,24 @@ class TestPeppolOrderIntegration(TestPeppolMessage):
 
         self.env['account_edi_proxy_client.user'].sudo()._cron_peppol_get_new_documents()
 
-        move = self.env['sale.order'].sudo().search([('peppol_message_uuid', '=', FAKE_UUID[1])])
-        self.assertRecordValues(move, [{
+        order = self.env['sale.order'].sudo().search([('peppol_message_uuid', '=', FAKE_UUID[1])])
+        order_tx = order.peppol_order_transaction_ids[0]
+        self.assertRecordValues(
+            order_tx,
+            [{
+                'document_type': 'order',
+                'state': 'to_reply',
+            }],
+        )
+        order.action_accept_peppol_order()
+        self.assertRecordValues(order_tx, [{
+            'state': 'accepted',
+        }])
+        self.assertRecordValues(order, [{
             'peppol_order_state': 'done',
         }])
 
-    def test_order_change(self):
+    def test_order_change_processing(self):
         """ Test complete workflow from XML document to sale order creation and follow up receipt
             of order change request.
         """
@@ -97,15 +73,22 @@ class TestPeppolOrderIntegration(TestPeppolMessage):
 
         cls.mocked_incoming_invoice_fname = 'encrypted_order'
         self.env['account_edi_proxy_client.user'].sudo()._cron_peppol_get_new_documents()
+
+        # Test order amount total
         order = self.env['sale.order'].sudo().search([('peppol_message_uuid', '=', FAKE_UUID[1])])
         self.assertEqual(order.amount_total, 7245.0)
 
         cls.mocked_incoming_invoice_fname = 'encrypted_order_change'
         self.env['account_edi_proxy_client.user'].sudo()._cron_peppol_get_new_documents()
+
+        # Test log notes
+        messages = order.message_ids.filtered(lambda m: 'Line changed: Needle 4mm' in m.body)
+        self.assertTrue(messages)
+
         order.action_apply_peppol_order_change()
         self.assertEqual(order.amount_total, 4855.0)
 
-    def test_order_cancel(self):
+    def test_order_cancel_processing(self):
         """ Test complete workflow from XML document to sale order creation and follow up receipt
             of order cancellation request.
         """

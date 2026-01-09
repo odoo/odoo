@@ -28,6 +28,7 @@ class SaleOrder(models.Model):
         string="EDI Trackers",
     )
 
+    l10n_sg_has_pending_order = fields.Boolean(compute='_has_pending_order')
     l10n_sg_has_pending_order_change = fields.Boolean(compute='_has_pending_order_change')
     l10n_sg_has_pending_order_cancel = fields.Boolean(compute='_has_pending_order_cancel')
 
@@ -64,10 +65,30 @@ class SaleOrder(models.Model):
             }
         return super()._get_edi_decoder(file_data, new)
 
+    def action_accept_peppol_order(self):
+        order_tx = self.peppol_order_transaction_ids.filtered_domain([
+            ('document_type', '=', 'order'),
+        ]).sorted()[:1]
+        if not order_tx:
+            raise UserError(self.env._("There is no related advanced order transaction."))
+
+        self._send_order_response_advanced(order_tx, "AP")
+        order_tx.state = 'accepted'
+
+    def action_reject_peppol_order(self):
+        order_tx = self.peppol_order_transaction_ids.filtered_domain([
+            ('document_type', '=', 'order'),
+        ]).sorted()[:1]
+        if not order_tx:
+            raise UserError(self.env._("There is no related advanced order transaction."))
+
+        self._send_order_response_advanced(order_tx, "RE")
+        order_tx.state = 'rejected'
+
     def action_apply_peppol_order_change(self):
-        order_change_tx = self.peppol_order_transaction_ids.search([
+        order_change_tx = self.peppol_order_transaction_ids.filtered_domain([
             ('document_type', '=', 'order_change'),
-        ], limit=1)
+        ]).sorted()[:1]
         if not order_change_tx:
             raise UserError(self.env._("There is no pending order change request for this order."))
 
@@ -78,9 +99,9 @@ class SaleOrder(models.Model):
         order_change_tx.state = 'accepted'
 
     def action_reject_peppol_order_change(self):
-        order_change_tx = self.peppol_order_transaction_ids.search([
+        order_change_tx = self.peppol_order_transaction_ids.filtered_domain([
             ('document_type', '=', 'order_change'),
-        ], limit=1)
+        ]).sorted()[:1]
         if not order_change_tx:
             raise UserError(self.env._("There is no pending order change request for this order."))
 
@@ -89,9 +110,9 @@ class SaleOrder(models.Model):
 
     def action_apply_peppol_order_cancel(self):
         for order in self:
-            order_cancel_tx = order.peppol_order_transaction_ids.search([
+            order_cancel_tx = order.peppol_order_transaction_ids.filtered_domain([
                 ('document_type', '=', 'order_cancel'),
-            ], limit=1)
+            ]).sorted()[:1]
             if not order_cancel_tx:
                 raise UserError(order.env._("There is no pending order change request for this order."))
 
@@ -103,9 +124,9 @@ class SaleOrder(models.Model):
 
     def action_reject_peppol_order_cancel(self):
         for order in self:
-            order_cancel_tx = order.peppol_order_transaction_ids.search([
+            order_cancel_tx = order.peppol_order_transaction_ids.filtered_domain([
                 ('document_type', '=', 'order_cancel'),
-            ], limit=1)
+            ]).sorted()[:1]
             if not order_cancel_tx:
                 raise UserError(order.env._("There is no pending order change request for this order."))
 
@@ -142,19 +163,28 @@ class SaleOrder(models.Model):
     # -------------------------------------------------------------------------
 
     @api.depends('peppol_order_transaction_ids')
+    def _has_pending_order(self):
+        for order in self:
+            order_tx = order.peppol_order_transaction_ids.filtered_domain([
+                ('document_type', '=', 'order'),
+                ('state', '=', 'to_reply'),
+            ]).sorted()[:1]
+            order.l10n_sg_has_pending_order_change = bool(order_tx)
+
+    @api.depends('peppol_order_transaction_ids')
     def _has_pending_order_change(self):
         for order in self:
-            order_change_tx = order.peppol_order_transaction_ids.search([
+            order_change_tx = order.peppol_order_transaction_ids.filtered_domain([
                 ('document_type', '=', 'order_change'),
                 ('state', '=', 'to_reply'),
-            ], limit=1)
+            ]).sorted()[:1]
             order.l10n_sg_has_pending_order_change = bool(order_change_tx)
 
     @api.depends('peppol_order_transaction_ids')
     def _has_pending_order_cancel(self):
         for order in self:
-            order_cancel_tx = order.peppol_order_transaction_ids.search([
+            order_cancel_tx = order.peppol_order_transaction_ids.filtered_domain([
                 ('document_type', '=', 'order_cancel'),
                 ('state', '=', 'to_reply'),
-            ], limit=1)
+            ]).sorted()[:1]
             order.l10n_sg_has_pending_order_cancel = bool(order_cancel_tx)

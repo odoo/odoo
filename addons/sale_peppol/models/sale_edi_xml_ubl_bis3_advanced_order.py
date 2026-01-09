@@ -153,7 +153,7 @@ class SaleEdiXmlUbl_Bis3_OrderChange(models.AbstractModel):
                 html_output += "</ul>"
 
         html_output += "</ul>"
-        order.message_post(body=html_output)
+        order.message_post(body=Markup(html_output))
 
     def process_peppol_order_change(self, order, attachment):
         """

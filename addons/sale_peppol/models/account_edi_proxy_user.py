@@ -23,7 +23,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         if file_data['xml_tree'].findtext('.//{*}ProfileID') == 'urn:fdc:peppol.eu:poacc:bis:advanced_ordering:3':
             return self._peppol_import_advanced_order(attachment, peppol_state, uuid)
 
-        return super()._peppol_import_document(self, attachment, peppol_state, uuid, journal)
+        return super()._peppol_import_document(attachment, peppol_state, uuid, journal)
 
     def _peppol_import_advanced_order(self, attachment, peppol_state, uuid):
         """Import documents related to advanced order. Note that for order change and order
