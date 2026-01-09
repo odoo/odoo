@@ -430,6 +430,9 @@ export class ListPlugin extends Plugin {
             if (li.style.listStyle !== "none") {
                 li.style.listStyle = null;
             }
+            if (!isListElement(li.firstChild)) {
+                li.classList.remove("oe-nested");
+            }
         }
         removeClass(newList, "o_checklist");
         if (newMode === "CL") {
