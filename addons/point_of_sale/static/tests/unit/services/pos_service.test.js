@@ -435,6 +435,15 @@ describe("pos_store.js", () => {
         expect(grouped[0][0]).toBe("1");
         expect(grouped[0][1][0].name).toBe("Multi Category Product");
         expect(grouped[0][1][1].name).toBe("TEST");
+
+        // Case 5: Grouping with category 'Food' selected (parent of 'Burger' & 'Pizza')
+        store.selectedCategory = store.models["pos.category"].get(3);
+        grouped = store.productToDisplayByCateg;
+        expect(grouped.length).toBe(3);
+        expect(grouped[0][0]).toBe("3");
+        expect(grouped[0][1][0].name).toBe("Club sandwich");
+        expect(grouped[1][1][0].name).toBe("Bacon burger");
+        expect(grouped[2][1][0].name).toBe("Pizza margarita");
     });
 
     test("onDeleteOrder", async () => {
