@@ -27,8 +27,10 @@ export class NavTabsHeaderMiddleButtons extends Component {
     }
 
     removeItem() {
-        this.callOperation(() => {
-            this.props.removeItem(this.env.getEditingElement());
-        });
+        if (this.state.tabEls.length > 2) {
+            this.callOperation(() => {
+                this.props.removeItem(this.env.getEditingElement());
+            });
+        }
     }
 }

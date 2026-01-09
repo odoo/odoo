@@ -69,4 +69,11 @@ test("Add/remove avatars", async () => {
     expect(":iframe .s_avatars .s_avatars_avatar.o_avatar:first").toHaveStyle("z-index: 3");
     expect(":iframe .s_avatars .s_avatars_avatar.o_avatar:last").toHaveStyle("z-index: 2");
     expect(removeButtonSelector).not.toHaveAttribute("disabled");
+
+    // Check that the last avatar is never removed, even if the user clicks fast
+    // on the "remove" button. For this test, we simulate a double click when
+    // only two avatars are present.
+    await contains(removeButtonSelector).dblclick();
+    expect(":iframe .s_avatars .s_avatars_avatar.o_avatar").toHaveCount(1);
+    expect(removeButtonSelector).toHaveAttribute("disabled");
 });

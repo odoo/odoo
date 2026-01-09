@@ -26,8 +26,10 @@ export class AvatarsHeaderMiddleButtons extends Component {
     }
 
     removeAvatar() {
-        this.callOperation(() => {
-            this.props.removeAvatar(this.env.getEditingElement());
-        });
+        if (!this.state.disableRemoveButton) {
+            this.callOperation(() => {
+                this.props.removeAvatar(this.env.getEditingElement());
+            });
+        }
     }
 }
