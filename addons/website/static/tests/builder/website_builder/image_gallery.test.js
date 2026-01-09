@@ -108,10 +108,10 @@ test.skip("Remove all images in gallery", async () => {
 });
 
 test("Change gallery layout", async () => {
-    await setupWbsiteBuilderWithImageWall();
+    const { waitSidebarUpdated } = await setupWbsiteBuilderWithImageWall();
 
     await contains(":iframe img").click();
-    await waitFor("[data-label='Mode']");
+    await waitSidebarUpdated();
     expect("[data-label='Mode']").toHaveCount(1);
     expect(queryOne("[data-label='Mode'] .dropdown-toggle").textContent).toBe("Masonry");
     await contains("[data-label='Mode'] .dropdown-toggle").click();
