@@ -49,6 +49,18 @@ class TestChannelInternals(MailCommon, HttpCase):
         with self.assertRaises(ValidationError):
             public_channel._add_members(users=user_public)
 
+    @users("employee")
+    def test_channel_creator_is_owner(self):
+        create_vals = [
+            {"name": "Channel Owner Test Channel default"},
+            {"name": "Channel Owner Test Group", "channel_type": "group"},
+            {"name": "Channel Owner Test Channel", "channel_type": "channel"},
+        ]
+        channels = self.env["discuss.channel"].create(create_vals)
+        self.assertEqual(
+            len(channels.filtered(lambda c: c.self_member_id.sudo().channel_role == "owner")), 3
+        )
+
     @users('employee')
     @freeze_time("2020-03-22 10:42:06")
     def test_channel_members(self):
