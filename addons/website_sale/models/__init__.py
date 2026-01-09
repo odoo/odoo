@@ -10,6 +10,7 @@ from . import (
     payment_token,
     payment_transaction,
     product_attribute,
+    product_attribute_category,
     product_document,
     product_feed,
     product_image,
