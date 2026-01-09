@@ -314,6 +314,7 @@ describe("field HTML", () => {
             resId: 1,
             arch: mailViewArch,
         });
+        await waitFor(".o_mass_mailing_theme_selector_iframe_container iframe:not([hidden])", { timeout: 3000 });
         await click(waitFor(":iframe .o_mailing_template_preview_wrapper [data-name='default']"));
         await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
         expect(await waitFor(":iframe .o_layout", { timeout: 3000 })).toHaveClass(
@@ -327,8 +328,8 @@ describe("field HTML", () => {
         await waitFor(".hb-row .hb-row-label span:contains(Domain)");
         expect(queryOne(".hb-row span.fa-filter + span").textContent.toLowerCase()).toBe("id = 1");
         await clickSave();
-        await waitFor("table[t-if]");
-        expect(queryOne("table[t-if]")).toHaveAttribute(
+        await waitFor(".o_mail_body_inline table[t-if]");
+        expect(queryOne(".o_mail_body_inline table[t-if]")).toHaveAttribute(
             "t-if",
             'object.filtered_domain([("id", "=", 1)])'
         );
@@ -392,6 +393,7 @@ describe("field HTML: with loaded assets", () => {
             resId: 1,
             arch: mailViewArch,
         });
+        await waitFor(".o_mass_mailing_theme_selector_iframe_container iframe:not([hidden])", { timeout: 3000 });
         await click(waitFor(":iframe .o_mailing_template_preview_wrapper [data-name='default']"));
         await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
         const { bundleControls } = await htmlField.ensureIframeLoaded();
