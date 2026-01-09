@@ -94,6 +94,46 @@ test("Rounding sale UP 10 (all methods)", async () => {
     expect(order.canBeValidated()).toBe(true);
     expect(order.appliedRounding).toBe(7.46);
     expect(order.change).toBe(0);
+    order.payment_ids[0].delete();
+
+    order.addPaymentline(cardPm);
+    expect(order.payment_ids[0].amount).toBe(60);
+    order.payment_ids[0].setAmount(70);
+    expect(order.payment_ids[0].amount).toBe(70);
+    expect(order.canBeValidated()).toBe(true);
+    expect(order.appliedRounding).toBe(0);
+    expect(order.change).toBe(-10);
+});
+
+test("Rounding sale DOWN 10 (all methods)", async () => {
+    const store = await setupPosEnv();
+    const { cashPm, cardPm } = prepareRoundingVals(store, 10, "DOWN", false);
+    const order = await getFilledOrderForPriceCheck(store);
+
+    expect(order.displayPrice).toBe(52.54);
+
+    order.addPaymentline(cardPm);
+    expect(order.payment_ids[0].amount).toBe(50);
+    expect(order.canBeValidated()).toBe(true);
+    expect(order.appliedRounding).toBe(-2.54);
+    expect(order.change).toBe(0);
+    order.payment_ids[0].delete();
+    expect(order.canBeValidated()).toBe(true);
+
+    order.addPaymentline(cashPm);
+    expect(order.payment_ids[0].amount).toBe(50);
+    expect(order.canBeValidated()).toBe(true);
+    expect(order.appliedRounding).toBe(-2.54);
+    expect(order.change).toBe(0);
+    order.payment_ids[0].delete();
+
+    order.addPaymentline(cardPm);
+    expect(order.payment_ids[0].amount).toBe(50);
+    order.payment_ids[0].setAmount(70);
+    expect(order.payment_ids[0].amount).toBe(70);
+    expect(order.canBeValidated()).toBe(true);
+    expect(order.appliedRounding).toBe(0);
+    expect(order.change).toBe(-20);
 });
 
 test("Rounding sale DOWN 1 (cash only)", async () => {
