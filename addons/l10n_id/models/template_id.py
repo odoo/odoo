@@ -35,5 +35,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_id_99900004',
                 'account_sale_tax_id': 'tax_ST4',
                 'account_purchase_tax_id': 'tax_PT4',
+                'deferred_expense_account_id': 'l10n_id_11210040',
+                'deferred_revenue_account_id': 'l10n_id_28110030',
             },
         }
