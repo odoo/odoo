@@ -556,48 +556,39 @@ const GPSPicker = InputUserValueWidget.extend({
             return this._gmapCacheGPSToPlace[gps];
         }
 
-        await this.contentWindow.google.maps.importLibrary("places");
         const p = gps.substring(1).slice(0, -1).split(',');
-        const location = new this.contentWindow.google.maps.LatLng(p[0] || 0, p[1] || 0);
-        return new Promise(resolve => {
-            const service = new this.contentWindow.google.maps.places.PlacesService(document.createElement('div'));
-            service.nearbySearch({
-                // Do a 'nearbySearch' followed by 'getDetails' to avoid using
-                // GMap Geocoder which the user may not have enabled... but
-                // ideally Geocoder should be used to get the exact location at
-                // those coordinates and to limit billing query count.
-                location: location,
-                radius: 1,
-            }, (results, status) => {
-                const GMAP_CRITICAL_ERRORS = [
-                    this.contentWindow.google.maps.places.PlacesServiceStatus.REQUEST_DENIED,
-                    this.contentWindow.google.maps.places.PlacesServiceStatus.UNKNOWN_ERROR
-                ];
-                if (status === this.contentWindow.google.maps.places.PlacesServiceStatus.OK) {
-                    service.getDetails({
-                        placeId: results[0].place_id,
-                        fields: ['geometry', 'formatted_address'],
-                    }, (place, status) => {
-                        if (status === this.contentWindow.google.maps.places.PlacesServiceStatus.OK) {
-                            this._gmapCacheGPSToPlace[gps] = place;
-                            resolve(place);
-                        } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
-                            if (notify) {
-                                this._notifyGMapError();
-                            }
-                            resolve();
-                        }
-                    });
-                } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
-                    if (notify) {
-                        this._notifyGMapError();
-                    }
-                    resolve();
-                } else {
-                    resolve();
-                }
+        try {
+            const { Place } = await this.contentWindow.google.maps.importLibrary("places");
+            const { places } = await Place.searchNearby({
+                fields: ["id", "location"],
+                locationRestriction: {
+                    center: { lat: Number(p[0]), lng: Number(p[1]) },
+                    radius: 10,
+                },
+                maxResultCount: 1,
             });
-        });
+            if (!places || !places.length) {
+                return null;
+            }
+            const placeResult = places[0];
+            await placeResult.fetchFields({
+                fields: ["id", "location", "formattedAddress"],
+            });
+            const place = {
+                place_id: placeResult.id,
+                formatted_address: placeResult.formattedAddress,
+                geometry: {
+                    location: placeResult.location,
+                },
+            };
+            this._gmapCacheGPSToPlace[gps] = place;
+            return place;
+        } catch {
+            if (notify) {
+                this._notifyGMapError();
+            }
+            return null;
+        }
     },
     /**
      * Indicates to the user there is an error with the google map API and
