@@ -719,6 +719,10 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_optional_product(self):
         # optional product in pos
+        image = _create_image(color="orange")
+
+        self.small_shelf.write({'image_1920': image})
+
         self.desk_pad.write({'pos_optional_product_ids': [
             Command.set([ self.small_shelf.id ])
         ]})
@@ -727,9 +731,14 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pos_optional_product_ids': [Command.set([self.configurable_chair.id])],
             'barcode': 'lettertray'
         })
-
+        # Case 1: Images ON → images must be visible in optional product dialog
+        self.main_pos_config.show_product_images = True
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_optional_product')
+
+        # Case 2: Images OFF → product images should not be shown
+        self.main_pos_config.show_product_images = False
+        self.start_pos_tour('test_optional_product_image_not_display')
 
     @skip('Temporary to fast merge new valuation')
     def test_05_ticket_screen(self):
