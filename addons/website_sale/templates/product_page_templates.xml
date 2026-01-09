@@ -928,15 +928,13 @@
     </template>
 
     <template id="website_sale.tax_indication" active="False">
-        <span
+        <small
             t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-            class="fs-6 fw-normal text-muted text-nowrap"
+            class="text-muted text-nowrap"
         >
             (Tax excluded)
-        </span>
-        <span t-else="" class="fs-6 fw-normal text-muted text-nowrap">
-            (Tax included)
-        </span>
+        </small>
+        <small t-else="" class="text-muted text-nowrap">(Tax included)</small>
     </template>
 
     <template id="website_sale.product_price">
@@ -946,7 +944,7 @@
         >
             <div
                 name="product_price_container"
-                class="css_editable_mode_hidden d-flex align-items-baseline justify-content-end gap-2 flex-wrap h5 mb-0 text-wrap"
+                t-attf-class="css_editable_mode_hidden d-flex align-items-baseline {{is_view_active('website_sale.cta_wrapper_boxed') and 'justify-content-end'}} gap-2 flex-wrap h5 mb-0 text-wrap"
             >
                 <span class="oe_price"
                       style="white-space: nowrap;"
@@ -958,7 +956,6 @@
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                       name="product_list_price"
                 />
-                <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <del
                     name="product_price_strikethrough"
                     t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])"
@@ -978,13 +975,20 @@
             >
                 <span t-field="product.list_price"
                       t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
-                <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <del t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])">
                     <bdi dir="inherit">
                     <span t-field="product.compare_list_price"
                           t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
                     </bdi>
                 </del>
+
+            </div>
+            <div
+                name="tax_indicator"
+                t-if="not combination_info.get('tax_disclaimer') and is_view_active('website_sale.tax_indication')"
+                t-attf-class="d-flex {{is_view_active('website_sale.cta_wrapper_boxed') and 'justify-content-end'}}"
+            >
+                <t t-call="website_sale.tax_indication"/>
             </div>
             <small t-if="combination_info.get('tax_disclaimer')" class="text-muted">
                 <t t-out="combination_info['tax_disclaimer']"/>

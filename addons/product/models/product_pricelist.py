@@ -16,14 +16,11 @@ class ProductPricelist(models.Model):
     def _default_currency_id(self):
         return self.env.company.currency_id.id
 
-    def _base_domain_item_ids(self):
+    def _domain_item_ids(self):
         return [
             '|', ('product_tmpl_id', '=', None), ('product_tmpl_id.active', '=', True),
             '|', ('product_id', '=', None), ('product_id.active', '=', True),
         ]
-
-    def _domain_item_ids(self):
-        return self._base_domain_item_ids()
 
     name = fields.Char(string="Pricelist Name", required=True, translate=True)
 
