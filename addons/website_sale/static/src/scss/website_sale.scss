@@ -1068,6 +1068,10 @@ $-product-radius-map: (
     container: product-details / inline-size;
     z-index: 0;
 
+    &:has(.s_popup) {
+        z-index: 2;
+    }
+    
     @include media-breakpoint-up(lg) {
         padding-top: var(--o-wsale-product-col-details-padding-top-lg, 0px);
     }
