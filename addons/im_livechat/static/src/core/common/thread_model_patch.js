@@ -29,15 +29,6 @@ patch(Thread.prototype, {
             },
         });
     },
-    get autoOpenChatWindowOnNewMessage() {
-        return (
-            (this.channel?.channel_type === "livechat" &&
-                !this.store.chatHub.compact &&
-                this.channel.self_member_id) ||
-            super.autoOpenChatWindowOnNewMessage
-        );
-    },
-
     get composerHidden() {
         return this.channel?.channel_type === "livechat" && this.livechat_end_dt;
     },
