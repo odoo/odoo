@@ -87,7 +87,7 @@ def _print_debug(self, *args):
 smtplib.SMTP._print_debug = _print_debug
 
 # Python 3: workaround for bpo-35805, only partially fixed in Python 3.8.
-RFC5322_IDENTIFICATION_HEADERS = {'message-id', 'in-reply-to', 'references', 'resent-msg-id'}
+RFC5322_IDENTIFICATION_HEADERS = {'message-id', 'in-reply-to', 'references', 'resent-msg-id', 'subject'}
 _noFoldPolicy = email.policy.SMTP.clone(max_line_length=None)
 class IdentificationFieldsNoFoldPolicy(email.policy.EmailPolicy):
     # Override _fold() to avoid folding identification fields, excluded by RFC2047 section 5
