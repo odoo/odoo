@@ -12,11 +12,7 @@ export class ProductProduct extends Base {
     static pythonModel = "product.product";
 
     getImageUrl() {
-        return (
-            (this.image_128 &&
-                `/web/image?model=product.product&field=image_128&id=${this.id}&unique=${this.write_date}`) ||
-            ""
-        );
+        return `/web/image?model=product.product&field=image_128&id=${this.id}&unique=${this.write_date}`;
     }
 
     get searchString() {

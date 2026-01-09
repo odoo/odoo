@@ -86,11 +86,7 @@ export class ProductTemplate extends ProductTemplateAccounting {
     }
 
     getImageUrl() {
-        return (
-            (this.image_128 &&
-                `/web/image?model=product.template&field=image_128&id=${this.id}&unique=${this.write_date}`) ||
-            ""
-        );
+        return `/web/image?model=product.template&field=image_128&id=${this.id}&unique=${this.write_date}`;
     }
 
     _isArchivedCombination(attributeValueIds) {
