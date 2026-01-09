@@ -1,8 +1,10 @@
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
+import { Plugin } from "@html_editor/plugin";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
+    addPlugin,
     addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -447,4 +449,67 @@ test("background shape detection is compatible with previous ones (web_editor)",
         "data-action-value",
         "html_builder/Connections/01"
     );
+});
+
+test("can customize background shape groups", async () => {
+    class CustomBackgroundShapeGroupsPlugin extends Plugin {
+        static id = "customBackgroundShapeGroups";
+        resources = {
+            background_shape_groups_providers: (shapeGroups) => {
+                const connections = shapeGroups.basic.subgroups.connections.shapes;
+                const customShapes = {
+                    "html_builder/Connections/01": {
+                        ...connections["html_builder/Connections/01"],
+                        selectLabel: "Custom 01",
+                    },
+                    "html_builder/Connections/02": {
+                        ...connections["html_builder/Connections/02"],
+                        selectLabel: "Custom 02",
+                    },
+                };
+                const extraShapes = {
+                    "html_builder/Connections/03": {
+                        ...connections["html_builder/Connections/03"],
+                        selectLabel: "Extra 03",
+                    },
+                };
+                delete connections["html_builder/Connections/01"];
+                delete connections["html_builder/Connections/02"];
+                return {
+                    basic: {
+                        subgroups: {
+                            custom: {
+                                label: "Custom",
+                                shapes: customShapes,
+                            },
+                        },
+                    },
+                    extra: {
+                        label: "Extra",
+                        subgroups: {
+                            extra: {
+                                label: "Extra",
+                                shapes: extraShapes,
+                            },
+                        },
+                    },
+                };
+            },
+        };
+    }
+    addPlugin(CustomBackgroundShapeGroupsPlugin);
+
+    await setupWebsiteBuilder(`<section>AAAA</section>`);
+    await contains(":iframe section").click();
+    await contains("div[data-label='Shape'] button.o-hb-btn").click();
+    expect(".o_pager_container").toHaveText(/Custom/);
+    expect("button.o-hb-select-pager-tab[data-group-id='extra']").toHaveCount(1);
+    expect("[data-action-value='html_builder/Connections/01']").toHaveCount(1);
+    expect("[data-action-value='html_builder/Connections/02']").toHaveCount(1);
+    await contains("[data-action-value='html_builder/Connections/01']").click();
+    expect(":iframe section").toHaveAttribute(
+        "data-oe-shape-data",
+        '{"shape":"html_builder/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'
+    );
+    expect("div[data-label='Shape'] button:not([data-action-id])").toHaveText("Custom 01");
 });
