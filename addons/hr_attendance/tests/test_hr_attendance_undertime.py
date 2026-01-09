@@ -177,7 +177,7 @@ class TestHrAttendanceUndertime(HttpCase):
         self.assertFalse(overtime, 'No overtime record should exist for that employee')
 
         checkin_am.write({'check_out': datetime(2021, 1, 4, 12, 0)})
-        overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
+        overtime = checkin_am._linked_overtimes()
         self.assertTrue(overtime, 'An overtime record should be created')
         self.assertEqual(overtime.duration, -4)
 
@@ -185,6 +185,7 @@ class TestHrAttendanceUndertime(HttpCase):
             'employee_id': self.employee.id,
             'check_in': datetime(2021, 1, 4, 13, 0),
         })
+        overtime = checkin_pm._linked_overtimes()
         self.assertFalse(overtime.exists(), 'Overtime duration should not exist when an attendance has not been checked out.')
         checkin_pm.write({'check_out': datetime(2021, 1, 4, 18, 0)})
         overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
@@ -462,3 +463,25 @@ class TestHrAttendanceUndertime(HttpCase):
         overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id)])
         self.assertTrue(overtime, 'Overtime entry should exist since the tolerance has been lowered.')
         self.assertAlmostEqual(overtime.duration, -(10 / 60), places=2, msg='Overtime should be equal to -10 minutes.')
+
+    def test_overtime_on_multiple_days(self):
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 8, 8, 0),  # Friday 8 AM - 17 PM work, 17 - 24 overtime (7 hours)
+            'check_out': datetime(2021, 1, 9, 3, 0),  # Saturday 0-3 AM overtime (3 hours)
+        })
+
+        overtime = attendance._linked_overtimes()
+        self.assertEqual(len(overtime), 2, 'There should be 2 overtime records for that attendance.')
+        self.assertEqual(sum(overtime.mapped('duration')), 10, 'There should be a total of 10 hours of overtime for that attendance.')
+
+        attendance.write({
+            'check_out': datetime(2021, 1, 8, 20, 0),
+        })
+
+        overtime = attendance._linked_overtimes()
+        self.assertEqual(len(overtime), 1, 'There should have only 1 overtime for that attendance after modification.')
+        self.assertEqual(sum(overtime.mapped('duration')), 3, 'There should be a total of 3 hours of overtime for that attendance after modification.')
+
+        all_overtimes = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id)])
+        self.assertEqual(len(all_overtimes), 1, 'There should be only 1 overtime record in total for that employee.')
