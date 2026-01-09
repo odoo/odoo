@@ -3,11 +3,13 @@
 from odoo.service.common import exp_version
 from odoo import http, _
 from odoo.http import request
+from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import float_round, py_to_js_locale, SQL
 from odoo.tools.image import image_data_uri
 
 import datetime
+from requests.exceptions import RequestException
 
 class HrAttendance(http.Controller):
     @staticmethod
@@ -53,20 +55,10 @@ class HrAttendance(http.Controller):
     @staticmethod
     def _get_geoip_response(mode, latitude=False, longitude=False):
         # First try to reverse lookup the country and city through coordinates
-        if latitude and longitude:
-            geo_obj = request.env['base.geocoder']
-            location_request = geo_obj._call_openstreetmap_reverse(latitude, longitude)
-            if location_request and location_request.get('display_name'):
-                location = location_request.get('display_name')
-            else:
-                location = _('Unknown')
-        else:
-            city = request.geoip.city.name
-            country = request.geoip.country.name
-            if city and country:
-                location = f"{city}, {country}"
-            else:
-                location = _('Unknown')
+        try:
+            location = request.env['base.geocoder']._get_localisation(latitude, longitude)
+        except (UserError, RequestException):
+            location = _("Unknown")
         return {
             'location': location,
             'latitude': latitude or request.geoip.location.latitude or False,
