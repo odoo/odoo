@@ -149,7 +149,6 @@ export function assertCartContains({
         steps.push({
             content: `Checking if the cart line holds the expected quantity.`,
             trigger: `${backend ? ":iframe" : ""} ${quantityTrigger}`,
-            break: true,
         })
     }
 

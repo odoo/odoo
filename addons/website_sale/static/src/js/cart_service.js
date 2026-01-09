@@ -478,8 +478,16 @@ export class CartService {
             product_custom_attribute_values: productCustomAttributeValues,
             no_variant_attribute_value_ids: noVariantAttributeValues,
             ...rest
+        }).catch(error => {
+            this._showCartNotification({
+                type: 'warning',
+                data: { warning_message: error.data.message },
+            });
+            return null;
         });
-        // TODO should not redirect if errors in data.
+        if (!data) {
+            return 0;
+        }
         if (shouldRedirectToCart || session.add_to_cart_action === 'go_to_cart') {
             redirect('/shop/cart');
             return data.quantity;
