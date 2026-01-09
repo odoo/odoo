@@ -513,7 +513,7 @@ class DiscussChannel(models.Model):
         super()._sync_field_names(res)
         res[None].attr("avatar_cache_key", predicate=is_channel_or_group)
         # sudo: discuss.category - guests can read categories of accessible channels
-        res[None].one("discuss_category_id", ["name", "sequence"], sudo=True)
+        res[None].one("discuss_category_id", "_store_category_fields", sudo=True)
         res[None].extend(["channel_type", "create_uid", "default_display_mode"])
         res[None].attr("description", predicate=is_channel_or_group)
         res[None].many("group_ids", [], predicate=is_channel)
@@ -1207,7 +1207,7 @@ class DiscussChannel(models.Model):
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         res.attr("avatar_cache_key", predicate=is_channel_or_group)
         # sudo: discuss.category - guests can read categories of accessible channels
-        res.one("discuss_category_id", ["name", "sequence"], sudo=True)
+        res.one("discuss_category_id", "_store_category_fields", sudo=True)
         res.attr("channel_type")
         res.attr("create_uid")
         res.many(
