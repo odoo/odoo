@@ -59,14 +59,15 @@ def _install_languages(env):
     for lang_code, lang_name in languages:
         try:
             # Check if language is already installed
-            existing = env['res.lang'].search([('code', '=', lang_code)], limit=1)
-            if existing:
-                _logger.info(f"  - {lang_name} ({lang_code}): already installed")
+            # Find the language record ID (Odoo 19 requires lang_ids M2M)
+            lang = env['res.lang'].with_context(active_test=False).search([('code', '=', lang_code)], limit=1)
+            if not lang:
+                _logger.warning(f"  - {lang_name} ({lang_code}): language not found in res.lang")
                 continue
 
             # Install language
             wizard = env['base.language.install'].create({
-                'lang': lang_code,
+                'lang_ids': [fields.Command.link(lang.id)],
                 'overwrite': False,
             })
             wizard.lang_install()

@@ -5,11 +5,12 @@ ViaSuite Base Module
         
         Features:
         ---------
-        * Multi-language support (pt_BR, es_PY, en_US, ar_SA, zh_CN)
-        * Keycloak SSO integration (multi-tenant)
+        * **Keycloak SSO integration**: Core authentication logic for multi-tenant environments.
+        * **Tenant Validation**: Ensures users can only access their designated tenant database.
+        * **Branded Login UI**: Customized Odoo 19 login pages with ViaSuite identity.
+        * **Multi-language support**: pt_BR, es_PY, en_US, ar_SA, zh_CN.
 
-        This module is auto-installed and provides the foundation for all
-        ViaSuite tenants.
+        This module is the core foundation and is installed in **every** tenant database. For central redirection and global management, see `via_suite_portal`.
 
 ## Keycloak configuration via environment variables
 
