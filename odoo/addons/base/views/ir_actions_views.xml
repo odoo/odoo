@@ -393,7 +393,7 @@
                         </group>
                         <t name="action_content" invisible="not model_id">
                             <field name="allowed_states" invisible="1"/> <!-- Used to filter state using selection_badge_with_filter -->
-                            <div class="d-flex flex-column">
+                            <div class="d-flex flex-column pb-2">
                                 <label for="state"/>
                                 <field name="state" widget="selection_badge_with_filter" options="{'size': 'sm', 'allowed_selection_field': 'allowed_states'}"/>
                             </div>
@@ -402,6 +402,7 @@
                             </div>
                             <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'object_write'">
                                 <field name="evaluation_type" class="oe_inline"/>
+                                <label for="update_path" string="Select Field:" class="fw-bold ps-2"/>
                                 <field name="update_path" widget="field_selector" class="oe_inline" options="{'model': 'model_name', 'allow_properties': False}" required="state == 'object_write'"/>
                                 <field name="update_field_id" invisible="True"/>  <!-- The field is store=True and readonly=False, in this view we want to save the value from compute/onchange -->
                                 <field name="update_related_model_id" invisible="True"/> <!-- This field is required for 'resource_ref' to compute possible m2m and m2o values -->
