@@ -2,7 +2,7 @@
 
 import binascii
 
-from odoo import fields, http, _
+from odoo import _, fields, http
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
@@ -367,6 +367,13 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
 class PaymentPortal(payment_portal.PaymentPortal):
 
+    def _validate_transaction_for_order(self, transaction, sale_order):
+        """
+        Perform final checks against the transaction & sale_order.
+        Override me to apply payment unrelated checks & processing
+        """
+        return
+
     @http.route('/my/orders/<int:order_id>/transaction', type='json', auth='public')
     def portal_order_transaction(self, order_id, access_token, **kwargs):
         """ Create a draft transaction and return its processing values.
@@ -397,6 +404,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         tx_sudo = self._create_transaction(
             custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,
         )
+        self._validate_transaction_for_order(tx_sudo, order_sudo)
 
         return tx_sudo._get_processing_values()
 
