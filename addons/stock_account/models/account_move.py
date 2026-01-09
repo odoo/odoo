@@ -215,8 +215,12 @@ class AccountMove(models.Model):
 
                 if product_interim_account.reconcile:
                     # Search for anglo-saxon lines linked to the product in the journal entry.
-                    product_account_moves = move.line_ids.filtered(
-                        lambda line: line.product_id == prod and line.account_id == product_interim_account and not line.reconciled)
+                    product_account_moves = self.env['account.move.line'].search([
+                        ('id', 'in', move.line_ids.ids),
+                        ('product_id', '=', prod.id),
+                        ('account_id', '=', product_interim_account.id),
+                        ('reconciled', '=', False),
+                    ])
 
                     # Search for anglo-saxon lines linked to the product in the stock moves.
                     product_stock_moves = stock_moves._get_all_related_sm(prod)
