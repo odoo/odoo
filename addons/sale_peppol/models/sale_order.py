@@ -169,7 +169,7 @@ class SaleOrder(models.Model):
                 ('document_type', '=', 'order'),
                 ('state', '=', 'to_reply'),
             ]).sorted()[:1]
-            order.l10n_sg_has_pending_order_change = bool(order_tx)
+            order.l10n_sg_has_pending_order = bool(order_tx)
 
     @api.depends('peppol_order_transaction_ids')
     def _has_pending_order_change(self):
