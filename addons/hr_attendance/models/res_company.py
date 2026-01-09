@@ -40,7 +40,7 @@ class ResCompany(models.Model):
     auto_check_out = fields.Boolean(string="Automatic Check Out", default=False)
     auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
     absence_management = fields.Boolean(string="Absence Management", default=False)
-    attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=True)
+    attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=False)
 
     @api.depends("attendance_kiosk_key")
     def _compute_attendance_kiosk_url(self):
