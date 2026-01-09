@@ -1,6 +1,6 @@
 import io
 import logging
-from typing import cast
+from typing import cast, Any
 from collections import deque
 
 from odoo.tools.pdf import (
@@ -89,7 +89,7 @@ class IncrementalPdfMerge:
     :type pdf_raw: bytes
     """
 
-    def __init__(self, pdf_raw) -> None:
+    def __init__(self, pdf_raw: bytes) -> None:
         """
         Initializes the output stream with the original PDF content.
 
@@ -130,49 +130,18 @@ class IncrementalPdfMerge:
         return self.output_stream.getvalue()
 
     def merge_pdf(self, overlay_pdf: PdfFileReader) -> None:
-        """
-        Incrementally merges pages from the ``overlay_pdf`` onto the current PDF and
-        writes the result to the configured output stream.
+        pdf_reader, incremented_objects = self._merge_pdf_pages(overlay_pdf)
+        self._write_incremented_pdf(pdf_reader, incremented_objects)
 
-        This method manually handles indirect object management, Cross-Reference (XRef)
-        table construction, and trailer generation. Unlike standard pypdf merging,
-        this implementation performs an **Incremental Update**, appending new data to
-        the end of the file. This preserves the validity of existing digital signatures
-        and maintains the original file structure.
+    def overlay_pdf_as_annotation(self, overlay_pdf: PdfFileReader) -> None:
+        pdf_reader, incremented_objects = self._overlay_pdf_pages_as_annotation(overlay_pdf)
+        self._write_incremented_pdf(pdf_reader, incremented_objects)
 
-        The process involves:
-
-        1.  **Initialization:** Loading the original PDF structure and determining the
-            next available Object ID to prevent collisions.
-        2.  **Non-Destructive Merge:** Overlaying content streams from ``overlay_pdf``
-            (e.g., signature appearances) onto the existing pages using ``pypdf``.
-            Crucially, this modifies existing Page Objects in place (appending to
-            ``/Annots``, ``/Resources``, or ``/Contents``) without altering their original Object IDs.
-        3.  **Graph Traversal:** Recursively sweeping the object graph starting from
-            the Catalog (``/Root``). This identifies modified or newly created objects
-            and resolves circular references (e.g., objects pointing back to parent Pages).
-        4.  **Serialization:** Writing the binary representation of all new and modified
-            objects to the output stream.
-        5.  **XRef Construction:** Generating a new XRef table section. This logic
-            groups contiguous Object IDs into subsections to optimize the table size
-            as per ISO 32000-1 specifications.
-        6.  **Finalization:** Appending the updated PDF trailer, ``startxref`` pointer,
-            and ``%%EOF`` marker.
-
-        :param overlay_pdf: A PdfFileReader object containing the visual elements
-            (such as signature fields, images, or stamps) to be merged on top of
-            the original PDF pages.
-        :type overlay_pdf: PdfFileReader
-        :return: None
-        """
+    def _merge_pdf_pages(self, overlay_pdf: PdfFileReader) -> tuple[PdfFileReader, dict[int, Any]]:
         # 1. Load the current output stream PDF bytes in memory
         pdf_reader = PdfFileReader(io.BytesIO(self.get_output_stream_value()), strict=False)
 
-        # 2. Determine the next available object ID and last xref location for incremental update
-        start_id = pdf_reader.trailer[TK.SIZE]
-        original_startxref = self._find_last_startxref(self.get_output_stream_value())
-
-        # 3. Merge Page Content (Non-Destructive):
+        # 2. Merge Page Content (Non-Destructive):
         # We use pypdf to overlay the new PDF content onto the existing pages.
         # Crucially, pypdf modifies the existing Page Object's /Annots, /Contents, and
         # /Resources in place (appending to them) without altering its Object ID or
@@ -185,35 +154,13 @@ class IncrementalPdfMerge:
             page.mergePage(overlay_pdf.pages[page_index])
             incremented_objects[page.indirect_reference.idnum] = page
 
-        # 4. Graph Traversal & ID Assignment:
-        # We perform a recursive traversal starting from the Catalog (/Root) to
-        # detect any newly created objects injected during the merge. These objects
-        # are assigned valid, contiguous Object IDs to ensure they are correctly
-        # indexed in the upcoming incremental XRef update. Additionally, this step
-        # resolves circular references (e.g., objects pointing back to their parent
-        # Pages), ensuring the integrity of the object graph.
-        catalog = cast(DictionaryObject, pdf_reader.trailer[TK.ROOT])
-        self._sweep_indirect_references(catalog, pdf_reader, incremented_objects, start_id)
+        return pdf_reader, incremented_objects
 
-        # 5. Write all objects to the output stream
-        output = self.output_stream
-        new_xref_entries = self._write_objects(output, incremented_objects)
-
-        # 6. Generate Xref table
-        xref_start, new_size = self._write_xref_table(output, new_xref_entries)
-
-        # 7. Construct the PDF trailer
-        self._write_trailer(output, pdf_reader, original_startxref, xref_start, new_size)
-
-    def merge_pdf_as_annotation(self, overlay_pdf: PdfFileReader) -> None:
+    def _overlay_pdf_pages_as_annotation(self, overlay_pdf: PdfFileReader) -> tuple[PdfFileReader, dict[int, Any]]:
         # 1. Load the current output stream PDF bytes in memory
         pdf_reader = PdfFileReader(io.BytesIO(self.get_output_stream_value()), strict=False)
 
-        # 2. Determine the next available object ID and last xref location for incremental update
-        start_id = pdf_reader.trailer[TK.SIZE]
-        original_startxref = self._find_last_startxref(self.get_output_stream_value())
-
-        # 3. Convert overlay pages to an annotations
+        # 2. Convert overlay pages to an annotations
         incremented_objects = {}
         for page_index in range(0, len(pdf_reader.pages)):
             page = pdf_reader.pages[page_index]
@@ -233,24 +180,12 @@ class IncrementalPdfMerge:
             writer = PdfFileWriter()  # A temporary PdfFileWriter used to wrap new objects
             ann_indirect_reference = writer._add_object(annot)
             new_annots.append(ann_indirect_reference)
-            page["/Annots"].append(writer._add_object(annot))
+            # page["/Annots"].append(writer._add_object(annot))
             page[NameObject("/Annots")] = new_annots
 
             incremented_objects[page.indirect_reference.idnum] = page
 
-        # 4. Graph Traversal & ID Assignment:
-        catalog = cast(DictionaryObject, pdf_reader.trailer[TK.ROOT])
-        self._sweep_indirect_references(catalog, pdf_reader, incremented_objects, start_id)
-
-        # 5. Write all objects to the output stream
-        output = self.output_stream
-        new_xref_entries = self._write_objects(output, incremented_objects)
-
-        # 6. Generate Xref table
-        xref_start, new_size = self._write_xref_table(output, new_xref_entries)
-
-        # 7. Construct the PDF trailer
-        self._write_trailer(output, pdf_reader, original_startxref, xref_start, new_size)
+        return pdf_reader, incremented_objects
 
     def _convert_page_content_to_annotation_object(self, page):
         page_content = page.get_contents()
@@ -289,6 +224,29 @@ class IncrementalPdfMerge:
         })
 
         return annot
+
+    def _write_incremented_pdf(self, pdf_reader, incremented_objects):
+        start_id = pdf_reader.trailer[TK.SIZE]
+        original_startxref = self._find_last_startxref(self.get_output_stream_value())
+
+        # We perform a recursive traversal starting from the Catalog (/Root) to
+        # detect any newly created objects injected during the merge. These objects
+        # are assigned valid, contiguous Object IDs to ensure they are correctly
+        # indexed in the upcoming incremental XRef update. Additionally, this step
+        # resolves circular references (e.g., objects pointing back to their parent
+        # Pages), ensuring the integrity of the object graph.
+        catalog = cast(DictionaryObject, pdf_reader.trailer[TK.ROOT])
+        self._sweep_indirect_references(catalog, pdf_reader, incremented_objects, start_id)
+
+        # 5. Write all objects to the output stream
+        output = self.output_stream
+        new_xref_entries = self._write_objects(output, incremented_objects)
+
+        # 6. Generate Xref table
+        xref_start, new_size = self._write_xref_table(output, new_xref_entries)
+
+        # 7. Construct the PDF trailer
+        self._write_trailer(output, pdf_reader, original_startxref, xref_start, new_size)
 
     def _write_objects(self, output, incremented_objects):
         new_xref_entries = {}
@@ -362,7 +320,7 @@ class IncrementalPdfMerge:
         trailer.update(
             {
                 NameObject(TK.SIZE): NumberObject(size),
-                NameObject(TK.ROOT): pdf_reader.trailer[TK.ROOT],
+                NameObject(TK.ROOT): pdf_reader.trailer.raw_get(TK.ROOT),
                 NameObject(TK.INFO): pdf_reader.trailer[TK.INFO],
                 NameObject(TK.PREV): NumberObject(original_startxref)
             }
@@ -446,6 +404,11 @@ class IncrementalPdfMerge:
 
         # Start from root
         stack.append((root, parent, key_or_id, grant_parents))
+
+        for key, real_obj in incremented_objects.items():
+            hash_value = real_obj.hash_value()
+            if hash_value not in idnum_hash:
+                idnum_hash[hash_value] = IndirectObject(key, 0, pdf_reader)
 
         while len(stack):
             data, parent, key_or_id, grant_parents = stack.pop()
