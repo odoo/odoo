@@ -71,7 +71,7 @@ class HrVersion(models.Model):
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other'),
-    ], groups="hr.group_hr_user", tracking=1, help="This is the legal sex recognized by the state.", string='Gender')
+    ], groups="hr.group_hr_user", tracking=1, help="This is the legal sex as recognized by the state, used for official and statutory purposes.", string='Gender')
 
     private_street = fields.Char(string="Private Street", groups="hr.group_hr_user", tracking=1)
     private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user", tracking=1)
