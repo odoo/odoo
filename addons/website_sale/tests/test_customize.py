@@ -419,3 +419,6 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         product_no_alternative.set_sequence_top()
         product_with_alternative.set_sequence_top()
         self.start_tour('/', 'shop_editor_no_alternative_products_visibility_tour', login="admin")
+
+    def test_13_shop_editor_create_and_set_product_ribbon(self):
+        self.start_tour("/", 'shop_editor_create_and_set_product_ribbon', login="admin")
