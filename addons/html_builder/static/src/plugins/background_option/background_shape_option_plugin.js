@@ -2,7 +2,7 @@ import { getValueFromVar } from "@html_builder/utils/utils";
 import { normalizeColor } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { pick } from "@web/core/utils/objects";
+import { deepCopy, deepMerge, pick } from "@web/core/utils/objects";
 import { backgroundShapesDefinition } from "./background_shapes_definition";
 import { getDefaultColors } from "./background_shape_option";
 import { withSequence } from "@html_editor/utils/resource";
@@ -11,6 +11,17 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 
 /**
+ * @typedef {Object.<string, {
+ *   label?: string,
+ *   subgroups: Object.<string, {
+ *     label?: string,
+ *     shapes: Object.<string, {
+ *       selectLabel?: string,
+ *       animated?: boolean,
+ *     }>,
+ *   }>,
+ * }>} BackgroundShapeGroups
+ * @typedef {((shapeGroups: BackgroundShapeGroups) => BackgroundShapeGroups | void)[]} background_shape_groups_providers
  * @typedef {((editingElement: HTMLElement) => HTMLElement)[]} background_shape_target_providers
  */
 
@@ -26,6 +37,9 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             SetBgAnimationSpeedAction,
             BackgroundShapeColorAction,
         },
+        background_shape_groups_providers: withSequence(0, () =>
+            deepCopy(backgroundShapesDefinition)
+        ),
         background_shape_target_providers: withSequence(5, (editingElement) =>
             editingElement.querySelector(":scope > .o_we_bg_filter")
         ),
@@ -313,7 +327,17 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         shapeEl.remove();
     }
     getBackgroundShapeGroups() {
-        return backgroundShapesDefinition;
+        if (!this.backgroundShapeGroups) {
+            const shapeGroups = {};
+            for (const provider of this.getResource("background_shape_groups_providers")) {
+                const providedGroups = provider(shapeGroups);
+                if (providedGroups) {
+                    Object.assign(shapeGroups, deepMerge(shapeGroups, providedGroups));
+                }
+            }
+            this.backgroundShapeGroups = shapeGroups;
+        }
+        return this.backgroundShapeGroups;
     }
     getBackgroundShapes() {
         if (!this.backgroundShapesById) {
