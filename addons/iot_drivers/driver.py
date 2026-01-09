@@ -52,14 +52,14 @@ class Driver(Thread):
             return
 
         action = data.get('action', '')
-        session_id = data.get('session_id')
-        if session_id:
-            self.data["owner"] = session_id
+        self.data["owner"] = data.get('session_id')
+
+        base_response = {'action_args': {**data}, 'session_id': data.get('session_id')}
         try:
-            response = {'status': 'success', 'result': self._actions[action](data), 'action_args': {**data}}
+            response = {'status': 'success', 'result': self._actions[action](data), **base_response}
         except Exception as e:
             _logger.exception("Error while executing action %s with params %s", action, data)
-            response = {'status': 'error', 'result': str(e), 'action_args': {**data}}
+            response = {'status': 'error', 'result': str(e), **base_response}
 
         # Make response available to /event route or websocket
         # printers and payment terminals handle their own events (low on paper, waiting for card, etc.)
