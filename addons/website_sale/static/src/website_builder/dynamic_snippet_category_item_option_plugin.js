@@ -38,7 +38,7 @@ class SetCategoryImageAction extends BuilderAction {
                     attachment_id: selectedMedia[0]['id'],
                 });
                 if (!(selectedImageEl instanceof HTMLImageElement)) return;
-                categoryImage.replaceWith(selectedImageEl);
+                categoryImage.src = selectedImageEl.src;
                 this.dependencies['builderOptions'].updateContainers(selectedImageEl);
             },
         });
