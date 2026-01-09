@@ -42,6 +42,7 @@ registry.category('views').add('time_off_calendar_hr_leave', TimeOffCalendarHrLe
 registry.category('views').add('time_off_calendar_dashboard', {
     ...TimeOffCalendarView,
     Renderer: TimeOffDashboardCalendarRenderer,
+    buttonTemplate: "hr_holidays.TimeOffDashboard.controlButtons",
 });
 registry.category('views').add('time_off_report_calendar', {
     ...TimeOffCalendarView,

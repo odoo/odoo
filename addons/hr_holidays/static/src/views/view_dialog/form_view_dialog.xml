@@ -40,6 +40,7 @@
                 t-on-click="() =>this.onClick('action_refuse')"
                 data-hotkey="x">Refuse</button>
         </xpath>
+        <xpath expr="//button[hasclass('o_form_button_remove')]" position="replace"/>
         <xpath expr="." position="inside">
             <button class="btn btn-danger ms-auto" t-if="canDelete" t-on-click="deleteRecord" data-hotkey="v">
                 Delete Time Off

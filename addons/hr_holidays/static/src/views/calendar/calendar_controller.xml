@@ -6,9 +6,10 @@
             <t t-if="props.archInfo.canCreate" t-set-slot="control-panel-buttons">
                 <span class="o_timeoff_buttons btn-group">
                     <div class="btn-group">
-                        <button class="btn btn-primary btn-time-off " t-on-click="newTimeOffRequest" type="button">
-                            New
-                        </button>
+                        <NewButton
+                            onNewTimeOffRequest="() => this.newTimeOffRequest()"
+                            onNewAllocationRequest="() => this.newAllocationRequest()"
+                        />
                     </div>
                 </span>
             </t>
