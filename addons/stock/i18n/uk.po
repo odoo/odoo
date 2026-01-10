@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 22:50+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -20,10 +20,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
-"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
-"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: stock
@@ -813,7 +813,7 @@ msgstr "<strong>Контакт</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
+msgid "<strong>Customer</strong>"
 msgstr ""
 
 #. module: stock
@@ -824,6 +824,11 @@ msgstr "<strong>Доставлено</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
 msgstr ""
 
 #. module: stock
@@ -5874,8 +5879,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
-"Не знайдено жодного правила для поповнення \"%(product)s\" в \"%(location)s\""
-".\n"
+"Не знайдено жодного правила для поповнення \"%(product)s\" в \"%"
+"(location)s\".\n"
 "Перевірте налаштування маршрутів на товарі."
 
 #. module: stock
@@ -8132,8 +8137,8 @@ msgid ""
 "Rule %(rule)s belongs to %(rule_company)s while the route belongs to %"
 "(route_company)s."
 msgstr ""
-"Правило %(rule)s належить %(rule_company)s, а маршрут належить "
-"%(route_company)s."
+"Правило %(rule)s належить %(rule_company)s, а маршрут належить %"
+"(route_company)s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8448,8 +8453,8 @@ msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): %"
 "(location_list)s. Please correct the serial number encoded."
 msgstr ""
-"Серійний номер (%(serial_number)s) вже існує в місцезнаходженн: "
-"%(location_list)s. Виправіть закодований серійний номер."
+"Серійний номер (%(serial_number)s) вже існує в місцезнаходженн: %"
+"(location_list)s. Виправіть закодований серійний номер."
 
 #. module: stock
 #. odoo-python
@@ -8477,8 +8482,8 @@ msgstr ""
 "Серійний номер (%(serial_number)s) не знаходиться в %(source_location)s, але "
 "знаходиться у місцезнаходженні: %(other_locations)s.\n"
 "\n"
-"Джерело місцезнаходження для цього переміщення буде змінено на "
-"%(recommended_location)s"
+"Джерело місцезнаходження для цього переміщення буде змінено на %"
+"(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -9277,7 +9282,8 @@ msgstr "Дозамовлення %s створене."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
-msgstr "Штрих-код для розташування повинен бути унікальним для кожної компанії!"
+msgstr ""
+"Штрих-код для розташування повинен бути унікальним для кожної компанії!"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -10925,8 +10931,8 @@ msgid ""
 "                    Those quantities will be removed from the following "
 "package(s):"
 msgstr ""
-"Ви збираєтеся перемістити запаковану кількість, не переміщуючи всю упаковку."
-"\n"
+"Ви збираєтеся перемістити запаковану кількість, не переміщуючи всю "
+"упаковку.\n"
 "Цю кількість буде вилучено з наступних упаковок:"
 
 #. module: stock

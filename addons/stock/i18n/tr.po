@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 22:50+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s18-4/stock/"
@@ -815,8 +815,8 @@ msgstr "<strong>Kişi</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>Müşteri Adresi</strong>"
+msgid "<strong>Customer</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -826,6 +826,11 @@ msgstr "<strong>Teslim Edilen</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
 msgstr ""
 
 #. module: stock
@@ -7655,8 +7660,8 @@ msgid ""
 "                        locations management traceability, quality control, "
 "etc."
 msgstr ""
-"Uyarılar, barkod uygulaması, ikmal önerileri, konum yönetimi izlenebilirliği,"
-"\n"
+"Uyarılar, barkod uygulaması, ikmal önerileri, konum yönetimi "
+"izlenebilirliği,\n"
 "                        kalite kontrol vb. ile stok tükenmelerini azaltın."
 
 #. module: stock
@@ -9289,8 +9294,8 @@ msgid ""
 "Otherwise, the serial number should be corrected to prevent inconsistent "
 "data."
 msgstr ""
-"Seri Numarası (%(serial_number)s) şu konum(lar)da zaten kullanılmış: "
-"%(location_list)s.\n"
+"Seri Numarası (%(serial_number)s) şu konum(lar)da zaten kullanılmış: %"
+"(location_list)s.\n"
 "\n"
 "Bu beklenen bir durum mu? Örneğin, bu, ilgili alım operasyonu onaylanmadan "
 "önce bir teslimat operasyonu onaylandığında meydana gelebilir. Bu durumda, "
@@ -10279,8 +10284,8 @@ msgid ""
 "Unavailable Serial numbers. Please correct the serial numbers encoded: %"
 "(serial_numbers_to_locations)s"
 msgstr ""
-"Kullanılamayan Seri numaraları. Lütfen girilen seri numaralarını düzeltin: "
-"%(serial_numbers_to_locations)s"
+"Kullanılamayan Seri numaraları. Lütfen girilen seri numaralarını düzeltin: %"
+"(serial_numbers_to_locations)s"
 
 #. module: stock
 #. odoo-javascript
@@ -10842,9 +10847,8 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</"
 "b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
-"Ürünler <b>%(source_location)s</b> konumuna ulaştığında, bunları "
-"<b>%(destination)s</b> konumuna göndermek için <b>%(operation)s</b> "
-"oluşturulur."
+"Ürünler <b>%(source_location)s</b> konumuna ulaştığında, bunları <b>%"
+"(destination)s</b> konumuna göndermek için <b>%(operation)s</b> oluşturulur."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
@@ -11782,3 +11786,6 @@ msgstr "Birimler"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} Teslimat (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>Müşteri Adresi</strong>"

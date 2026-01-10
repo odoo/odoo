@@ -7,14 +7,14 @@
 # Sammi Iversen <sammi@vkdata.dk>, 2025
 # Wil Odoo, 2025
 # Kira Petersen, 2025
-# "Kira Petersen François (peti)" <peti@odoo.com>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-19 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 13:05+0000\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
+"PO-Revision-Date: 2026-01-10 13:05+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "point_of_sale/da/>\n"
@@ -5895,7 +5895,7 @@ msgstr "Betalingsform"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Payment Name Demo"
-msgstr "Demo-betalingsnavn"
+msgstr "Demobetalingsnavn"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
@@ -8594,7 +8594,8 @@ msgid ""
 "Continue without checking the validity of serial/lot numbers ?"
 msgstr ""
 "De eksisterende serie- og partinumre kunne ikke hentes. \n"
-"Vil du fortsætte uden at kontrollere gyldigheden af serie- og partinumrene?"
+"Ønsker du at fortsætte uden at kontrollere gyldigheden af serie- og "
+"partinumrene?"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10025,7 +10026,7 @@ msgid ""
 msgstr ""
 "Du er ved at sælge produkter med serienumre og partinumre, men nogle er ikke "
 "konfigureret.\n"
-"Vil du fortsætte alligevel?"
+"Ønsker du at fortsætte alligevel?"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10081,6 +10082,14 @@ msgid ""
 msgstr ""
 "Det er ikke muligt at arkivere '%(picking_type)s', da det bruges af POS-"
 "konfigurationen '%(config)s'."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"You cannot archive a product that is set as a special product in a Point of "
+"Sale configuration. Please change the configuration first."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

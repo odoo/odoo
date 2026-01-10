@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 22:53+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -54,8 +54,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Prijenosi %(transfer_list)s: Morate unjieti Lot/serijski broj za proizvode "
-"%(product_list)s."
+"Prijenosi %(transfer_list)s: Morate unjieti Lot/serijski broj za proizvode %"
+"(product_list)s."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__serial_prefix_format
@@ -238,8 +238,8 @@ msgid ""
 "%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to "
 "order is %(qty_to_order)s %(uom)s."
 msgstr ""
-"%(warehouse)s može pružiti %(free_qty)s %(uom)s, dok je količina narudžbe "
-"%(qty_to_order)s%(uom)s."
+"%(warehouse)s može pružiti %(free_qty)s %(uom)s, dok je količina narudžbe %"
+"(qty_to_order)s%(uom)s."
 
 #. module: stock
 #. odoo-python
@@ -823,8 +823,8 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>Adresa kupca</strong>"
+msgid "<strong>Customer</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -834,6 +834,11 @@ msgstr "<strong>Isporučeno</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
 msgstr ""
 
 #. module: stock
@@ -1421,8 +1426,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Budući da su za ovaj proizvod već korištene druge mjerne jedinice (npr. "
-"%(problem_uom)s) osim %(uom)s, promjena mjerne jedinice nije moguća. Ako je "
+"Budući da su za ovaj proizvod već korištene druge mjerne jedinice (npr. %"
+"(problem_uom)s) osim %(uom)s, promjena mjerne jedinice nije moguća. Ako je "
 "želite promijeniti, arhivirajte proizvod i stvorite novi."
 
 #. module: stock
@@ -3868,7 +3873,8 @@ msgstr "Potpuna sljedivost od dobavljača do kupaca"
 msgid ""
 "Give to the more specialized category, a higher priority to have them in top "
 "of the list."
-msgstr "Uvrsti u drugu kategoriju većeg prioriteta kako bi bila na vrhu popisa."
+msgstr ""
+"Uvrsti u drugu kategoriju većeg prioriteta kako bi bila na vrhu popisa."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__sequence
@@ -5937,8 +5943,8 @@ msgid ""
 "routing of the reports.\n"
 "                                        <br/>"
 msgstr ""
-"Odoo po zadanim postavkama otvara pregled PDF-a. Ako želite odmah ispisati ("
-"samo za Enterprise korisnike), \n"
+"Odoo po zadanim postavkama otvara pregled PDF-a. Ako želite odmah ispisati "
+"(samo za Enterprise korisnike), \n"
 "                                        instalirajte IoT aplikaciju na "
 "računalo koje je povezano na istu lokalnu mrežu kao i\n"
 "                                        uređaj za barkod te konfigurirajte "
@@ -9921,7 +9927,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "Transfers allow you to move products from one location to another."
-msgstr "Transferi omogućuju da premještate proizvode s jedne lokacije na drugu."
+msgstr ""
+"Transferi omogućuju da premještate proizvode s jedne lokacije na drugu."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -11439,6 +11446,9 @@ msgstr "jedinice"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} Otpremnica (Ref {{ object.name or '/' }})"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>Adresa kupca</strong>"
 
 #~ msgid ""
 #~ "\n"

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_edi_ubl_cii_tax_extension
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Ujjawal Pathak, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Ujjawal Pathak, 2025\n"
 "Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
+"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_edi_ubl_cii_tax_extension
@@ -34,8 +34,7 @@ msgstr "B - इटली में ट्रांसफ़र किया ग�
 #: model:ir.model,name:account_edi_ubl_cii_tax_extension.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
-msgstr ""
-"EDI डॉक्यूमेंट के मुख्य काम: डेटा बनाना, नियम तय करना, और ऐसे ही दूसरे काम."
+msgstr "EDI डॉक्यूमेंट के मुख्य काम: डेटा बनाना, नियम तय करना, और ऐसे ही दूसरे काम."
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields,field_description:account_edi_ubl_cii_tax_extension.field_account_edi_common__display_name
@@ -47,6 +46,12 @@ msgstr "डिस्प्ले नाम"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__e
 msgid "E - Exempt from Tax"
 msgstr "E - टैक्स से छूट"
+
+#. module: account_edi_ubl_cii_tax_extension
+#. odoo-python
+#: code:addons/account_edi_ubl_cii_tax_extension/models/account_edi_common.py:0
+msgid "Exempt from tax"
+msgstr ""
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__g
@@ -62,8 +67,7 @@ msgstr "आईडी"
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__k
 msgid "K - VAT exempt for EEA intra-community supply of goods and services"
-msgstr ""
-"K - यूरोप के कुछ देशों (EEA) के बीच व्यापार करने पर टैक्स (वैट) नहीं लगता है"
+msgstr "K - यूरोप के कुछ देशों (EEA) के बीच व्यापार करने पर टैक्स (वैट) नहीं लगता है"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__l
@@ -103,8 +107,7 @@ msgstr "टैक्स में छूट का कारण बताने 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields,help:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_category_code
 msgid "The VAT category code used for electronic invoicing purposes."
-msgstr ""
-"इलेक्ट्रॉनिक इनवॉइस बनाने में इस्तेमाल होने वाला वैट की कैटगरी का कोड."
+msgstr "इलेक्ट्रॉनिक इनवॉइस बनाने में इस्तेमाल होने वाला वैट की कैटगरी का कोड."
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields,help:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_exemption_reason_code
@@ -112,8 +115,8 @@ msgid ""
 "The reason why the amount is exempted from VAT or why no VAT is being "
 "charged, used for electronic invoicing purposes."
 msgstr ""
-"इलेक्ट्रॉनिक इनवॉइस बनाते समय, वह वजह बताना कि किसी रकम पर वैट क्यों नहीं "
-"लगा है या क्यों उसे छूट दी गई है."
+"इलेक्ट्रॉनिक इनवॉइस बनाते समय, वह वजह बताना कि किसी रकम पर वैट क्यों नहीं लगा है या "
+"क्यों उसे छूट दी गई है."
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields,field_description:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_requires_exemption_reason
@@ -125,8 +128,7 @@ msgstr "UBL CII को छूट के वजह की ज़रूरत ह�
 msgid ""
 "VATEX-EU-132 - Exempt based on article 132 of Council Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132 - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132 के आधार पर छूट "
-"प्राप्त"
+"VATEX-EU-132 - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132 के आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1a
@@ -134,8 +136,8 @@ msgid ""
 "VATEX-EU-132-1A - Exempt based on article 132, section 1 (a) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1A - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(a) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1A - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (a) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1b
@@ -143,8 +145,8 @@ msgid ""
 "VATEX-EU-132-1B - Exempt based on article 132, section 1 (b) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1B - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(b) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1B - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (b) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1c
@@ -152,8 +154,8 @@ msgid ""
 "VATEX-EU-132-1C - Exempt based on article 132, section 1 (c) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1C - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(c) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1C - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (c) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1d
@@ -161,8 +163,8 @@ msgid ""
 "VATEX-EU-132-1D - Exempt based on article 132, section 1 (d) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1D - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(d) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1D - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (d) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1e
@@ -170,8 +172,8 @@ msgid ""
 "VATEX-EU-132-1E - Exempt based on article 132, section 1 (e) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1E - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(e) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1E - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (e) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1f
@@ -179,8 +181,8 @@ msgid ""
 "VATEX-EU-132-1F - Exempt based on article 132, section 1 (f) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1F - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(f) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1F - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (f) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1g
@@ -188,8 +190,8 @@ msgid ""
 "VATEX-EU-132-1G - Exempt based on article 132, section 1 (g) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1G - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(g) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1G - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (g) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1h
@@ -197,8 +199,8 @@ msgid ""
 "VATEX-EU-132-1H - Exempt based on article 132, section 1 (h) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1H - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(h) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1H - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (h) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1i
@@ -206,8 +208,8 @@ msgid ""
 "VATEX-EU-132-1I - Exempt based on article 132, section 1 (i) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1I - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(i) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1I - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (i) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1j
@@ -215,8 +217,8 @@ msgid ""
 "VATEX-EU-132-1J - Exempt based on article 132, section 1 (j) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1J - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(j) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1J - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (j) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1k
@@ -224,8 +226,8 @@ msgid ""
 "VATEX-EU-132-1K - Exempt based on article 132, section 1 (k) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1K - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(k) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1K - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (k) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1l
@@ -233,8 +235,8 @@ msgid ""
 "VATEX-EU-132-1L - Exempt based on article 132, section 1 (l) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1L - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(l) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1L - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (l) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1m
@@ -242,8 +244,8 @@ msgid ""
 "VATEX-EU-132-1M - Exempt based on article 132, section 1 (m) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1M - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(m) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1M - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (m) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1n
@@ -251,8 +253,8 @@ msgid ""
 "VATEX-EU-132-1N - Exempt based on article 132, section 1 (n) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1N - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(n) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1N - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (n) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1o
@@ -260,8 +262,8 @@ msgid ""
 "VATEX-EU-132-1O - Exempt based on article 132, section 1 (o) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1O - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(o) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1O - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (o) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1p
@@ -269,8 +271,8 @@ msgid ""
 "VATEX-EU-132-1P - Exempt based on article 132, section 1 (p) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1P - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(p) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1P - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (p) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1q
@@ -278,16 +280,15 @@ msgid ""
 "VATEX-EU-132-1Q - Exempt based on article 132, section 1 (q) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1Q - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 "
-"(q) के आधार पर छूट प्राप्त"
+"VATEX-EU-132-1Q - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 132, सेक्शन 1 (q) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143
 msgid ""
 "VATEX-EU-143 - Exempt based on article 143 of Council Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143 - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143 के आधार पर छूट "
-"प्राप्त।"
+"VATEX-EU-143 - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143 के आधार पर छूट प्राप्त।"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1a
@@ -295,8 +296,8 @@ msgid ""
 "VATEX-EU-143-1A - Exempt based on article 143, section 1 (a) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1A - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 "
-"(a) के आधार पर छूट प्राप्त"
+"VATEX-EU-143-1A - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 (a) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1b
@@ -304,8 +305,8 @@ msgid ""
 "VATEX-EU-143-1B - Exempt based on article 143, section 1 (b) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1B - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 "
-"(b) के आधार पर छूट प्राप्त"
+"VATEX-EU-143-1B - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 (b) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1c
@@ -313,8 +314,8 @@ msgid ""
 "VATEX-EU-143-1C - Exempt based on article 143, section 1 (c) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1C - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 "
-"(c) के आधार पर छूट प्राप्त"
+"VATEX-EU-143-1C - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 (c) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1d
@@ -322,8 +323,8 @@ msgid ""
 "VATEX-EU-143-1D - Exempt based on article 143, section 1 (d) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1D - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 "
-"(d) के आधार पर छूट प्राप्त"
+"VATEX-EU-143-1D - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 (d) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1e
@@ -331,8 +332,8 @@ msgid ""
 "VATEX-EU-143-1E - Exempt based on article 143, section 1 (e) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1E - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 "
-"(e) के आधार पर छूट प्राप्त"
+"VATEX-EU-143-1E - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 (e) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1f
@@ -340,8 +341,8 @@ msgid ""
 "VATEX-EU-143-1F - Exempt based on article 143, section 1 (f) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1F - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 "
-"(f) के आधार पर छूट प्राप्त"
+"VATEX-EU-143-1F - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 (f) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1fa
@@ -349,8 +350,8 @@ msgid ""
 "VATEX-EU-143-1FA - Exempt based on article 143, section 1 (fa) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1FA - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 "
-"(fa) के आधार पर छूट प्राप्त"
+"VATEX-EU-143-1FA - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 (fa) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1g
@@ -358,8 +359,8 @@ msgid ""
 "VATEX-EU-143-1G - Exempt based on article 143, section 1 (g) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1G - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 "
-"(g) के आधार पर छूट प्राप्त"
+"VATEX-EU-143-1G - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 (g) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1h
@@ -367,8 +368,8 @@ msgid ""
 "VATEX-EU-143-1H - Exempt based on article 143, section 1 (h) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1H - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 "
-"(h) के आधार पर छूट प्राप्त"
+"VATEX-EU-143-1H - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 (h) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1i
@@ -376,8 +377,8 @@ msgid ""
 "VATEX-EU-143-1I - Exempt based on article 143, section 1 (i) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1I - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 "
-"(i) के आधार पर छूट प्राप्त"
+"VATEX-EU-143-1I - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 (i) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1j
@@ -385,8 +386,8 @@ msgid ""
 "VATEX-EU-143-1J - Exempt based on article 143, section 1 (j) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1J - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 "
-"(j) के आधार पर छूट प्राप्त"
+"VATEX-EU-143-1J - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 (j) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1k
@@ -394,8 +395,8 @@ msgid ""
 "VATEX-EU-143-1K - Exempt based on article 143, section 1 (k) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1K - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 "
-"(k) के आधार पर छूट प्राप्त"
+"VATEX-EU-143-1K - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 (k) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1l
@@ -403,16 +404,15 @@ msgid ""
 "VATEX-EU-143-1L - Exempt based on article 143, section 1 (l) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1L - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 "
-"(l) के आधार पर छूट प्राप्त"
+"VATEX-EU-143-1L - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 143, सेक्शन 1 (l) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148
 msgid ""
 "VATEX-EU-148 - Exempt based on article 148 of Council Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148 - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148 के आधार पर छूट "
-"प्राप्त"
+"VATEX-EU-148 - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148 के आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-a
@@ -420,8 +420,8 @@ msgid ""
 "VATEX-EU-148-A - Exempt based on article 148, section (a) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-A - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (a) "
-"के आधार पर छूट प्राप्त"
+"VATEX-EU-148-A - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (a) के आधार "
+"पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-b
@@ -429,8 +429,8 @@ msgid ""
 "VATEX-EU-148-B - Exempt based on article 148, section (b) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-B - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (b) "
-"के आधार पर छूट प्राप्त"
+"VATEX-EU-148-B - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (b) के आधार "
+"पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-c
@@ -438,8 +438,8 @@ msgid ""
 "VATEX-EU-148-C - Exempt based on article 148, section (c) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-C - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (c) "
-"के आधार पर छूट प्राप्त।"
+"VATEX-EU-148-C - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (c) के आधार "
+"पर छूट प्राप्त।"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-d
@@ -447,8 +447,8 @@ msgid ""
 "VATEX-EU-148-D - Exempt based on article 148, section (d) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-D - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (d) "
-"के आधार पर छूट प्राप्त"
+"VATEX-EU-148-D - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (d) के आधार "
+"पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-e
@@ -456,8 +456,8 @@ msgid ""
 "VATEX-EU-148-E - Exempt based on article 148, section (e) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-E - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (e) "
-"के आधार पर छूट प्राप्त"
+"VATEX-EU-148-E - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (e) के आधार "
+"पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-f
@@ -465,8 +465,8 @@ msgid ""
 "VATEX-EU-148-F - Exempt based on article 148, section (f) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-F - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (f) "
-"के आधार पर छूट प्राप्त"
+"VATEX-EU-148-F - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (f) के आधार "
+"पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-g
@@ -474,16 +474,15 @@ msgid ""
 "VATEX-EU-148-G - Exempt based on article 148, section (g) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-G - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (g) "
-"के आधार पर छूट प्राप्त"
+"VATEX-EU-148-G - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 148, सेक्शन (g) के आधार "
+"पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151
 msgid ""
 "VATEX-EU-151 - Exempt based on article 151 of Council Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151 - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151 के आधार पर छूट "
-"प्राप्त"
+"VATEX-EU-151 - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151 के आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1a
@@ -491,8 +490,8 @@ msgid ""
 "VATEX-EU-151-1A - Exempt based on article 151, section 1 (a) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1A - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151, सेक्शन 1 "
-"(a) के आधार पर छूट प्राप्त"
+"VATEX-EU-151-1A - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151, सेक्शन 1 (a) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1aa
@@ -500,8 +499,8 @@ msgid ""
 "VATEX-EU-151-1AA - Exempt based on article 151, section 1 (aa) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1AA - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151, सेक्शन 1 "
-"(aa) के आधार पर छूट प्राप्त"
+"VATEX-EU-151-1AA - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151, सेक्शन 1 (aa) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1b
@@ -509,8 +508,8 @@ msgid ""
 "VATEX-EU-151-1B - Exempt based on article 151, section 1 (b) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1B - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151, सेक्शन 1 "
-"(b) के आधार पर छूट प्राप्त"
+"VATEX-EU-151-1B - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151, सेक्शन 1 (b) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1c
@@ -518,8 +517,8 @@ msgid ""
 "VATEX-EU-151-1C - Exempt based on article 151, section 1 (c) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1C - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151, सेक्शन 1 "
-"(c) के आधार पर छूट प्राप्त"
+"VATEX-EU-151-1C - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151, सेक्शन 1 (c) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1d
@@ -527,8 +526,8 @@ msgid ""
 "VATEX-EU-151-1D - Exempt based on article 151, section 1 (d) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1D - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151, सेक्शन 1 "
-"(d) के आधार पर छूट प्राप्त"
+"VATEX-EU-151-1D - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151, सेक्शन 1 (d) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1e
@@ -536,16 +535,15 @@ msgid ""
 "VATEX-EU-151-1E - Exempt based on article 151, section 1 (e) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1E - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151, सेक्शन 1 "
-"(e) के आधार पर छूट प्राप्त"
+"VATEX-EU-151-1E - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 151, सेक्शन 1 (e) के "
+"आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-309
 msgid ""
 "VATEX-EU-309 - Exempt based on article 309 of Council Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-309 - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 309 के आधार पर छूट "
-"प्राप्त"
+"VATEX-EU-309 - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 309 के आधार पर छूट प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-79-c
@@ -553,8 +551,8 @@ msgid ""
 "VATEX-EU-79-C - Exempt based on article 79, point c of Council Directive "
 "2006/112/EC"
 msgstr ""
-"VATEX-EU-79-C - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 79, पॉइंट c के "
-"आधार पर छूट प्राप्त"
+"VATEX-EU-79-C - काउंसिल डायरेक्टिव 2006/112/EC के आर्टिकल 79, पॉइंट c के आधार पर छूट "
+"प्राप्त"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-ae
@@ -566,15 +564,15 @@ msgstr "VATEX-EU-AE - रिवर्स चार्ज"
 msgid ""
 "VATEX-EU-D - Intra-Community acquisition from second hand means of transport"
 msgstr ""
-"VATEX-EU-D -  ईयू के अंदर पुराने वाहनों की खरीद-फरोख्त पर वैट कैसे लगता है "
-"या कब छूट मिलती है"
+"VATEX-EU-D -  ईयू के अंदर पुराने वाहनों की खरीद-फरोख्त पर वैट कैसे लगता है या कब छूट "
+"मिलती है"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-f
 msgid "VATEX-EU-F - Intra-Community acquisition of second hand goods"
 msgstr ""
-"VATEX-EU-F - ईयू के अंदर पुराने सामान की खरीद-फरोख्त पर टैक्स कैसे लगता है "
-"या कब छूट मिलती है"
+"VATEX-EU-F - ईयू के अंदर पुराने सामान की खरीद-फरोख्त पर टैक्स कैसे लगता है या कब छूट "
+"मिलती है"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-g
@@ -585,8 +583,7 @@ msgstr "VATEX-EU-G - ईयू के बाहर एक्सपोर्ट"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-i
 msgid "VATEX-EU-I - Intra-Community acquisition of works of art"
 msgstr ""
-"VATEX-EU-I - ईयू के अंदर कला की चीज़ें खरीदने पर टैक्स कैसे लगता है या कब "
-"छूट मिलती है"
+"VATEX-EU-I - ईयू के अंदर कला की चीज़ें खरीदने पर टैक्स कैसे लगता है या कब छूट मिलती है"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-ic
@@ -598,8 +595,8 @@ msgstr "VATEX-EU-IC - इंट्रा-कम्यूनिटी सप्�
 msgid ""
 "VATEX-EU-J - Intra-Community acquisition of collectors items and antiques"
 msgstr ""
-"VATEX-EU-J - ईयू के अंदर पुरानी और इकट्ठा करने वाली चीज़ें खरीदने पर टैक्स "
-"कैसे लगता है या कब छूट मिलती है।"
+"VATEX-EU-J - ईयू के अंदर पुरानी और इकट्ठा करने वाली चीज़ें खरीदने पर टैक्स कैसे लगता है या "
+"कब छूट मिलती है।"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-o
@@ -612,8 +609,8 @@ msgid ""
 "VATEX-FR-CNWVAT - France domestic Credit Notes without VAT, due to supplier "
 "forfeit of VAT for discount"
 msgstr ""
-"VATEX-FR-CNWVAT - फ्रांस के घरेलू क्रेडिट नोट्स बिना वैट के, सप्लायर द्वारा "
-"छूट के लिए वैट माफ करने की वजह"
+"VATEX-FR-CNWVAT - फ्रांस के घरेलू क्रेडिट नोट्स बिना वैट के, सप्लायर द्वारा छूट के लिए वैट "
+"माफ करने की वजह"
 
 #. module: account_edi_ubl_cii_tax_extension
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-franchise
