@@ -18,6 +18,16 @@
                                 <field name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Sales Manager"/>
                             </h1>
                         </div>
+                        <group id="job_skills">
+                            <field
+                                name="current_job_skill_ids"
+                                widget="many2many_tags"
+                                options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
+                                readonly="True"
+                                string="Expected Skills"
+                                groups="!hr.group_hr_user"
+                            />
+                        </group>
                         <notebook>
                             <page string="Details" name="recruitment_page" invisible="1" groups="hr.group_hr_user">
                                 <group>
@@ -32,6 +42,20 @@
                                     <group name="job" string="Job">
                                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" placeholder="Visible to all"/>
                                         <field name="department_id"/>
+                                        <field
+                                            name="current_job_skill_ids"
+                                            mode="list"
+                                            widget="many2one_tags_skills"
+                                            context="{'default_job_id': id}"
+                                            string="Expected Skills"
+                                        >
+                                            <list>
+                                                <field name="skill_id"/> <!--This is needed for the UI to update smoothly -->
+                                                <field name="skill_level_id"/> <!--This is needed for the UI to update smoothly -->
+                                                <field name="display_name"/>
+                                                <field name="color"/>
+                                            </list>
+                                        </field>
                                     </group>
                                     <group name="contract" string="Contract">
                                         <field name="contract_type_id"/>

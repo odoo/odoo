@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -24,6 +23,7 @@ class ResourceResource(models.Model):
     show_hr_icon_display = fields.Boolean(related='employee_id.show_hr_icon_display')
     hr_icon_display = fields.Selection(related='employee_id.hr_icon_display')
     calendar_id = fields.Many2one(inverse='_inverse_calendar_id')
+    employee_skill_ids = fields.One2many(related='employee_id.employee_skill_ids')
 
     @api.depends('employee_id')
     def _compute_job_title(self):

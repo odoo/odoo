@@ -11,7 +11,7 @@ E-learning and Skills for HR
 
 This module add completed courses to resume for employees.
         """,
-    'depends': ['hr_skills', 'website_slides'],
+    'depends': ['hr', 'website_slides'],
     'data': [
         'views/hr_employee_views.xml',
         'views/hr_employee_public_views.xml',

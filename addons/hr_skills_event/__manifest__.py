@@ -11,7 +11,7 @@ Events and Skills for HR
 
 This module add completed course events to resume for employees.
         """,
-    'depends': ['hr_skills', 'event'],
+    'depends': ['hr', 'event'],
     'data': [
         'views/hr_resume_line_views.xml',
         'views/event_event_views.xml',

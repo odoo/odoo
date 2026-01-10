@@ -5,7 +5,7 @@
     'category': 'Human Resources/Recruitment',
     'sequence': 270,
     'summary': 'Manage skills of your employees',
-    'depends': ['hr_skills', 'hr_recruitment'],
+    'depends': ['hr', 'hr_recruitment'],
     'data': [
         'security/hr_recruitment_skills_security.xml',
         'views/hr_applicant_views.xml',

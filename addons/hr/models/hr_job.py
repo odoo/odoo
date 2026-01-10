@@ -1,7 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Domain
+
 from odoo.addons.html_editor.tools import handle_history_divergence
 
 
@@ -44,6 +45,24 @@ class HrJob(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, tracking=True)
     contract_type_id = fields.Many2one('hr.contract.type', string='Contract Type', tracking=True)
 
+    job_skill_ids = fields.One2many(
+        comodel_name="hr.job.skill",
+        inverse_name="job_id",
+        string="Skills",
+        domain=[("skill_type_id.active", "=", True)],
+    )
+    current_job_skill_ids = fields.One2many(
+        comodel_name="hr.job.skill",
+        compute="_compute_current_job_skill_ids",
+        search="_search_current_job_skill_ids",
+        readonly=False,
+    )
+    skill_ids = fields.Many2many(
+        comodel_name="hr.skill",
+        compute="_compute_skill_ids",
+        store=True,
+    )
+
     _name_company_uniq = models.Constraint(
         'unique(name, company_id, department_id)',
         'The name of the job position must be unique per department in company!',
@@ -61,9 +80,41 @@ class HrJob(models.Model):
             job.no_of_employee = result.get(job.id, 0)
             job.expected_employees = result.get(job.id, 0) + job.no_of_recruitment
 
+    @api.depends("job_skill_ids")
+    def _compute_current_job_skill_ids(self):
+        for job in self:
+            job.current_job_skill_ids = job.job_skill_ids.filtered(
+                lambda skill: not skill.valid_to or skill.valid_to >= fields.Date.today()
+            )
+
+    def _search_current_job_skill_ids(self, operator, value):
+        if operator not in ('in', 'not in', 'any'):
+            raise NotImplementedError()
+        job_skill_ids = []
+        domain = Domain.OR([
+            Domain('valid_to', '=', False),
+            Domain('valid_to', '>=', fields.Date.today()),
+        ])
+        if operator == 'any' and isinstance(value, Domain):
+            domain = Domain.AND([domain, value])
+
+        elif operator in ('in', 'not in'):
+            domain = Domain.AND([domain, Domain('id', 'in', value)])
+
+        job_skill_ids = self.env['hr.job.skill']._search(domain)
+        return Domain('job_skill_ids', 'in', job_skill_ids)
+
+    @api.depends("job_skill_ids.skill_id")
+    def _compute_skill_ids(self):
+        for job in self:
+            job.skill_ids = job.job_skill_ids.skill_id
+
     @api.model_create_multi
     def create(self, vals_list):
-        """ We don't want the current user to be follower of all created job """
+        for vals in vals_list:
+            vals_job_skill = vals.pop("current_job_skill_ids", []) + vals.get("job_skill_ids", [])
+            vals["job_skill_ids"] = self.env["hr.job.skill"]._get_transformed_commands(vals_job_skill, self)
+        # We don't want the current user to be follower of all created job
         return super(HrJob, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
     def copy_data(self, default=None):
@@ -73,4 +124,7 @@ class HrJob(models.Model):
     def write(self, vals):
         if len(self) == 1:
             handle_history_divergence(self, 'description', vals)
+        if "current_job_skill_ids" in vals or "job_skill_ids" in vals:
+            vals_job_skill = vals.pop("current_job_skill_ids", []) + vals.get("job_skill_ids", [])
+            vals["job_skill_ids"] = self.env["hr.job.skill"]._get_transformed_commands(vals_job_skill, self)
         return super().write(vals)
