@@ -9,13 +9,13 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
 # 江口和志 <sandwhale1010@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-30 18:37+0000\n"
-"PO-Revision-Date: 2025-12-24 10:24+0000\n"
+"PO-Revision-Date: 2026-01-05 04:32+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/payment/"
 "ja/>\n"
@@ -2470,13 +2470,13 @@ msgstr "%(tx_label)s %(ref)s (%(formatted_amount)s) はキャンセルされま�
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been confirmed."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s(%(formatted_amount)s)が確定されました。"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s is pending."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s (%(formatted_amount)s)は保留中です。"
 
 #. module: payment
 #. odoo-python
@@ -3090,7 +3090,8 @@ msgstr ""
 msgid ""
 "Whether the transaction happened in a production environment. False for "
 "transactions created before this tracking was implemented."
-msgstr ""
+msgstr "その取引が本番環境で発生したかどうかを示します。この追跡機能が実装される以前"
+"に作成された取引については、False となります。"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -3297,13 +3298,13 @@ msgstr "お客様の支払方法"
 msgid ""
 "Your payment operation could not be completed for following transactions: %"
 "(tx_refs)s"
-msgstr ""
+msgstr "以下の取引について、お支払いの処理が完了できませんでした：%(tx_refs)s"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment operation has been successfully submitted."
-msgstr ""
+msgstr "お支払いの手続きは正常に送信されました。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
