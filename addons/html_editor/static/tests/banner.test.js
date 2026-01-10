@@ -299,3 +299,20 @@ test("Inserting a banner should not remove the next sibling block", async () => 
             </div><p>b</p>`
     );
 });
+
+test("Monospace banner should have no emoji", async () => {
+    const { el, editor } = await setupEditor("<p>test[]</p>");
+    await insertText(editor, "/monospace");
+    await press("enter");
+    expect(unformat(getContent(el))).toBe(
+        unformat(
+            `<p data-selection-placeholder=""><br></p>
+            <div class="font-monospace o_editor_banner user-select-none o-contenteditable-false d-flex align-items-center alert alert-secondary pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
+                    <p>test[]</p>
+                </div>
+            </div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        )
+    );
+});

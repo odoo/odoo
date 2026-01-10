@@ -29,6 +29,7 @@ export class CodeToolbar extends Component {
         getContent: { type: Function },
         onLanguageChange: { type: Function },
         currentLanguage: { type: String },
+        convertToParagraph: { type: Function },
     };
     static components = { Dropdown, DropdownItem, CopyButton };
 

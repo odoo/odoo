@@ -4,6 +4,7 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
     goBackToBlocks,
+    changeOption,
 } from "@website/js/tours/tour_utils";
 
 const dynamicSnippet = {
@@ -50,6 +51,20 @@ registerWebsitePreviewTour(
         {
             content: "Check That the `Template` option is visible",
             trigger: `.options-container [data-label="Template"]`,
+        },
+        // Check that the content width classes resets when the template is changed.
+        {
+            content: "Set Full-Width on the snippet",
+            ...changeOption("Dynamic Snippet", "[data-action-param='container-fluid']"),
+        },
+        ...changeOptionInPopover(
+            "Dynamic Snippet",
+            "Template",
+            "[data-action-param*='blog_post_single_circle']"
+        ),
+        {
+            content: "Check if the content width is not set as 'Full-width'",
+            trigger: ":iframe .s_dynamic_snippet_container.o_container_small:not(.container-fluid)",
         },
     ]
 );

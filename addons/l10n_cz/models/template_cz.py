@@ -63,7 +63,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'demo_move_auto_reconcile_6',
                 'demo_move_auto_reconcile_7',
             ):
-                vals = data[key]
+                vals = data[self.company_xmlid(key)]
                 if invoice_date := vals.get('invoice_date'):
                     vals['taxable_supply_date'] = invoice_date
         return data

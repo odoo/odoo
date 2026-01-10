@@ -49,6 +49,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  */
 
 export const DYNAMIC_SNIPPET = SNIPPET_SPECIFIC_END;
+export const CONTAINER_CLASSES = ["container", "container-fluid", "o_container_small"];
 
 class DynamicSnippetOptionPlugin extends Plugin {
     static id = "dynamicSnippetOption";
@@ -208,9 +209,7 @@ class DynamicSnippetOptionPlugin extends Plugin {
         if (oldTemplate) {
             const snippetContainerEl = el.querySelector(".s_dynamic_snippet_container");
             const snippetContentEl = el.querySelector(".s_dynamic_snippet_content");
-            snippetContainerEl.classList.remove(
-                ...(oldTemplate.containerClasses?.split(" ") || [])
-            );
+            snippetContainerEl.classList.remove(...CONTAINER_CLASSES);
             snippetContainerEl.classList.add(
                 ...(template.containerClasses || "container").split(" ")
             );

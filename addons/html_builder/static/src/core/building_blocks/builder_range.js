@@ -78,7 +78,7 @@ export class BuilderRange extends Component {
             return;
         }
         e.preventDefault();
-        let value = parseInt(e.target.value);
+        let value = parseFloat(e.target.value);
         if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
             value = Math.max(this.min, value - this.props.step);
         } else {

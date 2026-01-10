@@ -276,7 +276,7 @@ class PosOrder(models.Model):
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
             .mapped('picking_ids.move_ids')\
-            .filtered(lambda m: m.is_valued and m.product_id.valuation == 'real_time')\
+            .filtered(lambda m: m.is_valued and m.product_id.valuation == 'real_time' and m.product_id.id == product.id)\
             .sorted(lambda x: x.date)
         return moves._get_price_unit()
 
@@ -1224,7 +1224,7 @@ class PosOrder(models.Model):
 
     def read_pos_data(self, data, config):
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
-        account_moves = self.sudo().account_move | self.sudo().payment_ids.account_move_id
+        account_moves = self.sudo().account_move | self.sudo().payment_ids.account_move_id | self.sudo().session_move_id
         return {
             'pos.order': self._load_pos_data_read(self, config) if config else [],
             'pos.session': [],

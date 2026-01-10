@@ -48,7 +48,7 @@ class PosLoadMixin(models.AbstractModel):
             raise ValueError("config must be provided to read PoS data.")
 
         fields = self._load_pos_data_fields(config)
-        records = records.read(fields, load=False)
+        records = records._filtered_access("read").read(fields, load=False)
         return records or []
 
     def _unrelevant_records(self, config):

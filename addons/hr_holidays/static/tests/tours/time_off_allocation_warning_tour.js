@@ -1,6 +1,12 @@
 import { registry } from '@web/core/registry';
 import { stepUtils } from "@web_tour/tour_utils";
 
+const today = luxon.DateTime.now();
+const pastDateFrom = today.minus({ days: 3 }).toFormat("MM/dd/yyyy");
+const pastDateTo = today.minus({ days: 2 }).toFormat("MM/dd/yyyy");
+const futureDateTo = today.plus({ days: 2 }).toFormat("MM/dd/yyyy");
+const warningText = "The allocated days cannot be used, because the allocation is set to finish in the past.";
+
 registry.category("web_tour.tours").add("time_off_allocation_warning_tour", {
     url: "/odoo",
     steps: () => [
@@ -27,37 +33,49 @@ registry.category("web_tour.tours").add("time_off_allocation_warning_tour", {
         },
         {
             content: "Click to select a leave type",
-            trigger: ".o_field_widget[name='holiday_status_id'] .o-autocomplete--input",
+            trigger: ".o_field_widget[name='holiday_status_id'] input",
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:nth-child(1) > a",
+            trigger: ".o-autocomplete--dropdown-menu > li > a[id=holiday_status_id_0_0_0]",
             run: "click",
         },
         {
             content: "Open the start date picker",
-            trigger: ".o_field_widget[name='date_from'] .o_input",
+            trigger: ".o_field_widget[name='date_from'] button",
+            // Past date to trigger the warning
             run: "click",
         },
         {
-            content: "Choose a start date",
-            trigger: ".o_date_item_cell:nth-child(15) > div",
-            run: "click",
+            content: "Edit the start date picker",
+            trigger: ".o_field_widget[name='date_from'] input",
+           // Past date to trigger the warning
+            run: `click && edit ${pastDateFrom}`,
+        },
+        {
+            content: "Edit the end date picker",
+            trigger: ".o_field_widget[name='date_to'] input",
+            // Past date to trigger the warning
+            run: `click && edit ${pastDateTo} && click body`,
+        },
+        {
+            content: "Error regarding allocation to be visible",
+            trigger: `.o_cell:has(.o_row[name='validity']) + div span:contains(${warningText})`,
         },
         {
             content: "Open the end date picker",
-            trigger: ".o_field_widget[name='date_to'] .o_input",
+            trigger: ".o_field_widget[name='date_to'] button",
             run: "click",
         },
         {
-            content: "Choose a future end date",
-            trigger: ".o_date_item_cell:nth-child(22) > div",
-            run: "click",
+            content: "Edit the end date picker",
+            trigger: ".o_field_widget[name='date_to'] input",
+            run: `click && edit ${futureDateTo} && click body`,
+        },
+        {
+            content: "Error regarding allocation to be visible",
+            trigger: `.o_cell:has(.o_row[name='validity']) + div:not(:has(span:not(:contains(${warningText}))))`,
         },
         ...stepUtils.saveForm(),
-        {
-            trigger: ".o_menu_brand",
-            run: "click",
-        },
     ],
 });

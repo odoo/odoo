@@ -19,5 +19,10 @@ registry.category("web_tour.tours").add("deductible_amount_column", {
         trigger: ".o_field_widget[name='deductible_amount'] > .o_input",
         run: "edit 80"
     },
+    {
+        content: "Set Bill Date",
+        trigger: "input[data-field=invoice_date]",
+        run: "edit 2025-12-01",
+    },
     ...stepUtils.saveForm(),
 ]})

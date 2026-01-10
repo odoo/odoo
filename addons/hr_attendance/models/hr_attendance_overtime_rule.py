@@ -341,7 +341,9 @@ class HrAttendanceOvertimeRule(models.Model):
             expected_duration = sum_intervals(period_schedule)
 
         overtime_amount = sum_intervals(Intervals(attendances_interval_without_lunch)) - expected_duration
-        if self.ruleset_id.company_id.absence_management and float_compare(overtime_amount, -self.employee_tolerance, 5) == -1:
+        employee = attendances.employee_id
+        company = self.company_id or employee.company_id
+        if company.absence_management and float_compare(overtime_amount, -self.employee_tolerance, 5) == -1:
             last_attendance = sorted(intervals_attendance_by_attendance.keys(), key=lambda att: att.check_out)[-1]
             return {}, {last_attendance: [(overtime_amount, self)]}
 

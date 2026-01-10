@@ -59,7 +59,7 @@ import { setElementContent } from "@web/core/utils/html";
 /**
  * Clean up DOM before taking into account for next history step remaining in
  * edit mode
- * @typedef {((root: EditorContext["editable"] | HTMLElement) => void)[]} normalize_handlers
+ * @typedef {((root: EditorContext["editable"] | HTMLElement, stepState: "original"|"undo"|"redo"|"restore") => void)[]} normalize_handlers
  */
 
 /**
