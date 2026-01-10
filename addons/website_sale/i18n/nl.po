@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
 "PO-Revision-Date: 2025-12-20 09:49+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
@@ -204,10 +204,16 @@ msgstr "66 %"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+#, fuzzy
+#| msgid ""
+#| "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#| "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#| "class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+#| "                    <span class=\"align-middle\">to follow your order.</"
+#| "span>"
 msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+"<a role=\"button\" t-att-href=\"signup_url\" class=\"btn btn-primary "
+"o_translate_inline\">Sign Up</a>\n"
 "                    <span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
 "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
@@ -289,11 +295,6 @@ msgstr ""
 ">\n"
 "                    <span class=\"o_label small ms-1\">Toevoegen aan "
 "winkelmandje</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -1729,6 +1730,7 @@ msgstr "E-mail Winkelmandje herstel verstuurd"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__product_category_ids
+#: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 #: model_terms:ir.ui.view,arch_db:website_sale.filmstrip_categories
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_view_tree_website_sale
@@ -2574,6 +2576,7 @@ msgstr "Weergave"
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
 #: model:ir.model.fields,field_description:website_sale.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__display_name
+#: model:ir.model.fields,field_description:website_sale.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_document__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__display_name
@@ -3250,6 +3253,7 @@ msgstr "Ik ga akkoord met de"
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__id
 #: model:ir.model.fields,field_description:website_sale.field_ir_module_module__id
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__id
+#: model:ir.model.fields,field_description:website_sale.field_payment_transaction__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:website_sale.field_product_document__id
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__id
@@ -4018,11 +4022,6 @@ msgid "None"
 msgstr "Geen"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
-msgid "Not Published"
-msgstr "Niet gepubliceerd"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product/product.xml:0
 msgid "Not available for sale"
@@ -4176,6 +4175,13 @@ msgstr "Transparantie van de overlay"
 #: code:addons/website_sale/models/res_partner.py:0
 msgid "Open Sale Orders"
 msgstr "Verkooporders openen"
+
+#. module: website_sale
+#: model:ir.actions.act_url,name:website_sale.action_open_shop_page
+#, fuzzy
+#| msgid "Shop Payment"
+msgid "Open Shop Page"
+msgstr "Shop - Betaling"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -4354,6 +4360,13 @@ msgid "Payment Tokens"
 msgstr "Betaaltokens"
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_transaction
+#, fuzzy
+#| msgid "Payment Transactions"
+msgid "Payment Transaction"
+msgstr "Betaaltransacties"
+
+#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
 msgid "Payment Transactions"
 msgstr "Betaaltransacties"
@@ -4526,7 +4539,6 @@ msgstr "Privacybeleid"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
-#: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "Process the order once the payment is received."
 msgstr "Verwerk de order nadat de betaling ontvangen is."
 
@@ -4669,11 +4681,6 @@ msgid "Product Page main columns order"
 msgstr "Volgorde van hoofdkolommen op productpagina"
 
 #. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.action_product_pages_list
-msgid "Product Pages"
-msgstr "Productpagina's"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
 msgid "Product Public Categories"
 msgstr "Openbare productcategorieën"
@@ -4757,7 +4764,6 @@ msgstr "Productlint"
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
-#: model:ir.ui.menu,name:website_sale.menu_product_pages
 #: model_terms:ir.ui.view,arch_db:website_sale.products_breadcrumb
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -4836,7 +4842,6 @@ msgid "Publish on website"
 msgstr "Op de website publiceren"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_search_view_website
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_search
@@ -5231,12 +5236,6 @@ msgid "Sample"
 msgstr "Voorbeeld"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
-#: model_terms:ir.ui.view,arch_db:website_sale.product_pages_tree_view
-msgid "Scheduled"
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Search"
@@ -5396,6 +5395,7 @@ msgstr "Verzenden"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+#: model:ir.ui.menu,name:website_sale.menu_open_shop
 #: model:website.menu,name:website_sale.menu_shop
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "Shop"
@@ -5752,7 +5752,6 @@ msgstr "Tabs"
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
-#: model:ir.ui.menu,name:website_sale.product_catalog_product_tags
 msgid "Tags"
 msgstr "Labels"
 
@@ -6025,7 +6024,6 @@ msgstr "Er is geen bevestigde order vanuit de website"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
-#: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "There is no unpaid order from the website yet"
 msgstr "Er is nog geen onbetaalde order vanuit de website"
 
@@ -6218,8 +6216,6 @@ msgstr "Onbetaald"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
-#: model:ir.actions.act_window,name:website_sale.action_view_unpaid_quotation_tree
-#: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
 msgid "Unpaid Orders"
 msgstr "Onbetaalde orders"
 
@@ -6771,7 +6767,6 @@ msgstr "E-commerce"
 #: code:addons/website_sale/static/src/website_builder/mega_menu_option.xml:0
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__public_categ_ids
-#: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 msgid "eCommerce Categories"
 msgstr "E-commerce categorieën"
 
@@ -6949,3 +6944,12 @@ msgstr "algemene voorwaarden"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr "{{0}} afbeelding"
+
+#~ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+#~ msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+
+#~ msgid "Not Published"
+#~ msgstr "Niet gepubliceerd"
+
+#~ msgid "Product Pages"
+#~ msgstr "Productpagina's"

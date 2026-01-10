@@ -9,17 +9,17 @@
 # Martin Trigaux, 2023
 # Sarah Park, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-12-20 09:46+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-08 03:15+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/account/"
-"ko/>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
+"account/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -347,6 +347,24 @@ msgid ""
 msgstr ""
 "- « 총계 (세금 포함) » 필드가 새로 추가되어, 계정 및 세금이 정확히 표시되도"
 "록 라인을 자동 생성하여 인코딩 속도를 높이고 제어합니다."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"- A rounding per tax is advised if your prices are tax-excluded. This "
+"minimizes cumulative rounding errors because it totals all unrounded tax "
+"amounts first and only rounds the final tax total once."
+"\\n                                                                                                                                                                                "
+"- A rounding per line is advised if your prices are tax-included. That way, "
+"the sum of line subtotal equals the total with taxes."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
+#, fuzzy
+#| msgid "Rounding"
+msgid "- Ending"
+msgstr "반올림"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1040,6 +1058,28 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        안녕하세요 <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
+"t>님<br/><br/>\n"
+"        결제해 주셔서 감사합니다.\n"
+"        다음과 같이 영수증을 발급해 드립니다: <span style=\"font-weight:bold;"
+"\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</"
+"span>, 금액:\n"
+"         <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">$ 10.00</span> , 발행: <t t-out=\"
+""object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        궁금한 점이 있으면 언제든 문의주시기 바랍니다.\n"
+"        <br/><br/>\n"
+"        감사합니다\n"
+"        <t t-if=\"not is_html_empty(user.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -1402,6 +1442,13 @@ msgid "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
+#, fuzzy
+#| msgid "<span invisible=\"not early_discount\"> days</span>"
+msgid "<span invisible=\"not account_id\">on</span>"
+msgstr "<span invisible=\"not early_discount\">일</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "<span invisible=\"not early_discount\"> % if paid within </span>"
 msgstr ""
@@ -1422,6 +1469,13 @@ msgstr ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> 청구서</span>\n"
 "                                        <span "
 "invisible=\"reconciled_invoices_type == 'invoice'\"> 신용 전표</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
+#, fuzzy
+#| msgid "<span invisible=\"not early_discount\"> days</span>"
+msgid "<span invisible=\"repartition_type == 'base'\">%</span>"
+msgstr "<span invisible=\"not early_discount\">일</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1491,9 +1545,14 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
+#| msgid ""
+#| "<span>1.00</span>\n"
+#| "                                                        <span "
+#| "groups=\"uom.group_uom\">Units</span>"
 msgid ""
 "<span>1.00</span>\n"
-"                                                        <span "
+"                                                            <span "
 "groups=\"uom.group_uom\">Units</span>"
 msgstr ""
 "<span>1.00</span>\n"
@@ -2039,9 +2098,6 @@ msgid ""
 "<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/"
 ">\n"
 "\n"
-"<t t-set=\"payment_state\" t-value=\"object.payment_state != 'not_paid' and "
-"object.payment_state.replace('_', ' ')\"/>\n"
-"\n"
 "<div style=\"margin:0; padding:0; color:#2c2431;\">\n"
 "    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
 "style=\"width:100%; background:#f7f4f8; padding:40px 0;\">\n"
@@ -2268,6 +2324,233 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<t t-set=\"portal_url\" t-value=\"object.get_portal_url()\"/>\n"
+"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/>"
+"\n"
+"\n"
+"<div style=\"margin:0; padding:0; color:#2c2431;\">\n"
+"    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style="
+"\"width:100%; background:#f7f4f8; padding:40px 0;\">\n"
+"        <tr>\n"
+"            <td align=\"center\">\n"
+"                <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+"width=\"640\" style=\"width:100%; max-width:640px; background:#ffffff; "
+"border-radius:16px; overflow:hidden; box-shadow:0 20px 45px rgba"
+"(56, 37, 60, 0.12);\">\n"
+"                    <tr>\n"
+"                        <td colspan=\"2\" style=\"background:linear-gradient"
+"(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; padding:38px;\">"
+"\n"
+"                            <table cellpadding=\"0\" cellspacing=\"0\" "
+"border=\"0\" style=\"width:100%;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"font-size:13px; letter-"
+"spacing:0.3px; text-transform:uppercase; opacity:0.78;\">\n"
+"                                        <t t-if="
+"\"object.is_sale_document(include_receipts=True)\">매출 청구서</t>\n"
+"                                        <t t-else=\"\">매입 청구서</t>\n"
+"                                    </td>\n"
+"                                    <td align=\"right\">\n"
+"                                        <img alt=\"Odoo\" src="
+"\"/web/static/img/logo_inverse_white_206px.png\" style="
+"\"height:30px; width:92px; object-fit:contain;\"/>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                                <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding-"
+"top:22px; font-size:26px; line-height:1.45; font-weight:600; color:#ffffff;\""
+">\n"
+"                                        다음의 신규 청구서: <t t-out="
+"\"object.journal_id.display_name\"/>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                                <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding-"
+"top:18px; font-size:14px; opacity:0.85; line-height:1.6; color:#ffffff;\">\n"
+"                                        신규 청구서가 <t t-out="
+"\"object.journal_id.display_name\"/> 다음 전표에서 발행: <t t-out="
+"\"object.company_id.name\"/>!\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td colspan=\"2\" style=\"padding:34px 38px;\">\n"
+"                            <table cellpadding=\"0\" cellspacing=\"0\" "
+"border=\"0\" style="
+"\"width:100%; border-collapse:separate; border-spacing:0 16px;\">\n"
+"                                <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding:0;\">\n"
+"                                        <table cellpadding=\"0\" cellspacing="
+"\"0\" border=\"0\" style="
+"\"width:100%; background:#fbf7fc; border-radius:16px;\">\n"
+"                                            <tr>\n"
+"                                                <td style="
+"\"padding:24px 26px;\">\n"
+"                                                    <div style=\"font-"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;\">"
+"문서</div>\n"
+"                                                    <div style=\"margin-"
+"top:8px; font-size:20px; font-weight:600; color:#2c2431; word-break:break-"
+"word;\">\n"
+"                                                        <t t-out="
+"\"object._get_move_display_name()\"/>\n"
+"                                                    </div>\n"
+"                                                    <t t-if=\"object.ref\">\n"
+"                                                        <div style=\"margin-"
+"top:6px; color:#7f6c84;\">참조 번호: <t t-out=\"object.ref\"/></div>\n"
+"                                                    </t>\n"
+"                                                </td>\n"
+"                                                <t t-if="
+"\"not object.currency_id.is_zero(object.amount_total)\">\n"
+"                                                    <td style="
+"\"padding:24px 26px; border-left:1px solid #efe6f3;\" align=\"right\">\n"
+"                                                        <div style=\"font-"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;\">"
+"총계</div>\n"
+"                                                        <div style=\"margin-"
+"top:8px; font-size:22px; font-weight:600; color:#2c2431;\">\n"
+"                                                            <t t-out="
+"\"format_amount(object.amount_total, object.currency_id)\"/>\n"
+"                                                        </div>\n"
+"                                                    </td>\n"
+"                                                </t>\n"
+"                                            </tr>\n"
+"                                        </table>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                                <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding:0;\">\n"
+"                                        <table cellpadding=\"0\" cellspacing="
+"\"0\" border=\"0\" style=\"width:100%; margin-top:18px;\">\n"
+"                                            <tr>\n"
+"                                                <td style=\"padding:0;\">\n"
+"                                                    <div style="
+"\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-start;\">\n"
+"                                                        <t t-if="
+"\"object.partner_id\">\n"
+"                                                            <div style=\"flex"
+":0 1 180px; min-width:160px; background:#fff; border:1px solid #efe6f3; "
+"border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div style"
+"=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">파트너</div>\n"
+"                                                                <div style"
+"=\"margin-top:6px; font-size:15px; font-weight:500; color:#2c2431; word-break"
+":break-word;\">\n"
+"                                                                    <t t-out="
+"\"object.partner_id.display_name\"/>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                        <div style=\"flex:0 "
+"1 150px; min-width:140px; background:#fff; border:1px solid #efe6f3; border-"
+"radius:12px; padding:12px 16px;\">\n"
+"                                                            <div style"
+"=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">청구일</div>\n"
+"                                                            <div style"
+"=\"margin-top:6px; font-size:15px; color:#2c2431;\">\n"
+"                                                                <t t-out="
+"\"format_date(object.invoice_date or object.date)\"/>\n"
+"                                                            </div>\n"
+"                                                        </div>\n"
+"                                                        <t t-if="
+"\"object.invoice_date_due\">\n"
+"                                                            <div style=\"flex"
+":0 1 150px; min-width:140px; background:#fff; border:1px solid #efe6f3; "
+"border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div style"
+"=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">마감일</div>\n"
+"                                                                <div style"
+"=\"margin-top:6px; font-size:15px; color:#2c2431;\">\n"
+"                                                                    <t t-out="
+"\"format_date(object.invoice_date_due)\"/>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                        <t t-if="
+"\"object.payment_state in ('paid', 'in_payment')\">\n"
+"                                                            <div style=\"flex"
+":0 1 180px; min-width:160px; background:#fff; border:1px solid #efe6f3; "
+"border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div style"
+"=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">결제 상태</div>\n"
+"                                                                <div style"
+"=\"margin-top:6px; font-size:15px; color:#2c2431; text-transform:capitalize;"
+"\">\n"
+"                                                                    해당 청구"
+"서 결제 완료\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                        <t t-if="
+"\"object.currency_id != object.company_currency_id\">\n"
+"                                                            <div style=\"flex"
+":0 1 150px; min-width:140px; background:#fff; border:1px solid #efe6f3; "
+"border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div style"
+"=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">통화</div>\n"
+"                                                                <div style"
+"=\"margin-top:6px; font-size:15px; color:#2c2431;\">\n"
+"                                                                    <t t-out="
+"\"object.currency_id.display_name\"/>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                    </div>\n"
+"                                                </td>\n"
+"                                            </tr>\n"
+"                                        </table>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"\n"
+"                            <div style=\"margin:18px 0 0; padding:18px 22px; "
+"background:#f9f2f9; border-radius:12px; border:1px solid #eadff0; font-"
+"size:13px; color:#6f5c73; line-height:1.6;\">\n"
+"                                <strong style=\"color:#2c2431;\">파일 포함:</"
+"strong> 원본 문서를 참고로 포함함.\n"
+"                            </div>\n"
+"\n"
+"                            <div style=\"margin-top:32px; text-align:center;"
+"\">\n"
+"                                <a t-if=\"portal_url\" t-attf-href="
+"\"{{ portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
+"padding:13px 30px; min-width:210px; background:linear-gradient"
+"(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-decoration:none; "
+"border-radius:12px; font-weight:600; font-size:14px;\" target=\"_blank\">\n"
+"                                    포털에서 보기\n"
+"                                </a>\n"
+"                            </div>\n"
+"\n"
+"                            <p style="
+"\"margin:28px 0 0; font-size:12px; color:#8f8596; text-align:center;\">\n"
+"                                다음 항목의 구독자로 등록된 경우 이 메시지를 "
+"수신합니다:\n"
+"                                <strong t-out="
+"\"object.journal_id.display_name or 'this journal'\"/>.\n"
+"                                <span style=\"display:block; margin:18px "
+"auto; height:1px; max-width:420px; background:#ece3ed;\"/>\n"
+"                                <t t-if=\"unsubscribe_url\">\n"
+"                                    메시지 수신을 중단하고 싶으신가요? <a t"
+"-attf-href=\"{{ unsubscribe_url }}\" style="
+"\"color:#8f8596; text-decoration:underline;\" target=\"_blank\">수신 거부하기"
+"</a>.\n"
+"                                </t>\n"
+"                            </p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #. odoo-python
@@ -2402,15 +2685,6 @@ msgstr "미결제 계좌의 결제는 분개 항목이 없으면 확인할 수 �
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
 msgid "A report line with the same code already exists."
 msgstr "동일한 코드가 있는 보고서 명세가 이미 존재합니다."
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid ""
-"A rounding per line is advised if your prices are tax-included. That way, "
-"the sum of line subtotals equals the total with taxes."
-msgstr ""
-"세금 포함 가격인 경우에는 항목별로 반올림을 하는 것을 권합니다. 그렇게 해야 "
-"항목 소계를 합한 금액이 세금 포함 합계 금액과 같아지게 됩니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2752,6 +3026,13 @@ msgstr "세금 계정"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
 msgstr "세금 계정 그룹"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_form
+#, fuzzy
+#| msgid "Tax Repartition Line"
+msgid "Account Tax Repartition Line"
+msgstr "세금 분할 명세"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
@@ -3878,7 +4159,7 @@ msgstr "분석"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__anomaly
 msgid "Anomaly"
-msgstr ""
+msgstr "이상 항목"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_unique_name
@@ -4391,6 +4672,7 @@ msgstr "은행 및 현금 계정은 회사 간에 공유할 수 없습니다."
 #: model:ir.model,name:account.model_res_partner_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "Bank Account"
 msgstr "은행 계좌"
 
@@ -4420,7 +4702,6 @@ msgstr "은행 계좌 이름"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-#: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "Bank Account Number"
 msgstr "은행 계좌 번호"
 
@@ -5605,6 +5886,7 @@ msgstr "협력사"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__company_id
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__company_id
 #: model:ir.model.fields,field_description:account.field_account_code_mapping__company_id
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__company_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_id
@@ -8777,12 +9059,12 @@ msgid "Foldable"
 msgstr "접기 가능"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,description:account.portal_invoice_vendor
 msgid "Follow, download or pay our invoices"
 msgstr "청구서를 팔로우하거나 다운로드 혹은 결제하세요."
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,description:account.portal_invoice_client
 msgid "Follow, download or pay your invoices"
 msgstr "청구서를 팔로우하거나 다운로드 혹은 결제하세요."
 
@@ -10367,8 +10649,6 @@ msgid "Invoice Count"
 msgstr "청구서 수"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
 #: model:mail.message.subtype,description:account.mt_invoice_created
 #: model:mail.message.subtype,name:account.mt_invoice_created
 msgid "Invoice Created"
@@ -13225,7 +13505,7 @@ msgid "Other type of property, like plants, machinery or various equipment"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,name:account.portal_invoice_vendor
 msgid "Our Invoices"
 msgstr "청구서"
 
@@ -14094,11 +14374,6 @@ msgstr "이전 소계"
 #: model:ir.model.fields,field_description:account.field_account_move__preferred_payment_method_line_id
 msgid "Preferred Payment Method Line"
 msgstr "선호하는 결제 수단 내역"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_report__prefix_groups_threshold
-msgid "Prefix Groups Threshold"
-msgstr "접두사 그룹 임계값"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__prefix_placeholder
@@ -16320,6 +16595,13 @@ msgid "Standard communication"
 msgstr "표준 커뮤니케이션"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
+#, fuzzy
+#| msgid "Settings"
+msgid "Starting"
+msgstr "설정"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
 msgid "Starting Balance"
 msgstr "개시 잔액"
@@ -16542,7 +16824,7 @@ msgstr "데이터 요약"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__supervised
 msgid "Supervised"
-msgstr ""
+msgstr "관리 감독"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_supplier_rank
@@ -19073,6 +19355,13 @@ msgid "Transaction Feeds"
 msgstr "거래 피드"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__transaction_uuid
+#, fuzzy
+#| msgid "Transactions"
+msgid "Transaction ID"
+msgstr "거래"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_type
 msgid "Transaction Type"
 msgstr "거래 유형"
@@ -19262,6 +19551,11 @@ msgstr "해시되지 않은 항목"
 #: model:ir.model.fields,help:account.field_account_report_line__code
 msgid "Unique identifier for this line."
 msgstr "이 항목에 대한 고유 식별 기호입니다."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment__transaction_uuid
+msgid "Unique transaction identifier assigned by the initiating party"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
@@ -20525,14 +20819,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You cannot have more than one account with \"Current Year Earnings\" as "
-"type. (accounts: %s)"
-msgstr "\"현재 연도 수익\" 계정은 하나만 있어야 합니다. (계정 : %s)"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
@@ -20854,7 +21140,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,name:account.portal_invoice_client
 msgid "Your Invoices"
 msgstr "청구서"
 
@@ -21478,3 +21764,18 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} 내부 발행 청구서 (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "A rounding per line is advised if your prices are tax-included. That way, "
+#~ "the sum of line subtotals equals the total with taxes."
+#~ msgstr ""
+#~ "세금 포함 가격인 경우에는 항목별로 반올림을 하는 것을 권합니다. 그렇게 해"
+#~ "야 항목 소계를 합한 금액이 세금 포함 합계 금액과 같아지게 됩니다."
+
+#~ msgid "Prefix Groups Threshold"
+#~ msgstr "접두사 그룹 임계값"
+
+#~ msgid ""
+#~ "You cannot have more than one account with \"Current Year Earnings\" as "
+#~ "type. (accounts: %s)"
+#~ msgstr "\"현재 연도 수익\" 계정은 하나만 있어야 합니다. (계정 : %s)"

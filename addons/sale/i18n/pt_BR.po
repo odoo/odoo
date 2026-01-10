@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-01-04 18:36+0000\n"
 "PO-Revision-Date: 2025-11-27 09:03+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -823,6 +823,23 @@ msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr "<span class=\"o_stat_text\">Vendido</span>"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+msgid ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                Outgoing\n"
+"                            </span>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#, fuzzy
+#| msgid "<span class=\"o_stat_text\">Sold</span>"
+msgid "<span groups=\"!uom.group_uom\">Sold</span>"
+msgstr "<span class=\"o_stat_text\">Vendido</span>"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "<span id=\"o_sale_portal_use_amount_total\">By paying,</span>"
 msgstr "<span id=\"o_sale_portal_use_amount_total\">Ao pagar,</span>"
@@ -984,6 +1001,11 @@ msgstr ""
 "Uma fatura padrão é emitida com todas as linhas do pedido prontas para serem "
 "faturadas de acordo com a política de faturamento (baseado na quantidade "
 "solicitada ou entregue)."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_line__is_storable
+msgid "A storable product is a product for which you manage stock."
+msgstr ""
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1371,6 +1393,18 @@ msgid "Automatic Invoice"
 msgstr "Fatura automática"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
+msgid "Availability"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.js:0
+msgid "Available"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Average"
 msgstr "Média"
@@ -1395,6 +1429,14 @@ msgstr "Baseado na referência do documento"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Beat competitors with stunning quotations!"
 msgstr "Acabe com a concorrência com cotações impressionantes!"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__delivery_status
+msgid ""
+"Blue: Not Delivered/Started\n"
+"            Orange: Partially Delivered\n"
+"            Green: Fully Delivered"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -2094,6 +2136,14 @@ msgid "Delete"
 msgstr "Excluir"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#, fuzzy
+#| msgid "Delivered"
+msgid "Deliver"
+msgstr "Entregue"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
 msgstr "Entregar conteúdo por e-mail"
@@ -2122,6 +2172,7 @@ msgstr "Endereço de entrega"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__delivery_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__scheduled_date
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivery Date"
@@ -2141,6 +2192,13 @@ msgstr "Métodos de entrega"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
 msgstr "Quantidade entregue"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__delivery_status
+#, fuzzy
+#| msgid "Delivery Date"
+msgid "Delivery Status"
+msgstr "Data de entrega"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -2289,6 +2347,13 @@ msgstr "Exibir aviso de fatura em rascunho"
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
 msgid "Display Name"
 msgstr "Nome exibido"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__display_qty_widget
+#, fuzzy
+#| msgid "Display Type"
+msgid "Display Qty Widget"
+msgstr "Tipo de exibição"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
@@ -2521,7 +2586,7 @@ msgid "Fixed Amount"
 msgstr "Valor fixo"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
+#: model:portal.entry,description:sale.portal_your_orders
 msgid "Follow, view or pay your orders"
 msgstr "Acompanhe, visualize ou pague seus pedidos"
 
@@ -2553,6 +2618,14 @@ msgid "Forbidden values on non-accountable sale order line"
 msgstr "Valores inválidos em uma linha não faturável do pedido de venda"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.js:0
+#, fuzzy
+#| msgid "Created on"
+msgid "Forecasted Stock"
+msgstr "Criado em"
+
+#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
 msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
@@ -2568,6 +2641,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
 msgid "Full amount <br/>"
 msgstr "Valor total <br/>"
+
+#. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__full
+#, fuzzy
+#| msgid "Qty Delivered"
+msgid "Fully Delivered"
+msgstr "Qtd entregue"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -3430,6 +3510,13 @@ msgid "No, go back"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__pending
+#, fuzzy
+#| msgid "Qty Delivered"
+msgid "Not Delivered"
+msgstr "Qtd entregue"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Not using Odoo?"
 msgstr "Não está usando o Odoo?"
@@ -3490,6 +3577,12 @@ msgstr "Odoo"
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
+msgid "On"
 msgstr ""
 
 #. module: sale
@@ -3756,6 +3849,13 @@ msgstr "Empacotamento"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
 msgid "Parent Section Line"
 msgstr ""
+
+#. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__partial
+#, fuzzy
+#| msgid "Qty Delivered"
+msgid "Partially Delivered"
+msgstr "Qtd entregue"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
@@ -4073,6 +4173,11 @@ msgid "Qty"
 msgstr "Qtd"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_available_today
+msgid "Qty Available Today"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_delivered
 msgid "Qty Delivered"
 msgstr "Qtd entregue"
@@ -4214,7 +4319,7 @@ msgid "Quotations and Sales"
 msgstr "Cotação e vendas"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
+#: model:portal.entry,name:sale.portal_quotations_to_review
 msgid "Quotations to review"
 msgstr "Cotações a revisar"
 
@@ -4364,6 +4469,13 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 msgid "Review & Sign Quotation"
 msgstr ""
+
+#. module: sale
+#: model:portal.entry,description:sale.portal_quotations_to_review
+#, fuzzy
+#| msgid "View Quotation"
+msgid "Review your quotations"
+msgstr "Visualizar cotação"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
@@ -4585,7 +4697,6 @@ msgstr "Pedidos de venda"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
-#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_order_calendar
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_order_graph
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_order_pivot
@@ -4824,6 +4935,13 @@ msgid "Shopee Sync"
 msgstr "Sincronização da Shopee"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__show_deliver_button
+#, fuzzy
+#| msgid "Delivery Quantity"
+msgid "Show Deliver Button"
+msgstr "Quantidade entregue"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records whose next activity date is past"
 msgstr "Mostrar todos os registros cuja data da próxima atividade já passou"
@@ -4885,8 +5003,10 @@ msgstr "Vendido"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
-msgid "Sold in the last 365 days"
-msgstr "Vendido nos últimos 365 dias"
+msgid ""
+"Sold in the last 365 days. Outgoing represents confirmed sales orders not "
+"delivered, or partially delivered"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -4942,6 +5062,13 @@ msgstr "Conector Starshipit"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Start on Odoo"
+msgstr "Iniciar no Odoo"
+
+#. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__started
+#, fuzzy
+#| msgid "Start on Odoo"
+msgid "Started"
 msgstr "Iniciar no Odoo"
 
 #. module: sale
@@ -5229,6 +5356,14 @@ msgstr ""
 "%(used_products)s\n"
 "Você pode arquivar estes produtos e recriá-los com a restrição de empresa, "
 "ou pode mantê-los como produtos compartilhados."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+msgid ""
+"The following sale orders %(invalid_orders) can't be delivered. Cancelled "
+"all deliveries."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -5552,6 +5687,11 @@ msgid "Total: %s"
 msgstr "Total: %s"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__is_storable
+msgid "Track Inventory"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale.field_product_template__service_type
 msgid "Track Service"
@@ -5788,6 +5928,11 @@ msgid "Virtual"
 msgstr "Virtual"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_available_at_date
+msgid "Virtual Available At Date"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Void Transaction"
 msgstr "Transação anulada"
@@ -5934,7 +6079,7 @@ msgstr ""
 "                seja um produto armazenável, consumível, ou um serviço."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
+#: model:portal.entry,name:sale.portal_your_orders
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Seu pedido"
@@ -6117,3 +6262,6 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Sold in the last 365 days"
+#~ msgstr "Vendido nos últimos 365 dias"

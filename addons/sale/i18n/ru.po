@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-01-04 18:36+0000\n"
 "PO-Revision-Date: 2025-12-20 09:39+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/sale/ru/"
@@ -811,6 +811,23 @@ msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr "<span class=\"o_stat_text\">Продано</span>"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+msgid ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                Outgoing\n"
+"                            </span>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#, fuzzy
+#| msgid "<span class=\"o_stat_text\">Sold</span>"
+msgid "<span groups=\"!uom.group_uom\">Sold</span>"
+msgstr "<span class=\"o_stat_text\">Продано</span>"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "<span id=\"o_sale_portal_use_amount_total\">By paying,</span>"
 msgstr ""
@@ -972,6 +989,11 @@ msgstr ""
 "Выставляется стандартный счет-фактура со всеми строками заказа, готовыми для "
 "выставления счета, в соответствии с их политикой выставления счетов (на "
 "основе заказанного или поставленного количества)."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_line__is_storable
+msgid "A storable product is a product for which you manage stock."
+msgstr ""
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1352,6 +1374,18 @@ msgid "Automatic Invoice"
 msgstr "Автоматическое выставление счета"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
+msgid "Availability"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.js:0
+msgid "Available"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Average"
 msgstr "Средне"
@@ -1377,6 +1411,14 @@ msgstr "На основании ссылки на документ"
 msgid "Beat competitors with stunning quotations!"
 msgstr ""
 "Опережайте конкурентов благодаря впечатляющим коммерческим предложениям!"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__delivery_status
+msgid ""
+"Blue: Not Delivered/Started\n"
+"            Orange: Partially Delivered\n"
+"            Green: Fully Delivered"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -2076,6 +2118,14 @@ msgid "Delete"
 msgstr "Удалить"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#, fuzzy
+#| msgid "Delivered"
+msgid "Deliver"
+msgstr "Отгружено"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
 msgstr "Доставка контента по электронной почте"
@@ -2104,6 +2154,7 @@ msgstr "Адрес доставки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__delivery_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__scheduled_date
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivery Date"
@@ -2123,6 +2174,13 @@ msgstr "Способы доставки"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
 msgstr "Доставка Количество"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__delivery_status
+#, fuzzy
+#| msgid "Delivery Date"
+msgid "Delivery Status"
+msgstr "Дата доставки"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -2269,6 +2327,13 @@ msgstr "Отображение предупреждения о черновом 
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__display_qty_widget
+#, fuzzy
+#| msgid "Display Type"
+msgid "Display Qty Widget"
+msgstr "Тип отображения"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
@@ -2501,7 +2566,7 @@ msgid "Fixed Amount"
 msgstr "Фиксированная сумма"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
+#: model:portal.entry,description:sale.portal_your_orders
 msgid "Follow, view or pay your orders"
 msgstr "Отслеживайте, просматривайте или оплачивайте свои заказы"
 
@@ -2533,6 +2598,14 @@ msgid "Forbidden values on non-accountable sale order line"
 msgstr "Запрещенные значения в строке заказа на продажу без учета"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.js:0
+#, fuzzy
+#| msgid "Created on"
+msgid "Forecasted Stock"
+msgstr "Дата создания:"
+
+#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
 msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
@@ -2548,6 +2621,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
 msgid "Full amount <br/>"
 msgstr "Полная сумма <br/>"
+
+#. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__full
+#, fuzzy
+#| msgid "Qty Delivered"
+msgid "Fully Delivered"
+msgstr "Кол-во доставлено"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -3407,6 +3487,13 @@ msgid "No, go back"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__pending
+#, fuzzy
+#| msgid "Qty Delivered"
+msgid "Not Delivered"
+msgstr "Кол-во доставлено"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Not using Odoo?"
 msgstr "Не используете Odoo?"
@@ -3466,6 +3553,12 @@ msgstr "Odoo"
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
+msgid "On"
 msgstr ""
 
 #. module: sale
@@ -3731,6 +3824,13 @@ msgstr "Упаковка"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
 msgid "Parent Section Line"
 msgstr ""
+
+#. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__partial
+#, fuzzy
+#| msgid "Qty Delivered"
+msgid "Partially Delivered"
+msgstr "Кол-во доставлено"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
@@ -4046,6 +4146,11 @@ msgid "Qty"
 msgstr "Количество"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_available_today
+msgid "Qty Available Today"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_delivered
 msgid "Qty Delivered"
 msgstr "Кол-во доставлено"
@@ -4189,7 +4294,7 @@ msgid "Quotations and Sales"
 msgstr "Коммерческие предложения и Продажи"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
+#: model:portal.entry,name:sale.portal_quotations_to_review
 msgid "Quotations to review"
 msgstr "Котировки для рассмотрения"
 
@@ -4339,6 +4444,13 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 msgid "Review & Sign Quotation"
 msgstr ""
+
+#. module: sale
+#: model:portal.entry,description:sale.portal_quotations_to_review
+#, fuzzy
+#| msgid "View Quotation"
+msgid "Review your quotations"
+msgstr "Посмотреть предложение"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
@@ -4560,7 +4672,6 @@ msgstr "Заказ(ы) на продажу"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
-#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_order_calendar
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_order_graph
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_order_pivot
@@ -4798,6 +4909,13 @@ msgid "Shopee Sync"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__show_deliver_button
+#, fuzzy
+#| msgid "Delivery Quantity"
+msgid "Show Deliver Button"
+msgstr "Доставка Количество"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records whose next activity date is past"
 msgstr ""
@@ -4860,8 +4978,10 @@ msgstr "Продано"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
-msgid "Sold in the last 365 days"
-msgstr "Продано за последние 365 дней"
+msgid ""
+"Sold in the last 365 days. Outgoing represents confirmed sales orders not "
+"delivered, or partially delivered"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -4914,6 +5034,13 @@ msgstr "Коннектор Starshipit"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Start on Odoo"
+msgstr "Начать работу в Odoo"
+
+#. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__started
+#, fuzzy
+#| msgid "Start on Odoo"
+msgid "Started"
 msgstr "Начать работу в Odoo"
 
 #. module: sale
@@ -5201,6 +5328,14 @@ msgstr ""
 "%(used_products)s\n"
 "Мы можете архивировать эти продукты и создать их заново для нужной компании "
 "или пометьте их как общие."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+msgid ""
+"The following sale orders %(invalid_orders) can't be delivered. Cancelled "
+"all deliveries."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -5529,6 +5664,11 @@ msgid "Total: %s"
 msgstr "Итого: %s"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__is_storable
+msgid "Track Inventory"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale.field_product_template__service_type
 msgid "Track Service"
@@ -5766,6 +5906,11 @@ msgid "Virtual"
 msgstr "Виртуальный"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_available_at_date
+msgid "Virtual Available At Date"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Void Transaction"
 msgstr "Аннулировать транзакцию"
@@ -5915,7 +6060,7 @@ msgstr ""
 "                будь то хранимый продукт, расходный материал или услуга."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
+#: model:portal.entry,name:sale.portal_your_orders
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Ваши заказы"
@@ -6097,3 +6242,6 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Sold in the last 365 days"
+#~ msgstr "Продано за последние 365 дней"

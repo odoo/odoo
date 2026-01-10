@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
 "PO-Revision-Date: 2025-11-16 15:10+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -114,11 +114,6 @@ msgstr "<b>写几封信</b>寻找公司，或创建新公司。"
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"fa fa-briefcase\" title=\"Opportunity Name\"/>"
 msgstr "<i class=\"fa fa-briefcase\" title=\"商机名称\"/>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
-msgid "<i class=\"fa fa-building\" title=\"Company\"/>"
-msgstr "<i class=\"fa fa-building\" title=\"公司\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
@@ -352,18 +347,6 @@ msgid "A lead in a Won stage cannot be lost. Move it to another stage first."
 msgstr "在赢得阶段的潜在客户不会丢失。请先将其转移到另一个阶段。"
 
 #. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_lead.py:0
-msgid "A new lead has been created and is not assigned to any team."
-msgstr "创建了一个新销售线索，但未分配给任何团队。"
-
-#. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_lead.py:0
-msgid "A new lead has been created for the team \"%(team_name)s\"."
-msgstr "已为团队\"%(team_name)s\"创建了新的销售线索。"
-
-#. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -584,11 +567,6 @@ msgid "All set. Let’s <b>Schedule</b> it."
 msgstr "全部已设置。立即<b>计划</b>。"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "Analysis"
-msgstr "分析"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__deduplicate
 msgid "Apply deduplication"
 msgstr "应用去重"
@@ -611,6 +589,12 @@ msgstr "已归档"
 msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the "
 "<b>first team by default.</b>"
+msgstr ""
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.xml:0
+msgid "Ask your Team Leader to get access"
 msgstr ""
 
 #. module: crm
@@ -897,7 +881,6 @@ msgstr "颜色索引"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__company_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -1004,11 +987,6 @@ msgid "Contact:"
 msgstr "联系人："
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "Contacts"
-msgstr "联系人"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__name
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__name
 msgid "Conversion Action"
@@ -1041,6 +1019,13 @@ msgstr "线索转化为商机（批量）"
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Convert Lead to Opportunity (not in mass)"
 msgstr "线索转化为商机（非批量）"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+#, fuzzy
+#| msgid "Create an opportunity to start playing with your pipeline."
+msgid "Convert into an Opportunity to see it in your Pipeline"
+msgstr "从你的线索中创建一个商机"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1130,6 +1115,14 @@ msgid "Create a Recurring Plan"
 msgstr "创建定期计划"
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+#, fuzzy
+#| msgid "Create a Lead"
+msgid "Create a landing page"
+msgstr "创建线索"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
 msgstr "直接从商机商机创建线索挖掘申请。"
@@ -1159,6 +1152,12 @@ msgstr "创建商机"
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Create an opportunity to start playing with your pipeline."
 msgstr "从你的线索中创建一个商机"
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Create leads on specific answers"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__create_uid
@@ -1221,11 +1220,6 @@ msgstr "自定义退回消息"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Customer"
 msgstr "客户"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead__commercial_partner_id
-msgid "Customer Company"
-msgstr "客户公司"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.res_partner_menu_customer
@@ -1371,6 +1365,12 @@ msgstr "确定要更新此阶段？"
 
 #. module: crm
 #. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Do you want to install the \"%(module_name)s\" App?"
+msgstr ""
+
+#. module: crm
+#. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Does not have a"
 msgstr "没有"
@@ -1430,6 +1430,14 @@ msgstr "电子邮箱别名"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_domain_criterion
 msgid "Email Domain Criterion"
 msgstr "电子邮箱域名标准"
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+#, fuzzy
+#| msgid "Marketing"
+msgid "Email Marketing"
+msgstr "市场营销"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
@@ -1552,6 +1560,12 @@ msgstr "额外字段......"
 
 #. module: crm
 #. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Failed to install \"%(module_name)s\""
+msgstr ""
+
+#. module: crm
+#. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency_field__field_id
 msgid "Field"
@@ -1573,6 +1587,11 @@ msgstr "用于存储经已净化的电话号码的字段。有助于加快搜索
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
 msgid "Fields that can be used for predictive lead scoring computation"
 msgstr "可用于计算预测线索评分的字段"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
+msgid "Fold by Default"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
@@ -1640,6 +1659,20 @@ msgid "Future Activities"
 msgstr "未来活动"
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.xml:0
+#, fuzzy
+#| msgid "Create a Lead"
+msgid "Generate Leads"
+msgstr "创建线索"
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Generate leads from any email you get"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_mine
 msgid "Generate new leads based on their country, industries, size, etc."
 msgstr "基于国家/地区、行业、规模等信息生成新的线索。"
@@ -1653,11 +1686,6 @@ msgstr "基于国家/地区、行业、规模等信息生成新的线索。"
 #: model:ir.model,name:crm.model_crm_lead_lost
 msgid "Get Lost Reason"
 msgstr "获取丢失原因"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
-msgid "Give your team the requirements to move an opportunity to this stage."
-msgstr "向您的团队提出要求，将商机移至该阶段。"
 
 #. module: crm
 #. odoo-python
@@ -1825,6 +1853,12 @@ msgstr ""
 "和手机号码字段时区分列入黑名单的号码。"
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Installing \"%(module_name)s\""
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_type
 msgid "Interval type between each cron run (e.g. each 2 days or each 2 hours)"
 msgstr "各定时任务运行之间的间隔类型（例如：每2天或每2小时）"
@@ -1841,11 +1875,6 @@ msgstr "重复频率无效。应改变频率类型，而不是使用大数字。
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_is_follower
 msgid "Is Follower"
 msgstr "是关注者"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead__is_partner_visible
-msgid "Is Partner Visible"
-msgstr "是可见合作伙伴"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__won_status
@@ -2060,6 +2089,14 @@ msgid "Lead Scoring Starting Date in String"
 msgstr "字符串中的线索评分开始日期"
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+#, fuzzy
+#| msgid "Lead Mining"
+msgid "Lead Sourcing"
+msgstr "挖掘线索"
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_tree
 msgid "Lead Tags"
@@ -2082,6 +2119,13 @@ msgstr "线索/商机自动分配仅限于经理或管理员"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Lead/Opportunity created"
+msgstr "已创建的线索/商机"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_creation_message
+#, fuzzy
+#| msgid "Lead/Opportunity created"
+msgid "Lead/Opportunity created<br/>"
 msgstr "已创建的线索/商机"
 
 #. module: crm
@@ -2316,6 +2360,14 @@ msgstr "低"
 #: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.xml:0
 msgid "MRR"
 msgstr "MRR"
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+#, fuzzy
+#| msgid "Email Alias"
+msgid "Mail plugins"
+msgstr "电子邮箱别名"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3371,6 +3423,12 @@ msgstr "搜索商机"
 
 #. module: crm
 #. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Search in our directory of 300.000+ companies"
+msgstr ""
+
+#. module: crm
+#. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "See AI-computed chances details"
 msgstr "查看 AI 人工智能计算的机率详情"
@@ -3385,6 +3443,25 @@ msgstr "选择一个未成交原因⋯"
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Select at least two Leads/Opportunities from the list to merge them."
 msgstr "要进行合并，请从列表中至少选择两个潜在客户/销售机会。"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+#, fuzzy
+#| msgid "Select a Lost Reason..."
+msgid "Select or create a contact..."
+msgstr "选择一个未成交原因⋯"
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Send a Survey"
+msgstr ""
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Send an email and get leads from replies"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3415,11 +3492,6 @@ msgstr "在商机商机中设置新阶段"
 #: model:ir.ui.menu,name:crm.crm_config_settings_menu
 msgid "Settings"
 msgstr "设置"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
-msgid "Shared with all teams"
-msgstr ""
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
@@ -3457,6 +3529,13 @@ msgstr "仅显示商机"
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Show only opportunity"
 msgstr "仅显示商机"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
+#, fuzzy
+#| msgid "Show only leads"
+msgid "Show to all teams"
+msgstr "仅显示线索"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_optout
@@ -3906,6 +3985,14 @@ msgid "Try sending an email"
 msgstr "尝试发送电子邮件"
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+#, fuzzy
+#| msgid "Visits to Leads"
+msgid "Turn visitors into leads"
+msgstr "访问线索"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
 #: model:ir.model.fields,field_description:crm.field_crm_lead__type
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -4132,6 +4219,14 @@ msgid "Welcome Demo"
 msgstr "欢迎演示"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
+#, fuzzy
+#| msgid ""
+#| "Give your team the requirements to move an opportunity to this stage."
+msgid "What are the requirements to move an opportunity to this stage?"
+msgstr "向您的团队提出要求，将商机移至该阶段。"
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "What went wrong?"
 msgstr "出现了什么问题？"
@@ -4263,14 +4358,21 @@ msgid "e.g. \"Monthly\""
 msgstr "例如：\"每月\""
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
-msgid "e.g. Negotiation"
-msgstr "例如：协商"
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "e.g. (555) 555-0199"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "e.g. Product Pricing"
 msgstr "例如：产品定价"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
+#, fuzzy
+#| msgid "e.g. Negotiation"
+msgid "e.g. Qualification"
+msgstr "例如：协商"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -4281,6 +4383,11 @@ msgstr "例如：太昂贵"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "e.g. https://www.odoo.com"
 msgstr "例如：https://www.odoo.com"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "e.g. john.doe@email.com"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -4395,3 +4502,24 @@ msgstr "有效电子邮件地址"
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "valid phone number"
 msgstr "有效电话号码"
+
+#~ msgid "<i class=\"fa fa-building\" title=\"Company\"/>"
+#~ msgstr "<i class=\"fa fa-building\" title=\"公司\"/>"
+
+#~ msgid "A new lead has been created and is not assigned to any team."
+#~ msgstr "创建了一个新销售线索，但未分配给任何团队。"
+
+#~ msgid "A new lead has been created for the team \"%(team_name)s\"."
+#~ msgstr "已为团队\"%(team_name)s\"创建了新的销售线索。"
+
+#~ msgid "Analysis"
+#~ msgstr "分析"
+
+#~ msgid "Contacts"
+#~ msgstr "联系人"
+
+#~ msgid "Customer Company"
+#~ msgstr "客户公司"
+
+#~ msgid "Is Partner Visible"
+#~ msgstr "是可见合作伙伴"

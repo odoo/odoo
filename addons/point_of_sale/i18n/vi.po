@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
 "PO-Revision-Date: 2025-12-03 10:32+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -204,6 +204,11 @@ msgstr "0014-001-00001"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "10"
 msgstr "10"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_form
+msgid "10.100.50.87"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -843,14 +848,24 @@ msgid "Add a new payment method"
 msgstr "Thêm phương thức thanh toán mới"
 
 #. module: point_of_sale
-#: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
-msgid "Add a new preparation printer"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_preset_form
 msgid "Add a new preset"
 msgstr "Thêm một cài đặt sẵn mới"
+
+#. module: point_of_sale
+#: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
+#, fuzzy
+#| msgid "Add a new preset"
+msgid "Add a new printer"
+msgstr "Thêm một cài đặt sẵn mới"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.xml:0
+#, fuzzy
+#| msgid "Add Tip"
+msgid "Add a tip"
+msgstr "Thêm tiền tip"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -868,6 +883,13 @@ msgstr "Thêm ghi chú nội bộ trong chi tiết đơn hàng cho nhà bếp"
 #: code:addons/point_of_sale/static/src/app/components/buttons/quantity_buttons/quantity_buttons.xml:0
 msgid "Add one"
 msgstr "Thêm"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+#, fuzzy
+#| msgid "Add a new payment method"
+msgid "Add tip after payment"
+msgstr "Thêm phương thức thanh toán mới"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -907,6 +929,14 @@ msgstr "Địa chỉ"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Adds a button to set a global discount"
 msgstr "Thêm một nút để thiết lập chiết khấu toàn bộ"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__set_tip_after_payment
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_set_tip_after_payment
+msgid ""
+"Adjust the amount authorized by payment terminals to add a tip after the "
+"customers left or at the end of the day."
+msgstr ""
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
@@ -1048,6 +1078,14 @@ msgid "Amount for %(old_pm)s changed from %(old_amount)s to %(new_amount)s"
 msgstr ""
 "Số tiền cho %(old_pm)s đã được thay đổi từ %(old_amount)s thành %"
 "(new_amount)s"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
+#, fuzzy
+#| msgid "Amount total"
+msgid "Amount of guests"
+msgstr "Tổng tiền"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
@@ -1313,6 +1351,7 @@ msgid "Availability Until"
 msgstr "Sẵn sàng cho đến"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Available"
 msgstr "Có hàng"
@@ -1358,7 +1397,8 @@ msgstr "Giá trung bình"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.xml:0
 msgid "Back"
 msgstr "Quay lại"
 
@@ -1465,11 +1505,6 @@ msgid "Barcode Scanner"
 msgstr "Máy quét mã vạch"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Barcode Scanner/Card Reader"
-msgstr "Máy quét mã vạch/Máy đọc thẻ"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__basic_receipt
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_basic_receipt
 msgid "Basic Receipt"
@@ -1568,11 +1603,6 @@ msgid "By:"
 msgstr "Bởi:"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
-msgid "Bypass browser printing and prints via the hardware proxy."
-msgstr "Bỏ qua việc in trên trình duyệt và in thông qua proxy phần cứng."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "CANCELLED"
@@ -1604,6 +1634,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -1651,6 +1682,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Cannot modify a tip"
 msgstr "Không thể sửa tiền tip"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Cannot reach the printer."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1877,8 +1914,6 @@ msgstr "Làm tròn tiền"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_cashdrawer
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_cashdrawer
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cashdrawer"
 msgstr "Ngăn két"
 
@@ -2158,6 +2193,14 @@ msgstr "Công cụ đóng phiên"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
+#, fuzzy
+#| msgid "Close"
+msgid "Close Tab"
+msgstr "Đóng"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Close debug widget"
 msgstr ""
@@ -2364,7 +2407,9 @@ msgstr "Cấu hình ít nhất một POS."
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Confirm"
@@ -2376,12 +2421,6 @@ msgid "Confirm Action"
 msgstr "Xác nhận tác vụ"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
-msgid "Confirm?"
-msgstr "Xác nhận?"
-
-#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirmation_wizard
 msgid "Confirmation Wizard"
 msgstr "Công cụ xác nhận"
@@ -2389,7 +2428,9 @@ msgstr "Công cụ xác nhận"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Connect device to your PoS without an IoT Box"
+#, fuzzy
+#| msgid "Connect device to your PoS without an IoT Box"
+msgid "Connect device to your PoS"
 msgstr "Kết nối thiết bị với POS của bạn mà không cần Hộp IoT."
 
 #. module: point_of_sale
@@ -2399,10 +2440,18 @@ msgid "Connect devices to your PoS without an IoT Box."
 msgstr "Kết nối thiết bị với Máy tính tiền của bạn mà không cần Hộp IoT."
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__preparation_devices
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_preparation_devices
+msgid "Connect preparation printers to print to the bar, kitchen,..."
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Connect devices using an IoT Box"
-msgstr "Kết nối thiết bị bằng Hộp IoT"
+#, fuzzy
+#| msgid "Preparation Printers"
+msgid "Connect preparation printers to your PoS"
+msgstr "Máy in khâu chuẩn bị"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2459,6 +2508,7 @@ msgstr "Thông tin liên lạc"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 msgid "Continue"
@@ -2651,6 +2701,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__create_uid
 msgid "Created by"
 msgstr "Được tạo bởi"
@@ -2673,6 +2724,7 @@ msgstr "Được tạo bởi"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__create_date
 msgid "Created on"
 msgstr "Được tạo vào"
@@ -2866,6 +2918,7 @@ msgid "Decimal Precision"
 msgstr "Độ chính xác thập phân"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "Default"
@@ -2914,6 +2967,14 @@ msgstr "Bảng giá mặc định"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__default_qr
 msgid "Default Qr"
 msgstr "QR mặc định"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_receipt_printer_id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_receipt_printer_id
+#, fuzzy
+#| msgid "Receipt Printer"
+msgid "Default Receipt Printer"
+msgstr "Máy in biên lai"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__default_pos_receivable_account_name
@@ -3140,7 +3201,6 @@ msgstr "CK:"
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/optional_products_popup/optional_products_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
@@ -3215,6 +3275,7 @@ msgstr "Chiết khấu"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__display_name
@@ -3318,18 +3379,6 @@ msgid "EAN-13"
 msgstr "EAN-13"
 
 #. module: point_of_sale
-#: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
-msgid ""
-"Each printer can be configured to print products from a specific category.\n"
-"            The printer will then only print updates for products belonging "
-"to one of\n"
-"            its linked categories."
-msgstr ""
-"Mỗi máy in có thể được cấu hình để in sản phẩm từ một danh mục cụ thể.\n"
-"Máy in đó sẽ chỉ in các cập nhật dành cho những sản phẩm thuộc một trong \n"
-"các danh mục đã liên kết với nó."
-
-#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_preset
 msgid "Easily load a set of configuration options"
 msgstr "Dễ dàng tải nhiều tùy chọn cấu hình"
@@ -3371,14 +3420,6 @@ msgid "Edited order(s) during the session:%s"
 msgstr "(Các) đơn hàng đã được chỉnh sửa trong phiên:%s"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_electronic_scale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_electronic_scale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Electronic Scale"
-msgstr "Cân điện tử"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__email
@@ -3415,28 +3456,21 @@ msgid "Empty Order"
 msgstr "Đơn hàng rỗng"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_scan_via_proxy
-msgid ""
-"Enable barcode scanning with a remotely connected barcode scanner and card "
-"swiping with a Vantiv card reader."
-msgstr ""
-"Bật quét mã vạch với máy quét mã vạch được kết nối từ xa và quẹt thẻ bằng "
-"máy đọc thẻ Vantiv."
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__use_fast_payment
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_use_fast_payment
 msgid "Enable fast payment methods to validate orders on the product screen."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_electronic_scale
-msgid "Enables Electronic Scale integration."
-msgstr "Bật tích hợp cân điện tử."
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__end_date
 msgid "End Date"
+msgstr "Ngày kết thúc"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__end_time
+#, fuzzy
+#| msgid "End Date"
+msgid "End Time"
 msgstr "Ngày kết thúc"
 
 #. module: point_of_sale
@@ -3461,12 +3495,6 @@ msgid "Ensure you validate the refund before taking another order."
 msgstr "Hãy nhớ xác nhận hoàn tiền trước khi thực hiện đơn hàng khác."
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__epson_printer_ip
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_epson_printer_ip
-msgid "Epson Printer IP"
-msgstr "IP máy in Epson"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__epson_printer_ip
 msgid "Epson Printer IP Address"
 msgstr "Địa chỉ IP máy in Epson"
@@ -3476,12 +3504,6 @@ msgstr "Địa chỉ IP máy in Epson"
 #: code:addons/point_of_sale/models/pos_printer.py:0
 msgid "Epson Printer IP Address cannot be empty."
 msgstr "Không thể bỏ trống địa chỉ IP máy in Epson."
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Epson Receipt Printer IP Address"
-msgstr "Địa chỉ IP máy in biên lai Epson"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3545,16 +3567,6 @@ msgstr "Phiếu xuất kho không thành công"
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "Failed to print a test receipt. Check your printer."
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
-msgid ""
-"Failed to reach the printer. Check the configured url. Make sure that the "
-"printer is online and you are on the same network."
-msgstr ""
-"Không thể kết nối với máy in. Kiểm tra lại URL đã cấu hình. Đảm bảo máy in "
-"đang bật và bạn đang ở cùng mạng."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3690,6 +3702,12 @@ msgstr "Footer"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_tree
 msgid "For all point of sale."
 msgstr "Dành cho tất cả POS."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
+msgid "For convenience, we are providing the following gratuity calculations:"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_big_scrollbars
@@ -3855,12 +3873,6 @@ msgid "HTTP Routing"
 msgstr "Định tuyến HTTP"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "HTTPS connection to IoT Box failed"
-msgstr "Kết nối HTTPS tới Hộp IoT không thành công"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__has_active_session
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_has_active_session
 msgid "Has Active Session"
@@ -3997,6 +4009,7 @@ msgstr "Cách quản lý giá bao gồm thuế"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__id
@@ -4040,9 +4053,10 @@ msgid "INTERNAL NOTE"
 msgstr "GHI CHÚ NỘI BỘ"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__proxy_ip
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_proxy_ip
-msgid "IP Address"
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__epson_epos
+#, fuzzy
+#| msgid "IP Address"
+msgid "IP address"
 msgstr "Địa chỉ IP"
 
 #. module: point_of_sale
@@ -4337,18 +4351,6 @@ msgid "Invoicing confirmation"
 msgstr "Xác nhận xuất hoá đơn"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "IoT Box"
-msgstr "Hộp IoT"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "IoT Box IP Address"
-msgstr "Địa chỉ IP của Hộp IoT"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_is_follower
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_is_follower
 msgid "Is Follower"
@@ -4498,6 +4500,12 @@ msgid "Journal Items"
 msgstr "Hạng mục bút toán"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Keep Open"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid "Kindly ensure that each order contains a customer."
@@ -4568,6 +4576,7 @@ msgstr "Ngày đóng phiên gần nhất"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__write_uid
 msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
@@ -4590,6 +4599,7 @@ msgstr "Cập nhật lần cuối bởi"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__write_date
 msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
@@ -4764,15 +4774,38 @@ msgid "Loading..."
 msgstr "Đang tải..."
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__epson_printer_ip
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__epson_printer_ip
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_epson_printer_ip
 msgid ""
 "Local IP address of an Epson receipt printer, or its serial number if the "
 "'Automatic Certificate Update' option is enabled in the printer settings."
 msgstr ""
 "Địa chỉ IP nội bộ của máy in hóa đơn Epson, hoặc số sê-ri nếu tùy chọn “Cập "
 "nhật chứng chỉ tự động” được bật trong phần cài đặt máy in."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid ""
+"Local Network Access configuration is enabled, but your browser is not "
+"Chromium-based. Please use a Chromium-based browser to benefit from this "
+"feature."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid ""
+"Local Network Access is enabled for this POS, but your browser version does "
+"not support it. Please update your browser to the latest version."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid ""
+"Local Network Access permission is denied. Some hardware devices might not "
+"work properly. Please allow Local Network Access in your browser settings."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4792,6 +4825,14 @@ msgstr "Logo"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__lot_name
 msgid "Lot Name"
 msgstr "Tên lô"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
+#| msgid "Lot/Serial number"
+msgid "Lot/Serial %s is expired"
+msgstr "Số lô/sê-ri"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4849,16 +4890,6 @@ msgstr ""
 "các khách hàng cụ thể từ biểu mẫu liên hệ của họ (trong tab Bán hàng). Để "
 "hợp lệ, bảng giá này phải được liệt kê ở đây dưới dạng bảng giá có sẵn. Nếu "
 "không, bảng giá mặc định sẽ được áp dụng."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid ""
-"Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
-"the certificate of your IoT Box."
-msgstr ""
-"Bảo đảm bạn đang sử dụng IoT Box v18.12 hoặc mới hơn. Điều hướng đến %s để "
-"chấp nhận chứng chỉ Hộp IoT của bạn."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5214,6 +5245,14 @@ msgstr "Không có thuế"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.xml:0
+#, fuzzy
+#| msgid "Add Tip"
+msgid "No Tip"
+msgstr "Thêm tiền tip"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup.xml:0
 msgid "No cash move found"
 msgstr ""
@@ -5305,6 +5344,12 @@ msgstr "Không tìm thấy sản phẩm nào khác cho \"%s\"."
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "No products found for"
 msgstr "Không tìm thấy sản phẩm nào cho"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "No receipt printers configured for this POS."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -5488,12 +5533,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
-msgid "Ok"
-msgstr "Ok"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "On hand:"
 msgstr ""
@@ -5582,6 +5621,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Oops.."
 msgstr "Rất tiếc..."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#, fuzzy
+#| msgid "Opening"
+msgid "Open"
+msgstr "Đang mở"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5787,12 +5834,6 @@ msgid "Order Printer"
 msgstr "Máy in đơn hàng"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__printer_ids
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_printer_ids
-msgid "Order Printers"
-msgstr "Máy in đơn hàng"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__order_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__order_id
@@ -5906,6 +5947,13 @@ msgstr "Tài khoản chưa thanh toán"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
 msgid "POS Category"
 msgstr "Danh mục POS"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__pos_config_id
+#, fuzzy
+#| msgid "PoS Config"
+msgid "POS Config"
+msgstr "Cấu hình PoS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__pos_optional_product_ids
@@ -6301,12 +6349,6 @@ msgstr ""
 "Các phiên đang mở: %s"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
-msgid "Please configure a valid ePoS url in order to test the printer"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Please create/select a Point of Sale above to show the configuration options."
@@ -6469,6 +6511,7 @@ msgstr "POS"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__config_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__pos_config_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_config_id
@@ -6605,6 +6648,13 @@ msgid "Point of Sale Printer"
 msgstr "Máy in POS"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_product_template_snooze
+#, fuzzy
+#| msgid "Point of Sale Printer"
+msgid "Point of Sale Product Snooze"
+msgstr "Máy in POS"
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -6648,7 +6698,6 @@ msgstr "Bảng giá được cho phép trong POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__pos_config_ids
 msgid "Pos Config"
 msgstr "Cấu hình PoS"
 
@@ -6721,17 +6770,6 @@ msgid "Pos Sessions"
 msgstr "Phiên POS"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_order_printer
-msgid "Pos Use Order Printer"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_posbox
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_posbox
-msgid "PosBox"
-msgstr "PosBox"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid "Positive quantity not allowed"
@@ -6752,15 +6790,16 @@ msgid "Powered by"
 msgstr "Được hỗ trợ bởi"
 
 #. module: point_of_sale
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__use_type__preparation
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation"
 msgstr "Chuẩn bị"
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_printer
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__preparation_printer_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_preparation_printer_ids
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer
 msgid "Preparation Printers"
 msgstr "Máy in khâu chuẩn bị"
 
@@ -6770,14 +6809,12 @@ msgid "Preparation capacity"
 msgstr ""
 
 #. module: point_of_sale
-#: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
-msgid ""
-"Preparation printers are typically used by restaurants and bars to print "
-"the\n"
-"            orders at the kitchen/bar when the waiter updates an order."
-msgstr ""
-"Máy in khâu chuẩn bị thường được sử dụng tại nhà hàng và quán bar để in \n"
-"đơn hàng trong nhà bếp hoặc quầy khi nhân viên phục vụ cập nhật đơn gọi món."
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__preparation_devices
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_preparation_devices
+#, fuzzy
+#| msgid "Preparation Printers"
+msgid "Preparation devices"
+msgstr "Máy in khâu chuẩn bị"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6967,19 +7004,8 @@ msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Print orders at the kitchen, at the bar, etc."
-msgstr "In đơn hàng ở nhà bếp, quầy bar,..."
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Print receipts automatically once the payment is registered"
 msgstr "Tự động in biên lai sau khi thanh toán được ghi nhận"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_via_proxy
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_print_via_proxy
-msgid "Print via Proxy"
-msgstr "In qua proxy"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__product_categories_ids
@@ -7009,9 +7035,27 @@ msgid "Printer cover is open. Please close it and try again!"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_printers
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer
 msgid "Printers"
 msgstr "Máy in"
+
+#. module: point_of_sale
+#: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
+#, fuzzy
+#| msgid ""
+#| "Preparation printers are typically used by restaurants and bars to print "
+#| "the\n"
+#| "            orders at the kitchen/bar when the waiter updates an order."
+msgid ""
+"Printers are typically used by restaurants and bars to print the\n"
+"            orders at the kitchen/bar, the bills or the receipts for the "
+"customers."
+msgstr ""
+"Máy in khâu chuẩn bị thường được sử dụng tại nhà hàng và quán bar để in \n"
+"đơn hàng trong nhà bếp hoặc quầy khi nhân viên phục vụ cập nhật đơn gọi món."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7036,6 +7080,7 @@ msgstr "Vẫn tiếp tục"
 #: model:ir.model,name:point_of_sale.model_product_template
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__product_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__product_template_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -7299,6 +7344,7 @@ msgstr "Lý do"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__use_type__receipt
 msgid "Receipt"
 msgstr "Biên lai"
 
@@ -7330,9 +7376,17 @@ msgstr "Số biên lai"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Receipt Printer"
+msgstr "Máy in biên lai"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_printer_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_receipt_printer_ids
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Receipt Printer"
+#, fuzzy
+#| msgid "Receipt Printer"
+msgid "Receipt Printers"
 msgstr "Máy in biên lai"
 
 #. module: point_of_sale
@@ -7525,6 +7579,14 @@ msgstr "Báo cáo"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/invoice_button/invoice_button.js:0
 msgid "Reprint Invoice"
 msgstr "In lại hóa đơn"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.xml:0
+#, fuzzy
+#| msgid "Print Receipt"
+msgid "Reprint receipts"
+msgstr "In biên lai"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
@@ -7772,6 +7834,14 @@ msgid "Save"
 msgstr "Lưu"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+#, fuzzy
+#| msgid "No PoS configuration found"
+msgid "Save the configuration before testing"
+msgstr "Không tìm thấy cấu hình PoS nào"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Save this page and come back here to set up the feature."
@@ -7788,17 +7858,6 @@ msgstr "Quét"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Scan a barcode to create automatically, or load our sample data."
 msgstr "Quét mã vạch để tạo tự động hoặc tải dữ liệu mẫu của chúng tôi."
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_scan_via_proxy
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_scan_via_proxy
-msgid "Scan via Proxy"
-msgstr "Quét qua Proxy"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Scanner"
-msgstr "Máy quét"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -8080,6 +8139,14 @@ msgid "Set Maximum Difference"
 msgstr "Đặt chênh lệch tối đa"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__set_tip_after_payment
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_set_tip_after_payment
+#, fuzzy
+#| msgid "Reverse Payment"
+msgid "Set Tip After Payment"
+msgstr "Đảo ngược thanh toán"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Set a maximum difference allowed between the expected and counted money "
@@ -8145,9 +8212,22 @@ msgstr "Cài đặt trên trang này sẽ áp dụng cho POS này."
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.xml:0
+msgid "Settle"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_payment_provider_cards/pos_payment_provider_cards.xml:0
 msgid "Setup"
 msgstr "Thiết lập"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
+msgid "Several printers are available"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8250,6 +8330,12 @@ msgid "Sign in"
 msgstr "Đăng nhập"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/tip_receipt/tip_receipt.xml:0
+msgid "Signature"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_skip_screen
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_print_skip_screen
 msgid "Skip Preview Screen"
@@ -8265,6 +8351,13 @@ msgstr "Vị trí"
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
 msgstr "Giá nhỏ"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_snooze_ids
+#, fuzzy
+#| msgid "Search Products"
+msgid "Snoozed Products"
+msgstr "Tìm kiếm sản phẩm"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_cinnamon_roll_product_template
@@ -8352,10 +8445,11 @@ msgid "Start Date"
 msgstr "Ngày bắt đầu"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/order_display/order_display.js:0
-msgid "Start adding products"
-msgstr "Bắt đầu thêm sản phẩm"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__start_time
+#, fuzzy
+#| msgid "Start Date"
+msgid "Start Time"
+msgstr "Ngày bắt đầu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
@@ -8450,6 +8544,7 @@ msgstr "Áo khoác da phong cách, bền và thời trang, phù hợp với mọ
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/components/tip_receipt/tip_receipt.xml:0
 msgid "Subtotal"
 msgstr "Thành tiền"
 
@@ -8462,12 +8557,6 @@ msgstr "Thành tiền trước thuế"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_sub_total
 msgid "Subtotal w/o discount"
 msgstr "Thành tiền chưa tính chiết khấu"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
-msgid "Succesfully printed a test receipt"
-msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8670,16 +8759,6 @@ msgstr ""
 "Thời gian Sẵn sàng cho đến phải được đặt trong khoảng từ 00:00 đến 24:00"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid ""
-"The Epson receipt printer will be used instead of the receipt printer "
-"connected to the IoT Box."
-msgstr ""
-"Máy in hóa đơn Epson sẽ được sử dụng thay vì máy in hóa đơn kết nối với hộp "
-"IoT."
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -8872,16 +8951,6 @@ msgstr ""
 #: code:addons/point_of_sale/models/product_combo.py:0
 msgid "The free quantity of an upsell combo must be equal to 0."
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_proxy_ip
-msgid ""
-"The hostname or ip address of the hardware proxy, Will be autodetected if "
-"left empty."
-msgstr ""
-"Tên máy chủ hoặc địa chỉ ip của proxy phần cứng. Sẽ được tự động phát hiện "
-"nếu để trống."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9163,6 +9232,14 @@ msgstr ""
 "cho phép thêm tiền tip."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
+#, fuzzy
+#| msgid "There is already an electronic payment in progress."
+msgid "The tip is already included inside the payment lines"
+msgstr "Có một thanh toán điện tử đang được xử lý."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
@@ -9405,18 +9482,6 @@ msgid "This invoice has been created from the point of sale session:%s"
 msgstr "Hóa đơn này đã được tạo từ phiên POS: %s"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_move.py:0
-msgid ""
-"This invoice is linked to a POS Order, resetting it to draft prevents "
-"closing the session. You should rather refund the order or create a credit "
-"note."
-msgstr ""
-"Hóa đơn này liên kết với một Đơn hàng POS, việc đặt lại trạng thái về nháp "
-"sẽ ngăn phiên giao dịch được đóng. Bạn nên hoàn trả đơn hàng hoặc tạo một "
-"giấy báo có."
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
 msgid ""
 "This is useful for restaurants with onsite and take-away services that imply "
@@ -9477,6 +9542,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.js:0
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
@@ -9499,6 +9565,7 @@ msgstr "Phương thức thanh toán này không được định cấu hình đ�
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_tip_product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This product is used as reference on customer receipts."
 msgstr "Sản phẩm này được dùng làm tham chiếu cho biên lai khách hàng."
@@ -9559,10 +9626,19 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Tip"
 msgstr "Tiền tip"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.js:0
+msgid "Tip (%s%)"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tip_amount
 msgid "Tip Amount"
 msgstr "Số tiền tip"
@@ -9573,6 +9649,20 @@ msgstr "Số tiền tip"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Tip Product"
 msgstr "Sản phẩm tip"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/tip_receipt/tip_receipt.xml:0
+msgid "Tip:"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#, fuzzy
+#| msgid "Shipping Date"
+msgid "Tipping"
+msgstr "Ngày vận chuyển"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_product_tip_product_template
@@ -9735,6 +9825,7 @@ msgstr "Tổng số lượng"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sales_detail_report.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/tip_receipt/tip_receipt.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Total:"
 msgstr "Tổng:"
@@ -9789,8 +9880,17 @@ msgid "Trusted Point of Sale Configurations"
 msgstr "Cấu hình POS đáng tin cậy"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
+#, fuzzy
+#| msgid "Order Printer"
+msgid "Try on other printer"
+msgstr "Máy in đơn hàng"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__type
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__use_type
 msgid "Type"
 msgstr "Loại"
 
@@ -9930,6 +10030,7 @@ msgstr "Định dạng mã vạch không được hỗ trợ"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.js:0
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid "Unsynced order"
 msgstr "Đơn hàng chưa được đồng bộ"
 
@@ -9961,6 +10062,11 @@ msgid "Upsell & Cross-Sell"
 msgstr "Bán thêm & bán chéo"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__use_lna
+msgid "Use Local Network Access"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_presets
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_presets
 msgid "Use Presets"
@@ -9976,11 +10082,6 @@ msgstr "Sử dụng thiết bị thanh toán"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_pricelist
 msgid "Use a pricelist."
 msgstr "Sử dụng bảng giá."
-
-#. module: point_of_sale
-#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__epson_epos
-msgid "Use an Epson printer"
-msgstr "Sử dụng máy in Epson"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -10027,6 +10128,14 @@ msgstr "Người dùng"
 #: model:ir.actions.report,name:point_of_sale.report_user_label
 msgid "User Labels"
 msgstr "Nhãn người dùng"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.xml:0
+#, fuzzy
+#| msgid "User"
+msgid "Username"
+msgstr "Người dùng"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
@@ -10125,12 +10234,6 @@ msgstr "Cảnh báo"
 msgid ""
 "Warning, the paid amount is higher than the total amount. (Difference: %s)"
 msgstr "Cảnh báo, số tiền đã thanh toán cao hơn tổng số tiền. (Chênh lệch: %s)"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_move.py:0
-msgid "Warning: Invoice Reset Risk"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
@@ -10294,6 +10397,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "You can update it by selecting one of the following options:"
 msgstr "Bạn có thể cập nhật bằng cách chọn một trong các tùy chọn sau:"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid ""
+"You can't reset this invoice to draft because the POS session is still open. "
+"Please close the ongoing session first, then try again."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -10492,6 +10603,12 @@ msgid "You need a loss and profit account on your cash journal."
 msgstr "Bạn cần tài khoản ghi lãi và lỗ trong sổ nhật ký tiền mặt."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "You need to add an IP address or choose an IoT device before testing."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You should assign a Point of Sale to your session."
@@ -10537,6 +10654,18 @@ msgstr ""
 #: model:mail.template,subject:point_of_sale.email_template_pos_receipt
 msgid "Your {{ object.config_id.name }} receipt"
 msgstr "Biên lai {{ object.config_id.name }} của bạn"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/tip_receipt/tip_receipt.xml:0
+msgid "________________________"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/tip_receipt/tip_receipt.xml:0
+msgid "______________________________________________"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -10605,6 +10734,13 @@ msgid "e.g. Dine in"
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_form
+#, fuzzy
+#| msgid "Receipt Printer"
+msgid "e.g. Kitchen Printer"
+msgstr "Máy in biên lai"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "e.g. NYC Shop"
 msgstr "VD. Cửa hàng NYC"
@@ -10618,12 +10754,6 @@ msgstr "VD: Chính sách trả hàng, Cảm ơn bạn đã mua sắm ở cửa h
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
 msgstr "VD: nước ngọt"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "ePos Printer"
-msgstr "Máy in ePOS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -10793,3 +10923,122 @@ msgstr "để kích hoạt nút."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "sử dụng"
+
+#~ msgid "Barcode Scanner/Card Reader"
+#~ msgstr "Máy quét mã vạch/Máy đọc thẻ"
+
+#~ msgid "Bypass browser printing and prints via the hardware proxy."
+#~ msgstr "Bỏ qua việc in trên trình duyệt và in thông qua proxy phần cứng."
+
+#~ msgid "Confirm?"
+#~ msgstr "Xác nhận?"
+
+#~ msgid "Connect devices using an IoT Box"
+#~ msgstr "Kết nối thiết bị bằng Hộp IoT"
+
+#~ msgid ""
+#~ "Each printer can be configured to print products from a specific "
+#~ "category.\n"
+#~ "            The printer will then only print updates for products "
+#~ "belonging to one of\n"
+#~ "            its linked categories."
+#~ msgstr ""
+#~ "Mỗi máy in có thể được cấu hình để in sản phẩm từ một danh mục cụ thể.\n"
+#~ "Máy in đó sẽ chỉ in các cập nhật dành cho những sản phẩm thuộc một "
+#~ "trong \n"
+#~ "các danh mục đã liên kết với nó."
+
+#~ msgid "Electronic Scale"
+#~ msgstr "Cân điện tử"
+
+#~ msgid ""
+#~ "Enable barcode scanning with a remotely connected barcode scanner and "
+#~ "card swiping with a Vantiv card reader."
+#~ msgstr ""
+#~ "Bật quét mã vạch với máy quét mã vạch được kết nối từ xa và quẹt thẻ bằng "
+#~ "máy đọc thẻ Vantiv."
+
+#~ msgid "Enables Electronic Scale integration."
+#~ msgstr "Bật tích hợp cân điện tử."
+
+#~ msgid "Epson Printer IP"
+#~ msgstr "IP máy in Epson"
+
+#~ msgid "Epson Receipt Printer IP Address"
+#~ msgstr "Địa chỉ IP máy in biên lai Epson"
+
+#~ msgid ""
+#~ "Failed to reach the printer. Check the configured url. Make sure that the "
+#~ "printer is online and you are on the same network."
+#~ msgstr ""
+#~ "Không thể kết nối với máy in. Kiểm tra lại URL đã cấu hình. Đảm bảo máy "
+#~ "in đang bật và bạn đang ở cùng mạng."
+
+#~ msgid "HTTPS connection to IoT Box failed"
+#~ msgstr "Kết nối HTTPS tới Hộp IoT không thành công"
+
+#~ msgid "IoT Box"
+#~ msgstr "Hộp IoT"
+
+#~ msgid "IoT Box IP Address"
+#~ msgstr "Địa chỉ IP của Hộp IoT"
+
+#~ msgid ""
+#~ "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to "
+#~ "accept the certificate of your IoT Box."
+#~ msgstr ""
+#~ "Bảo đảm bạn đang sử dụng IoT Box v18.12 hoặc mới hơn. Điều hướng đến %s "
+#~ "để chấp nhận chứng chỉ Hộp IoT của bạn."
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgid "Order Printers"
+#~ msgstr "Máy in đơn hàng"
+
+#~ msgid "PosBox"
+#~ msgstr "PosBox"
+
+#~ msgid "Print orders at the kitchen, at the bar, etc."
+#~ msgstr "In đơn hàng ở nhà bếp, quầy bar,..."
+
+#~ msgid "Print via Proxy"
+#~ msgstr "In qua proxy"
+
+#~ msgid "Scan via Proxy"
+#~ msgstr "Quét qua Proxy"
+
+#~ msgid "Scanner"
+#~ msgstr "Máy quét"
+
+#~ msgid "Start adding products"
+#~ msgstr "Bắt đầu thêm sản phẩm"
+
+#~ msgid ""
+#~ "The Epson receipt printer will be used instead of the receipt printer "
+#~ "connected to the IoT Box."
+#~ msgstr ""
+#~ "Máy in hóa đơn Epson sẽ được sử dụng thay vì máy in hóa đơn kết nối với "
+#~ "hộp IoT."
+
+#~ msgid ""
+#~ "The hostname or ip address of the hardware proxy, Will be autodetected if "
+#~ "left empty."
+#~ msgstr ""
+#~ "Tên máy chủ hoặc địa chỉ ip của proxy phần cứng. Sẽ được tự động phát "
+#~ "hiện nếu để trống."
+
+#~ msgid ""
+#~ "This invoice is linked to a POS Order, resetting it to draft prevents "
+#~ "closing the session. You should rather refund the order or create a "
+#~ "credit note."
+#~ msgstr ""
+#~ "Hóa đơn này liên kết với một Đơn hàng POS, việc đặt lại trạng thái về "
+#~ "nháp sẽ ngăn phiên giao dịch được đóng. Bạn nên hoàn trả đơn hàng hoặc "
+#~ "tạo một giấy báo có."
+
+#~ msgid "Use an Epson printer"
+#~ msgstr "Sử dụng máy in Epson"
+
+#~ msgid "ePos Printer"
+#~ msgstr "Máy in ePOS"

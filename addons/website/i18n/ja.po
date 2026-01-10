@@ -10,17 +10,17 @@
 # Noma Yuki, 2023
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-12-20 09:49+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-08 07:56+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/website/"
-"ja/>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
+"website/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -165,7 +165,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 msgid "\"URL to\" cannot be empty."
-msgstr ""
+msgstr "「URL先」は空にできません。"
 
 #. module: website
 #. odoo-python
@@ -561,6 +561,11 @@ msgid "10 m"
 msgstr "10 m"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_avatars
+msgid "10+"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
 msgid "100 km"
@@ -695,6 +700,11 @@ msgstr "30 km"
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid
 msgid "30% Off Your First Purchase"
 msgstr "初回購入30%オフ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
+msgid "30% off wooden desks"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_page_properties__redirect_type__301
@@ -1035,6 +1045,19 @@ msgstr ""
 "わせ</a>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.footer_cookie_policy_link
+#, fuzzy
+#| msgid ""
+#| "<a href=\"#\" class=\"btn btn-primary btn-lg o_translate_inline\">Learn "
+#| "more</a>"
+msgid ""
+"<a href=\"/cookie-policy\" class=\"oe_unremovable btn btn-link btn-sm px-0 "
+"o_translate_inline\">Cookie Policy</a>"
+msgstr ""
+"<a href=\"#\" class=\"btn btn-primary btn-lg o_translate_inline\">さらに詳し"
+"く</a>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_split_intro
 msgid ""
 "<a t-att-href=\"cta_btn_href\" class=\"btn btn-lg btn-primary "
@@ -1241,6 +1264,11 @@ msgid ""
 msgstr ""
 "<br/><br/>\n"
 "                  規則例:<br/>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
+msgid "<br/><br/><br/>Expert’s review<br/>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_detail
@@ -2438,8 +2466,16 @@ msgstr "<span class=\"o_force_ltr\">+1 555-555-5556</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+#, fuzzy
+#| msgid ""
+#| "<span class=\"o_small\">\n"
+#| "                                            <strong>Iris DOE</strong><br/"
+#| ">\n"
+#| "                                            <span class=\"text-"
+#| "muted\">Manager of MyCompany</span>\n"
+#| "                                        </span>"
 msgid ""
-"<span class=\"o_small\">\n"
+"<span class=\"o_small-fs\">\n"
 "                                            <strong>Iris DOE</strong><br/>\n"
 "                                            <span class=\"text-"
 "muted\">Manager of MyCompany</span>\n"
@@ -2454,8 +2490,16 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+#, fuzzy
+#| msgid ""
+#| "<span class=\"o_small\">\n"
+#| "                                            <strong>Jane DOE</strong><br/"
+#| ">\n"
+#| "                                            <span class=\"text-"
+#| "muted\">CEO of MyCompany</span>\n"
+#| "                                        </span>"
 msgid ""
-"<span class=\"o_small\">\n"
+"<span class=\"o_small-fs\">\n"
 "                                            <strong>Jane DOE</strong><br/>\n"
 "                                            <span class=\"text-muted\">CEO "
 "of MyCompany</span>\n"
@@ -2470,8 +2514,16 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+#, fuzzy
+#| msgid ""
+#| "<span class=\"o_small\">\n"
+#| "                                            <strong>John DOE</strong><br/"
+#| ">\n"
+#| "                                            <span class=\"text-"
+#| "muted\">CCO of MyCompany</span>\n"
+#| "                                        </span>"
 msgid ""
-"<span class=\"o_small\">\n"
+"<span class=\"o_small-fs\">\n"
 "                                            <strong>John DOE</strong><br/>\n"
 "                                            <span class=\"text-muted\">CCO "
 "of MyCompany</span>\n"
@@ -2483,80 +2535,6 @@ msgstr ""
 "                                            <span class=\"text-"
 "muted\">MyCompany CCO </span>\n"
 "                                        </span>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
-msgid ""
-"<span class=\"o_small\">\n"
-"                                    <strong>Iris DOE</strong><br/>\n"
-"                                    <span class=\"text-muted\">Manager of "
-"MyCompany</span>\n"
-"                                </span>"
-msgstr ""
-"<span class=\"o_small\">\n"
-"                                    <strong>アイリス・ドー</strong><br/>\n"
-"                                    <span class=\"text-muted\">MyCompanyマネ"
-"ジャー</span>\n"
-"                                </span>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
-msgid ""
-"<span class=\"o_small\">\n"
-"                                    <strong>Jane DOE</strong><br/>\n"
-"                                    <span class=\"text-muted\">CEO of "
-"MyCompany</span>\n"
-"                                </span>"
-msgstr ""
-"<span class=\"o_small\">\n"
-"                                    <strong>ジェーン・ドー</strong><br/>\n"
-"                                    <span class=\"text-muted\">MyCompany "
-"CEO</span>\n"
-"                                </span>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
-msgid ""
-"<span class=\"o_small\">\n"
-"                                    <strong>John DOE</strong><br/>\n"
-"                                    <span class=\"text-muted\">CCO of "
-"MyCompany</span>\n"
-"                                </span>"
-msgstr ""
-"<span class=\"o_small\">\n"
-"                                    <strong>ジョン・ドー</strong><br/>\n"
-"                                    <span class=\"text-muted\">MyCompany CCO "
-"</span>\n"
-"                                </span>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_banner
-msgid ""
-"<span class=\"o_small\">\n"
-"                                    <strong>Paul Dawson</strong><br/>\n"
-"                                    <span>CEO of MyCompany</span>\n"
-"                                </span>"
-msgstr ""
-"<span class=\"o_small\">\n"
-"                                    <strong>ポール・ドーソン</strong><br/>\n"
-"                                    <span>MyCompany CEO</span>\n"
-"                                </span>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_blockquote
-msgid ""
-"<span class=\"o_small\">\n"
-"                    <strong>Paul Dawson</strong><br/>\n"
-"                    <span class=\"text-muted\">CEO of MyCompany</span>\n"
-"                </span>"
-msgstr ""
-"<span class=\"o_small\">\n"
-"                    <strong>ポール・ドーソン</strong><br/>\n"
-"                    <span class=\"text-muted\">MyCompany CEO</span>\n"
-"                </span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid
@@ -2572,6 +2550,135 @@ msgstr ""
 "                                        <br/><br/><br/><br/><br/><br/><br/"
 "><br/><br/><br/><br/>\n"
 "                                    </span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+#, fuzzy
+#| msgid ""
+#| "<span class=\"o_small\">\n"
+#| "                                    <strong>Iris DOE</strong><br/>\n"
+#| "                                    <span class=\"text-muted\">Manager of "
+#| "MyCompany</span>\n"
+#| "                                </span>"
+msgid ""
+"<span class=\"o_small-fs\">\n"
+"                                    <strong>Iris DOE</strong><br/>\n"
+"                                    <span class=\"text-muted\">Manager of "
+"MyCompany</span>\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_small\">\n"
+"                                    <strong>アイリス・ドー</strong><br/>\n"
+"                                    <span class=\"text-muted\">MyCompanyマネ"
+"ジャー</span>\n"
+"                                </span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+#, fuzzy
+#| msgid ""
+#| "<span class=\"o_small\">\n"
+#| "                                    <strong>Jane DOE</strong><br/>\n"
+#| "                                    <span class=\"text-muted\">CEO of "
+#| "MyCompany</span>\n"
+#| "                                </span>"
+msgid ""
+"<span class=\"o_small-fs\">\n"
+"                                    <strong>Jane DOE</strong><br/>\n"
+"                                    <span class=\"text-muted\">CEO of "
+"MyCompany</span>\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_small\">\n"
+"                                    <strong>ジェーン・ドー</strong><br/>\n"
+"                                    <span class=\"text-muted\">MyCompany "
+"CEO</span>\n"
+"                                </span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+#, fuzzy
+#| msgid ""
+#| "<span class=\"o_small\">\n"
+#| "                                    <strong>John DOE</strong><br/>\n"
+#| "                                    <span class=\"text-muted\">CCO of "
+#| "MyCompany</span>\n"
+#| "                                </span>"
+msgid ""
+"<span class=\"o_small-fs\">\n"
+"                                    <strong>John DOE</strong><br/>\n"
+"                                    <span class=\"text-muted\">CCO of "
+"MyCompany</span>\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_small\">\n"
+"                                    <strong>ジョン・ドー</strong><br/>\n"
+"                                    <span class=\"text-muted\">MyCompany CCO "
+"</span>\n"
+"                                </span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
+#, fuzzy
+#| msgid ""
+#| "<span class=\"o_small\">\n"
+#| "                                    <strong>Jane DOE</strong><br/>\n"
+#| "                                    <span class=\"text-muted\">CEO of "
+#| "MyCompany</span>\n"
+#| "                                </span>"
+msgid ""
+"<span class=\"o_small-fs\">\n"
+"                                    <strong>Paul Dawson</strong><br/>\n"
+"                                    <span class=\"text-muted\">Furniture "
+"Design Specialist</span>\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_small\">\n"
+"                                    <strong>ジェーン・ドー</strong><br/>\n"
+"                                    <span class=\"text-muted\">MyCompany "
+"CEO</span>\n"
+"                                </span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_banner
+#, fuzzy
+#| msgid ""
+#| "<span class=\"o_small\">\n"
+#| "                                    <strong>Paul Dawson</strong><br/>\n"
+#| "                                    <span>CEO of MyCompany</span>\n"
+#| "                                </span>"
+msgid ""
+"<span class=\"o_small-fs\">\n"
+"                                    <strong>Paul Dawson</strong><br/>\n"
+"                                    <span>CEO of MyCompany</span>\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_small\">\n"
+"                                    <strong>ポール・ドーソン</strong><br/>\n"
+"                                    <span>MyCompany CEO</span>\n"
+"                                </span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_blockquote
+#, fuzzy
+#| msgid ""
+#| "<span class=\"o_small\">\n"
+#| "                    <strong>Paul Dawson</strong><br/>\n"
+#| "                    <span class=\"text-muted\">CEO of MyCompany</span>\n"
+#| "                </span>"
+msgid ""
+"<span class=\"o_small-fs\">\n"
+"                    <strong>Paul Dawson</strong><br/>\n"
+"                    <span class=\"text-muted\">CEO of MyCompany</span>\n"
+"                </span>"
+msgstr ""
+"<span class=\"o_small\">\n"
+"                    <strong>ポール・ドーソン</strong><br/>\n"
+"                    <span class=\"text-muted\">MyCompany CEO</span>\n"
+"                </span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -2848,6 +2955,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_reviews_wall
 msgid "<strong class=\"s_rating_title\">Rating</strong>"
 msgstr "<strong class=\"s_rating_title\">評価</strong>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_avatars
+msgid ""
+"<strong>100+</strong><br/>\n"
+"            Happy customers"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_boxed
@@ -3461,6 +3575,14 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
+#, fuzzy
+#| msgid "Add Card"
+msgid "Add Avatar"
+msgstr "カードを追加"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
 msgid "Add Card"
 msgstr "カードを追加"
@@ -3911,6 +4033,7 @@ msgstr "上揃え"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/blockquote_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/card_width_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
@@ -4194,6 +4317,14 @@ msgstr "付加"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
+#, fuzzy
+#| msgid "Applies to all cards"
+msgid "Applies to all avatars"
+msgstr "すべてのカードに適用"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
 msgid "Applies to all cards"
 msgstr "すべてのカードに適用"
@@ -4206,9 +4337,23 @@ msgstr "適用"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
+#, fuzzy
+#| msgid "Background Color"
+msgid "Apply a background color"
+msgstr "背景色"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_font_option.xml:0
 msgid "Apply a light contrast on dropdown buttons"
 msgstr "ドロップダウンボタンに薄いコントラストを適用"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
+msgid "Apply an icon color"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -4284,6 +4429,14 @@ msgstr "変更をすべて破棄してもよろしいですか?この操作は�
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
+#, fuzzy
+#| msgid "Job Position"
+msgid "Arrow Position"
+msgstr "職位"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 msgid "Arrows"
@@ -4350,7 +4503,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_search
 msgid "Author"
-msgstr "著作者"
+msgstr "作成者"
 
 #. module: website
 #. odoo-javascript
@@ -4423,6 +4576,12 @@ msgid "Available on the Website"
 msgstr "ウェブサイトで使用可"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Avatars"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_api_key_dialog.xml:0
 msgid "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
@@ -4465,6 +4624,7 @@ msgstr "背景"
 #: code:addons/website/static/src/builder/plugins/font_awesome_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/breadcrumb_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/portal_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
 msgid "Background Color"
 msgstr "背景色"
@@ -4584,6 +4744,13 @@ msgid ""
 msgstr ""
 "免税ショッピングで、お買い物をもっとシンプルに。追加費用なしで、さらにお得"
 "に。"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+#, fuzzy
+#| msgid "Bento Banner"
+msgid "Bento Avatars"
+msgstr "ベントーバナー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -4743,6 +4910,7 @@ msgstr "Bootstrapベースのテンプレート"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
 #: code:addons/website/static/src/builder/plugins/font_awesome_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/bento_border_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/blockquote_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/border_option.xml:0
@@ -4752,6 +4920,7 @@ msgstr "Bootstrapベースのテンプレート"
 #: code:addons/website/static/src/builder/plugins/options/header/header_box_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/media_list_item_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/portal_option.xml:0
 msgid "Border"
 msgstr "枠線"
 
@@ -4803,6 +4972,7 @@ msgstr "角の丸み(小)"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/card_image_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
@@ -4813,6 +4983,30 @@ msgstr "角の丸み(小)"
 #: model_terms:ir.ui.view,arch_db:website.template_header_sales_two
 #: model_terms:ir.ui.view,arch_db:website.template_header_search
 msgid "Bottom"
+msgstr "下"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
+#, fuzzy
+#| msgid "Bottom"
+msgid "Bottom Center"
+msgstr "下"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
+#, fuzzy
+#| msgid "Bottom"
+msgid "Bottom Left"
+msgstr "下"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
+#, fuzzy
+#| msgid "Bottom"
+msgid "Bottom Right"
 msgstr "下"
 
 #. module: website
@@ -5103,7 +5297,6 @@ msgstr "公開可"
 #: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_api_key_dialog.xml:0
 #: code:addons/website/static/src/components/dialog/dialog.js:0
-#: code:addons/website/static/src/js/utils.js:0
 #: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
@@ -5196,6 +5389,7 @@ msgstr "カード"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/portal_option.xml:0
 msgid "Cards Design"
 msgstr "カードデザイン"
 
@@ -5287,6 +5481,7 @@ msgstr "Cookie分類"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/blockquote_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/card_width_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
@@ -5793,6 +5988,7 @@ msgstr "色"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/layout_option/layout_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 msgid "Column"
 msgstr "カラム"
 
@@ -6143,6 +6339,14 @@ msgid "Cookie Policy"
 msgstr "クッキーポリシー"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/footer_option.xml:0
+#, fuzzy
+#| msgid "Cookie Policy"
+msgid "Cookie Policy Link"
+msgstr "クッキーポリシー"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_columns
 msgid "Cookies"
@@ -6304,7 +6508,6 @@ msgstr "Cras justo odio"
 #: code:addons/website/static/src/client_actions/website_preview/edit_website_systray_item.xml:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.js:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
-#: code:addons/website/static/src/js/utils.js:0
 #: model_terms:ir.ui.view,arch_db:website.view_website_form_view_themes_modal
 msgid "Create"
 msgstr "作成"
@@ -6666,6 +6869,7 @@ msgstr "成功を導く献身的なプロフェッショナルたち"
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/ecomm_categories_showcase_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/footer_option_plugin.js:0
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
@@ -6986,6 +7190,7 @@ msgstr "デジタルコンサルティングの専門知識"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/announcement_scroll_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navtabs_style_option.xml:0
 msgid "Direction"
 msgstr "方向"
@@ -7799,6 +8004,21 @@ msgid "Elevate Your Brand With Us"
 msgstr "ブランド力を高めましょう"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
+#, fuzzy
+#| msgid ""
+#| "Elevate your living space with furniture that blends modern aesthetics "
+#| "and classic charm, crafted to bring both comfort and style to your home.\n"
+#| "                        <br/><br/><br/><br/><br/><br/>"
+msgid ""
+"Elevate your living space with furniture that blends modern aesthetics and "
+"classic charm, crafted to bring both comfort and style to your home."
+msgstr ""
+"モダンな美しさとクラシックな魅力を融合させた家具で、あなたの暮らしをワンラン"
+"クアップ。快適さとスタイルの両方を兼ね備えた空間を演出します。\n"
+"                        <br/><br/><br/><br/><br/><br/>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid
 msgid ""
 "Elevate your living space with furniture that blends modern aesthetics and "
@@ -7947,6 +8167,17 @@ msgid ""
 "best value.<br/>"
 msgstr ""
 "ユーザ目線のデザインで体験をより良いものに。最高の価値を感じてください。<br/>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
+msgid "Enjoy 30% on all our wooden desks and elevate your workspace."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/html_editor.xml:0
+msgid "Enter URL, /page, or #anchor"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -8350,6 +8581,14 @@ msgstr "外部ID"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
+#, fuzzy
+#| msgid "Content"
+msgid "Extra Content"
+msgstr "コンテンツ"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 msgid "Extra Large"
 msgstr "特大"
@@ -8704,6 +8943,14 @@ msgstr "初回のみ"
 #: code:addons/website/static/src/builder/plugins/options/ecomm_categories_showcase_option.xml:0
 msgid "First block larger"
 msgstr "最初のブロックを大きく表示"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
+#, fuzzy
+#| msgid "First Connection"
+msgid "First on top"
+msgstr "最初の接続"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_ui_view__first_page_id
@@ -9229,6 +9476,7 @@ msgstr "すべての内側ブロックに適用されるグローバルオプシ
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/portal_option.xml:0
 msgid "Global options for all inner cards."
 msgstr "すべての内側のカードに適用されるグローバルオプション。"
 
@@ -9733,12 +9981,6 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
 msgid "Hide on Mobile"
 msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/interactions/cookies/cookies_toggle.js:0
-msgid "Hide the cookies bar"
-msgstr "クッキーバーを非表示"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
@@ -10607,6 +10849,14 @@ msgstr ""
 "単にコンテンツを作成できます。"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
+#, fuzzy
+#| msgid "Display Inside"
+msgid "Inside"
+msgstr "中に表示"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_boxed
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_framed
 msgid "Insights, stats, and metrics"
@@ -11255,6 +11505,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/footer_copyright_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/language_selector_option.xml:0
@@ -11446,6 +11697,14 @@ msgid "Last modified pages"
 msgstr "最後の変更されたページ"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
+#, fuzzy
+#| msgid "Last Connection"
+msgid "Last on top"
+msgstr "最後の接続"
+
+#. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__last_connection_datetime
 msgid "Last page view date"
 msgstr "最後のページビュー日付"
@@ -11539,6 +11798,7 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/announcement_scroll_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/blockquote_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/card_image_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/card_width_option.xml:0
@@ -11864,6 +12124,13 @@ msgid "Low"
 msgstr "低"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
+msgid ""
+"Made from ethically sourced wood and premium textiles, our furniture is as "
+"kind to the planet as it is to your living space."
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/theme/theme_colors_option.xml:0
 msgid "Main"
@@ -11909,13 +12176,20 @@ msgid "Making a difference every day"
 msgstr "日々、違いをもたらす"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+#, fuzzy
+#| msgid "Partners and references"
+msgid "Manage Your Cookie Preferences"
+msgstr "パートナー企業と導入実績"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_features
 msgid "Management"
 msgstr "管理"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/utils.js:0
+#: code:addons/website/static/src/snippets/s_map/map.js:0
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.s_map
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -12479,6 +12753,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Monitors"
 msgstr "モニター"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
+#, fuzzy
+#| msgid "Read More"
+msgid "More"
+msgstr "さらに読む"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
@@ -13328,7 +13610,7 @@ msgstr "業務マネジャー"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/utils.js:0
+#: code:addons/website/static/src/client_actions/website_preview/publish_website_systray_item.js:0
 #: model:ir.ui.menu,name:website.menu_optimize_seo
 msgid "Optimize SEO"
 msgstr "SEO最適化"
@@ -13367,6 +13649,14 @@ msgstr "オプション"
 #: model:ir.model.fields,help:website.field_website_snippet_filter__help
 msgid "Optional help text describing the filter usage and/or purpose."
 msgstr "フィルターの使い方や目的を説明する任意の補足テキスト。"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
+#, fuzzy
+#| msgid "Order by"
+msgid "Order"
+msgstr "並べ替え:"
 
 #. module: website
 #. odoo-javascript
@@ -13870,7 +14160,7 @@ msgstr "どのページにスニペットリストが作成されるかを確認
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/utils.js:0
+#: code:addons/website/static/src/client_actions/website_preview/publish_website_systray_item.js:0
 msgid "Page description not set."
 msgstr "ページの説明が設定されていません。"
 
@@ -13882,7 +14172,7 @@ msgstr "ページが見つかりません"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/utils.js:0
+#: code:addons/website/static/src/client_actions/website_preview/publish_website_systray_item.js:0
 msgid "Page title not set."
 msgstr "ページタイトルが設定されていません。"
 
@@ -14210,7 +14500,6 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/cookies_bar_option.xml:0
-#: model_terms:ir.ui.view,arch_db:website.external_snippets
 #: model_terms:ir.ui.view,arch_db:website.s_popup
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Popup"
@@ -14947,6 +15236,14 @@ msgstr "\"%(keyword)s\"を削除する"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
+#, fuzzy
+#| msgid "Remove Cover"
+msgid "Remove Avatar"
+msgstr "カバー画像を削除"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 msgid "Remove Column"
 msgstr "列を削除"
@@ -15198,6 +15495,7 @@ msgstr "リライト"
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/announcement_scroll_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/blockquote_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/card_image_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/card_width_option.xml:0
@@ -15298,6 +15596,7 @@ msgstr "丸型サムネイル"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/bento_border_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/ecomm_categories_showcase_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
@@ -15309,6 +15608,14 @@ msgstr "丸み"
 #: model:ir.model.fields,field_description:website.field_website_route__path
 msgid "Route"
 msgstr "ルート"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
+#, fuzzy
+#| msgid "Low"
+msgid "Row"
+msgstr "低"
 
 #. module: website
 #. odoo-javascript
@@ -15443,6 +15750,7 @@ msgstr "スクリーンショット"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_template_option.xml:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Scroll"
 msgstr "スクロール"
 
@@ -15674,8 +15982,10 @@ msgstr "セキュリティポリシー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template
-msgid "See All"
-msgstr "すべて表示"
+#, fuzzy
+#| msgid "See all<span class=\"fa fa-long-arrow-right ms-2\"/>"
+msgid "See All <i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/>"
+msgstr "すべて表示<span class=\"fa fa-long-arrow-right ms-2\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -15687,11 +15997,6 @@ msgstr "分析レポートを見る"
 #: code:addons/website/static/src/components/dialog/seo.js:0
 msgid "See Google Trends about '%(keyword)s'"
 msgstr "'%(keyword)s' の Google トレンドを見る"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template
-msgid "See all<span class=\"fa fa-long-arrow-right ms-2\"/>"
-msgstr "すべて表示<span class=\"fa fa-long-arrow-right ms-2\"/>"
 
 #. module: website
 #. odoo-javascript
@@ -16022,6 +16327,12 @@ msgstr "メッセージを表示"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
+msgid "Show extra avatars count"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/hierarchy_navbar.xml:0
 msgid "Show inactive views"
 msgstr "非アクティブビューを表示"
@@ -16057,15 +16368,23 @@ msgstr "サイトマップを表示"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/interactions/cookies/cookies_toggle.js:0
-msgid "Show the cookies bar"
-msgstr "クッキーバーを表示"
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
+#, fuzzy
+#| msgid "Show site map"
+msgid "Show text"
+msgstr "サイトマップを表示"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_elements_option.xml:0
 msgid "Show/Hide Elements"
 msgstr "要素の表示/非表示"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_advanced_option.xml:0
+msgid "Show/Hide the header on all pages"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -16166,6 +16485,7 @@ msgstr "サイト"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/font_awesome_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
@@ -16517,6 +16837,13 @@ msgid "Start Now"
 msgstr "今すぐ開始"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
+#, fuzzy
+#| msgid "See all<span class=\"fa fa-long-arrow-right ms-2\"/>"
+msgid "Start saving  <span class=\"fa fa-long-arrow-right\" role=\"img\"/>"
+msgstr "すべて表示<span class=\"fa fa-long-arrow-right ms-2\"/>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_card_offset
 #: model_terms:ir.ui.view,arch_db:website.s_image_hexagonal
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
@@ -16722,6 +17049,7 @@ msgstr "囲まれる"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid
+#: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
 msgid "Sustainable Materials"
 msgstr "サステイナブルな材質"
 
@@ -16768,6 +17096,13 @@ msgstr "タブ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Table of Content"
+msgstr "目次"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+#, fuzzy
+#| msgid "Table of Content"
+msgid "Table of Contents"
 msgstr "目次"
 
 #. module: website
@@ -17695,6 +18030,7 @@ msgstr "時間です! 今は訪問できます:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid
+#: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
 msgid "Timeless Design"
 msgstr "タイムレスなデザイン"
 
@@ -18199,12 +18535,6 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/xml/html_editor.xml:0
-msgid "Type your URL"
-msgstr "URLを入力して下さい"
-
-#. module: website
-#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/facebook_option.xml:0
@@ -18357,6 +18687,11 @@ msgstr "最新プロダクト発表"
 #: model_terms:ir.ui.view,arch_db:website.s_images_mosaic
 msgid "Unveiling our newest solutions"
 msgstr "最新ソリューションの発表"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid "Update My Cookie Preferences"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
@@ -19219,6 +19554,14 @@ msgstr ""
 "特に当社のプラットフォームを初めてご利用になるお客様にとっては、初期設定が難"
 "しい場合があることを理解しています。そのため、全ての段階を順を追って説明した"
 "ガイドを用意し、お客様がすぐに業務を開始できるよう努めています。<br/>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.cookie_policy
+msgid ""
+"We use cookies to enhance your experience on our website and personalize "
+"content. You have full control over your choices and can update your "
+"preferences at any time."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -20364,11 +20707,36 @@ msgstr "ビジネス"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
+#, fuzzy
+#| msgid ""
+#| "cards, shop, grid, column, cart, product, ecommerce, categories, "
+#| "hightlights, pictures, photos, illustration, media, visuals, intro, home, "
+#| "coupon, code, description, rounded, card, call to action, cta, marketing, "
+#| "showcase, mosaic, collage, arrangement, collection, visual-grid"
 msgid ""
-"cards, shop, grid, column, cart, product, ecommerce, categories, "
-"hightlights, pictures, photos, illustration, media, visuals, intro, home, "
+"cards, shop, grid, avatars, column, cart, product, ecommerce, categories, "
+"highlights, pictures, photos, illustration, media, visuals, intro, home, "
 "coupon, code, description, rounded, card, call to action, cta, marketing, "
 "showcase, mosaic, collage, arrangement, collection, visual-grid"
+msgstr ""
+"カード, ショップ, グリッド, カラム, カート, 商品, ECサイト, カテゴリ, ハイラ"
+"イト, 図, 写真, イラスト, メディア, ビジュアル, イントロ, ホーム, クーポン, "
+"コード, 説明, 角丸, コールトゥアクション, CTA, マーケティング, ショーケース, "
+"モザイク, コラージュ, 配置, コレクション, ビジュアルグリッド"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+#, fuzzy
+#| msgid ""
+#| "cards, shop, grid, column, cart, product, ecommerce, categories, "
+#| "hightlights, pictures, photos, illustration, media, visuals, intro, home, "
+#| "coupon, code, description, rounded, card, call to action, cta, marketing, "
+#| "showcase, mosaic, collage, arrangement, collection, visual-grid"
+msgid ""
+"cards, shop, grid, column, cart, product, ecommerce, categories, highlights, "
+"pictures, photos, illustration, media, visuals, intro, home, coupon, code, "
+"description, rounded, card, call to action, cta, marketing, showcase, "
+"mosaic, collage, arrangement, collection, visual-grid"
 msgstr ""
 "カード, ショップ, グリッド, カラム, カート, 商品, ECサイト, カテゴリ, ハイラ"
 "イト, 図, 写真, イラスト, メディア, ビジュアル, イントロ, ホーム, クーポン, "
@@ -21634,6 +22002,11 @@ msgid "zip, ttf, woff, woff2, otf"
 msgstr "zip, ttf, woff, woff2, otf"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
+msgid "“Our furniture balances style, comfort, and sustainability.”<br/>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_announcement_scroll
 msgid "• Free Shipping • Secure payment • Easy Return"
 msgstr "• 送料無料 • 安全な支払い • 簡単返品"
@@ -21658,3 +22031,15 @@ msgstr "✽  ピザ"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  当社が提供するもの"
+
+#~ msgid "Hide the cookies bar"
+#~ msgstr "クッキーバーを非表示"
+
+#~ msgid "See All"
+#~ msgstr "すべて表示"
+
+#~ msgid "Show the cookies bar"
+#~ msgstr "クッキーバーを表示"
+
+#~ msgid "Type your URL"
+#~ msgstr "URLを入力して下さい"

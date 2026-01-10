@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
 "PO-Revision-Date: 2025-12-02 14:37+0000\n"
 "Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/crm/ro/"
@@ -123,11 +123,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"fa fa-briefcase\" title=\"Opportunity Name\"/>"
 msgstr "<i class=\"fa fa-briefcase\" title=\"Numele oportunității\"/>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
-msgid "<i class=\"fa fa-building\" title=\"Company\"/>"
-msgstr "<i class=\"fa fa-building\" title=\"Companie\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
@@ -370,18 +365,6 @@ msgstr ""
 "altă etapă."
 
 #. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_lead.py:0
-msgid "A new lead has been created and is not assigned to any team."
-msgstr "O pistă nouă a fost creată și nu este alocată niciunei echipe."
-
-#. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_lead.py:0
-msgid "A new lead has been created for the team \"%(team_name)s\"."
-msgstr "O pistă nouă a fost creată pentru echipa \"%(team_name)s\"."
-
-#. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -606,11 +589,6 @@ msgid "All set. Let’s <b>Schedule</b> it."
 msgstr "Totul e gata. Hai să <b>programăm</b>."
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "Analysis"
-msgstr "Analiză"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__deduplicate
 msgid "Apply deduplication"
 msgstr "Aplicarea deduplicarii"
@@ -633,6 +611,12 @@ msgstr "Arhivat"
 msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the "
 "<b>first team by default.</b>"
+msgstr ""
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.xml:0
+msgid "Ask your Team Leader to get access"
 msgstr ""
 
 #. module: crm
@@ -929,7 +913,6 @@ msgstr "Index Culori"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__company_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -1036,11 +1019,6 @@ msgid "Contact:"
 msgstr "Contact:"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "Contacts"
-msgstr "Contacte"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__name
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__name
 msgid "Conversion Action"
@@ -1073,6 +1051,14 @@ msgstr "Transformați Pista în Oportunitate (în masă)"
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Convert Lead to Opportunity (not in mass)"
 msgstr "Transformați Pista în Oportunitate (nu în masă)"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+#, fuzzy
+#| msgid "Create an opportunity to start playing with your pipeline."
+msgid "Convert into an Opportunity to see it in your Pipeline"
+msgstr ""
+"Creează o oportunitate pentru a începe să joci cu fluxul de activitate."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1164,6 +1150,14 @@ msgid "Create a Recurring Plan"
 msgstr "Creează un Plan Recurent"
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+#, fuzzy
+#| msgid "Create a Lead"
+msgid "Create a landing page"
+msgstr "Creează o Pistă"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
 msgstr ""
@@ -1196,6 +1190,12 @@ msgstr "Creează o oportunitate"
 msgid "Create an opportunity to start playing with your pipeline."
 msgstr ""
 "Creează o oportunitate pentru a începe să joci cu fluxul de activitate."
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Create leads on specific answers"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__create_uid
@@ -1258,11 +1258,6 @@ msgstr "Mesaj personalizat de respins"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Customer"
 msgstr "Client"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead__commercial_partner_id
-msgid "Customer Company"
-msgstr "Companie Clienti"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.res_partner_menu_customer
@@ -1413,6 +1408,12 @@ msgstr "Vrei cu adevărat să actualizezi această etapă?"
 
 #. module: crm
 #. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Do you want to install the \"%(module_name)s\" App?"
+msgstr ""
+
+#. module: crm
+#. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Does not have a"
 msgstr "Nu are un"
@@ -1476,6 +1477,14 @@ msgstr "Email Alias"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_domain_criterion
 msgid "Email Domain Criterion"
 msgstr "Criteriu domeniu e-mail"
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+#, fuzzy
+#| msgid "Marketing"
+msgid "Email Marketing"
+msgstr "Marketing"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
@@ -1599,6 +1608,12 @@ msgstr "Câmpuri suplimentare ..."
 
 #. module: crm
 #. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Failed to install \"%(module_name)s\""
+msgstr ""
+
+#. module: crm
+#. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency_field__field_id
 msgid "Field"
@@ -1624,6 +1639,11 @@ msgid "Fields that can be used for predictive lead scoring computation"
 msgstr ""
 "Câmpurile care pot fi utilizate pentru calculul scorului de oportunitate "
 "predictiv"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
+msgid "Fold by Default"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
@@ -1695,6 +1715,20 @@ msgid "Future Activities"
 msgstr "Activități viitoare"
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.xml:0
+#, fuzzy
+#| msgid "Create a Lead"
+msgid "Generate Leads"
+msgstr "Creează o Pistă"
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Generate leads from any email you get"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_mine
 msgid "Generate new leads based on their country, industries, size, etc."
 msgstr "Generați noi piste pe baza țării, industriei, dimensiunii, etc."
@@ -1708,12 +1742,6 @@ msgstr "Generați noi piste pe baza țării, industriei, dimensiunii, etc."
 #: model:ir.model,name:crm.model_crm_lead_lost
 msgid "Get Lost Reason"
 msgstr "Motivul pierderii"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
-msgid "Give your team the requirements to move an opportunity to this stage."
-msgstr ""
-"Dați echipelor dvs. cerințele pentru a muta o oportunitate la această etapă."
 
 #. module: crm
 #. odoo-python
@@ -1894,6 +1922,12 @@ msgstr ""
 "atât un câmp de mobil și telefon într-un model."
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Installing \"%(module_name)s\""
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_type
 msgid "Interval type between each cron run (e.g. each 2 days or each 2 hours)"
 msgstr ""
@@ -1914,11 +1948,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_is_follower
 msgid "Is Follower"
 msgstr "Este urmăritor"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead__is_partner_visible
-msgid "Is Partner Visible"
-msgstr "Este partenerul vizibil"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__won_status
@@ -2133,6 +2162,14 @@ msgid "Lead Scoring Starting Date in String"
 msgstr "Data de începere a evaluării pistelor în șir"
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+#, fuzzy
+#| msgid "Lead Mining"
+msgid "Lead Sourcing"
+msgstr "Extragere pistă"
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_tree
 msgid "Lead Tags"
@@ -2157,6 +2194,13 @@ msgstr ""
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Lead/Opportunity created"
+msgstr "Pistă/Oportunitate creată"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_creation_message
+#, fuzzy
+#| msgid "Lead/Opportunity created"
+msgid "Lead/Opportunity created<br/>"
 msgstr "Pistă/Oportunitate creată"
 
 #. module: crm
@@ -2397,6 +2441,14 @@ msgstr "Scăzut"
 #: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.xml:0
 msgid "MRR"
 msgstr "Venit lunar recurent"
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+#, fuzzy
+#| msgid "Email Alias"
+msgid "Mail plugins"
+msgstr "Email Alias"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3481,6 +3533,12 @@ msgstr "Caută oportunități"
 
 #. module: crm
 #. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Search in our directory of 300.000+ companies"
+msgstr ""
+
+#. module: crm
+#. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "See AI-computed chances details"
 msgstr "Vedeți detaliile șanselor calculate de AI"
@@ -3496,6 +3554,25 @@ msgstr "Selectați un motiv al pierderii..."
 msgid "Select at least two Leads/Opportunities from the list to merge them."
 msgstr ""
 "Selectați cel puțin două piste/oportunități din listă pentru a le îmbina."
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+#, fuzzy
+#| msgid "Select a Lost Reason..."
+msgid "Select or create a contact..."
+msgstr "Selectați un motiv al pierderii..."
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Send a Survey"
+msgstr ""
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+msgid "Send an email and get leads from replies"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3528,11 +3605,6 @@ msgstr "Setați o nouă etapă în pipeline-ul dvs. de oportunități"
 #: model:ir.ui.menu,name:crm.crm_config_settings_menu
 msgid "Settings"
 msgstr "Setări"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
-msgid "Shared with all teams"
-msgstr "Partajat cu toate echipele"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
@@ -3572,6 +3644,13 @@ msgstr "Afișează doar oportunități"
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Show only opportunity"
 msgstr "Afișează doar oportunitatea"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
+#, fuzzy
+#| msgid "Shared with all teams"
+msgid "Show to all teams"
+msgstr "Partajat cu toate echipele"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_optout
@@ -4053,6 +4132,14 @@ msgid "Try sending an email"
 msgstr "Încercați să trimiteți un e-mail"
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
+#, fuzzy
+#| msgid "Visits to Leads"
+msgid "Turn visitors into leads"
+msgstr "Vizite la piste"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
 #: model:ir.model.fields,field_description:crm.field_crm_lead__type
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -4294,6 +4381,15 @@ msgid "Welcome Demo"
 msgstr "Bine ați venit Demo"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
+#, fuzzy
+#| msgid ""
+#| "Give your team the requirements to move an opportunity to this stage."
+msgid "What are the requirements to move an opportunity to this stage?"
+msgstr ""
+"Dați echipelor dvs. cerințele pentru a muta o oportunitate la această etapă."
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "What went wrong?"
 msgstr "Ce nu a mers bine?"
@@ -4427,14 +4523,21 @@ msgid "e.g. \"Monthly\""
 msgstr "ex. \"Lunar\""
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
-msgid "e.g. Negotiation"
-msgstr "ex. Negociere"
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "e.g. (555) 555-0199"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "e.g. Product Pricing"
 msgstr "ex. Prețuri produs"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
+#, fuzzy
+#| msgid "e.g. Negotiation"
+msgid "e.g. Qualification"
+msgstr "ex. Negociere"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -4445,6 +4548,11 @@ msgstr "ex. Prea scump"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "e.g. https://www.odoo.com"
 msgstr "e.g. https://www.odoo.com"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "e.g. john.doe@email.com"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -4561,3 +4669,24 @@ msgstr "adresă de e-mail validă"
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "valid phone number"
 msgstr "număr de telefon valid"
+
+#~ msgid "<i class=\"fa fa-building\" title=\"Company\"/>"
+#~ msgstr "<i class=\"fa fa-building\" title=\"Companie\"/>"
+
+#~ msgid "A new lead has been created and is not assigned to any team."
+#~ msgstr "O pistă nouă a fost creată și nu este alocată niciunei echipe."
+
+#~ msgid "A new lead has been created for the team \"%(team_name)s\"."
+#~ msgstr "O pistă nouă a fost creată pentru echipa \"%(team_name)s\"."
+
+#~ msgid "Analysis"
+#~ msgstr "Analiză"
+
+#~ msgid "Contacts"
+#~ msgstr "Contacte"
+
+#~ msgid "Customer Company"
+#~ msgstr "Companie Clienti"
+
+#~ msgid "Is Partner Visible"
+#~ msgstr "Este partenerul vizibil"

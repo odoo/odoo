@@ -8,24 +8,24 @@
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-11-17 17:21+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-07 14:37+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_holidays/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
-"1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
+"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -115,7 +115,7 @@ msgstr "%(employee_name)s du %(date_from)s au %(date_to)s - %(state)s"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(employee_name)s requested a time-off \n"
-msgstr ""
+msgstr "%(employee_name)s a demandé un congé \n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -193,7 +193,7 @@ msgstr "%(person)s : %(duration)s (%(start)s)"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(start_date)s → %(end_date)s (%(duration)s)"
-msgstr ""
+msgstr "%(start_date)s → %(end_date)s (%(duration)s)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -306,6 +306,23 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Bonjour <b><t t-out=\"object.env.context.get('manager')\""
+"/></b>,\n"
+"                    <br/><br/>\n"
+"                    <p>Je vous adresse une demande de congé et vous serais "
+"reconnaissant(e) de bien vouloir l’approuver dès que possible !</p>\n"
+"                    <ul>\n"
+"                        <li>Type de congé : <t t-out="
+"\"object.holiday_status_id.name\"/></li>\n"
+"                        <li><t t-out=\"object.request_date_from\"/> → <t "
+"t-out=\"object.request_date_to\"/> (<t t-out=\"object.duration_display\"/>)"
+"</li>\n"
+"                        <li t-if=\"object.name\">Motif : <t t-out="
+"\"object.name\"/></li>\n"
+"                    </ul>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -527,12 +544,22 @@ msgid ""
 "    Versions:\n"
 "    %(versions)s"
 msgstr ""
+"Un congé ne peut pas être défini sur plusieurs versions avec des horaires de "
+"travail différents.\n"
+"\n"
+"Veuillez créer un congé distinct pour chaque période de version.\n"
+"\n"
+"Congé :\n"
+"%(time_off)s\n"
+"\n"
+"Versions :\n"
+"%(versions)s"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "A new time off request has been submitted:"
-msgstr ""
+msgstr "Une nouvelle demande de congé a été soumise :"
 
 #. module: hr_holidays
 #. odoo-python
@@ -704,7 +731,7 @@ msgstr "Employé actif"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Active Employees"
-msgstr ""
+msgstr "Employés actifs"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -734,7 +761,7 @@ msgstr "Activité exception décoration"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_plans_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Plans d'activité"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_state
@@ -1094,7 +1121,7 @@ msgstr "Archivé"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Archived Employees"
-msgstr ""
+msgstr "Employés archivés"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1671,7 +1698,7 @@ msgstr "Date"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_report__working_schedule_aligned_date_from
 msgid "Date From"
-msgstr ""
+msgstr "Date de début"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to_period
@@ -2409,6 +2436,9 @@ msgid ""
 "{{ object.holiday_status_id.name }} from {{ object.request_date_from }} to "
 "{{ object.request_date_to }}"
 msgstr ""
+"Je fais une demande de {{ object.duration_display }} de {{ "
+"object.holiday_status_id.name }} du {{ object.request_date_from }} au {{ "
+"object.request_date_to }}"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__id
@@ -2500,6 +2530,8 @@ msgid ""
 "If checked, every time this time off type is taken, the time off officers of "
 "the same company will be notified"
 msgstr ""
+"Si cette option est cochée, chaque fois que ce type de congé est pris, les "
+"responsables des congés de la même société seront notifiés"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -2771,7 +2803,7 @@ msgstr "Perdu"
 #. module: hr_holidays
 #: model:mail.template,description:hr_holidays.new_timeoff_request_template
 msgid "Mail for new leave request"
-msgstr ""
+msgstr "E-mail pour une nouvelle demande de congé"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_main_attachment_id
@@ -2900,7 +2932,7 @@ msgstr "Erreur d'envoi du message"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_mail_message_subtype
 msgid "Message Subtype"
-msgstr ""
+msgstr "Sous-type de message"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_ids
@@ -3101,13 +3133,13 @@ msgstr "Nouvelle demande de congé"
 #. module: hr_holidays
 #: model:mail.template,name:hr_holidays.new_timeoff_request_template
 msgid "New Time Off Request"
-msgstr ""
+msgstr "Nouvelle demande de congé"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "New Time Off Request: %(leave_type)s"
-msgstr ""
+msgstr "Nouvelle demande de congé : %(leave_type)s"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_form
@@ -3249,7 +3281,7 @@ msgstr "Prévenir les RH"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__notify_time_off_officers
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Notify Time Off Officer(s)?"
-msgstr ""
+msgstr "Notifier le(s) responsable(s) des congés ?"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__11
@@ -3261,12 +3293,12 @@ msgstr "Novembre"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_report__number_of_days
 msgid "Number Of Days"
-msgstr ""
+msgstr "Nombre de jours"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_report__number_of_hours
 msgid "Number Of Hours"
-msgstr ""
+msgstr "Nombre d’heures"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction_counter
@@ -3479,12 +3511,12 @@ msgstr "Congé de paternité"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_be_leave_type_paternity_legal
 msgid "Paternity Time Off (Legal)"
-msgstr ""
+msgstr "Congé de paternité (légal)"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_be_leave_type_paternity_paid_company
 msgid "Paternity Time Off (Paid By Company)"
-msgstr ""
+msgstr "Congé de paternité (payé par l’entreprise)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3518,7 +3550,7 @@ msgstr "Planifié :"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Please review and take appropriate action."
-msgstr ""
+msgstr "Veuillez examiner la demande et prendre les mesures appropriées."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__hr_icon_display__presence_holiday_present
@@ -3688,12 +3720,12 @@ msgstr "Document justificatif requis"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_status_requires_allocation
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__requires_allocation
 msgid "Requires Allocation"
-msgstr ""
+msgstr "Nécessite une allocation"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_resource
 msgid "Resource"
-msgstr ""
+msgstr "Ressource"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__resource_calendar_id
@@ -4423,7 +4455,6 @@ msgstr "Validation des congés"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_manager_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_manager_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__leave_manager_id
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
 msgid "Time Off Approver"
 msgstr "Approbateur de congés"
 
@@ -4431,7 +4462,7 @@ msgstr "Approbateur de congés"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/calendar/calendar_side_panel/calendar_side_panel.xml:0
 msgid "Time Off Balance"
-msgstr ""
+msgstr "Solde de congés"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_report_calendar
@@ -4462,12 +4493,12 @@ msgstr "Sous-type de notification pour les congés"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_employee_report
 msgid "Time Off Per Employee Analysis"
-msgstr ""
+msgstr "Analyse des congés par employé"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_employee_report
 msgid "Time Off Per Employee Summary / Report"
-msgstr ""
+msgstr "Récapitulatif des congés par employé / Rapport"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5140,6 +5171,8 @@ msgid ""
 "You can only cancel your own leave. You can cancel a leave only if this "
 "leave     is approved, validated or refused."
 msgstr ""
+"Vous pouvez uniquement annuler vos propres congés. Vous pouvez annuler un "
+"congé uniquement si celui-ci est approuvé, validé ou refusé."
 
 #. module: hr_holidays
 #. odoo-python

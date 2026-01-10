@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
 "PO-Revision-Date: 2025-11-28 04:36+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -549,37 +549,6 @@ msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
 msgstr "<span class=\"o_stat_text\">Nhiệm vụ phụ</span>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.task_type_edit
-msgid ""
-"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
-"                                            <i class=\"fa fa-lightbulb-o "
-"pe-2\"/>\n"
-"                                            <span "
-"name=\"rating_status_helper\">\n"
-"                                                <span "
-"invisible=\"rating_status == 'periodic'\">A rating request will be sent as "
-"soon as a task reaches this stage.</span>\n"
-"                                                <span "
-"invisible=\"rating_status == 'stage'\">Rating requests will be sent as long "
-"as the task remains in this stage.</span>\n"
-"                                            </span>\n"
-"                                        </span>"
-msgstr ""
-"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
-"                                            <i class=\"fa fa-lightbulb-o "
-"pe-2\"/>\n"
-"                                           <span "
-"name=\"rating_status_helper\">\n"
-"                                                <span "
-"invisible=\"rating_status == 'periodic'\">Yêu cầu đánh giá sẽ được gửi ngay "
-"khi nhiệm vụ đạt đến giai đoạn này.</span>\n"
-"                                                <span "
-"invisible=\"rating_status == 'stage'\">Yêu cầu đánh giá sẽ được gửi nếu "
-"nhiệm vụ vẫn ở trong giai đoạn này.</span>\n"
-"                                            </span>\n"
-"</span>"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 msgid "<span>Progress</span>"
 msgstr "<span>Tiến trình</span>"
@@ -600,6 +569,7 @@ msgid "<span>View</span>"
 msgstr "<span>Xem</span>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "<span>days</span>"
 msgstr ""
@@ -656,18 +626,6 @@ msgid ""
 msgstr ""
 "Không thể chọn một cộng tác viên hai lần trong truy cập chia sẻ dự án. Vui "
 "lòng xóa trùng lặp và thử lại."
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "A new task has been created and is not part of any project."
-msgstr "Một nhiệm vụ mới đã được tạo và không thuộc về bất kỳ dự án nào."
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "A new task has been created in the \"%(project_name)s\" project."
-msgstr "Một nhiệm vụ mới đã được tạo trong dự án \"%(project_name)s\"."
 
 #. module: project
 #. odoo-python
@@ -1036,6 +994,13 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "Are you sure you want to restore this version ?"
 msgstr "Bạn có chắc chắn muốn khôi phục phiên bản này không?"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#, fuzzy
+#| msgid "Customer Ratings"
+msgid "Ask for Ratings"
+msgstr "Đánh giá của khách hàng"
 
 #. module: project
 #. odoo-javascript
@@ -1729,11 +1694,6 @@ msgid "Customer Portal URL"
 msgstr "URL cổng thông tin khách hàng"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.task_type_edit
-msgid "Customer Rating"
-msgstr "Đánh giá của Khách hàng"
-
-#. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
 msgid "Customer Ratings"
@@ -1819,6 +1779,12 @@ msgstr ""
 "thường cần để phân công nhiệm vụ."
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project_stage__rotting_threshold_days
+msgid ""
+"Day count before projects in this stage become stale. Set to 0 to disable."
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rotting_threshold_days
 msgid ""
 "Day count before tasks in this stage become stale. Set to 0 to "
@@ -1854,6 +1820,7 @@ msgid "Days to Deadline"
 msgstr "Số ngày tới hạn"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_stage__rotting_threshold_days
 #: model:ir.model.fields,field_description:project.field_project_task_type__rotting_threshold_days
 msgid "Days to rot"
 msgstr ""
@@ -1874,6 +1841,13 @@ msgstr "Thời hạn"
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
 msgid "Dear"
 msgstr "Thân gửi"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#, fuzzy
+#| msgid "Default Values"
+msgid "Default"
+msgstr "Giá trị Mặc định"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -2097,12 +2071,6 @@ msgid "Draft"
 msgstr "Nháp"
 
 #. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_list_to_plan/project_task_calendar_list_to_plan.xml:0
-msgid "Drag Tasks to Schedule"
-msgstr ""
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Duplicate"
@@ -2285,6 +2253,12 @@ msgid "Finance"
 msgstr "Tài chính"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+msgid "Fold by Default"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded"
@@ -2297,12 +2271,14 @@ msgid "Follow"
 msgstr "Theo dõi"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_home
-msgid "Follow and comment on tasks in your projects"
-msgstr ""
+#: model:portal.entry,description:project.portal_tasks
+#, fuzzy
+#| msgid "Follow the evolution of your projects"
+msgid "Follow and comments tasks of your projects"
+msgstr "Theo dõi sự phát triển của dự án"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_home
+#: model:portal.entry,description:project.portal_projects
 msgid "Follow the evolution of your projects"
 msgstr "Theo dõi sự phát triển của dự án"
 
@@ -2585,18 +2561,6 @@ msgstr ""
 "Danh sách của dự án. Các dự án ở giai đoạn thu gọn được coi là đã đóng."
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
-msgid ""
-"If set, a rating request will automatically be sent by email to the customer "
-"when the task reaches this stage. \n"
-"Alternatively, it will be sent at a regular interval as long as the task "
-"remains in this stage."
-msgstr ""
-"Nếu được thiết lập, yêu cầu đánh giá sẽ được gửi tự động qua email cho khách "
-"hàng khi nhiệm vụ đạt đến giai đoạn này. \n"
-"Hoặc, yêu cầu sẽ được gửi định kỳ miễn là nhiệm vụ vẫn ở trong giai đoạn này."
-
-#. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
 msgid ""
 "If set, an email will be automatically sent to the customer when the project "
@@ -2795,6 +2759,7 @@ msgstr "Đánh giá cuối cùng (1-5)"
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
+#: model:ir.model.fields,field_description:project.field_project_project__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_project_task__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
@@ -2929,12 +2894,6 @@ msgstr "Liên kết"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Live"
 msgstr "Trực tiếp"
-
-#. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_list_to_plan/project_task_calendar_list_to_plan.xml:0
-msgid "Load More"
-msgstr "Tải thêm"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_incoming_local
@@ -3140,10 +3099,8 @@ msgstr "Cập nhật của tôi"
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_milestone__name
 #: model:ir.model.fields,field_description:project.field_project_project__name
-#: model:ir.model.fields,field_description:project.field_project_project_stage__name
 #: model:ir.model.fields,field_description:project.field_project_role__name
 #: model:ir.model.fields,field_description:project.field_project_tags__name
-#: model:ir.model.fields,field_description:project.field_project_task_type__name
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__name
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -3305,6 +3262,12 @@ msgid "No data yet!"
 msgstr "Chưa có dữ liệu nào!"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+msgid "No email"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.actions.act_window,help:project.project_milestone_action
 msgid "No milestones found. Let's create one!"
 msgstr "Không tìm thấy mốc nào. Hãy tạo một mốc!"
@@ -3434,6 +3397,13 @@ msgstr "Tạm dừng"
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Track"
 msgstr "Đúng tiến độ"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__periodic
+#, fuzzy
+#| msgid "on a periodic basis"
+msgid "On a periodic basis"
+msgstr "định kỳ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__monthly
@@ -3999,9 +3969,9 @@ msgstr "Dự án: Lời mời đánh giá nhiệm vụ"
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.menu,name:project.menu_projects_config_group_stage
 #: model:ir.ui.menu,name:project.menu_projects_group_stage
+#: model:portal.entry,name:project.portal_projects
 #: model_terms:ir.ui.view,arch_db:project.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
-#: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -4097,6 +4067,13 @@ msgid "Rating Avg Text"
 msgstr "Nội dung đánh giá trung bình"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#, fuzzy
+#| msgid "Rating Email Template"
+msgid "Rating Email"
+msgstr "Mẫu Email đánh giá"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
 msgid "Rating Email Template"
 msgstr "Mẫu Email đánh giá"
@@ -4120,6 +4097,13 @@ msgstr "Đánh giá ảnh cuối cùng"
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
 msgstr "Đánh giá giá trị cuối cùng"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#, fuzzy
+#| msgid "Rating Text"
+msgid "Rating Periodicity"
+msgstr "Nội dung đánh giá"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
@@ -4354,11 +4338,13 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_rotting
 #: model:ir.model.fields,field_description:project.field_project_task__is_rotting
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rotting"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Rotting in"
 msgstr ""
@@ -4605,6 +4591,11 @@ msgid "Show sub-tasks & top menu"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
+msgid "Show to all companies"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "Since"
 msgstr "Kể từ"
@@ -4707,6 +4698,14 @@ msgstr "Giai đoạn (Biểu đồ burn-down)"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
+msgstr "Giai đoạn đã thay đổi"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_stage__name
+#: model:ir.model.fields,field_description:project.field_project_task_type__name
+#, fuzzy
+#| msgid "Stage Changed"
+msgid "Stage Name"
 msgstr "Giai đoạn đã thay đổi"
 
 #. module: project
@@ -5017,11 +5016,6 @@ msgid "Task:"
 msgstr "Nhiệm vụ:"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.task_type_edit
-msgid "Task: Rating Request"
-msgstr "Nhiệm vụ: Yêu cầu đánh giá"
-
-#. module: project
 #. odoo-javascript
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
@@ -5031,6 +5025,7 @@ msgstr "Nhiệm vụ: Yêu cầu đánh giá"
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
 #: model:ir.embedded.actions,name:project.project_embedded_action_all_tasks_dashboard
 #: model:ir.ui.menu,name:project.menu_project_management
+#: model:portal.entry,name:project.portal_tasks
 #: model:project.project,label_tasks:project.project_home_construction
 #: model:project.project,label_tasks:project.project_project_1
 #: model:project.project,label_tasks:project.project_project_2
@@ -5039,7 +5034,6 @@ msgstr "Nhiệm vụ: Yêu cầu đánh giá"
 #: model:project.project,label_tasks:project.project_template_1
 #: model:project.project,label_tasks:project.project_template_2
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
-#: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_main_base
@@ -5085,6 +5079,12 @@ msgstr "Nhiệm vụ lặp lại"
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
 msgid "Tasks.test"
 msgstr "Tasks.test"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_role__user_ids
+#: model_terms:ir.ui.view,arch_db:project.project_role_view_search
+msgid "Team Members"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_id
@@ -5340,6 +5340,22 @@ msgid ""
 msgstr ""
 "Đây là bản xem trước cho thấy dự án sẽ trông như thế nào khi được chia sẻ "
 "với khách hàng và họ có quyền chỉnh sửa."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+#, fuzzy
+#| msgid "A new task has been created in the \"%(project_name)s\" project."
+msgid "This new task has been created in the \"%(project_name)s\" project."
+msgstr "Một nhiệm vụ mới đã được tạo trong dự án \"%(project_name)s\"."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+#, fuzzy
+#| msgid "A new task has been created and is not part of any project."
+msgid "This new task is not part of any project."
+msgstr "Một nhiệm vụ mới đã được tạo và không thuộc về bất kỳ dự án nào."
 
 #. module: project
 #. odoo-python
@@ -5693,6 +5709,13 @@ msgid "Update Created"
 msgstr "Đã tạo cập nhật"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#, fuzzy
+#| msgid "Update Created"
+msgid "Update Stage"
+msgstr "Đã tạo cập nhật"
+
+#. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__3
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__3
 msgid "Urgent"
@@ -5835,7 +5858,6 @@ msgstr "Chế độ hiển thị"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "Visible to all"
@@ -5889,6 +5911,11 @@ msgstr "Hàng tuần"
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__week
 msgid "Weeks"
 msgstr "Tuần"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
+msgid "When reaching this stage"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__role_ids
@@ -6169,6 +6196,14 @@ msgid "e.g. Product Launch"
 msgstr "VD: Ra mắt sản phẩm"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#, fuzzy
+#| msgid "Specifications"
+msgid "e.g. Qualification"
+msgstr "Thông số kỹ thuật"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. Send Invitations"
@@ -6180,10 +6215,8 @@ msgid "e.g. Tasks"
 msgstr "VD: Nhiệm vụ"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_tree
-#: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "e.g. To Do"
 msgstr "VD: Việc cần làm"
@@ -6228,11 +6261,6 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "icon."
 msgstr "biểu tượng."
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__periodic
-msgid "on a periodic basis"
-msgstr "định kỳ"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -6318,11 +6346,6 @@ msgid "to signalize what is the current status of your Idea."
 msgstr "để báo hiệu trạng thái hiện tại của Ý tưởng của bạn là gì."
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
-msgid "when reaching this stage"
-msgstr ""
-
-#. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "will generate tasks in your"
 msgstr "sẽ tạo ra các nhiệm vụ trong"
@@ -6353,3 +6376,52 @@ msgstr "👤 Chưa được phân công"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Riêng tư"
+
+#~ msgid ""
+#~ "<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+#~ "                                            <i class=\"fa fa-lightbulb-o "
+#~ "pe-2\"/>\n"
+#~ "                                            <span "
+#~ "name=\"rating_status_helper\">\n"
+#~ "                                                <span "
+#~ "invisible=\"rating_status == 'periodic'\">A rating request will be sent "
+#~ "as soon as a task reaches this stage.</span>\n"
+#~ "                                                <span "
+#~ "invisible=\"rating_status == 'stage'\">Rating requests will be sent as "
+#~ "long as the task remains in this stage.</span>\n"
+#~ "                                            </span>\n"
+#~ "                                        </span>"
+#~ msgstr ""
+#~ "<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+#~ "                                            <i class=\"fa fa-lightbulb-o "
+#~ "pe-2\"/>\n"
+#~ "                                           <span "
+#~ "name=\"rating_status_helper\">\n"
+#~ "                                                <span "
+#~ "invisible=\"rating_status == 'periodic'\">Yêu cầu đánh giá sẽ được gửi "
+#~ "ngay khi nhiệm vụ đạt đến giai đoạn này.</span>\n"
+#~ "                                                <span "
+#~ "invisible=\"rating_status == 'stage'\">Yêu cầu đánh giá sẽ được gửi nếu "
+#~ "nhiệm vụ vẫn ở trong giai đoạn này.</span>\n"
+#~ "                                            </span>\n"
+#~ "</span>"
+
+#~ msgid "Customer Rating"
+#~ msgstr "Đánh giá của Khách hàng"
+
+#~ msgid ""
+#~ "If set, a rating request will automatically be sent by email to the "
+#~ "customer when the task reaches this stage. \n"
+#~ "Alternatively, it will be sent at a regular interval as long as the task "
+#~ "remains in this stage."
+#~ msgstr ""
+#~ "Nếu được thiết lập, yêu cầu đánh giá sẽ được gửi tự động qua email cho "
+#~ "khách hàng khi nhiệm vụ đạt đến giai đoạn này. \n"
+#~ "Hoặc, yêu cầu sẽ được gửi định kỳ miễn là nhiệm vụ vẫn ở trong giai đoạn "
+#~ "này."
+
+#~ msgid "Load More"
+#~ msgstr "Tải thêm"
+
+#~ msgid "Task: Rating Request"
+#~ msgstr "Nhiệm vụ: Yêu cầu đánh giá"

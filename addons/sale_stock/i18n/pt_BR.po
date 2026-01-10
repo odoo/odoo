@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"POT-Creation-Date: 2026-01-04 18:36+0000\n"
 "PO-Revision-Date: 2025-12-12 15:40+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -96,11 +96,6 @@ msgid "<strong>Incoterm</strong>"
 msgstr "<strong>Incoterm</strong>"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order_line__is_storable
-msgid "A storable product is a product for which you manage stock."
-msgstr "Produtos armazenáveis são aqueles cujo estoque é administrado."
-
-#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
 "According to product configuration, the delivered quantity can be "
@@ -161,17 +156,6 @@ msgid "Available in stock"
 msgstr "Disponível em estoque"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order__delivery_status
-msgid ""
-"Blue: Not Delivered/Started\n"
-"            Orange: Partially Delivered\n"
-"            Green: Fully Delivered"
-msgstr ""
-"Azul: Não entregue/iniciado\n"
-"Laranja: Parcialmente entregue\n"
-"Verde: Totalmente entregue"
-
-#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
 msgstr "Escolha aplicar rotas específicas a linhas do pedido de venda."
@@ -220,11 +204,6 @@ msgstr "Entrega"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
 msgstr "Pedidos de entrega"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
-msgid "Delivery Status"
-msgstr "Status da entrega"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -325,11 +304,6 @@ msgstr "Estoque previsto"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
 msgstr "Quantidade gratuita de hoje"
-
-#. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
-msgid "Fully Delivered"
-msgstr "Totalmente entregue"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -486,7 +460,6 @@ msgid "Not Available"
 msgstr "Não disponível"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Not Delivered"
 msgstr "Não entregue"
@@ -513,7 +486,6 @@ msgid "On"
 msgstr "Em"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Partially Delivered"
 msgstr "Parcialmente entregue"
@@ -527,11 +499,6 @@ msgstr "Produto"
 #: model:ir.model,name:sale_stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "Movimentações do produto (linha da movimentação de estoque)"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
-msgid "Qty Available Today"
-msgstr "Quantidade disponível hoje"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
@@ -663,11 +630,6 @@ msgid "Schedule deliveries earlier to avoid delays"
 msgstr "Agende entregas mais cedo para evitar atrasos"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
-msgid "Scheduled Date"
-msgstr "Data programada"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
 msgstr "Margem de segurança"
@@ -693,7 +655,6 @@ msgid "Shipping Status"
 msgstr "Status da remessa"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Started"
 msgstr "Iniciado"
@@ -784,11 +745,6 @@ msgid "This product is replenished on demand."
 msgstr "Este produto é reabastecido sob demanda."
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_storable
-msgid "Track Inventory"
-msgstr "Rastrear inventário"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "Transferir"
@@ -814,11 +770,6 @@ msgstr "Usuário"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "View Forecast"
 msgstr "Ver previsão"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
-msgid "Virtual Available At Date"
-msgstr "Virtual disponível na data"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -884,3 +835,33 @@ msgstr "processados em vez de"
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "will be late."
 msgstr "vai atrasar."
+
+#~ msgid "A storable product is a product for which you manage stock."
+#~ msgstr "Produtos armazenáveis são aqueles cujo estoque é administrado."
+
+#~ msgid ""
+#~ "Blue: Not Delivered/Started\n"
+#~ "            Orange: Partially Delivered\n"
+#~ "            Green: Fully Delivered"
+#~ msgstr ""
+#~ "Azul: Não entregue/iniciado\n"
+#~ "Laranja: Parcialmente entregue\n"
+#~ "Verde: Totalmente entregue"
+
+#~ msgid "Delivery Status"
+#~ msgstr "Status da entrega"
+
+#~ msgid "Fully Delivered"
+#~ msgstr "Totalmente entregue"
+
+#~ msgid "Qty Available Today"
+#~ msgstr "Quantidade disponível hoje"
+
+#~ msgid "Scheduled Date"
+#~ msgstr "Data programada"
+
+#~ msgid "Track Inventory"
+#~ msgstr "Rastrear inventário"
+
+#~ msgid "Virtual Available At Date"
+#~ msgstr "Virtual disponível na data"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-01-09 18:38+0000\n"
 "PO-Revision-Date: 2025-12-09 14:08+0000\n"
 "Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
@@ -450,6 +450,14 @@ msgstr "Faceți clic din nou pentru a reseta transformarea"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.xml:0
+msgid ""
+"Click to open options\n"
+"Drag to move"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid "Close"
 msgstr "Închide"
@@ -529,14 +537,14 @@ msgstr "Transformă în coloane"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
-msgid "Copy"
-msgstr "Copie"
+msgid "Convert to paragraph"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Copy Link"
-msgstr "Copiază link"
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
+msgid "Copy"
+msgstr "Copie"
 
 #. module: html_editor
 #. odoo-javascript
@@ -683,6 +691,7 @@ msgstr "EROARE: nu s-au putut descărca adrese URL din biblioteca media."
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/fields/x2many_field/x2many_image_field.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit"
 msgstr "Editare"
 
@@ -1045,6 +1054,14 @@ msgstr "Inserează o linie orizontală de separare"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+#, fuzzy
+#| msgid "Insert a success banner"
+msgid "Insert a monospace banner"
+msgstr "Inserează un banner de succes"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/star_plugin.js:0
 msgid "Insert a rating"
 msgstr "Inserează o evaluare"
@@ -1194,9 +1211,9 @@ msgstr "Link"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Link copied to clipboard."
-msgstr "Linkul a fost copiat în clipboard."
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Link Popover"
+msgstr ""
 
 #. module: html_editor
 #. odoo-python
@@ -1280,6 +1297,18 @@ msgstr "Fișier lipsă"
 #: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
 msgid "Modules"
 msgstr "Module"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Monospace"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Monospace Banner"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1795,6 +1824,22 @@ msgstr "Selectează un fișier media"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+#, fuzzy
+#| msgid "Select font size"
+msgid "Select button shape"
+msgstr "Selectați dimensiunea fontului"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+#, fuzzy
+#| msgid "Select font size"
+msgid "Select button size"
+msgstr "Selectați dimensiunea fontului"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_family_plugin.js:0
 msgid "Select font family"
 msgstr "Selectați familia de fonturi"
@@ -1855,12 +1900,6 @@ msgstr "Setați forma: Miniatură"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Shape"
-msgstr "Formă"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Show comparison"
 msgstr ""
@@ -1886,7 +1925,6 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Size"
 msgstr "Dimensiune"
 
@@ -2497,3 +2535,12 @@ msgstr "videouri"
 #: model:ir.model,name:html_editor.model_ir_websocket
 msgid "websocket message handling"
 msgstr "gestionarea mesajelor websocket"
+
+#~ msgid "Copy Link"
+#~ msgstr "Copiază link"
+
+#~ msgid "Link copied to clipboard."
+#~ msgstr "Linkul a fost copiat în clipboard."
+
+#~ msgid "Shape"
+#~ msgstr "Formă"

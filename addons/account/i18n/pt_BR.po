@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
 "PO-Revision-Date: 2025-12-09 14:07+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -365,6 +365,24 @@ msgid ""
 msgstr ""
 "- Um novo campo \"Total (com impostos)\" para acelerar e controlar a "
 "codificação automatizando a criação de linha com a conta e impostos corretos."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"- A rounding per tax is advised if your prices are tax-excluded. This "
+"minimizes cumulative rounding errors because it totals all unrounded tax "
+"amounts first and only rounds the final tax total once."
+"\\n                                                                                                                                                                                "
+"- A rounding per line is advised if your prices are tax-included. That way, "
+"the sum of line subtotal equals the total with taxes."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
+#, fuzzy
+#| msgid "Rounding"
+msgid "- Ending"
+msgstr "Arredondamento"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1422,6 +1440,13 @@ msgid "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
+#, fuzzy
+#| msgid "<span invisible=\"not early_discount\"> days</span>"
+msgid "<span invisible=\"not account_id\">on</span>"
+msgstr "<span invisible=\"not early_discount\"> dias</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "<span invisible=\"not early_discount\"> % if paid within </span>"
 msgstr "<span invisible=\"not early_discount\"> % se pago em </span>"
@@ -1441,6 +1466,13 @@ msgstr ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> Fatura</span>\n"
 "                                        <span "
 "invisible=\"reconciled_invoices_type == 'invoice'\"> Nota de crédito</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
+#, fuzzy
+#| msgid "<span invisible=\"not early_discount\"> days</span>"
+msgid "<span invisible=\"repartition_type == 'base'\">%</span>"
+msgstr "<span invisible=\"not early_discount\"> dias</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1510,9 +1542,14 @@ msgstr "<span>US$ <span class=\"oe_currency_value\">19.250,00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
+#| msgid ""
+#| "<span>1.00</span>\n"
+#| "                                                        <span "
+#| "groups=\"uom.group_uom\">Units</span>"
 msgid ""
 "<span>1.00</span>\n"
-"                                                        <span "
+"                                                            <span "
 "groups=\"uom.group_uom\">Units</span>"
 msgstr ""
 "<span>1,00 Unidades</span>\n"
@@ -2033,9 +2070,6 @@ msgid ""
 "<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/"
 ">\n"
 "\n"
-"<t t-set=\"payment_state\" t-value=\"object.payment_state != 'not_paid' and "
-"object.payment_state.replace('_', ' ')\"/>\n"
-"\n"
 "<div style=\"margin:0; padding:0; color:#2c2431;\">\n"
 "    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
 "style=\"width:100%; background:#f7f4f8; padding:40px 0;\">\n"
@@ -2409,15 +2443,6 @@ msgid "A report line with the same code already exists."
 msgstr "Uma linha de relatório com o mesmo código já existe."
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid ""
-"A rounding per line is advised if your prices are tax-included. That way, "
-"the sum of line subtotals equals the total with taxes."
-msgstr ""
-"Um arredondamento por linha é aconselhado se seus preços incluem impostos. "
-"Dessa forma, a soma dos subtotais equivalem ao total com os impostos."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A section title"
 msgstr "Um título de seção"
@@ -2764,6 +2789,13 @@ msgstr "Imposto da conta"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
 msgstr "Grupo de impostos da conta"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_form
+#, fuzzy
+#| msgid "Tax Repartition Line"
+msgid "Account Tax Repartition Line"
+msgstr "Linha de repartição de imposto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
@@ -4444,6 +4476,7 @@ msgstr ""
 #: model:ir.model,name:account.model_res_partner_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "Bank Account"
 msgstr "Conta bancária"
 
@@ -4473,7 +4506,6 @@ msgstr "Nome da conta bancária"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-#: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "Bank Account Number"
 msgstr "Número da conta bancária"
 
@@ -5681,6 +5713,7 @@ msgstr "Empresas relacionadas ao usuário"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__company_id
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__company_id
 #: model:ir.model.fields,field_description:account.field_account_code_mapping__company_id
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__company_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_id
@@ -8906,12 +8939,12 @@ msgid "Foldable"
 msgstr "Dobrável"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,description:account.portal_invoice_vendor
 msgid "Follow, download or pay our invoices"
 msgstr "Acompanhe, baixe ou pague nossas faturas"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,description:account.portal_invoice_client
 msgid "Follow, download or pay your invoices"
 msgstr "Acompanhe, baixe ou pague suas faturas"
 
@@ -10547,8 +10580,6 @@ msgid "Invoice Count"
 msgstr "Total de faturas"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
 #: model:mail.message.subtype,description:account.mt_invoice_created
 #: model:mail.message.subtype,name:account.mt_invoice_created
 msgid "Invoice Created"
@@ -13453,7 +13484,7 @@ msgstr ""
 "Outros tipos de bens, como instalações, máquinas ou equipamentos diversos"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,name:account.portal_invoice_vendor
 msgid "Our Invoices"
 msgstr "Nossas faturas"
 
@@ -14335,11 +14366,6 @@ msgstr "Subtotal anterior"
 #: model:ir.model.fields,field_description:account.field_account_move__preferred_payment_method_line_id
 msgid "Preferred Payment Method Line"
 msgstr "Linha da forma de pagamento preferencial"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_report__prefix_groups_threshold
-msgid "Prefix Groups Threshold"
-msgstr "Limite dos grupos do prefixo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__prefix_placeholder
@@ -16604,6 +16630,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Standard communication"
 msgstr "Comunicação padrão"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
+#, fuzzy
+#| msgid "Settings"
+msgid "Starting"
+msgstr "Definições"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -19126,15 +19159,6 @@ msgstr ""
 "como, por exemplo, para envio por e-mail ou revisão de um lote de registros."
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid ""
-"This will update all taxes and accounts based on the currently selected "
-"fiscal position."
-msgstr ""
-"Isto atualizará todos os impostos e contas com base na posição fiscal "
-"atualmente selecionada."
-
-#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
@@ -19455,6 +19479,13 @@ msgid "Transaction Feeds"
 msgstr "Informações de transação"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__transaction_uuid
+#, fuzzy
+#| msgid "Transactions"
+msgid "Transaction ID"
+msgstr "Transações"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_type
 msgid "Transaction Type"
 msgstr "Tipo de transação"
@@ -19648,6 +19679,11 @@ msgstr "Lançamentos sem hash"
 #: model:ir.model.fields,help:account.field_account_report_line__code
 msgid "Unique identifier for this line."
 msgstr "Identificador único para esta linha."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment__transaction_uuid
+msgid "Unique transaction identifier assigned by the initiating party"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
@@ -20979,16 +21015,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You cannot have more than one account with \"Current Year Earnings\" as "
-"type. (accounts: %s)"
-msgstr ""
-"Não é possível ter mais de uma conta com \"Ganhos do ano atual\" como tipo. "
-"(contas: %s)"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
@@ -21339,7 +21365,7 @@ msgstr ""
 "Essa alteração não pode ser desfeita sem suporte técnico."
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,name:account.portal_invoice_client
 msgid "Your Invoices"
 msgstr "Suas faturas"
 
@@ -21972,3 +21998,28 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Fatura de autofaturamento (Ref. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "This will update all taxes and accounts based on the currently selected "
+#~ "fiscal position."
+#~ msgstr ""
+#~ "Isto atualizará todos os impostos e contas com base na posição fiscal "
+#~ "atualmente selecionada."
+
+#~ msgid ""
+#~ "A rounding per line is advised if your prices are tax-included. That way, "
+#~ "the sum of line subtotals equals the total with taxes."
+#~ msgstr ""
+#~ "Um arredondamento por linha é aconselhado se seus preços incluem "
+#~ "impostos. Dessa forma, a soma dos subtotais equivalem ao total com os "
+#~ "impostos."
+
+#~ msgid "Prefix Groups Threshold"
+#~ msgstr "Limite dos grupos do prefixo"
+
+#~ msgid ""
+#~ "You cannot have more than one account with \"Current Year Earnings\" as "
+#~ "type. (accounts: %s)"
+#~ msgstr ""
+#~ "Não é possível ter mais de uma conta com \"Ganhos do ano atual\" como "
+#~ "tipo. (contas: %s)"

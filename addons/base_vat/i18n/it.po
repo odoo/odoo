@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-01-04 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 19:06+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/base_vat/"
@@ -80,16 +80,6 @@ msgid "Config Settings"
 msgstr "Impostazioni di configurazione"
 
 #. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr ""
-"Connessione al server VIES non riuscita. Non è stato possibile convalidare "
-"il numero di partita IVA %s."
-
-#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
 msgstr "Contatto"
@@ -119,6 +109,12 @@ msgstr "DE123456788 oppure 12/345/67890"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "Error while checking the VAT number '%s' against the VIES service."
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -243,24 +239,9 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr ""
-"Il server VIES non è riuscito a interpretare il numero di partita IVA %s."
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
-msgstr ""
-"La richiesta per la convalida dell'IVA non è stata elaborata. Il sistema "
-"VIES ha segnalato il seguente errore: %s"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
+#, fuzzy
+#| msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
+msgid "To explicitly indicate no (valid) VAT, use '/', 'na' or 'NA' instead. "
 msgstr ""
 "Per indicare esplicitamente l'assenza di partita IVA (valida), usa '/'. "
 
@@ -300,3 +281,21 @@ msgstr "11 cifre per CPF oppure 14 cifre per CNPJ"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "partner [%s]"
+
+#~ msgid ""
+#~ "Connection with the VIES server failed. The VAT number %s could not be "
+#~ "validated."
+#~ msgstr ""
+#~ "Connessione al server VIES non riuscita. Non è stato possibile "
+#~ "convalidare il numero di partita IVA %s."
+
+#~ msgid "The VAT number %s could not be interpreted by the VIES server."
+#~ msgstr ""
+#~ "Il server VIES non è riuscito a interpretare il numero di partita IVA %s."
+
+#~ msgid ""
+#~ "The request for VAT validation was not processed. VIES service has "
+#~ "responded with the following error: %s"
+#~ msgstr ""
+#~ "La richiesta per la convalida dell'IVA non è stata elaborata. Il sistema "
+#~ "VIES ha segnalato il seguente errore: %s"

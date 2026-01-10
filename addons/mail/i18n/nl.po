@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
 "PO-Revision-Date: 2025-11-24 13:23+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/mail/nl/>\n"
@@ -173,6 +173,14 @@ msgid "%(date)s at %(time)s"
 msgstr "%(date)s om %(time)s"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/utils/common/dates.js:0
+#, fuzzy
+#| msgid "%(date)s at %(time)s"
+msgid "%(datetime)s local time"
+msgstr "%(date)s om %(time)s"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_partner.py:0
 msgid ""
@@ -245,13 +253,13 @@ msgstr "%(file1)s en %(file2)s"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/mail_poll_model.js:0
+#: code:addons/mail/static/src/core/common/poll.js:0
 msgid "%(hours)s hours left"
 msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/mail_poll_model.js:0
+#: code:addons/mail/static/src/core/common/poll.js:0
 msgid "%(minutes)s minutes left"
 msgstr ""
 
@@ -330,7 +338,7 @@ msgstr "%(partner_name)s <%(partner_email)s>"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/mail_poll_model.js:0
+#: code:addons/mail/static/src/core/common/poll.js:0
 msgid "%(seconds)s seconds left"
 msgstr ""
 
@@ -560,7 +568,7 @@ msgstr "1 andere"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/mail_poll_model.js:0
+#: code:addons/mail/static/src/core/common/poll.js:0
 msgid "1 second left"
 msgstr ""
 
@@ -648,6 +656,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 msgstr "<i class=\"fa fa-globe\" aria-label=\"URL document\"/>"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
+#, fuzzy
+#| msgid "<i class=\"fa fa-check\"/> Done"
+msgid "<i class=\"fa fa-sign-in\" role=\"img\"/> Join"
+msgstr "<i class=\"fa fa-check\"/> Voltooid"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
+#, fuzzy
+#| msgid "<i class=\"fa fa-times\"/> Cancel"
+msgid "<i class=\"fa fa-sign-out\" role=\"img\"/> Leave"
+msgstr "<i class=\"fa fa-times\"/> Annuleren"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -1486,6 +1510,7 @@ msgstr "Geavanceerde opties"
 #: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 #: code:addons/mail/static/src/discuss/core/web/thread_actions.js:0
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "Advanced Settings"
 msgstr "Geavanceerde instellingen"
 
@@ -1671,12 +1696,27 @@ msgid "All"
 msgstr "Alle"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__kpi_provider_visibility__all
+#, fuzzy
+#| msgid "Show All Activities"
+msgid "All Activities"
+msgstr "Toon alle activiteiten"
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/settings_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__custom_notifications__all
 #: model:ir.model.fields.selection,name:mail.selection__res_users_settings__channel_notifications__all
 msgid "All Messages"
 msgstr "Alle berichten"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
+#, fuzzy
+#| msgid "Use microphone and camera"
+msgid "Allow Microphone and Camera"
+msgstr "Microfoon en camera gebruiken"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_poll__allow_multiple_options
@@ -1756,6 +1796,13 @@ msgid "And 1 other member."
 msgstr "En 1 ander lid."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.xml:0
+msgid ""
+"Animated illustration showing toggles for camera and microphone permissions"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__res_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__res_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_template__model_id
@@ -1772,6 +1819,7 @@ msgstr "Toepassen"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
+#: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -2427,20 +2475,6 @@ msgstr "Camera"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
-msgid "Camera access blocked. Enable in browser settings."
-msgstr "Geen cameratoegang. Schakel toegang in bij browserinstellingen."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
-msgid "Camera and microphone access blocked. Enable in browser settings."
-msgstr ""
-"Toegang tot camera en microfoon geblokkeerd. Schakel toegang in bij "
-"browserinstellingen."
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Camera is unavailable outside the call tab."
 msgstr "De camera is niet beschikbaar buiten het tabblad oproep."
@@ -2455,6 +2489,20 @@ msgstr "Kan tekst bewerken"
 #: model:ir.model.fields,field_description:mail.field_res_users__can_edit_role
 msgid "Can Edit Role"
 msgstr "Kan rol bewerken"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel__can_join
+#, fuzzy
+#| msgid "Join"
+msgid "Can Join"
+msgstr "Deelnemen"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel__can_leave
+#, fuzzy
+#| msgid "Leave"
+msgid "Can Leave"
+msgstr "Verlaten"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -2622,6 +2670,14 @@ msgstr ""
 "hebben als het bovenliggende."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
+#, fuzzy
+#| msgid "No conversation selected."
+msgid "Cannot undo; the conversation was deleted."
+msgstr "Geen gesprek geselecteerd."
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_poll_vote.py:0
 msgid "Cannot vote on closed poll: \"%s\""
@@ -2736,6 +2792,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__channel
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_search
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
 msgid "Channel"
 msgstr "Kanaal"
 
@@ -2791,6 +2848,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_type
+#: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
 msgid "Channel Type"
 msgstr "Kanaaltype"
 
@@ -2831,6 +2889,7 @@ msgstr "Kanaalnaam"
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app/discuss_app_model_patch.js:0
 #: model:ir.actions.act_window,name:mail.discuss_channel_action
+#: model:ir.actions.act_window,name:mail.discuss_my_conversations_action
 #: model:ir.model.fields,field_description:mail.field_discuss_category__channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_guest__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_ids
@@ -2838,7 +2897,6 @@ msgstr "Kanaalnaam"
 #: model:ir.ui.menu,name:mail.discuss_channel_menu_settings
 #: model:ir.ui.menu,name:mail.menu_channel
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_member_view_tree
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_list
 msgid "Channels"
 msgstr "Kanalen"
 
@@ -2853,6 +2911,7 @@ msgstr "Kanalen/leden"
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 #: code:addons/mail/static/src/discuss/call/common/meeting_chat.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__chat
+#: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
 msgid "Chat"
 msgstr "Chat"
 
@@ -2933,6 +2992,12 @@ msgstr "Tijd resetten"
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "Click here to retry"
 msgstr "Klik hier om opnieuw te proberen"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.xml:0
+msgid "Click the"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -3298,6 +3363,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__body
 msgid "Contents"
 msgstr "Inhoud"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
+msgid "Conversation hidden until new messages arrive."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
+#, fuzzy
+#| msgid "Conversations"
+msgid "Conversation hidden."
+msgstr "Gesprekken"
 
 #. module: mail
 #. odoo-javascript
@@ -4052,6 +4131,26 @@ msgid "Discuss Categories"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
+msgid "Discuss cannot access your camera"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
+msgid "Discuss cannot access your camera and microphone"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
+#, fuzzy
+#| msgid "\"%(hostname)s\" needs to access your microphone"
+msgid "Discuss cannot access your microphone"
+msgstr "'%(hostname)s' heeft toegang nodig tot je microfoon"
+
+#. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_discuss_channel_member_unmute_ir_actions_server
 msgid "Discuss: channel member unmute"
 msgstr "Bespreken: kanaallid dempen opheffen"
@@ -4109,6 +4208,7 @@ msgstr "Waarschuwing negeren"
 #: model:ir.model.fields,field_description:mail.field_ir_ui_menu__display_name
 #: model:ir.model.fields,field_description:mail.field_ir_ui_view__display_name
 #: model:ir.model.fields,field_description:mail.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:mail.field_kpi_provider__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_activity__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__display_name
@@ -4202,6 +4302,14 @@ msgstr "Wil je dit voorbeeld echt verwijderen?"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Do you want people to hear you in the meeting?"
+msgstr "Wil je dat mensen je horen in de vergadering?"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
+#, fuzzy
+#| msgid "Do you want people to hear you in the meeting?"
+msgid "Do you want people to see and hear you in the meeting?"
 msgstr "Wil je dat mensen je horen in de vergadering?"
 
 #. module: mail
@@ -5420,6 +5528,7 @@ msgstr "Google Translate-integratie"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__group
+#: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
 msgid "Group"
 msgstr "Groep"
 
@@ -5436,12 +5545,6 @@ msgid ""
 msgstr ""
 "Groepsautorisatie en automatisch groepsabonnement worden alleen ondersteund "
 "op kanalen."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/thread_icon.xml:0
-msgid "Grouped Chat"
-msgstr "Gegroepeerde chat"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_tree
@@ -5613,6 +5716,7 @@ msgstr "Hallo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__hidden
+#: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
 msgid "Hidden"
 msgstr "Verborgen"
 
@@ -5624,7 +5728,21 @@ msgstr "Verborgen sjabloon"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+msgid "Hide"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Hide Pinned Messages"
+msgstr "Verberg vastgezette berichten"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+#, fuzzy
+#| msgid "Hide Pinned Messages"
+msgid "Hide Until New Message"
 msgstr "Verberg vastgezette berichten"
 
 #. module: mail
@@ -5746,6 +5864,7 @@ msgstr "ICE:"
 #: model:ir.model.fields,field_description:mail.field_ir_ui_menu__id
 #: model:ir.model.fields,field_description:mail.field_ir_ui_view__id
 #: model:ir.model.fields,field_description:mail.field_ir_websocket__id
+#: model:ir.model.fields,field_description:mail.field_kpi_provider__id
 #: model:ir.model.fields,field_description:mail.field_mail_activity__id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__id
@@ -6021,6 +6140,14 @@ msgid "If you want to use twilio as TURN/STUN server provider"
 msgstr "Als je twilio als TURN/STUN-serverprovider wilt gebruiken"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.xml:0
+msgid ""
+"Illustration showing a lady pushing a giant toggle button representing "
+"microphone and camera permissions"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__image_128
 #: model:ir.model.fields,field_description:mail.field_mail_guest__image_1920
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__og_image
@@ -6123,18 +6250,18 @@ msgid "Incoming Mail Servers"
 msgstr "Inkomende e-mailservers"
 
 #. module: mail
-#. odoo-javascript
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Incoming call"
 msgstr "Inkomende oproep"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
-msgid "Incoming call from %(inviter)s"
-msgstr "Inkomende oproep van %(inviter)s"
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
+#, fuzzy
+#| msgid "Incoming call"
+msgid "Incoming call..."
+msgstr "Inkomende oproep"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
@@ -6425,6 +6552,14 @@ msgid "Invite to Group Chat"
 msgstr "Uitnodigen voor groepsgesprek"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+#, fuzzy
+#| msgid "Invited Member"
+msgid "Invite to Meeting"
+msgstr "Uitgenodigd lid"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__invited_member_ids
 msgid "Invited Member"
 msgstr "Uitgenodigd lid"
@@ -6586,7 +6721,6 @@ msgstr "JSON die IDs uit een many2one-veld koppelt aan bestede seconden"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_list
 msgid "Join"
 msgstr "Deelnemen"
@@ -6635,6 +6769,13 @@ msgid "Join the Call with Camera"
 msgstr "Deelnemen aan gesprek met camera"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
+#, fuzzy
+#| msgid "Join"
+msgid "Joined"
+msgstr "Deelnemen"
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_card_list.xml:0
 msgid "Jump"
@@ -6651,6 +6792,16 @@ msgstr "Spring naar huidig bericht"
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 msgid "KB"
 msgstr "KB"
+
+#. module: mail
+#: model:ir.model,name:mail.model_kpi_provider
+msgid "KPI Provider"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_type__kpi_provider_visibility
+msgid "KPI Provider Visibility"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__attach
@@ -6709,6 +6860,14 @@ msgid "Language"
 msgstr "Taal"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel__last_interest_dt
+#: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_interest_dt
+#, fuzzy
+#| msgid "List Activity"
+msgid "Last Activity"
+msgstr "Lijst Activiteit"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Last Error"
 msgstr "Laatste Foutmelding"
@@ -6732,12 +6891,6 @@ msgstr "Laatste ophaaldatum"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__fetched_message_id
 msgid "Last Fetched"
 msgstr "Laatst opgehaald"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_discuss_channel__last_interest_dt
-#: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_interest_dt
-msgid "Last Interest"
-msgstr "Laatste interesse"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_presence__last_poll
@@ -6891,14 +7044,13 @@ msgid "Layout"
 msgstr "Lay-out"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_list
 msgid "Leave"
 msgstr "Verlaten"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/thread_actions.js:0
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Leave Channel"
 msgstr "Kanaal verlaten"
 
@@ -7362,6 +7514,7 @@ msgstr "Markeren als gelezen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_actions.js:0
 #: code:addons/mail/static/src/discuss/core/common/message_actions.js:0
 msgid "Mark as Unread"
 msgstr "Markeren als niet gelezen"
@@ -7371,6 +7524,14 @@ msgstr "Markeren als niet gelezen"
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
 msgid "Mark as done"
 msgstr "Markeren als gereed"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+#, fuzzy
+#| msgid "Mark as Unread"
+msgid "Marked as unread"
+msgstr "Markeren als niet gelezen"
 
 #. module: mail
 #. odoo-javascript
@@ -7738,13 +7899,6 @@ msgid "Microphone"
 msgstr "Microfoon"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
-msgid "Microphone access blocked. Enable in browser settings."
-msgstr ""
-"Microfoontoegang geblokkeerd. Schakel toegang in bij browserinstellingen."
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
 msgid "Missing email"
 msgstr "Ontbrekende e-mail"
@@ -8063,6 +8217,14 @@ msgid "No"
 msgstr "Nee"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
+#, fuzzy
+#| msgid "Show camera preview"
+msgid "No Camera Preview"
+msgstr "Cameravoorvertoning tonen"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_notification.py:0
 msgid "No Error"
@@ -8166,6 +8328,14 @@ msgid "No one else is here."
 msgstr "Er is niemand anders."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
+#, fuzzy
+#| msgid "Search people to invite"
+msgid "No people found to invite."
+msgstr "Zoek mensen om uit te nodigen"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "No recipient found."
@@ -8228,12 +8398,6 @@ msgstr "Geen berichten voor antwoorden"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
-msgid "No user found that is not already a member of this channel."
-msgstr "Geen gebruiker gevonden die nog geen lid is van dit kanaal."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "No user found."
 msgstr "Geen gebruiker gevonden."
 
@@ -8258,6 +8422,7 @@ msgstr "Geen bestaand record of verkeerde token."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__default
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__kpi_provider_visibility__none
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 msgid "None"
@@ -8280,6 +8445,13 @@ msgstr "Genormaliseerde e-mail"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__fetchmail_server__state__draft
 msgid "Not Confirmed"
+msgstr "Niet bevestigd"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
+#, fuzzy
+#| msgid "Not Confirmed"
+msgid "Not Joined"
 msgstr "Niet bevestigd"
 
 #. module: mail
@@ -8782,6 +8954,14 @@ msgstr "Chat openen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_menu.xml:0
+#, fuzzy
+#| msgid "Unpin Conversation"
+msgid "Open Conversation"
+msgstr "Gesprek losmaken"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "Open Discuss App"
 msgstr "Open chat app"
@@ -9082,6 +9262,13 @@ msgid "Overdue"
 msgstr "Te laat"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__kpi_provider_visibility__own
+#, fuzzy
+#| msgid "Activities"
+msgid "Own Activities"
+msgstr "Activiteiten"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_template__user_id
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__channel_role__owner
@@ -9264,6 +9451,30 @@ msgid "Permission Needed"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.xml:0
+msgid "Permissions Lady"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.xml:0
+msgid "Permissions Lady - Lady pushing a giant toggle button"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.xml:0
+msgid "Permissions Toggle"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.xml:0
+msgid "Permissions Toggle - Animated illustration"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
 #: model:ir.model.fields,field_description:mail.field_res_users__phone
 msgid "Phone"
@@ -9432,6 +9643,14 @@ msgid "Play"
 msgstr "Play"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
+#, fuzzy
+#| msgid "Camera access blocked. Enable in browser settings."
+msgid "Please allow access in your browser settings."
+msgstr "Geen cameratoegang. Schakel toegang in bij browserinstellingen."
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
 msgstr "Neem in plaats daarvan contact met ons op via"
@@ -9515,7 +9734,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/mail_poll_model.js:0
+#: code:addons/mail/static/src/core/common/poll.js:0
 msgid "Poll will end soon"
 msgstr ""
 
@@ -10580,11 +10799,6 @@ msgid "Search Alias"
 msgstr "Zoek alias"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
-msgid "Search Groups"
-msgstr "Zoek groepen"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "Search ICE Servers"
 msgstr "ICE-servers zoeken"
@@ -10761,6 +10975,14 @@ msgstr "Door iedereen gezien"
 #: code:addons/mail/static/src/discuss/core/common/message_seen_indicator.xml:0
 msgid "Seen by:"
 msgstr "Gezien door:"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_menu.xml:0
+#, fuzzy
+#| msgid "Server Action"
+msgid "Select Actions"
+msgstr "Serveractie"
 
 #. module: mail
 #. odoo-javascript
@@ -11904,6 +12126,14 @@ msgid "The conversation is empty."
 msgstr "Het gesprek is leeg."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
+#, fuzzy
+#| msgid "No conversation selected."
+msgid "The conversation was deleted."
+msgstr "Geen gesprek geselecteerd."
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
 msgid "The current user can edit the template."
 msgstr "De huidige gebruiker kan de sjabloon bewerken."
@@ -12431,6 +12661,7 @@ msgstr "Thread-acties"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 #: code:addons/mail/static/src/core/public_web/discuss_content.xml:0
+#: code:addons/mail/static/src/discuss/call/common/call_menu.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app/sidebar/channel.xml:0
 msgid "Thread Image"
 msgstr "Thread afbeelding"
@@ -12730,6 +12961,34 @@ msgid "Turn on notifications"
 msgstr "Meldingen inschakelen"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
+msgid "Turn on the camera and microphone permissions"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
+#, fuzzy
+#| msgid "Turn camera on"
+msgid "Turn on the camera permission"
+msgstr "Zet camera aan"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
+msgid "Turn on the microphone permission"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
+#, fuzzy
+#| msgid "Do you really want to delete this preview?"
+msgid "Turn on your camera to see the preview."
+msgstr "Wil je dit voorbeeld echt verwijderen?"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__state
 #: model:ir.model.fields,field_description:mail.field_ir_cron__state
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__message_type
@@ -12878,6 +13137,7 @@ msgstr "Niet doven"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_model.js:0
+#: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
 msgid "Undo"
 msgstr ""
 
@@ -12968,12 +13228,6 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "Unpin"
 msgstr "Losmaken"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/thread_actions.js:0
-msgid "Unpin Conversation"
-msgstr "Gesprek losmaken"
 
 #. module: mail
 #. odoo-javascript
@@ -13505,6 +13759,7 @@ msgstr "Video zichtbaar in het tabblad oproep"
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/views/web/calendar/calendar_common/activity_calendar_common_popover.xml:0
 #: model:ir.model,name:mail.model_ir_ui_view
+#: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "View"
 msgstr "Bekijk"
 
@@ -13559,6 +13814,15 @@ msgstr "Chat mit %(channel_name)s bekijken"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/public_web/discuss_app/sidebar/sidebar.xml:0
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
+#, fuzzy
+#| msgid "Hide all conversations"
+msgid "View hidden conversations"
+msgstr "Alle gesprekken verbergen"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_app/sidebar/category_patch.js:0
 msgid "View or join channels"
 msgstr "Kanalen bekijken of eraan deelnemen"
@@ -13574,6 +13838,13 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "View the %(channel_name)s channel"
 msgstr "Kanal %(channel_name)s bekijken"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
+#, fuzzy
+#| msgid "Visible to all"
+msgid "Visible"
+msgstr "Voor iedereen zichtbaar"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -13804,6 +14075,17 @@ msgid ""
 msgstr ""
 "Of bijlagen moeten worden gedownload. Indien niet ingeschakeld, worden "
 "inkomende e-mails ontdaan van alle bijlagen voordat ze worden verwerkt"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_activity_type__kpi_provider_visibility
+msgid ""
+"Whether this type of activity should be displayed in the KPI Provider API.\n"
+"None: never display this type of activity\n"
+"Own Activities: the synchronization user will only count their own "
+"activities of this type\n"
+"All Activities: the synchronization user will count the all the activities "
+"of this type, whatever their owner"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__track_recipients
@@ -14714,6 +14996,12 @@ msgstr "owner_user_id moet uniek zijn"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.xml:0
+msgid "page info icon in your browser's address bar"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 msgid "raising hand"
 msgstr "hand opsteken"
@@ -14858,3 +15146,27 @@ msgstr "je alias"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” in “%(channel_name)s”"
+
+#~ msgid "Camera and microphone access blocked. Enable in browser settings."
+#~ msgstr ""
+#~ "Toegang tot camera en microfoon geblokkeerd. Schakel toegang in bij "
+#~ "browserinstellingen."
+
+#~ msgid "Grouped Chat"
+#~ msgstr "Gegroepeerde chat"
+
+#~ msgid "Incoming call from %(inviter)s"
+#~ msgstr "Inkomende oproep van %(inviter)s"
+
+#~ msgid "Last Interest"
+#~ msgstr "Laatste interesse"
+
+#~ msgid "Microphone access blocked. Enable in browser settings."
+#~ msgstr ""
+#~ "Microfoontoegang geblokkeerd. Schakel toegang in bij browserinstellingen."
+
+#~ msgid "No user found that is not already a member of this channel."
+#~ msgstr "Geen gebruiker gevonden die nog geen lid is van dit kanaal."
+
+#~ msgid "Search Groups"
+#~ msgstr "Zoek groepen"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"POT-Creation-Date: 2026-01-04 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 21:55+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
@@ -96,12 +96,6 @@ msgid "<strong>Incoterm</strong>"
 msgstr "<strong>Incoterm</strong>"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order_line__is_storable
-msgid "A storable product is a product for which you manage stock."
-msgstr ""
-"Los productos almacenables son productos para los que gestiona el inventario."
-
-#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
 "According to product configuration, the delivered quantity can be "
@@ -163,17 +157,6 @@ msgid "Available in stock"
 msgstr "Unidades disponibles"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order__delivery_status
-msgid ""
-"Blue: Not Delivered/Started\n"
-"            Orange: Partially Delivered\n"
-"            Green: Fully Delivered"
-msgstr ""
-"Azul: no entregado/iniciado\n"
-"            Naranja: parcialmente entregado\n"
-"            Verde: totalmente entregado"
-
-#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
 msgstr "Elija aplicar rutas específicas para líneas del pedido de venta."
@@ -222,11 +205,6 @@ msgstr "Entrega"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
 msgstr "Órdenes de entrega"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
-msgid "Delivery Status"
-msgstr "Estado de entrega"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -326,11 +304,6 @@ msgstr "Stock pronosticado"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
 msgstr "Ctd. disponible hoy"
-
-#. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
-msgid "Fully Delivered"
-msgstr "Completamente entregado"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -487,7 +460,6 @@ msgid "Not Available"
 msgstr "No disponible"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Not Delivered"
 msgstr "No entregado"
@@ -514,7 +486,6 @@ msgid "On"
 msgstr "Al"
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Partially Delivered"
 msgstr "Parcialmente entregado"
@@ -528,11 +499,6 @@ msgstr "Producto"
 #: model:ir.model,name:sale_stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "Movimientos de producto (línea de movimiento de stock)"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
-msgid "Qty Available Today"
-msgstr "Ctd. disponible hoy"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
@@ -665,11 +631,6 @@ msgid "Schedule deliveries earlier to avoid delays"
 msgstr "Programe las entregas antes para evitar retrasos"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
-msgid "Scheduled Date"
-msgstr "Fecha programada"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
 msgstr "Plazo de seguridad"
@@ -695,7 +656,6 @@ msgid "Shipping Status"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Started"
 msgstr "Iniciado"
@@ -786,11 +746,6 @@ msgid "This product is replenished on demand."
 msgstr "Este producto se repone bajo demanda."
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_storable
-msgid "Track Inventory"
-msgstr "Rastrear inventario"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "Traslado"
@@ -815,11 +770,6 @@ msgstr "Usuario"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "View Forecast"
 msgstr "Ver pronóstico"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
-msgid "Virtual Available At Date"
-msgstr "Disponibilidad virtual a la fecha"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -885,3 +835,35 @@ msgstr "procesado en lugar de"
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "will be late."
 msgstr "se retrasará."
+
+#~ msgid "A storable product is a product for which you manage stock."
+#~ msgstr ""
+#~ "Los productos almacenables son productos para los que gestiona el "
+#~ "inventario."
+
+#~ msgid ""
+#~ "Blue: Not Delivered/Started\n"
+#~ "            Orange: Partially Delivered\n"
+#~ "            Green: Fully Delivered"
+#~ msgstr ""
+#~ "Azul: no entregado/iniciado\n"
+#~ "            Naranja: parcialmente entregado\n"
+#~ "            Verde: totalmente entregado"
+
+#~ msgid "Delivery Status"
+#~ msgstr "Estado de entrega"
+
+#~ msgid "Fully Delivered"
+#~ msgstr "Completamente entregado"
+
+#~ msgid "Qty Available Today"
+#~ msgstr "Ctd. disponible hoy"
+
+#~ msgid "Scheduled Date"
+#~ msgstr "Fecha programada"
+
+#~ msgid "Track Inventory"
+#~ msgstr "Rastrear inventario"
+
+#~ msgid "Virtual Available At Date"
+#~ msgstr "Disponibilidad virtual a la fecha"

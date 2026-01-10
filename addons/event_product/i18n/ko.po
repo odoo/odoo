@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 18:36+0000\n"
+"POT-Creation-Date: 2026-01-04 18:36+0000\n"
 "PO-Revision-Date: 2025-11-17 19:01+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -26,6 +26,12 @@ msgstr ""
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
 msgstr "고객에게 전달하려는 티켓에 대한 내용입니다."
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__additional_product_ids
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__additional_product_ids
+msgid "Additional Products"
+msgstr ""
 
 #. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_product_product__service_tracking
@@ -114,26 +120,18 @@ msgid "Not Sold"
 msgstr "판매되지 않음"
 
 #. module: event_product
-#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price
-#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__price
-msgid "Price"
-msgstr "가격"
-
-#. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price_reduce
 #: model:ir.model.fields,field_description:event_product.field_event_type_ticket__price_reduce
 msgid "Price Reduce"
 msgstr "가격 인하"
 
 #. module: event_product
-#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price_reduce_taxinc
-msgid "Price Reduce Tax inc"
-msgstr "세금을 포함한 가격 인하"
-
-#. module: event_product
-#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price_incl
-msgid "Price include"
-msgstr "가격 포함"
+#: model:ir.model.fields,help:event_product.field_event_event_ticket__total_price
+#: model:ir.model.fields,help:event_product.field_event_type_ticket__total_price
+msgid ""
+"Price at which this ticket will be sold, which takes into account the Ticket "
+"Price and the price of every Additional Product"
+msgstr ""
 
 #. module: event_product
 #: model:ir.model,name:event_product.model_product_template
@@ -171,10 +169,54 @@ msgid "Sales Start"
 msgstr "판매 시작"
 
 #. module: event_product
+#: model:ir.model.fields,help:event_product.field_event_event_ticket__additional_product_ids
+#: model:ir.model.fields,help:event_product.field_event_type_ticket__additional_product_ids
+msgid ""
+"Select products to include with each registration. They will also show up "
+"separately on Sale Orders."
+msgstr ""
+
+#. module: event_product
 #: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__sold
 #: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
 msgid "Sold"
 msgstr "판매 완료"
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__price
+msgid "Ticket Price"
+msgstr ""
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__total_price
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__total_price
+#, fuzzy
+#| msgid "Price"
+msgid "Total Price"
+msgstr "가격"
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__total_price_reduce
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__total_price_reduce
+#, fuzzy
+#| msgid "Price Reduce"
+msgid "Total Price Reduce"
+msgstr "가격 인하"
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__total_price_reduce_taxinc
+#, fuzzy
+#| msgid "Price Reduce Tax inc"
+msgid "Total Price Reduce Tax inc"
+msgstr "세금을 포함한 가격 인하"
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__total_price_incl
+#, fuzzy
+#| msgid "Price include"
+msgid "Total Price include"
+msgstr "가격 포함"
 
 #. module: event_product
 #: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form

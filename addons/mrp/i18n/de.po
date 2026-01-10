@@ -11,16 +11,17 @@
 # Niyas Raphy, 2023
 # Larissa Manderfeld, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-12-04 14:03+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-06 12:13+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-19/mrp/de/>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/mrp/de/"
+">\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -771,7 +772,7 @@ msgstr "Aktivitätsausnahme-Dekoration"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__activity_plans_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Aktivitätspläne"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
@@ -3549,6 +3550,13 @@ msgid "MO Pending"
 msgstr "Fertigungsauftrag ausstehend"
 
 #. module: mrp
+#: model:mail.message.subtype,name:mrp.mrp_mo_planned
+#, fuzzy
+#| msgid "Planned"
+msgid "MO Planned"
+msgstr "Geplant"
+
+#. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_progress
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_progress
 msgid "MO Progress"
@@ -4535,9 +4543,11 @@ msgid "Plan Orders"
 msgstr "Aufträge planen"
 
 #. module: mrp
-#: model:ir.actions.server,name:mrp.action_plan_with_components_availability
-msgid "Plan based on Components Availability"
-msgstr "Auf Grundlage der Komponentenverfügbarkeit planen"
+#: model:ir.actions.server,name:mrp.action_plan_at_date
+#, fuzzy
+#| msgid "Delay Alert Date"
+msgid "Plan at Date"
+msgstr "Warndatum bei Verzögerung"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -5946,6 +5956,22 @@ msgstr "Übermorgen"
 #: code:addons/mrp/models/stock_orderpoint.py:0
 msgid "The following replenishment order has been generated"
 msgstr "Der folgende Auffüllungsauftrag wurde generiert."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, fuzzy
+#| msgid "No manufacturing order found. Let's create one."
+msgid "The manufacturing order has been planned."
+msgstr "Kein Fertigungsauftrag gefunden. Erstellen Sie einen!"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, fuzzy
+#| msgid "No manufacturing order found. Let's create one."
+msgid "The manufacturing order has been unplanned."
+msgstr "Kein Fertigungsauftrag gefunden. Erstellen Sie einen!"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
@@ -7500,3 +7526,6 @@ msgstr "tatsächliche Dauer"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "aufgeteilt"
+
+#~ msgid "Plan based on Components Availability"
+#~ msgstr "Auf Grundlage der Komponentenverfügbarkeit planen"

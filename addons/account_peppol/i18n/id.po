@@ -3,16 +3,16 @@
 # * account_peppol
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:52+0000\n"
+"POT-Creation-Date: 2026-01-04 18:36+0000\n"
+"PO-Revision-Date: 2026-01-07 02:13+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_peppol/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -661,7 +661,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "Cannot cancel an entry that has already been sent to Peppol"
-msgstr ""
+msgstr "Tidak dapat membatalkan entri yang sudah dikirim ke Peppol"
 
 #. module: account_peppol
 #. odoo-python
@@ -784,6 +784,11 @@ msgstr "Demo"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Disable the reception."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Discard"
 msgstr "Buang"
 
@@ -873,6 +878,13 @@ msgstr "Identifikasi Edi"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Email"
 msgstr "Email"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+#, fuzzy
+#| msgid "Pending Reception"
+msgid "Enable reception"
+msgstr "Pending Reception"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -1246,6 +1258,8 @@ msgstr "Peppol Menggunakan Induk Perusahaan"
 msgid ""
 "Peppol allows for complete automation of sending and receiving e-invoices."
 msgstr ""
+"Peppol mengizinkan untuk menyelesaikan otomatisasi mengirim dan menerima "
+"e-faktur."
 
 #. module: account_peppol
 #. odoo-python
@@ -1285,6 +1299,8 @@ msgstr "Faktur Peppol diterima"
 msgid ""
 "Peppol is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
+"Peppol adalah standar aman untuk e-faktur yang digunakan di UE dan di "
+"seluruh dunia."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
@@ -1423,11 +1439,6 @@ msgid "Ready to send"
 msgstr "Siap untuk dikirim"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-msgid "Receive your electronic invoices in Odoo"
-msgstr "Terima faktur elektronik Anda di Odoo"
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Reconnect this database"
 msgstr ""
@@ -1461,7 +1472,7 @@ msgstr "Didaftarkan untuk menerima dokumen melalui Peppol (demo)."
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid "Registered to receive documents via Peppol."
 msgstr "Didaftarkan untuk menerima dokumen melalui Peppol."
 
@@ -1490,11 +1501,6 @@ msgstr "Simpan"
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
 msgid "Selected Company"
 msgstr "Perusahaan Terpilih"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-msgid "Self Billing"
-msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__peppol_self_billing_reception_journal_id
@@ -1550,19 +1556,6 @@ msgstr ""
 "Beberapa fungsi keandalaan diimplementasikan seperti oleh modul Keandalaan, "
 "tidak beroperasi, atau status keandalaan terkait dengan urutan pesan ini "
 "tidak valid."
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-msgid ""
-"Some service support migration keys. If this is your case you can enter your "
-"migration key below.\n"
-"                        If not, you should de-register from your current "
-"service provider and register with Odoo afterward."
-msgstr ""
-"Beberapa layanan mendukung migration keys. Bila ini betul untuk Anda Anda "
-"dapat memasukkan migration key di bawah.\n"
-"                        Bila tidak, Anda harus membatalkan pendaftaran dari "
-"provider layanan Anda saat ini dan mendaftar dengan Odoo setelahnya."
 
 #. module: account_peppol
 #. odoo-python
@@ -2239,7 +2232,7 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."
@@ -2289,3 +2282,17 @@ msgstr "untuk mengirim faktur, tapi yang ini"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "user-user"
+
+#~ msgid "Receive your electronic invoices in Odoo"
+#~ msgstr "Terima faktur elektronik Anda di Odoo"
+
+#~ msgid ""
+#~ "Some service support migration keys. If this is your case you can enter "
+#~ "your migration key below.\n"
+#~ "                        If not, you should de-register from your current "
+#~ "service provider and register with Odoo afterward."
+#~ msgstr ""
+#~ "Beberapa layanan mendukung migration keys. Bila ini betul untuk Anda Anda "
+#~ "dapat memasukkan migration key di bawah.\n"
+#~ "                        Bila tidak, Anda harus membatalkan pendaftaran "
+#~ "dari provider layanan Anda saat ini dan mendaftar dengan Odoo setelahnya."

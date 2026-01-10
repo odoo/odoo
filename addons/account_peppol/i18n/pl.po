@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-01-04 18:36+0000\n"
 "PO-Revision-Date: 2025-10-30 13:03+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
@@ -791,6 +791,11 @@ msgstr "Demo"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Disable the reception."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Discard"
 msgstr "Odrzuć"
 
@@ -880,6 +885,13 @@ msgstr "Identyfikacja EDI"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Email"
 msgstr "E-mail"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+#, fuzzy
+#| msgid "Pending Reception"
+msgid "Enable reception"
+msgstr "Oczekuje na odebranie"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -1441,11 +1453,6 @@ msgid "Ready to send"
 msgstr "Gotowy do wysłania"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-msgid "Receive your electronic invoices in Odoo"
-msgstr "Otrzymuj swoje elektroniczne faktury w Odoo"
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Reconnect this database"
 msgstr "Połącz ponownie tę bazę danych"
@@ -1479,7 +1486,7 @@ msgstr "Zarejestrowano do otrzymywania dokumentów przez Peppol (demo)."
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid "Registered to receive documents via Peppol."
 msgstr "Zarejestrowano do otrzymywania dokumentów przez Peppol."
 
@@ -1508,11 +1515,6 @@ msgstr "Zapisz"
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
 msgid "Selected Company"
 msgstr "Wybrana firma"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-msgid "Self Billing"
-msgstr "Samodzielne fakturowanie"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__peppol_self_billing_reception_journal_id
@@ -1569,19 +1571,6 @@ msgstr ""
 "Niektóre funkcje niezawodności zaimplementowane przez moduł Niezawodność nie "
 "działają lub stan niezawodności powiązany z tą sekwencją komunikatów jest "
 "nieprawidłowy."
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-msgid ""
-"Some service support migration keys. If this is your case you can enter your "
-"migration key below.\n"
-"                        If not, you should de-register from your current "
-"service provider and register with Odoo afterward."
-msgstr ""
-"Niektóre usługi obsługują klucze migracji. Jeśli to Twój przypadek, możesz "
-"wpisać klucz migracji poniżej.\n"
-"                        Jeśli nie, powinieneś wyrejestrować się od swojego "
-"aktualnego dostawcy usługi a następnie zarejestrować w Odoo."
 
 #. module: account_peppol
 #. odoo-python
@@ -2270,7 +2259,7 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."
@@ -2320,3 +2309,20 @@ msgstr "aby wysyłać faktury, ale ta"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "używa"
+
+#~ msgid "Receive your electronic invoices in Odoo"
+#~ msgstr "Otrzymuj swoje elektroniczne faktury w Odoo"
+
+#~ msgid "Self Billing"
+#~ msgstr "Samodzielne fakturowanie"
+
+#~ msgid ""
+#~ "Some service support migration keys. If this is your case you can enter "
+#~ "your migration key below.\n"
+#~ "                        If not, you should de-register from your current "
+#~ "service provider and register with Odoo afterward."
+#~ msgstr ""
+#~ "Niektóre usługi obsługują klucze migracji. Jeśli to Twój przypadek, "
+#~ "możesz wpisać klucz migracji poniżej.\n"
+#~ "                        Jeśli nie, powinieneś wyrejestrować się od "
+#~ "swojego aktualnego dostawcy usługi a następnie zarejestrować w Odoo."

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
 "PO-Revision-Date: 2025-11-08 17:54+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -3386,6 +3386,13 @@ msgid "MO Pending"
 msgstr "製造訂單等待中"
 
 #. module: mrp
+#: model:mail.message.subtype,name:mrp.mrp_mo_planned
+#, fuzzy
+#| msgid "Planned"
+msgid "MO Planned"
+msgstr "已安排"
+
+#. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_progress
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_progress
 msgid "MO Progress"
@@ -4345,9 +4352,11 @@ msgid "Plan Orders"
 msgstr "安排訂單"
 
 #. module: mrp
-#: model:ir.actions.server,name:mrp.action_plan_with_components_availability
-msgid "Plan based on Components Availability"
-msgstr "基於組件可用性的計劃"
+#: model:ir.actions.server,name:mrp.action_plan_at_date
+#, fuzzy
+#| msgid "Delay Alert Date"
+msgid "Plan at Date"
+msgstr "延遲提醒日期"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -5725,6 +5734,22 @@ msgstr "後天"
 #: code:addons/mrp/models/stock_orderpoint.py:0
 msgid "The following replenishment order has been generated"
 msgstr "已建立以下補貨單"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, fuzzy
+#| msgid "No manufacturing order found. Let's create one."
+msgid "The manufacturing order has been planned."
+msgstr "未找到製造訂單. 讓我們建立一個吧."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, fuzzy
+#| msgid "No manufacturing order found. Let's create one."
+msgid "The manufacturing order has been unplanned."
+msgstr "未找到製造訂單. 讓我們建立一個吧."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
@@ -7178,3 +7203,6 @@ msgstr "實際持續時間"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "拆分"
+
+#~ msgid "Plan based on Components Availability"
+#~ msgstr "基於組件可用性的計劃"

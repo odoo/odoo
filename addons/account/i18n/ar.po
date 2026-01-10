@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
 "PO-Revision-Date: 2025-12-20 09:39+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/account/"
@@ -353,6 +353,24 @@ msgid ""
 msgstr ""
 "- حقل جديد « الإجمالي (متضمن الضريبة) » لتسريع الترميز والتحكم به عن طريق "
 "إنشاء الحساب والضريبة الصحيحين."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"- A rounding per tax is advised if your prices are tax-excluded. This "
+"minimizes cumulative rounding errors because it totals all unrounded tax "
+"amounts first and only rounds the final tax total once."
+"\\n                                                                                                                                                                                "
+"- A rounding per line is advised if your prices are tax-included. That way, "
+"the sum of line subtotal equals the total with taxes."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
+#, fuzzy
+#| msgid "Rounding"
+msgid "- Ending"
+msgstr "التقريب"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1407,6 +1425,13 @@ msgid "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
+#, fuzzy
+#| msgid "<span invisible=\"not early_discount\"> days</span>"
+msgid "<span invisible=\"not account_id\">on</span>"
+msgstr "<span invisible=\"not early_discount\"> أيام</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "<span invisible=\"not early_discount\"> % if paid within </span>"
 msgstr "<span invisible=\"not early_discount\"> % إذا تم الدفع خلال </span>"
@@ -1426,6 +1451,13 @@ msgstr ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> الفاتورة</span>\n"
 "                                        <span "
 "invisible=\"reconciled_invoices_type == 'invoice'\"> الإشعار الدائن</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
+#, fuzzy
+#| msgid "<span invisible=\"not early_discount\"> days</span>"
+msgid "<span invisible=\"repartition_type == 'base'\">%</span>"
+msgstr "<span invisible=\"not early_discount\"> أيام</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1495,9 +1527,14 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
+#| msgid ""
+#| "<span>1.00</span>\n"
+#| "                                                        <span "
+#| "groups=\"uom.group_uom\">Units</span>"
 msgid ""
 "<span>1.00</span>\n"
-"                                                        <span "
+"                                                            <span "
 "groups=\"uom.group_uom\">Units</span>"
 msgstr ""
 "<span>1.00</span>\n"
@@ -2041,9 +2078,6 @@ msgid ""
 "<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/"
 ">\n"
 "\n"
-"<t t-set=\"payment_state\" t-value=\"object.payment_state != 'not_paid' and "
-"object.payment_state.replace('_', ' ')\"/>\n"
-"\n"
 "<div style=\"margin:0; padding:0; color:#2c2431;\">\n"
 "    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
 "style=\"width:100%; background:#f7f4f8; padding:40px 0;\">\n"
@@ -2405,15 +2439,6 @@ msgid "A report line with the same code already exists."
 msgstr "يوجد بند في التقرير يحتوي نفس الكود."
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid ""
-"A rounding per line is advised if your prices are tax-included. That way, "
-"the sum of line subtotals equals the total with taxes."
-msgstr ""
-"يُنصح باستخدام التقريب لكل بند إذا كانت الأسعار شاملة الضرائب. هكذا، سيكون "
-"مجموع الإجماليات الفرعية لكل بند يساوي الإجمالي شامل الضرائب."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A section title"
 msgstr "عنوان القسم"
@@ -2757,6 +2782,13 @@ msgstr "ضريبة الحساب"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
 msgstr "مجموعة ضرائب الحساب"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_form
+#, fuzzy
+#| msgid "Tax Repartition Line"
+msgid "Account Tax Repartition Line"
+msgstr "بند التوزيع الضريبي"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
@@ -4410,6 +4442,7 @@ msgstr "لا يمكن أن تكون الحسابات البنكية والنقد
 #: model:ir.model,name:account.model_res_partner_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "Bank Account"
 msgstr "الحساب البنكي"
 
@@ -4439,7 +4472,6 @@ msgstr "اسم الحساب البنكي"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-#: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "Bank Account Number"
 msgstr "رقم الحساب البنكي"
 
@@ -5618,6 +5650,7 @@ msgstr "الشركات التي تشير إلى شريك"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__company_id
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__company_id
 #: model:ir.model.fields,field_description:account.field_account_code_mapping__company_id
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__company_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_id
@@ -8804,12 +8837,12 @@ msgid "Foldable"
 msgstr "قابل للكشف"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,description:account.portal_invoice_vendor
 msgid "Follow, download or pay our invoices"
 msgstr "قم بمتابعة أو تنزيل أو دفع قيمة الفواتير"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,description:account.portal_invoice_client
 msgid "Follow, download or pay your invoices"
 msgstr "قم بمتابعة أو تنزيل أو دفع قيمة فواتيرك"
 
@@ -10413,8 +10446,6 @@ msgid "Invoice Count"
 msgstr "عدد الفواتير"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
 #: model:mail.message.subtype,description:account.mt_invoice_created
 #: model:mail.message.subtype,name:account.mt_invoice_created
 msgid "Invoice Created"
@@ -13282,7 +13313,7 @@ msgid "Other type of property, like plants, machinery or various equipment"
 msgstr "Other type of property, like plants, machinery or various equipment"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,name:account.portal_invoice_vendor
 msgid "Our Invoices"
 msgstr "فواتيرنا"
 
@@ -14151,11 +14182,6 @@ msgstr "الناتج الفرعي السابق"
 #: model:ir.model.fields,field_description:account.field_account_move__preferred_payment_method_line_id
 msgid "Preferred Payment Method Line"
 msgstr "بند طريقة الدفع المفضلة"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_report__prefix_groups_threshold
-msgid "Prefix Groups Threshold"
-msgstr "الحد الأدنى لمجموعات البادئات"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__prefix_placeholder
@@ -16393,6 +16419,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Standard communication"
 msgstr "التواصل القياسي"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
+#, fuzzy
+#| msgid "Settings"
+msgid "Starting"
+msgstr "الإعدادات"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -18831,15 +18864,6 @@ msgstr ""
 "السجلات."
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid ""
-"This will update all taxes and accounts based on the currently selected "
-"fiscal position."
-msgstr ""
-"سيقوم ذلك بتحديث كافة الضرائب والحسابات بناءً على الأوضاع المالية المحددة "
-"حالياً."
-
-#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
@@ -19155,6 +19179,13 @@ msgid "Transaction Feeds"
 msgstr "موجزات المعاملة"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__transaction_uuid
+#, fuzzy
+#| msgid "Transactions"
+msgid "Transaction ID"
+msgstr "المعاملات"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_type
 msgid "Transaction Type"
 msgstr "نوع المعاملة"
@@ -19345,6 +19376,11 @@ msgstr "القيود غير المشفرة"
 #: model:ir.model.fields,help:account.field_account_report_line__code
 msgid "Unique identifier for this line."
 msgstr "المعرّف الفريد لهذا البند."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment__transaction_uuid
+msgid "Unique transaction identifier assigned by the initiating party"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
@@ -20617,16 +20653,6 @@ msgstr "لا يمكنك امتلاك حساب دائن/مدين غير قابل 
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You cannot have more than one account with \"Current Year Earnings\" as "
-"type. (accounts: %s)"
-msgstr ""
-"لا يمكنك امتلاك أكثر من حساب واحد مع \"أرباح السنة الجارية\" كنوع. "
-"(الحسابات: %s)"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
@@ -20949,7 +20975,7 @@ msgstr ""
 "لا يمكن التراجع عن هذا التغيير دون دعم فني."
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,name:account.portal_invoice_client
 msgid "Your Invoices"
 msgstr "فواتيرك"
 
@@ -21575,3 +21601,27 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} الفاتورة الذاتية (المرجع {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "This will update all taxes and accounts based on the currently selected "
+#~ "fiscal position."
+#~ msgstr ""
+#~ "سيقوم ذلك بتحديث كافة الضرائب والحسابات بناءً على الأوضاع المالية المحددة "
+#~ "حالياً."
+
+#~ msgid ""
+#~ "A rounding per line is advised if your prices are tax-included. That way, "
+#~ "the sum of line subtotals equals the total with taxes."
+#~ msgstr ""
+#~ "يُنصح باستخدام التقريب لكل بند إذا كانت الأسعار شاملة الضرائب. هكذا، سيكون "
+#~ "مجموع الإجماليات الفرعية لكل بند يساوي الإجمالي شامل الضرائب."
+
+#~ msgid "Prefix Groups Threshold"
+#~ msgstr "الحد الأدنى لمجموعات البادئات"
+
+#~ msgid ""
+#~ "You cannot have more than one account with \"Current Year Earnings\" as "
+#~ "type. (accounts: %s)"
+#~ msgstr ""
+#~ "لا يمكنك امتلاك أكثر من حساب واحد مع \"أرباح السنة الجارية\" كنوع. "
+#~ "(الحسابات: %s)"

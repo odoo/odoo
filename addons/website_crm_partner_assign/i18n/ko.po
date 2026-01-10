@@ -7,16 +7,16 @@
 # Sarah Park, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:37+0000\n"
-"PO-Revision-Date: 2025-12-11 06:44+0000\n"
+"POT-Creation-Date: 2026-01-04 18:37+0000\n"
+"PO-Revision-Date: 2026-01-08 05:31+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_crm_partner_assign/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -258,6 +258,44 @@ msgid ""
 "</t>\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"안녕하세요,<br/>\n"
+"해당하는 지역의 잠재 고객으로부터 연락을 받아, 고객을 다음의 파트너에게 배정"
+"해 드렸음을 알려드립니다: <t t-out=\"ctx['partner_id'].name or ''\"/>:<br/>\n"
+"<ol>\n"
+"    <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href="
+"\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">"
+"제목 미정</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id']"
+".contact_name or 'Contact Name Undefined'\">연락처 미정</t>, <t t-out=\"lead"
+"['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country "
+"Undefined'\">국가 미정</t>, <t t-out=\"lead['lead_id'].email_from or 'Email "
+"Undefined' or ''\">이메일 미정</t>, <t t-out=\"lead['lead_id'].phone or ''\""
+">+1 650-123-4567</t> </li><br/>\n"
+"</ol>\n"
+"<t t-if=\"ctx.get('partner_in_portal')\">\n"
+"    현재 사용 중인 <a t-att-href="
+"\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">파트너 포털</a"
+">에서 자세한 내용을 확인해 보시기 바랍니다. 잠재 고객님과 연락 후 왼쪽 상단에"
+" 있는: \"관심 있음\" &amp; \"관심 없음\" 중 선택해 주시기 바랍니다.<br/>\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"    아직 포털 액세스 권한이 없습니다. 다음으로 연락 주시기 바랍니다\n"
+"    <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email "
+"and 'your account manager %s (%s)' % "
+"(ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\">연"
+"락하기</t>.<br/>\n"
+"</t>\n"
+"잠재 고객에게 20일 이내에 연락을 하지 않을 경우, 해당 고객은 다른 파트너에게 "
+"배정됨을 유의하시기 바랍니다.<br/><br/>\n"
+"감사합니다.<br/>\n"
+"<t t-out="
+"\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"/>"
+"\n"
+"<br/>\n"
+"<t t-if=\"not ctx['partner_id'].user_id\">\n"
+"    참고 사항: 현재 배정된 계정 관리자가 없습니다. 관리자에게 문의하세요.\n"
+"</t>\n"
+"            </t>"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__activation
@@ -536,6 +574,7 @@ msgstr "다음 활동 세부사항"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_portal_entry__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__display_name
@@ -613,12 +652,12 @@ msgid "Find a reseller"
 msgstr "국내 파트너사 찾기:"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
+#: model:portal.entry,description:website_crm_partner_assign.portal_entry_leads
 msgid "Follow and convert your leads"
 msgstr "잠재고객을 팔로우하고 전환하기"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
+#: model:portal.entry,description:website_crm_partner_assign.portal_entry_opportunities
 msgid "Follow and convert your opportunities"
 msgstr "기회를 팔로우하고 전환하기"
 
@@ -731,6 +770,7 @@ msgstr "관심 없음"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_portal_entry__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__id
@@ -840,7 +880,7 @@ msgid "Lead forward to partner"
 msgstr "협력사로 영업제안 전달"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
+#: model:portal.entry,name:website_crm_partner_assign.portal_entry_leads
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "Leads"
@@ -952,7 +992,7 @@ msgid "Open industries dropdown"
 msgstr "산업 드롭다운 열기"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
+#: model:portal.entry,name:website_crm_partner_assign.portal_entry_opportunities
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Opportunities"
@@ -1092,6 +1132,11 @@ msgstr "계획된 수익"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Please check back soon."
 msgstr "잠시 후 다시 확인하세요."
+
+#. module: website_crm_partner_assign
+#: model:ir.model,name:website_crm_partner_assign.model_portal_entry
+msgid "Portal Entry"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity

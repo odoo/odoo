@@ -3,16 +3,16 @@
 # * hr_work_entry
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:50+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-07 05:18+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_work_entry/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -502,7 +502,7 @@ msgstr "Disabilitas oleh karena penyakit (IMSS)"
 #: code:addons/hr_work_entry/static/src/components/work_entry_popover/work_entry_popover.xml:0
 #: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_create_popover.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "Buang"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -543,6 +543,12 @@ msgstr "Draft"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
 msgid "Duration"
 msgstr "Durasi"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "Duration must be positive and cannot exceed 24 hours."
+msgstr "Durasi harus positif dan tidak dapat melampaui 24 jam."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
@@ -1170,7 +1176,7 @@ msgstr "Baru"
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/components/work_entry_popover/work_entry_popover.xml:0
 msgid "New Work Entry"
-msgstr ""
+msgstr "Entri Kerja Baru"
 
 #. module: hr_work_entry
 #: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
@@ -1637,7 +1643,7 @@ msgstr "Gaji dalam kasus Cuti Militer"
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/components/work_entry_popover/work_entry_popover.xml:0
 msgid "Save"
-msgstr ""
+msgstr "Simpan"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__search_criteria_completed
@@ -1789,7 +1795,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/components/work_entry_popover/work_entry_popover.xml:0
 msgid "Split"
-msgstr "Pisah"
+msgstr "Pisahkan"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1937,6 +1943,11 @@ msgid ""
 msgstr ""
 "Kode ISO negara dalam dua karakter.\n"
 "Anda dapat menggunakan kolom ini untuk pencarian cepat."
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "The amount of work on the day should not exceed 24 hours."
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__code

@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
 "PO-Revision-Date: 2025-11-08 19:02+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-19/"
@@ -3430,6 +3430,13 @@ msgid "MO Pending"
 msgstr ""
 
 #. module: mrp
+#: model:mail.message.subtype,name:mrp.mrp_mo_planned
+#, fuzzy
+#| msgid "Planned"
+msgid "MO Planned"
+msgstr "Planlagt"
+
+#. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_progress
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_progress
 msgid "MO Progress"
@@ -4399,9 +4406,11 @@ msgid "Plan Orders"
 msgstr "Planlegg Ordre"
 
 #. module: mrp
-#: model:ir.actions.server,name:mrp.action_plan_with_components_availability
-msgid "Plan based on Components Availability"
-msgstr "Planlegg basert på tilgjengelighet av komponenter"
+#: model:ir.actions.server,name:mrp.action_plan_at_date
+#, fuzzy
+#| msgid "Delay Alert Date"
+msgid "Plan at Date"
+msgstr "Varsel for dato forsinkelse"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -5791,6 +5800,22 @@ msgstr ""
 #: code:addons/mrp/models/stock_orderpoint.py:0
 msgid "The following replenishment order has been generated"
 msgstr "Følgende påfyllingsordre er blitt generert"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, fuzzy
+#| msgid "No manufacturing order found. Let's create one."
+msgid "The manufacturing order has been planned."
+msgstr "Ingen produksjonsordre funnet. La oss lage en!"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, fuzzy
+#| msgid "No manufacturing order found. Let's create one."
+msgid "The manufacturing order has been unplanned."
+msgstr "Ingen produksjonsordre funnet. La oss lage en!"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
@@ -7297,3 +7322,6 @@ msgstr "faktisk varighet"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "splitte"
+
+#~ msgid "Plan based on Components Availability"
+#~ msgstr "Planlegg basert på tilgjengelighet av komponenter"

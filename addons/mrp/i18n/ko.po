@@ -7,16 +7,17 @@
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Sarah Park, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-12-03 08:34+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-08 09:17+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/mrp/ko/>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/mrp/ko/"
+">\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -729,7 +730,7 @@ msgstr "활동 예외 장식"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__activity_plans_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "활동 계획"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
@@ -3042,7 +3043,7 @@ msgstr "재고 이동"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "재고 경로"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
@@ -3426,6 +3427,13 @@ msgstr "제조요청서 현황 보고서"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "MO Pending"
 msgstr "MO 대기 중"
+
+#. module: mrp
+#: model:mail.message.subtype,name:mrp.mrp_mo_planned
+#, fuzzy
+#| msgid "Planned"
+msgid "MO Planned"
+msgstr "계획됨"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_progress
@@ -4136,7 +4144,7 @@ msgstr "생산 관리"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__code
 msgid "Operation Category"
-msgstr ""
+msgstr "작업 카테고리"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__allow_operation_dependencies
@@ -4394,9 +4402,11 @@ msgid "Plan Orders"
 msgstr "계획 지시서"
 
 #. module: mrp
-#: model:ir.actions.server,name:mrp.action_plan_with_components_availability
-msgid "Plan based on Components Availability"
-msgstr "부품 가용성을 기반으로 한 계획"
+#: model:ir.actions.server,name:mrp.action_plan_at_date
+#, fuzzy
+#| msgid "Delay Alert Date"
+msgid "Plan at Date"
+msgstr "지연 알림일"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -5778,6 +5788,22 @@ msgstr "모레"
 #: code:addons/mrp/models/stock_orderpoint.py:0
 msgid "The following replenishment order has been generated"
 msgstr "다음 보충 주문이 생성되었습니다."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, fuzzy
+#| msgid "No manufacturing order found. Let's create one."
+msgid "The manufacturing order has been planned."
+msgstr "제조주문서를 찾을 수 없습니다. 새로 작성해주세요!"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, fuzzy
+#| msgid "No manufacturing order found. Let's create one."
+msgid "The manufacturing order has been unplanned."
+msgstr "제조주문서를 찾을 수 없습니다. 새로 작성해주세요!"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
@@ -7260,3 +7286,6 @@ msgstr "실제 소요 시간"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "분할"
+
+#~ msgid "Plan based on Components Availability"
+#~ msgstr "부품 가용성을 기반으로 한 계획"

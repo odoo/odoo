@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
 "PO-Revision-Date: 2025-11-10 14:29+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19/account/hi/"
@@ -339,6 +339,24 @@ msgid ""
 msgstr ""
 "- एक नया फ़ील्ड है, जिसका नाम है \"कुल (टैक्स सहित)\". यह फ़ील्ड आपकी काम करने की गति "
 "बढ़ाएगा और गलतियों को कम करेगा. यह सही खाते और टैक्स के साथ लाइनों को अपने-आप बनाएगा।"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"- A rounding per tax is advised if your prices are tax-excluded. This "
+"minimizes cumulative rounding errors because it totals all unrounded tax "
+"amounts first and only rounds the final tax total once."
+"\\n                                                                                                                                                                                "
+"- A rounding per line is advised if your prices are tax-included. That way, "
+"the sum of line subtotal equals the total with taxes."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
+#, fuzzy
+#| msgid "Rounding"
+msgid "- Ending"
+msgstr "राउंडिंग"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1390,6 +1408,13 @@ msgid "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
+#, fuzzy
+#| msgid "<span invisible=\"not early_discount\"> days</span>"
+msgid "<span invisible=\"not account_id\">on</span>"
+msgstr "<span invisible=\"not early_discount\"> दिन</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "<span invisible=\"not early_discount\"> % if paid within </span>"
 msgstr "<span invisible=\"not early_discount\"> % अगर </span> तक चुका दिया गया"
@@ -1409,6 +1434,13 @@ msgstr ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> इनवॉइस</span>\n"
 "                                        <span "
 "invisible=\"reconciled_invoices_type == 'invoice'\"> क्रेडिट नोट</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
+#, fuzzy
+#| msgid "<span invisible=\"not early_discount\"> days</span>"
+msgid "<span invisible=\"repartition_type == 'base'\">%</span>"
+msgstr "<span invisible=\"not early_discount\"> दिन</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1478,11 +1510,19 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
+#| msgid ""
+#| "<span class=\"o_stat_text\">\n"
+#| "                                    Taxes\n"
+#| "                                </span>"
 msgid ""
 "<span>1.00</span>\n"
-"                                                        <span "
+"                                                            <span "
 "groups=\"uom.group_uom\">Units</span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    टैक्स\n"
+"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1884,9 +1924,6 @@ msgid ""
 "<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/"
 ">\n"
 "\n"
-"<t t-set=\"payment_state\" t-value=\"object.payment_state != 'not_paid' and "
-"object.payment_state.replace('_', ' ')\"/>\n"
-"\n"
 "<div style=\"margin:0; padding:0; color:#2c2431;\">\n"
 "    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
 "style=\"width:100%; background:#f7f4f8; padding:40px 0;\">\n"
@@ -2256,15 +2293,6 @@ msgid "A report line with the same code already exists."
 msgstr "इस कोड वाली रिपोर्ट लाइन पहले से बनी है।"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid ""
-"A rounding per line is advised if your prices are tax-included. That way, "
-"the sum of line subtotals equals the total with taxes."
-msgstr ""
-"अगर आपकी कीमतों में टैक्स शामिल है, तो हर लाइन पर राउंडिंग करें. इससे सभी लाइनों का कुल "
-"जोड़, टैक्स के साथ पूरे बिल के जोड़ के बराबर आएगा।"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A section title"
 msgstr "सेक्शन टाइटल"
@@ -2608,6 +2636,13 @@ msgstr "अकाउंट टैक्स"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
 msgstr "अकाउंट टैक्स ग्रुप"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_form
+#, fuzzy
+#| msgid "Tax Repartition Line"
+msgid "Account Tax Repartition Line"
+msgstr "टैक्स रिपार्टिशन लाइन"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
@@ -4257,6 +4292,7 @@ msgstr "बैंक और कैश खाते दो अलग-अलग �
 #: model:ir.model,name:account.model_res_partner_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "Bank Account"
 msgstr "बैंक खाता"
 
@@ -4286,7 +4322,6 @@ msgstr "बैंक खाते का नाम"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-#: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "Bank Account Number"
 msgstr "बैंक खाता नंबर"
 
@@ -5472,6 +5507,7 @@ msgstr "जो कंपनियां पार्टनर से जुड�
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__company_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__company_id
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__company_id
 #: model:ir.model.fields,field_description:account.field_account_code_mapping__company_id
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__company_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_id
@@ -8651,12 +8687,12 @@ msgid "Foldable"
 msgstr "फोल्डेबल"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,description:account.portal_invoice_vendor
 msgid "Follow, download or pay our invoices"
 msgstr "हमारा इनवॉइस फ़ॉलो करें, डाउनलोड करें या पैसे चुकाएं"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,description:account.portal_invoice_client
 msgid "Follow, download or pay your invoices"
 msgstr "अपने इनवॉइस फ़ॉलो करें, डाउनलोड करें या पैसे चुकाएं"
 
@@ -10263,8 +10299,6 @@ msgid "Invoice Count"
 msgstr "इनवॉइस काउंट"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
 #: model:mail.message.subtype,description:account.mt_invoice_created
 #: model:mail.message.subtype,name:account.mt_invoice_created
 msgid "Invoice Created"
@@ -13128,7 +13162,7 @@ msgid "Other type of property, like plants, machinery or various equipment"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,name:account.portal_invoice_vendor
 msgid "Our Invoices"
 msgstr "हमारे इनवॉइस"
 
@@ -13996,11 +14030,6 @@ msgstr "पिछला सबटोटल"
 #: model:ir.model.fields,field_description:account.field_account_move__preferred_payment_method_line_id
 msgid "Preferred Payment Method Line"
 msgstr "पसंदीदा पेमेंट मेथड लाइन विधि लाइन"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_report__prefix_groups_threshold
-msgid "Prefix Groups Threshold"
-msgstr "प्रीफ़िक्स ग्रुप थ्रेशोल्ड"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__prefix_placeholder
@@ -16220,6 +16249,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Standard communication"
 msgstr "स्टैंडर्ड कम्यूनिकेशन"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
+#, fuzzy
+#| msgid "Settings"
+msgid "Starting"
+msgstr "कॉन्फ़िगरेशन"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -18674,13 +18710,6 @@ msgstr ""
 "जैसे कि उन्हें ईमेल करने के लिए या एक साथ कई रिकॉर्ड को देखने के लिए।"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid ""
-"This will update all taxes and accounts based on the currently selected "
-"fiscal position."
-msgstr "इससे अभी चुनी हुई 'वित्तीय स्थिति' के हिसाब से सारे टैक्स और अकाउंट अपडेट हो जाएंगे।"
-
-#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
@@ -19000,6 +19029,13 @@ msgid "Transaction Feeds"
 msgstr "ट्रांज़ैक्शन फ़ीज"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__transaction_uuid
+#, fuzzy
+#| msgid "Transactions"
+msgid "Transaction ID"
+msgstr "ट्रांजैक्शन"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_type
 msgid "Transaction Type"
 msgstr "ट्रांज़ैक्शन टाइ"
@@ -19188,6 +19224,11 @@ msgstr "ऐसी एंट्रीज़ जिन पर कोई हैश 
 #: model:ir.model.fields,help:account.field_account_report_line__code
 msgid "Unique identifier for this line."
 msgstr "इस लाइन के लिए यूनीक आइडेंटिफ़ायर।"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment__transaction_uuid
+msgid "Unique transaction identifier assigned by the initiating party"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
@@ -20470,16 +20511,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You cannot have more than one account with \"Current Year Earnings\" as "
-"type. (accounts: %s)"
-msgstr ""
-"आप 'चालू वर्ष की कमाई' के लिए एक से ज़्यादा अकाउंट नहीं बना सकते. आपके पास सिर्फ़ एक ऐसा "
-"अकाउंट होना चाहिए. (अकाउंट: %s)"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
@@ -20808,7 +20839,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
+#: model:portal.entry,name:account.portal_invoice_client
 msgid "Your Invoices"
 msgstr "आपकी इनवॉइस"
 
@@ -21430,3 +21461,26 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid ""
+#~ "This will update all taxes and accounts based on the currently selected "
+#~ "fiscal position."
+#~ msgstr ""
+#~ "इससे अभी चुनी हुई 'वित्तीय स्थिति' के हिसाब से सारे टैक्स और अकाउंट अपडेट हो जाएंगे।"
+
+#~ msgid ""
+#~ "A rounding per line is advised if your prices are tax-included. That way, "
+#~ "the sum of line subtotals equals the total with taxes."
+#~ msgstr ""
+#~ "अगर आपकी कीमतों में टैक्स शामिल है, तो हर लाइन पर राउंडिंग करें. इससे सभी लाइनों का "
+#~ "कुल जोड़, टैक्स के साथ पूरे बिल के जोड़ के बराबर आएगा।"
+
+#~ msgid "Prefix Groups Threshold"
+#~ msgstr "प्रीफ़िक्स ग्रुप थ्रेशोल्ड"
+
+#~ msgid ""
+#~ "You cannot have more than one account with \"Current Year Earnings\" as "
+#~ "type. (accounts: %s)"
+#~ msgstr ""
+#~ "आप 'चालू वर्ष की कमाई' के लिए एक से ज़्यादा अकाउंट नहीं बना सकते. आपके पास सिर्फ़ एक "
+#~ "ऐसा अकाउंट होना चाहिए. (अकाउंट: %s)"

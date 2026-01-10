@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
 "PO-Revision-Date: 2025-12-20 09:36+0000\n"
 "Last-Translator: or balmas <or@laylinetech.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/mrp/he/>\n"
@@ -3433,6 +3433,13 @@ msgid "MO Pending"
 msgstr "הוראת ייצור ממתינה"
 
 #. module: mrp
+#: model:mail.message.subtype,name:mrp.mrp_mo_planned
+#, fuzzy
+#| msgid "Planned"
+msgid "MO Planned"
+msgstr "מתוכנן"
+
+#. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_progress
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_progress
 msgid "MO Progress"
@@ -4390,9 +4397,11 @@ msgid "Plan Orders"
 msgstr "תכנון הזמנות"
 
 #. module: mrp
-#: model:ir.actions.server,name:mrp.action_plan_with_components_availability
-msgid "Plan based on Components Availability"
-msgstr "תכנון מבוסס על זמינות רכיבים"
+#: model:ir.actions.server,name:mrp.action_plan_at_date
+#, fuzzy
+#| msgid "Delay Alert Date"
+msgid "Plan at Date"
+msgstr "עיכוב תאריך התראה"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -5773,6 +5782,22 @@ msgstr "מחרתיים"
 #: code:addons/mrp/models/stock_orderpoint.py:0
 msgid "The following replenishment order has been generated"
 msgstr "הוראת החידוש מלאי הבאה נוצרה"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, fuzzy
+#| msgid "No manufacturing order found. Let's create one."
+msgid "The manufacturing order has been planned."
+msgstr "לא נמצאה הזמנת ייצור. בואו ניצור אחת."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, fuzzy
+#| msgid "No manufacturing order found. Let's create one."
+msgid "The manufacturing order has been unplanned."
+msgstr "לא נמצאה הזמנת ייצור. בואו ניצור אחת."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
@@ -7240,3 +7265,6 @@ msgstr "משך זמן בפועל"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "פצל"
+
+#~ msgid "Plan based on Components Availability"
+#~ msgstr "תכנון מבוסס על זמינות רכיבים"

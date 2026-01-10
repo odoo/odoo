@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-01-04 18:36+0000\n"
 "PO-Revision-Date: 2025-12-20 09:52+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -781,6 +781,11 @@ msgstr "デモ"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Disable the reception."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Discard"
 msgstr "破棄"
 
@@ -870,6 +875,13 @@ msgstr "Edi識別確認"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Email"
 msgstr "Eメール"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+#, fuzzy
+#| msgid "Pending Reception"
+msgid "Enable reception"
+msgstr "受領保留中"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -1428,11 +1440,6 @@ msgid "Ready to send"
 msgstr "送信準備完了"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-msgid "Receive your electronic invoices in Odoo"
-msgstr "Odooで電子請求書を受取ることができます"
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Reconnect this database"
 msgstr "このデータベースを再接続"
@@ -1466,7 +1473,7 @@ msgstr "Peppol経由でドキュメントを受信する登録済 (demo)。"
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid "Registered to receive documents via Peppol."
 msgstr "Peppol経由でドキュメントを受信する登録済。"
 
@@ -1495,11 +1502,6 @@ msgstr "保存"
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
 msgid "Selected Company"
 msgstr "選択された会社"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-msgid "Self Billing"
-msgstr "Self Billing"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__peppol_self_billing_reception_journal_id
@@ -1554,19 +1556,6 @@ msgid ""
 msgstr ""
 "信頼性モジュールによって実装されている一部の信頼性機能が動作していないか、ま"
 "たはこのメッセージシーケンスに関連付けられた信頼性ステータスが無効です。"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-msgid ""
-"Some service support migration keys. If this is your case you can enter your "
-"migration key below.\n"
-"                        If not, you should de-register from your current "
-"service provider and register with Odoo afterward."
-msgstr ""
-"一部のサービスサポートでは、移行キーが必要です。この条件に該当する場合は、以"
-"下に移行キーを入力してください:\n"
-"                        該当しない場合は、現在のサービスプロバイダーから登録"
-"を解除し、その後Odooに登録して下さい。"
 
 #. module: account_peppol
 #. odoo-python
@@ -2240,7 +2229,7 @@ msgstr "登録は拒否されました。サポートまでお問い合わせ下
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."
@@ -2290,3 +2279,20 @@ msgstr "請求書を送信するには、しかし、この請求書は"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "ユーザー"
+
+#~ msgid "Receive your electronic invoices in Odoo"
+#~ msgstr "Odooで電子請求書を受取ることができます"
+
+#~ msgid "Self Billing"
+#~ msgstr "Self Billing"
+
+#~ msgid ""
+#~ "Some service support migration keys. If this is your case you can enter "
+#~ "your migration key below.\n"
+#~ "                        If not, you should de-register from your current "
+#~ "service provider and register with Odoo afterward."
+#~ msgstr ""
+#~ "一部のサービスサポートでは、移行キーが必要です。この条件に該当する場合は、"
+#~ "以下に移行キーを入力してください:\n"
+#~ "                        該当しない場合は、現在のサービスプロバイダーから登"
+#~ "録を解除し、その後Odooに登録して下さい。"

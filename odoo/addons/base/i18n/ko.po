@@ -8,17 +8,17 @@
 # Martin Trigaux, 2023
 # JH CHOI <hwangtog@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-24 08:34+0000\n"
-"PO-Revision-Date: 2025-12-11 06:44+0000\n"
+"PO-Revision-Date: 2026-01-08 05:31+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/base/ko/"
-">\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/base/"
+"ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3798,6 +3798,125 @@ msgid ""
 "    encode in in the payroll Settings, with the .pem file and the related "
 "password, if any.\n"
 msgstr ""
+"\n"
+"벨기에 급여 규칙.\n"
+"======================\n"
+"\n"
+"    * 직원 세부 정보\n"
+"    * 직원 계약서\n"
+"    * 여권 기준 계약서\n"
+"    * 수당/공제\n"
+"    * 기본급/총급여/순급여 환경설정 여부\n"
+"    * 직원 급여명세서\n"
+"    * 월 급여 대장\n"
+"    * 휴가 항목과 통합 관리\n"
+"    * 급여 주요 항목, ONS), 원천징수세, 자녀 수당 외\n"
+"\n"
+"자동 DmfA 서명\n"
+"========================\n"
+"\n"
+"필수 조건:\n"
+"--------------\n"
+"\n"
+"- Global Sign에서 발급하는 벨기에 정부 인증 디지털 인증서 필요. 참조: "
+"https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- SSL 인증서(.pfx 파일) 생성. 이를 통해 기술 사용자 생성(.cer 파일) 및 ONSS "
+"원격 인증(.pem)에 필요한 인증서 파일 생성. UNIX 시스템에서는 다음 명령어 사용"
+" 가능:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
+"clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
+"my_cert.cer\n"
+"\n"
+"  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"  - PFX -> KEY: openssl pkcs12 -in my_cert.pfx -out my_cert.key -nocerts\n"
+"\n"
+"- 사회보장 SFTP 웹서비스를 사용하려면 본인 또는 클라이언트용 계정을 생성하고 "
+"보안 항목을 설정 필요. (전체 절차는 다음에서 확인 가능: https://"
+"www.socialsecurity.be/site_fr/general/helpcentre/batch/sftp/previewstep.htm)"
+"\n"
+"  본인 또는 클라이언트용 계정을 생성하고 보안 항목 설정. (전체 절차는 다음에"
+"서 확인 가능:\n"
+"  https://www.socialsecurity.be/site_fr/general/helpcentre/batch/sftp/"
+"previewstep.htm)\n"
+"\n"
+"  - 기술 업무 사용자 생성 및 SFTP 채널 활성화: 이제 고객이 액세스 관리 온라인"
+" 서비스에서 기술 사용자 생성.\n"
+"    다음에서 절차 확인 가능: https://www.socialsecurity.be/site_fr/general/"
+"helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"- SFTP 클라이언트 설정: https://www.socialsecurity.be/site_fr/general/"
+"helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
+"\n"
+"  - 절차가 완료되면 \"ONSS Expeditor Number\"를 수신하게 되며,\n"
+"    해당 번호와 .pem 파일, 관련 비밀번호(설정한 경우)를 급여 설정에서 인코딩 "
+"가능.\n"
+"\n"
+"- 설정 시 참고 사항: .pfx 인증서는 급여 환경설정에서 설정.\n"
+"\n"
+"ONSS 포털에 DmfA 동기화\n"
+"===============================\n"
+"\n"
+"DmfA ONSS 신고서를 벨기에 공식 SFTP 포털에\n"
+"자동으로 동기화.\n"
+"\n"
+"- FO, FS, GO 파일을 알맞은 ONSS 환경 폴더\n"
+"(IN, INTEST, INTEST-S)에 업로드.\n"
+"- OUT 폴더(OUT, OUTTEST, OUTTEST-S)를 폴링하여 반환된 파일 확인.\n"
+"- 수신된 파일을 해당 신고서 및 직원들에게\n"
+"적용 가능한 경우 연결.\n"
+"\n"
+"기술적 특징:\n"
+"- 개인 키 및 기술 사용자 자격 증명을 통한 보안 연결\n"
+"- ACRF 및 통지 파일용 XML 파일 파싱\n"
+"- 누락된 디렉토리 또는 형식 오류 파일 처리 및 로깅\n"
+"\n"
+"본 기능을 통해 ONSS 전자 신고 요건에 따라 제출할 수 있으며\n"
+"SFTP 포털에서 수동 작업을 최소화하여 수발신할 수 있습니다.\n"
+"\n"
+"자동 DIMONA 신고\n"
+"=============================\n"
+"\n"
+"- 벨기에 정부 인증 디지털 인증서(Global Sign 발급) 필요. 참조: https://"
+"shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- SSL 인증서(.pfx 파일)을 통해 기술 사용자 생성(.cer 파일) 및 ONSS 원격 인증"
+"(.pem)에 필요한 인증서 파일 생성. 유닉스(UNIX) 시스템에서는 다음 명령어 사용 "
+"가능:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
+"clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
+"my_cert.cer\n"
+"\n"
+"  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"- 사회보장 REST 웹 서비스를 사용하기 전에 본인 또는 고객을 위한 계정을 생성하"
+"고\n"
+"  보안 설정. (전체 절차는 다음에서 확인 가능: https://www.socialsecurity.be/"
+"site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
+"\n"
+"  - 사용자 계정 관리: 다음 절차에 따라 진행- https://www.socialsecurity.be/"
+"site_fr/general/helpcentre/rest/documents/pdf/"
+"procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - 기술 사용자 생성: 이제 고객이 액세스 관리 온라인 서비스에서 기술 사용자 "
+"생성. 다음 절차에 따라 진행- https://www.socialsecurity.be/site_fr/general/"
+"helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - 웹 서비스 채널 활성화: 기술 사용자 생성 후, 고객가 액세스 관리에서 웹 서"
+"비스 채널 활성화. 채널 활성화 단계는 다음 매뉴얼 참조: https://"
+"www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_ajouter_le_canal_FR.pdf\n"
+" \n"
+"  - 절차 완료 시 \"ONSS Expeditor Number\"를 수신하게 되며,\n"
+"    해당 번호와 .pem 파일, 관련 비밀번호(있는 경우)를 급여 설정"
+"(payroll Settings)에 입력 가능.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -20359,7 +20478,7 @@ msgstr "기본 보기"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Base/Unit"
-msgstr ""
+msgstr "기초/단위"
 
 #. module: base
 #: model:ir.actions.server,name:base.autovacuum_job_ir_actions_server
@@ -20716,7 +20835,7 @@ msgstr "블로그"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__bold
 msgid "Bold"
-msgstr ""
+msgstr "굵게"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.VEF
@@ -20812,7 +20931,7 @@ msgstr "볼링장"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__boxed
 msgid "Boxed"
-msgstr ""
+msgstr "박스 적용"
 
 #. module: base
 #. odoo-python
@@ -21100,7 +21219,7 @@ msgstr "브루나이 다루살람"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__bubble
 msgid "Bubble"
-msgstr ""
+msgstr "말풍선"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
@@ -21538,7 +21657,7 @@ msgstr "카테고리"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_catering
 msgid "Catering"
-msgstr ""
+msgstr "케이터링"
 
 #. module: base
 #: model:res.country,name:base.ky
@@ -22240,7 +22359,7 @@ msgstr "색상표"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__column
 msgid "Column"
-msgstr ""
+msgstr "열"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__column1
@@ -23657,7 +23776,7 @@ msgstr "통화 기호입니다. 금액을 인쇄할 때 사용됩니다."
 #: model:ir.model.fields,field_description:base.field_res_device__is_current
 #: model:ir.model.fields,field_description:base.field_res_session__is_current
 msgid "Current"
-msgstr ""
+msgstr "현재"
 
 #. module: base
 #. odoo-python
@@ -23961,7 +24080,7 @@ msgstr "데이터베이스 구조"
 #: model:ir.module.category,name:base.module_category_services_databases
 #: model:ir.module.module,shortdesc:base.module_databases
 msgid "Databases"
-msgstr ""
+msgstr "데이터베이스"
 
 #. module: base
 #. odoo-python
@@ -24434,7 +24553,7 @@ msgstr "Development, IT development, Design, Tech, Computers, IT, Blogs"
 #: model:ir.model,name:base.model_res_device
 #: model:ir.model.fields,field_description:base.field_res_session__device_ids
 msgid "Device"
-msgstr ""
+msgstr "장치"
 
 #. module: base
 #: model:ir.model,name:base.model_res_device_log
@@ -26904,7 +27023,7 @@ msgstr "FSM - SMS"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__factory
 msgid "Factory"
-msgstr ""
+msgstr "공장"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_users_deletion__state__fail
@@ -31684,7 +31803,7 @@ msgstr "라이프스타일"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__light
 msgid "Light"
-msgstr ""
+msgstr "밝게"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_graphene
@@ -31967,7 +32086,7 @@ msgstr "현지화"
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_sale_localizations
 msgid "Localizations"
-msgstr ""
+msgstr "현지화"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_loftspace
@@ -43607,7 +43726,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__striped
 msgid "Striped"
-msgstr ""
+msgstr "취소선"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_student_organization
@@ -46872,7 +46991,7 @@ msgstr "설치 제거 가능"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Uninstallation"
-msgstr ""
+msgstr "설치 취소"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__uninstalled_l10n_module_ids
@@ -46894,7 +47013,7 @@ msgstr "설치 제거…"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Unit/Base"
-msgstr ""
+msgstr "단위/기초"
 
 #. module: base
 #: model:res.country,name:base.ae
@@ -47858,7 +47977,7 @@ msgstr "이것을 상속한 화면"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_vineyard
 msgid "Vineyard"
-msgstr ""
+msgstr "와이너리"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -48284,7 +48403,7 @@ msgstr "WhatsApp-판매"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_sign
 msgid "WhatsApp-Sign"
-msgstr ""
+msgstr "WhatsApp-전자 서명"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_event
@@ -49097,7 +49216,7 @@ msgstr "활성화"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "address"
-msgstr ""
+msgstr "주소"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_fields
@@ -49494,7 +49613,7 @@ msgstr "l10n_be_pos_sale"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__localtime
 msgid "localtime"
-msgstr ""
+msgstr "현지 시간"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many

@@ -40,7 +40,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
 "PO-Revision-Date: 2025-11-08 19:11+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/project/"
@@ -471,24 +471,6 @@ msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
 msgstr "<span class=\"o_stat_text\">Podzadania</span>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.task_type_edit
-msgid ""
-"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
-"                                            <i class=\"fa fa-lightbulb-o "
-"pe-2\"/>\n"
-"                                            <span "
-"name=\"rating_status_helper\">\n"
-"                                                <span "
-"invisible=\"rating_status == 'periodic'\">A rating request will be sent as "
-"soon as a task reaches this stage.</span>\n"
-"                                                <span "
-"invisible=\"rating_status == 'stage'\">Rating requests will be sent as long "
-"as the task remains in this stage.</span>\n"
-"                                            </span>\n"
-"                                        </span>"
-msgstr ""
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 msgid "<span>Progress</span>"
 msgstr "<span>Postęp</span>"
@@ -509,6 +491,7 @@ msgid "<span>View</span>"
 msgstr "<span>Podgląd</span>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "<span>days</span>"
 msgstr ""
@@ -565,18 +548,6 @@ msgid ""
 msgstr ""
 "Współpracownik nie może być wybrany więcej niż raz w dostępie do "
 "współdzielenia projektu. Usuń duplikaty i spróbuj ponownie."
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "A new task has been created and is not part of any project."
-msgstr "Utworzono nowe zadanie, które nie jest częścią żadnego projektu."
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "A new task has been created in the \"%(project_name)s\" project."
-msgstr "Nowe zadanie zostało utworzone w projekcie \"%(project_name)s\"."
 
 #. module: project
 #. odoo-python
@@ -945,6 +916,13 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "Are you sure you want to restore this version ?"
 msgstr "Czy na pewno chcesz przywrócić tę wersję?"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#, fuzzy
+#| msgid "Customer Ratings"
+msgid "Ask for Ratings"
+msgstr "Oceny klienta"
 
 #. module: project
 #. odoo-javascript
@@ -1629,11 +1607,6 @@ msgid "Customer Portal URL"
 msgstr "Adres URL portalu klienta"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.task_type_edit
-msgid "Customer Rating"
-msgstr "Ocena klienta"
-
-#. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
 msgid "Customer Ratings"
@@ -1717,6 +1690,12 @@ msgstr ""
 "zadań."
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project_stage__rotting_threshold_days
+msgid ""
+"Day count before projects in this stage become stale. Set to 0 to disable."
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rotting_threshold_days
 msgid ""
 "Day count before tasks in this stage become stale. Set to 0 to "
@@ -1749,6 +1728,7 @@ msgid "Days to Deadline"
 msgstr "Dni do terminu zakończenia"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_stage__rotting_threshold_days
 #: model:ir.model.fields,field_description:project.field_project_task_type__rotting_threshold_days
 msgid "Days to rot"
 msgstr "Dni przed uznaniem za bezczynne"
@@ -1769,6 +1749,13 @@ msgstr "Termin"
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
 msgid "Dear"
 msgstr "Dzień dobry,"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#, fuzzy
+#| msgid "Default Values"
+msgid "Default"
+msgstr "Wartości domyślne"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -1989,12 +1976,6 @@ msgid "Draft"
 msgstr "Projekt"
 
 #. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_list_to_plan/project_task_calendar_list_to_plan.xml:0
-msgid "Drag Tasks to Schedule"
-msgstr "Przeciągnij zadania, aby zaplanować"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Duplicate"
@@ -2176,6 +2157,12 @@ msgid "Finance"
 msgstr "Finanse"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+msgid "Fold by Default"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded"
@@ -2188,12 +2175,14 @@ msgid "Follow"
 msgstr "Obserwuj"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_home
-msgid "Follow and comment on tasks in your projects"
+#: model:portal.entry,description:project.portal_tasks
+#, fuzzy
+#| msgid "Follow and comment on tasks in your projects"
+msgid "Follow and comments tasks of your projects"
 msgstr "Śledź i komentuj zadania w swoich projektach"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_home
+#: model:portal.entry,description:project.portal_projects
 msgid "Follow the evolution of your projects"
 msgstr "Śledź rozwój swoich projektów"
 
@@ -2473,15 +2462,6 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
-msgid ""
-"If set, a rating request will automatically be sent by email to the customer "
-"when the task reaches this stage. \n"
-"Alternatively, it will be sent at a regular interval as long as the task "
-"remains in this stage."
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
 msgid ""
 "If set, an email will be automatically sent to the customer when the project "
@@ -2680,6 +2660,7 @@ msgstr "Ostatnia ocena (1-5)"
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
+#: model:ir.model.fields,field_description:project.field_project_project__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_project_task__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
@@ -2812,12 +2793,6 @@ msgstr "Odnośnik"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Live"
 msgstr "Na żywo"
-
-#. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_list_to_plan/project_task_calendar_list_to_plan.xml:0
-msgid "Load More"
-msgstr "Załaduj więcej"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_incoming_local
@@ -3024,10 +2999,8 @@ msgstr "Moje aktualizacje"
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_milestone__name
 #: model:ir.model.fields,field_description:project.field_project_project__name
-#: model:ir.model.fields,field_description:project.field_project_project_stage__name
 #: model:ir.model.fields,field_description:project.field_project_role__name
 #: model:ir.model.fields,field_description:project.field_project_tags__name
-#: model:ir.model.fields,field_description:project.field_project_task_type__name
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__name
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -3189,6 +3162,12 @@ msgid "No data yet!"
 msgstr "Brak danych!"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+msgid "No email"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.actions.act_window,help:project.project_milestone_action
 msgid "No milestones found. Let's create one!"
 msgstr "Nie znaleziono żadnych kamieni milowych. Stwórzmy jakiś!"
@@ -3318,6 +3297,13 @@ msgstr "Wstrzymany (na żądanie)"
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Track"
 msgstr "Zgodnie z planem"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__periodic
+#, fuzzy
+#| msgid "on a periodic basis"
+msgid "On a periodic basis"
+msgstr "okresowo"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__monthly
@@ -3857,9 +3843,9 @@ msgstr "Projekt: Żądanie oceny zadania"
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.menu,name:project.menu_projects_config_group_stage
 #: model:ir.ui.menu,name:project.menu_projects_group_stage
+#: model:portal.entry,name:project.portal_projects
 #: model_terms:ir.ui.view,arch_db:project.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
-#: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -3955,6 +3941,13 @@ msgid "Rating Avg Text"
 msgstr "Średni tekst oceny"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#, fuzzy
+#| msgid "Rating Email Template"
+msgid "Rating Email"
+msgstr "Szablon e-maila oceny"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
 msgid "Rating Email Template"
 msgstr "Szablon e-maila oceny"
@@ -3978,6 +3971,13 @@ msgstr "Ocena ostatniego obrazu"
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
 msgstr "Ocena ostatniej wartości"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#, fuzzy
+#| msgid "Rating Text"
+msgid "Rating Periodicity"
+msgstr "Tekst oceny"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
@@ -4214,11 +4214,13 @@ msgstr "Role użytkowników"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_rotting
 #: model:ir.model.fields,field_description:project.field_project_task__is_rotting
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rotting"
 msgstr "Bezczynny"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Rotting in"
 msgstr ""
@@ -4465,6 +4467,11 @@ msgid "Show sub-tasks & top menu"
 msgstr "Pokaż podzadania i górne menu"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
+msgid "Show to all companies"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "Since"
 msgstr "Od"
@@ -4565,6 +4572,14 @@ msgstr "Etap (Wykres burndown)"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
+msgstr "Zmieniono etap"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_stage__name
+#: model:ir.model.fields,field_description:project.field_project_task_type__name
+#, fuzzy
+#| msgid "Stage Changed"
+msgid "Stage Name"
 msgstr "Zmieniono etap"
 
 #. module: project
@@ -4875,11 +4890,6 @@ msgid "Task:"
 msgstr "Zadanie:"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.task_type_edit
-msgid "Task: Rating Request"
-msgstr "Zadanie: Prośba o ocenę"
-
-#. module: project
 #. odoo-javascript
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
@@ -4889,6 +4899,7 @@ msgstr "Zadanie: Prośba o ocenę"
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
 #: model:ir.embedded.actions,name:project.project_embedded_action_all_tasks_dashboard
 #: model:ir.ui.menu,name:project.menu_project_management
+#: model:portal.entry,name:project.portal_tasks
 #: model:project.project,label_tasks:project.project_home_construction
 #: model:project.project,label_tasks:project.project_project_1
 #: model:project.project,label_tasks:project.project_project_2
@@ -4897,7 +4908,6 @@ msgstr "Zadanie: Prośba o ocenę"
 #: model:project.project,label_tasks:project.project_template_1
 #: model:project.project,label_tasks:project.project_template_2
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
-#: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_main_base
@@ -4943,6 +4953,12 @@ msgstr "Zadań powtarzalnych"
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
 msgid "Tasks.test"
 msgstr "Zadania.test"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_role__user_ids
+#: model_terms:ir.ui.view,arch_db:project.project_role_view_search
+msgid "Team Members"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_id
@@ -5198,6 +5214,22 @@ msgid ""
 msgstr ""
 "Jest to podgląd tego, jak projekt będzie wyglądał, gdy zostanie udostępniony "
 "klientom i będą oni mieli dostęp do edycji."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+#, fuzzy
+#| msgid "A new task has been created in the \"%(project_name)s\" project."
+msgid "This new task has been created in the \"%(project_name)s\" project."
+msgstr "Nowe zadanie zostało utworzone w projekcie \"%(project_name)s\"."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+#, fuzzy
+#| msgid "A new task has been created and is not part of any project."
+msgid "This new task is not part of any project."
+msgstr "Utworzono nowe zadanie, które nie jest częścią żadnego projektu."
 
 #. module: project
 #. odoo-python
@@ -5549,6 +5581,13 @@ msgid "Update Created"
 msgstr "Utworzono aktualizację"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#, fuzzy
+#| msgid "Update Created"
+msgid "Update Stage"
+msgstr "Utworzono aktualizację"
+
+#. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__3
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__3
 msgid "Urgent"
@@ -5691,7 +5730,6 @@ msgstr "Widoczność"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "Visible to all"
@@ -5746,6 +5784,11 @@ msgstr "Tygodniowo"
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__week
 msgid "Weeks"
 msgstr "Tygodnie"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
+msgid "When reaching this stage"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__role_ids
@@ -6024,6 +6067,14 @@ msgid "e.g. Product Launch"
 msgstr "np. Wprowadzenie produktu"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#, fuzzy
+#| msgid "Specifications"
+msgid "e.g. Qualification"
+msgstr "Specyfikacja"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. Send Invitations"
@@ -6035,10 +6086,8 @@ msgid "e.g. Tasks"
 msgstr "np. Zadania"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_tree
-#: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "e.g. To Do"
 msgstr "np. To-Do"
@@ -6083,11 +6132,6 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "icon."
 msgstr "ikona."
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__periodic
-msgid "on a periodic basis"
-msgstr "okresowo"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -6172,11 +6216,6 @@ msgid "to signalize what is the current status of your Idea."
 msgstr "aby zasygnalizować aktualny stan pomysłu."
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
-msgid "when reaching this stage"
-msgstr ""
-
-#. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "will generate tasks in your"
 msgstr "będzie tworzyć zadania w"
@@ -6207,3 +6246,15 @@ msgstr "👤 Nieprzypisany"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Prywatne"
+
+#~ msgid "Customer Rating"
+#~ msgstr "Ocena klienta"
+
+#~ msgid "Drag Tasks to Schedule"
+#~ msgstr "Przeciągnij zadania, aby zaplanować"
+
+#~ msgid "Load More"
+#~ msgstr "Załaduj więcej"
+
+#~ msgid "Task: Rating Request"
+#~ msgstr "Zadanie: Prośba o ocenę"

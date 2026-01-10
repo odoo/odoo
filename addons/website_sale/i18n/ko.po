@@ -8,17 +8,17 @@
 # Martin Trigaux, 2022
 # Sarah Park, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-12-11 06:44+0000\n"
+"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"PO-Revision-Date: 2026-01-07 05:19+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_sale/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -122,7 +122,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "/shop"
-msgstr ""
+msgstr "/shop"
 
 #. module: website_sale
 #. odoo-javascript
@@ -158,10 +158,16 @@ msgstr "66 %"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+#, fuzzy
+#| msgid ""
+#| "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#| "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#| "class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+#| "                    <span class=\"align-middle\">to follow your order.</"
+#| "span>"
 msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+"<a role=\"button\" t-att-href=\"signup_url\" class=\"btn btn-primary "
+"o_translate_inline\">Sign Up</a>\n"
 "                    <span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
 "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
@@ -236,11 +242,6 @@ msgid ""
 ">\n"
 "                    <span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -948,6 +949,321 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style"
+"=\"max-width: 590px; padding: 0px; background-color: white; color: #454748; "
+"border-collapse: collapse;\" role=\"presentation\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"100%\" style=\"max-width: 590px; background-color: white; padding: 0px 0px "
+"0px 0px; border-collapse:collapse;\" role=\"presentation\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <t t-set=\"color\" t-value="
+"\"object.company_id.email_secondary_color or '#875A7B'\"/>\n"
+"                    <t t-if=\"'website_id' in object and object.website_id\" "
+"t-set=\"logo_src\" t-value="
+"\"object.website_id.image_url(object.website_id, 'logo')\"/>\n"
+"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef="
+"\"/logo.png?company=#{object.company_id.id}\"/>\n"
+"                    <img t-att-src=\"logo_src\" style="
+"\"display: block; height: 50px; margin: 0 0 16px;\" alt=\"Logo\"/>\n"
+"                    <p style=\"margin: 0 0 12px; line-height: 18px;\">\n"
+"                        안녕하세요 <t t-out="
+"\"object.partner_id.display_name or ''\">Johnny Tester</t>님,\n"
+"                        <br/><br/>\n"
+"                        아직 고객님의 온라인 주문이 완료되지 않았습니다.<br/>"
+"\n"
+"                        제품과 관련하여 궁금한 점이 있으신가요?<br/>\n"
+"                        언제든지 본 이메일로 회신하면 상담이 가능합니다!<br/>"
+"\n"
+"                    </p>\n"
+"                    <t t-if=\"not is_html_empty(user.signature)\">\n"
+"                        <div style=\"font-size: 14px; margin: 0 0 16px;"
+"\"><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"                    </t>\n"
+"                    <t t-if=\"'hide_recovery_button' not in ctx\">\n"
+"                        <div t-attf-style=\"margin-bottom: 22px; font-size: "
+"14px;\">\n"
+"                            <a t-attf-href=\"{{ object.get_base_url() }}/"
+"shop/cart?id={{ object.id }}&amp;access_token={{ object.access_token }}"
+"\" target=\"_blank\" t-attf-style=\"background-color: {{"
+"object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
+"8px 16px; text-decoration: none; color: {{"
+"object.company_id.email_primary_color or '#fff'}}; border-radius: 5px; font-"
+"size:14px;\">\n"
+"                                주문으로 돌아가기\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.order_line\">\n"
+"                        <!-- The following loop is also used in the addons > "
+"sale > data > mail_template_data.xml file because we want the same layout. "
+"-->\n"
+"                        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
+"                            <t t-if=\"(not hasattr(line, 'is_delivery') or "
+"not line.is_delivery) and not line.combo_item_id\">\n"
+"                                <table width=\"100%\" style=\"max-width: "
+"590px; color: #454748; font-size: 14px; border-collapse: collapse;\" role=\""
+"presentation\">\n"
+"                                    <tr>\n"
+"                                        <td width=\"24%\" style=\"max-width: "
+"120px; padding: 0 10px 10px 0; vertical-align: top;\">\n"
+"                                            <img t-attf-src="
+"\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style="
+"\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>"
+"\n"
+"                                        </td>\n"
+"                                        <td align=\"left\" style=\"vertical-"
+"align: top; padding-bottom: 22px;\">\n"
+"                                            <h3 t-attf-style=\"mso-line-"
+"height-rule:exactly; margin:0; font-size: 14px; color: {{color}}; {{'margin-"
+"bottom: 6px;' if line.product_type == 'combo' else ''}}\">\n"
+"                                                <strong t-out="
+"\"line.product_id.name or ''\">Taking care of Trees Course</strong>\n"
+"                                                <span t-if="
+"\"line.product_id.product_template_attribute_value_ids\" style="
+"\"color: #6c757d;\">\n"
+"                                                    <t t-out=\"', '.join"
+"(line.product_id.product_template_attribute_value_ids.mapped('name'))\"/>\n"
+"                                                </span>\n"
+"                                            </h3>\n"
+"                                            <t t-set=\"combo_line_idx\" "
+"t-value=\"0\"/>\n"
+"                                            <t t-set=\"totalComboLines\" "
+"t-value=\"0\"/>\n"
+"                                            <t t-set=\"line_idx\" t-value="
+"\"line_index\"/>\n"
+"                                            <t t-foreach="
+"\"object.order_line\" t-as=\"combo_liness\">\n"
+"                                                <t t-if=\""
+"(not hasattr(line, 'is_delivery') or not line.is_delivery) and "
+"(combo_liness.linked_line_id.id == line.id) and line_idx == line_index\">\n"
+"                                                    <t t-if="
+"\"combo_liness.linked_line_id.id == line.id and combo_liness.id != line.id\">"
+"\n"
+"                                                        <t t-set="
+"\"totalComboLines\" t-value=\"totalComboLines + 1\"/>\n"
+"                                                    </t>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <t t-foreach="
+"\"object.order_line\" t-as=\"combo_line\">\n"
+"                                                <t t-if=\""
+"(not hasattr(line, 'is_delivery') or not line.is_delivery) and "
+"(combo_line.linked_line_id.id == line.id) and combo_line.combo_item_id and "
+"line_idx == line_index\">\n"
+"                                                        <t t-set="
+"\"borderRadiusStyle\" t-value=\"''\"/>\n"
+"                                                        <t t-set="
+"\"borderTopStyle\" t-value=\"''\"/>\n"
+"                                                        <t t-set="
+"\"borderBottomStyle\" t-value=\"''\"/>\n"
+"\n"
+"                                                        <t t-if="
+"\"combo_line.linked_line_id.id == line.id and combo_line.id != line.id\">\n"
+"                                                            <t t-set="
+"\"combo_line_idx\" t-value=\"combo_line_idx + 1\"/>\n"
+"                                                        </t>\n"
+"                                                        <t t-elif="
+"\"combo_line.id == line.id and line_idx != line_index\">\n"
+"                                                            <t t-set="
+"\"combo_line_idx\" t-value=\"0\"/>\n"
+"                                                        </t>\n"
+"                                                        <t t-if="
+"\"combo_line_idx == 1\">\n"
+"                                                            <t t-if="
+"\"totalComboLines != 1\">\n"
+"                                                                <t t-set="
+"\"borderRadiusStyle\" t-value=\"'border-radius: 6px 6px 0 0;'\"/>\n"
+"                                                                <t t-set="
+"\"borderBottomStyle\" t-value=\"'border-bottom: none;'\"/>\n"
+"                                                            </t>\n"
+"                                                            <t t-else=\"\">\n"
+"                                                                <t t-set="
+"\"borderRadiusStyle\" t-value=\"'border-radius: 6px;'\"/>\n"
+"                                                            </t>\n"
+"                                                        </t>\n"
+"                                                        <t t-elif="
+"\"totalComboLines == combo_line_idx\">\n"
+"                                                            <t t-set="
+"\"borderRadiusStyle\" t-value=\"'border-radius: 0 0 6px 6px;'\"/>\n"
+"                                                            <t t-if="
+"\"totalComboLines != 2\">\n"
+"                                                                <t t-set="
+"\"borderTopStyle\" t-value=\"'border-top: none;'\"/>\n"
+"                                                            </t>\n"
+"                                                        </t>\n"
+"                                                        <div t-attf-style="
+"\"width: 100%; border: 1px solid #dee2e6; padding: 5px 8px; {{ "
+"borderRadiusStyle }} {{ borderBottomStyle }} {{ borderTopStyle }}\">\n"
+"                                                                    <t t-out="
+"\"combo_line.product_id.name or ''\">Taking care of Trees Course</t>\n"
+"                                                                    <span "
+"t-if=\"combo_line.product_id.product_template_attribute_value_ids\" style="
+"\"color: #6c757d;\">\n"
+"                                                                        <t "
+"t-out=\"', '.join"
+"(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))\""
+"/>\n"
+"                                                                    </span>\n"
+"                                                                    -\n"
+"                                                                    <span>\n"
+"                                                                        <t "
+"t-out=\"int(combo_line.product_uom_qty) or ''\">10000</t>\n"
+"                                                                        <t "
+"t-out=\"combo_line.product_uom_id.name or ''\" t-if="
+"\"combo_line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
+"                                                                    </span>\n"
+"                                                                    <p t-if="
+"\"hasattr(combo_line, 'is_rental') and combo_line.is_rental and "
+"combo_line.id == line.id\" style=\"color: #6c757d;\">\n"
+"                                                                        <t "
+"t-out=\"combo_line._get_rental_pricing_description() or ''\"/><br/>\n"
+"                                                                    </p>\n"
+"                                                                    <t t-if="
+"\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
+"(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)\""
+">\n"
+"                                                                        <t "
+"t-set=\"description_lines\" t-value="
+"\"combo_line.get_description_following_lines()\"/>\n"
+"                                                                        <div "
+"t-if=\"description_lines\" style=\"color: #6c757d;\">\n"
+"                                                                            "
+"<t t-foreach=\"description_lines\" t-as=\"description_line\">\n"
+"                                                                                "
+"<p t-if=\"description_line\" t-out=\"description_line\" style="
+"\"margin: 4px 0 0;\"/>\n"
+"                                                                            "
+"</t>\n"
+"                                                                        "
+"</div>\n"
+"                                                                    </t>\n"
+"                                                        </div>\n"
+"                                                    </t>\n"
+"                                                <t t-elif="
+"\"not(combo_line.linked_line_id) and combo_line.id == line.id\">\n"
+"                                                    <p t-if="
+"\"hasattr(line, 'is_rental') and line.is_rental\" style="
+"\"margin: 4px 0 0; color: #6c757d;\">\n"
+"                                                        <t t-out="
+"\"line._get_rental_pricing_description() or ''\"/><br/>\n"
+"                                                    </p>\n"
+"                                                    <t t-if=\""
+"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
+"(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)\""
+">\n"
+"                                                        <t t-set="
+"\"product_description_lines\" t-value="
+"\"line.get_description_following_lines()\"/>\n"
+"                                                        <div t-if="
+"\"product_description_lines\" style=\"color: #6c757d;\">\n"
+"                                                            <t t-foreach="
+"\"product_description_lines\" t-as=\"product_description_line\">\n"
+"                                                                <p t-if="
+"\"product_description_line\" t-out=\"product_description_line\" style="
+"\"margin: 4px 0 0;\"/>\n"
+"                                                            </t>\n"
+"                                                        </div>\n"
+"                                                    </t>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <span style=\"display: inline-"
+"block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; background-"
+"color: #e9ecef; color: #454748; font-size: 12px;\">\n"
+"                                                <t t-out="
+"\"int(line.product_uom_qty) or ''\">10000</t>\n"
+"                                                <t t-out="
+"\"line.product_uom_id.name or ''\" t-if="
+"\"line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
+"                                            </span>\n"
+"                                        </td>\n"
+"                                        <td width=\"19%\" align=\"right\" "
+"style=\"max-width: 100px; vertical-align: top;\">\n"
+"                                            <t t-if="
+"\"line.product_type == 'combo'\">\n"
+"                                                <span t-out="
+"\"format_amount(line._get_cart_display_price(), object.currency_id) or ''\">$"
+" 10.00</span>\n"
+"                                            </t>\n"
+"                                            <t t-else=\"\">\n"
+"                                                <span style=\"white-space: "
+"nowrap;\">\n"
+"                                                    <t t-if="
+"\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
+"                                                        <t t-out="
+"\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ 10.00</t>"
+"\n"
+"                                                    </t>\n"
+"                                                    <t t-else=\"\">\n"
+"                                                        <t t-out="
+"\"format_amount(line.price_total, object.currency_id) or ''\">$ 10.00</t>\n"
+"                                                    </t>\n"
+"                                                </span>\n"
+"                                            </t>\n"
+"                                            <t t-if="
+"\"hasattr(line, 'recurring_invoice') and line.recurring_invoice\">\n"
+"                                                <br/>\n"
+"                                                <t t-out="
+"\"line.subscription_plan_id.billing_period_display_sentence or ''\"/>\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </t>\n"
+"                        </t>\n"
+"                        <table width=\"100%\" role=\"presentation\" style"
+"=\"font-size: 14px; border-collapse:collapse;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding-top: 8px;  border-top: "
+"1px solid #dee2e6; color: #495057;\">Delivery</td>\n"
+"                                <td style=\"padding-top: 8px;  border-top: "
+"1px solid #dee2e6; text-align: right; color: #495057;\" width=\"100px\" "
+"align=\"right\">\n"
+"                                    <t t-out="
+"\"format_amount(object.amount_delivery, object.currency_id) or ''\">-</t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td style=\"padding-top: 4px; color: #495057;"
+"\">소계</td>\n"
+"                                <td style=\"padding-top: 4px; text-align: "
+"right; color: #495057;\" width=\"100px\" align=\"right\"><t t-out="
+"\"format_amount(object.amount_untaxed, object.currency_id) or ''\">-</t></td>"
+"\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td style="
+"\"padding: 4px 0 8px 0; color: #495057;\">세금</td>\n"
+"                                <td style="
+"\"padding: 4px 0 8px 0; text-align: right; color: #495057;\" width=\"100px\" "
+"align=\"right\"><t t-out="
+"\"format_amount(object.amount_tax, object.currency_id) or ''\">-</t></td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td style=\"padding-top: 8px; border-top: "
+"1px solid #343a40;\"><strong>총계</strong></td>\n"
+"                                <td style=\"padding-top: 8px; border-top: "
+"1px solid #343a40; text-align: right\" width=\"100px\" align=\"right\">\n"
+"                                    <strong t-out="
+"\"format_amount(object.amount_total, object.currency_id) or ''\">-</strong>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </t>\n"
+"                    <t t-set=\"company\" t-value="
+"\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
@@ -1440,7 +1756,7 @@ msgstr "베네룩스"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Bento"
-msgstr ""
+msgstr "도시락"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1629,6 +1945,7 @@ msgstr "이미 전송된 장바구니 복구 이메일"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__product_category_ids
+#: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 #: model_terms:ir.ui.view,arch_db:website_sale.filmstrip_categories
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_view_tree_website_sale
@@ -1919,7 +2236,7 @@ msgstr "품목명, 바코드 또는 내부용 참조를 쉼표로 구분지은 �
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "회사"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2360,7 +2677,7 @@ msgstr "웹 사이트에 대한 설명"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Design"
-msgstr ""
+msgstr "디자인"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_design_and_planning
@@ -2456,6 +2773,7 @@ msgstr "표시"
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
 #: model:ir.model.fields,field_description:website_sale.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__display_name
+#: model:ir.model.fields,field_description:website_sale.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_document__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__display_name
@@ -2780,7 +3098,7 @@ msgstr "파일 서랍"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "Filter"
-msgstr ""
+msgstr "필터"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3119,6 +3437,7 @@ msgstr "대해 동의합니다"
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__id
 #: model:ir.model.fields,field_description:website_sale.field_ir_module_module__id
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__id
+#: model:ir.model.fields,field_description:website_sale.field_payment_transaction__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:website_sale.field_product_document__id
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__id
@@ -3877,11 +4196,6 @@ msgid "None"
 msgstr "없음"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
-msgid "Not Published"
-msgstr "게시 안됨"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product/product.xml:0
 msgid "Not available for sale"
@@ -4035,6 +4349,13 @@ msgstr "오버레이 투명도 설정"
 #: code:addons/website_sale/models/res_partner.py:0
 msgid "Open Sale Orders"
 msgstr "진행 중인 판매 주문"
+
+#. module: website_sale
+#: model:ir.actions.act_url,name:website_sale.action_open_shop_page
+#, fuzzy
+#| msgid "Shop Payment"
+msgid "Open Shop Page"
+msgstr "상점 결제"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -4209,6 +4530,13 @@ msgid "Payment Tokens"
 msgstr "결제 토큰"
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_transaction
+#, fuzzy
+#| msgid "Payment Transactions"
+msgid "Payment Transaction"
+msgstr "결제 거래"
+
+#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
 msgid "Payment Transactions"
 msgstr "결제 거래"
@@ -4381,7 +4709,6 @@ msgstr "개인정보 처리방침"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
-#: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "Process the order once the payment is received."
 msgstr "결제가 완료되면 주문을 처리합니다."
 
@@ -4524,11 +4851,6 @@ msgid "Product Page main columns order"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.action_product_pages_list
-msgid "Product Pages"
-msgstr "품목 페이지"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
 msgid "Product Public Categories"
 msgstr "상품 일반 범주"
@@ -4612,7 +4934,6 @@ msgstr "품목 리본"
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
-#: model:ir.ui.menu,name:website_sale.menu_product_pages
 #: model_terms:ir.ui.view,arch_db:website_sale.products_breadcrumb
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -4691,7 +5012,6 @@ msgid "Publish on website"
 msgstr "웹사이트에 게시"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_search_view_website
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_search
@@ -4978,7 +5298,7 @@ msgstr "리본 이름"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.product_catalog_product_ribbons
 msgid "Ribbons"
-msgstr ""
+msgstr "리본"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5078,12 +5398,6 @@ msgstr "영업사원"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "Sample"
 msgstr "견본"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
-#: model_terms:ir.ui.view,arch_db:website_sale.product_pages_tree_view
-msgid "Scheduled"
-msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -5241,6 +5555,7 @@ msgstr "배송"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+#: model:ir.ui.menu,name:website_sale.menu_open_shop
 #: model:website.menu,name:website_sale.menu_shop
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "Shop"
@@ -5596,7 +5911,6 @@ msgstr "탭"
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
-#: model:ir.ui.menu,name:website_sale.product_catalog_product_tags
 msgid "Tags"
 msgstr "태그"
 
@@ -5846,7 +6160,6 @@ msgstr "웹사이트에서 확인된 주문이 없습니다"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
-#: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "There is no unpaid order from the website yet"
 msgstr "웹사이트에서 아직 지불하지 않은 주문이 없습니다."
 
@@ -6036,8 +6349,6 @@ msgstr "무급 휴가"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
-#: model:ir.actions.act_window,name:website_sale.action_view_unpaid_quotation_tree
-#: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
 msgid "Unpaid Orders"
 msgstr "미결제 주문"
 
@@ -6051,7 +6362,7 @@ msgstr "게시 안 함"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Unschedule"
-msgstr ""
+msgstr "일정 취소"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_container__unset
@@ -6579,7 +6890,6 @@ msgstr "이커머스"
 #: code:addons/website_sale/static/src/website_builder/mega_menu_option.xml:0
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__public_categ_ids
-#: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 msgid "eCommerce Categories"
 msgstr "이커머스 카테고리"
 
@@ -6742,3 +7052,12 @@ msgstr "이용 &amp; 약관"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr "{{0}} 이미지"
+
+#~ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+#~ msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+
+#~ msgid "Not Published"
+#~ msgstr "게시 안됨"
+
+#~ msgid "Product Pages"
+#~ msgstr "품목 페이지"

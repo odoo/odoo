@@ -10,17 +10,17 @@
 # Martin Trigaux, 2023
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:35+0000\n"
-"PO-Revision-Date: 2025-12-20 09:34+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
+"PO-Revision-Date: 2026-01-07 05:18+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/hr/id/"
-">\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/hr/"
+"id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -439,6 +439,11 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span invisible=\"not contract_date_start\">to</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
 msgstr ""
 
 #. module: hr
@@ -1482,7 +1487,9 @@ msgstr "Batal"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot archive the only active record of an employee."
+#, fuzzy
+#| msgid "Cannot archive the only active record of an employee."
+msgid "Cannot archive all the active versions of an employee."
 msgstr "Tidak dapat mengarsip satu-satunya rekaman aktif karyawan."
 
 #. module: hr
@@ -1498,7 +1505,9 @@ msgstr ""
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot unassign the only active record of an employee."
+#, fuzzy
+#| msgid "Cannot unassign the only active record of an employee."
+msgid "Cannot unassign all the active versions of an employee."
 msgstr "Tidak dapat membatalkan satu-satunya rekaman aktif karyawan."
 
 #. module: hr
@@ -1718,11 +1727,17 @@ msgid "Contract"
 msgstr "Kontrak"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#, fuzzy
+#| msgid "Contract End Date"
+msgid "Contract End"
+msgstr "Tanggal Akhir Kontrak"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_date_end
 #: model:ir.model.fields,field_description:hr.field_hr_version__contract_date_end
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Contract End Date"
 msgstr "Tanggal Akhir Kontrak"
 
@@ -1743,10 +1758,16 @@ msgid "Contract Overview"
 msgstr "Gambaran Umum Kontrak"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#, fuzzy
+#| msgid "Contract Start Date"
+msgid "Contract Start"
+msgstr "Tanggal Mulai Kontrak"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_date_start
 #: model:ir.model.fields,field_description:hr.field_hr_version__contract_date_start
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Contract Start Date"
 msgstr "Tanggal Mulai Kontrak"
 
@@ -2345,7 +2366,7 @@ msgstr "Elemen untuk diamati"
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__eligible_employee_line_ids
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_employee_mixin_list_view
 msgid "Eligible Employees"
-msgstr ""
+msgstr "Karyawan yang Memenuhi Syarat"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_email
@@ -3267,7 +3288,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "Indirect subordinates"
-msgstr ""
+msgstr "Bawahan tidak langsung"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_interim
@@ -3572,7 +3593,7 @@ msgstr "Hubungkan elemen dengan value boolean True."
 #. odoo-javascript
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 msgid "Load Contract Template"
-msgstr ""
+msgstr "Muat Templat Kontrak"
 
 #. module: hr
 #: model:ir.actions.server,name:hr.action_hr_employee_load_demo_data
@@ -3583,7 +3604,7 @@ msgstr "Muat Data Sampel"
 #. odoo-javascript
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 msgid "Load Template"
-msgstr ""
+msgstr "Muat Templat"
 
 #. module: hr
 #. odoo-javascript
@@ -3755,13 +3776,13 @@ msgstr "Telepon Mobile"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Modified on the Employee Record '%s'"
-msgstr ""
+msgstr "Dimodifikasi di Rekaman Karyawan '%s'"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "More managers"
-msgstr ""
+msgstr "Lebih banyak manajer"
 
 #. module: hr
 #. odoo-javascript
@@ -4050,11 +4071,6 @@ msgstr "Petugas: Kelola semua karyawan"
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
 msgid "Onboarding / Offboarding"
 msgstr "Onboarding / Offboarding"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
-msgid "Ongoing Activity Plan"
-msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -4742,12 +4758,6 @@ msgid "SMS Delivery error"
 msgstr "Error Pengiriman SMS"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
-#: model:ir.model.fields,field_description:hr.field_hr_version__ssnid
-msgid "SSN No"
-msgstr "Nomor Jamkesmas"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_salary_amount
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -4805,7 +4815,7 @@ msgstr "Musiman"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "See All"
-msgstr ""
+msgstr "Lihat Semua"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_version__contract_template_id
@@ -4848,7 +4858,7 @@ msgstr "Tetapkan Tanggal Akhir Kontrak"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "Set a manager or reports to show in org chart."
-msgstr ""
+msgstr "Tetapkan manajer atau laporan untuk ditunjukkan di bagan organisasi."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -4903,9 +4913,11 @@ msgid "Skills Management"
 msgstr "Manajemen Keahlian"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__ssnid
-#: model:ir.model.fields,help:hr.field_hr_version__ssnid
-msgid "Social Security Number"
+#: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
+#: model:ir.model.fields,field_description:hr.field_hr_version__ssnid
+#, fuzzy
+#| msgid "Social Security Number"
+msgid "Social Security No"
 msgstr "Nomor Keamanan Sosial"
 
 #. module: hr
@@ -4921,6 +4933,8 @@ msgid ""
 "Some employees are present in a loop.\n"
 "                Click"
 msgstr ""
+"Beberapa karyawan tersedia di loop.\n"
+"                Klik"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -5087,7 +5101,7 @@ msgstr "Target"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hooks.js:0
 msgid "Team"
-msgstr ""
+msgstr "Tim"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -5200,7 +5214,7 @@ msgstr "Kontrak harus memiliki tanggal mulai."
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The contract of %(employee_name)s is about to expire."
-msgstr ""
+msgstr "Kontrak %(employee_name)s akan sebentar lagi berakhir."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
@@ -5299,7 +5313,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The work permit of %(employee_name)s is about to expire."
-msgstr ""
+msgstr "Izin kerja %(employee_name)s akan sebentar lagi berakhir."
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
@@ -5311,6 +5325,12 @@ msgstr "Thesis"
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This employee already has an user."
 msgstr "Karyawan ini sudah memiliki user."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
+msgstr "Field ini %(field_name)s tidak tersedia di model ini (hr.version)."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -5378,7 +5398,7 @@ msgstr "Aktivitas Hari ini"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
@@ -5568,7 +5588,7 @@ msgstr "Ijin kerja yang sah untuk Belgia"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "View employee"
-msgstr ""
+msgstr "Lihat karyawan"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -5856,6 +5876,8 @@ msgid ""
 "You are not allowed to access \"Employee\" (hr.employee) records.\n"
 "    We can redirect you to the public employee list."
 msgstr ""
+"Anda tidak diizinkan untuk mengakses rekaman \"Karyawan\" (hr.employee).\n"
+"    Kami dapat mengalihkan ulang Anda ke daftar karyawan publik."
 
 #. module: hr
 #. odoo-python
@@ -5918,6 +5940,7 @@ msgstr "Anda tidak memiliki akses ke dokumen ini."
 #: code:addons/hr/models/hr_export_mixin.py:0
 msgid "You must be logged in a %(country_code)s company to use this feature"
 msgstr ""
+"Anda harus login di perusahaan %(country_code)s untuk menggunakan fitur ini"
 
 #. module: hr
 #. odoo-python
@@ -6112,7 +6135,7 @@ msgstr "contoh. emailpribadi@contoh.com"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_renderer.xml:0
 msgid "here"
-msgstr ""
+msgstr "di sini"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_mixin
@@ -6157,7 +6180,7 @@ msgstr "lainnya"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
 msgid "people"
-msgstr ""
+msgstr "orang"
 
 #. module: hr
 #. odoo-python
@@ -6169,7 +6192,7 @@ msgstr "dibatasi untuk karyawan-karyawan"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_renderer.xml:0
 msgid "to see those employees."
-msgstr ""
+msgstr "untuk melihat karyawan tersebut."
 
 #. module: hr
 #. odoo-python
@@ -6187,3 +6210,6 @@ msgstr "kerja"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid "SSN No"
+#~ msgstr "Nomor Jamkesmas"
