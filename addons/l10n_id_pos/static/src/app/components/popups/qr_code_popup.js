@@ -11,7 +11,7 @@ patch(QRPopup.prototype, {
     },
 
     async _confirm() {
-        // Verify whether the payment has been recieved by QRIS
+        // Verify whether the payment has been received by QRIS
 
         this.setButtonsDisabled(true);
 
