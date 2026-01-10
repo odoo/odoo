@@ -1805,8 +1805,10 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
     def assertNotified(self, message, recipients_info, is_complete=False):
         """ Lightweight check for notifications (mail.notification).
 
+        All recipient info should define either a partner or an email.
         :param recipients_info: list notified recipients: [
-          {'partner': res.partner record (may be empty),
+          {'partner': res.partner record (may be empty or unset),
+           'email': single normalized email address as string (may be empty or unset),
            'type': notification_type to check,
            'is_read': is_read to check,
           }, {...}]
@@ -1818,9 +1820,15 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
             recipient_notif = next(
                 (notif
                  for notif in notifications
-                 if notif.res_partner_id == rinfo['partner']
-                ), False
+                 if (
+                     ('partner' not in rinfo or notif.res_partner_id == rinfo['partner'])
+                     and ('email' not in rinfo or notif.mail_email_address == rinfo['email'])
+                 )
+                ), self.env['mail.notification']
             )
+            # ensure we can only ever match a notification once
+            # in case multiple would match the same recipient
+            notifications -= recipient_notif
             self.assertTrue(recipient_notif)
             self.assertEqual(recipient_notif.is_read, rinfo['is_read'])
             self.assertEqual(recipient_notif.notification_type, rinfo['type'])
