@@ -239,8 +239,12 @@ class AccountJournal(models.Model):
 
         CCSID_data = json.loads(self_sudo.l10n_sa_compliance_csid_json)
         PCSID_data = self_sudo._l10n_sa_request_production_csid(CCSID_data, renew, OTP)
-        if PCSID_data.get('error'):
-            raise UserError(_("Could not obtain Production CSID: %s", PCSID_data['error']))
+        if PCSID_data.get('error') or PCSID_data.get('errors'):
+            raise UserError(_(
+                "Could not obtain Production CSID: %s",
+                PCSID_data['errors'][0] if PCSID_data.get('errors') else PCSID_data['error']
+            ))
+
         self_sudo.l10n_sa_production_csid_json = json.dumps(PCSID_data)
         pcsid_certificate = self_sudo.env['certificate.certificate'].create({
             'name': 'PCSID Certificate',

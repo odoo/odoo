@@ -580,8 +580,7 @@ class AccountAccount(models.Model):
         balances = {
             account.id: balance
             for account, balance in self.env['account.move.line']._read_group(
-                domain=[('account_id', 'in', self.ids), ('parent_state', '=', 'posted'), ('company_id', '=', self.env.company.id)],
-                groupby=['account_id'],
+                domain=[('account_id', 'in', self.ids), ('parent_state', '=', 'posted'), ('company_id', 'child_of', self.env.company.id)], groupby=['account_id'],
                 aggregates=['balance:sum'],
             )
         }

@@ -70,6 +70,10 @@ def _mock_call_peppol_proxy(func, self, *args, **kwargs):
             } for i in args[1]['documents']],
         }
 
+    def _mock_unregister_to_sender(user, args, kwargs):
+        user.company_id.account_peppol_proxy_state = 'sender'
+        return True
+
     endpoint = args[0].split('/')[-1]
     return {
         'ack': lambda _user, _args, _kwargs: {},
@@ -77,6 +81,7 @@ def _mock_call_peppol_proxy(func, self, *args, **kwargs):
         'register_sender': lambda _user, _args, _kwargs: {},
         'register_receiver': lambda _user, _args, _kwargs: {},
         'register_sender_as_receiver': lambda _user, _args, _kwargs: {},
+        'unregister_to_sender': _mock_unregister_to_sender,
         'get_all_documents': _mock_get_all_documents,
         'get_document': _mock_get_document,
         'participant_status': lambda _user, _args, _kwargs: {'peppol_state': 'receiver'},
@@ -181,7 +186,7 @@ def _mock_update_user_data(func, self, *args, **kwargs):
 
 
 def _mock_migrate_participant(func, self, *args, **kwargs):
-    self.company_id.account_peppol_migration_key = 'demo_migration_key'
+    self.company_id.sudo().account_peppol_migration_key = 'demo_migration_key'
 
 
 def _mock_check_company_on_peppol(func, self, *args, **kwargs):

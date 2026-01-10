@@ -713,6 +713,33 @@ test("should remove backgroundColor from selected cells using removeFormat (2)",
     });
 });
 
+test("should remove text color from empty element", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">[]\u200B</font></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfterEdit: `<p placeholder='Type "/" for commands' class="o-we-hint">[]\u200b</p>`,
+    });
+});
+
+test("should remove text color from empty element in a single selected cell", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="table table-bordered o_table o_selected_table"><tbody>
+                <tr><td class="o_selected_td"><p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">[]\u200B</font></p></td></tr>
+                <tr><td><p><br></p></td></tr>
+            </tbody></table>
+        `),
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfterEdit: unformat(`
+            <table class="table table-bordered o_table o_selected_table"><tbody>
+                <tr><td class="o_selected_td"><p placeholder='Type "/" for commands' class="o-we-hint">[]\u200b</p></td></tr>
+                <tr><td><p><br></p></td></tr>
+            </tbody></table>
+        `),
+    });
+});
+
 test("should remove all formats when having multiple formats", async () => {
     await testEditor({
         contentBefore:

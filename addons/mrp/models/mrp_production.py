@@ -921,7 +921,7 @@ class MrpProduction(models.Model):
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
         for move_str in ('move_raw_ids', 'move_finished_ids'):
-            if move_str not in vals or self.state in ['draft', 'cancel', 'done']:
+            if move_str not in vals or self.state in ['cancel', 'done']:
                 continue
             # When adding a move raw/finished, it should have the source location's `warehouse_id`.
             # Before, it was handle by an onchange, now it's forced if not already in vals.
@@ -1741,8 +1741,8 @@ class MrpProduction(models.Model):
         self.workorder_ids.filtered(lambda x: x.state not in ['done', 'cancel']).action_cancel()
         finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         raw_moves = self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-        (finish_moves | raw_moves)._action_cancel()
-        picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+        (finish_moves | raw_moves).with_context(skip_mo_check=True)._action_cancel()
+        picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and not any(mo.state == 'done' for mo in x.production_ids))
         picking_ids.action_cancel()
 
         for production, documents in documents_by_production.items():
