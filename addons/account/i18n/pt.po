@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-01-08 18:36+0000\n"
 "PO-Revision-Date: 2025-12-06 17:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-18/"
@@ -9220,6 +9220,11 @@ msgid "Invoice Outstanding Credits Debits Widget"
 msgstr "Funcionalidade de Créditos e Débitos Pendentes"
 
 #. module: account
+#: model:ir.actions.report,name:account.account_invoices
+msgid "Invoice PDF"
+msgstr "Fatura em PDF"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
@@ -11922,7 +11927,6 @@ msgstr "PAG001"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#: model:ir.actions.report,name:account.account_invoices
 msgid "PDF"
 msgstr "PDF"
 
@@ -15879,6 +15883,14 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "O movimento %(name)s (id %(id)s) deve estar em rascunho."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry '%(move_name)s (id %(move_id)s) is using accounts from a different "
+"company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -19799,9 +19811,6 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Recibo de Pagamento (Refª {{ object.name or 'n/"
 "a' }})"
-
-#~ msgid "Invoice PDF"
-#~ msgstr "Fatura em PDF"
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr ""

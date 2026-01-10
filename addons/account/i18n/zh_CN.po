@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-01-08 18:36+0000\n"
 "PO-Revision-Date: 2025-12-06 17:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -9107,6 +9107,11 @@ msgid "Invoice Outstanding Credits Debits Widget"
 msgstr "Invoice Outstanding Credits Debits Widget"
 
 #. module: account
+#: model:ir.actions.report,name:account.account_invoices
+msgid "Invoice PDF"
+msgstr "发票 PDF"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
@@ -11793,7 +11798,6 @@ msgstr "PAY001"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#: model:ir.actions.report,name:account.account_invoices
 msgid "PDF"
 msgstr "PDF"
 
@@ -15719,6 +15723,14 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "记项%(name)s（识别码%(id)s）必须为草稿。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry '%(move_name)s (id %(move_id)s) is using accounts from a different "
+"company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -19581,9 +19593,6 @@ msgstr "{{ object.company_id.name }}发票(Ref {{ object.name or 'n/a' }})"
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }}付款收据(Ref {{ object.name or 'n/a' }})"
-
-#~ msgid "Invoice PDF"
-#~ msgstr "发票 PDF"
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "This setting cannot be changed after an invoice is created."

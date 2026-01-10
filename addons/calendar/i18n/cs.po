@@ -10,13 +10,13 @@
 # Stanislav Kurinec, 2025
 # Marta Wacławek, 2025
 # Camille Dantinne <cmd@odoo.com>, 2025.
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-12-26 13:59+0000\n"
+"PO-Revision-Date: 2026-01-10 09:03+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-18/calendar/"
 "cs/>\n"
@@ -24,8 +24,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : "
+"(n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: calendar
@@ -1596,7 +1596,7 @@ msgstr "Informace o účastníkovi v kalendáři"
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendar_default_privacy
 msgid "Calendar Default Privacy"
-msgstr ""
+msgstr "Výchozí nastavení ochrany osobních údajů kalendáře"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -1849,12 +1849,13 @@ msgstr "Výchozí"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Default Privacy"
-msgstr ""
+msgstr "Výchozí nastavení ochrany osobních údajů"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_res_users_settings__calendar_default_privacy
 msgid "Default privacy setting for whom the calendar events will be visible."
 msgstr ""
+"Výchozí nastavení soukromí, pro koho budou události kalendáře viditelné."
 
 #. module: calendar
 #. odoo-javascript
@@ -2881,6 +2882,7 @@ msgid ""
 "Scheduling an activity using the calendar is not possible on more than one "
 "record."
 msgstr ""
+"Naplánování aktivity pomocí kalendáře není možné u více než jednoho záznamu."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2932,7 +2934,7 @@ msgstr "Nastavení"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
 msgid "Should Show Status"
-msgstr ""
+msgstr "Měl by zobrazit stav"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
@@ -2985,7 +2987,7 @@ msgstr "Datum ukončení události bez času pro celodenní události"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Stop synchro"
-msgstr ""
+msgstr "Zastavit synchronizaci"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -3013,13 +3015,13 @@ msgstr "Neděle"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Synchro is paused"
-msgstr ""
+msgstr "Synchronizace je pozastavena"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Synchronize with"
-msgstr ""
+msgstr "Synchronizovat s"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -3056,7 +3058,7 @@ msgstr "Orientační"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tentative_count
 msgid "Tentative Count"
-msgstr ""
+msgstr "Předběžný počet"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3086,6 +3088,8 @@ msgid ""
 "The ending date and time cannot be earlier than the starting date and time.\n"
 "Meeting “%(name)s” starts at %(start_time)s and ends at %(end_time)s"
 msgstr ""
+"Datum a čas ukončení nesmí být dřívější než datum a čas zahájení.\n"
+"Schůzka „%(name)s“ začíná v %(start_time)s a končí v %(end_time)s"
 
 #. module: calendar
 #. odoo-python
@@ -3094,6 +3098,8 @@ msgid ""
 "The ending date cannot be earlier than the starting date.\n"
 "Meeting “%(name)s” starts on %(start_date)s and ends on %(end_date)s"
 msgstr ""
+"Datum ukončení nesmí být dřívější než datum zahájení.\n"
+"Setkání „%(name)s“ začíná dne %(start_date)s a končí dne %(end_date)s"
 
 #. module: calendar
 #. odoo-python
@@ -3188,7 +3194,7 @@ msgstr "Typ"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Unable to save the recurrence with \"This Event\""
-msgstr ""
+msgstr "Nelze uložit opakování s „Touto událostí“"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3219,7 +3225,7 @@ msgstr "Uživatel"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
 msgid "User Can Edit"
-msgstr ""
+msgstr "Uživatel může upravovat"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users_settings
@@ -3302,6 +3308,8 @@ msgid ""
 "You are not allowed to change the calendar default privacy of another user "
 "due to privacy constraints."
 msgstr ""
+"Z důvodu omezení ochrany soukromí nemáte oprávnění měnit výchozí nastavení "
+"soukromí kalendáře jiného uživatele."
 
 #. module: calendar
 #. odoo-python
@@ -3331,7 +3339,7 @@ msgstr "Na této schůzce jste sami"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "accepted"
-msgstr ""
+msgstr "přijato"
 
 #. module: calendar
 #. odoo-javascript
@@ -3348,7 +3356,7 @@ msgstr "čekající"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "declined"
-msgstr ""
+msgstr "odmítnuto"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3358,7 +3366,7 @@ msgstr "např. Obchodní oběd"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g: 12/31/2023"
-msgstr ""
+msgstr "např.: 31. 12. 2023"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3369,7 +3377,7 @@ msgstr "možná,"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/attendee_tags_list.xml:0
 msgid "no email"
-msgstr ""
+msgstr "žádný e-mail"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3380,13 +3388,13 @@ msgstr "ne,"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 msgid "props.placeholder"
-msgstr ""
+msgstr "props.placeholder"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "uncertain"
-msgstr ""
+msgstr "nejistý"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form

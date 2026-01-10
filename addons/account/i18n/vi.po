@@ -8,15 +8,15 @@
 # Thomas Becquevort, 2025
 # Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
-# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-01-03 18:01+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-01-08 18:36+0000\n"
+"PO-Revision-Date: 2026-01-10 09:14+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-18/"
 "account/vi/>\n"
 "Language: vi\n"
@@ -8042,7 +8042,7 @@ msgstr "Nhận kết quả toàn vẹn dữ liệu hash dưới dạng PDF."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Get warnings when invoicing specific customers"
-msgstr "Nhận cảnh báo khi xuất hoá đơn cho một khách hàng nào đó"
+msgstr "Nhận cảnh báo khi lập hoá đơn cho một khách hàng nào đó"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__fiscalyear_lock_date
@@ -9174,6 +9174,11 @@ msgstr "Thanh toán online hóa đơn"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_outstanding_credits_debits_widget
 msgid "Invoice Outstanding Credits Debits Widget"
 msgstr "Tiện ích hiển thị các khoản dư có/dư nợ chưa phân bổ của hóa đơn"
+
+#. module: account
+#: model:ir.actions.report,name:account.account_invoices
+msgid "Invoice PDF"
+msgstr "Hoá đơn PDF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
@@ -11855,7 +11860,6 @@ msgstr "PAY001"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#: model:ir.actions.report,name:account.account_invoices
 msgid "PDF"
 msgstr "PDF"
 
@@ -13764,7 +13768,7 @@ msgstr "Thuế bán hàng"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Salesperson"
-msgstr "Chuyên viên sales"
+msgstr "Nhân viên sales"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15790,6 +15794,14 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "Bút toán %(name)s (id %(id)s) phải ở trạng thái nháp."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry '%(move_name)s (id %(move_id)s) is using accounts from a different "
+"company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -17029,7 +17041,7 @@ msgstr "Cần kiểm tra"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "To Invoice"
-msgstr "Cần xuất hoá đơn"
+msgstr "Cần lập hoá đơn"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -19671,9 +19683,6 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Biên lai thanh toán (Mã {{ object.name or "
 "'Không có' }})"
-
-#~ msgid "Invoice PDF"
-#~ msgstr "Hoá đơn PDF"
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "Không thể thay đổi cài đặt này sau khi hóa đơn được tạo."
