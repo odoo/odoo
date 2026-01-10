@@ -145,8 +145,8 @@ const discussChannelPatch = {
     /**
      * Handle the notification of a new message based on the notification setting of the user.
      * Thread on mute:
-     * 1. No longer see the unread status: the bold text disappears and the channel name fades out.
-     * 2. Without sound + need action counter.
+     * 1. The bold text disappears and the channel name fades out.
+     * 2. Only mention sounds + need action counter.
      * Thread Notification Type:
      * All messages:All messages sound + need action counter
      * Mentions:Only mention sounds + need action counter
@@ -155,15 +155,14 @@ const discussChannelPatch = {
      * @param {import("models").Message} message
      */
     async notifyMessageToUser(message) {
-        const channel_notifications =
-            this.self_member_id?.custom_notifications || this.store.settings.channel_notifications;
         if (
-            !this.self_member_id?.mute_until_dt &&
+            (!this.self_member_id?.mute_until_dt ||
+                message.partner_ids?.includes(this.store.self)) &&
             this.store.self.im_status !== "busy" &&
             (this.channel_type !== "channel" ||
                 (this.channel_type === "channel" &&
-                    (channel_notifications === "all" ||
-                        (channel_notifications === "mentions" &&
+                    (this.channelNotifications === "all" ||
+                        (this.channelNotifications === "mentions" &&
                             message.partner_ids?.includes(this.store.self)))))
         ) {
             if (this.inChathubOnNewMessage) {

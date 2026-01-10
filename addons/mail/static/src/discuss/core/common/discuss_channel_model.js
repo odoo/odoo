@@ -167,6 +167,11 @@ export class DiscussChannel extends Record {
             this._onDeleteChatWindow();
         },
     });
+    get channelNotifications() {
+        return (
+            this.self_member_id?.custom_notifications || this.store.settings.channel_notifications
+        );
+    }
     get chatChannelTypes() {
         return ["chat", "group"];
     }
@@ -329,18 +334,19 @@ export class DiscussChannel extends Record {
         },
     });
     get importantCounter() {
-        if (this.isChatChannel && this.self_member_id?.message_unread_counter_ui) {
+        if (
+            this.isChatChannel &&
+            this.self_member_id?.message_unread_counter_ui &&
+            (this.channel_type !== "group" || !this.self_member_id?.mute_until_dt)
+        ) {
             return this.self_member_id.message_unread_counter_ui;
         }
-        if (this.discussAppCategory?.id === "channels") {
-            if (this.store.settings.channel_notifications === "no_notif") {
+        if (this.channel_type === "channel") {
+            if (this.channelNotifications === "no_notif") {
                 return 0;
             }
-            if (
-                this.store.settings.channel_notifications === "all" &&
-                !this.self_member_id?.mute_until_dt
-            ) {
-                return this.self_member_id?.message_unread_counter_ui;
+            if (this.channelNotifications === "all" && !this.self_member_id?.mute_until_dt) {
+                return this.self_member_id.message_unread_counter_ui;
             }
         }
         return this.message_needaction_counter;
