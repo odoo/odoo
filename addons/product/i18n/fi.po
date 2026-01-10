@@ -33,13 +33,13 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-30 18:37+0000\n"
-"PO-Revision-Date: 2025-11-24 12:08+0000\n"
+"PO-Revision-Date: 2026-01-07 13:26+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/product/"
 "fi/>\n"
@@ -48,7 +48,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: product
 #. odoo-python
@@ -793,18 +793,18 @@ msgstr "Liitteen URL"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__attribute_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_id
 msgid "Attribute"
-msgstr "Määrite"
+msgstr "Ominaisuus"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
 msgid "Attribute Line"
-msgstr "Määriterivi"
+msgstr "Ominaisuusrivi"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Attribute Name"
-msgstr "Määritteen nimi"
+msgstr "Ominaisuuden nimi"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
@@ -813,7 +813,7 @@ msgstr "Määritteen nimi"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_attribute_value_id
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__attribute_value_id
 msgid "Attribute Value"
-msgstr "Määritteen arvo"
+msgstr "Ominaisuuden arvo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
@@ -821,19 +821,19 @@ msgstr "Määritteen arvo"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_value_list
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
-msgstr "Määritteiden arvot"
+msgstr "Ominaisuuden arvot"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_tree
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Attributes"
-msgstr "Määritteet"
+msgstr "Ominaisuudet"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Attributes & Variants"
-msgstr "Määritteet & variantit"
+msgstr "Ominaisuudet & Variaatiot"
 
 #. module: product
 #. odoo-javascript
@@ -1601,7 +1601,9 @@ msgstr "Dyson"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
-msgstr "Kukin arvo on määriteltävä vain kerran per määrite ja tuote."
+msgstr ""
+"Jokainen arvo tulisi määrittää vain kerran kullekin ominaisuudelle ja "
+"tuotteelle."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -1764,8 +1766,8 @@ msgid ""
 "the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
-"Jotta sääntöä sovellettaisiin, ostetun / myydyn määrän on oltava suurempi "
-"tai yhtä suuri kuin tässä kentässä määritelty vähimmäismäärä.\n"
+"Jotta sääntö pätee, ostetun/myydyn määrän on oltava suurempi tai yhtä suuri "
+"kuin tässä kentässä määritetty vähimmäismäärä.\n"
 "Ilmaistuna tuotteen oletusyksikössä."
 
 #. module: product
@@ -1835,7 +1837,7 @@ msgstr "Kultajäsenen hinnasto"
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Goods"
-msgstr "Tavarat"
+msgstr "Tavara"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__type
@@ -2106,7 +2108,7 @@ msgstr "Välittömästi"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Notes"
-msgstr "Sisäiset kommentit"
+msgstr "Sisäiset muistiinpanot"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__default_code
@@ -2699,7 +2701,7 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the "
 "attribute %(attribute)s because they do not match."
 msgstr ""
-"Tuotteeseen %(product)s ei voi liittää arvoa %(value)s, jossa on määrite %"
+"Tuotteeseen %(product)s ei voi liittää arvoa %(value)s ominaisuudella %"
 "(attribute)s, koska ne eivät vastaa toisiaan."
 
 #. module: product
@@ -2709,7 +2711,7 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute %"
 "(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
-"Tuotteen %(product)s määritettä %(attribute_src)s ei voi muuttaa "
+"Tuotteen %(product)s ominaisuutta %(attribute_src)s ei voi muuttaa "
 "ominaisuudeksi %(attribute_dest)s."
 
 #. module: product
@@ -3058,7 +3060,7 @@ msgstr "Tuote"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
 msgid "Product Attribute"
-msgstr "Tuotteen määrite"
+msgstr "Tuotteen ominaisuus"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
@@ -3218,7 +3220,7 @@ msgstr "Tuotemallin määritteiden rajaaminen"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "Tuotemallin määriterivi"
+msgstr "Tuotteen mallipohjan ominaisuusrivi"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
@@ -3286,7 +3288,7 @@ msgstr "Tuotevariaatiot"
 #. odoo-python
 #: code:addons/product/report/product_label_report.py:0
 msgid "Product model not defined, Please contact your administrator."
-msgstr "Tuotemallia ei ole määritetty, ota yhteys järjestelmänvalvojaan."
+msgstr "Tuotemallia ei ole määritetty, ota yhteys ylläpitäjääsi."
 
 #. module: product
 #. odoo-python
@@ -3350,7 +3352,7 @@ msgstr "Puma"
 #: model:ir.model.fields,field_description:product.field_product_template__purchase_ok
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Purchase"
-msgstr "Ostot"
+msgstr "Osto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__description_purchase
@@ -3821,8 +3823,7 @@ msgid ""
 "The attribute cannot be changed once the value is used on at least one "
 "product."
 msgstr ""
-"Määritettä ei voi vaihtaa sen jälkeen kun arvoa on käytetty vähintään "
-"yhdessä tuotteessa."
+"Ominaisuutta ei voi vaihtaa sen jälkeen, kun arvoa on käytetty tuotteessa."
 
 #. module: product
 #. odoo-python
@@ -3918,9 +3919,9 @@ msgid ""
 "a vendor unit is set, quantity should be specified in this unit, otherwise "
 "it should be specified in the default unit of the product."
 msgstr ""
-"Määrä, joka on ostettava tältä toimittajalta, jotta yksikköhinta  on "
-"edullinen. Jos toimittaja on määritellyt yksikön, määrä tulee ilmoittaa "
-"tässä yksikössä. Muuten se tulee ilmoittaa tuotteen oletusyksikössä."
+"Tältä toimittajalta ostattava määrä, joka tekee yksikköhinnasta kannattavan. "
+"Jos toimittajan yksikkö on määritetty, määrä tulee ilmoittaa tässä "
+"yksikössä. Muuten se tulee ilmoittaa tuotteen oletusyksikössä."
 
 #. module: product
 #. odoo-python
@@ -3935,8 +3936,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Configure "
 "Variants' button to set the extra attribute prices."
 msgstr ""
-"Myyntihintaa hallitaan tuotemallista. Napsauta 'Määritä variantteja' "
-"-painiketta asettaaksesi ylimääräiset määritehinnat."
+"Myyntihintaa hallitaan tuotteen mallipohjasta. Klikkaa 'Määritä variaatiot' -"
+"painiketta asettaaksesi ylimääräisen ominaisuuden."
 
 #. module: product
 #. odoo-python
@@ -3945,7 +3946,7 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
-"Tuotteen %(product)s määritteelle %(attribute)s ei ole määritelty arvoa %"
+"Tuotteen %(product)s ominaisuudelle %(attribute)s ei ole määritetty arvoa %"
 "(value)s."
 
 #. module: product
@@ -4164,7 +4165,7 @@ msgstr "Lataa tiedostoja tuotteeseesi"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr "Lisämyynti: upsell & cross-sell"
+msgstr "Lisä- & ristiinmyynti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__url
@@ -4211,7 +4212,7 @@ msgstr "Käyttäjänimi"
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr "Voimassa olevat tuotemääriterivit"
+msgstr "Voimassa olevat tuoteominaisuusrivit"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -4584,8 +4585,7 @@ msgstr "Et voi muokata tätä tuotetta luettelossa."
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
 msgstr ""
-"Tätä määritettä ei voi arkistoida, koska siihen on edelleen liitetty "
-"tuotteita"
+"Et voi arkistoida tätä ominaisuutta, koska siihen liittyy edelleen tuotteita"
 
 #. module: product
 #. odoo-python
@@ -4654,7 +4654,7 @@ msgid ""
 "following products:\n"
 "%(products)s"
 msgstr ""
-"Määritettä %(attribute)s ei voi poistaa, koska sitä käytetään seuraavissa "
+"Ominaisuutta %(attribute)s ei voi poistaa, koska sitä käytetään seuraavissa "
 "tuotteissa:\n"
 "%(products)s"
 
@@ -4677,7 +4677,7 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s "
 "to the product %(product_dest)s."
 msgstr ""
-"Määritettä %(attribute)s ei voi siirtää tuotteesta %(product_src)s "
+"Ominaisuutta %(attribute)s ei voi siirtää tuotteesta %(product_src)s "
 "tuotteeseen %(product_dest)s."
 
 #. module: product
@@ -4698,9 +4698,9 @@ msgid ""
 "                            whether it's a storable product, a consumable or "
 "a service."
 msgstr ""
-"Kaikelle myytävälle tai ostettavalle on määriteltävä tuote,\n"
-"                            olipa kyseessä varastoitava tuote, "
-"kulutushyödyke tai palvelu."
+"Kaikelle myymällesi tai ostamallesi on määritettävä tuote,\n"
+"                            oli kyseessä sitten varastoitava tuote, "
+"kulutustavara tai palvelu."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -4722,13 +4722,13 @@ msgid ""
 "                price, notes in the quotation, accounting data, procurement "
 "methods, etc."
 msgstr ""
-"Kaikelle myytävälle tai ostettavalle tuotteelle on määriteltävä tuote,\n"
-"                olipa kyseessä varastoitava tuote, kulutushyödyke tai "
+"Kaikelle myymällesi tai ostamallesi on määritettävä tuote,\n"
+"                oli kyseessä sitten varastoitava tuote, kulutustavara tai "
 "palvelu.\n"
 "                Tuotelomake sisältää tietoja, jotka yksinkertaistavat "
-"myyntiprosessia:\n"
+"myyntiprosessin:\n"
 "                hinta, tarjousmerkinnät, kirjanpitotiedot, "
-"hankintamenetelmät jne."
+"hankintamenetelmät, jne."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -4741,13 +4741,14 @@ msgid ""
 "                price, notes in the quotation, accounting data, procurement "
 "methods, etc."
 msgstr ""
-"Sinun on määritettävä tuote kaikkeen, mitä myyt, olipa kyseessä sitten "
-"fyysinen tuote,\n"
-"                kulutustavaraa tai palvelua, jota tarjoat asiakkaille.\n"
-"                Tuotemuoto sisältää tietoja myyntiprosessin "
+"Kaikelle myymällesi on määritettävä tuote, oli kyseessä sitten fyysinen "
+"tuote,\n"
+"                                kulutustavara tai palvelu, jota tarjoat "
+"asiakkaillesi.\n"
+"                                Tuotelomake sisältää tietoja myyntiprosessin "
 "yksinkertaistamiseksi:\n"
-"                hinta, noteeraukset, kirjanpitotiedot, hankintamenetelmät "
-"jne."
+"                                hinta, tarjousmerkinnät, kirjanpitotiedot, "
+"hankintamenetelmät, jne."
 
 #. module: product
 #. odoo-javascript
@@ -4853,7 +4854,7 @@ msgstr "pdf"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "per"
-msgstr "kohti"
+msgstr "/"
 
 #. module: product
 #. odoo-python

@@ -14,7 +14,7 @@
 # Víctor Martínez <victor.martinez@tecnativa.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:37+0000\n"
+"PO-Revision-Date: 2026-01-08 09:30+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/project/"
 "es/>\n"
@@ -30,8 +30,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: project
@@ -615,6 +615,19 @@ msgid ""
 "                                            </span>\n"
 "                                        </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                            <i class="
+"\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                            <span name="
+"\"rating_status_helper\">\n"
+"                                                <span invisible="
+"\"rating_status == 'periodic'\">Se enviará una solicitud de valoración en "
+"cuanto una tarea alcance esta etapa.</span>\n"
+"                                                <span invisible="
+"\"rating_status == 'stage'\">Las solicitudes de valoración se enviarán en "
+"cuanto la tarea permanezca en esta fase.</span>\n"
+"                                            </span>\n"
+"                                        </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
@@ -1092,6 +1105,9 @@ msgid ""
 "                When creating a new project from the template, choose who "
 "will take on each role."
 msgstr ""
+"Asigna roles a las tareas en tus plantillas de proyecto.\n"
+"                Al crear un nuevo proyecto a partir de la plantilla, elige "
+"quién asumirá cada rol."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -1433,6 +1449,13 @@ msgid ""
 "Periodic rating: an email will be automatically sent at regular intervals as "
 "long as the task remains in the stage."
 msgstr ""
+"Recoge feedback de tus clientes al enviarles una solicitud de valoración "
+"cuando una tarea entre en una determinada etapa. Para ello, define una "
+"plantilla de correo electrónico de valoración en la etapa.\n"
+"Valoración al cambiar de etapa: se enviará automáticamente un correo "
+"electrónico cuando una tarea llegue a la etapa.\n"
+"Valoración periódica: se enviará automáticamente un correo electrónico a "
+"intervalos regulares mientras la tarea permanezca en la etapa."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_role__color
@@ -1652,7 +1675,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by email:"
-msgstr ""
+msgstr "Crear tareas por correo electrónico:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
@@ -1849,12 +1872,16 @@ msgid ""
 "disable         Changing this parameter will not affect the rotting status/"
 "date of resources last updated before this change."
 msgstr ""
+"Número de días antes de que las tareas se consideren obsoletas. Establecer "
+"en 0 para desactivarlo         Cambiar este parámetro no afectará al estado "
+"ni a la fecha de caducidad de obsolescencia de los recursos actualizados "
+"antes de este cambio."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rotting_days
 #: model:ir.model.fields,help:project.field_project_task__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Número de días desde la última actualización de este recurso"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -1867,7 +1894,7 @@ msgstr "Días"
 #: model:ir.model.fields,field_description:project.field_project_project__rotting_days
 #: model:ir.model.fields,field_description:project.field_project_task__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "Días en espera"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
@@ -1877,7 +1904,7 @@ msgstr "Días para la fecha límite"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "Días hasta la inactividad"
 
 #. module: project
 #. odoo-python
@@ -2442,7 +2469,7 @@ msgstr "Tiene un mensaje"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_template_ancestor
 msgid "Has Template Ancestor"
-msgstr ""
+msgstr "Tiene plantilla de origen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
@@ -2590,6 +2617,9 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban and List "
 "views of your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"Si se activa, esta etapa se mostrará como plegada en la vista de kanban y en "
+"la vista de lista de tus proyectos. Los proyectos en una etapa plegada se "
+"consideran cerrados."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2599,6 +2629,10 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task "
 "remains in this stage."
 msgstr ""
+"Si se configura, se enviará automáticamente una solicitud de valoración por "
+"correo electrónico al cliente cuando la tarea alcance esta etapa.\n"
+"Alternativamente, se enviará a intervalos regulares mientras la tarea "
+"permanezca en esta etapa."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2631,7 +2665,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Import Template for Tasks"
-msgstr ""
+msgstr "Importar plantilla para tareas"
 
 #. module: project
 #. odoo-javascript
@@ -2684,7 +2718,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
 msgid "Invalid Display Name"
-msgstr ""
+msgstr "Nombre para mostrar no válido"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
@@ -2867,7 +2901,7 @@ msgstr "Más tarde"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create a regular <b>project</b>."
-msgstr ""
+msgstr "Creemos un <b>proyecto</b> normal."
 
 #. module: project
 #. odoo-javascript
@@ -3681,7 +3715,7 @@ msgstr "Las tareas privadas no se pueden convertir en plantillas"
 #. module: project
 #: model:project.project,name:project.project_template_1
 msgid "Product Launch Campaign"
-msgstr ""
+msgstr "Campaña de lanzamiento de producto"
 
 #. module: project
 #. odoo-javascript
@@ -3799,7 +3833,7 @@ msgstr "Asistente para eliminar la etapa del proyecto"
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 msgid "Project Stage: Send rating"
-msgstr ""
+msgstr "Etapa del proyecto: enviar valoración"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
@@ -4331,7 +4365,7 @@ msgstr "Rol para usuarios"
 #: model:ir.model.fields,field_description:project.field_project_task__is_rotting
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rotting"
-msgstr ""
+msgstr "En espera/estancado"
 
 #. module: project
 #. odoo-javascript
@@ -4460,7 +4494,7 @@ msgstr "Enviar invitación"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_active
 msgid "Send a customer rating request"
-msgstr ""
+msgstr "Enviar una solicitud de valoración de cliente"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__sequence
@@ -4677,7 +4711,7 @@ msgstr "Propietario de la etapa"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Stage Rating Status"
-msgstr ""
+msgstr "Estado de calificación de la etapa"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4885,7 +4919,7 @@ msgstr "Recurrencia de tareas"
 #. module: project
 #: model:ir.model,name:project.model_task_share_wizard
 msgid "Task Sharing"
-msgstr ""
+msgstr "Distribución de tareas"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -5048,7 +5082,7 @@ msgstr "Plantilla"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_has_dates
 msgid "Template Has Dates"
-msgstr ""
+msgstr "La plantilla tiene fechas"
 
 #. module: project
 #. odoo-python
@@ -5858,6 +5892,9 @@ msgid ""
 "takes each role. These employees will be added to the tasks, along with "
 "anyone already assigned."
 msgstr ""
+"Cuando creas un proyecto a partir de una plantilla, puedes elegir qué "
+"empleado asume cada rol. Estos empleados se añadirán a las tareas, junto con "
+"las personas que ya estén asignadas."
 
 #. module: project
 #: model:project.tags,name:project.project_tags_14
@@ -6270,7 +6307,7 @@ msgstr "para indicar cuál es el estado actual de su idea."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
 msgid "when reaching this stage"
-msgstr ""
+msgstr "al llegar a esta etapa"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

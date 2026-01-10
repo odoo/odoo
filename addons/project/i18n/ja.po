@@ -11,14 +11,14 @@
 # Martin Trigaux, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-12-24 10:24+0000\n"
+"PO-Revision-Date: 2026-01-08 07:39+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/project/"
 "ja/>\n"
@@ -798,7 +798,7 @@ msgstr "活動ステータス"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,field_description:project.field_project_update__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
@@ -1164,7 +1164,7 @@ msgstr "メッセージ以外の添付ファイル"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id
 msgid "Author"
-msgstr "著作者"
+msgstr "作成者"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3481,7 +3481,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Overdue"
-msgstr "遅延"
+msgstr "期限超過"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -3862,6 +3862,29 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"プロジェクトとタスクの可視性:\n"
+"- 招待された内部ユーザ: フォローしているプロジェクトまたはタスクのみアクセス"
+"可能。担当者には自動的にアクセス権が付与されます。\n"
+"- 招待された内部ユーザおよびポータルユーザ: 上記と同様、ポータルユーザに拡張"
+"されます。\n"
+"- すべての内部ユーザ: プロジェクトおよびそのすべてのタスクへのフルアクセス権"
+"。\n"
+"- すべての内部ユーザおよび招待されたポータルユーザ: 内部ユーザはフルアクセス"
+"権を取得。ポータルユーザはフォローしているプロジェクトまたはタスクのみアクセ"
+"ス可能。\n"
+"\n"
+"ポータルアクセスレベル:\n"
+"- 読み取り専用: ポータルユーザはポータル経由でタスクを表示できますが、編集は"
+"不可。\n"
+"- 編集(限定): ポータルユーザはカンバン/リストビューにアクセスでき、フォロー中"
+"のタスクの限定フィールドを編集可能。\n"
+"- 編集: 上記と同様、全タスクへのアクセス権付き。\n"
+"\n"
+"その他のルール:\n"
+"- 内部ユーザは、プロジェクトアクセス権がなくても直接リンクからタスクを開けま"
+"す。\n"
+"- プロジェクト管理者は、非フォロワーであっても非公開プロジェクトにアクセスで"
+"きます。\n"
 
 #. module: project
 #. odoo-javascript
@@ -4693,7 +4716,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -4839,7 +4862,7 @@ msgstr "タスクの繰り返し"
 #. module: project
 #: model:ir.model,name:project.model_task_share_wizard
 msgid "Task Sharing"
-msgstr ""
+msgstr "タスク分担"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -5002,7 +5025,7 @@ msgstr "テンプレート"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_has_dates
 msgid "Template Has Dates"
-msgstr ""
+msgstr "テンプレートに日付あり"
 
 #. module: project
 #. odoo-python
@@ -5791,6 +5814,9 @@ msgid ""
 "takes each role. These employees will be added to the tasks, along with "
 "anyone already assigned."
 msgstr ""
+"テンプレートからプロジェクトを作成する際、各役割を担当する従業員を選択できま"
+"す。これらの従業員は、既に割り当てられている従業員と共にタスクに追加されます"
+"。"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_14
@@ -6199,7 +6225,7 @@ msgstr "アイデアの現在のステータスを示します。"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
 msgid "when reaching this stage"
-msgstr ""
+msgstr "このステージに達したとき"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
