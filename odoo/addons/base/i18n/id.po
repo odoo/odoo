@@ -10,14 +10,14 @@
 # Ryanto The <ry.the77@gmail.com>, 2023
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-12-20 09:39+0000\n"
+"PO-Revision-Date: 2026-01-06 06:53+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/base/"
 "id/>\n"
@@ -1233,6 +1233,10 @@ msgid ""
 "===========================\n"
 "A helper model for managing transfers between accounts.\n"
 msgstr ""
+"\n"
+"Transfer Akun\n"
+"===========================\n"
+"Model helper untuk mengelola transfer antara akun.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant
@@ -1559,6 +1563,8 @@ msgid ""
 "\n"
 "Accounting Expense Bridge\n"
 msgstr ""
+"\n"
+"Penghubung Pengeluaran Akuntansi\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant_fleet
@@ -1566,6 +1572,8 @@ msgid ""
 "\n"
 "Accounting Fleet Bridge\n"
 msgstr ""
+"\n"
+"Penghubung Akuntansi Armada\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_base_import
@@ -3882,6 +3890,12 @@ msgid ""
 "well.\n"
 "It should be renamed later to ai_documents_automation.\n"
 msgstr ""
+"\n"
+"Otomatis sortir dokumen Anda.\n"
+"Modul ini hanya digunakan untuk menyortir dokumen secara otomatis dan tidak "
+"dapat digunakan untuk fitur terkait dokumen ai karena menggunakan "
+"base_automation juga.\n"
+"Harus dinamakan ulang nanti menjadi ai_documents_automation.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fsm
@@ -9315,6 +9329,15 @@ msgid ""
 "models and their fields and methods. It also provides a playground to run\n"
 "the methods over HTTP, with examples in various programming languages.\n"
 msgstr ""
+"\n"
+"Odoo Dynamic API Documentation\n"
+"==============================\n"
+"\n"
+"Modul ini menyediakan halaman dokumentasi dinamis untuk developer di URL\n"
+"/doc. Dokumentasi dibuat menggunakan database untuk menunjukkan\n"
+"model dan field serta metode mereka. Ini juga menyediakan templat untuk "
+"menjalankan\n"
+"metode di atas HTTP, dengan contoh di beragam bahasa programming.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -13932,6 +13955,13 @@ msgid ""
 "This is designed as a separate, optional module to keep core functionality\n"
 "clean and allow for flexible use cases.\n"
 msgstr ""
+"\n"
+"Modul ini memperkenalkan beberapa field advanced terkait Peppol ke model\n"
+"faktur Odoo (`account.move`) dan membuatnya tersedia di tab 'Informasi\n"
+"Tambahan' dalam bagian 'Info Lain' di tampilan formulir faktur.\n"
+"Ini dirancang sebagai modul terpisah, opsional untuk menjaga fungsionalitas "
+"inti\n"
+"tetap bersih dan mengizinkan untuk penggunaan kasus fleksibel.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_crm_full
@@ -13953,6 +13983,10 @@ msgid ""
 "It checks if the pgvector extension is available in the server and\n"
 "only then the AI module is auto-installed.\n"
 msgstr ""
+"\n"
+"Modul ini dibutuhkan untuk secara kondisional menginstal otomatis modul AI.\n"
+"Ini memeriksa bila ekstensi pgvector tersedia di server dan\n"
+"hanya bila tersedia modul AI akan diinstal otomatis.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_skills
@@ -14984,7 +15018,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%i:%m:%s_%p
 msgid " 1:00:00 PM"
-msgstr ""
+msgstr " 1:00:00 PM"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_mondialrelay
@@ -15319,7 +15353,7 @@ msgstr "1099 Melapor"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%h:%m:%s
 msgid "13:00:00"
-msgstr ""
+msgstr "13:00:00"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp_mail
@@ -16371,7 +16405,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_ai_documents_account
 #: model:ir.module.module,summary:base.module_ai_documents_account
 msgid "AI Documents Account"
-msgstr ""
+msgstr "Akun Dokumen AI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_documents_source
@@ -16436,7 +16470,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_ai
 msgid "AI-related features are accessible with limited configurability."
-msgstr ""
+msgstr "Fitur-fitur terkait AI dapat diakses dengan konfigurasi terbatas."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_api_doc
@@ -16620,7 +16654,7 @@ msgstr "Ekstrak Akun"
 #: model:ir.module.module,shortdesc:base.module_account_fiscal_categories
 #: model:ir.module.module,summary:base.module_account_fiscal_categories
 msgid "Account Fiscal Report"
-msgstr ""
+msgstr "Laporan Fiskal Akun"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
@@ -20630,13 +20664,13 @@ msgstr "Vacuum Otomatis"
 #: model:ir.module.module,description:base.module_ai_crm_livechat
 #: model:ir.module.module,summary:base.module_ai_crm_livechat
 msgid "Automatically create leads from livechat."
-msgstr ""
+msgstr "Otomatis membuat lead dari livechat."
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_crm
 #: model:ir.module.module,summary:base.module_ai_crm
 msgid "Automatically create leads."
-msgstr ""
+msgstr "Otomatis buat lead."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary_holidays
@@ -26496,7 +26530,7 @@ msgstr "Aktifkan konfigurasi field AI di studio"
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_google_reserve
 msgid "Enable a link between your appointment type and the google API"
-msgstr ""
+msgstr "Aktifkan link antara tipe appointment Anda dan google API"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_sale
@@ -29999,7 +30033,7 @@ msgstr "Hongkong"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hospitaility
 msgid "Hospitaility"
-msgstr ""
+msgstr "Hospitality"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hospitality
@@ -30971,7 +31005,7 @@ msgstr "Indian - Stock Report(GST)"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__grouping__[3,2,0]
 msgid "Indian Grouping"
-msgstr ""
+msgstr "Indian Grouping"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -31387,7 +31421,7 @@ msgstr "Catatan internal..."
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__grouping__[3,0]
 msgid "International Grouping"
-msgstr ""
+msgstr "International Grouping"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iot
@@ -43542,6 +43576,10 @@ msgid ""
 "developer.dhl.com/. It is no longercompatible with the older DHL SOAP APIs "
 "(which have their own credentials)."
 msgstr ""
+"Kirim pengiriman Anda melalui DHL dan lacak mereka online. Versi connector "
+"DHL ini kompatibel dengan DHL REST API yang tersedia di https://"
+"developer.dhl.com/. Versi ini tidak lagi kompatibel dengan DHL SOAP API yang "
+"lebih tua (yang memiliki kredensial mereka sendiri)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex_rest
@@ -45969,6 +46007,9 @@ msgid ""
 "The International Grouping will represent 123456789 to be 123,456,789.00; "
 "The Indian Grouping will represent 123456789 to be 12,34,56,789.00"
 msgstr ""
+"The International Grouping akan mewakili 123456789 untuk menjadi "
+"123,456,789.00; The Indian Grouping akan mewakili 123456789 untuk menjadi "
+"12,34,56,789.00"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_10
@@ -47900,17 +47941,17 @@ msgstr "Terjemahkan"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__translate__html_translate
 msgid "Translate HTML terms"
-msgstr ""
+msgstr "Terjemahkan istilah HTML"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__translate__xml_translate
 msgid "Translate XML terms"
-msgstr ""
+msgstr "Terjemahkan istilah XML"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__translate__standard
 msgid "Translate as a whole"
-msgstr ""
+msgstr "Terjemahkan secara menyeluruh"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation

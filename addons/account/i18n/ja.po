@@ -12,7 +12,7 @@
 # Martin Trigaux, 2023
 # Andy Yiu, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Yoshi Tashiro <tashiro@quartile.co>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-12-23 08:11+0000\n"
+"PO-Revision-Date: 2026-01-08 04:20+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/account/"
 "ja/>\n"
@@ -45,9 +45,9 @@ msgstr ""
 "\n"
 "        顧客請求書仕訳帳用には '販売' を選択します。\n"
 "        仕入先請求書仕訳帳用には '購買' を選択します。\n"
-"        顧客または仕入先支払に使用される仕訳帳用には '現金', '銀行' または "
-"'クレジットカード' を選択します。\n"
-"        その他処理の仕訳帳用には '一般' を選択します。\n"
+"        顧客または仕入先支払に使用される仕訳帳用には '現金', '銀行' または '"
+"クレジットカード' を選択します。\n"
+"        雑仕訳の仕訳帳用には '一般' を選択します。\n"
 "        "
 
 #. module: account
@@ -1098,8 +1098,8 @@ msgstr ""
 "        \n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-if=\"object.partner_id.name\">\n"
-"                <t t-out=\"object.partner_id.name\">Brandon Freeman</t> (<t "
-"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)様\n"
+"                <t t-out=\"object.partner_id.name\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)様\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
@@ -1110,39 +1110,40 @@ msgstr ""
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>様\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        お世話になっております。以下がお客様の\n"
+"        お世話になっております。以下にSelf-billing請求書をお送りさせていただ"
+"きます。\n"
 "        <t t-if=\"object.name\">\n"
-"            Self-billingです： <span style=\"font-weight:bold;\" t-"
-"out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"            Self-billing請求書番号： <span style=\"font-weight:bold;"
+"\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            Self-billing\n"
+"            Self-billing請求書\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (参照番号: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        金額： <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        金額： <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        請求元： <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            このSelf-billingはすでにお支払い済みです。\n"
 "        </t>\n"
-"        <t t-if=\"hasattr(object, 'timesheet_count') and "
-"object.timesheet_count\">\n"
+"        <t t-if="
+"\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
 "            <br/><br/>\n"
-"            追伸: タイムシート <a t-att-href=\"'/my/timesheets?"
-"search_in=invoice&amp;search=%s' % object.name\">はポータルよりご確認いただけ"
-"ます。</a>\n"
+"            追記: ポータルより、タイムシート <a t-att-href="
+"\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">をご確認い"
+"ただけます。</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        ご不明な点がございましたら、お気軽にお問い合わせください。\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
-"o-mail-quote-container=\"1\">\n"
+"        ご不明な点がございましたら、お気軽にお問い合わせください。何卒よろし"
+"くお願いいたします。\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" "
+"data-o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\""
+">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1193,19 +1194,20 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear\n"
+"        \n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
 "(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)様\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>様\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        クレジットノートをお送りします。\n"
+"        いつもお世話になっております。クレジットノートをお送りさせていただき"
+"ます。\n"
 "        <t t-if=\"object.name\">\n"
-"            クレジットノート番号: <span style=\"font-weight:bold;\" t-"
-"out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"            クレジットノート番号: <span style=\"font-weight:bold;\" t-out=\""
+"object.name or ''\">RINV/2021/05/0001</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            クレジットノート\n"
@@ -1213,18 +1215,18 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (参照番号: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        金額: <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
-"        発行元 <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        金額: <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        発行元: <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
-"        ご不明な点がございましたら、お問合せ下さい。\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
-"o-mail-quote-container=\"1\">\n"
+"        ご不明な点がございましたら、お問合せ下さい。何卒よろしくお願いいたし"
+"ます。\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" "
+"data-o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\""
+">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1260,24 +1262,25 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>様<br/"
-"><br/>\n"
-"        お支払い頂きありがとうございました。\n"
-"        領収書: <span style=\"font-weight:bold;\" t-out=\"(object.name or "
-"'').replace('/','-') or ''\">BNK1-2021-05-0002</span> 支払金額: <span "
-"style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, "
-"object.currency_id) or ''\">$ 10.00</span> 発行元: <t t-"
-"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>様<br/><"
+"br/>\n"
+"        いつも大変お世話になっております。お忙しい中、お支払い頂き誠にありが"
+"とうございました。以下に、領収書をお送りさせていただきます。\n"
+"        領収書番号: <span style=\"font-weight:bold;\" t-out=\""
+"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> 支払金"
+"額: <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">$ 10.00</span> 発行元: <t t-out=\"
+""object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        何かございましたら、お気軽にお問合せ下さい。\n"
 "        <br/><br/>\n"
-"        宜しくお願い致します。\n"
+"        何卒よろしくお願いいたします。\n"
 "        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-"
 "container=\"1\">\n"
 "            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -3665,7 +3668,7 @@ msgstr "活動ステータス"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_type_icon
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -5256,12 +5259,12 @@ msgstr "簿記担当者または会計事務所からの請求書"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Pay"
-msgstr "未払仕入先請求書"
+msgstr "支払待ち仕入先請求書"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr "未検証仕入先請求"
+msgstr "検証待ち仕入先請求書"
 
 #. module: account
 #. odoo-python
@@ -7657,7 +7660,7 @@ msgstr "非推奨"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Deprecated link"
-msgstr "廃止されたリンク"
+msgstr "非推奨リンク"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
@@ -8314,7 +8317,7 @@ msgstr "ドロップして請求書をインポートしましょう。"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value_amount
 msgid "Due"
-msgstr "未払"
+msgstr "支払期日"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -13136,7 +13139,7 @@ msgstr "次を含まない"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Not Due"
-msgstr "それ以降"
+msgstr "期日前"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__not_hashable_unlocked_move_ids
@@ -13832,7 +13835,7 @@ msgstr "未消込借方"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Overdue"
-msgstr "滞納"
+msgstr "期限超過"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__overdue
@@ -13843,17 +13846,17 @@ msgstr "期限超過額"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Overdue invoices"
-msgstr "滞納請求書"
+msgstr "期限超過請求書"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue invoices, maturity date passed"
-msgstr "延滞した請求書、満期日が過ぎました"
+msgstr "期限超過した請求書、満期日が過ぎました"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Overdue payments, due date passed"
-msgstr "延滞した請求書、期日が過ぎました"
+msgstr "期限超過した請求書、期日が過ぎました"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include_override
@@ -16805,7 +16808,7 @@ msgstr "ソース通貨"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Source Document"
-msgstr "元ドキュメント"
+msgstr "参照元ドキュメント"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_source_email
@@ -16956,7 +16959,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -21316,7 +21319,7 @@ msgstr "次の会社にアクセスできないため、この操作を行う権
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "You do not have the right to trust or un-trust a bank account."
-msgstr "銀行口座を信用する・信用しない権利はありません。"
+msgstr "銀行口座を確認済みにしたり、未確認に戻したりする権限がありません。"
 
 #. module: account
 #. odoo-python
@@ -21947,7 +21950,7 @@ msgstr "信頼できない"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "untrusted bank accounts"
-msgstr "信頼できない銀行口座"
+msgstr "未確認の銀行口座"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
