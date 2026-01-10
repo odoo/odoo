@@ -9,14 +9,14 @@
 # Martin Trigaux, 2023
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-12-10 03:26+0000\n"
+"PO-Revision-Date: 2026-01-06 10:37+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "project/id/>\n"
@@ -1312,6 +1312,13 @@ msgid ""
 "Periodic rating: an email will be automatically sent at regular intervals as "
 "long as the task remains in the stage."
 msgstr ""
+"Kumpulkan feedback dari pelanggan Anda dengan mengirimkan mereka permintaan "
+"rating saat tugas mencapai tahap tertentu. Untuk melakukan ini, definisikan "
+"templat email rating di tahap.\n"
+"Rating saat mengubah tahap: email akan secara otomatis dikirim saat tugas "
+"mencapai tahap tersebut.\n"
+"Rating periodik: email akan secara otomatis dikirim pada periode reguler "
+"selama tugas tersisa di tahap."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_role__color
@@ -1725,12 +1732,16 @@ msgid ""
 "disable         Changing this parameter will not affect the rotting status/"
 "date of resources last updated before this change."
 msgstr ""
+"Jumlah hari sebelum tugas di tahap ini menjadi basi. Tetapkan menjadi 0 "
+"untuk menonaktifkan         Mengubah parameter ini tidak akan berdampak ke "
+"tanggal sumber daya yang diupdate terakhir/status membusuk sebelum perubahan "
+"ini."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rotting_days
 #: model:ir.model.fields,help:project.field_project_task__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Jumlah hari semenjak sumber daya ini terakhir diupdate"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -1743,7 +1754,7 @@ msgstr "Hari"
 #: model:ir.model.fields,field_description:project.field_project_project__rotting_days
 #: model:ir.model.fields,field_description:project.field_project_task__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "Hari-Hari Membusuk"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
@@ -1753,7 +1764,7 @@ msgstr "Hari menuju Deadline"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "Hari-hari untuk membusuk"
 
 #. module: project
 #. odoo-python
@@ -2313,7 +2324,7 @@ msgstr "Memiliki Pesan"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_template_ancestor
 msgid "Has Template Ancestor"
-msgstr ""
+msgstr "Memiliki Templat Lampau"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
@@ -2461,6 +2472,9 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban and List "
 "views of your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"Bila diaktifkan, tahap ini akan ditampilkan sebagai dilipat di tampilan "
+"Kanban dan List dari project Anda. Project di tahap dilipat dianggap sebagai "
+"ditutup."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2470,6 +2484,10 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task "
 "remains in this stage."
 msgstr ""
+"Bila ditetapkan, permintaan rating akan secara otomatis dikirim melalui "
+"email ke pelanggan saat tugas mencapai tahap ini.\n"
+"Secara alternatif, ini akan dikirim pada periode reguler selama tugas tetap "
+"ada di tahap ini."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2560,12 +2578,12 @@ msgstr "Nama Tampilan Tidak Valid"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
 msgid "Invited internal and portal users"
-msgstr ""
+msgstr "User internal dan portal yang diundang"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users"
-msgstr ""
+msgstr "User internal yang diundang"
 
 #. module: project
 #. odoo-javascript
@@ -3739,6 +3757,28 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"Project dan Visibilitas Tugas:\n"
+"- User-user internal yang diundang: Dapat mengakses hanya project atau task "
+"yang mereka ikuti. Penerima tugas otomatis mendapatkan akses.\n"
+"- U-seruser internal dan portal yang diundang: Sama dengan di atas, "
+"diberikan juga ke user portal.\n"
+"- Semua user internal: Akses lengkap ke project dan semua tugasnya.\n"
+"- Semua user internal dan yang diundang: User-user internal mendapatkan "
+"akses lengkap. User-user portal dapat mengakses hanya project atau tugas "
+"yang mereka ikuti.\n"
+"\n"
+"Tingkat Akses Portal:\n"
+"- Read-only: User-user portal melihat tugas melalui portal mereka tapi tidak "
+"dapat mengedit mereka.\n"
+"- Edit (terbatas): User portal mengakses tampilan kanban/list dan dapat "
+"mengedit field terbatas ke tugas-tugas yang diikuti.\n"
+"- Edit: Sama seperti di atas, dengan akses ke semua tugas.\n"
+"\n"
+"Peraturan Lainnya:\n"
+"- User-user internal dapat membuka tugas dari link langsung, bahkan tanpa "
+"akses project.\n"
+"- Project admin memiliki akses ke project privat, bahkan bila bukan pengikut."
+"\n"
 
 #. module: project
 #. odoo-javascript
@@ -4169,7 +4209,7 @@ msgstr "Peran Ke User"
 #: model:ir.model.fields,field_description:project.field_project_task__is_rotting
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rotting"
-msgstr ""
+msgstr "Membusuk"
 
 #. module: project
 #. odoo-javascript
@@ -4298,7 +4338,7 @@ msgstr "Kirim Undangan"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_active
 msgid "Send a customer rating request"
-msgstr ""
+msgstr "Kirim permintaan rating pelanggan"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__sequence
@@ -4513,7 +4553,7 @@ msgstr "Pemilik Tahap"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Stage Rating Status"
-msgstr ""
+msgstr "Status Rating Tahap"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4884,7 +4924,7 @@ msgstr "Template"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_has_dates
 msgid "Template Has Dates"
-msgstr ""
+msgstr "Templat Memiliki Tanggal"
 
 #. module: project
 #. odoo-python
@@ -5684,6 +5724,9 @@ msgid ""
 "takes each role. These employees will be added to the tasks, along with "
 "anyone already assigned."
 msgstr ""
+"Saat Anda membuat project dari templat, Anda dapat memilih karyawan mana "
+"yang mengambil setiap peran. Karyawan-karyawan ini akan ditambahkan ke "
+"tugas, beserta siapa pun yang sudah ditugaskan."
 
 #. module: project
 #: model:project.tags,name:project.project_tags_14
@@ -6103,7 +6146,7 @@ msgstr "untuk memberikan signal apa status saat ini untuk Ide Anda."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
 msgid "when reaching this stage"
-msgstr ""
+msgstr "saat mencapai tahap ini"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

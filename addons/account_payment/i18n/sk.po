@@ -10,13 +10,13 @@
 # Jan Prokop, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Tomáš Píšek <Tomas.Pisek@seznam.cz>, 2025.
+# Tomáš Píšek <Tomas.Pisek@seznam.cz>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-12-27 19:00+0000\n"
+"PO-Revision-Date: 2026-01-05 20:43+0000\n"
 "Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/"
 "account_payment/sk/>\n"
@@ -35,12 +35,14 @@ msgid ""
 "#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
 "class=\"text-primary\">%(date)s</strong>"
 msgstr ""
+"#%(number)s – Splátka vo výške <strong>%(amount)s</strong> splatná dňa "
+"<strong class=\"text-primary\">%(date)s</strong>"
 
 #. module: account_payment
 #. odoo-javascript
 #: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
 msgid "%s day(s) overdue"
-msgstr ""
+msgstr "%s dní po splatnosti"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -67,6 +69,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Authorized</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Autorizované</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -74,11 +78,13 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Paid</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Zaplatené</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Paid"
-msgstr "<i class=\"fa fa-fw fa-check-circle\"/>  Zaplatené"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Zaplatené"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -88,17 +94,17 @@ msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Prebieha"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Processing Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Spracovanie platby"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
-msgstr ""
+msgstr "<span class=\"d-none d-md-inline\"> Čaká na vybavenie</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "<strong>Full Amount</strong><br/>"
-msgstr ""
+msgstr "<strong>Celková suma</strong><br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -106,6 +112,8 @@ msgid ""
 "<strong>Installment</strong>\n"
 "                                        <br/>"
 msgstr ""
+"<strong>Splátka</strong>\n"
+"                                        <br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -116,19 +124,24 @@ msgid ""
 "                        few minutes, please check your payment provider "
 "configuration."
 msgstr ""
+"<strong>Upozornenie!</strong> Pre túto platbu je v procese vrátenie peňazí.\n"
+"                        Počkajte chvíľu, kým sa spracuje. Ak vrátenie peňazí "
+"po niekoľkých minútach stále nie je spracované,\n"
+"                        skontrolujte nastavenia svojho poskytovateľa "
+"platobných služieb."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "A discount will be applied if the customer pays before %s included."
-msgstr ""
+msgstr "Zľava sa uplatní, ak zákazník zaplatí pred %s vrátane."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
 "A payment has already been made on this invoice, please make sure to not pay "
 "twice."
-msgstr ""
+msgstr "Platba za túto faktúru už bola vykonaná, prosím, nezaplaťte ju dvakrát."
 
 #. module: account_payment
 #. odoo-python
@@ -146,7 +159,7 @@ msgstr "Pre vytvorenie novej platobnej transakcie je potrebný token."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
 msgid "Amount"
-msgstr ""
+msgstr "Suma"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
@@ -156,7 +169,7 @@ msgstr "Suma na refundovanie"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__invoice_amount_due
 msgid "Amount Due"
-msgstr ""
+msgstr "Splatná suma"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
@@ -180,7 +193,7 @@ msgstr "Autorizované transakcie"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Capture Transaction"
-msgstr "Zachytenie transakcie"
+msgstr "Zachytiť transakciu"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -212,7 +225,7 @@ msgstr "Mena"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__discount_date
 msgid "Discount Date"
-msgstr ""
+msgstr "Dátum zľavy"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_journal__display_name
@@ -232,7 +245,7 @@ msgstr "Zobrazovaný názov"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_open_installments
 msgid "Display Open Installments"
-msgstr ""
+msgstr "Zobraziť otvorené splátky"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -245,17 +258,17 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
 msgid "Early Payment Discount Information"
-msgstr ""
+msgstr "Informácie k zľave za včasnú platbu"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Early Payment Discount of"
-msgstr ""
+msgstr "Zľava za včasnú platbu"
 
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
 msgid "Full Only"
-msgstr ""
+msgstr "Iba plne"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
@@ -270,12 +283,12 @@ msgstr "Vygenerujte platobný odkaz"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__has_eligible_epd
 msgid "Has Eligible Epd"
-msgstr ""
+msgstr "Má oprávnené skonto"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr ""
+msgstr "Má nevybavenú refundáciu"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_journal__id
@@ -299,6 +312,8 @@ msgid ""
 "Impossible to pay all the overdue invoices if they don't share the same "
 "currency."
 msgstr ""
+"Je nemožné zaplatiť všetky nezaplatené faktúry, ak nie sú vystavené v "
+"rovnakej mene."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -306,6 +321,9 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"V testovacom režime sa prostredníctvom testovacieho platobného rozhrania "
+"spracováva fiktívna platba.\n"
+"Tento režim sa odporúča pri nastavovaní poskytovateľa."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
@@ -327,17 +345,17 @@ msgstr "Faktúry"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
 msgid "Invoices &amp; Bills"
-msgstr ""
+msgstr "Zákaznícke a dodávateľské faktúry"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
-msgstr ""
+msgstr "Počet faktúr"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_account_payment
 msgid "Invoices to pay"
-msgstr ""
+msgstr "Faktúry na zaplatenie"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_journal
@@ -362,12 +380,12 @@ msgstr "Naposledy upravované"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "Maximálna povolená refundácia"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_link_wizard__form_inherit_account_payment
 msgid "Next Installments"
-msgstr ""
+msgstr "Ďalšie splátky"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
@@ -375,6 +393,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
+"Upozorňujeme, že k dispozícii sú len tokeny od poskytovateľov, ktorí "
+"umožňujú zachytiť sumu."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -382,51 +402,53 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Upozorňujeme, že tokeny od poskytovateľov nastavených tak, aby autorizovali "
+"iba transakcie (namiesto zachytávania sumy), nie sú k dispozícii."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "Online payment option is not enabled in Configuration."
-msgstr ""
+msgstr "Možnosť online platby nie je povolená v konfigurácii."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same company."
-msgstr ""
+msgstr "Faktúry po splatnosti by mali patriť tej istej spoločnosti."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same currency."
-msgstr ""
+msgstr "Faktúry po splatnosti by mali mať tu istú menu."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same partner."
-msgstr ""
+msgstr "Faktúry po splatnosti by mali patriť tému istému partnerovi."
 
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__partial
 msgid "Partial"
-msgstr ""
+msgstr "Čiastočne"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_register
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Pay"
-msgstr ""
+msgstr "Zaplatiť"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Pay Invoice"
-msgstr ""
+msgstr "Zaplatiť faktúru"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_res_config_settings__pay_invoices_online
 msgid "Pay Invoices Online"
-msgstr ""
+msgstr "Platba faktúr online"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_docs_entry
@@ -442,7 +464,7 @@ msgstr "Zaplatiť teraz"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
 msgid "Pay overdue"
-msgstr ""
+msgstr "Zaplatiť oneskorené"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_id
@@ -471,17 +493,17 @@ msgstr "Platobné metódy"
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr ""
+msgstr "Poskytovateľ platieb"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
 msgid "Payment Providers"
-msgstr ""
+msgstr "Poskytovatelia platieb"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "Sprievodca vrátením platby"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
@@ -510,7 +532,7 @@ msgstr "Platby"
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 msgid "Please log in to pay your overdue invoices"
-msgstr ""
+msgstr "Prihláste sa, prosím, aby ste mohli uhradiť svoje nezaplatené faktúry"
 
 #. module: account_payment
 #. odoo-python
@@ -522,7 +544,7 @@ msgstr "Poskytovateľ"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_overdue_invoices_page
 msgid "Reference"
-msgstr ""
+msgstr "Referencia"
 
 #. module: account_payment
 #. odoo-python
@@ -536,7 +558,7 @@ msgstr "Refundácia"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr "Suma vrátenia peňazí"
+msgstr "Vrátená suma"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__refunded_amount
@@ -546,91 +568,90 @@ msgstr "Vrátená suma"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 msgid "Refunds"
-msgstr "Prijaté dobropisy"
+msgstr "Refundácie platieb"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "Počet refundácií"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "NASTAVENIE"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr ""
+msgstr "Uložený platobný token"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
 msgid "Saved payment token"
-msgstr "Platobný token uložený"
+msgstr "Uložený platobný token"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "Zdroj platby"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
 msgid "State"
-msgstr "Štát"
+msgstr "Stav"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr ""
+msgstr "Vhodné platobné tokeny"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Prístupový token je neplatný."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_refund_wizard.py:0
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr ""
-"Suma, ktorá sa má vrátiť, musí byť kladná a nemôže byť vyššia ako suma%s."
+msgstr "Suma, ktorá sa má vrátiť, musí byť kladná a nemôže byť vyššia ako %s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr ""
+msgstr "Denník, do ktorého sa zaznamenávajú úspešné transakcie."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 msgid "The payment related to transaction %(ref)s has been posted: %(link)s"
-msgstr ""
+msgstr "Platba súvisiaca s transakciou %(ref)s bola zaúčtovaná: %(link)s"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "Zadané parametre sú neplatné."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "Zdroj platby súvisiacich refundácií platieb"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_move.py:0
 msgid "There are pending transactions for this invoice."
-msgstr ""
+msgstr "K tejto faktúre sú nevybavené transakcie."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_move.py:0
 msgid "There is no amount to be paid."
-msgstr ""
+msgstr "Nie je potrebné uhradiť žiadnu sumu."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -644,7 +665,7 @@ msgid ""
 "validation."
 msgstr ""
 "Vyskytla sa chyba pri spracovaní vašej platby: problém pri overení ID "
-"kreditnej karty"
+"kreditnej karty."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -656,37 +677,37 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
-"Vyskytla sa chyba pri spracovaní vašej platby: neplatné ID kreditnej karty"
+"Vyskytla sa chyba pri spracovaní vašej platby: neplatné ID kreditnej karty."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_move.py:0
 msgid "This invoice cannot be paid online."
-msgstr ""
+msgstr "Túto faktúru nie je možné uhradiť online."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_move.py:0
 msgid "This invoice has already been paid."
-msgstr ""
+msgstr "Táto faktúra už bola zaplatená."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_move.py:0
 msgid "This invoice isn't posted."
-msgstr ""
+msgstr "Táto faktúra nie je zaúčtovaná."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_move.py:0
 msgid "This is not an outgoing invoice."
-msgstr ""
+msgstr "Toto nie je vystavená faktúra."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_count
 #: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_count
 msgid "Transaction Count"
-msgstr ""
+msgstr "Počet transakcií"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
@@ -697,13 +718,13 @@ msgstr "Transakcie"
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__none
 msgid "Unsupported"
-msgstr ""
+msgstr "Nepodporované"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "Použiť elektronickú platobnú metódu"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -718,6 +739,9 @@ msgid ""
 "enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
+"Nemôžete odstrániť platobnú metódu, ktorá je prepojená s poskytovateľom v "
+"stave povolený alebo test.\n"
+"Prepojení poskytovatelia: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -726,6 +750,8 @@ msgid ""
 "You cannot uninstall this module as payments using this payment method "
 "already exist."
 msgstr ""
+"Tento modul nemožno odinštalovať, pretože už existujú platby realizované "
+"pomocou tejto platobnej metódy."
 
 #. module: account_payment
 #. odoo-python
@@ -734,28 +760,31 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"Pred vymazaním denníka platobného poskytovateľa ho musíte najskôr "
+"deaktivovať.\n"
+"Prepojení poskytovatelia: %s"
 
 #. module: account_payment
 #. odoo-javascript
 #: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
 msgid "due in %s day(s)"
-msgstr ""
+msgstr "splatné za %s dní"
 
 #. module: account_payment
 #. odoo-javascript
 #: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
 msgid "due today"
-msgstr ""
+msgstr "splatné dnes"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "has been applied."
-msgstr ""
+msgstr "bol použitý."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
-msgstr ""
+msgstr "po splatnosti"
 
 #~ msgid ""
 #~ "<strong>No suitable payment option could be found.</strong><br/>\n"
