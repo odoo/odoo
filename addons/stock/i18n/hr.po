@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-26 18:37+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
 "PO-Revision-Date: 2025-11-15 11:25+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -822,8 +822,8 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>Adresa kupca</strong>"
+msgid "<strong>Customer</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -833,6 +833,11 @@ msgstr "<strong>Isporučeno</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
 msgstr ""
 
 #. module: stock
@@ -1413,8 +1418,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Budući da su za ovaj proizvod već korištene druge mjerne jedinice (npr. "
-"%(problem_uom)s) osim %(uom)s, promjena mjerne jedinice nije moguća. Ako je "
+"Budući da su za ovaj proizvod već korištene druge mjerne jedinice (npr. %"
+"(problem_uom)s) osim %(uom)s, promjena mjerne jedinice nije moguća. Ako je "
 "želite promijeniti, arhivirajte proizvod i stvorite novi."
 
 #. module: stock
@@ -5930,8 +5935,8 @@ msgid ""
 "routing of the reports.\n"
 "                                        <br/>"
 msgstr ""
-"Odoo po zadanim postavkama otvara pregled PDF-a. Ako želite odmah ispisati ("
-"samo za Enterprise korisnike), \n"
+"Odoo po zadanim postavkama otvara pregled PDF-a. Ako želite odmah ispisati "
+"(samo za Enterprise korisnike), \n"
 "                                        instalirajte IoT aplikaciju na "
 "računalo koje je povezano na istu lokalnu mrežu kao i\n"
 "                                        uređaj za barkod te konfigurirajte "
@@ -9892,7 +9897,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "Transfers allow you to move products from one location to another."
-msgstr "Transferi omogućuju da premještate proizvode s jedne lokacije na drugu."
+msgstr ""
+"Transferi omogućuju da premještate proizvode s jedne lokacije na drugu."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -11449,6 +11455,9 @@ msgstr "jedinice"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} Otpremnica (Ref {{ object.name or '/' }})"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>Adresa kupca</strong>"
 
 #~ msgid "<span class=\"o_stat_text\">Forecasted</span>"
 #~ msgstr "<span class=\"o_stat_text\">Predviđeno</span>"

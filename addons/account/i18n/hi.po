@@ -7,13 +7,13 @@
 # Ujjawal Pathak, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Ujjawal Pathak (pauj)" <pauj@odoo.com>, 2025.
+# "Ujjawal Pathak (pauj)" <pauj@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:37+0000\n"
-"PO-Revision-Date: 2025-11-25 09:40+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
+"PO-Revision-Date: 2026-01-10 11:16+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/account/"
 "hi/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -5278,7 +5278,7 @@ msgid ""
 "type."
 msgstr ""
 "लाइन किस तरह की है, उसके हिसाब से इसमें उस हिस्से का नाम होगा या फिर कोई गलती का "
-"संदेश."
+"मैसेज।"
 
 #. module: account
 #. odoo-python
@@ -7344,7 +7344,7 @@ msgstr "शुरूआती पेमेंट के लिए छूट:"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Edit"
-msgstr "संपादित"
+msgstr "बदलाव करें"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_totals
@@ -7436,7 +7436,7 @@ msgstr "डिफ़ॉल्ट रूप से चालू है"
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__end_datetime
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__end_date
 msgid "End Date"
-msgstr "समाप्ति तिथि"
+msgstr "खत्म होने की तारीख"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_end_following_month
@@ -9103,7 +9103,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Inactive"
-msgstr "निष्क्रि"
+msgstr "चालू नहीं है"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -11034,7 +11034,7 @@ msgstr "मैसेज डिलीवरी में गड़बड़ी"
 #: model:ir.model.fields,field_description:account.field_res_company__message_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_ids
 msgid "Messages"
-msgstr "संदेश"
+msgstr "मैसेज"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
@@ -11377,7 +11377,7 @@ msgstr "अगली गतिविधि"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "अगली गतिविधि कैलेंडर इवेंट"
+msgstr "कैलेंडर इवेंट में अगली गतिविधि"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -11397,7 +11397,7 @@ msgstr "अगली गतिविधि की डेडलाइन"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_summary
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_summary
 msgid "Next Activity Summary"
-msgstr "अगली गतिविधी की जानकारी"
+msgstr "अगली गतिविधि की जानकारी"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_type_id
@@ -16101,6 +16101,14 @@ msgstr "एंट्री %(name)s (आईडी %(id)s) ड्रॉफ़्�
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry '%(move_name)s (id %(move_id)s) is using accounts from a different "
+"company."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 msgid "The entry is not balanced."
 msgstr "एंट्री बैलेंस नहीं है."
 
@@ -18539,9 +18547,9 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"यहां आप वह डिफ़ॉल्ट संदेश या जानकारी सेट कर सकते हैं जो ग्राहक के इनवॉइस पर, फाइनल होने "
+"यहां आप वह डिफ़ॉल्ट मैसेज या जानकारी सेट कर सकते हैं जो ग्राहक के इनवॉइस पर, फाइनल होने "
 "के बाद दिखेगी. यह जानकारी ग्राहक को पेमेंट करते समय उस खास इनवॉइस को पहचानने में मदद "
-"करेगी."
+"करेगी।"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications

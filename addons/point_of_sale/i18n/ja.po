@@ -6,14 +6,14 @@
 # Wil Odoo, 2025
 # Junko Augias, 2025
 #
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:37+0000\n"
-"PO-Revision-Date: 2025-11-27 06:35+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
+"PO-Revision-Date: 2026-01-10 11:12+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/"
 "point_of_sale/ja/>\n"
@@ -752,7 +752,7 @@ msgstr "活動状態"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1822,7 +1822,7 @@ msgstr "現金丸め"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cashdrawer"
-msgstr "現金箱"
+msgstr "キャッシュドロワー"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__cashier
@@ -2025,6 +2025,13 @@ msgstr "クラッシック革ベルト"
 #: model:product.template,description_sale:point_of_sale.classic_leather_belt_product_template
 msgid "Classic leather belt, a must-have accessory for any wardrobe."
 msgstr "クラッシックな革ベルト、どんなワードローブにも必須のアイテム。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/data_service.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Clear cache"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2392,6 +2399,13 @@ msgstr "連絡先"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Contact Info"
 msgstr "連絡先情報"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/data_service.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Continue"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3420,6 +3434,15 @@ msgstr "失敗したピッキング"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"Failed to initialize the application. This is often caused by outdated "
+"cached data.\n"
+"Would you like to clear the cache and reload?"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Failure to generate Payment QR Code"
 msgstr "支払QRコードの生成失敗"
 
@@ -4024,6 +4047,12 @@ msgstr "リアルタイムで"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Incorrect address for shipping"
 msgstr "配送用の不正な住所"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/data_service.js:0
+msgid "IndexedDB Initialization error"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8185,7 +8214,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -8484,6 +8513,15 @@ msgid ""
 msgstr ""
 "ISOの国別コードは2文字です。\n"
 "これを使ってクイックサーチできます。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/data_service.js:0
+msgid ""
+"The IndexedDB database is taking too long to initialize. This may be due to "
+"a corrupted IndexedDB database. We recommend you to clear your browser's "
+"IndexedDB for this site and reload the Point of Sale."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
