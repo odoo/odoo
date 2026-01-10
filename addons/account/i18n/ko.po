@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-01-08 18:36+0000\n"
 "PO-Revision-Date: 2025-12-10 11:18+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-18/account/"
@@ -9050,6 +9050,11 @@ msgid "Invoice Outstanding Credits Debits Widget"
 msgstr "청구서 미처리내역 대변 차변 위젯"
 
 #. module: account
+#: model:ir.actions.report,name:account.account_invoices
+msgid "Invoice PDF"
+msgstr "청구서 PDF"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
@@ -11711,7 +11716,6 @@ msgstr "PAY001"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#: model:ir.actions.report,name:account.account_invoices
 msgid "PDF"
 msgstr "PDF"
 
@@ -15594,6 +15598,14 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "%(name)s 항목 (ID %(id)s)이 초안에 있어야 합니다."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry '%(move_name)s (id %(move_id)s) is using accounts from a different "
+"company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -19351,9 +19363,6 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} 결제 영수증 (참조 {{ object.name or 'n/a' }})"
-
-#~ msgid "Invoice PDF"
-#~ msgstr "청구서 PDF"
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "이 설정은 청구서가 생성된 후에는 변경할 수 없습니다."
