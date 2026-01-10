@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-24 18:39+0000\n"
+"POT-Creation-Date: 2026-01-09 18:38+0000\n"
 "PO-Revision-Date: 2025-11-22 13:12+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -509,15 +509,15 @@ msgid ""
 "merge all samples.<br/>It can lead to partially invalid result in case of "
 "concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
-"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
-"\"profile_aggregation_mode\">\n"
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
+"id=\"profile_aggregation_mode\">\n"
 "                                <option value=\"tabs\">Separados (um por "
 "registro))</option>\n"
 "                                <option value=\"temporal\">Temporal "
 "(experimental)</option>\n"
 "                            </select>\n"
-"                            <span id=\"temporal_warning\" class="
-"\"alert alert-warning\" style=\"display:none\"><b>Aviso:</b> O modo temporal "
+"                            <span id=\"temporal_warning\" class=\"alert "
+"alert-warning\" style=\"display:none\"><b>Aviso:</b> O modo temporal "
 "mesclará todas as amostras.<br/>Pode levar a um resultado parcialmente "
 "inválido no caso de perfis simultâneos.<br/>Use com cautela </span>"
 
@@ -661,8 +661,8 @@ msgid ""
 "strong>"
 msgstr ""
 "<strong class=\"text-nowrap\">US$ <span class=\"oe_currency_value\">\n"
-"                                                       "
-"22.137,50</span></strong>"
+"                                                       22.137,50</span></"
+"strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -3667,7 +3667,8 @@ msgstr "ID de registro inválido: %s"
 #. odoo-python
 #: code:addons/web/controllers/json.py:0
 msgid "Invalid view type '%(view_type)s' for action id=%(action)s"
-msgstr "Tipo de visualização inválido '%(view_type)s' para a ação id=%(action)s"
+msgstr ""
+"Tipo de visualização inválido '%(view_type)s' para a ação id=%(action)s"
 
 #. module: web
 #. odoo-javascript
@@ -4731,6 +4732,12 @@ msgid "No data to display"
 msgstr "Sem dados a mostrar"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/pivot.py:0
+msgid "No data to export"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 msgid "No debug command found"
@@ -4993,8 +5000,8 @@ msgid ""
 "Of the %(selectedRecord)s selected records, only the first %(firstRecords)s "
 "have been archived/unarchived."
 msgstr ""
-"Dos %(selectedRecord)s registros selecionados, apenas os primeiros "
-"%(firstRecords)s foram arquivados/desarquivados."
+"Dos %(selectedRecord)s registros selecionados, apenas os primeiros %"
+"(firstRecords)s foram arquivados/desarquivados."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_offline

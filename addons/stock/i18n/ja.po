@@ -6,14 +6,14 @@
 # Wil Odoo, 2025
 # Junko Augias, 2025
 #
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-26 18:38+0000\n"
-"PO-Revision-Date: 2025-12-27 21:01+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
+"PO-Revision-Date: 2026-01-10 10:39+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-2/"
 "stock/ja/>\n"
@@ -822,8 +822,8 @@ msgstr "<strong>バーコード</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>顧客住所</strong>"
+msgid "<strong>Customer</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -834,6 +834,11 @@ msgstr "<strong>配送</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
 msgstr "<strong>配送先住所:</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1054,7 +1059,7 @@ msgstr "活動状態"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_icon
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_activity
@@ -2022,8 +2027,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "DHLで配送費用を計算し発送します<br/>\n"
-"                                    "
-"<strong>(ホーム&gt;アプリからインストールしてください)</strong>"
+"                                    <strong>(ホーム&gt;アプリからインストール"
+"してください)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2048,8 +2053,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "FedExで配送費用を計算し発送します<br/>\n"
-"                                    "
-"<strong>(ホーム&gt;アプリからインストールしてください)</strong>"
+"                                    <strong>(ホーム&gt;アプリからインストール"
+"してください)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2079,8 +2084,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "UPSで配送費用を計算し発送します<br/>\n"
-"                                    "
-"<strong>(ホーム&gt;アプリからインストールしてください)</strong>"
+"                                    <strong>(ホーム&gt;アプリからインストール"
+"してください)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2095,8 +2100,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "USPSで配送費用を計算し発送します<br/>\n"
-"                                    "
-"<strong>(ホーム&gt;アプリからインストールしてください)</strong>"
+"                                    <strong>(ホーム&gt;アプリからインストール"
+"してください)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8818,7 +8823,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__origin
 msgid "Source"
-msgstr "情報源"
+msgstr "参照元"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__origin
@@ -8826,7 +8831,7 @@ msgstr "情報源"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__origin
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Source Document"
-msgstr "元ドキュメント"
+msgstr "参照元ドキュメント"
 
 #. module: stock
 #. odoo-python
@@ -8916,7 +8921,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -11855,6 +11860,9 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} 配送オーダ (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>顧客住所</strong>"
 
 #~ msgid ""
 #~ "You cannot validate a transfer if no quantities are reserved. To force "

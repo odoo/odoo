@@ -1,26 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* calendar
+# * calendar
 #
 # Translators:
 # Vojtěch Olšan, 2025
 # Marta Wacławek, 2025
 # Wil Odoo, 2025
 #
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-24 18:37+0000\n"
-"PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"PO-Revision-Date: 2026-01-10 10:35+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-s18-2/"
+"calendar/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : "
+"(n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
@@ -529,6 +532,95 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    <t t-set=\"mail_tz\" t-value="
+"\"object._get_mail_tz() or ctx.get('mail_tz')\"/>\n"
+"                    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
+"                    <t t-set=\"start_date\" t-value=\"object.start or ''\"/>"
+"\n"
+"                    <t t-set=\"end_date\" t-value=\"object.stop or ''\"/>\n"
+"                    <t t-set=\"event_organizer\" t-value="
+"\"object.user_id.name or ''\"/>\n"
+"                    <div>\n"
+"                        <table border=\"0\" cellpadding=\"0\" cellspacing="
+"\"0\">\n"
+"                            <tr>\n"
+"                                <td width=\"130px;\" style=\"min-width: "
+"130px;\">\n"
+"                                    <div style=\"border-top-start-radius: "
+"3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; "
+"text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; "
+"background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                                        <t t-out=\"format_datetime("
+"dt=object.start, tz=mail_tz if not object.allday else None, "
+"dt_format='EEEE', lang_code=object.env.lang) \">Úterý</t>\n"
+"                                    </div>\n"
+"                                    <div style=\"font-size: 48px; min-height:"
+" auto; font-weight: bold; text-align: center; color: #5F5F5F; background-"
+"color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                                        <t t-out=\"format_datetime("
+"dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', "
+"lang_code=object.env.lang)\">4</t>\n"
+"                                    </div>\n"
+"                                    <div style=\"font-size: 12px; text-align:"
+" center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                                        <t t-out=\"format_datetime("
+"dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM "
+"y', lang_code=object.env.lang)\">května 2021</t>\n"
+"                                    </div>\n"
+"                                    <div style=\"border-collapse: separate; "
+"color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-"
+"radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-"
+"start-radius: 3px;\">\n"
+"                                        <t t-if=\"not object.allday\">\n"
+"                                            <div>\n"
+"                                                <t t-out=\"format_time("
+"time=object.start, tz=mail_tz, time_format='short', "
+"lang_code=object.env.lang)\">11:00</t>\n"
+"                                            </div>\n"
+"                                            <t t-if=\"mail_tz\">\n"
+"                                                <div style=\"font-size: 10px;"
+" font-weight: normal\">\n"
+"                                                    "
+"(<t t-out=\"mail_tz\"> Europe/Brussels</t>)\n"
+"                                                </div>\n"
+"                                            </t>\n"
+"                                        </t>\n"
+"                                    </div>\n"
+"                                </td>\n"
+"                                <td width=\"20px;\"/>\n"
+"                                <td style=\"padding-top: 5px;\">\n"
+"                                    <p>\n"
+"                                        <strong>Táto schůzka byla zrušená a "
+"odstraněná z vašeho kalendáře.</strong>\n"
+"                                    </p>\n"
+"                                    <p>\n"
+"                                        Tímto vás informujeme, že schůzka "
+"<strong><t t-out=\"event_name\"/></strong>\n"
+"                                        naplánována od <strong><t t-out="
+"\"start_date or ''\"/></strong>\n"
+"                                        do <strong><t t-out="
+"\"end_date or ''\"/></strong>\n"
+"                                        byla odstraněna.\n"
+"                                    </p>\n"
+"                                    <p>\n"
+"                                        Organizátor: <strong><t t-out="
+"\"event_organizer\"/></strong>\n"
+"                                    </p>\n"
+"                                    <p>\n"
+"                                        V případě dotazů nás neváhejte "
+"kontaktovat.\n"
+"                                    </p>\n"
+"                                    <p>\n"
+"                                        S pozdravem,<br/>\n"
+"                                        <strong>Tým kalendáře</strong>\n"
+"                                    </p>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </div>\n"
+"                </div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -1409,16 +1501,18 @@ msgid ""
 "<i class=\"fa fa-calendar me-1\" aria-label=\"Meetings\" role=\"img\" "
 "title=\"Meetings\"/>"
 msgstr ""
+"<i class=\"fa fa-calendar me-1\" aria-label=\"Schůzky\" role=\"img\" title="
+"\"Schůzky\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"fa fa-plus\"/> <span>Odoo meeting</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-plus\"/> <span>Odoo schůzka</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span class=\"fa fa-plus\"/><span> Odoo meeting</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-plus\"/><span> Odoo schůzka</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1433,6 +1527,9 @@ msgid ""
 "['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
 "'weekly')\">Repeat on</span>"
 msgstr ""
+"<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
+"['weekly', 'custom'] or "
+"(rrule_type_ui == 'custom' and rrule_type != 'weekly')\">Opakování</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -1469,7 +1566,7 @@ msgstr "<span> hodin</span>"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 msgid "<span>Are you sure you want to delete this event? <br/></span>"
-msgstr ""
+msgstr "<span>Opravdu chcete tuto událost smazat? <br/></span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -1492,7 +1589,7 @@ msgstr "Přijmout"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__accepted_count
 msgid "Accepted Count"
-msgstr ""
+msgstr "Přijatý počet"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -1698,7 +1795,7 @@ msgstr "Informace o účastníkovi v kalendáři"
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendar_default_privacy
 msgid "Calendar Default Privacy"
-msgstr ""
+msgstr "Výchozí nastavení ochrany osobních údajů kalendáře"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -1745,7 +1842,7 @@ msgstr "Kalendář: Datum aktualizace"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_delete_event
 msgid "Calendar: Event Deleted"
-msgstr ""
+msgstr "Kalendář: Událost smazána"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
@@ -1971,12 +2068,13 @@ msgstr "Výchozí"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Default Privacy"
-msgstr ""
+msgstr "Výchozí nastavení ochrany osobních údajů"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_res_users_settings__calendar_default_privacy
 msgid "Default privacy setting for whom the calendar events will be visible."
 msgstr ""
+"Výchozí nastavení soukromí, pro koho budou události kalendáře viditelné."
 
 #. module: calendar
 #. odoo-javascript
@@ -2176,7 +2274,7 @@ msgstr "Správce notifikací kalendářové události"
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_event_delete_wizard
 msgid "Event Cancel Wizard"
-msgstr ""
+msgstr "Průvodce zrušením události"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
@@ -2803,7 +2901,7 @@ msgstr "Oznámení odeslané všem účastníkům na připomenutí schůzky."
 #: code:addons/calendar/models/calendar_alarm.py:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__notify_responsible
 msgid "Notify Responsible"
-msgstr ""
+msgstr "Upozornit zodpovědnou osobu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -3085,6 +3183,7 @@ msgid ""
 "Scheduling an activity using the calendar is not possible on more than one "
 "record."
 msgstr ""
+"Naplánování aktivity pomocí kalendáře není možné u více než jednoho záznamu."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -3120,7 +3219,7 @@ msgstr "Poslat mail"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 msgid "Send and delete"
-msgstr ""
+msgstr "Odeslat a smazat"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_reminder
@@ -3141,7 +3240,7 @@ msgstr "Nastavení"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
 msgid "Should Show Status"
-msgstr ""
+msgstr "Měl by zobrazit stav"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
@@ -3194,7 +3293,7 @@ msgstr "Datum ukončení události bez času pro celodenní události"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Stop synchro"
-msgstr ""
+msgstr "Zastavit synchronizaci"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__subject
@@ -3224,13 +3323,13 @@ msgstr "Neděle"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Synchro is paused"
-msgstr ""
+msgstr "Synchronizace je pozastavena"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Synchronize with"
-msgstr ""
+msgstr "Synchronizovat s"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -3267,7 +3366,7 @@ msgstr "Orientační"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tentative_count
 msgid "Tentative Count"
-msgstr ""
+msgstr "Předběžný počet"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3297,6 +3396,8 @@ msgid ""
 "The ending date and time cannot be earlier than the starting date and time.\n"
 "Meeting “%(name)s” starts at %(start_time)s and ends at %(end_time)s"
 msgstr ""
+"Datum a čas ukončení nesmí být dřívější než datum a čas zahájení.\n"
+"Schůzka „%(name)s“ začíná v %(start_time)s a končí v %(end_time)s"
 
 #. module: calendar
 #. odoo-python
@@ -3305,6 +3406,8 @@ msgid ""
 "The ending date cannot be earlier than the starting date.\n"
 "Meeting “%(name)s” starts on %(start_date)s and ends on %(end_date)s"
 msgstr ""
+"Datum ukončení nesmí být dřívější než datum zahájení.\n"
+"Setkání „%(name)s“ začíná dne %(start_date)s a končí dne %(end_date)s"
 
 #. module: calendar
 #. odoo-python
@@ -3399,7 +3502,7 @@ msgstr "Typ"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Unable to save the recurrence with \"This Event\""
-msgstr ""
+msgstr "Nelze uložit opakování s „Touto událostí“"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3425,7 +3528,7 @@ msgstr "Používá se k ručnímu upozornění účastníků"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_delete_event
 msgid "Used to manually notify attendees"
-msgstr ""
+msgstr "Slouží k ručnímu informování účastníků"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -3435,7 +3538,7 @@ msgstr "Uživatel"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
 msgid "User Can Edit"
-msgstr ""
+msgstr "Uživatel může upravovat"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users_settings
@@ -3518,6 +3621,8 @@ msgid ""
 "You are not allowed to change the calendar default privacy of another user "
 "due to privacy constraints."
 msgstr ""
+"Z důvodu omezení ochrany soukromí nemáte oprávnění měnit výchozí nastavení "
+"soukromí kalendáře jiného uživatele."
 
 #. module: calendar
 #. odoo-python
@@ -3547,7 +3652,7 @@ msgstr "Na této schůzce jste sami"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "accepted"
-msgstr ""
+msgstr "přijato"
 
 #. module: calendar
 #. odoo-javascript
@@ -3564,7 +3669,7 @@ msgstr "čekající"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "declined"
-msgstr ""
+msgstr "odmítnuto"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3574,7 +3679,7 @@ msgstr "např. Obchodní oběd"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g: 12/31/2023"
-msgstr ""
+msgstr "např.: 31. 12. 2023"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3585,7 +3690,7 @@ msgstr "možná,"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/attendee_tags_list.xml:0
 msgid "no email"
-msgstr ""
+msgstr "žádný e-mail"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3596,13 +3701,13 @@ msgstr "ne,"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 msgid "props.placeholder"
-msgstr ""
+msgstr "props.placeholder"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "uncertain"
-msgstr ""
+msgstr "nejistý"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
