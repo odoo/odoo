@@ -1276,3 +1276,62 @@ test("sidebar category toggle is visually disabled when no visible channels", as
         ".o-mail-DiscussSidebarCategory-toggler:disabled:contains('Channels') i.oi-chevron-right"
     );
 });
+
+test("Muted group chats show notification counter from mentions-only", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Chuck" });
+    const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "group",
+            name: "Sales Team",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "group",
+            name: "Development Team",
+        },
+    ]);
+    const messageIds = pyEnv["mail.message"].create([
+        {
+            author_id: partnerId,
+            model: "discuss.channel",
+            res_id: channelId_2,
+            body: "@Mitchell Admin",
+            needaction: true,
+        },
+        {
+            author_id: partnerId,
+            model: "discuss.channel",
+            res_id: channelId_1,
+            body: "test",
+        },
+        {
+            author_id: partnerId,
+            model: "discuss.channel",
+            res_id: channelId_2,
+            body: "test",
+        },
+    ]);
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageIds[0],
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+    ]);
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel:contains(Sales Team) .badge:text('1')");
+    await contains(".o-mail-DiscussSidebarChannel:contains(Development Team) .badge:text('2')");
+    rpc("/discuss/settings/mute", { minutes: -1, channel_id: channelId_1 });
+    rpc("/discuss/settings/mute", { minutes: -1, channel_id: channelId_2 });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Sales Team) .badge", { count: 0 });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Development Team) .badge:text('1')");
+});

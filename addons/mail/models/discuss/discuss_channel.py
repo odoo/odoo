@@ -912,8 +912,11 @@ class DiscussChannel(models.Model):
             [("channel_id", "=", self.id)],
             [("partner_id", "!=", author_id)],
             [("partner_id.active", "=", True)],
-            [("mute_until_dt", "=", False)],
             [("partner_id.user_ids.manual_im_status", "!=", "busy")],
+            Domain.OR([
+                [("mute_until_dt", "=", False)],
+                [("partner_id", "in", pids)],
+            ]),
             Domain.OR([
                 [("channel_id.channel_type", "!=", "channel")],
                 Domain.AND([

@@ -37,10 +37,10 @@
                 <t t-set="message" t-value="thread.channel?.isChatChannel or (thread.channel?.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentOfAllMessage : thread.needactionMessages.at(-1)"/>
                 <NotificationItem
                     isActive="state.activeIndex === itemIndex"
-                    counter="thread.needactionCounter"
+                    counter="thread.channel?.importantCounter ?? thread.needactionCounter"
                     datetime="message?.datetime"
                     iconSrc="thread.avatarUrl"
-                    important="thread.needactionCounter"
+                    important="thread.channel?.importantCounter ?? thread.needactionCounter"
                     hasMarkAsReadButton="thread.isUnread"
                     muted="thread.channel?.self_member_id?.mute_until_dt ? 2 : !thread.isUnread ? 1 : 0"
                     onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread, message)"
