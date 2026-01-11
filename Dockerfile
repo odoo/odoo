@@ -7,9 +7,12 @@ FROM python:3.12-slim-bookworm AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_NO_CACHE_DIR=1
+    PIP_NO_CACHE_DIR=0 \
+    PIP_CACHE_DIR=/root/.cache/pip
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     git \
     curl \
@@ -34,7 +37,8 @@ WORKDIR /opt/odoo
 COPY ./requirements.txt ./requirements.txt
 
 # Builda wheels (mais rápido e reprodutível no runtime)
-RUN python -m pip install --upgrade pip wheel setuptools \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python -m pip install --upgrade pip wheel setuptools \
  && python -m pip wheel -r requirements.txt -w /wheels
 
 
@@ -51,7 +55,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
     WKHTMLTOPDF_VERSION=0.12.6.1-3
 
 # Runtime libs (sem *-dev)
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
     tini \
     curl \
     ca-certificates \
@@ -105,7 +111,8 @@ WORKDIR ${ODOO_HOME}
 # instala wheels
 COPY --from=builder /wheels /wheels
 COPY --from=builder /opt/odoo/requirements.txt /opt/odoo/requirements.txt
-RUN python -m pip install --no-index --find-links=/wheels -r /opt/odoo/requirements.txt \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python -m pip install --no-index --find-links=/wheels -r /opt/odoo/requirements.txt \
  && rm -rf /wheels
 
 # copia o código do odoo + seus addons

@@ -23,6 +23,7 @@ Main Features:
         'security/ir.model.access.csv',
         'views/tenant_views.xml',
     ],
+    'pre_init_hook': 'pre_init_hook',
     'installable': True,
     'application': True,
     'auto_install': False,
