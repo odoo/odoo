@@ -49,7 +49,6 @@ MODULES_TO_LINT = (
     'planning_calendar',
     'planning_contract',
     'planning_holidays',
-    'planning_hr_skills',
     'project',
     'project_account_asset',
     'project_account_budget',
