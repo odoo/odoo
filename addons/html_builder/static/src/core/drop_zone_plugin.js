@@ -119,12 +119,17 @@ export class DropZonePlugin extends Plugin {
                 excludeNearParent,
             } = dropzoneSelector;
             if (snippetEl.matches(selector) && !snippetEl.matches(exclude)) {
+                // Allow dropzones when reordering an existing snippet, but
+                // prevents their creation when "o-contenteditable-false" class
+                // is present to avoid dropping new inner block snippets.
+                const filterTarget = (el) =>
+                    this.editable.contains(snippetEl) || !el.closest(".o-contenteditable-false");
                 if (dropNear) {
                     selectorSiblings.push(
                         ...this.getSelectorSiblings(editableAreaEls, rootEl, {
                             selector: dropNear,
                             excludeNearParent,
-                        })
+                        }).filter(filterTarget)
                     );
                 }
                 if (dropIn) {

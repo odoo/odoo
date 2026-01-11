@@ -1,6 +1,7 @@
 import {
     confirmAddSnippet,
     dummyBase64Img,
+    getDragMoveHelper,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { expect, test } from "@odoo/hoot";
@@ -79,6 +80,7 @@ test("Add image in gallery", async () => {
         "data-mimetype-before-conversion",
         "image/png"
     );
+    expect(":iframe .o_masonry_col img[data-index='6']").toHaveClass("o_editable_media");
 });
 
 // TODO Re-enable once interactions run within iframe in hoot tests.
@@ -250,4 +252,32 @@ test("Click the outline option for the image gallery thumbnails", async () => {
         ".o-dropdown--menu [data-action-param='s_image_gallery_indicators_dots']"
     ).click();
     expect(":iframe section.o_slideshow").not.toHaveClass("s_image_gallery_indicators_outline");
+});
+
+test("Disable text input and inner snippet insertion in s_images_wall", async () => {
+    const imageWallSelector = ":iframe .o_masonry";
+    await setupWbsiteBuilderWithImageWall();
+    await contains(imageWallSelector).click();
+    expect(`${imageWallSelector} .o-contenteditable-false`).toHaveCount(1);
+    expect(`${imageWallSelector} img.o_editable_media`).toHaveCount(6);
+    await contains("[data-label='Mode'] .dropdown-toggle").click();
+    await contains("[data-action-param='grid']").click();
+    await contains(":iframe .o_grid img").click();
+    const { drop } = await contains(".o_overlay_options .o_draggable").drag();
+    expect(":iframe .oe_drop_zone").toHaveCount(7);
+    await drop(getDragMoveHelper());
+    await contains("[data-name='blocks']").click();
+    await contains("[data-snippet='s_button']").drag();
+    expect(":iframe .oe_drop_zone").toHaveCount(0);
+});
+
+test("Disable text input and inner snippet insertion in s_image_gallery", async () => {
+    const imageGallerySelector = ":iframe .s_image_gallery";
+    await setupWebsiteBuilderWithSnippet("s_image_gallery");
+    await contains(imageGallerySelector).click();
+    expect(`${imageGallerySelector} .o-contenteditable-false`).toHaveCount(1);
+    expect(`${imageGallerySelector} img.o_editable_media`).toHaveCount(3);
+    await contains("[data-name='blocks']").click();
+    await contains("[data-snippet='s_button']").drag();
+    expect(":iframe .oe_drop_zone").toHaveCount(0);
 });
