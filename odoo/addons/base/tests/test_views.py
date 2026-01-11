@@ -4924,7 +4924,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'hr_recruitment',
             'hr_recruitment_extract',
             'hr_recruitment_sign',
-            'hr_recruitment_skills',
             'hr_recruitment_survey',
             'hr_referral',
             'hr_sign',

@@ -31,6 +31,7 @@
         'views/hr_applicant_category_views.xml',
         'views/hr_applicant_refuse_reason_views.xml',
         'views/hr_applicant_views.xml',
+        'views/hr_applicant_skill_views.xml',
         'views/hr_talent_pool_views.xml',
         'views/res_config_settings_views.xml',
         'views/hr_department_views.xml',

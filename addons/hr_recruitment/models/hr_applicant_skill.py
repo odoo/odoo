@@ -5,10 +5,10 @@ from odoo import fields, models
 
 
 class HrApplicantSkill(models.Model):
-    _name = 'hr.applicant.skill'
+    _name = "hr.applicant.skill"
     _inherit = "hr.individual.skill.mixin"
     _description = "Skill level for an applicant"
-    _rec_name = 'skill_id'
+    _rec_name = "skill_id"
     _order = "skill_type_id, skill_level_id desc"
 
     applicant_id = fields.Many2one(

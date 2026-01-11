@@ -142,7 +142,7 @@
                                                     <i class="fa fa-2x fa-clock-o" role="img" aria-label="Activities"></i>
                                                     <span class="activity_badge position-absolute translate-middle badge rounded-pill bg-danger text-light" t-if="record.activity_count.raw_value > 0">
                                                         <field name="activity_count"/>
-                                                    </span> 
+                                                    </span>
                                                 </button>
                                             </div>
                                         </div>
@@ -428,6 +428,9 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="department_id"/>
+                <field name="applicant_matching_score" widget="progressbar"
+                    groups="hr_recruitment.group_hr_recruitment_interviewer"
+                    invisible="not applicant_matching_score" column_invisible="not context.get('active_applicant_id')"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="open_application_count" string="Open Applications" groups="hr_recruitment.group_hr_recruitment_interviewer" optional="hide"/>
                 <field name="no_of_recruitment" optional="hide"/>
@@ -487,6 +490,17 @@
         ]</field>
     </record>
 
+    <record id="view_hr_job_form" model="ir.ui.view">
+        <field name="name">hr.job.view.form.inherit.hr.recruitment</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='job_skills']/field[@name='current_job_skill_ids']" position="attributes">
+                <attribute name="groups">!hr.group_hr_user,!hr_recruitment.group_hr_recruitment_interviewer</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="hr_job_platform_form" model="ir.ui.view">
         <field name="name">hr.job.platform.form</field>
         <field name="model">hr.job.platform</field>
@@ -537,5 +551,14 @@
                 Without a regex: The applicant's name will be the email's subject.
             </p>
         </field>
+    </record>
+
+    <record id="action_applicant_search_applicant" model="ir.actions.server">
+        <field name="name">Search Matching Applicants</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_job"/>
+        <field name="binding_model_id" ref="hr_recruitment.model_hr_job"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_search_matching_applicants()</field>
     </record>
 </odoo>
