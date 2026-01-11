@@ -604,7 +604,8 @@ export const accountTaxHelpers = {
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
     add_tax_details_in_base_line(base_line, company, { rounding_method = null } = {}) {
-        rounding_method = rounding_method || company.tax_calculation_rounding_method;
+        rounding_method =
+            rounding_method || base_line.rounding_method || company.tax_calculation_rounding_method;
         const price_unit_after_discount = base_line.price_unit * (1 - (base_line.discount / 100.0));
         const currency_pd = base_line.currency_id.rounding;
         const company_currency_pd = company.currency_id.rounding;

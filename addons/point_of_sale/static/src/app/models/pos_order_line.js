@@ -402,6 +402,9 @@ export class PosOrderline extends Base {
                 order.models
             );
         }
+        if (this.product_id.id === order.config.down_payment_product_id?.id) {
+            values.rounding_method = "round_globally";
+        }
         return values;
     }
 
@@ -411,17 +414,25 @@ export class PosOrderline extends Base {
             : isNaN(parseFloat(price))
             ? 0
             : parseFloat("" + price);
-        this.price_unit = roundDecimals(
-            parsed_price || 0,
-            this.models["decimal.precision"].find((dp) => dp.name === "Product Price").digits
-        );
+        const productPricePrecision = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        ).digits;
+        const digits =
+            this.product_id.id === this.config.down_payment_product_id?.id
+                ? Math.max(productPricePrecision, 6)
+                : productPricePrecision;
+        this.price_unit = roundDecimals(parsed_price || 0, digits);
         this.setDirty();
     }
 
     get_unit_price() {
-        const digits = this.models["decimal.precision"].find(
+        const productPricePrecision = this.models["decimal.precision"].find(
             (dp) => dp.name === "Product Price"
         ).digits;
+        const digits =
+            this.product_id.id === this.config.down_payment_product_id?.id
+                ? Math.max(productPricePrecision, 6)
+                : productPricePrecision;
         // round and truncate to mimic _symbol_set behavior
         return window.parseFloat(roundDecimals(this.price_unit || 0, digits).toFixed(digits));
     }

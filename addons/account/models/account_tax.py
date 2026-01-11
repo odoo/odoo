@@ -1521,7 +1521,7 @@ class AccountTax(models.Model):
         :param company:         The company owning the base line.
         :param rounding_method: The rounding method to be used. If not specified, it will be taken from the company.
         """
-        rounding_method = rounding_method or company.tax_calculation_rounding_method
+        rounding_method = rounding_method or base_line.get('rounding_method') or company.tax_calculation_rounding_method
         price_unit_after_discount = base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))
         taxes_computation = base_line['tax_ids']._get_tax_details(
             price_unit=price_unit_after_discount,

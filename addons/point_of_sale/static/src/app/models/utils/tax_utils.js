@@ -22,12 +22,13 @@ export const compute_price_force_price_include = (
         product_default_values,
         company,
         currency,
-        "total_included"
+        "total_included",
+        "round_globally"
     );
-    let new_price = tax_res.total_excluded;
+    let new_price = tax_res.raw_total_excluded_currency;
     new_price += tax_res.taxes_data
         .filter((tax) => models["account.tax"].get(tax.id).price_include)
-        .reduce((sum, tax) => (sum += tax.tax_amount), 0);
+        .reduce((sum, tax) => (sum += tax.raw_tax_amount_currency), 0);
     return new_price;
 };
 
@@ -39,7 +40,8 @@ export const getTaxesValues = (
     productDefaultValues,
     company,
     currency,
-    special_mode = null
+    special_mode = null,
+    rounding_method = null
 ) => {
     const baseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
         {},
@@ -55,7 +57,7 @@ export const getTaxesValues = (
             special_mode: special_mode,
         }
     );
-    accountTaxHelpers.add_tax_details_in_base_line(baseLine, company);
+    accountTaxHelpers.add_tax_details_in_base_line(baseLine, company, { rounding_method });
     accountTaxHelpers.round_base_lines_tax_details([baseLine], company);
 
     const results = baseLine.tax_details;
