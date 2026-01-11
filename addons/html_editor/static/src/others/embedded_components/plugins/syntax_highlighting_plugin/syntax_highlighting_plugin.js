@@ -116,6 +116,22 @@ export class SyntaxHighlightingPlugin extends Plugin {
         if (name === "syntaxHighlighting") {
             Object.assign(props, {
                 onTextareaFocus: () => this.dependencies.history.stageFocus(),
+                convertToParagraph: ({ target }) => {
+                    this.dependencies.history.stageSelection();
+                    const component = target.closest(`[data-embedded='${name}']`);
+                    const embeddedProps = getEmbeddedProps(component);
+                    const value = embeddedProps.value;
+                    const p = this.document.createElement("div");
+                    p.classList.add("o-paragraph");
+                    p.textContent = value;
+                    component.before(p);
+                    component.remove();
+                    newlinesToLineBreaks(p);
+                    this.dependencies.selection.setSelection({
+                        anchorNode: p,
+                    });
+                    this.dependencies.history.addStep();
+                },
             });
             props.host.removeAttribute("data-syntax-highlighting-autofocus");
         }

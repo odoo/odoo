@@ -1021,3 +1021,45 @@ class TestExpenses(TestExpenseCommon):
         expense.action_approve()
         # Should not raise trust validation error despite missing recipient partner bank
         expense.action_post()
+
+    def test_expense_analytic_vendor_bill_count(self):
+        """
+        Verify that purchase receipts appear when opening a vendor bill via the smart button,
+        and that the vendor bill count matches the records shown.
+        """
+        expense = self.create_expenses([
+            {
+                'name': 'Employee PA 2*800 + 15%',
+                'analytic_distribution': {self.analytic_account_1.id: 100},
+            }])
+        expense.action_submit()
+        expense.action_approve()
+        self.post_expenses_with_wizard(expense)
+
+        self.assertEqual('in_receipt', expense.account_move_id.move_type)
+
+        vendor_bill_view = self.analytic_account_1.action_view_vendor_bill()
+        self.assertTrue(expense.account_move_id.id in vendor_bill_view['domain'][0][2])
+
+    def test_expense_paid_company_no_autobalancing_line(self):
+        """
+        Test that when creating the move associated with an expense paid by company, no autobalancing line
+        appears when an analytic is added to a move line.
+        """
+        expense = self.create_expenses({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'total_amount_currency': 100.0,
+            'product_id': self.product_c.id,
+            'payment_mode': 'company_account',
+            'company_id': self.company_data['company'].id,
+            'tax_ids': [self.tax_sale_a.id],
+            })
+
+        expense.action_submit()
+        expense.action_approve()
+        expense.analytic_distribution = {self.analytic_account_1.id: 100.00}
+        expense.action_post()
+
+        # Check that there is no fourth autobalancing line on the account move
+        self.assertEqual(expense.account_move_id.line_ids.mapped('balance'), [86.96, 13.04, -100.0])

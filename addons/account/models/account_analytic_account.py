@@ -65,7 +65,7 @@ class AccountAnalyticAccount(models.Model):
     def action_view_vendor_bill(self):
         self.ensure_one()
         account_move_lines = self.env['account.move.line'].search_fetch([
-            ('move_id.move_type', 'in', self.env['account.move'].get_purchase_types()),
+            ('move_id.move_type', 'in', self.env['account.move'].get_purchase_types(include_receipts=True)),
             ('analytic_distribution', 'in', self.ids),
         ], ['move_id'])
         return {

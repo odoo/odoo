@@ -12,14 +12,14 @@
 # Martin Trigaux, 2023
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:46+0000\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
+"PO-Revision-Date: 2026-01-06 06:54+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "account/id/>\n"
@@ -3556,7 +3556,7 @@ msgstr "Sudah Dibayar:"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Already unsubscribed"
-msgstr ""
+msgstr "Sudah berhenti berlangganan"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__always
@@ -4124,7 +4124,7 @@ msgstr "Auto-Complete"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_vendor_bill_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
 msgid "Auto-complete from a previous bill or refund."
-msgstr ""
+msgstr "Selesaikan otomatis dari tagihan sebelumnya atau refund."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ids
@@ -7199,7 +7199,7 @@ msgstr "Usang"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Deprecated link"
-msgstr ""
+msgstr "Link usang"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
@@ -7935,6 +7935,8 @@ msgid ""
 "During perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
 msgstr ""
+"Selama perpetual valuation, akun ini akan memegang perbedaan harga antara "
+"harga standar dan harga tagihan."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -8081,6 +8083,8 @@ msgid ""
 "Email addresses that will receive copy for sent and received invoices. "
 "Separate entries with ';'."
 msgstr ""
+"Alamat email yang akan menerima salinan untuk faktur yang dikirim dan "
+"diterima. Pisahkan entri dengan ';'."
 
 #. module: account
 #. odoo-javascript
@@ -8400,12 +8404,12 @@ msgstr "Entri-entri selisih kurs:"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__no_followup
 #: model:ir.model.fields,help:account.field_account_move__no_followup
 msgid "Exclude this journal entry from follow-up reports."
-msgstr ""
+msgstr "Kecualikan entri jurnal ini dari laporan follow-up."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__no_followup
 msgid "Exclude this journal item from follow-up reports."
-msgstr ""
+msgstr "Kecualikan item jurnal ini dari laporan follow-up."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
@@ -9753,6 +9757,8 @@ msgid ""
 "If checked, the lines below this section will not be displayed in reports "
 "and portal."
 msgstr ""
+"Bila dicentang, baris di bawah bagian ini tidak akan ditampilkan di laporan "
+"dan portal."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__collapse_prices
@@ -9760,6 +9766,8 @@ msgid ""
 "If checked, the prices of the lines below this section will not be displayed "
 "in reports and portal."
 msgstr ""
+"Bila dicentang, harga baris-baris di bawah bagian ini tidak akan ditampilkan "
+"di laporan dan portal."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10420,7 +10428,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Invalid token"
-msgstr ""
+msgstr "Token tidak valid"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_inventory_valuation
@@ -11906,6 +11914,20 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Manual: Bayar atau Dapatkan Bayaran dengan metode apa pun diluar Odoo.\n"
+"Provider Pembayaran: Setiap provider pembayaran memiliki Metode "
+"Pembayarannya sendiri. Minta transaksi pada/ke kartu berkat token pembayaran "
+"yang disimpan oleh partner saat membeli atau berlangganan online.\n"
+"Cek: Bayara tagihan menggunakan cek dan cetak dari Odoo.\n"
+"Batch Deposit: Kumpulkan beberapa cek pelanggan sekaligus membuat dan "
+"menyerahkan batch deposit ke bank Anda. Modul account_batch_payment "
+"diperlukan.\n"
+"SEPA Credit Transfer: Bayar dalam SEPA zone dengan menyerahkan file SEPA "
+"Credit Transfer ke bank Anda. Modul account_iso20022 diperlukan.\n"
+"SEPA Direct Debit: Dapatkan bayaran dalam SEPA zone berkat mandat yang "
+"partner Anda akan ebrikan ke Anda. Modul account_iso20022 diperlukan.\n"
+"U.S. ISO20022: Bayar di AS dengan menyerahkan file ISO20022 ke bank Anda. "
+"Modul account_iso20022 diperlukan.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__payment_method_line_id
@@ -13242,6 +13264,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Bahasa terjemahan opsional (kode ISO) untuk dipilih saat mengirimkan email. "
+"Bila tidak ditetapkan, bahasa utama partner akan digunakan. Ini biasanya "
+"merupakan expression placeholder yang menyediakan bahasa yang sesuai, "
+"contoh. {{ object.partner_id.lang }}."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -14011,7 +14037,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Pembayaran yang sudah direkonsiliasi dengan faktur ini."
 
 #. module: account
 #: model:account.group,name:account.2_us_group_61
@@ -15860,7 +15886,7 @@ msgstr "Kirim"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__incoming_einvoice_notification_email
 msgid "Send Copy To"
-msgstr ""
+msgstr "Kirim Salinan Ke"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__allow_out_payment
@@ -18845,6 +18871,8 @@ msgid ""
 "This journal is for self-billing invoices. Invoices will be created using a "
 "different sequence per partner."
 msgstr ""
+"Jurnal ini untuk faktur tagihan-mandiri. Faktur akan dibuat menggunakan "
+"urutan berbeda per partner."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -18948,15 +18976,6 @@ msgstr ""
 "lain,\n"
 "                seperti untuk mengirim melalui email atau meninjau batch "
 "rekaman."
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid ""
-"This will update all taxes and accounts based on the currently selected "
-"fiscal position."
-msgstr ""
-"Ini akan mengupdate semua pajak dan akun berdasarkan posisi fiskal yang saat "
-"ini dipilih."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -21799,6 +21818,13 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid ""
+#~ "This will update all taxes and accounts based on the currently selected "
+#~ "fiscal position."
+#~ msgstr ""
+#~ "Ini akan mengupdate semua pajak dan akun berdasarkan posisi fiskal yang "
+#~ "saat ini dipilih."
 
 #~ msgid "Enter an email to get notified"
 #~ msgstr "Masukkan email untuk dinotifikasi"

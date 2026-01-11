@@ -292,7 +292,7 @@ class IrHttp(models.AbstractModel):
     def _get_translation_frontend_modules_name(cls):
         mods = super()._get_translation_frontend_modules_name()
         installed = request.registry._init_modules.union(odoo.tools.config['server_wide_modules'])
-        return mods + [mod for mod in installed if mod.startswith('website')]
+        return mods + [mod for mod in installed if 'website' in mod]
 
     @classmethod
     def _serve_page(cls):

@@ -14,40 +14,50 @@ class PeppolRegistration(models.TransientModel):
     _name = 'peppol.registration'
     _description = "Peppol Registration"
 
-    def _get_default_use_parent_connection_selection(self):
-        if all((
-            (parent_company := self.env.company._get_active_peppol_parent_company()),  # potential parent peppol company exist
-            parent_company in self.env.user.company_ids,  # current user has access to the potential parent peppol company
-            self.env.company.vat in (False, parent_company.vat),  # current company doesn't have VAT or have same VAT as parent
-        )):
-            return 'use_parent'
-        else:
-            return 'use_self'
-
+    # 'company_id' is the current active company, always set.
     company_id = fields.Many2one(
         comodel_name='res.company',
         required=True,
         default=lambda self: self.env.company,
     )
-    is_branch_company = fields.Boolean(compute='_compute_from_company_id')
-    active_parent_company = fields.Many2one(
+
+    # 'parent_company_id' is the potential parent company of the current branch or the branch itself
+    # if no fallback on the parent branch is possible.
+    parent_company_id = fields.Many2one(
         comodel_name='res.company',
-        compute='_compute_from_company_id',
+        compute='_compute_parent_company_id'
     )
-    active_parent_company_name = fields.Char(related='active_parent_company.name')
+    parent_company_name = fields.Char(related='parent_company_id.name')
+
+    # 'selected_company_id' could be 'company_id' if 'use_parent_connection_selection' is 'use_self'
+    # or 'parent_company_id' if 'use_parent_connection_selection' is 'use_parent'.
+    selected_company_id = fields.Many2one(
+        comodel_name='res.company',
+        compute='_compute_selected_company_id',
+    )
+
+    # Choice between the current company or the parent one.
+    display_use_parent_connection_selection = fields.Boolean(
+        compute='_compute_display_use_parent_connection_selection',
+    )
     use_parent_connection_selection = fields.Selection(
         selection=[
             ('use_parent', "Send from parent company"),
             ('use_self', "Register this company on peppol"),
         ],
-        default=_get_default_use_parent_connection_selection,
+        compute='_compute_use_parent_connection_selection',
+        store=True,
+        readonly=False,
     )
-    can_use_parent_connection = fields.Boolean(compute='_compute_from_company_id')
     use_parent_connection = fields.Boolean(compute='_compute_use_parent_connection')
-    selected_company_id = fields.Many2one(
-        comodel_name='res.company',
-        compute='_compute_selected_company_id',
-    )
+
+    # TODO: remove in master
+    is_branch_company = fields.Boolean(store=False)
+    active_parent_company = fields.Many2one(string="Active Parent Company", related='parent_company_id')
+    active_parent_company_name = fields.Char(string="Active Parent Company Name", related='parent_company_name')
+    can_use_parent_connection = fields.Boolean(string="Can Use Parent Connection", related='display_use_parent_connection_selection')
+    # TODO END: remove in master
+
     edi_mode = fields.Selection(
         string='EDI mode',
         selection=[('demo', 'Demo'), ('test', 'Test'), ('prod', 'Live')],
@@ -108,23 +118,36 @@ class PeppolRegistration(models.TransientModel):
     # -------------------------------------------------------------------------
 
     @api.depends('company_id')
-    def _compute_from_company_id(self):
+    def _compute_parent_company_id(self):
         for wizard in self:
-            wizard.is_branch_company = bool(wizard.company_id.parent_id)
-            wizard.active_parent_company = wizard.company_id._get_active_peppol_parent_company()
-            wizard.can_use_parent_connection = wizard.active_parent_company in self.env.user.company_ids
+            wizard.parent_company_id = wizard.company_id.peppol_parent_company_id or wizard.company_id
+
+    @api.depends('parent_company_id')
+    def _compute_display_use_parent_connection_selection(self):
+        for wizard in self:
+            wizard.display_use_parent_connection_selection = wizard.company_id != wizard.parent_company_id
+
+    @api.depends('display_use_parent_connection_selection')
+    def _compute_use_parent_connection_selection(self):
+        for wizard in self:
+            if wizard.display_use_parent_connection_selection:
+                wizard.use_parent_connection_selection = 'use_parent' if wizard.parent_company_id.peppol_can_send else 'use_self'
+            else:
+                wizard.use_parent_connection_selection = 'use_self'
 
     @api.depends('use_parent_connection_selection')
     def _compute_use_parent_connection(self):
         for wizard in self:
-            wizard.use_parent_connection = wizard.use_parent_connection_selection == 'use_parent'
+            wizard.use_parent_connection = (
+                wizard.display_use_parent_connection_selection
+                and wizard.use_parent_connection_selection == 'use_parent'
+            )
 
-    @api.depends('use_parent_connection', 'active_parent_company')
-    @api.depends_context('company')
+    @api.depends('use_parent_connection')
     def _compute_selected_company_id(self):
         for wizard in self:
-            if wizard.use_parent_connection and wizard.active_parent_company:
-                wizard.selected_company_id = wizard.active_parent_company
+            if wizard.use_parent_connection:
+                wizard.selected_company_id = wizard.parent_company_id
             else:
                 wizard.selected_company_id = wizard.company_id
 
@@ -190,13 +213,12 @@ class PeppolRegistration(models.TransientModel):
 
     def _branch_with_same_address(self):
         self.ensure_one()
-        return all((
-            self.is_branch_company,
-            self.active_parent_company,
-            not self.use_parent_connection,
-            self.peppol_eas == self.active_parent_company.peppol_eas,
-            self.peppol_endpoint == self.active_parent_company.peppol_endpoint,
-        ))
+        return (
+            not self.use_parent_connection
+            and self.company_id != self.parent_company_id
+            and self.peppol_eas == self.parent_company_id.peppol_eas
+            and self.peppol_endpoint == self.parent_company_id.peppol_endpoint
+        )
 
     def _ensure_mandatory_fields(self):
         if self.use_parent_connection:
@@ -250,6 +272,10 @@ class PeppolRegistration(models.TransientModel):
         self.ensure_one()
         self._ensure_mandatory_fields()
 
+        if self.account_peppol_proxy_state in ('smp_registration', 'receiver', 'rejected'):
+            raise UserError(
+                _('Cannot register a user with a %s application', self.account_peppol_proxy_state))
+
         if self.use_parent_connection:
             self.company_id.write({
                 'peppol_eas': self.peppol_eas,
@@ -257,10 +283,6 @@ class PeppolRegistration(models.TransientModel):
                 'account_peppol_contact_email': self.contact_email,
                 'account_peppol_phone_number': self.phone_number,
             })
-
-        if not self.is_branch_company and self.account_peppol_proxy_state in ('smp_registration', 'receiver', 'rejected'):
-            raise UserError(
-                _('Cannot register a user with a %s application', self.account_peppol_proxy_state))
 
         edi_user = self.edi_user_id or self.env['account_edi_proxy_client.user']._register_proxy_user(self.company_id, 'peppol', self.edi_mode)
 

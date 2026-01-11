@@ -572,7 +572,9 @@ export class PosStore extends WithLazyGetterTrap {
         return true;
     }
     async afterOrderDeletion() {
-        this.setOrder(this.getOpenOrders().at(-1) || this.addNewOrder());
+        if (!this.config.module_pos_restaurant) {
+            this.setOrder(this.getOpenOrders().at(-1) || this.addNewOrder());
+        }
     }
 
     async deleteOrders(orders, serverIds = [], ignoreChange = false) {
@@ -1068,9 +1070,9 @@ export class PosStore extends WithLazyGetterTrap {
                     ]),
                     combo_item_id: comboItem.combo_item_id,
                     price_unit: comboItem.price_unit,
-                    price_type: "automatic",
+                    price_type: "original",
                     order_id: order,
-                    qty: comboItem.qty,
+                    qty: comboItem.qty * values.qty,
                     attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
                         "link",
                         attr,

@@ -48,6 +48,9 @@ export class NoteButton extends Component {
                 note: payload,
             });
             selectedOrderline.qty = saved_quantity;
+            for (const line of selectedOrderline.combo_line_ids) {
+                line.setQuantity(line.uiState.oldQty);
+            }
         } else {
             this.setOrderlineNote(payload);
         }

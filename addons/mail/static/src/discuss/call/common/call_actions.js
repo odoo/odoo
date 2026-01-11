@@ -36,15 +36,16 @@ export const muteAction = {
     badge: ({ owner, store }) =>
         !owner.env.inCallMenu && store.rtc.microphonePermission !== "granted",
     badgeIcon: "fa fa-exclamation",
-    condition: ({ thread }) => thread?.isSelfInCall,
+    condition: ({ owner, store, thread }) =>
+        thread?.isSelfInCall && (owner.env.inCallMenu || !store.rtc.selfSession?.is_deaf),
     name: ({ store }) => (store.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
     isActive: ({ store }) =>
         (store.rtc.selfSession?.isMute && store.rtc.microphonePermission === "granted") ||
         store.rtc.selfSession?.is_deaf,
     isTracked: true,
-    icon: ({ action, store }) =>
+    icon: ({ action, owner, store }) =>
         action.isActive
-            ? store.rtc.selfSession?.is_deaf
+            ? store.rtc.selfSession?.is_deaf && !owner.env.inCallMenu
                 ? CALL_ICON_DEAFEN
                 : CALL_ICON_MUTED
             : "fa fa-microphone",
@@ -77,7 +78,8 @@ export const quickActionSettings = {
 };
 registerCallAction("quick-voice-settings", quickActionSettings);
 registerCallAction("deafen", {
-    condition: ({ owner, thread }) => owner.env.inCallMenu && thread?.isSelfInCall,
+    condition: ({ owner, store, thread }) =>
+        thread?.isSelfInCall && (owner.env.inCallMenu || store.rtc.selfSession?.is_deaf),
     name: ({ store }) => (store.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
     isTracked: true,
@@ -85,7 +87,7 @@ registerCallAction("deafen", {
     hotkey: "shift+d",
     onSelected: ({ store }) => store.rtc.toggleDeafen(),
     sequence: 10,
-    sequenceGroup: 110,
+    sequenceGroup: 100,
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.DANGER : undefined),
 });
 export const cameraOnAction = {
@@ -188,17 +190,18 @@ export const blurBackgroundAction = {
     sequenceGroup: 200,
 };
 registerCallAction("fullscreen", {
-    btnClass: ({ owner, thread }) =>
+    btnClass: ({ thread }) =>
         attClassObjectToString({
             "o-discuss-CallActionList-pulse": Boolean(
-                !owner.env.pipWindow && thread.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
+                thread.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
             ),
         }),
     condition: ({ thread }) => thread?.isSelfInCall,
     name: ({ store }) => (store.rtc.state.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
     isActive: ({ store }) => store.rtc.state.isFullscreen,
     icon: ({ action }) => (action.isActive ? "fa fa-compress" : "fa fa-expand"),
-    onSelected: ({ store }) => {
+    onSelected: ({ store, thread }) => {
+        thread.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         if (store.rtc.state.isFullscreen) {
             store.rtc.exitFullscreen();
         } else {
@@ -220,7 +223,8 @@ registerCallAction("picture-in-picture", {
         store.rtc?.state.isPipMode ? _t("Exit Picture in Picture") : _t("Picture in Picture"),
     isActive: ({ store }) => store.rtc?.state.isPipMode,
     icon: "oi oi-launch",
-    onSelected: ({ owner, store }) => {
+    onSelected: ({ owner, store, thread }) => {
+        thread.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         const isPipMode = store.rtc?.state.isPipMode;
         if (isPipMode) {
             store.rtc.closePip();

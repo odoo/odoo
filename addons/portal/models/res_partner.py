@@ -32,10 +32,11 @@ class ResPartner(models.Model):
     def _can_be_edited_by_current_customer(self, **kwargs):
         """Return whether partner can be edited by current user."""
         self.ensure_one()
-        if self == self._get_current_partner(**kwargs):
+        current_partner = self._get_current_partner(**kwargs)
+        if self == current_partner:
             return True
         children_partner_ids = self.env['res.partner']._search([
-            ('id', 'child_of', self.commercial_partner_id.id),
+            ('id', 'child_of', current_partner.commercial_partner_id.id),
             ('type', 'in', ('invoice', 'delivery', 'other')),
         ])
         return self.id in children_partner_ids
