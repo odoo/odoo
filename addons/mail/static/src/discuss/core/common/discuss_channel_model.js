@@ -438,6 +438,9 @@ export class DiscussChannel extends Record {
     get showUnreadBanner() {
         return this.self_member_id?.message_unread_counter_ui > 0;
     }
+    get supportsChannelRename() {
+        return ["channel", "group"];
+    }
     sub_channel_ids = fields.Many("discuss.channel", {
         inverse: "parent_channel_id",
         sort: (a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id,
@@ -655,7 +658,7 @@ export class DiscussChannel extends Record {
             newName !== this.displayName &&
             ((newName && this.channel?.channel_type === "channel") || this.channel?.isChatChannel)
         ) {
-            if (["channel", "group"].includes(this.channel_type)) {
+            if (this.supportsChannelRename.includes(this.channel_type)) {
                 this.name = newName;
                 await this.store.env.services.orm.call(
                     "discuss.channel",
