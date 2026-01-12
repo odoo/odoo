@@ -1,29 +1,44 @@
 # ViaSuite Portal
 
-Central management and dispatcher module for ViaSuite multi-tenant architecture.
+Módulo de gerenciamento central e orquestração do ecossistema **ViaSuite**.
 
-## Overview
+## Visão Geral
 
-This module is the "Dispatcher" of the ViaSuite ecosystem. It is designed to be installed **only** in the management database (e.g., `via-suite-viafronteira`).
+O **ViaSuite Portal** atua como o "Cérebro" e "Despachante" da arquitetura multi-tenant. Ele deve ser instalado **exclusivamente** no banco de dados de gerenciamento (ex: `via-suite-viafronteira`).
 
-## Main Features
+## Funcionalidades Principais
 
-### 1. Global Dispatcher
-Handles the initial login request on the root domain (`viafronteira.app`). 
-- If a user authenticates and the token contains a `tenant` claim, the controller automatically redirects the browser to `https://[tenant].viafronteira.app/auth_oauth/signin`.
-- The redirection preserves the `access_token` fragment, allowing the tenant database to perform local login seamlessly.
+### 1. Despachante Global (Dispatcher)
+Gerencia o fluxo inicial de login no domínio raiz (`viafronteira.app`).
+- **Roteamento Inteligente**: Detecta o claim `tenant` no token do Keycloak e despacha o usuário para o subdomínio correto.
+- **Checagem de Status**: Valida se o tenant está `Active` antes de permitir o redirecionamento.
+- **Bloqueio de Inativos**: Usuários de ambientes desativados são barrados com uma tela de "Ambiente Suspenso".
 
-### 2. Tenant Management
-Provides a dedicated UI for administrators to track and manage client environments.
-- **Model**: `via_suite.tenant`
-- **Fields**: Name, Subdomain, Active Status.
-- **Support Links**: One-click access to client environments.
+### 2. Orquestração de Bancos de Dados (DB Automation)
+Automatiza o ciclo de vida físico dos tenants no PostgreSQL:
+- **Zero-Touch Provisioning**: Ao salvar um novo registro de Tenant, o portal clona automaticamente o banco `via-suite-template` para criar o novo ambiente.
+- **Renomeação Dinâmica**: Alterar o subdomínio no portal renomeia fisicamente o banco de dados no PostgreSQL.
+- **Limpeza Automática**: Deletar um registro de Tenant executa o `DROP DATABASE` físico no servidor.
 
-## Configuration
+### 3. Segurança e Controle de Acesso
+- **Trava de Instalação**: Possui um `pre_init_hook` que impede a instalação do módulo em bancos que não sejam o de gerenciamento autorizado.
+- **Gestão de Parâmetros**: Configuração central do banco molde via System Parameter `via_suite.template_database`.
 
-### Environment Variables
-- `VIA_SUITE_GLOBAL_DOMAIN`: The domain where the dispatcher logic is active.  
-  *Default*: `viafronteira.app`
+## Configuração
 
-## Security
-By separating this logic into its own module, customer databases remain clean and secure. Customer users have no access to the global tenant list or redirection logic.
+### Variáveis de Ambiente
+| Variável | Descrição | Exemplo |
+| :--- | :--- | :--- |
+| `VIA_SUITE_GLOBAL_DOMAIN` | Domínio base para o dispatcher | `viafronteira.app` |
+| `VIA_SUITE_MANAGEMENT_DB` | Nome do banco autorizado para instalação | `via-suite-viafronteira` |
+
+### Parâmetros de Sistema (Odoo)
+| Parâmetro | Função | Default |
+| :--- | :--- | :--- |
+| `via_suite.template_database` | Banco de dados usado como molde para novos tenants | `via-suite-template` |
+
+## Requisitos de Infraestrutura
+Para que a orquestração física funcione, o usuário do banco de dados utilizado pelo Odoo no PostgreSQL deve possuir a permissão `CREATEDB`.
+
+---
+© 2026 ViaFronteira, LLC.
