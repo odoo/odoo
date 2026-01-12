@@ -339,26 +339,29 @@ class TestAPI(SavepointCaseWithUserDemo):
 
         # iteration and relational fields should use the same prefetch set
         self.assertEqual(type(partners).country_id.type, 'many2one')
-        self.assertEqual(type(partners).bank_ids.type, 'one2many')
+        self.assertEqual(type(partners).user_ids.type, 'one2many')
         self.assertEqual(type(partners).category_id.type, 'many2many')
 
         vals0 = {
             'name': 'Empty relational fields',
             'country_id': False,
-            'bank_ids': [],
+            'user_ids': [],
             'category_id': [],
         }
         vals1 = {
             'name': 'Non-empty relational fields',
             'country_id': self.ref('base.be'),
-            'bank_ids': [Command.create({'account_number': 'FOO42'})],
+            'user_ids': [Command.create({
+                'name': 'Bob',
+                'login': 'bob',
+            })],
             'category_id': [Command.link(self.partner_category.id)],
         }
         partners = partners.create([vals0, vals1])
         for partner in partners:
             self.assertEqual(partner._prefetch_ids, partners._prefetch_ids)
             self.assertEqual(set(partner.country_id._prefetch_ids), set(partners.country_id._prefetch_ids))
-            self.assertEqual(set(partner.bank_ids._prefetch_ids), set(partners.bank_ids._prefetch_ids))
+            self.assertEqual(set(partner.user_ids._prefetch_ids), set(partners.user_ids._prefetch_ids))
             self.assertEqual(set(partner.category_id._prefetch_ids), set(partners.category_id._prefetch_ids))
 
         # records concatenation, union, intersection, difference

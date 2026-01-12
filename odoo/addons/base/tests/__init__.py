@@ -2,7 +2,6 @@
 
 from . import common
 from . import test_acl
-from . import test_api
 from . import test_barcode
 from . import test_base
 from . import test_basecase
@@ -63,7 +62,6 @@ from . import test_res_company
 from . import test_res_currency
 from . import test_res_country
 from . import test_res_partner
-from . import test_res_partner_bank
 from . import test_res_partner_merge
 from . import test_res_users
 from . import test_reports

@@ -56,11 +56,6 @@ class TestFormCreate(TransactionCase):
         group_form.name = 'a group'
         group_form.save()
 
-    def test_create_res_partner_bank(self):
-        bank_account_form = Form(self.env['res.partner.bank'].with_context(default_partner_id=self.env.user.partner_id.id))
-        bank_account_form.account_number = '11234'
-        bank_account_form.save()
-
     def test_create_res_country(self):
         country_form = Form(self.env['res.country'])
         country_form.name = 'a country'
