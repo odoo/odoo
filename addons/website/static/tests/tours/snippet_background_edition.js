@@ -95,6 +95,10 @@ function checkAndUpdateBackgroundColor({
             run: "click",
         });
         steps.push({
+            content: "Wait the style is applied",
+            trigger: "body:not(:has(.o_popover))",
+        });
+        steps.push({
             trigger: finalSelector,
             content: "The selected colors have been applied (CC AND (BG or GRADIENT))",
             tooltipPosition: "bottom",
@@ -237,18 +241,21 @@ registerWebsitePreviewTour(
         },
         {
             trigger: `:iframe .${snippets[0].id}.o_cc1`,
-            run: function () {
-                const parts = backgroundImageCssToParts(
-                    getComputedStyle(this.anchor)["background-image"]
+            async run({ waitUntil }) {
+                await waitUntil(
+                    () => {
+                        const parts = backgroundImageCssToParts(
+                            getComputedStyle(this.anchor)["background-image"]
+                        );
+                        return parts.url?.startsWith("url(") && parts.gradient === gradients[1];
+                    },
+                    {
+                        timeout: 9000,
+                        message: `An image should have been added as background. 
+                            The gradient should have been kept when adding the background image
+                        `,
+                    }
                 );
-                if (!parts.url || !parts.url.startsWith("url(")) {
-                    throw new Error("An image should have been added as background.");
-                }
-                if (parts.gradient !== gradients[1]) {
-                    throw new Error(
-                        "The gradient should have been kept when adding the background image"
-                    );
-                }
             },
         },
 
@@ -259,16 +266,21 @@ registerWebsitePreviewTour(
             changeType: "gradient",
             change: gradients[0],
             finalSelector: `:iframe .${snippets[0].id}.o_cc1:not([style*="${gradients[1]}"])`,
-            finalRun: function () {
-                const parts = backgroundImageCssToParts(
-                    getComputedStyle(this.anchor)["background-image"]
+            async finalRun({ waitUntil }) {
+                await waitUntil(
+                    () => {
+                        const parts = backgroundImageCssToParts(
+                            getComputedStyle(this.anchor)["background-image"]
+                        );
+                        return parts.url?.startsWith("url(") && parts.gradient === gradients[0];
+                    },
+                    {
+                        timeout: 9000,
+                        message: `The image should have been kept when changing the gradient. 
+                            TThe gradient should have been changed.
+                        `,
+                    }
                 );
-                if (!parts.url || !parts.url.startsWith("url(")) {
-                    throw new Error("The image should have been kept when changing the gradient");
-                }
-                if (parts.gradient !== gradients[0]) {
-                    throw new Error("The gradient should have been changed");
-                }
             },
         }),
 
@@ -369,6 +381,10 @@ registerWebsitePreviewTour(
             content: `Revert to predefiend gradient ${gradients[0]}`,
             run: "click",
         },
+        {
+            content: "Wait the style is applied",
+            trigger: "body:not(:has(.o_popover))",
+        },
 
         // Replace the gradient by a bg color
         ...checkAndUpdateBackgroundColor({
@@ -377,7 +393,20 @@ registerWebsitePreviewTour(
             checkNoGradient: gradients[1],
             changeType: "bg",
             change: backgroundColors[1].code,
-            finalSelector: `:iframe .${snippets[0].id}.o_cc1.bg-${backgroundColors[1].code}[style^="background-image: url("]:not([style*="${gradients[0]}"])`,
+            finalSelector: `:iframe .${snippets[0].id}.o_cc1.bg-${backgroundColors[1].code}`,
+            async finalRun({ waitUntil }) {
+                await waitUntil(
+                    () => {
+                        const parts = backgroundImageCssToParts(
+                            getComputedStyle(this.anchor)["background-image"]
+                        );
+                        return parts.url?.startsWith("url(") && !parts.gradient;
+                    },
+                    {
+                        timeout: 9000,
+                    }
+                );
+            },
         }),
 
         // Re-add a gradient
@@ -388,16 +417,22 @@ registerWebsitePreviewTour(
             changeType: "gradient",
             change: gradients[1],
             finalSelector: `:iframe .${snippets[0].id}.o_cc1:not(.bg-${backgroundColors[1].code})`,
-            finalRun() {
-                const parts = backgroundImageCssToParts(
-                    getComputedStyle(this.anchor)["background-image"]
+            async finalRun({ waitUntil }) {
+                await waitUntil(
+                    () => {
+                        const parts = backgroundImageCssToParts(
+                            getComputedStyle(this.anchor)["background-image"]
+                        );
+                        return parts.url?.startsWith("url(") && parts.gradient === gradients[1];
+                    },
+                    {
+                        timeout: 9000,
+                        message: `
+                        The image should have been kept when re-adding the gradient.
+                        The gradient should have been re-added.
+                        `,
+                    }
                 );
-                if (!parts.url || !parts.url.startsWith("url(")) {
-                    throw new Error("The image should have been kept when re-adding the gradient");
-                }
-                if (parts.gradient !== gradients[1]) {
-                    throw new Error("The gradient should have been re-added");
-                }
             },
         }),
 
