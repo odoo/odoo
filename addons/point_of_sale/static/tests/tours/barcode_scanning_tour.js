@@ -1,6 +1,7 @@
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as Offline from "@point_of_sale/../tests/tours/utils/offline_util";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/tours/utils/common";
 
@@ -104,6 +105,19 @@ registry.category("web_tour.tours").add("BarcodeScanPartnerTour", {
             // scan the customer barcode
             scan_barcode("0421234567890"),
             ProductScreen.customerIsSelected("John Doe"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_offline_barcode_not_in_pos", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Offline.setOfflineMode(),
+            scan_barcode("2100005000000"),
+            ProductScreen.clickDisplayedProduct("Magnetic Board"),
+            ProductScreen.clickPayButton(),
             Chrome.endTour(),
         ].flat(),
 });
