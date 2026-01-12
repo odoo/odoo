@@ -45,6 +45,12 @@ class StockPickingType(models.Model):
 
     def action_batch(self):
         action = self.env['ir.actions.act_window']._for_xml_id("stock_picking_batch.stock_picking_batch_action")
+        action["context"] = {
+            "search_default_draft": True,
+            "search_default_in_progress": True,
+            "default_picking_type_id": self.id,
+            "search_default_picking_type_id": self.id,
+        }
         if self.env.context.get("view_mode"):
             del action["mobile_view_mode"]
             del action["views"]
