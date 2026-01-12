@@ -379,8 +379,10 @@
     </t>
 
     <t t-name="web.ListHeaderTooltip">
-        <t t-esc="field.label"/>
-        <div t-if="field.help" class="mt-2" t-esc="field.help"/>
+        <div class="o-tooltip--string">
+            <t t-esc="field.label"/>
+            <div t-if="field.help" class="mt-2" t-esc="field.help"/>
+        </div>
     </t>
 
 </templates>
