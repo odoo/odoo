@@ -3,6 +3,8 @@
 import wTourUtils from "@website/js/tours/tour_utils";
 import { browser } from "@web/core/browser/browser";
 
+const oldWriteText = browser.navigator.clipboard.writeText;
+
 wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     test: true,
     url: "/",
@@ -22,16 +24,17 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         in_modal: false,
         run() {
             // Patch and ignore write on clipboard in tour as we don't have permissions
-            const oldWriteText = browser.navigator.clipboard.writeText;
             browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
             this.$anchor[0].click();
-            browser.navigator.clipboard.writeText = oldWriteText;
         }
     },
     {
         content: "Check the copied anchor from the notification toast",
         trigger: ".o_notification_manager .o_notification_content",
         run() {
+            // Cleanup the patched clipboard method
+            browser.navigator.clipboard.writeText = oldWriteText;
+
             const notificationContent = this.$anchor[0].innerText;
             const anchor = notificationContent.substring(notificationContent.indexOf("#"));
 
