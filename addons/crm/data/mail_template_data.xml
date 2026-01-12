@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="crm_module_access_request_template" inherit_id="base_install_request.mail_installation_request_template" primary="True">
+        <xpath expr="//a[@t-attf-href]" position="replace">
+            <a t-attf-style="background-color: {{user_id.company_id.email_secondary_color or '#875A7B'}}; padding:8px 16px 8px 16px; text-decoration:none; color: {{user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius:5px"
+               t-attf-href="/odoo/users/{{user_id.id}}">
+                Review Request
+            </a>
+        </xpath>
+    </template>
+</odoo>

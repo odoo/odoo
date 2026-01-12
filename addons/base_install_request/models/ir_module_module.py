@@ -12,7 +12,7 @@ class IrModuleModule(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'name': _('Activation Request of "%s"', self.shortdesc),
+            'name': _('Activation Request for %s', self.shortdesc),
             'view_mode': 'form',
             'res_model': 'base.module.install.request',
             'context': {'default_module_id': self.id},
