@@ -829,13 +829,13 @@ class MailThread(models.AbstractModel):
                 bounced_record._message_receive_bounce(bounced_email, bounced_partner)
 
             if bounced_message and (bounced_email or bounced_partner):
-                self.env['mail.notification'].sudo().search(Domain(
-                    'mail_message_id', '=', bounced_message.id
-                ) & Domain.OR([
-                    Domain('res_partner_id', 'in', bounced_partner.ids) if bounced_partner else [],
-                    Domain('mail_email_address', '=', bounced_email) if bounced_email else [],
-                ]),
-                ).write({
+                domain = Domain('mail_message_id', '=', bounced_message.id)
+                sub_domains = []
+                if bounced_partner:
+                    sub_domains.append(Domain('res_partner_id', 'in', bounced_partner.ids))
+                if bounced_email:
+                    sub_domains.append(Domain('mail_email_address', '=', bounced_email))
+                self.env['mail.notification'].sudo().search(domain & Domain.OR(sub_domains)).write({
                     'failure_reason': html2plaintext(message_dict.get('body') or ''),
                     'failure_type': 'mail_bounce',
                     'notification_status': 'bounce',
