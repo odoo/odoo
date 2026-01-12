@@ -19,10 +19,17 @@
             <xpath expr="//div[@name='journal_div']" position="after">
                 <label for="l10n_tr_nilvera_send_status" invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'in_invoice']"/>
                 <div name="nilvera_div"
-                     class="d-flex"
+                     class="o_row o_align_center"
                      invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'in_invoice']">
                     <field name="l10n_tr_nilvera_send_status" class="oe_inline"/>
-                </div>
+                    <button
+                        name="l10n_tr_nilvera_get_move_status"
+                        type="object"
+                        class="o_icon_button text-primary"
+                        invisible="l10n_tr_nilvera_send_status not in ['sent', 'waiting']"
+                        title="Synchronize with Nilvera"
+                        icon="fa-refresh"/>
+                    </div>
                 <field name="l10n_tr_is_export_invoice"
                        invisible="l10n_tr_nilvera_customer_status != 'earchive'"
                        readonly="state in ['cancel', 'posted']"/>
@@ -66,7 +73,7 @@
             </xpath>
             <xpath expr="//header/field[@name='state']" position="before">
                 <button name="l10n_tr_nilvera_get_pdf"
-                        string="Fetch Nilvera PDF"
+                        string="Sync &amp; Fetch Nilvera PDF"
                         type="object"
                         invisible="move_type != 'out_invoice' or l10n_tr_nilvera_send_status != 'succeed'"/>
             </xpath>
@@ -90,7 +97,7 @@
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
             <button name="action_force_register_payment" position="after">
-                <button name="l10n_tr_nilvera_get_pdf" type="object" string="Fetch Nilvera PDF"/>
+                <button name="l10n_tr_nilvera_get_pdf" type="object" string="Sync &amp; Fetch Nilvera PDF"/>
             </button>
             <xpath expr="//field[@name='abnormal_date_warning']" position="after">
                 <field name="l10n_tr_nilvera_send_status"

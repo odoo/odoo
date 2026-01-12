@@ -283,6 +283,9 @@ class AccountMove(models.Model):
                     else:
                         invoice.message_post(body=_("The invoice status couldn't be retrieved from Nilvera."))
 
+    def l10n_tr_nilvera_get_move_status(self):
+        self._l10n_tr_nilvera_get_submitted_document_status()
+
     def _l10n_tr_nilvera_get_documents(self, invoice_channel="einvoice", document_category="Purchase", journal_type="in_invoice"):
         with _get_nilvera_client(self.env.company) as client:
             response = client.request("GET", f"/{invoice_channel}/{quote(document_category)}", params={"StatusCode": ["succeed"]})
@@ -387,21 +390,53 @@ class AccountMove(models.Model):
         invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachment.ids)
 
     def l10n_tr_nilvera_get_pdf(self):
+        eligible_invoices = self.filtered(
+            lambda i: i.l10n_tr_nilvera_customer_status in {'einvoice', 'earchive'}
+            and i.invoice_pdf_report_id
+            and i.message_main_attachment_id.id == i.invoice_pdf_report_id.id
+        )
+        successful_invoices = eligible_invoices.filtered(lambda i: i.l10n_tr_nilvera_send_status == 'succeed')
+        pending_invoices = eligible_invoices.filtered(lambda i: i.l10n_tr_nilvera_send_status in {'sent', 'waiting'})
+        failed_invoices = eligible_invoices.filtered(lambda i: i.l10n_tr_nilvera_send_status == 'error')
+
+        # Update the invoice status first to fetch all possible PDFs.
+        if pending_invoices:
+            pending_invoices._l10n_tr_nilvera_get_submitted_document_status()
+            newly_succeed = pending_invoices.filtered(lambda i: i.l10n_tr_nilvera_send_status == 'succeed')
+            successful_invoices |= newly_succeed
+            failed_invoices |= pending_invoices - newly_succeed
+
         with _get_nilvera_client(self.env.company) as client:
-            for invoice in self:
-                if (
-                        invoice.l10n_tr_nilvera_customer_status not in {'einvoice', 'earchive'}
-                        or invoice.message_main_attachment_id.id != invoice.invoice_pdf_report_id.id
-                        or invoice.l10n_tr_nilvera_send_status != 'succeed'
-                ):
-                    continue
-                self._l10n_tr_nilvera_add_pdf_to_invoice(
+            for invoice in successful_invoices:
+                invoice._l10n_tr_nilvera_add_pdf_to_invoice(
                     client,
                     invoice,
                     invoice.l10n_tr_nilvera_uuid,
                     document_category="Sale",
                     invoice_channel=invoice.l10n_tr_nilvera_customer_status,
                 )
+
+        if failed_invoices:
+            # The notification should be different if the button is called in a form or a list view.
+            notification_type = 'simple_notification'
+            payload = {
+                'type': 'warning',
+                'sticky': True,
+                'message': _(
+                    "%s could not be retrieved because the Nilvera Status is not successful yet or is in error. "
+                    "Please try again once the status becomes successful.",
+                    "Some PDFs" if len(self) > 1 else "The PDF",
+                )
+            }
+            if len(self) > 1:
+                notification_type = 'account_notification'
+                payload['action_button'] = {
+                    'name': _('View Invoice(s)'),
+                    'action_name': _('Invoices in Error'),
+                    'model': 'account.move',
+                    'res_ids': failed_invoices.ids,
+                }
+            self.env.user._bus_send(notification_type, payload)
 
     def _l10n_tr_nilvera_einvoice_get_error_messages_from_response(self, response):
         msg = ""
