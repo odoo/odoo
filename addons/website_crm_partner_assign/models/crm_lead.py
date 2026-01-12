@@ -284,6 +284,12 @@ class CrmLead(models.Model):
             raise UserError(_("Not allowed to update the following field(s): %s.", ", ".join([key for key in values if not key in fields])))
         return self.sudo().write(values)
 
+    def update_stage_from_portal(self, stage_id):
+        """ Allow portal users to update the stage of their assigned leads """
+        self._assert_portal_write_access()
+        self.sudo().write({'stage_id': stage_id})
+        return True
+
     @api.model
     def create_opp_portal(self, values):
         if not (self.env.user.partner_id.grade_id or self.env.user.commercial_partner_id.grade_id):
