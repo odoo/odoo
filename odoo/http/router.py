@@ -192,12 +192,6 @@ class Application:
 
         return nodb_routing_map
 
-    @functools.cached_property
-    def session_store(self):
-        path = config.session_dir
-        _logger.debug('HTTP sessions stored in: %s', path)
-        return SessionStore(path=path)
-
     def get_db_router(self, db: str | None) -> werkzeug.routing.Map:
         if not db:
             return self.nodb_routing_map
@@ -317,4 +311,4 @@ from .requestlib import (
     request,
 )
 from .routing_map import ROUTING_KEYS, _generate_routing_rules
-from .session import SessionExpiredException, SessionStore, logout
+from .session import SessionExpiredException, logout

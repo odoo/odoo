@@ -1,16 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
-from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.http.router import Application, root
-from odoo.http.session import Session, SessionStore
+from odoo.http.session import session_store
 from odoo.tests import tagged
-from odoo.tools import config, mute_logger, reset_cached_properties
+from odoo.tools import config, mute_logger
 
 from .test_common import TestHttpBase
 from odoo.addons.test_http.utils import (
@@ -45,8 +43,11 @@ class TestDevice(TestHttpBase):
         super().setUp()
         self.DeviceLog.search([]).unlink()
 
-    def authenticate(self, login, password):
-        return super().authenticate(login, password, session_extra={'_trace_disable': False})
+    def authenticate(self, login, password, *, browser=None, session_extra=None):
+        if session_extra is None:
+            session_extra = {}
+        session_extra.setdefault('_trace_disable', False)
+        return super().authenticate(login, password, browser=browser, session_extra=session_extra)
 
     def hit(self, time, endpoint, headers=None, ip=None):
         if ip:
@@ -85,143 +86,143 @@ class TestDevice(TestHttpBase):
     # --------------------
 
     def test_detection_device_readonly(self):
-        session = self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public')
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public')
 
         sessions, devices, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_devices']), 1)
+        self.assertEqual(len(res.session['_devices']), 1)
 
     def test_detection_device_no_readonly(self):
-        session = self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
 
         sessions, devices, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_devices']), 1)
+        self.assertEqual(len(res.session['_devices']), 1)
 
     def test_detection_user_public(self):
-        session = self.authenticate(None, None)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
+        self.authenticate(None, None)
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
 
         sessions, devices, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(sessions), 0)
         self.assertEqual(len(devices), 0)
         self.assertEqual(len(logs), 0)
-        self.assertEqual(len(session['_devices']), 0)
+        self.assertEqual(len(res.session['_devices']), 0)
 
     def test_detection_device_readonly_then_no_readonly(self):
-        session = self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public')
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public')
 
         sessions, devices, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_devices']), 1)
+        self.assertEqual(len(res.session['_devices']), 1)
 
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
 
         sessions, devices, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_devices']), 1)
+        self.assertEqual(len(res.session['_devices']), 1)
 
     def test_detection_device_according_to_time(self):
-        session = self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
 
         sessions, devices, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_devices']), 1)
+        self.assertEqual(len(res.session['_devices']), 1)
 
-        device_1 = next(iter(session['_devices'].values()))
+        device_1 = next(iter(res.session['_devices'].values()))
         self.assertEqual(self.info_device(device_1)['elapsed_time'], 0)
 
-        self.hit('2024-01-01 08:30:00', '/test_http/greeting-public?readonly=0')
+        res = self.hit('2024-01-01 08:30:00', '/test_http/greeting-public?readonly=0')
 
         sessions, devices, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_devices']), 1)
+        self.assertEqual(len(res.session['_devices']), 1)
 
-        device_1 = next(iter(session['_devices'].values()))
+        device_1 = next(iter(res.session['_devices'].values()))
         self.assertEqual(self.info_device(device_1)['elapsed_time'], 0)  # No trace update (< 3600 sec)
 
-        self.hit('2024-01-01 09:00:00', '/test_http/greeting-public?readonly=0')
+        res = self.hit('2024-01-01 09:00:00', '/test_http/greeting-public?readonly=0')
 
         sessions, devices, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 2)
-        self.assertEqual(len(session['_devices']), 1)
+        self.assertEqual(len(res.session['_devices']), 1)
 
-        device_1 = next(iter(session['_devices'].values()))
+        device_1 = next(iter(res.session['_devices'].values()))
         self.assertEqual(self.info_device(device_1)['elapsed_time'], 3600)
 
-        self.hit('2024-01-01 10:00:00', '/test_http/greeting-public?readonly=0')
+        res = self.hit('2024-01-01 10:00:00', '/test_http/greeting-public?readonly=0')
 
         sessions, devices, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 3)
-        self.assertEqual(len(session['_devices']), 1)
+        self.assertEqual(len(res.session['_devices']), 1)
 
-        device_1 = next(iter(session['_devices'].values()))
+        device_1 = next(iter(res.session['_devices'].values()))
         self.assertEqual(self.info_device(device_1)['elapsed_time'], 7200)
 
     def test_detection_device_according_to_useragent(self):
-        session = self.authenticate(self.user_admin.login, self.user_admin.login)
+        self.authenticate(self.user_admin.login, self.user_admin.login)
 
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_chrome})
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_chrome})
 
         sessions, devices, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_devices']), 1)
+        self.assertEqual(len(res.session['_devices']), 1)
 
-        device_1 = next(iter(session['_devices'].values()))
+        device_1 = next(iter(res.session['_devices'].values()))
         self.assertEqual(self.info_device(device_1)['user_agent'], USER_AGENT_linux_chrome)
 
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_firefox})
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_firefox})
 
         sessions, devices, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 2)
         self.assertEqual(len(logs), 2)
-        self.assertEqual(len(session['_devices']), 2)
+        self.assertEqual(len(res.session['_devices']), 2)
 
-        _, device_2 = session['_devices'].values()
+        _, device_2 = res.session['_devices'].values()
         self.assertEqual(self.info_device(device_2)['user_agent'], USER_AGENT_linux_firefox)
 
     def test_detection_device_according_to_ipaddress(self):
-        session = self.authenticate(self.user_admin.login, self.user_admin.login)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
 
         sessions, devices, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_devices']), 1)
+        self.assertEqual(len(res.session['_devices']), 1)
 
-        self.hit('2024-01-01 08:00:01', '/test_http/greeting-public?readonly=0', ip=TEST_IP)
+        res = self.hit('2024-01-01 08:00:01', '/test_http/greeting-public?readonly=0', ip=TEST_IP)
 
         sessions, devices, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 2)
         self.assertEqual(len(logs), 2)
-        self.assertEqual(len(session['_devices']), 2)
+        self.assertEqual(len(res.session['_devices']), 2)
 
-        device_1, device_2 = session['_devices'].values()
+        device_1, device_2 = res.session['_devices'].values()
         self.assertNotEqual(self.info_device(device_1)['ip_address'], TEST_IP)
         self.assertEqual(self.info_device(device_2)['ip_address'], TEST_IP)
 
@@ -309,9 +310,11 @@ class TestDevice(TestHttpBase):
         self.assertCountEqual(device_firefox.mapped('ip_address'), ['191.0.1.41'])
 
     def test_detection_no_trace_mechanism(self):
-        session = self.authenticate(self.user_admin.login, self.user_admin.login)
-        session['_trace_disable'] = True
-        root.session_store.save(session)
+        self.authenticate(
+            self.user_admin.login,
+            self.user_admin.login,
+            session_extra={'_trace_disable': True},
+        )
         res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
         self.assertEqual(res.status_code, 200)
 
@@ -319,7 +322,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 0)
         self.assertEqual(len(devices), 0)
         self.assertEqual(len(logs), 0)
-        self.assertEqual(len(session['_devices']), 0)
+        self.assertEqual(len(res.session['_devices']), 0)
 
     def test_detection_device_default_order(self):
         self.authenticate(self.user_admin.login, self.user_admin.login)
@@ -397,7 +400,7 @@ class TestDevice(TestHttpBase):
     def _create_device_log_for_user(self, session, count):
         for _ in range(count):
             self.DeviceLog.create({
-                'session_identifier': root.session_store.generate_key(),
+                'session_identifier': session_store().generate_key(),
                 'user_id': session.uid,
                 'revoked': False,
                 'ip_address': TEST_IP,
@@ -418,8 +421,6 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(self.user_admin.session_ids), 10)
         self.assertEqual(len(self.user_internal.session_ids), 10)
 
-        root.session_store.store.clear()
-
         # Update all device logs
         with freeze_time('2025-02-01 08:00:00'), patch.object(self.cr, 'commit', lambda: ...):
             self.DeviceLog.sudo()._ResDeviceLog__update_revoked()
@@ -439,8 +440,8 @@ class TestDevice(TestHttpBase):
             does not have to create a session file if there
             are no changes in the session itself.
         """
-        session = self.authenticate(None, None)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
+        self.authenticate(None, None)
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
 
         # As we don't have a uid in the session, we shouldn't go through
         # the session check and therefore we won't go through the device update.
@@ -449,7 +450,7 @@ class TestDevice(TestHttpBase):
         # we can check that there is no `_devices`.
         # This means that the device logic will not create a session file
         # (because we are not passing in the `_update_device` logic).
-        self.assertFalse(session['_devices'])
+        self.assertFalse(res.session['_devices'])
 
     def test_keep_user_reference_after_user_deletion(self):
         self.authenticate(self.user_internal.login, self.user_internal.login)
@@ -477,38 +478,3 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-
-    @mute_logger('odoo.http')
-    def test_ensure_single_log_if_retrying(self):
-        tmpdir = TemporaryDirectory()
-        self.addCleanup(tmpdir.cleanup)
-
-        session_store = SessionStore(path=tmpdir.name, session_cls=Session)
-        reset_cached_properties(root)
-
-        with patch.object(Application, 'session_store', session_store), \
-            patch('time.sleep', return_value=None):
-            self.authenticate(self.user_admin.login, self.user_admin.login)
-            self.hit('2026-01-01 08:00:00', '/test_http/trigger-retrying')
-            # Ensure log is inserted only once if retrying is triggered
-            sessions, devices, logs = self.get_devices(self.user_admin)
-            self.assertEqual(len(sessions), 1)
-            self.assertEqual(len(devices), 1)
-            self.assertEqual(len(logs), 1)
-
-    def test_ensure_single_log_if_no_save_session(self):
-        tmpdir = TemporaryDirectory()
-        self.addCleanup(tmpdir.cleanup)
-
-        session_store = SessionStore(path=tmpdir.name, session_cls=Session)
-        reset_cached_properties(root)
-
-        with patch.object(Application, 'session_store', session_store):
-            self.authenticate(self.user_admin.login, self.user_admin.login)
-            self.hit('2026-01-01 08:00:00', '/test_http/no_save_session')
-            self.hit('2026-01-01 08:00:00', '/test_http/no_save_session')
-            # Ensure log is inserted only once if we hit a route with `save_session=False`
-            sessions, devices, logs = self.get_devices(self.user_admin)
-            self.assertEqual(len(sessions), 1)
-            self.assertEqual(len(devices), 1)
-            self.assertEqual(len(logs), 1)

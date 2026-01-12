@@ -228,7 +228,7 @@ class HttpDispatcher(Dispatcher):
             response = self.request.redirect_query('/web/login', {
                 'redirect': self.request.httprequest.full_path})
             if was_connected:
-                root.session_store.rotate(session, self.request.env)
+                session_store().rotate(session, self.request.env)
                 response.set_cookie(
                     'session_id',
                     session.sid,
@@ -413,4 +413,5 @@ from .session import (
     SessionExpiredException,
     get_session_max_inactivity,
     logout,
+    session_store,
 )

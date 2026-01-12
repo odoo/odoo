@@ -9,7 +9,7 @@ import werkzeug.exceptions
 from werkzeug.urls import iri_to_uri
 
 from odoo.http import request, router
-from odoo.http.session import get_default_session
+from odoo.http.session import get_default_session, session_store
 from odoo.tools.misc import file_open
 from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT
 
@@ -91,7 +91,7 @@ def ensure_db(redirect='/web/database/selector', db=None):
 
     # always switch the session to the computed db
     if db != request.session.db:
-        request.session = router.root.session_store.new()
+        request.session = session_store().new()
         request.session.update(get_default_session(), db=db)
         request.session.context['lang'] = request.default_lang()
         werkzeug.exceptions.abort(request.redirect(request.httprequest.url, 302))

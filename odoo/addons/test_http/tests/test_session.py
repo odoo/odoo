@@ -19,6 +19,7 @@ from odoo.http.session import (
     STORED_SESSION_BYTES,
     _session_identifier_re,
     get_session_max_inactivity,
+    session_store,
 )
 from odoo.tests import get_db_name, tagged
 from odoo.tools import config, mute_logger, reset_cached_properties
@@ -45,18 +46,18 @@ class TestHttpSession(TestHttpBase):
     def test_session00_debug_mode(self):
         session = self.authenticate(None, None)
         self.assertEqual(session.debug, '')
-        self.db_url_open('/test_http/greeting').raise_for_status()
-        self.assertEqual(session.debug, '')
-        self.db_url_open('/test_http/greeting?debug=1').raise_for_status()
-        self.assertEqual(session.debug, '1')
-        self.db_url_open('/test_http/greeting').raise_for_status()
-        self.assertEqual(session.debug, '1')
-        self.db_url_open('/test_http/greeting?debug=').raise_for_status()
-        self.assertEqual(session.debug, '')
+        res = self.db_url_open('/test_http/greeting').raise_for_status()
+        self.assertEqual(res.session.debug, '')
+        res = self.db_url_open('/test_http/greeting?debug=1').raise_for_status()
+        self.assertEqual(res.session.debug, '1')
+        res = self.db_url_open('/test_http/greeting').raise_for_status()
+        self.assertEqual(res.session.debug, '1')
+        res = self.db_url_open('/test_http/greeting?debug=').raise_for_status()
+        self.assertEqual(res.session.debug, '')
 
     def test_session01_default_session(self):
         # The default session should not be saved on the filestore.
-        with patch.object(root.session_store, 'save') as mock_save:
+        with patch.object(session_store(), 'save') as mock_save:
             res = self.db_url_open('/test_http/geoip')
             res.raise_for_status()
             try:
@@ -66,18 +67,17 @@ class TestHttpSession(TestHttpBase):
                 raise AssertionError(msg) from exc
 
     def test_session03_logout_15_0_geoip(self):
-        session = self.authenticate(None, None)
-        session['db'] = 'idontexist'
-        session['geoip'] = {}  # Until saas-15.2 geoip was directly stored in the session
-        root.session_store.save(session)
-
+        self.authenticate(None, None, session_extra={
+            'db': 'idontexist',
+            'geoip': {},  # Until saas-15.2 geoip was directly stored in the session
+        })
         with self.assertLogs('odoo.http', level='WARNING') as (_, warnings):
             res = self.multidb_url_open('/test_http/ensure_db', dblist=['db1', 'db2'])
 
         self.assertEqual(warnings, [
             "WARNING:odoo.http:Logged into database 'idontexist', but dbfilter rejects it; logging session out.",
         ])
-        self.assertFalse(session['db'])
+        self.assertFalse(res.session['db'])
         self.assertEqual(res.status_code, 303)
         self.assertURLEqual(res.headers.get('Location'), '/web/database/selector')
 
@@ -129,7 +129,7 @@ class TestHttpSession(TestHttpBase):
             self.assertEqual(res.text, 'en_US')
 
     def test_session06_saved_lang(self):
-        session = self.authenticate('demo', 'demo')
+        self.authenticate('demo', 'demo')
         self.env['res.lang']._activate_lang('en_US')  # default lang
         lang_fr = self.env['res.lang']._activate_lang('fr_FR')
 
@@ -138,22 +138,19 @@ class TestHttpSession(TestHttpBase):
             self.assertEqual(res.text, 'en_US')
 
         with self.subTest(case='fr saved and fr_FR enabled'):
-            session.context['lang'] = 'fr_FR'
-            root.session_store.save(session)
+            self.update_session_context(lang='fr_FR')
             res = self.url_open('/test_http/echo-http-context-lang')
             self.assertEqual(res.text, 'fr_FR')
 
         with self.subTest(case='fr saved but fr_FR disabled'):
-            session['lang'] = 'fr_FR'
-            root.session_store.save(session)
+            self.update_session_context(lang='fr_FR')
             lang_fr.active = False
             res = self.url_open('/test_http/echo-http-context-lang')
             self.assertEqual(res.text, 'en_US')
 
         milky_way = self.env.ref('test_http.milky_way')
         with self.subTest(case='fr record in url but fr_FR disabled'):
-            session.context['lang'] = 'fr_FR'
-            root.session_store.save(session)
+            self.update_session_context(lang='fr_FR')
             lang_fr.active = False
             self.url_open(f'/test_http/{milky_way.id}').raise_for_status()
 
@@ -223,36 +220,36 @@ class TestHttpSession(TestHttpBase):
         for value in not_recommended_values:
             self.assertEqual(check_session_attr(value), None)
 
-    @patch("odoo.http.router.root.session_store.vacuum")
-    def test_session08_gc_ignored_no_db_name(self, mock):
-        with patch.dict(os.environ, {'ODOO_SKIP_GC_SESSIONS': ''}):
-            self.env['ir.http']._gc_sessions()
-            mock.assert_called_once()
+    def test_session08_gc_ignored_no_db_name(self):
+        with patch.object(session_store(), "vacuum") as mock:
+            with patch.dict(os.environ, {'ODOO_SKIP_GC_SESSIONS': ''}):
+                self.env['ir.http']._gc_sessions()
+                mock.assert_called_once()
 
-        with patch.dict(os.environ, {'ODOO_SKIP_GC_SESSIONS': '1'}):
-            mock.reset_mock()
-            self.env['ir.http']._gc_sessions()
-            mock.assert_not_called()
+            with patch.dict(os.environ, {'ODOO_SKIP_GC_SESSIONS': '1'}):
+                mock.reset_mock()
+                self.env['ir.http']._gc_sessions()
+                mock.assert_not_called()
 
     def test_session09_logout(self):
         sid = self.authenticate('admin', 'admin').sid
-        self.assertTrue(root.session_store.get(sid), "session should exist")
+        self.assertTrue(session_store().get(sid), "session should exist")
         self.url_open(
             '/web/session/logout',
             method='POST',
             data={
                 "csrf_token": self.csrf_token(),
             },
-            allow_redirects=False
+            allow_redirects=False,
         ).raise_for_status()
-        self.assertFalse(root.session_store.get(sid), "session should not exist")
+        self.assertFalse(session_store().get(sid), "session should not exist")
 
     def test_session10_explicit_session(self):
         forged_sid = 'da39a3ee5e6b4b0d3255bfef95601890afd80709'
-        admin_session = self.authenticate('admin', 'admin')
+        self.authenticate('admin', 'admin')
         with self.assertLogs('odoo.http') as capture:
             qs = urlencode({'debug': 1, 'session_id': forged_sid})
-            self.url_open(
+            res = self.url_open(
                 f'/web/session/logout?{qs}',
                 method='POST',
                 data={
@@ -264,7 +261,7 @@ class TestHttpSession(TestHttpBase):
             r"^WARNING:odoo.http:<function odoo\.addons\.\w+\.controllers\.\w+\.logout> "
             r"called ignoring args {('session_id', 'debug'|'debug', 'session_id')}$"
         )
-        self.assertEqual(admin_session.debug, '1')
+        self.assertEqual(res.session['debug'], '1')
 
     def test_session11_items_accessibility(self):
         session = self.authenticate('admin', 'admin')
@@ -355,7 +352,7 @@ class TestHttpSession(TestHttpBase):
     def test_session16_soft_rotate_with_abort(self):
         session = self.authenticate('admin', 'admin')
         session['create_time'] -= SESSION_ROTATION_INTERVAL
-        root.session_store.save(session)
+        session_store().save(session)
 
         # Any route that uses werkzeug.exceptions.abort would do, here
         # we call a simple type='jsonrpc' route with bad data to trigger
@@ -395,12 +392,12 @@ class TestSessionStore(HttpCaseWithUserDemo):
 
             freeze.tick(delta=datetime.timedelta(seconds=SESSION_LIFETIME - 1))
             self.env['ir.http']._gc_sessions()
-            session_from_store = root.session_store.get(session.sid)
+            session_from_store = session_store().get(session.sid)
             self.assertEqual(session.sid, session_from_store.sid, "the session should still be valid")
 
             freeze.tick(delta=datetime.timedelta(seconds=2))
             self.env['ir.http']._gc_sessions()
-            session_from_store = root.session_store.get(session.sid)
+            session_from_store = session_store().get(session.sid)
             self.assertNotEqual(session.sid, session_from_store.sid, "the old session as been removed")
 
     @mute_logger('odoo.http')
@@ -412,12 +409,12 @@ class TestSessionStore(HttpCaseWithUserDemo):
 
             freeze.tick(delta=datetime.timedelta(seconds=59))
             self.env['ir.http']._gc_sessions()
-            session_from_store = root.session_store.get(session.sid)
+            session_from_store = session_store().get(session.sid)
             self.assertEqual(session.sid, session_from_store.sid, "the session should still be valid")
 
             freeze.tick(delta=datetime.timedelta(seconds=2))
             self.env['ir.http']._gc_sessions()
-            session_from_store = root.session_store.get(session.sid)
+            session_from_store = session_store().get(session.sid)
             self.assertNotEqual(session.sid, session_from_store.sid, "the old session as been removed")
 
     @mute_logger('odoo.http')
@@ -432,12 +429,12 @@ class TestSessionStore(HttpCaseWithUserDemo):
 
             freeze.tick(delta=datetime.timedelta(seconds=(SESSION_LIFETIME // 2) - 1))
             self.env['ir.http']._gc_sessions()
-            session_from_store = root.session_store.get(session)
+            session_from_store = session_store().get(session)
             self.assertEqual(session, session_from_store.sid, "the session should still be valid")
 
             freeze.tick(delta=datetime.timedelta(seconds=2))
             self.env['ir.http']._gc_sessions()
-            session_from_store = root.session_store.get(session)
+            session_from_store = session_store().get(session)
             self.assertNotEqual(session, session_from_store.sid, "the old session as been removed")
 
 
@@ -448,8 +445,8 @@ class TestSessionRotation(HttpCase):
         def get_amount_sessions(session):
             identifier = session[:STORED_SESSION_BYTES]
             self.assertTrue(_session_identifier_re.match(identifier))
-            normalized_path = os.path.normpath(os.path.join(root.session_store.path, identifier[:2], identifier + '*'))
-            self.assertTrue(normalized_path.startswith(root.session_store.path))
+            normalized_path = os.path.normpath(os.path.join(session_store().path, identifier[:2], identifier + '*'))
+            self.assertTrue(normalized_path.startswith(session_store().path))
             return len(glob.glob(normalized_path))
         self.authenticate('admin', 'admin')
         self.url_open('/odoo')
@@ -459,22 +456,22 @@ class TestSessionRotation(HttpCase):
         self.assertEqual(self.opener.cookies['session_id'], session_one)
         self.assertEqual(get_amount_sessions(session_one), 1)
         # Expire the first session
-        session_one_obj = root.session_store.get(session_one)
+        session_one_obj = session_store().get(session_one)
         session_one_obj['create_time'] -= SESSION_ROTATION_INTERVAL
-        root.session_store.save(session_one_obj)
+        session_store().save(session_one_obj)
         self.url_open('/odoo')
         session_two = self.opener.cookies['session_id']
         self.assertNotEqual(session_one, session_two)
         self.assertEqual(get_amount_sessions(session_two), 2)
         # Trigger cleanup
-        session_two_obj = root.session_store.get(session_two)
+        session_two_obj = session_store().get(session_two)
         session_two_obj['create_time'] -= SESSION_DELETION_TIMER
-        root.session_store.save(session_two_obj)
+        session_store().save(session_two_obj)
         self.url_open('/odoo')
         session_three = self.opener.cookies['session_id']
         self.assertEqual(session_three, session_two)
         self.assertEqual(get_amount_sessions(session_three), 1)
         # Cleaning the test up
         self.logout()
-        root.session_store.delete_from_identifiers([session_three[:STORED_SESSION_BYTES]])
+        session_store().delete_from_identifiers([session_three[:STORED_SESSION_BYTES]])
         self.assertEqual(get_amount_sessions(session_three), 0)

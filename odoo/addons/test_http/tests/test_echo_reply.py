@@ -4,7 +4,6 @@ import json
 import time
 from http import HTTPStatus
 
-from odoo.http.router import root
 from odoo.http.session import SESSION_ROTATION_INTERVAL
 from odoo.tests import Like, new_test_user, tagged
 from odoo.tools import mute_logger
@@ -39,7 +38,6 @@ class TestHttpEchoReplyHttpNoDB(TestHttpBase):
         res = self.nodb_url_open('/test_http/echo-http-post', data=payload, headers=CT_JSON)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, '{}')
-
 
     def test_echohttp5_post_csrf(self):
         res = self.nodb_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'})
@@ -158,8 +156,7 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
         sid_before_rotation = self.opener.cookies['session_id']
 
         # Force a rotation by changing the create date of the session
-        self.session['create_time'] = time.time() - SESSION_ROTATION_INTERVAL
-        root.session_store.save(self.session)
+        self.update_session(create_time=time.time() - SESSION_ROTATION_INTERVAL)
 
         # Trigger session rotation by calling another endpoint
         res = self.db_url_open('/test_http/echo-http-get')

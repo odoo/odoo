@@ -1,7 +1,6 @@
 import re
 from unittest.mock import patch
 
-from odoo.http.router import root
 from odoo.tests.common import HttpCase, tagged
 
 
@@ -63,12 +62,10 @@ class TestAuthLDAP(HttpCase):
             )
             res.raise_for_status()
 
-        session = root.session_store.get(res.cookies["session_id"])
-        self.assertEqual(
-            session.sid, res.cookies["session_id"], "A session must exist at this point")
+        self.assertTrue(res.session, "A session must exist at this point")
 
         with self.registry.cursor() as cr:
             cr.execute(
                 "SELECT id FROM res_users WHERE login = %s and id = %s",
-                ("test_ldap_user", session.uid))
+                ("test_ldap_user", res.session.uid))
             self.assertTrue(cr.rowcount, "User should be present")

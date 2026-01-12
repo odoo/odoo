@@ -2,7 +2,7 @@ import time
 
 from odoo import api, models
 from odoo.http import request
-from odoo.http.router import root
+from odoo.http.session import session_store
 
 
 class IrHttp(models.AbstractModel):
@@ -94,11 +94,11 @@ class IrHttp(models.AbstractModel):
             if not session.get("identity-check-next") or next_check < session["identity-check-next"]:
                 session["identity-check-next"] = next_check
                 # Save manually, websocket requests do not save the session automatically
-                root.session_store.save(session)
+                session_store().save(session)
         elif not inactive and (timestamp := session.get("identity-check-next")) and timestamp > time.time():
             session.pop("identity-check-next")
             # Save manually, websocket requests do not save the session automatically
-            root.session_store.save(session)
+            session_store().save(session)
 
     def _session_info_common_auth_timeout(self, session_info):
         """

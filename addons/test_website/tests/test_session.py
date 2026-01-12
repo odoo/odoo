@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from unittest.mock import patch
 
 from lxml import html
 
 import odoo.tests
-from odoo.http.router import root
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website.models.website import Website
@@ -18,10 +16,8 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         self.start_tour('/', 'test_json_auth')
 
     def test_02_inactive_session_lang(self):
-        session = self.authenticate(None, None)
+        self.authenticate(None, None, session_extra={'context': {'lang': 'fr_FR'}})
         self.env.ref('base.lang_fr').active = False
-        session.context['lang'] = 'fr_FR'
-        root.session_store.save(session)
 
         # ensure that _get_current_website_id will be able to match a website
         current_website_id = self.env["website"]._get_current_website_id(odoo.tests.HOST)
@@ -31,10 +27,8 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         res.raise_for_status()
 
     def test_03_totp_login_with_inactive_session_lang(self):
-        session = self.authenticate(None, None)
+        self.authenticate(None, None, session_extra={'context': {'lang': 'fr_FR'}})
         self.env.ref('base.lang_fr').active = False
-        session.context['lang'] = 'fr_FR'
-        root.session_store.save(session)
 
         # ensure that _get_current_website_id will be able to match a website
         current_website_id = self.env["website"]._get_current_website_id(odoo.tests.HOST)
@@ -51,11 +45,7 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         self.assertTrue(res.next.path_url.startswith("/web/login/totp"))
 
     def test_04_ensure_website_cached_data_can_be_called(self):
-        session = self.authenticate('admin', 'admin')
-
-        # Force a browser language that is not installed
-        session.context['lang'] = 'fr_MC'
-        root.session_store.save(session)
+        self.authenticate('admin', 'admin', session_extra={'context': {'lang': 'fr_MC'}})
 
         # Disable cache in order to make sure that values would be fetched at any time
         get_cached_values_without_cache = Website._cached_data.__cache__.method

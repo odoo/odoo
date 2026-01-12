@@ -5,8 +5,13 @@ from datetime import datetime, timedelta
 
 from odoo import api, fields, models, tools
 from odoo.http import request
-from odoo.http.router import root
-from odoo.http.session import STORED_SESSION_BYTES, get_session_max_inactivity, logout, update_device
+from odoo.http.session import (
+    STORED_SESSION_BYTES,
+    get_session_max_inactivity,
+    logout,
+    session_store,
+    update_device,
+)
 from odoo.tools import SQL
 from odoo.tools._vendor.useragents import UserAgent
 from odoo.tools.translate import _
@@ -78,7 +83,7 @@ class ResDeviceLog(models.Model):
                 revoked=False,
             ))
             _logger.info('User %d inserts device log (%s)', user_id, session_identifier)
-            root.session_store.save(request.session)
+            session_store().save(request.session)
 
     @api.autovacuum
     def _gc_device_log(self):
@@ -120,7 +125,7 @@ class ResDeviceLog(models.Model):
             if not candidate_device_log_ids:
                 break
             offset += batch_size
-            revoked_session_identifiers = root.session_store.get_missing_session_identifiers(
+            revoked_session_identifiers = session_store().get_missing_session_identifiers(
                 set(candidate_device_log_ids.mapped('session_identifier')),
             )
             if not revoked_session_identifiers:
@@ -294,7 +299,7 @@ class ResSession(models.Model):
     def _revoke(self):
         ResDeviceLog = self.env['res.device.log']
         session_identifiers = list(set(self.mapped('session_identifier')))
-        root.session_store.delete_from_identifiers(session_identifiers)
+        session_store().delete_from_identifiers(session_identifiers)
         revoked_devices = ResDeviceLog.sudo().search([
             ('session_identifier', 'in', session_identifiers),
             ('revoked', '=', False),

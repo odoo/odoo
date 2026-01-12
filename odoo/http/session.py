@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 import glob
 import json
 import logging
@@ -16,7 +17,7 @@ from http import HTTPStatus
 from zlib import adler32
 
 from odoo.api import Environment
-from odoo.tools import consteq, get_lang
+from odoo.tools import config, consteq, get_lang
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
@@ -326,10 +327,6 @@ def update_device(session: Session, request: Request) -> dict | None:
     return device
 
 
-def delete_old_sessions(session: Session) -> None:
-    root.session_store.delete_old_sessions(session)
-
-
 def update_session_token(session: Session, env: Environment) -> None:
     """
     Compute the session token of the current user (determined using
@@ -363,7 +360,7 @@ def check(session: Session, request_or_env: Request | Environment) -> None:
     else:
         request, env = request_or_env, request_or_env.env
     del request_or_env
-    delete_old_sessions(session)
+    session_store().delete_old_sessions(session)
     # Make sure we don't use a deleted session that can be saved again
     if session.get('deletion_time', float('+inf')) <= time.time():
         logout(session, keep_db=True)
@@ -585,7 +582,12 @@ class SessionStore:
                 self.save(session)
 
 
+@functools.lru_cache(1)
+def session_store():
+    _logger.debug('HTTP sessions stored in: %s', config.session_dir)
+    return SessionStore(path=config.session_dir)
+
+
 # ruff: noqa: E402
 from .geoip import GeoIP
 from .requestlib import request
-from .router import root

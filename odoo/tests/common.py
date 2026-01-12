@@ -61,8 +61,13 @@ from odoo import api
 from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.http.requestlib import Request, _request_stack, request
-from odoo.http.router import root
-from odoo.http.session import DEFAULT_LANG, get_default_session, logout, update_session_token
+from odoo.http.session import (
+    DEFAULT_LANG,
+    get_default_session,
+    logout,
+    update_session_token,
+    session_store,
+)
 from odoo.http.session import Session as OdooHttpSession
 from odoo.modules.registry import Registry
 from odoo.sql_db import Cursor, Savepoint
@@ -2177,6 +2182,31 @@ class Opener(requests.Session):
 
 
 class Response(requests.Response):
+    @property
+    def session(self) -> Session:
+        """
+        Get the session attached to the response.
+
+        There are three cases:
+
+        1. The session exists and was persisted on disk, you get the
+           entire session and ``session.is_new`` is ``False``.
+        2. The session exists but was not persisted on disk (because it
+           only contained default values), you get an *empty* session
+           but ``session.is_new`` is ``False``. This session is **not**
+           populated with :func:`odoo.http.session.get_default_session`
+           as the ``db`` and ``context['lang']`` cannot be set. Please
+           adapt your test in this regard.
+        3. The session doesn't exist, you get an empty session and
+           ``session.is_new`` is ``True``.
+        """
+        session_id = (
+            self.cookies.get('session_id')
+            or self.request._cookies.get('session_id')
+            or ''
+        )
+        return session_store().get(session_id, keep_sid=True)
+
     def raise_for_status(self) -> Response:
         try:
             super().raise_for_status()
@@ -2378,27 +2408,32 @@ class HttpCase(TransactionCase):
 
     def logout(self, keep_db=True):
         logout(self.session, keep_db=keep_db)
-        root.session_store.save(self.session)
+        session_store().save(self.session)
 
-    def authenticate(self, user, password, *,
-        browser: ChromeBrowser = None, session_extra: dict | None = None):
+    def update_session(self, **items):
+        self.session.update(**items)
+        session_store().save(self.session)
+
+    def update_session_context(self, **items):
+        self.session['context'].update(**items)
+        session_store().save(self.session)
+
+    def authenticate(self, user, password, *, browser: ChromeBrowser = None, session_extra=()):
         if getattr(self, 'session', None):
-            root.session_store.delete(self.session)
+            session_store().delete(self.session)
 
-        self.session = session = root.session_store.new()
-        session.update(
+        self.session = session_store().new()
+        self.session.update(
             get_default_session(),
             db=get_db_name(),
-            # In order to avoid perform a query to each first `url_open`
-            # in a test (insert `res.device.log`).
-            _trace_disable=True,
+            _trace_disable=True,  # saves a query on all requests
         )
-        session.context['lang'] = DEFAULT_LANG
+        self.session.context['lang'] = DEFAULT_LANG
 
         if session_extra:
             if extra_ctx := session_extra.pop('context', None):
-                session.context.update(extra_ctx)
-            session.update(session_extra)
+                self.session.context.update(extra_ctx)
+            self.session.update(session_extra)
 
         if user: # if authenticated
             # Flush and clear the current transaction.  This is useful, because
@@ -2417,14 +2452,16 @@ class HttpCase(TransactionCase):
                 auth_info = self.env['res.users'].authenticate(credential, {'interactive': False})
             uid = auth_info['uid']
             env = api.Environment(self.cr, uid, {})
-            session['uid'] = uid
-            session['login'] = user
-            session['session_token'] = None
+            self.session['uid'] = uid
+            self.session['login'] = user
+            self.session['session_token'] = None
             if uid:
-                update_session_token(session, env)
-            session['context'] = dict(env['res.users'].context_get())
+                update_session_token(self.session, env)
+            self.session['context'] = dict(env['res.users'].context_get())
+            if session_extra and (ctx := session_extra.get('context')):
+                self.session['context'].update(ctx)
 
-        root.session_store.save(session)
+        session_store().save(self.session)
         # Reset the opener: turns out when we set cookies['foo'] we're really
         # setting a cookie on domain='' path='/'.
         #
@@ -2439,12 +2476,12 @@ class HttpCase(TransactionCase):
         # An alternative would be to set the cookie to None (unsetting it
         # completely) or clear-ing session.cookies.
         self.opener = Opener(self)
-        self.opener.cookies.set("session_id", session.sid, domain=HOST)
+        self.opener.cookies.set("session_id", self.session.sid, domain=HOST)
         if browser:
             self._logger.info('Setting session cookie in browser')
-            browser.set_cookie('session_id', session.sid, '/', HOST)
+            browser.set_cookie('session_id', self.session.sid, '/', HOST)
 
-        return session
+        return self.session
 
     def fetch_proxy(self, url):
         """
