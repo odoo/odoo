@@ -4,7 +4,7 @@ import {
     generatePartnerMentionElement,
     generateRoleMentionElement,
     generateSpecialMentionElement,
-    generateThreadMentionElement,
+    generateChannelMentionElement,
 } from "@mail/utils/common/format";
 import { status, useComponent, useEffect, useState } from "@odoo/owl";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
@@ -204,8 +204,8 @@ export class UseSuggestion {
             this.composer.mentionedPartners.add({ id: option.partner.id });
         } else if (option.role) {
             this.composer.mentionedRoles.add(option.role);
-        } else if (option.thread) {
-            this.composer.mentionedChannels.add({ model: "discuss.channel", id: option.thread.id });
+        } else if (option.channel) {
+            this.composer.mentionedChannels.add(option.channel.id);
         } else if (option.cannedResponse) {
             this.composer.cannedResponses.push(option.cannedResponse);
         }
@@ -217,8 +217,8 @@ export class UseSuggestion {
                 inlineElement = generateSpecialMentionElement(option.label);
             } else if (option.role) {
                 inlineElement = generateRoleMentionElement(option.role);
-            } else if (option.thread) {
-                inlineElement = generateThreadMentionElement(option.thread);
+            } else if (option.channel) {
+                inlineElement = generateChannelMentionElement(option.channel);
             } else {
                 inlineElement = createTextNode(option.label);
             }

@@ -439,10 +439,10 @@ export class Composer extends Component {
             case "discuss.channel":
                 return {
                     ...props,
-                    optionTemplate: "mail.Composer.suggestionThread",
+                    optionTemplate: "mail.Composer.suggestionChannel",
                     options: suggestions.map((suggestion) => ({
                         label: suggestion.fullNameWithParent,
-                        thread: suggestion,
+                        channel: suggestion,
                         classList: "o-mail-Composer-suggestion",
                     })),
                 };

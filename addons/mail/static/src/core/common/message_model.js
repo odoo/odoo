@@ -657,12 +657,7 @@ export class Message extends Record {
             await Promise.all(
                 Array.from(
                     doc.querySelectorAll(".o_channel_redirect[data-oe-model='discuss.channel']")
-                ).map(async (el) =>
-                    this.store["mail.thread"].getOrFetch({
-                        id: el.dataset.oeId,
-                        model: "discuss.channel",
-                    })
-                )
+                ).map(async (el) => this.store["discuss.channel"].getOrFetch(el.dataset.oeId))
             )
         ).filter((channel) => channel?.exists());
         const text = convertBrToLineBreak(this.body);
