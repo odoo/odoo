@@ -10,6 +10,7 @@
     'website': 'https://www.odoo.com/app/crm',
     'depends': [
         'base_setup',
+        'base_install_request',
         'sales_team',
         'mail',
         'calendar',
@@ -33,13 +34,14 @@
         'data/ir_cron_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/crm_recurring_plan_data.xml',
+        'data/mail_template_data.xml',
         'data/crm_tour.xml',
 
         'wizard/crm_lead_lost_views.xml',
         'wizard/crm_lead_to_opportunity_views.xml',
         'wizard/crm_lead_to_opportunity_mass_views.xml',
-        'wizard/crm_merge_opportunities_views.xml',
         'wizard/crm_lead_pls_update_views.xml',
+        'wizard/crm_merge_opportunities_views.xml',
 
         'views/calendar_views.xml',
         'views/crm_recurring_plan_views.xml',
