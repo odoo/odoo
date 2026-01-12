@@ -1,14 +1,17 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { sortBy } from "@web/core/utils/arrays";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { useCommand } from "@web/core/commands/command_hook";
 import { AccordionItem } from "@web/core/dropdown/accordion_item";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
+import { _t } from "@web/core/l10n/translation";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -48,6 +51,20 @@ export class SearchBarMenu extends Component {
         // Favorite
         this.state = useState({ sharedFavoritesExpanded: false });
         useBus(this.env.searchModel, "update", this.render);
+        this.dialogService = useService("dialog");
+        this.notificationService = useService("notification");
+
+        // Add Share command
+        if (this.env.config.actionId && !this.env.inDialog) {
+            const uiService = useService("ui");
+            const togglerRef = useRef("searchview_dropdown_toggler"); // To double check searchBar is in DOM
+            useCommand(_t("Share"), () => this.shareViewUrl(), {
+                hotkey: "alt+shift+h",
+                hotkeyOptions: { bypassEditableProtection: true },
+                global: true, // We decide ourself when to add command
+                isAvailable: () => uiService.activeElement.contains(togglerRef.el),
+            });
+        }
     }
 
     // Filter Panel
@@ -170,5 +187,42 @@ export class SearchBarMenu extends Component {
             },
             res_id: this.env.searchModel.searchItems[itemId].serverSideId,
         });
+    }
+
+    /**
+     * Adds encoded active filters to the current url and copies it to the user's
+     * clipboard if possible. This url is parsed to reactivate filters if in route.
+     */
+    async shareViewUrl() {
+        let shareUrl = window.location.href;
+        const extra = this.env.searchModel.generateQueryString();
+        if (extra) {
+            const [base, hash = ""] = window.location.href.split("#");
+            shareUrl = base + (base.includes("?") ? "&" : "?") + extra + (hash ? "#" + hash : "");
+        }
+
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+        } catch {
+            // Can fail in some context like if the browser is unsafe.
+            this.dialogService.add(AlertDialog, {
+                title: _t("Share the current view"),
+                body: _t(
+                    "You can use the link below to share the current view with its filters: \n\n %(url)s",
+                    { url: shareUrl }
+                ),
+            });
+            return;
+        }
+
+        const maxSafeUrlLength = 2000; // Chrome v.143. working up to 450000 chars and firefox > 500000 chars
+        if (shareUrl.length < maxSafeUrlLength) {
+            this.notificationService.add(_t("Link copied to clipboard"), { type: "success" });
+        } else {
+            this.notificationService.add(
+                _t("Warning: Link copied to clipboard might be too long for some browsers"),
+                { type: "warning" }
+            );
+        }
     }
 }
