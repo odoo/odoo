@@ -33,8 +33,6 @@ class Website(models.Model):
 
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)
-        if search_type in ['forums', 'forums_only', 'forum_forum', 'all']:
-            result.append(self.env['forum.forum']._search_get_detail(self, order, options))
         if search_type in ['forums', 'forum_posts_only', 'forum_post', 'all']:
             result.append(self.env['forum.post']._search_get_detail(self, order, options))
         if search_type in ['forums', 'forum_tags_only', 'forum_tag']:

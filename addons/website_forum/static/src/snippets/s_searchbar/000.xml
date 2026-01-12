@@ -8,12 +8,6 @@
         </t>
     </t>
 
-    <t t-name="website_forum.search_items_forum">
-        <t t-foreach="bucket.data" t-as="result" t-key="result_index">
-            <t t-call="website.search_result_item"/>
-        </t>
-    </t>
-
     <t t-name="website_forum.search_items_forum_tags">
         <t t-foreach="bucket.data" t-as="result" t-key="result_index">
             <t t-call="website.search_result_item"/>

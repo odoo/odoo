@@ -427,12 +427,6 @@ list of filtered posts (by date or tag).
     </t>
 </template>
 
-<template id="website_blog.search_items_blog_blog_view">
-    <t t-foreach="bucket['data']" t-as="result">
-        <t t-call="website.search_result_item"/>
-    </t>
-</template>
-
 <!-- Robots.txt -->
 <template id="robots" inherit_id="website.robots">
     <xpath expr="//t[@id='robots_module_rules']" position="inside">

@@ -18,6 +18,6 @@ class Website(models.Model):
         result = super()._search_get_details(search_type, order, options)
         if search_type in ['slides', 'slide_channels_only', 'slide_channel', 'all']:
             result.append(self.env['slide.channel']._search_get_detail(self, order, options))
-        if search_type in ['slides', 'slides_only', 'slide_slide', 'all']:
+        if search_type in ['slides_only', 'slide_slide']:
             result.append(self.env['slide.slide']._search_get_detail(self, order, options))
         return result
