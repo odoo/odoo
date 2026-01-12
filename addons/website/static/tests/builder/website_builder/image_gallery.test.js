@@ -205,7 +205,7 @@ test("Cloning an image gallery should produce a unique ID", async () => {
 });
 
 test("Changing layout of an image gallery to grid should remove size option on images", async () => {
-    await setupWebsiteBuilder(
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
         `
         <section class="s_image_gallery o_masonry" data-columns="2" data-snippet="s_images_wall">
             <div class="container">
@@ -220,7 +220,7 @@ test("Changing layout of an image gallery to grid should remove size option on i
         `
     );
     await contains(":iframe .first_img").click();
-    await waitFor("[data-label='Mode']");
+    await waitSidebarUpdated();
     expect("[data-label='Mode']").toHaveCount(1);
     expect(queryOne("[data-label='Mode'] .dropdown-toggle").textContent).toBe("Masonry");
     expect("[data-label='Size']").toHaveCount(1);
@@ -231,7 +231,9 @@ test("Changing layout of an image gallery to grid should remove size option on i
     expect(":iframe .o_grid").toHaveCount(1);
     expect(":iframe .o_masonry_col").toHaveCount(0);
     expect(queryOne("[data-label='Mode'] .dropdown-toggle").textContent).toBe("Grid");
+
     await contains(":iframe .first_img").click();
+    await waitSidebarUpdated();
     expect("[data-label='Size']").toHaveCount(0);
 });
 
