@@ -3,6 +3,8 @@
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 
+const oldWriteText = browser.navigator.clipboard.writeText;
+
 function fillSelect2(inputID, search) {
     return [
         {
@@ -56,10 +58,8 @@ registry.category("web_tour.tours").add('website_links_tour', {
             trigger: '#btn_shorten_url',
             run: function () {
                 // Patch and ignore write on clipboard in tour as we don't have permissions
-                const oldWriteText = browser.navigator.clipboard.writeText;
                 browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
                 $('#btn_shorten_url').click();
-                browser.navigator.clipboard.writeText = oldWriteText;
             },
         },
         // 2. Visit it
@@ -68,6 +68,9 @@ registry.category("web_tour.tours").add('website_links_tour', {
             extra_trigger: '#o_website_links_recent_links .truncate_text:first():contains("Contact Us")',
             trigger: '#o_website_links_link_tracker_form #generated_tracked_link:contains("/r/")',
             run: function () {
+                // Cleanup the patched clipboard method
+                browser.navigator.clipboard.writeText = oldWriteText;
+
                 window.location.href = $('#generated_tracked_link').text();
             },
         },
