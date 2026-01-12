@@ -15,6 +15,16 @@ export class EmbeddedVideoPlugin extends VideoPlugin {
         mount_component_handlers: this.extendEmbeddedVideoProps.bind(this),
     };
 
+    setup() {
+        // we need to clean media_iframe_video class from embedded videos
+        // because it might have been added by the Video plugin
+        for (const video of this.document.querySelectorAll(
+            ".media_iframe_video[data-embedded='video']"
+        )) {
+            video.classList.remove("media_iframe_video");
+        }
+    }
+
     /** @override */
     get componentForMediaDialog() {
         return EmbeddedVideoSelector;
