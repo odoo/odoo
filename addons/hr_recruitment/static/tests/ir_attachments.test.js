@@ -8,19 +8,9 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { defineModels, models } from "@web/../tests/web_test_helpers";
+import { defineModels } from "@web/../tests/web_test_helpers";
+import { HrApplicant } from "./mock_server/mock_models/hr_applicant";
 
-class HrApplicant extends models.ServerModel {
-    _name = "hr.applicant";
-    _records = [
-        {
-            id: 21,
-        },
-    ];
-    _views = {
-        form: `<form><field name="id"/></form>`,
-    };
-}
 defineMailModels();
 defineModels([HrApplicant]);
 
