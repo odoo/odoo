@@ -268,6 +268,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _get_additional_shop_values(self, values, **kwargs):
         """ Hook to update values used for rendering website_sale.products template """
         return {
+            # TODO lazy to avoid queries when wishlist disabled on shop page ?
             'products_in_wishlist': request.env['product.wishlist'].current().product_id.product_tmpl_id,
         }
 
