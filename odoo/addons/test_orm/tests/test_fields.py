@@ -17,7 +17,7 @@ from odoo.tools.image import image_data_uri
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.tests.files import SVG_B64, ZIP_RAW
-from odoo.addons.base.tests.test_expression import TransactionExpressionCase
+from odoo.addons.test_orm.tests.test_expression import TransactionExpressionCase
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import common
-from . import test_acl
 from . import test_barcode
 from . import test_base
 from . import test_basecase
@@ -11,7 +10,6 @@ from . import test_date_utils
 from . import test_deprecation
 from . import test_db_cursor
 from . import test_display_name
-from . import test_expression
 from . import test_float
 from . import test_format_address_mixin
 from . import test_func

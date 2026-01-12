@@ -1,6 +1,6 @@
 import odoo.tests
 
-from odoo.addons.base.tests.test_expression import TransactionExpressionCase
+from odoo.addons.test_orm.tests.test_expression import TransactionExpressionCase
 from odoo.addons.base.tests.test_translate import SPECIAL_CHARACTERS
 
 

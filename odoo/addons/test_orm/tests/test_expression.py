@@ -258,16 +258,16 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(Partner.search([('id', 'parent_of', bot.ids)]), accessible)
 
         # same kind of search from another model
-        Bank = self.env['res.partner.bank'].with_user(self.user_demo)
-        bank_top, bank_med, bank_bot = Bank.create([
-            {'account_number': '1', 'partner_id': top.id},
-            {'account_number': '2', 'partner_id': med.id},
-            {'account_number': '3', 'partner_id': bot.id},
+        User = self.env['res.users'].with_user(self.user_demo)
+        user_top, user_med, user_bot = User.create([
+            {'login': 'top', 'partner_id': top.id},
+            {'login': 'med', 'partner_id': med.id},
+            {'login': 'bot', 'partner_id': bot.id},
         ])
 
-        self.assertEqual(Bank.search([('partner_id', 'in', accessible.ids)]), bank_top + bank_bot)
-        self.assertEqual(Bank.search([('partner_id', 'child_of', top.ids)]), bank_top + bank_med + bank_bot)
-        self.assertEqual(Bank.search([('partner_id', 'parent_of', bot.ids)]), bank_top + bank_med + bank_bot)
+        self.assertEqual(User.search([('partner_id', 'in', accessible.ids)]), user_top + user_bot)
+        self.assertEqual(User.search([('partner_id', 'child_of', top.ids)]), user_top + user_med + user_bot)
+        self.assertEqual(User.search([('partner_id', 'parent_of', bot.ids)]), user_top + user_med + user_bot)
 
     def test_10_eq_lt_gt_lte_gte(self):
         # test if less/greater than or equal operators work
