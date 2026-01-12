@@ -731,6 +731,7 @@ export class FormOptionPlugin extends Plugin {
                 defaults: JSON.stringify(defaults),
                 availableRecords: availableRecords,
                 newRecordId: isFieldCustom(fieldEl) ? getNewRecordId(fieldEl) : "",
+                isInputDisabled: !isFieldCustom(fieldEl),
             });
         }
         return {
