@@ -504,6 +504,17 @@ registry.category("web_tour.tours").add("test_order_invoice_search", {
             TicketScreen.selectFilter("Paid"),
             TicketScreen.search("Invoice Number", "00001"),
             TicketScreen.nthRowContains(1, "001", false),
+            Chrome.clickMenuOption("Close Register"),
+            {
+                content: `Select button close register`,
+                trigger: `button:contains(close register)`,
+                run: "click",
+                expectUnloadPage: true,
+            },
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
         ].flat(),
 });
 
