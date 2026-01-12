@@ -93,11 +93,10 @@
                                                 <span class="o_label small ms-1">Add to Cart</span>
                                             </button>
                                             <t t-if="is_view_active('website_sale.add_to_compare')">
-                                                <t t-set="categories" t-value="wish.product_id.product_tmpl_id.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
-                                                <t t-set="product_variant_id" t-value="wish.product_id.product_tmpl_id._get_first_possible_variant_id()"/>
+                                                <t t-set="categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
 
                                                 <button
-                                                    t-if="product_variant_id and categories"
+                                                    t-if="product_variant and categories"
                                                     class="btn btn-light o_add_to_compare d-inline-flex"
                                                     aria-label="Add to compare"
                                                     t-att-data-product-id="wish.product_id.id"

@@ -32,14 +32,14 @@ class ProductWishlist(Controller):
 
         return wish
 
-    @route('/shop/wishlist', type='http', auth='public', website=True, sitemap=False)
-    def get_wishlist(self, **kw):
-        wishes = request.env['product.wishlist'].with_context(display_default_code=False).current()
+    @route('/shop/wishlist', type='http', auth='public', website=True, readonly=True, sitemap=False)
+    def shop_wishlist(self, **kw):
+        wishes = request.env['product.wishlist'].current()
 
         return request.render(
             'website_sale.product_wishlist',
             {
-                'wishes': wishes,
+                'wishes': wishes.with_context(display_default_code=False),
             }
         )
 
