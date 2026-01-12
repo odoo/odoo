@@ -2080,7 +2080,10 @@ class IrQweb(models.AbstractModel):
                 code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
             elif 't-valuef.translate' in el.attrib:
                 exprf = el.attrib.pop('t-valuef.translate')
-                code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
+                if self.env.context.get('edit_translations'):
+                    code.append(indent_code(f"values[{varname!r}] = Markup({self._compile_format(exprf)})", level))
+                else:
+                    code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
             elif varname[0] == '{':
                 code.append(indent_code(f"values.update({self._compile_expr(varname)})", level))
             else:
@@ -2606,10 +2609,17 @@ class IrQweb(models.AbstractModel):
 
         # args to values
         for key in list(el.attrib):
-            if key.endswith(('.f', '.translate')):
-                name = key.removesuffix(".f").removesuffix(".translate")
+            if key.endswith('.f'):
+                name = key.removesuffix(".f")
                 value = el.attrib.pop(key)
                 code.append(indent_code(f"t_call_values[{name!r}] = {self._compile_format(value)}", level))
+            elif key.endswith('.translate'):
+                name = key.removesuffix(".f").removesuffix(".translate")
+                value = el.attrib.pop(key)
+                if self.env.context.get('edit_translations'):
+                    code.append(indent_code(f"t_call_values[{name!r}] = Markup({self._compile_format(value)})", level))
+                else:
+                    code.append(indent_code(f"t_call_values[{name!r}] = {self._compile_format(value)}", level))
             elif not key.startswith('t-'):
                 value = el.attrib.pop(key)
                 code.append(indent_code(f"t_call_values[{key!r}] = {self._compile_expr(value)}", level))
