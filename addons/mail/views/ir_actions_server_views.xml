@@ -12,28 +12,54 @@
                 </xpath>
                 <xpath expr="//t[@name='action_content']//notebook" position="before">
                     <!-- Create next activity -->
+                    <div class="d-flex flex-column" invisible="state != 'next_activity'">
+                        <label for="activity_plan_id" invisible="not has_activity_plans"/>
+                        <field name="activity_plan_id"
+                            widget="selection_badge"
+                            options="{'size': 'sm'}"
+                            required="not activity_type_id and state == 'next_activity'"
+                            invisible="not has_activity_plans"/>
+                        <label for="activity_type_id"/>
+                        <field name="activity_type_id"
+                            widget="selection_badge_icons"
+                            options="{'size': 'sm', 'related_icon_field': 'icon'}"
+                            required="not activity_plan_id and state == 'next_activity'"/>
+                    </div>
                     <group invisible="state != 'next_activity'">
-                        <group>
-                            <field name="activity_type_id" options="{'no_create': True, 'no_open': True}"
-                                required="state == 'next_activity'"/>
-                            <field name="activity_summary" placeholder="e.g. Discuss proposal"/>
+                        <group colspan="2" invisible="not activity_type_id">
+                            <label for="activity_summary" class="o_form_label fs-3"/>
+                            <field name="activity_summary"
+                                nolabel="1"
+                                placeholder="e.g. Discuss proposal"
+                                class="fs-3 w-100"/>
                         </group>
                         <group>
                             <label for="activity_date_deadline_range"/>
-                            <div class="o_row">
-                                <field name="activity_date_deadline_range" class="oe_inline"/>
+                            <div class="d-flex flex-row gap-2">
+                                <field name="activity_date_deadline_range" class="oe_inline o_input_3ch"/>
                                 <field name="activity_date_deadline_range_type" class="oe_inline" required="state == 'next_activity' and activity_date_deadline_range &gt; 0"/>
                             </div>
-                            <field name="activity_user_type" required="state == 'next_activity'"/>
-                            <field name="activity_user_field_name"
-                                widget="field_selector" options="{'model': 'model_name'}"
-                                invisible="activity_user_type != 'generic'"
-                                required="state == 'next_activity' and activity_user_type == 'generic'"/>
-                            <field name="activity_user_id"
-                                placeholder="Choose a user..."
-                                invisible="activity_user_type != 'specific'"
-                                required="state == 'next_activity' and activity_user_type == 'specific'"/>
-                            <field name="activity_note" class="oe-bordered-editor" placeholder="Add a description to your activity..."/>
+                            <label for="activity_user_type" string="Assign to" invisible="state != 'next_activity' or (not activity_type_id and not activity_plan_has_user_on_demand)"/>
+                            <div class="d-flex flex-row gap-2" invisible="state != 'next_activity' or (not activity_type_id and not activity_plan_has_user_on_demand)">
+                                <field name="activity_user_type"
+                                    required="state == 'next_activity' and (activity_type_id or activity_plan_has_user_on_demand)"/>
+                                <field name="activity_user_field_name"
+                                    invisible="activity_user_type != 'generic'"
+                                    widget="field_selector"
+                                    options="{'model': 'model_name'}"
+                                    required="state == 'next_activity' and activity_user_type == 'generic'"/>
+                                <field name="activity_user_id"
+                                    invisible="activity_user_type != 'specific'"
+                                    placeholder="Choose a user..."
+                                    widget="many2one_avatar_user"
+                                    required="state == 'next_activity' and activity_user_type == 'specific' "/>
+                            </div>
+                        </group>
+                        <group colspan="2" invisible="not activity_type_id">
+                            <field name="activity_note"
+                                nolabel="1"
+                                class="oe-inline oe-bordered-editor embedded-editor-height-4"
+                                placeholder="Log a note..."/>
                         </group>
                     </group>
                     <!-- Add/Remove Followers -->

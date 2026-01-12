@@ -51,9 +51,9 @@ class MailActivityPlanTemplate(models.Model):
                 viewed_responsible.append(responsible_parent)
                 responsible_parent = responsible_parent.parent_id
 
-    def _determine_responsible(self, on_demand_responsible, employee):
+    def _determine_responsible(self, on_demand_responsible, on_demand_responsible_fname, employee):
         if self.plan_id.res_model != 'hr.employee' or self.responsible_type not in {'coach', 'manager', 'employee'}:
-            return super()._determine_responsible(on_demand_responsible, employee)
+            return super()._determine_responsible(on_demand_responsible, on_demand_responsible_fname, employee)
         result = {"error": "", "warning": "", "responsible": False}
         if self.responsible_type == 'coach':
             if not employee.coach_id:
