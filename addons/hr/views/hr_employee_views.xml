@@ -546,7 +546,7 @@
             <field name="name">hr.employee.list</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <list string="Employees" expand="context.get('expand', False)" multi_edit="1" duplicate="false" sample="1" js_class="hr_employee_list">
+                <list string="Employees" expand="context.get('expand', False)" multi_edit="1" duplicate="false" sample="1">
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
                     </header>
@@ -580,7 +580,7 @@
             <field name="name">hr.employee.list</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <list string="Employees" multi_edit="1" editable="bottom" duplicate="false" sample="1" js_class="hr_employee_list">
+                <list string="Employees" multi_edit="1" editable="bottom" duplicate="false" sample="1">
                     <field name="name" string="Name" readonly="1"/>
                     <field name="company_id" optional="hide"/>
                     <field name="department_id" optional="hide"/>
@@ -596,7 +596,7 @@
             <field name="name">hr.employee.list.activites.view</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <list string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1" js_class="hr_employee_list">
+                <list string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1">
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
                     <field name="name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1" optional="hide"/>
