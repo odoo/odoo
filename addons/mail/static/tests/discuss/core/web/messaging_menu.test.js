@@ -304,3 +304,33 @@ test("can use notification item swipe actions", async () => {
     await swipeLeft(".o_actionswiper"); // unpins
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
+
+test("counter does not double count channel needaction messages", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "Hey @Mitchell Admin",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']"); // fetch channels
+    await contains(".o-mail-NotificationItem", { text: "General" }); // ensure channels fetched
+    await contains(".o-mail-MessagingMenu-counter:text('1')");
+});
