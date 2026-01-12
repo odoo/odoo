@@ -1316,9 +1316,10 @@ class UsersMultiCompany(models.Model):
             'base.group_multi_company', raise_if_not_found=False)
         if group_multi_company_id:
             for user in users:
-                if len(user.company_ids) <= 1 and group_multi_company_id in user.group_ids.ids:
+                company_count = len(user.sudo().company_ids)
+                if company_count <= 1 and group_multi_company_id in user.group_ids.ids:
                     user.write({'group_ids': [Command.unlink(group_multi_company_id)]})
-                elif len(user.company_ids) > 1 and group_multi_company_id not in user.group_ids.ids:
+                elif company_count > 1 and group_multi_company_id not in user.group_ids.ids:
                     user.write({'group_ids': [Command.link(group_multi_company_id)]})
         return users
 
@@ -1330,9 +1331,10 @@ class UsersMultiCompany(models.Model):
             'base.group_multi_company', raise_if_not_found=False)
         if group_multi_company_id:
             for user in self:
-                if len(user.company_ids) <= 1 and group_multi_company_id in user.group_ids.ids:
+                company_count = len(user.sudo().company_ids)
+                if company_count <= 1 and group_multi_company_id in user.group_ids.ids:
                     user.write({'group_ids': [Command.unlink(group_multi_company_id)]})
-                elif len(user.company_ids) > 1 and group_multi_company_id not in user.group_ids.ids:
+                elif company_count > 1 and group_multi_company_id not in user.group_ids.ids:
                     user.write({'group_ids': [Command.link(group_multi_company_id)]})
         return res
 
@@ -1344,9 +1346,10 @@ class UsersMultiCompany(models.Model):
         group_multi_company_id = self.env['ir.model.data']._xmlid_to_res_id(
             'base.group_multi_company', raise_if_not_found=False)
         if group_multi_company_id:
-            if len(user.company_ids) <= 1 and group_multi_company_id in user.group_ids.ids:
+            company_count = len(user.sudo().company_ids)
+            if company_count <= 1 and group_multi_company_id in user.group_ids.ids:
                 user.update({'group_ids': [Command.unlink(group_multi_company_id)]})
-            elif len(user.company_ids) > 1 and group_multi_company_id not in user.group_ids.ids:
+            elif company_count > 1 and group_multi_company_id not in user.group_ids.ids:
                 user.update({'group_ids': [Command.link(group_multi_company_id)]})
         return user
 
