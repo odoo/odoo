@@ -919,7 +919,8 @@ class MailMessage(models.Model):
     def unstar_all(self):
         """ Unstar messages for the current partner. """
         starred_messages = self.search([("starred_partner_ids", "in", self.env.user.partner_id.id)])
-        starred_messages.starred_partner_ids = [Command.unlink(self.env.user.partner_id.id)]
+        # sudo: mail.message - a user can unstar messages they can read
+        starred_messages.sudo().starred_partner_ids = [Command.unlink(self.env.user.partner_id.id)]
         self.env.user._bus_send(
             "mail.message/toggle_star", {"message_ids": starred_messages.ids, "starred": False}
         )
@@ -929,13 +930,14 @@ class MailMessage(models.Model):
             to uid are set to (un)starred.
         """
         self.ensure_one()
-        # a user should always be able to star a message they can read
         self.check_access('read')
         starred = not self.starred
         if starred:
-            self.starred_partner_ids = [Command.link(self.env.user.partner_id.id)]
+            # sudo: mail.message - a user can star a message they can read
+            self.sudo().starred_partner_ids = [Command.link(self.env.user.partner_id.id)]
         else:
-            self.starred_partner_ids = [Command.unlink(self.env.user.partner_id.id)]
+            # sudo: mail.message - a user can unstar a message they can read
+            self.sudo().starred_partner_ids = [Command.unlink(self.env.user.partner_id.id)]
         self.env.user._bus_send(
             "mail.message/toggle_star", {"message_ids": [self.id], "starred": starred}
         )
