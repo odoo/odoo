@@ -269,9 +269,11 @@ class HrAttendance(models.Model):
             return Domain.FALSE
         domain_list = [Domain.AND([
             Domain('employee_id', '=', employee.id),
-            Domain('date', '<=', max(attendances.mapped('date')) + relativedelta(SU)),
-            Domain('date', '>=', min(attendances.mapped('date')) + relativedelta(MO(-1))),
-        ]) for employee, attendances in self.grouped('employee_id').items()]
+            Domain('date', '<=', max(attendances.mapped('check_out')).date() + relativedelta(SU)),
+            Domain('date', '>=', min(attendances.mapped('check_in')).date() + relativedelta(MO(-1))),
+        ]) for employee, attendances in self.filtered(lambda att: att.check_out).grouped('employee_id').items()]
+        if not domain_list:
+            return Domain.FALSE
         return Domain.OR(domain_list) if len(domain_list) > 1 else domain_list[0]
 
     def _update_overtime(self, attendance_domain=None):
@@ -326,6 +328,8 @@ class HrAttendance(models.Model):
             )
         self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
         self.env.add_to_compute(self._fields['overtime_hours'], all_attendances)
+        self.env.add_to_compute(self._fields['validated_overtime_hours'], all_attendances)
+        self.env.add_to_compute(self._fields['overtime_status'], all_attendances)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -559,21 +563,6 @@ class HrAttendance(models.Model):
 
     def action_refuse_overtime(self):
         self.linked_overtime_ids.action_refuse()
-
-    # def action_list_overtimes(self):
-    #     self.ensure_one()
-    #     assert self.date
-    #     return {
-    #         "type": "ir.actions.act_window",
-    #         "name": _("Overtime details"),
-    #         "res_model": "hr.attendance.overtime.line",
-    #         "view_mode": 'list',
-    #         "context": {
-    #             "create": 0,
-    #             "editable": 'top',
-    #         },
-    #         "domain": [('id', 'in', self._linked_overtimes().ids)]
-    #     }
 
     def _cron_auto_check_out(self):
         def check_in_tz(attendance):
