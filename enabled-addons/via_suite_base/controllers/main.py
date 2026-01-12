@@ -25,6 +25,16 @@ class ViaSuiteLogin(OAuthLogin):
         if request.session.uid:
             return request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
         
+        # Centralized Redirection: If not authenticated and NOT on the global domain, 
+        # redirect to the global domain for central SSO handling.
+        import os
+        global_domain = os.getenv('VIA_SUITE_GLOBAL_DOMAIN', 'viafronteira.app')
+        current_host = request.httprequest.host.split(':')[0]
+        
+        if current_host != global_domain and not kw.get('via_error') and not kw.get('oauth_error'):
+            _logger.info("Centralizing Login: Redirecting %s to %s", current_host, global_domain)
+            return request.redirect(f"https://{global_domain}/web/login", local=False)
+        
         # If there's an OAuth error, let super handle it
         if kw.get('oauth_error') or kw.get('via_error'):
             return super(ViaSuiteLogin, self).web_login(redirect=redirect, **kw)
