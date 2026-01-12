@@ -202,3 +202,14 @@ class TestAccessRightsHolidayManager(TestAllocationRights):
         self.assertEqual(allocation.state, 'validate', "It should have been validated")
         allocation.action_refuse()
         self.assertEqual(allocation.state, 'refuse', "It should have been refused")
+
+    def test_manager_without_time_off_access_rights(self):
+        """ Test checking that when setting as manager a user that doesn't have access rights to time off,
+        that user isn't set as time off manager"""
+        self.user_responsible.write({
+            'group_ids': [(6, 0, [self.env.ref('hr.group_hr_user').id])],
+        })
+        self.employee_emp.write({
+            'parent_id': self.user_responsible.employee_id.id,
+        })
+        self.assertFalse(self.employee_emp.leave_manager_id)

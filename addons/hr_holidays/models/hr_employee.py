@@ -161,7 +161,7 @@ class HrEmployee(models.Model):
         for employee in self:
             previous_manager = employee._origin.parent_id.user_id
             manager = employee.parent_id.user_id
-            if manager and employee.leave_manager_id == previous_manager or not employee.leave_manager_id:
+            if manager and (employee.leave_manager_id == previous_manager or not employee.leave_manager_id) and manager.has_group('hr_holidays.group_hr_holidays_user'):
                 employee.leave_manager_id = manager
             elif not employee.leave_manager_id:
                 employee.leave_manager_id = False
@@ -213,7 +213,7 @@ class HrEmployee(models.Model):
         self = self.with_context(no_leave_resource_calendar_update=True)  # noqa: PLW0642
         if 'parent_id' in values:
             manager = self.env['hr.employee'].browse(values['parent_id']).user_id
-            if manager:
+            if manager and manager.has_group('hr_holidays.group_hr_holidays_user'):
                 to_change = self.filtered(lambda e: e.leave_manager_id == e.parent_id.user_id or not e.leave_manager_id)
                 to_change.write({'leave_manager_id': values.get('leave_manager_id', manager.id)})
 
