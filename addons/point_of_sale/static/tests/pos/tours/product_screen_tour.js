@@ -1220,6 +1220,7 @@ registry.category("web_tour.tours").add("test_preset_customer_selection", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            PartnerList.searchCustomerValue("Test Partner", true),
             PartnerList.clickPartner("Test Partner"),
             ProductScreen.customerIsSelected("Test Partner"),
             Chrome.endTour(),
