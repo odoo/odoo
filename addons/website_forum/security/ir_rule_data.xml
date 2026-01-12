@@ -42,4 +42,10 @@
         <field name="model_id" ref="model_forum_tag"/>
         <field name="domain_force">[('forum_id.can_access', '=', True)]</field>
     </record>
+
+    <record id="website_forum_post_comment" model="ir.rule">
+        <field name="name">Website forum post comment</field>
+        <field name="model_id" ref="model_forum_post_comment"/>
+        <field name="domain_force">[('post_id.forum_id.can_access', '=', True)]</field>
+    </record>
 </odoo>

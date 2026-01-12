@@ -2,3 +2,4 @@
 
 from . import legacy
 from . import website_forum
+from . import website_mail

@@ -3,6 +3,7 @@
 import logging
 import math
 import re
+from collections.abc import Iterable
 from datetime import datetime
 
 from odoo import api, fields, models, tools, _
@@ -18,14 +19,11 @@ class ForumPost(models.Model):
     _name = 'forum.post'
     _description = 'Forum Post'
     _inherit = [
-        'mail.thread',
         'website.seo.metadata',
         'website.located.mixin',
         'website.searchable.mixin',
     ]
     _order = "is_correct DESC, vote_count DESC, last_activity_date DESC"
-
-    _CUSTOMER_HEADERS_LIMIT_COUNT = 0  # never use X-Msg-To headers
 
     name = fields.Char('Title')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True, index=True)
@@ -42,7 +40,9 @@ class ForumPost(models.Model):
         ], string='Status', default='active')
     views = fields.Integer('Views', default=0, readonly=True, copy=False)
     active = fields.Boolean('Active', default=True)
-    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment', 'email_outgoing'])])
+
+    comment_ids = fields.One2many('forum.post.comment', 'post_id', string='Comments')
+
     website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
 
     # history
@@ -63,8 +63,13 @@ class ForumPost(models.Model):
     vote_count = fields.Integer('Total Votes', compute='_compute_vote_count', store=True)
 
     # favorite
-    favourite_ids = fields.Many2many('res.users', string='Favourite')
-    user_favourite = fields.Boolean('Is Favourite', compute='_compute_user_favourite')
+    favourite_ids = fields.Many2many('res.users', string='Favourite', groups='base.group_erp_manager')
+    user_favourite = fields.Boolean(
+        'Is Favourite',
+        compute='_compute_user_favourite',
+        inverse='_inverse_user_favourite',
+        search='_search_user_favourite',
+    )
     favourite_count = fields.Integer('Favorite', compute='_compute_favorite_count', store=True)
 
     # hierarchy
@@ -162,6 +167,43 @@ class ForumPost(models.Model):
         'Can Use Full Editor',
         compute='_compute_post_karma_rights', compute_sudo=False)
 
+    follower_ids = fields.Many2many(
+        "res.partner",
+        "forum_post_follower_rel",
+        string="Followers",
+        groups="base.group_erp_manager",
+    )
+    is_follower = fields.Boolean(
+        compute="_compute_is_follower",
+        inverse="_inverse_is_follower",
+        string="Is Follower",
+    )
+
+    @api.depends_context('uid')
+    @api.depends('follower_ids')
+    def _compute_is_follower(self):
+        followed = self.sudo().search([
+            ('id', 'in', self.ids),
+            ('follower_ids', '=', self._get_current_partner().id),
+        ])
+        (self & followed).is_follower = True  # update record in `self`
+        (self - followed).is_follower = False
+
+    def _inverse_is_follower(self):
+        partner = self._get_current_partner()
+        for post in self:
+            if post.is_follower:
+                post.sudo().follower_ids |= partner
+            else:
+                post.sudo().follower_ids -= partner
+
+    def _get_current_partner(self):
+        if self.env.user.active:
+            return self.env.user.partner_id
+
+        session_info = self.env['ir.http'].get_frontend_session_info()
+        return self.env['res.partner'].browse(session_info.get('public_partner_id'))
+
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if self._has_cycle():
@@ -205,14 +247,28 @@ class ForumPost(models.Model):
             post.vote_count = result[post.id]
 
     @api.depends_context('uid')
+    @api.depends('favourite_ids')
     def _compute_user_favourite(self):
         for post in self:
-            post.user_favourite = post.env.uid in post.favourite_ids.ids
+            post.user_favourite = post.env.uid in post.sudo().favourite_ids.ids
+
+    def _inverse_user_favourite(self):
+        for post in self:
+            if post.user_favourite:
+                post.sudo().favourite_ids |= self.env.user
+            else:
+                post.sudo().favourite_ids -= self.env.user
+
+    def _search_user_favourite(self, operator, value):
+        if operator != 'in' or not isinstance(value, Iterable) or tuple(value) != (True,):
+            return NotImplemented
+        domain = [('favourite_ids', '=', self.env.user.id)]
+        return [('id', 'in', self.sudo()._search(domain))]
 
     @api.depends('favourite_ids')
     def _compute_favorite_count(self):
         for post in self:
-            post.favourite_count = len(post.favourite_ids)
+            post.favourite_count = len(post.sudo().favourite_ids)
 
     @api.depends('create_uid', 'parent_id')
     def _compute_self_reply(self):
@@ -269,15 +325,14 @@ class ForumPost(models.Model):
             post.can_use_full_editor = is_admin or user.karma >= post.forum_id.karma_editor
 
     def _search_can_view(self, operator, value):
-        if operator != 'in':
+        if operator != 'in' or not isinstance(value, Iterable) or tuple(value) != (True,):
             return NotImplemented
 
-        user = self.env.user
         # Won't impact sitemap, search() in converter is forced as public user
         if self.env.is_admin():
-            return [(1, '=', 1)]
+            return Domain.TRUE
 
-        sql = SQL("""(
+        sql = SQL("""
             SELECT p.id
             FROM forum_post p
                    LEFT JOIN res_users u ON p.create_uid = u.id
@@ -289,7 +344,7 @@ class ForumPost(models.Model):
                     u.karma > 0
                     and (p.active or p.create_uid = %(user_id)s)
                 )
-        )""", user_id=user.id, karma=user.karma)
+        """, user_id=self.env.user.id, karma=self.env.user.karma)
         return [('id', 'in', sql)]
 
     # EXTENDS WEBSITE.SEO.METADATA
@@ -345,7 +400,8 @@ class ForumPost(models.Model):
         return super().unlink()
 
     def write(self, vals):
-        trusted_keys = ['active', 'is_correct', 'tag_ids']  # fields where security is checked manually
+        # fields where security is checked manually
+        trusted_keys = ['active', 'is_correct', 'tag_ids', 'is_follower', 'user_favourite']
         if 'forum_id' in vals:
             forum = self.env['forum.forum'].browse(vals['forum_id'])
             forum.check_access('write')
@@ -392,11 +448,24 @@ class ForumPost(models.Model):
             for post in self:
                 if post.parent_id:
                     body, subtype_xmlid = _('Answer Edited'), 'website_forum.mt_answer_edit'
-                    obj_id = post.parent_id
+                    partner_ids_sudo = post.sudo().follower_ids | post.sudo().parent_id.follower_ids
                 else:
                     body, subtype_xmlid = _('Question Edited'), 'website_forum.mt_question_edit'
-                    obj_id = post
-                obj_id.message_post(body=body, subtype_xmlid=subtype_xmlid)
+                    partner_ids_sudo = post.sudo().follower_ids
+
+                self.env['mail.thread'].with_context(
+                    email_notification_force_header=True,
+                    # create the mail message for Activity view on website
+                    mail_notify_force_create=True,
+                ).message_notify(
+                    body=body,
+                    model=post._name,
+                    res_id=post.id,
+                    partner_ids=partner_ids_sudo.ids,
+                    subtype_xmlid=subtype_xmlid,
+                    notify_author_mention=False,
+                )
+
         if 'active' in vals:
             answers = self.env['forum.post'].with_context(active_test=False).search([('parent_id', 'in', self.ids)])
             if answers:
@@ -444,34 +513,53 @@ class ForumPost(models.Model):
 
     def _notify_state_update(self):
         for post in self:
-            tag_partners = post.tag_ids.sudo().mapped('message_partner_ids')
+            tag_partners = post.tag_ids.follower_ids
+            partners = self.env['res.partner']
 
             if post.state == 'active' and post.parent_id:
-                post.parent_id.message_post_with_source(
-                    'website_forum.forum_post_template_new_answer',
-                    subject=_('Re: %s', post.parent_id.name),
-                    partner_ids=tag_partners.ids,
-                    subtype_xmlid='website_forum.mt_answer_new',
-                )
-            elif post.state == 'active' and not post.parent_id:
-                post.message_post_with_source(
-                    'website_forum.forum_post_template_new_question',
-                    subject=post.name,
-                    partner_ids=tag_partners.ids,
-                    subtype_xmlid='website_forum.mt_question_new',
-                )
-            elif post.state == 'pending' and not post.parent_id:
-                # TDE FIXME: in master, you should probably use a subtype;
-                # however here we remove subtype but set partner_ids
-                partners = post.sudo().message_partner_ids | tag_partners
-                partners = partners.filtered(lambda partner: partner.user_ids and any(user.karma >= post.forum_id.karma_moderate for user in partner.user_ids))
+                template = 'website_forum.forum_post_template_new_answer'
+                subject = post.parent_id.name
+                partners = tag_partners | post.parent_id.follower_ids
+                subtype_xmlid = 'website_forum.mt_answer_new'
 
-                post.message_post_with_source(
-                    'website_forum.forum_post_template_validation',
-                    subject=post.name,
-                    partner_ids=partners.ids,
-                    subtype_xmlid='mail.mt_note',
+            elif post.state == 'active' and not post.parent_id:
+                template = 'website_forum.forum_post_template_new_question'
+                subject = post.name
+                partners = tag_partners
+                subtype_xmlid = 'website_forum.mt_question_new'
+
+            elif post.state == 'pending' and not post.parent_id:
+                # Require validation
+                partners = post.sudo().follower_ids | tag_partners
+                partners = partners.filtered(
+                    lambda partner:
+                        partner.user_ids
+                        and any(user.karma >= post.forum_id.karma_moderate for user in partner.user_ids)
+                        and partner.user_ids != self.env.user
                 )
+                template = 'website_forum.forum_post_template_validation'
+                subject = post.name
+                subtype_xmlid = 'website_forum.mt_ask_validation'
+
+            body_html = self.env['mail.render.mixin']._render_template_qweb_view(
+                template,
+                post._name,
+                post.ids,
+            )[post.id]
+            self.env['mail.thread'].with_context(
+                email_notification_force_header=True,
+                # create the mail message for Activity view on website
+                mail_notify_force_create=True,
+            ).message_notify(
+                body=body_html,
+                subject=subject,
+                model=post._name,
+                res_id=post.id,
+                partner_ids=partners.ids,
+                subtype_xmlid=subtype_xmlid,
+                notify_author_mention=False,
+            )
+
         return True
 
     def reopen(self):
@@ -620,101 +708,41 @@ class ForumPost(models.Model):
         return {'vote_count': self.vote_count, 'user_vote': new_vote_value}
 
     def convert_answer_to_comment(self):
-        """ Tools to convert an answer (forum.post) to a comment (mail.message).
-        The original post is unlinked and a new comment is posted on the question
-        using the post create_uid as the comment's author. """
+        """Convert an answer to a comment."""
         self.ensure_one()
         if not self.parent_id:
-            return self.env['mail.message']
+            raise UserError(_("Can not convert a question to a comment"))
 
         # karma-based action check: use the post field that computed own/all value
         if not self.can_comment_convert:
             raise AccessError(_('%d karma required to convert an answer to a comment.', self.karma_comment_convert))
 
-        # post the message
-        question = self.parent_id
-        self_sudo = self.sudo()
-        values = {
-            'author_id': self_sudo.create_uid.partner_id.id,  # use sudo here because of access to res.users model
-            'email_from': self_sudo.create_uid.email_formatted,  # use sudo here because of access to res.users model
+        message = self.env['forum.post.comment'].with_user(self.sudo().create_uid).sudo().create({
             'body': tools.html_sanitize(self.content, sanitize_attributes=True, strip_style=True, strip_classes=True),
-            'message_type': 'comment',
-            'subtype_xmlid': 'mail.mt_comment',
-            'date': self.create_date,
-        }
-        # done with the author user to have create_uid correctly set
-        new_message = question.with_user(self_sudo.create_uid.id).with_context(mail_post_autofollow_author_skip=True).sudo().message_post(**values).sudo(False)
+            'post_id': self.parent_id.id,
+        })
+        message._notify_followers()
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
         self.sudo().unlink()
+        return message
 
-        return new_message
-
-    @api.model
-    def convert_comment_to_answer(self, message_id):
-        """ Tool to convert a comment (mail.message) into an answer (forum.post).
-        The original comment is unlinked and a new answer from the comment's author
-        is created. Nothing is done if the comment's author already answered the
-        question. """
-        comment_sudo = self.env['mail.message'].sudo().browse(message_id)
-        post = self.browse(comment_sudo.res_id)
-        if not comment_sudo.author_id or not comment_sudo.author_id.user_ids:  # only comment posted by users can be converted
-            return False
-
-        # karma-based action check: must check the message's author to know if own / all
-        is_author = comment_sudo.author_id.id == self.env.user.partner_id.id
-        karma_own = post.forum_id.karma_comment_convert_own
-        karma_all = post.forum_id.karma_comment_convert_all
-        karma_convert = is_author and karma_own or karma_all
-        can_convert = self.env.user.karma >= karma_convert
-        if not can_convert:
-            if is_author and karma_own < karma_all:
-                raise AccessError(_('%d karma required to convert your comment to an answer.', karma_own))
-            else:
-                raise AccessError(_('%d karma required to convert a comment to an answer.', karma_all))
-
-        # check the message's author has not already an answer
-        question = post.parent_id if post.parent_id else post
-        post_create_uid = comment_sudo.author_id.user_ids[0]
-        if any(answer.create_uid.id == post_create_uid.id for answer in question.child_ids):
-            return False
-
-        # create the new post
-        post_values = {
-            'forum_id': question.forum_id.id,
-            'content': comment_sudo.body,
-            'parent_id': question.id,
-            'name': _('Re: %s', question.name or ''),
-        }
-        # done with the author user to have create_uid correctly set
-        new_post = self.with_user(post_create_uid).sudo().create(post_values).sudo(False)
-
-        # delete comment
-        comment_sudo.unlink()
-
-        return new_post
-
-    def unlink_comment(self, message_id):
-        comment_sudo = self.env['mail.message'].sudo().browse(message_id)
-        if comment_sudo.model != 'forum.post':
-            return [False] * len(self)
+    def unlink_comment(self, comment):
+        self.ensure_one()
 
         user_karma = self.env.user.karma
-        result = []
-        for post in self:
-            if comment_sudo.res_id != post.id:
-                result.append(False)
-                continue
-            # karma-based action check: must check the message's author to know if own or all
-            karma_required = (
-                post.forum_id.karma_comment_unlink_own
-                if comment_sudo.author_id.id == self.env.user.partner_id.id
-                else post.forum_id.karma_comment_unlink_all
-            )
-            if user_karma < karma_required:
-                raise AccessError(_('%d karma required to delete a comment.', karma_required))
-            result.append(comment_sudo.unlink())
-        return result
+        if comment.post_id != self:
+            return
+
+        # karma-based action check: must check the message's author to know if own or all
+        karma_required = (
+            self.forum_id.karma_comment_unlink_own
+            if comment.create_uid == self.env.user
+            else self.forum_id.karma_comment_unlink_all
+        )
+        if user_karma < karma_required:
+            raise AccessError(_('%d karma required to delete a comment.', karma_required))
+        comment.sudo().unlink()
 
     def _set_viewed(self):
         self.ensure_one()
@@ -723,60 +751,6 @@ class ForumPost(models.Model):
     def _update_last_activity(self):
         self.ensure_one()
         return self.sudo().write({'last_activity_date': fields.Datetime.now()})
-
-    # ----------------------------------------------------------------------
-    # MESSAGING
-    # ----------------------------------------------------------------------
-
-    def _mail_get_operation_for_mail_message_operation(self, message_operation):
-        operations = super()._mail_get_operation_for_mail_message_operation(message_operation)
-        if message_operation in ('write', 'unlink'):
-            operations = [(Domain('can_edit', '=', True) & domain, op) for domain, op in operations]
-        return operations
-
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
-        if not self:
-            return groups
-
-        self.ensure_one()
-        if self.state == 'active':
-            for _group_name, _group_method, group_data in groups:
-                group_data['has_button_access'] = True
-
-        return groups
-
-    def message_post(self, *, message_type='notification', **kwargs):
-        if self.ids and message_type == 'comment':  # user comments have a restriction on karma
-            # add followers of comments on the parent post
-            if self.parent_id:
-                partner_ids = kwargs.get('partner_ids', [])
-                comment_subtype = self.sudo().env.ref('mail.mt_comment')
-                question_followers = self.env['mail.followers'].sudo().search([
-                    ('res_model', '=', self._name),
-                    ('res_id', '=', self.parent_id.id),
-                    ('partner_id', '!=', False),
-                ]).filtered(lambda fol: comment_subtype in fol.subtype_ids).mapped('partner_id')
-                partner_ids += question_followers.ids
-                kwargs['partner_ids'] = partner_ids
-
-            self.ensure_one()
-            if not self.can_comment:
-                raise AccessError(_('%d karma required to comment.', self.karma_comment))
-            if not kwargs.get('force_record_name') and self.parent_id.name:
-                kwargs['force_record_name'] = self.parent_id.name
-        return super().message_post(message_type=message_type, **kwargs)
-
-    def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
-        # Override to avoid keeping all notified recipients of a comment.
-        # We avoid tracking needaction on post comments. Only emails should be
-        # ufficient.
-        msg_vals = msg_vals or {}
-        if msg_vals.get('message_type', message.message_type) == 'comment':
-            return
-        return super()._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
     # ----------------------------------------------------------------------
     # WEBSITE
@@ -888,7 +862,7 @@ class ForumPost(models.Model):
         elif my == 'tagged':
             domain &= Domain('tag_ids.message_partner_ids', '=', user.partner_id.id)
         elif my == 'favourites':
-            domain &= Domain('favourite_ids', '=', user.id)
+            domain &= Domain('user_favourite', '=', True)
         elif my == 'upvoted':
             domain &= Domain('vote_ids.user_id', '=', user.id)
 

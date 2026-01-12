@@ -11,7 +11,7 @@
                 aria-label="Your favourite"
                 data-bs-toggle="tooltip"
                 class="fa fa-star o_wforum_gold"/>
-            <small t-if="question.message_is_follower and not (my == 'followed' or hide_fav_icon)"
+            <small t-if="question.is_follower and not (my == 'followed' or hide_fav_icon)"
                 title="You're following this post"
                 aria-label="You're following this post"
                 data-bs-toggle="tooltip"
@@ -400,6 +400,8 @@
                             >
                                 <i t-attf-class="fa fa-comment #{ 'karma_required' if not post_id.can_comment else ''}" title="Comment" data-bs-toggle="tooltip" data-bs-placement="top" />
                             </a>
+                            <t t-call="website_forum.follow_button" t-if="post_id.parent_id"
+                                object="post_id" btn_classes.f="opacity-50 opacity-100-hover"/>
                             <div class="dropdown">
                                 <a type="button" class="btn opacity-50 opacity-100-hover px-2" data-bs-toggle="dropdown">
                                     <i class="fa fa-share-alt" data-bs-toggle="tooltip" data-bs-placement="top" title="Share"/>
@@ -471,28 +473,30 @@
                 label.translate="Validate"
                 inDropdown="True"
                 icon.f="fa-check fa-fw"
-                karma="post_id.forum_id.karma_moderate if not post_id.can_moderate else 0"/>
+                karma.f="post_id.forum_id.karma_moderate if not post_id.can_moderate else 0"/>
         </t>
-        <t t-else="" t-call="website_forum.link_button"
-            url.f="/forum/#{slug(forum)}/post/#{slug(post_id)}/convert_to_comment"
-            label.translate="Convert to Comment"
-            inDropdown="True"
-            icon.f="fa-comment fa-fw"
-            karma="post_id.karma_comment_convert if not post_id.can_comment_convert else 0"/>
-        <t t-if="post_id.active" t-call="website_forum.link_button"
-            url="'/forum/' + slug(forum) +'/question/' + slug(post_id) + '/delete'"
-            label.translate="Delete"
-            inDropdown="True"
-            icon.f="fa-trash-o fa-fw"
-            karma="post_id.karma_unlink if not post_id.can_unlink else 0"/>
+        <t t-else="">
+            <t t-call="website_forum.link_button"
+                url.f="/forum/#{slug(forum)}/post/#{slug(post_id)}/convert_to_comment"
+                label.translate="Convert to Comment"
+                inDropdown="True"
+                icon.f="fa-comment fa-fw"
+                karma="post_id.karma_comment_convert if not post_id.can_comment_convert else 0"/>
+        </t>
         <t t-if="post_id.active and post_id.state != 'flagged'" t-call="website_forum.link_button"
             url="'/forum/' + slug(forum) +'/post/' + slug(post_id) + '/flag'"
             label.translate="Flag"
             inDropdown="True"
             icon="'fa-flag-o' if not post_id.can_flag else 'fa-flag'"
             karma="post_id.forum_id.karma_flag if not post_id.can_flag else 0"
-            classes.f="o_wforum_flag "
+            classes.f="o_wforum_flag"
             object="post_id"/>
+        <t t-if="post_id.active" t-call="website_forum.link_button"
+            url="'/forum/' + slug(forum) +'/question/' + slug(post_id) + '/delete'"
+            label.translate="Delete"
+            inDropdown="True"
+            icon.f="fa-trash-o fa-fw"
+            karma="post_id.karma_unlink if not post_id.can_unlink else 0"/>
     </div>
 </template>
 
@@ -503,7 +507,6 @@
             <form t-att-id="_collapse_uid" class="oe_comment_grey js_website_submit_form js_wforum_submit_form collapse rounded o_cc2 p-2"
                 t-attf-action="/forum/#{slug(forum)}/post/#{slug(object)}/comment" method="POST">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                    <input name="post_id" t-att-value="object.id" type="hidden"/>
                     <div class="d-flex gap-1 w-100">
                         <img class="o_wforum_avatar d-none d-md-inline-block align-self-baseline rounded-circle me-1" t-att-src="request.website.image_url(user, 'avatar_128', '36x36')" alt="Avatar"/>
                         <div class="w-100">
@@ -517,18 +520,18 @@
             </form>
         </div>
 
-        <div t-if="object.website_message_ids" t-foreach="reversed(object.website_message_ids)" t-as="message">
-            <t t-set="_comment_author" t-value="message.create_uid.id"/>
-            <div t-attf-class="o_wforum_post_comment d-flex rounded o_cc2 ps-3" t-att-data-last-activity="message.create_date">
+        <div t-if="object.comment_ids" t-foreach="object.comment_ids" t-as="comment">
+            <t t-set="_comment_author" t-value="comment.create_uid.id"/>
+            <div t-attf-class="o_wforum_post_comment d-flex rounded o_cc2 ps-3" t-att-data-last-activity="comment.create_date">
                 <t t-set="allow_post_comment" t-value="(object.parent_id and object.parent_id.state != 'close' and object.parent_id.active != False)
                                                         or (not object.parent_id and object.state != 'close' and object.active != False)"/>
-                <t t-set="unlink_comment_required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
+                <t t-set="unlink_comment_required_karma" t-value="comment.create_uid.id == user.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
                 <t t-set="can_unlink_comment" t-value="user.karma >= unlink_comment_required_karma"/>
                 <div class="flex-grow-1 py-2 opacity-75">
                     <header>
                         <span>
                             <t t-call="website_forum.author_box"
-                                object="message"
+                                object="comment"
                                 compact="True"
                                 show_name="True"/>
                         </span>
@@ -537,14 +540,14 @@
                             Author
                         </span>
                     </header>
-                    <div t-field="message.body" class="o_wforum_readable oe_no_empty small text-break"/>
+                    <div t-field="comment.body" class="o_wforum_readable oe_no_empty small text-break"/>
                 </div>
                 <div t-if="can_interact_with_post" class="dropdown ms-auto">
                     <a class="btn text-muted" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="oi oi-ellipsis-h"/>
                     </a>
                     <div class="dropdown-menu">
-                        <t t-set="comment_url" t-valuef="/forum/#{ slug(forum) }/post/#{ slug(object) }/comment/#{ slug(message) }"/>
+                        <t t-set="comment_url" t-valuef="/forum/#{ slug(forum) }/post/#{ slug(object) }/comment/#{ slug(comment) }"/>
                         <t t-call="website_forum.link_button"
                             url.f="#{ comment_url }/delete"
                             label.translate="Delete"
@@ -553,7 +556,7 @@
                             icon.f="fa-trash-o text-muted"
                             classes.f="comment_delete"
                             karma="unlink_comment_required_karma if not can_unlink_comment and unlink_comment_required_karma else 0"/>
-                        <t t-if="message.create_uid.id not in question.child_ids.create_uid.ids">
+                        <t t-if="comment.create_uid.id not in question.child_ids.create_uid.ids">
                             <t t-call="website_forum.link_button"
                                 url.f="#{ comment_url }/convert_to_answer"
                                 label.translate="Convert to answer"

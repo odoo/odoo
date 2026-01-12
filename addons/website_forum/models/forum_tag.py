@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections.abc import Iterable
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import AccessError
 
 
@@ -9,7 +10,6 @@ class ForumTag(models.Model):
     _name = 'forum.tag'
     _description = "Forum Tag"
     _inherit = [
-        'mail.thread',
         'website.searchable.mixin',
         'website.located.mixin',
         'website.seo.metadata',
@@ -26,6 +26,44 @@ class ForumTag(models.Model):
         'unique (name, forum_id)',
         'Tag name already exists!',
     )
+
+    follower_ids = fields.Many2many(
+        'res.partner',
+        'forum_tag_follower_rel',
+        string="Followers",
+        groups="base.group_erp_manager",
+    )
+    is_follower = fields.Boolean(
+        compute="_compute_is_follower",
+        inverse="_inverse_is_follower",
+        search="_search_is_follower",
+        string="Is Follower",
+    )
+
+    @api.depends_context('uid')
+    @api.depends("follower_ids")
+    def _compute_is_follower(self):
+        partner = self.env['forum.post']._get_current_partner()
+        followed = self.sudo().search([
+            ('id', 'in', self.ids),
+            ('follower_ids', '=', partner.id),
+        ])
+        (self & followed).is_follower = True  # update record in `self`
+        (self - followed).is_follower = False
+
+    def _inverse_is_follower(self):
+        partner = self.env['forum.post']._get_current_partner()
+        for post in self:
+            if post.is_follower:
+                post.sudo().follower_ids |= partner
+            else:
+                post.sudo().follower_ids -= partner
+
+    def _search_is_follower(self, operator, value):
+        if operator != 'in' or not isinstance(value, Iterable) or tuple(value) != (True,):
+            return NotImplemented
+        domain = [('follower_ids', '=', self.env.user.partner_id.id)]
+        return [('id', 'in', self.sudo()._search(domain))]
 
     @api.depends("post_ids", "post_ids.tag_ids", "post_ids.state", "post_ids.active")
     def _compute_posts_count(self):

@@ -12,9 +12,11 @@ class TestWebsiteSlidesForum(TestForumCommon):
                 "forum_id": self.forum.id,
             }
         )
-        message = self.post.message_post(
-            body="TestWebsiteSlidesForum",
-            message_type="comment",
+        comment = self.env["forum.post.comment"].create(
+            {
+                "post_id": self.post.id,
+                "body": "TestWebsiteSlidesForum",
+            }
         )
 
         # Public channel make the forum visible
@@ -26,10 +28,10 @@ class TestWebsiteSlidesForum(TestForumCommon):
         self._assert_access(self.user_employee, True)
 
         self.assertEqual(
-            self.env["mail.message"]
+            self.env["forum.post.comment"]
             .with_user(self.user_employee)
             .search([("body", "ilike", "TestWebsiteSlidesForum")]),
-            message,
+            comment,
         )
 
         # Non-published channel should remove access
@@ -41,10 +43,10 @@ class TestWebsiteSlidesForum(TestForumCommon):
         self._assert_access(self.user_public, True)
 
         self.assertEqual(
-            self.env["mail.message"]
+            self.env["forum.post.comment"]
             .with_user(self.user_employee)
             .search([("body", "ilike", "TestWebsiteSlidesForum")]),
-            message,
+            comment,
         )
 
         # Connected make it visible for portal / internal users
@@ -57,10 +59,10 @@ class TestWebsiteSlidesForum(TestForumCommon):
         self._assert_access(self.user_employee, True)
 
         self.assertEqual(
-            self.env["mail.message"]
+            self.env["forum.post.comment"]
             .with_user(self.user_employee)
             .search([("body", "ilike", "TestWebsiteSlidesForum")]),
-            message,
+            comment,
         )
 
         # Even if non-public, if one slide is public and published,
