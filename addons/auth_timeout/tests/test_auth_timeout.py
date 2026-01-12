@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import lxml.html
 
-from odoo.http.router import root
+from odoo.http.session import session_store
 from odoo.tests import HttpCase, TransactionCase, new_test_user, tagged
 from odoo.tests.common import HOST
 
@@ -241,19 +241,19 @@ class TestAuthTimeoutHttp(HttpCase):
         ).json()
 
     def set_session_create_time(self, session_id, timestamp):
-        session = root.session_store.get(session_id)
+        session = session_store().get(session_id)
         session["create_time"] = timestamp
-        root.session_store.save(session)
+        session_store().save(session)
 
     def set_session_last_check_identity(self, session_id, timestamp):
-        session = root.session_store.get(session_id)
+        session = session_store().get(session_id)
         session["identity-check-last"] = timestamp
-        root.session_store.save(session)
+        session_store().save(session)
 
     def set_session_next_check_identity(self, session_id, timestamp):
-        session = root.session_store.get(session_id)
+        session = session_store().get(session_id)
         session["identity-check-next"] = timestamp
-        root.session_store.save(session)
+        session_store().save(session)
 
     def set_auth_totp_mail(self):
         config = self.env["res.config.settings"].create({})

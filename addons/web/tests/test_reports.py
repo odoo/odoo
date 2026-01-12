@@ -3,7 +3,7 @@ from unittest.mock import Mock, patch
 
 import odoo.tests
 from odoo.exceptions import UserError
-from odoo.http.router import root
+from odoo.http.session import session_store
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -116,7 +116,7 @@ class TestReports(odoo.tests.HttpCase):
 
         with (MockRequest(report.env) as mock_request,
             patch('subprocess.run') as mock_popen,
-            patch.object(root.session_store, 'delete') as mock_delete,
+            patch.object(session_store(), 'delete') as mock_delete,
             patch.object(os, 'unlink') as mock_unlink):
 
             mock_request.session = self.authenticate(admin.login, admin.login)

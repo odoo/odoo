@@ -12,7 +12,6 @@ from weakref import WeakSet
 from freezegun import freeze_time
 
 from odoo.api import Environment
-from odoo.http.router import root
 from odoo.tests import common, new_test_user
 from odoo.tools import mute_logger
 
@@ -208,8 +207,7 @@ class TestWebsocketCaryall(WebsocketCase):
         # preferred language), this could be a unknown language (ex. territorial
         # specific) or a known language that is uninstalled; in all cases this
         # should not crash the notif. dispatching.
-        self.session.context['lang'] = 'fr_LU'
-        root.session_store.save(self.session)
+        self.update_session_context(lang='fr_LU')
         self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
         self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
         self.trigger_notification_dispatching(["my_channel"])

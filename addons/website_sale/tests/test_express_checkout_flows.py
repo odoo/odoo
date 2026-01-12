@@ -2,13 +2,14 @@
 
 from unittest.mock import Mock, patch
 
-from odoo.http.router import root
 from odoo.tests import HttpCase, tagged
 from odoo.tools import urls
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale.controllers.cart import Cart
-from odoo.addons.website_sale.controllers.delivery import Delivery as WebsiteSaleDeliveryController
+from odoo.addons.website_sale.controllers.delivery import (
+    Delivery as WebsiteSaleDeliveryController,
+)
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
@@ -124,9 +125,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
 
     def test_express_checkout_public_user(self):
         """Test that when using express checkout as a public user, a new partner is created."""
-        session = self.authenticate(None, None)
-        session['sale_order_id'] = self.sale_order.id
-        root.session_store.save(session)
+        self.authenticate(None, None, session_extra={'sale_order_id': self.sale_order.id})
 
         self.make_jsonrpc_request(
             urls.urljoin(
@@ -149,9 +148,11 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         partner and reuse the existing one.
         """
         self.sale_order.partner_id = self.user_demo.partner_id.id
-        session = self.authenticate(self.user_demo.login, self.user_demo.login)
-        session['sale_order_id'] = self.sale_order.id
-        root.session_store.save(session)
+        self.authenticate(
+            self.user_demo.login,
+            self.user_demo.login,
+            session_extra={'sale_order_id': self.sale_order.id},
+        )
 
         self.make_jsonrpc_request(
             urls.urljoin(
@@ -167,8 +168,8 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                     'zip': self.user_demo.partner_id.zip,
                     'country': self.user_demo.partner_id.country_id.code,
                     'state': self.user_demo.partner_id.state_id.code,
-                }
-            }
+                },
+            },
         )
 
         self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
@@ -197,16 +198,18 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         ))
 
         self.sale_order.partner_id = self.user_demo.partner_id.id
-        session = self.authenticate(self.user_demo.login, self.user_demo.login)
-        session['sale_order_id'] = self.sale_order.id
-        root.session_store.save(session)
+        self.authenticate(
+            self.user_demo.login,
+            self.user_demo.login,
+            session_extra={'sale_order_id': self.sale_order.id},
+        )
 
         self.make_jsonrpc_request(
             urls.urljoin(
                 self.base_url(), WebsiteSale._express_checkout_route
             ), params={
                 'billing_address': dict(self.express_checkout_billing_values)
-            }
+            },
         )
 
         self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
@@ -218,16 +221,18 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         odoo, we create a new partner.
         """
         self.sale_order.partner_id = self.user_demo.partner_id.id
-        session = self.authenticate(self.user_demo.login, self.user_demo.login)
-        session['sale_order_id'] = self.sale_order.id
-        root.session_store.save(session)
+        self.authenticate(
+            self.user_demo.login,
+            self.user_demo.login,
+            session_extra={'sale_order_id': self.sale_order.id},
+        )
 
         self.make_jsonrpc_request(
             urls.urljoin(
-                self.base_url(), WebsiteSale._express_checkout_route
+                self.base_url(), WebsiteSale._express_checkout_route,
             ), params={
-                'billing_address': dict(self.express_checkout_billing_values)
-            }
+                'billing_address': dict(self.express_checkout_billing_values),
+            },
         )
 
         self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
@@ -242,12 +247,11 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         """Test that when using express checkout as a public user and selecting a shipping address,
         a new partner is created if the partner of the SO is the public partner.
         """
-        session = self.authenticate(None, None)
-        session['sale_order_id'] = self.sale_order.id
-        root.session_store.save(session)
+        self.authenticate(None, None, session_extra={'sale_order_id': self.sale_order.id})
+
         with patch(
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
-            return_value=self.rate_shipment_result
+            return_value=self.rate_shipment_result,
         ):
             self.make_jsonrpc_request(
                 urls.urljoin(
@@ -273,9 +277,8 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         more than once, a new partner is created if the partner of the SO is the public partner
         (only creates one new partner that is updated).
         """
-        session = self.authenticate(None, None)
-        session['sale_order_id'] = self.sale_order.id
-        root.session_store.save(session)
+        self.authenticate(None, None, session_extra={'sale_order_id': self.sale_order.id})
+
         with patch(
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result
@@ -314,9 +317,12 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         shipping address, the existing partner (the one of the SO) is reused.
         """
         self.sale_order.partner_id = self.user_demo.partner_id.id
-        session = self.authenticate(self.user_demo.login, self.user_demo.login)
-        session['sale_order_id'] = self.sale_order.id
-        root.session_store.save(session)
+        self.authenticate(
+            self.user_demo.login,
+            self.user_demo.login,
+            session_extra={'sale_order_id': self.sale_order.id},
+        )
+
         with patch(
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result
@@ -340,9 +346,12 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         from the delivery information received.
         """
         self.sale_order.partner_id = self.user_demo.partner_id.id
-        session = self.authenticate(self.user_demo.login, self.user_demo.login)
-        session['sale_order_id'] = self.sale_order.id
-        root.session_store.save(session)
+        self.authenticate(
+            self.user_demo.login,
+            self.user_demo.login,
+            session_extra={'sale_order_id': self.sale_order.id},
+        )
+
         with patch(
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result
@@ -373,9 +382,12 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         the public partner (only creates one new partner that is updated).
         """
         self.sale_order.partner_id = self.user_demo.partner_id.id
-        session = self.authenticate(self.user_demo.login, self.user_demo.login)
-        session['sale_order_id'] = self.sale_order.id
-        root.session_store.save(session)
+        self.authenticate(
+            self.user_demo.login,
+            self.user_demo.login,
+            session_extra={'sale_order_id': self.sale_order.id},
+        )
+
         with patch(
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result
@@ -432,9 +444,12 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         to this user in Odoo, we do not create a new partner and reuse the existing one.
         """
         self.sale_order.partner_id = self.user_demo.partner_id.id
-        session = self.authenticate(self.user_demo.login, self.user_demo.login)
-        session['sale_order_id'] = self.sale_order.id
-        root.session_store.save(session)
+        self.authenticate(
+            self.user_demo.login,
+            self.user_demo.login,
+            session_extra={'sale_order_id': self.sale_order.id},
+        )
+
         with patch(
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result
@@ -471,9 +486,12 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         partner.
         """
         self.sale_order.partner_id = self.user_demo.partner_id.id
-        session = self.authenticate(self.user_demo.login, self.user_demo.login)
-        session['sale_order_id'] = self.sale_order.id
-        root.session_store.save(session)
+        self.authenticate(
+            self.user_demo.login,
+            self.user_demo.login,
+            session_extra={'sale_order_id': self.sale_order.id},
+        )
+
         with patch(
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result

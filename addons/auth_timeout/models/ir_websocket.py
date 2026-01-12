@@ -1,6 +1,6 @@
 from odoo import models
 from odoo.http import request
-from odoo.http.router import root
+from odoo.http.session import session_store
 
 from odoo.addons.bus.websocket import wsrequest
 
@@ -35,7 +35,7 @@ class IrWebsocket(models.AbstractModel):
         :return: None
         """
         if self.env.user:
-            session = root.session_store.get(cookies["session_id"])
+            session = session_store().get(cookies["session_id"])
             if not session.is_new:
                 # `is_new` is a mitigation to avoid calls with arbitrary `session_id`
                 # which would create a new session file in the session filestore with an arbitrary name

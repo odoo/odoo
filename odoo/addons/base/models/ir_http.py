@@ -35,13 +35,13 @@ from odoo.exceptions import AccessDenied
 from odoo.http import Response, request
 from odoo.http.dispatcher import SAFE_HTTP_METHODS
 from odoo.http.requestlib import is_cors_preflight
-from odoo.http.router import root
 from odoo.http.routing_map import ROUTING_KEYS
 from odoo.http.session import (
     check,
     CheckIdentityException,
     SessionExpiredException,
     get_session_max_inactivity,
+    session_store,
 )
 from odoo.modules.registry import Registry
 from odoo.tools.json import json_default
@@ -428,7 +428,7 @@ class IrHttp(models.AbstractModel):
     def _gc_sessions(self):
         if os.getenv("ODOO_SKIP_GC_SESSIONS"):
             return
-        root.session_store.vacuum(max_lifetime=get_session_max_inactivity(self.env))
+        session_store().vacuum(max_lifetime=get_session_max_inactivity(self.env))
 
     @api.model
     def _get_translations_for_webclient(self, modules, lang):

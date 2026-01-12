@@ -5,7 +5,6 @@ from contextlib import contextmanager
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from odoo.http.router import root
 from odoo.tests import HttpCase, common, tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -197,7 +196,7 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
             'password': pwd,
             'csrf_token': res.text.partition(csrf_anchor)[2].partition('"')[0],
         })
-        self.session = root.session_store.get(res.cookies["session_id"])
+        self.session = res.session
 
 
 class WebsiteVisitorTests(WebsiteVisitorTestsCommon):

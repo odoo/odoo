@@ -224,7 +224,7 @@ class TestHttpEnsureDb(TestHttpBase):
         res.raise_for_status()
         self.assertEqual(res.status_code, 302)
         self.assertURLEqual(res.headers.get('Location'), '/test_http/ensure_db?db=db0')
-        self.assertEqual(root.session_store.get(res.cookies['session_id']).db, 'db0')
+        self.assertEqual(res.session['db'], 'db0')
 
         # follow the redirection
         res = self.multidb_url_open('/test_http/ensure_db')
@@ -233,32 +233,24 @@ class TestHttpEnsureDb(TestHttpBase):
         self.assertEqual(res.text, 'db0')
 
     def test_ensure_db2_use_session_db(self):
-        session = self.authenticate(None, None)
-        session.db = 'db0'
-        root.session_store.save(session)
-
+        self.authenticate(None, None, session_extra={'db': 'db0'})
         res = self.multidb_url_open('/test_http/ensure_db')
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, 'db0')
 
     def test_ensure_db3_change_db(self):
-        session = self.authenticate(None, None)
-        session.db = 'db0'
-        root.session_store.save(session)
-
+        self.authenticate(None, None, session_extra={'db': 'db0'})
         res = self.multidb_url_open('/test_http/ensure_db?db=db1')
         res.raise_for_status()
         self.assertEqual(res.status_code, 302)
         self.assertURLEqual(res.headers.get('Location'), '/test_http/ensure_db?db=db1')
-
-        new_session = root.session_store.get(res.cookies['session_id'])
-        self.assertNotEqual(session.sid, new_session.sid)
-        self.assertEqual(new_session.db, 'db1')
-        self.assertEqual(new_session.uid, None)
+        self.assertNotEqual(self.session.sid, res.session.sid)
+        self.assertEqual(res.session['db'], 'db1')
+        self.assertEqual(res.session['uid'], None)
 
         # follow redirection
-        self.opener.cookies.set("session_id", new_session.sid, domain=HOST)
+        self.opener.cookies.set("session_id", res.session.sid, domain=HOST)
         res = self.multidb_url_open('/test_http/ensure_db')
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)
@@ -273,9 +265,7 @@ class TestHttpEnsureDb(TestHttpBase):
         self.assertURLEqual(
             res.headers.get('Location'),
             '/test_http/ensure_db?db=basededonnée1')
-        self.assertEqual(
-            root.session_store.get(res.cookies['session_id']).db,
-            'basededonnée1')
+        self.assertEqual(res.session['db'], 'basededonnée1')
 
         # follow the redirection
         res = self.multidb_url_open('/test_http/ensure_db')

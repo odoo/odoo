@@ -5,7 +5,7 @@ from unittest.mock import patch
 from lxml import html
 
 from odoo.fields import Command
-from odoo.http.router import root
+from odoo.http.session import session_store
 from odoo.tests import HttpCase, common, tagged
 from odoo.tools import mute_logger
 
@@ -16,7 +16,7 @@ from odoo.addons.website.controllers.main import Website
 @tagged('-at_install', 'post_install')
 class TestPage(common.TransactionCase):
     def setUp(self):
-        super(TestPage, self).setUp()
+        super().setUp()
         View = self.env['ir.ui.view']
         Page = self.env['website.page']
         Menu = self.env['website.menu']
@@ -279,7 +279,7 @@ class WithContext(HttpCase):
             self.assertIn('ZeroDivisionError: division by zero', r.text, "Error should be shown in debug.")
 
     def test_04_visitor_no_session(self):
-        with patch.object(root.session_store, 'save') as session_save,\
+        with patch.object(session_store(), 'save') as session_save,\
              MockRequest(self.env, website=self.env['website'].browse(1)):
             # no session should be saved for website visitor
             self.url_open(self.page.url).raise_for_status()

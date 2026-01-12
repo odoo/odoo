@@ -25,8 +25,7 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.http.router import root
-from odoo.http.session import update_session_token
+from odoo.http.session import session_store, update_session_token
 from odoo.tools import config, is_html_empty, parse_version, split_every
 from odoo.tools.barcode import (
     check_barcode_encoding,
@@ -560,7 +559,7 @@ class IrActionsReport(models.Model):
             # Passing the cookie to wkhtmltopdf in order to resolve internal links.
             if request and request.db:
                 # Create a temporary session which will not create device logs
-                temp_session = root.session_store.new()
+                temp_session = session_store().new()
                 temp_session.update({
                     **request.session,
                     'debug': '',
@@ -568,8 +567,8 @@ class IrActionsReport(models.Model):
                 })
                 if temp_session.uid:
                     update_session_token(temp_session, self.env)
-                root.session_store.save(temp_session)
-                stack.callback(root.session_store.delete, temp_session)
+                session_store().save(temp_session)
+                stack.callback(session_store().delete, temp_session)
 
                 base_url = self._get_report_url()
                 domain = urlparse(base_url).hostname
