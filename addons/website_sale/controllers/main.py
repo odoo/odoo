@@ -561,6 +561,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if not self._apply_selectable_pricelist(pricelist_id):
                 return request.redirect(self._get_shop_path(category))
 
+        request.update_context(website_sale_product_page=True)
         is_category_in_query = category and isinstance(category, str)
         category = self._validate_and_get_category(category)
         query = self._get_filtered_query_string(
