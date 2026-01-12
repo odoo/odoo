@@ -18,6 +18,7 @@ class TestUi(HttpCaseGamification):
             'email': 'mitchell.admin@example.com',
         })
         cls.forum_id = post.forum_id.id
+        cls.env.ref('website_forum.forum_help').privacy = 'public'
 
     def test_01_admin_forum_tour(self):
         self.start_tour(f"/forum/{self.forum_id}", 'question_tour', login="admin")

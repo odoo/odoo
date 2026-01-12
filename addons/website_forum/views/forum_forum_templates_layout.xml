@@ -56,10 +56,8 @@
                                 data-bs-placement="top"
                                 title="Favorite"/>
                         </a>
-                        <t t-if="question.state == 'active'" t-call="website_forum.follow"
-                            object="question"
-                            icons_design="True"
-                            btn_classes="'opacity-50 opacity-100-hover' "/>
+                        <t t-if="question.state == 'active'" t-call="website_forum.follow_button"
+                            object="question" btn_classes.f="opacity-50 opacity-100-hover"/>
                     </div>
                 </div>
             </div>

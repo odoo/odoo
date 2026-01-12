@@ -14,9 +14,11 @@ class TestWebsiteSlidesForum(TestForumCommon):
                 "forum_id": cls.forum.id,
             }
         )
-        cls.message = cls.post.message_post(
-            body="TestWebsiteSlidesForum",
-            message_type="comment",
+        cls.comment = cls.env["forum.post.comment"].create(
+            {
+                "post_id": cls.post.id,
+                "body": "TestWebsiteSlidesForum",
+            }
         )
 
     def test_public_published_channel_private_forum(self):
@@ -29,10 +31,10 @@ class TestWebsiteSlidesForum(TestForumCommon):
         self._assert_access(self.user_employee, True)
 
         self.assertEqual(
-            self.env["mail.message"]
+            self.env["forum.post.comment"]
             .with_user(self.user_employee)
             .search([("body", "ilike", "TestWebsiteSlidesForum")]),
-            self.message,
+            self.comment,
         )
 
         # Even if non-public, if one self.channel is public and published,
@@ -51,10 +53,10 @@ class TestWebsiteSlidesForum(TestForumCommon):
         self._assert_access(self.user_public, True)
 
         self.assertEqual(
-            self.env["mail.message"]
+            self.env["forum.post.comment"]
             .with_user(self.user_employee)
             .search([("body", "ilike", "TestWebsiteSlidesForum")]),
-            self.message,
+            self.comment,
         )
 
     def test_connected_published_channel(self):
@@ -68,10 +70,10 @@ class TestWebsiteSlidesForum(TestForumCommon):
         self._assert_access(self.user_employee, True)
 
         self.assertEqual(
-            self.env["mail.message"]
+            self.env["forum.post.comment"]
             .with_user(self.user_employee)
             .search([("body", "ilike", "TestWebsiteSlidesForum")]),
-            self.message,
+            self.comment,
         )
 
         # Private forum can be accessed by portal / internal users
