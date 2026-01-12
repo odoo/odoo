@@ -194,7 +194,7 @@ export class KanbanRenderer extends Component {
             {
                 area: () => this.rootRef.el,
                 isAvailable: (target) => {
-                    if (this.props.quickCreateState.isOpen) {
+                    if (this.props.quickCreateState?.isOpen) {
                         return false;
                     }
                     if (target.closest(".o_kanban_selection_active") !== null) {
@@ -349,7 +349,7 @@ export class KanbanRenderer extends Component {
             return true;
         }
         if (isGrouped) {
-            if (this.props.quickCreateState.isOpen) {
+            if (this.props.quickCreateState?.isOpen) {
                 return false;
             }
             if (this.canCreateGroup() && !this.state.columnQuickCreateIsFolded) {
