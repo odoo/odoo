@@ -8,6 +8,7 @@ export class DynamicSnippetEventsOption extends BaseOptionComponent {
     setup() {
         super.setup();
         const { getModelNameFilter } = this.dependencies.dynamicSnippetEventsOption;
-        this.dynamicOptionParams = useDynamicSnippetOption(getModelNameFilter());
+        this.modelNameFilter = getModelNameFilter();
+        this.dynamicOptionParams = useDynamicSnippetOption(this.modelNameFilter);
     }
 }

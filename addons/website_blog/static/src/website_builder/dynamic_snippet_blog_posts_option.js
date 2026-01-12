@@ -9,7 +9,8 @@ export class DynamicSnippetBlogPostsOption extends BaseOptionComponent {
     setup() {
         super.setup();
         const { fetchBlogs, getModelNameFilter } = this.dependencies.dynamicSnippetBlogPostsOption;
-        this.dynamicOptionParams = useDynamicSnippetOption(getModelNameFilter());
+        this.modelNameFilter = getModelNameFilter();
+        this.dynamicOptionParams = useDynamicSnippetOption(this.modelNameFilter);
         this.blogState = useState({
             blogs: [],
         });
