@@ -634,21 +634,13 @@ export class Composer extends Component {
             onClose: (args) => {
                 // args === { dismiss: true } : click on 'X' or press escape
                 // args === { special: true } : click on 'discard'
-                const accidentalDiscard = args?.dismiss;
-                const isDiscard = accidentalDiscard || args?.special;
+                const isDiscard = args?.dismiss || args?.special;
                 // otherwise message is posted (args === [undefined])
                 if (!isDiscard && this.props.composer.thread.model === "mail.box") {
                     this.notifySendFromMailbox();
                 }
-                if (accidentalDiscard) {
-                    this.fullComposerBus.trigger("ACCIDENTAL_DISCARD", {
-                        onAccidentalDiscard: (isEmpty) => {
-                            if (!isEmpty) {
-                                this.saveContent();
-                                this.restoreContent();
-                            }
-                        },
-                    });
+                if (isDiscard) {
+                    this.saveContent(true);
                 } else {
                     this.clear();
                 }
@@ -927,13 +919,22 @@ export class Composer extends Component {
         this.props.composer.isFocused = false;
     }
 
-    saveContent() {
+    saveContent(updateComposer = false) {
         const composer = toRaw(this.props.composer);
         const saveContentToLocalStorage = ({
             composerHtml,
             emailAddSignature,
             replyToMessageId,
         }) => {
+            if (updateComposer) {
+                if (!isHtmlEmpty(composerHtml)) {
+                    composer.composerHtml = composerHtml;
+                    composer.emailAddSignature = emailAddSignature;
+                }
+                if (Number.isInteger(replyToMessageId)) {
+                    composer.replyToMessage = this.store["mail.message"].insert(replyToMessageId);
+                }
+            }
             browser.localStorage.setItem(
                 composer.localId,
                 JSON.stringify({
