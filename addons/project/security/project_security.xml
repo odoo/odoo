@@ -237,7 +237,9 @@
             ('project_id.privacy_visibility', '=', 'portal'),
             ('active', '=', True),
             '|',
-                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                '&amp;',
+                    ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                    ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
                 ('project_id.collaborator_ids', 'any', [
                     ('partner_id', '=', user.partner_id.id),
                     ('limited_access', '=', False),
