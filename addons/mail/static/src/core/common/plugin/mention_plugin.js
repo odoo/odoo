@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { generateThreadMentionElement } from "@mail/utils/common/format";
+import { generateChannelMentionElement } from "@mail/utils/common/format";
 
 export class MentionPlugin extends Plugin {
     static id = "mention";
@@ -110,7 +110,7 @@ export class MentionPlugin extends Plugin {
         if (!channel) {
             return false;
         }
-        const validChannelMention = generateThreadMentionElement(channel);
+        const validChannelMention = generateChannelMentionElement(channel);
         return (
             validChannelMention.getAttribute("href") === el.getAttribute("href") &&
             [...validChannelMention.classList].every((cls) => el.classList.contains(cls))
