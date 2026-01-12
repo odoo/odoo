@@ -48,15 +48,19 @@ class Driver(Thread):
         :param dict data: the action method name and the parameters to be passed to it
         :return: the result of the action method
         """
-        if self._check_if_action_is_duplicate(data.get('action_unique_id')):
+        action = data.get('action', '')
+        action_unique_id = data.get('action_unique_id')
+        if action_unique_id and action_unique_id in self._recent_action_ids:
+            _logger.warning("Duplicate action %s id %s received, ignoring", action, action_unique_id)
             return
 
         self.data['owner'] = data.get('session_id')
-        action = data.get('action', '')
 
         base_response = {'action_args': {**data}, 'session_id': data.get('session_id')}
         try:
             response = {'status': 'success', 'result': self._actions[action](data), **base_response}
+            if action_unique_id:
+                self._recent_action_ids[action_unique_id] = action_unique_id
         except Exception as e:
             _logger.exception("Error while executing action %s with params %s", action, data)
             response = {'status': 'error', 'result': str(e), **base_response}
@@ -65,15 +69,6 @@ class Driver(Thread):
         # printers handle their own events (low on paper, etc.)
         if self.device_type not in ["printer", "payment"]:
             event_manager.device_changed(self, response)
-
-    def _check_if_action_is_duplicate(self, action_unique_id):
-        if not action_unique_id:
-            return False
-        if action_unique_id in self._recent_action_ids:
-            _logger.warning("Duplicate action %s received, ignoring", action_unique_id)
-            return True
-        self._recent_action_ids[action_unique_id] = action_unique_id
-        return False
 
     def disconnect(self):
         self._stopped.set()
