@@ -49,16 +49,23 @@
                         <field name="refunded_order_id" widget="statinfo" string="Refunded Orders" />
                     </button>
                 </div>
-                <group col="4" colspan="4" name="order_fields">
-                    <field name="name"/>
-                    <field name="source" readonly="True" />
-                    <field name="date_order"/>
-                    <field name="session_id"  readonly="state != 'draft'"/>
-                    <field string="User" name="user_id" readonly="account_move or state == 'done'"/>
-                    <field name="order_edit_tracking" invisible="1"/>
-                    <field name="is_edited" readonly="1" invisible="not order_edit_tracking"/>
-                    <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" readonly="account_move"/>
-                    <field name="fiscal_position_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                <div class="oe_title">
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </div>
+                <group>
+                    <group name="order_customer_details">
+                        <field name="date_order"/>
+                        <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" readonly="account_move"/>
+                        <field name="fiscal_position_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                    </group>
+                    <group name="order_operational_details">
+                        <field string="Served by" name="user_id" readonly="account_move or state == 'done'" widget="many2one_avatar_user"/>
+                        <field name="session_id"  readonly="state != 'draft'"/>
+                        <field name="order_edit_tracking" invisible="1"/>
+                        <field name="is_edited" readonly="1" invisible="not order_edit_tracking"/>
+                    </group>
                 </group>
                 <notebook colspan="4">
                     <page string="Products" name="products">
@@ -87,7 +94,7 @@
                                 <field name="full_product_name" optional="hide" readonly="1"/>
                                 <field name="product_id" widget="product_label_section_and_note_field" />
                                 <field name="is_edited" readonly="1" column_invisible="not parent.order_edit_tracking"/>
-                                <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
+                                <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot" optional="hide"/>
                                 <field name="qty"/>
                                 <field name="customer_note" optional="hide"/>
                                 <field name="product_uom_id" groups="uom.group_uom"/>
