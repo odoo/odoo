@@ -6,6 +6,7 @@
 <!-- TODO: rename `products_item` to `product_tile` -->
 <template id="website_sale.products_item" name="Products item">
     <!-- Parameters:
+        - show_combination_name: Whether to show the combination name of the provided variant.
         - show_variations: Whether to show the variant preview on the tile.
         - show_ribbons: Whether to show the ribbons.
         - product: `product.template` record.
@@ -45,16 +46,10 @@
     >
         <div t-attf-class="oe_product_image position-relative flex-grow-0 overflow-hidden">
             <!-- Fetch Images Data -->
-            <!-- Use `variant` instead of reassigning `product_variant` beacause it's used to infer
-                 if variant information should be shown later. -->
             <t
-                t-set="variant"
-                t-value="product_variant or product_variants[product]"
-            />
-            <t
-                t-if="variant and variant.with_context(bin_size=True).image_128"
+                t-if="product_variant and product_variant.with_context(bin_size=True).image_128"
                 t-set="all_images_list"
-                t-value="variant._get_images()"
+                t-value="product_variant._get_images()"
             />
             <t
                 t-else=""
@@ -125,15 +120,16 @@
                             t-att-href="product_href"
                         >
                             <span t-field="product.name"/>
-                            <t
-                                t-if="product_variant"
-                                t-set="combination_name"
-                                t-value="product_variant.product_template_attribute_value_ids._get_combination_name()"
-                            />
-                            <span
-                                t-if="combination_name"
-                                t-out="'('+combination_name+')'"
-                            />
+                            <t t-if="show_combination_name">
+                                <t
+                                    t-set="combination_name"
+                                    t-value="product_variant.product_template_attribute_value_ids._get_combination_name()"
+                                />
+                                <span
+                                    t-if="combination_name"
+                                    t-out="'('+combination_name+')'"
+                                />
+                            </t>
                         </a>
                         <a
                             t-if="not product.website_published"
@@ -232,7 +228,7 @@
                     class="o_wsale_product_btn_primary btn btn-primary"
                     aria-label="Add to cart"
                     title="Add to cart"
-                    t-att-data-product-id="variant.id"
+                    t-att-data-product-id="product_variant.id"
                     t-att-data-product-template-id="product.id"
                     t-att-data-product-type="product.type"
                     t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
@@ -254,23 +250,16 @@
         active="True"
     >
         <t name="buttons_container" position="inside">
-            <t t-set="isWishlistAvailable" t-value="products_in_wishlist is not None"/>
-
-            <t t-if="isWishlistAvailable" t-call="website_sale.product_tile_element_visibility">
+            <t t-call="website_sale.product_tile_element_visibility">
                 <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_wishlist'"/>
 
-                <t t-set="in_wish" t-value="product in products_in_wishlist"/>
                 <t t-set="btnTitle">Add to wishlist</t>
                 <t t-set="btnTitleActive">Handle your wishlist from the menu icon.</t>
-                <t
-                    t-set="product_variant_id"
-                    t-value="in_wish or product._get_first_possible_variant_id()"
-                />
+
                 <button
-                    t-if="product_variant_id"
                     t-attf-class="btn o_add_wishlist #{in_wish and 'o_in_wishlist'}"
-                    t-att-disabled="in_wish"
-                    t-att-data-product-id="product_variant_id"
+                    t-att-disabled="product in products_in_wishlist"
+                    t-att-data-product-id="product_variant.id"
                     t-att-data-product-template-id="product.id"
                     t-att-title="in_wish and btnTitleActive or btnTitle"
                 >
@@ -298,20 +287,18 @@
                 t-value="product and product.valid_product_template_attribute_line_ids"
             />
 
-            <t t-if="isCompareAvailable" t-call="website_sale.product_tile_element_visibility"
-                visible_element_class.f="o_wsale_products_opt_has_comparison">
+            <t
+                t-if="isCompareAvailable"
+                t-call="website_sale.product_tile_element_visibility"
+                visible_element_class.f="o_wsale_products_opt_has_comparison"
+            >
 
-                <t
-                    t-set="attrib_categories"
-                    t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"
-                />
-                <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
                 <button
-                    t-if="product_variant_id and attrib_categories"
+                    t-if="product._can_be_added_to_comparison()"
                     class="btn o_add_compare"
                     title="Compare"
                     aria-label="Compare"
-                    t-att-data-product-id="product_variant_id"
+                    t-att-data-product-id="product_variant.id"
                     t-att-data-product-template-id="product.id"
                 >
                     <span class="fa fa-exchange fa-fw o_not-animable"/>

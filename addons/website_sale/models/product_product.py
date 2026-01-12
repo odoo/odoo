@@ -237,6 +237,8 @@ class ProductProduct(models.Model):
         return super().write(vals)
 
     def _is_in_wishlist(self):
+        if not self:
+            return False
         self.ensure_one()
         return self in self.env['product.wishlist'].current().mapped('product_id')
 

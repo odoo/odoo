@@ -1261,33 +1261,34 @@
         priority="8"
     >
         <xpath expr="//div[@id='product_option_block']" position="inside">
-            <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
-            <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
-            <t
-                t-set="_button_classes"
-                t-valuef="o_add_compare_dyn btn btn-outline-primary order-last flex-grow-1 flex-sm-grow-0"
-            />
-            <t
-                t-if="not is_view_active('website_sale.product_add_to_wishlist') and not is_view_active('website_sale.cta_wrapper_default')"
-                t-set="_button_classes"
-                t-value="_button_classes + ' w-100'"
-            />
-            <t
-                t-if="is_view_active('website_sale.cta_wrapper_large')"
-                t-set="_button_classes"
-                t-value="_button_classes + ' btn-lg px-lg-0'"
-            />
-            <button
-                t-if="product_variant_id and attrib_categories"
-                t-att-class="_button_classes"
-                aria-label="Add to compare"
-                title="Add to compare"
-                t-att-data-product-id="product_variant_id"
-                t-att-data-product-template-id="product.id"
-            >
-                <span class="fa fa-exchange"/>
-                <span t-att-class="'d-inline ms-2' + (' d-lg-none' if website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) or is_view_active('website_sale.product_add_to_wishlist') else '')">Add to compare</span>
-            </button>
+            <t t-if="product._can_be_added_to_comparison()">
+                <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
+                <t
+                    t-set="_button_classes"
+                    t-valuef="o_add_compare_dyn btn btn-outline-primary order-last flex-grow-1 flex-sm-grow-0"
+                />
+                <t
+                    t-if="not is_view_active('website_sale.product_add_to_wishlist') and not is_view_active('website_sale.cta_wrapper_default')"
+                    t-set="_button_classes"
+                    t-value="_button_classes + ' w-100'"
+                />
+                <t
+                    t-if="is_view_active('website_sale.cta_wrapper_large')"
+                    t-set="_button_classes"
+                    t-value="_button_classes + ' btn-lg px-lg-0'"
+                />
+                <button
+                    t-if="product_variant"
+                    t-att-class="_button_classes"
+                    aria-label="Add to compare"
+                    title="Add to compare"
+                    t-att-data-product-id="product_variant.id"
+                    t-att-data-product-template-id="product.id"
+                >
+                    <span class="fa fa-exchange"/>
+                    <span t-att-class="'d-inline ms-2' + (' d-lg-none' if website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) or is_view_active('website_sale.product_add_to_wishlist') else '')">Add to compare</span>
+                </button>
+            </t>
         </xpath>
     </template>
 
@@ -1299,7 +1300,6 @@
     >
         <xpath expr="//div[@id='product_option_block']" position="inside">
             <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
-            <t t-set="in_wish" t-value="product_variant and product_variant._is_in_wishlist()"/>
             <t
                 t-set="_button_classes"
                 t-valuef="o_add_wishlist_dyn btn btn-outline-primary text-nowrap"
@@ -1322,7 +1322,7 @@
             <button
                 t-if="product_variant"
                 t-att-class="_button_classes"
-                t-att-disabled="in_wish"
+                t-att-disabled="product_variant._is_in_wishlist()"
                 t-att-data-product-id="product_variant.id"
                 t-att-data-product-template-id="product.id"
                 title="Add to wishlist"
@@ -1378,11 +1378,7 @@
                 t-set="attrib_categories"
                 t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"
             />
-            <t
-                t-set="product_variant_id"
-                t-value="product._get_first_possible_variant_id()"
-            />
-            <t t-if="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()">
+            <t t-if="attrib_categories">
                 <t t-foreach="attrib_categories" t-as="category">
                     <div class="accordion-item">
                         <div class="accordion-header my-0 h6">

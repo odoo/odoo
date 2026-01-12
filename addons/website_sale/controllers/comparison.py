@@ -17,6 +17,7 @@ class ProductComparison(Controller):
             'website_sale.product_compare',
             {
                 'products': products.with_context(display_default_code=False),
+                'attrib_categories': products._prepare_categories_for_display(),
             }
         )
 

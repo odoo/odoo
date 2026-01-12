@@ -34,6 +34,8 @@ class ProductWishlist(models.Model):
         else:
             wish = self.search([("partner_id", "=", self.env.user.partner_id.id), ('website_id', '=', request.website.id)])
 
+        # TODO for /shop page, no need to check _is_add_to_cart_possible as it's only used to see
+        # whether the product is in the wishlist.
         return wish.filtered(
             lambda wish:
                 (
