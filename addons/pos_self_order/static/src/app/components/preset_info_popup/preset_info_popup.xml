@@ -44,12 +44,14 @@
                     placeholder="Email"
                     t-model="state.email"
                     t-att-disabled="partnerIsSelected" />
-                <t t-if="preset.needsPartner">
-                    <input type="text"
+                <input t-if="preset.needsName || preset.needsPartner"
+                        type="text"
                         class="form-control form-control-lg"
                         placeholder="Phone"
                         t-model="state.phone"
                         t-att-disabled="partnerIsSelected"/>
+                <p t-if="!checkPhoneFormat()" class="text-danger">Enter a valid phone number starting with the country code (e.g. +32)</p>
+                <t t-if="preset.needsPartner">
                     <select class="partner-select form-select form-select-lg" t-model="state.countryId" t-att-disabled="partnerIsSelected">
                         <option value="">
                             Select a country
