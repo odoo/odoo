@@ -5,6 +5,7 @@ import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
 import * as ConfirmationPage from "@pos_self_order/../tests/tours/utils/confirmation_page_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("self_mobile_each_table_takeaway_in", {
     steps: () => [
@@ -301,9 +302,9 @@ registry.category("web_tour.tours").add("test_self_order_product_availability", 
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
         LandingPage.selectLocation("Test-In"),
-        // Mark 'Combo Product 5' as unavailable and verify it shows as out of stock
+        // Mark 'Combo Product 5' as unavailable and verify it is not displayed
         Utils.setProductAvailability("Combo Product 5", false),
-        ProductPage.checkProductOutOfStock("Combo Product 5"),
+        negateStep(ProductPage.isProductDisplayed("Combo Product 5")),
         ProductPage.clickProduct("Office Combo"),
         ProductPage.clickComboProduct("Combo Product 4"),
         Utils.clickBtn("Add to cart"),

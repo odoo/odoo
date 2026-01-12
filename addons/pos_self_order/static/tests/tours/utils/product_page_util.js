@@ -179,9 +179,9 @@ export function setupCombo(products, addToCart = true) {
     return steps;
 }
 
-export function checkProductOutOfStock(productName) {
+export function isProductDisplayed(productName) {
     return {
-        content: `Check if '${productName}' is marked as out of stock`,
-        trigger: `.o_self_product_box:has(span:contains('${productName}')):has(div:contains('Out of stock'))`,
+        content: `Check if product '${productName}' is displayed`,
+        trigger: `.o_self_product_box span:contains("${productName}")`,
     };
 }
