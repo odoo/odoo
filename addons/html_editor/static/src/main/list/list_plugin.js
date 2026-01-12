@@ -345,6 +345,11 @@ export class ListPlugin extends Plugin {
         const list = insertListAfter(this.document, baseContainer, mode, [
             childNodes(baseContainer),
         ]);
+        if (baseContainer.style.getPropertyValue("padding")) {
+            // Prevent copying padding from baseContainer to ensure
+            // the ::marker of the list is displayed correctly.
+            baseContainer.style.removeProperty("padding");
+        }
         this.dependencies.dom.copyAttributes(baseContainer, list);
         baseContainer.remove();
         cursors.remapNode(baseContainer, list.firstChild).restore();
@@ -659,6 +664,9 @@ export class ListPlugin extends Plugin {
             }
             if (textAlign && !block.style.getPropertyValue("text-align")) {
                 block.style.setProperty("text-align", textAlign);
+            }
+            if (ul.style.getPropertyValue("font-size")) {
+                block.style.setProperty("font-size", ul.style.getPropertyValue("font-size"));
             }
             cursors.update(callbacksForCursorUpdate.after(ul, block));
             ul.after(block);
