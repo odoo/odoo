@@ -34,7 +34,7 @@ class TestWebsiteSaleStockProductWarehouse(
         cls.product_B = cls._create_product()
         cls.test_env = cls.env['base'].with_context(
             website_id=cls.website.id,
-            website_sale_stock_get_quantity=True,
+            website_sale_product_page=True,
         ).env
 
         # Add 10 Product A in WH1 and 15 Product 1 in WH2

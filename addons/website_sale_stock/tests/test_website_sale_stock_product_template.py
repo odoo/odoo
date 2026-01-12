@@ -73,7 +73,7 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
 
         with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
             combination_info = self.env['product.template'].with_context(
-                website_sale_stock_get_quantity=True
+                website_sale_product_page=True
             )._get_additionnal_combination_info(
                 combo_product,
                 quantity=3,
@@ -93,7 +93,7 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
 
         with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
             combination_info = self.env['product.template'].with_context(
-                website_sale_stock_get_quantity=True
+                website_sale_product_page=True
             )._get_additionnal_combination_info(
                 combo_product,
                 quantity=3,
@@ -112,7 +112,7 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
         )
         with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
             combination_info = self.env['product.template'].with_context(
-                website_sale_stock_get_quantity=True,
+                website_sale_product_page=True,
             )._get_additionnal_combination_info(
                 self.product_oos_order_not_allowed,
                 quantity=9,
