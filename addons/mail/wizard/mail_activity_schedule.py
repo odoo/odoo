@@ -143,7 +143,7 @@ class MailActivitySchedule(models.TransientModel):
         for scheduler in self:
             if self.env.context.get('plan_mode'):
                 scheduler.plan_id = scheduler.env['mail.activity.plan'].search(
-                    [('id', 'in', self.plan_available_ids.ids)], order='id', limit=1)
+                    [('id', 'in', scheduler.plan_available_ids.ids)], order='id', limit=1)
             else:
                 scheduler.plan_id = False
 
