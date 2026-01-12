@@ -342,7 +342,7 @@ test("the overlay of hotkeys is correctly displayed on MacOs", async () => {
     await mountWithCleanup(MyComponent);
 
     // apply an existent hotkey
-    await keyDown("ctrl");
+    await keyDown("meta");
     expect(getOverlays()).toEqual(["B", "C"], { message: "should display the overlay" });
     await press("b");
     await tick();
@@ -350,7 +350,7 @@ test("the overlay of hotkeys is correctly displayed on MacOs", async () => {
     expect(getOverlays()).toEqual([], { message: "shouldn't display the overlay" });
 
     // apply a non-existent hotkey
-    await keyDown("ctrl");
+    await keyDown("meta");
     expect(getOverlays()).toEqual(["B", "C"], { message: "should display the overlay" });
     await press("x");
     expect(getOverlays()).toEqual([], { message: "shouldn't display the overlay" });
