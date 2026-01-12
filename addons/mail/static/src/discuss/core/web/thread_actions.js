@@ -25,7 +25,7 @@ registerThreadAction("expand-discuss", {
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-expand",
     name: _t("Open in Discuss"),
-    onSelected({ owner, store, thread }) {
+    onSelected({ channel, owner, store }) {
         store.env.services.action.doAction(
             {
                 type: "ir.actions.client",
@@ -33,7 +33,7 @@ registerThreadAction("expand-discuss", {
             },
             {
                 clearBreadcrumbs: owner.env.services["home_menu"]?.hasHomeMenu,
-                additionalContext: { active_id: thread.id },
+                additionalContext: { active_id: channel.id },
             }
         );
     },
