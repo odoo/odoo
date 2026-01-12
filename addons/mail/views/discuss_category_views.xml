@@ -2,14 +2,27 @@
 <odoo>
     <data>
 
+        <record id="discuss_category_view_search" model="ir.ui.view">
+            <field name="name">discuss.category.search</field>
+            <field name="model">discuss.category</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="channel_ids"/>
+                </search>
+            </field>
+        </record>
+
         <record id="discuss_category_view_tree" model="ir.ui.view">
             <field name="name">discuss.category.list</field>
             <field name="model">discuss.category</field>
             <field name="arch" type="xml">
-                <list string="Discuss Categories" editable="bottom" sample="1">
+                <list string="Categories" editable="bottom" sample="1">
                     <field name="sequence" widget="handle"/>
-                    <field name="name" placeholder="e.g. Service"/>
-                    <field name="channel_ids" widget="many2many_tags" domain="[('discuss_category_id', '=', False), ('channel_type', '=', 'channel')]"/>
+                    <field name="name" placeholder="e.g. General"/>
+                    <field name="channel_ids" widget="many2many_tags"
+                        options="{'no_create_edit': True}"
+                        domain="[('discuss_category_id', '=', False), ('channel_type', '=', 'channel'), ('parent_channel_id', '=', False)]"/>
                 </list>
             </field>
         </record>
@@ -18,29 +31,50 @@
             <field name="name">discuss.category.form</field>
             <field name="model">discuss.category</field>
             <field name="arch" type="xml">
-                <form string="Discuss Categories">
+                <form string="Categories">
                     <sheet>
                         <group>
-                            <field name="name" placeholder="e.g. Service"/>
-                            <field name="channel_ids" widget="many2many_tags" domain="[('discuss_category_id', '=', False), ('channel_type', '=', 'channel')]"/>
-                            <field name="sequence"/>
+                            <field name="name" placeholder="e.g. General"/>
+                            <field name="channel_ids" widget="many2many_tags"
+                                options="{'no_create_edit': True}"
+                                domain="[('discuss_category_id', '=', False), ('channel_type', '=', 'channel'), ('parent_channel_id', '=', False)]"/>
+                            <field name="sequence" groups="base.group_no_one"/>
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
 
+        <record id="discuss_category_view_kanban" model="ir.ui.view">
+            <field name="name">discuss.category.kanban</field>
+            <field name="model">discuss.category</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="card" class="flex-column">
+                            <div class="column">
+                                <field name="name"/>
+                                <field name="channel_ids" widget="many2many_tags"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="discuss_category_settings_action" model="ir.actions.act_window">
-            <field name="name">Discuss Categories</field>
+            <field name="name">Categories</field>
             <field name="res_model">discuss.category</field>
-            <field name="view_mode">list,form</field>
+            <field name="view_mode">list,form,kanban</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    No discuss category found. Let's create one!
-                </p><p>
-                    Use discuss categories to organize the channels.
+                    No categories found. Let's create one!
+                </p>
+                <p>
+                    Group related channels together to make them easier to find.
                 </p>
             </field>
+            <field name="search_view_id" ref="discuss_category_view_search"/>
         </record>
 
     </data>
