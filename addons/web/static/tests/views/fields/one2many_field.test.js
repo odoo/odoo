@@ -2420,6 +2420,33 @@ test("one2many kanban order with handle widget", async () => {
     expect.verifySteps(["web_read"]);
 });
 
+test("press Enter in a form with a one2many kanban", async () => {
+    Partner._records[0].p = [2, 4];
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="p">
+                    <kanban>
+                        <templates>
+                            <t t-name="card">
+                                <field name="foo"/>
+                            </t>
+                        </templates>
+                    </kanban>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    await press("Enter");
+
+    expect(".o_kanban_renderer").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)").toHaveCount(2);
+});
+
 test("one2many field when using the pager", async () => {
     const ids = [];
     for (let i = 0; i < 45; i++) {
