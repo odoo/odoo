@@ -26,6 +26,8 @@ const checkIfTextToolbarVisible = {
     trigger: ".o-we-toolbar",
 };
 
+const oldWriteText = browser.navigator.clipboard.writeText;
+
 registerWebsitePreviewTour('snippet_editor_panel_options', {
     url: '/',
     edition: true,
@@ -54,18 +56,16 @@ checkIfParagraphSelected(":iframe .s_text_image p"),
     trigger: "[data-container-title='Text - Image'] .oe_snippet_anchor",
     async run(helpers) {
         // Patch and ignore write on clipboard in tour as we don't have permissions
-        const oldWriteText = browser.navigator.clipboard.writeText;
         browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
         await helpers.click();
-        // Restore the writeText after a short delay to avoid reverting it
-        // before the plugin function has been completed
-        await new Promise(resolve => setTimeout(resolve, 100));
-        browser.navigator.clipboard.writeText = oldWriteText;
     }
 }, {
     content: "Check the copied url from the notification toast",
     trigger: '.o_notification_manager .o_notification_content',
     run() {
+        // Cleanup the patched clipboard method
+        browser.navigator.clipboard.writeText = oldWriteText;
+
         const { textContent } = this.anchor;
         const url = textContent.substring(textContent.indexOf('/'));
 
