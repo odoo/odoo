@@ -158,23 +158,13 @@ class AccountMove(models.Model):
     @api.depends('l10n_in_state_id', 'l10n_in_gst_treatment')
     def _compute_fiscal_position_id(self):
 
-        foreign_state = self.env['res.country.state'].search([('code', '!=', 'IN')], limit=1)
-
         def _get_fiscal_state(move):
             """
             Maps each move to its corresponding fiscal state based on its type,
             fiscal conditions, and the state of the associated partner or company.
             """
 
-            if (
-                move.country_code != 'IN'
-                or not move.is_invoice(include_receipts=True)
-                # Partner's FP takes precedence through super
-                or move.partner_shipping_id.property_account_position_id
-                or move.partner_id.property_account_position_id
-            ):
-                return False
-            elif move.l10n_in_gst_treatment == 'special_economic_zone':
+            if move.l10n_in_gst_treatment == 'special_economic_zone':
                 # Special Economic Zone
                 return self.env.ref('l10n_in.state_in_oc')
             elif move.is_sale_document(include_receipts=True):
@@ -197,8 +187,24 @@ class AccountMove(models.Model):
                     )
             return False
 
+        moves_to_skip = self.filtered(
+            lambda move: move.country_code != 'IN'
+            or not move.is_invoice(include_receipts=True)
+            # Partner's FP takes precedence through super
+            or move.partner_shipping_id.property_account_position_id
+            or move.partner_id.property_account_position_id
+        )
+        if moves_to_skip:
+            super(AccountMove, moves_to_skip)._compute_fiscal_position_id()
+
+        moves_to_process = self - moves_to_skip
+        if not moves_to_process:
+            return
+
         FiscalPosition = self.env['account.fiscal.position']
-        for state_id, moves in self.grouped(_get_fiscal_state).items():
+        foreign_state = self.env['res.country.state'].search([('country_id.code', '!=', 'IN')], limit=1)
+
+        for state_id, moves in moves_to_process.grouped(_get_fiscal_state).items():
             if state_id:
                 virtual_partner = self.env['res.partner'].new({
                     'state_id': state_id.id,
