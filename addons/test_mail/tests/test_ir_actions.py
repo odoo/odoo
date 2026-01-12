@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+
 from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests import tagged
+from odoo.tests import Form, RecordCapturer, tagged
 from odoo.tools import mute_logger
 
 
@@ -180,6 +182,163 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
                 'user_id': self.user_demo.id,  # the first user found
             }],
         )
+
+    def test_action_next_activity_formview(self):
+        """ Test the form view's onchanges/computed of next activity server actions. """
+        email_activity_type = self.env.ref('mail.mail_activity_data_email')
+        email_activity_type.write({'default_note': '<p>Default note for email</p>'})
+        with Form(self.env['ir.actions.server'], view='base.view_server_action_form') as action_form:
+            self.assertEqual(action_form.name, '')
+            action_form.model_id = self.res_partner_model
+            action_form.state = 'next_activity'
+            self.assertTrue(action_form._get_modifier('activity_plan_id', 'invisible'))
+            self.assertEqual(action_form.name, 'Create Activity')
+            self.assertTrue(action_form._get_modifier('activity_type_id', 'required'))
+
+            action_form.activity_type_id = self.env.ref('mail.mail_activity_data_todo')
+            self.assertEqual(action_form.name, 'Create To-Do')
+            self.assertEqual(action_form.activity_summary, 'To-Do')
+            self.assertEqual(action_form.activity_date_deadline_range, 1)
+            self.assertEqual(action_form.activity_date_deadline_range_type, 'days')
+            self.assertEqual(action_form.activity_user_type, 'specific')
+            self.assertFalse(action_form.activity_user_id)
+            self.assertFalse(action_form.activity_note)
+
+            action_form.activity_summary = 'Send a wonderful email'
+            action_form.activity_note = 'Hello world'
+            action_form.activity_date_deadline_range = 3
+            action_form.activity_date_deadline_range_type = 'weeks'
+            action_form.activity_user_id = self.user_demo
+            action_form.activity_type_id = email_activity_type
+            self.assertEqual(action_form.activity_summary, 'Email', 'activity_summary should be changed to "Email"')
+            self.assertEqual(action_form.activity_note, '<p>Default note for email</p>', 'activity_note should be changed to default note of email activity')
+            self.assertEqual(action_form.activity_date_deadline_range, 3)
+            self.assertEqual(action_form.activity_date_deadline_range_type, 'weeks')
+            self.assertEqual(action_form.activity_type_id, email_activity_type)
+            self.assertEqual(action_form.activity_user_type, 'specific')
+            self.assertEqual(action_form.activity_user_id, self.user_demo)
+
+            action_form.activity_user_type = 'generic'
+            self.assertFalse(action_form.activity_user_id)
+            self.assertEqual(action_form.activity_user_field_name, 'user_id')
+
+            action_form.activity_type_id = self.env.ref('mail.mail_activity_data_call')
+            self.assertEqual(action_form.activity_type_id, self.env.ref('mail.mail_activity_data_call'))
+            self.assertEqual(action_form.activity_user_type, 'generic')
+            self.assertEqual(action_form.activity_user_field_name, 'user_id')
+            self.assertEqual(action_form.activity_summary, 'Call')
+            self.assertFalse(action_form.activity_note, 'activity_note should be changed to default note of call activity (which is empty)')
+            self.assertEqual(action_form.activity_date_deadline_range, 3)
+            self.assertEqual(action_form.activity_date_deadline_range_type, 'weeks')
+
+    def test_action_next_activity_formview_with_plans(self):
+        """ Test the form view's onchanges/computed of next activity server actions. Specifically when activity plans are involved. """
+        activity_type_todo = self.env.ref('mail.mail_activity_data_todo')
+        admin_activity_plan = self.env['mail.activity.plan'].create({
+            'name': 'Test Onboarding Plan (responsible: admin)',
+            'res_model': 'res.partner',
+            'template_ids': [
+                (0, 0, {
+                    'activity_type_id': activity_type_todo.id,
+                    'responsible_id': self.user_admin.id,
+                    'responsible_type': 'other',
+                    'sequence': 10,
+                    'summary': 'Plan training',
+                }), (0, 0, {
+                    'activity_type_id': activity_type_todo.id,
+                    'responsible_id': self.user_admin.id,
+                    'responsible_type': 'other',
+                    'sequence': 20,
+                    'summary': 'Training',
+                }),
+            ]
+        })
+        on_demand_activity_plan = self.env['mail.activity.plan'].create({
+            'name': 'Test Onboarding Plan (responsible: on demand)',
+            'res_model': 'res.partner',
+            'template_ids': [
+                (0, 0, {
+                    'activity_type_id': activity_type_todo.id,
+                    'delay_count': 3,
+                    'delay_from': 'before_plan_date',
+                    'delay_unit': 'days',
+                    'responsible_id': self.user_admin.id,
+                    'responsible_type': 'other',
+                    'sequence': 10,
+                    'summary': 'Plan training',
+                }), (0, 0, {
+                    'activity_type_id': activity_type_todo.id,
+                    'delay_count': 2,
+                    'delay_from': 'after_plan_date',
+                    'delay_unit': 'weeks',
+                    'responsible_type': 'on_demand',
+                    'sequence': 20,
+                    'summary': 'Training',
+                }),
+            ]
+        })
+        self.test_partner.write({'user_id': self.user_employee.id})
+        with Form(self.env['ir.actions.server'], view='base.view_server_action_form') as action_form:
+            self.assertEqual(action_form.name, '')
+            self.assertTrue(action_form._get_modifier('activity_plan_id', 'invisible'))
+            action_form.model_id = self.res_partner_model
+            action_form.state = 'next_activity'
+            self.assertFalse(action_form._get_modifier('activity_plan_id', 'invisible'))
+
+            action_form.activity_type_id = self.env.ref('mail.mail_activity_data_todo')
+            action_form.activity_user_id = self.user_admin
+            action_form.activity_summary = 'Should be overridden by plan'
+            action_form.activity_note = 'Should be overridden by plan'
+            action_form.activity_date_deadline_range = 2
+            action_form.activity_date_deadline_range_type = 'weeks'
+            action_form.activity_plan_id = admin_activity_plan
+            self.assertEqual(action_form.activity_date_deadline_range, 2)
+            self.assertEqual(action_form.activity_date_deadline_range_type, 'weeks')
+            self.assertFalse(action_form.activity_type_id)
+            self.assertFalse(action_form._get_modifier('activity_type_id', 'invisible'))
+            self.assertTrue(action_form._get_modifier('activity_summary', 'invisible'))
+            self.assertFalse(action_form.activity_summary)
+            self.assertTrue(action_form._get_modifier('activity_note', 'invisible'))
+            self.assertFalse(action_form.activity_note)
+            self.assertTrue(action_form._get_modifier('activity_user_type', 'invisible'))
+            self.assertFalse(action_form.activity_user_type)
+            self.assertTrue(action_form._get_modifier('activity_user_id', 'invisible'))
+            self.assertFalse(action_form.activity_user_id)
+            self.assertTrue(action_form._get_modifier('activity_user_field_name', 'invisible'))
+            self.assertFalse(action_form.activity_user_field_name)
+            self.assertEqual(action_form.name, 'Plan activities: Test Onboarding Plan (responsible: admin)')
+
+            action_form.activity_plan_id = on_demand_activity_plan
+            self.assertEqual(action_form.name, 'Plan activities: Test Onboarding Plan (responsible: on demand)')
+            self.assertEqual(action_form.activity_user_type, 'specific')
+            self.assertTrue(action_form._get_modifier('activity_user_field_name', 'invisible'))
+
+            action_form.activity_user_type = 'generic'
+            self.assertTrue(action_form._get_modifier('activity_user_id', 'invisible'))
+
+            action_form.activity_user_field_name = 'user_id'
+            action = action_form.save()
+
+        reference_now = datetime(2022, 12, 24, 12, 0, 0)
+        with self.mock_datetime_and_now(reference_now), RecordCapturer(self.env['mail.activity']) as capture:
+            run_res = action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: create next activity action correctly finished should return False')
+        self.assertEqual(len(capture.records), 2)
+        activities = capture.records.grouped('user_id')
+        self.assertRecordValues(activities[self.user_admin], [
+            {
+                'activity_type_id': activity_type_todo.id,
+                'summary': 'Plan training',
+                'date_deadline': (reference_now + timedelta(days=11)).date(),
+            }
+        ])
+        self.assertRecordValues(activities[self.user_employee], [
+            {
+                'activity_type_id': activity_type_todo.id,
+                'summary': 'Training',
+                'date_deadline': (reference_now + timedelta(weeks=4)).date(),
+            }
+        ])
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_action_send_mail_without_mail_thread(self):

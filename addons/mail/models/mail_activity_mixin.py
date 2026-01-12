@@ -330,7 +330,7 @@ class MailActivityMixin(models.AbstractModel):
 
         return self.env['mail.activity'].search(domain)
 
-    def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', **act_values):
+    def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', activity_user_id_fname='', **act_values):
         """ Schedule an activity on each record of the current record set.
         This method allow to provide as parameter act_type_xmlid. This is an
         xml_id of activity type instead of directly giving an activity_type_id.
@@ -342,6 +342,10 @@ class MailActivityMixin(models.AbstractModel):
 
         :param date_deadline: the day the activity must be scheduled on
         the timezone of the user must be considered to set the correct deadline
+        :param activity_user_id_fname: name of the user field on the record to use
+        as responsible for the activity. Can be a related field path.
+        Useless if 'user_id' is already provided in act_values.
+        :type activity_user_id_fname: str
         """
         if self.env.context.get('mail_activity_automation_skip'):
             return False
@@ -379,6 +383,22 @@ class MailActivityMixin(models.AbstractModel):
                 'res_id': record.id,
             }
             create_vals.update(act_values)
+            if not create_vals.get('user_id') and activity_user_id_fname:
+                try:
+                    user = record.mapped(activity_user_id_fname)
+                except Exception:  # noqa: BLE001
+                    _logger.warning(
+                        "Unable to determine the responsible for the activity to schedule. "
+                        "We were not able to fetch value of field '%s'.",
+                        activity_user_id_fname,
+                    )
+                if not isinstance(user, self.pool['res.users']):
+                    _logger.warning(
+                        'The field "%s" must be related to the res.users model.',
+                        activity_user_id_fname,
+                    )
+                if user:
+                    create_vals['user_id'] = user.ids[0]
             if not create_vals.get('user_id') and activity_type.default_user_id:
                 create_vals['user_id'] = activity_type.default_user_id.id
             create_vals_list.append(create_vals)
