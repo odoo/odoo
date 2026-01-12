@@ -916,10 +916,19 @@ export class PosStore extends WithLazyGetterTrap {
                 const decimalAccuracy = this.models["decimal.precision"].find(
                     (dp) => dp.name === "Product Unit"
                 ).digits;
+
+                const overridedValues = {};
+                if (order.pricelist_id) {
+                    overridedValues.pricelist = order.pricelist_id;
+                }
+                if (order.fiscal_position_id) {
+                    overridedValues.fiscalPosition = order.fiscal_position_id;
+                }
+
                 this.scale.setProduct(
                     values.product_id,
                     decimalAccuracy,
-                    values.product_id.getTaxDetails().total_included
+                    values.product_id.getTaxDetails({ overridedValues }).total_included
                 );
                 const weight = await this.weighProduct();
                 if (weight) {
