@@ -75,15 +75,18 @@ patch(Thread.prototype, {
             return;
         }
         if (this.model !== "discuss.channel") {
-            this.store.env.services.action.doAction({
-                type: "ir.actions.act_window",
-                res_id: this.id,
-                res_model: this.model,
-                views: [[false, "form"]],
-            });
+            this.store.env.services.action.doAction(this.openRecordActionRequest);
             return;
         }
         super.open();
+    },
+    get openRecordActionRequest() {
+        return {
+            type: "ir.actions.act_window",
+            res_id: this.id,
+            res_model: this.model,
+            views: [[false, "form"]],
+        };
     },
     async unpin() {
         const chatWindow = this.store.ChatWindow.get({ thread: this });
