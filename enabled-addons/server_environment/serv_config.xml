@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="server_env_act_show_config" model="ir.actions.act_window">
+        <field name="name">Server Environment</field>
+        <field name="res_model">server.config</field>
+        <field name="view_mode">form</field>
+    </record>
+    <menuitem
+        parent="base.menu_ir_property"
+        sequence="90"
+        action="server_env_act_show_config"
+        id="menu_server_show_config"
+    />
+</odoo>

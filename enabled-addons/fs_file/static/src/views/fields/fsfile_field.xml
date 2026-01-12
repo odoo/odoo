@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="fs_file.FSFileField" owl="1">
+        <t t-if="!props.readonly">
+            <t t-if="props.record.data[props.name]">
+                <div class="w-100 d-inline-flex gap-1">
+                    <FileUploader
+                        acceptedFileExtensions="props.acceptedFileExtensions"
+                        t-key="props.record.resId"
+                        onUploaded.bind="onFileUploaded"
+                    >
+                        <t t-if="url">
+                            <a
+                                class="o_form_uri fs_file_link"
+                                t-att-href="url + '?download=1'"
+                            >
+                                <span class="fa fa-download me-2" />
+                                <t t-if="filename" t-esc="filename" />
+                            </a>
+                        </t>
+                        <t t-else="">
+                            <t t-if="filename" t-esc="filename" />
+                        </t>
+                        <t t-set-slot="toggler">
+                            <button
+                                class="btn btn-link btn-sm lh-1 fa fa-pencil o_select_file_button"
+                                data-tooltip="Edit"
+                                aria-label="Edit"
+                            />
+                        </t>
+                        <button
+                            class="btn btn-link btn-sm lh-1 fa fa-trash o_clear_file_button"
+                            data-tooltip="Clear"
+                            aria-label="Clear"
+                            t-on-click="onFileRemove"
+                            t-if="props.record.data[props.name]"
+                        />
+                    </FileUploader>
+                </div>
+            </t>
+            <t t-else="">
+                <label class="o_select_file_button btn btn-primary">
+                    <FileUploader
+                        acceptedFileExtensions="props.acceptedFileExtensions"
+                        t-key="props.record.resId"
+                        onUploaded.bind="onFileUploaded"
+                    >
+                        <t t-set-slot="toggler">
+                            Upload your file
+                        </t>
+                    </FileUploader>
+                </label>
+            </t>
+        </t>
+        <t t-elif="props.record.data[props.name]">
+            <a class="o_form_uri fs_file_link" t-att-href="url">
+                <span class="fa fa-download me-2" />
+                <t t-if="filename" t-esc="filename" />
+            </a>
+        </t>
+    </t>
+
+</templates>

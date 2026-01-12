@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="fs_storage_form_view_s3" model="ir.ui.view">
+        <field name="name">fs.storage.form.s3</field>
+        <field name="model">fs.storage</field>
+        <field name="inherit_id" ref="fs_storage.fs_storage_form_view" />
+        <field name="arch" type="xml">
+            <field name="protocol" position="after">
+                <field
+                    name="aws_access_key_id"
+                    invisible="protocol != 's3'"
+                    required="protocol == 's3'"
+                />
+                <field
+                    name="aws_secret_access_key"
+                    password="True"
+                    invisible="protocol != 's3'"
+                    required="protocol == 's3'"
+                />
+                <field
+                    name="aws_region"
+                    invisible="protocol != 's3'"
+                    required="protocol == 's3'"
+                />
+                <field
+                    name="aws_bucket_name"
+                    invisible="protocol != 's3'"
+                    required="protocol == 's3'"
+                />
+                <field
+                    name="aws_endpoint_url"
+                    invisible="protocol != 's3'"
+                    placeholder="https://s3.amazonaws.com or http://localstack:4566"
+                />
+                <field name="aws_use_ssl" invisible="protocol != 's3'" />
+            </field>
+        </field>
+    </record>
+</odoo>

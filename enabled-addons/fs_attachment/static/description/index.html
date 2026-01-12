@@ -1,0 +1,849 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils: https://docutils.sourceforge.io/" />
+<title>README.rst</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 9511 2024-01-13 09:50:07Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+Despite the name, some widely supported CSS2 features are used.
+
+See https://docutils.sourceforge.io/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+.subscript {
+  vertical-align: sub;
+  font-size: smaller }
+
+.superscript {
+  vertical-align: super;
+  font-size: smaller }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left, table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right, table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+.align-top    {
+  vertical-align: top }
+
+.align-middle {
+  vertical-align: middle }
+
+.align-bottom {
+  vertical-align: bottom }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: gray; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic, pre.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* "booktabs" style (no vertical lines) */
+table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.docutils.booktabs * {
+  border: 0px;
+}
+table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document">
+
+
+<a class="reference external image-reference" href="https://odoo-community.org/get-involved?utm_source=readme">
+<img alt="Odoo Community Association" src="https://odoo-community.org/readme-banner-image" />
+</a>
+<div class="section" id="base-attachment-object-store">
+<h1>Base Attachment Object Store</h1>
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! This file is generated by oca-gen-addon-readme !!
+!! changes will be overwritten.                   !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! source digest: sha256:50c6082aeb8a70f8037fe7af4499b73d24c5e70f2fb76df63606559a6700108d
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/license-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/storage/tree/18.0/fs_attachment"><img alt="OCA/storage" src="https://img.shields.io/badge/github-OCA%2Fstorage-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/storage-18-0/storage-18-0-fs_attachment"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/storage&amp;target_branch=18.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
+<p>In some cases, you need to store attachment in another system that the
+Odoo’s filestore. For example, when your deployment is based on a
+multi-server architecture to ensure redundancy and scalability, your
+attachments must be stored in a way that they are accessible from all
+the servers. In this way, you can use a shared storage system like NFS
+or a cloud storage like S3 compliant storage, or….</p>
+<p>This addon extend the storage mechanism of Odoo’s attachments to allow
+you to store them in any storage filesystem supported by the Python
+library <a class="reference external" href="https://filesystem-spec.readthedocs.io/en/latest/">fsspec</a>
+and made available via the fs_storage addon.</p>
+<p>In contrast to Odoo, when a file is stored into an external storage,
+this addon ensures that the filename keeps its meaning (In odoo the
+filename into the filestore is the file content checksum). Concretely
+the filename is based on the pattern:
+‘&lt;name-without-extension&gt;-&lt;attachment-id&gt;-&lt;version&gt;.&lt;extension&gt;’</p>
+<p>This addon also adds on the attachments 2 new fields to use to retrieve
+the file content from a URL:</p>
+<ul class="simple">
+<li><tt class="docutils literal">Internal URL</tt>: URL to retrieve the file content from the Odoo’s
+filestore.</li>
+<li><tt class="docutils literal">Filesystem URL</tt>: URL to retrieve the file content from the external
+storage.</li>
+</ul>
+<p>Note</p>
+<p>The internal URL is always available, but the filesystem URL is only
+available when the attachment is stored in an external storage.
+Particular attention has been paid to limit as much as possible the
+consumption of resources necessary to serve via Odoo the content stored
+in an external filesystem. The implementation is based on an end-to-end
+streaming of content between the external filesystem and the Odoo client
+application by default. Nevertheless, if your content is available via a
+URL on the external filesystem, you can configure the storage to use the
+x-sendfile mechanism to serve the content if it’s activated on your Odoo
+instance. In this case, the content served by Odoo at the internal URL
+will be proxied to the filesystem URL by nginx.</p>
+<p>Last but not least, the addon adds a new method open on the attachment.
+This method allows you to open the attachment as a file. For attachments
+stored into the filestore or in an external filesystem, it allows you to
+directly read from and write to the file and therefore minimize the
+memory consumption since data are not kept into memory before being
+written into the database.</p>
+<p><strong>Table of contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#usage" id="toc-entry-1">Usage</a><ul>
+<li><a class="reference internal" href="#configuration" id="toc-entry-2">Configuration</a></li>
+<li><a class="reference internal" href="#server-environment" id="toc-entry-3">Server Environment</a></li>
+<li><a class="reference internal" href="#advanced-usage-using-attachment-as-a-file" id="toc-entry-4">Advanced usage: Using attachment as a file</a></li>
+<li><a class="reference internal" href="#tips-tricks" id="toc-entry-5">Tips &amp; Tricks</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#changelog" id="toc-entry-6">Changelog</a><ul>
+<li><a class="reference internal" href="#section-1" id="toc-entry-7">18.0.2.2.0 (2025-10-20)</a><ul>
+<li><a class="reference internal" href="#features" id="toc-entry-8">Features</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#section-2" id="toc-entry-9">18.0.1.1.0 (2024-11-10)</a><ul>
+<li><a class="reference internal" href="#bugfixes" id="toc-entry-10">Bugfixes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#section-3" id="toc-entry-11">16.0.1.0.8 (2023-12-20)</a></li>
+<li><a class="reference internal" href="#section-4" id="toc-entry-12">16.0.1.0.6 (2023-12-02)</a></li>
+<li><a class="reference internal" href="#section-5" id="toc-entry-13">16.0.1.0.5 (2023-11-29)</a></li>
+<li><a class="reference internal" href="#section-6" id="toc-entry-14">16.0.1.0.4 (2023-11-22)</a></li>
+<li><a class="reference internal" href="#section-7" id="toc-entry-15">16.0.1.0.3 (2023-10-17)</a></li>
+<li><a class="reference internal" href="#section-8" id="toc-entry-16">16.0.1.0.2 (2023-10-09)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-17">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-18">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-19">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-20">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-21">Maintainers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="usage">
+<h2><a class="toc-backref" href="#toc-entry-1">Usage</a></h2>
+<div class="section" id="configuration">
+<h3><a class="toc-backref" href="#toc-entry-2">Configuration</a></h3>
+<p>The configuration is done through the creation of a filesytem storage
+record into odoo. To create a new storage, go to the menu
+<tt class="docutils literal">Settings &gt; Technical &gt; FS Storage</tt> and click on <tt class="docutils literal">Create</tt>.</p>
+<p>In addition to the common fields available to configure a storage,
+specifics fields are available under the section ‘Attachment’ to
+configure the way attachments will be stored in the filesystem.</p>
+<ul>
+<li><p class="first"><tt class="docutils literal">Optimizes Directory Path</tt>: This option is useful if you need to
+prevent having too many files in a single directory. It will create a
+directory structure based on the attachment’s checksum (with 2 levels
+of depth) For example, if the checksum is <tt class="docutils literal">123456789</tt>, the file will
+be stored in the directory <tt class="docutils literal"><span class="pre">/path/to/storage/12/34/my_file-1-0.txt</span></tt>.</p>
+</li>
+<li><p class="first"><tt class="docutils literal">Autovacuum GC</tt>: This is used to automatically remove files from the
+filesystem when it’s no longer referenced in Odoo. Some storage
+backends (like S3) may charge you for the storage of files, so it’s
+important to remove them when they’re no longer needed. In some cases,
+this option is not desirable, for example if you’re using a storage
+backend to store images shared with others systems (like your website)
+and you don’t want to remove the files from the storage while they’re
+still referenced into the others systems. This mechanism is based on a
+<tt class="docutils literal">fs.file.gc</tt> model used to collect the files to remove. This model
+is automatically populated by the <tt class="docutils literal">ir.attachment</tt> model when a file
+is removed from the database. If you disable this option, you’ll have
+to manually take care of the records in the <tt class="docutils literal">fs.file.gc</tt> for your
+filesystem storage.</p>
+</li>
+<li><p class="first"><tt class="docutils literal">Use As Default For Attachment</tt>: This options allows you to declare
+the storage as the default one for attachments. If you have multiple
+filesystem storage configured, you can choose which one will be used
+by default for attachments. Once activated, attachments created
+without specifying a storage will be stored in this default storage.</p>
+</li>
+<li><p class="first"><tt class="docutils literal">Force DB For Default Attachment Rules</tt>: This option is useful if
+you want to force the storage of some attachments in the database,
+even if you have a default filesystem storage configured. This is
+specially useful when you’re using a storage backend like S3, where
+the latency of the network can be high. This option is a JSON field
+that allows you to define the mimetypes and the size limit below which
+the attachments will be stored in the database.</p>
+<p>Small images (128, 256) are used in Odoo in list / kanban views. We
+want them to be fast to read. They are generally &lt; 50KB (default
+configuration) so they don’t take that much space in database, but
+they’ll be read much faster than from the object storage.</p>
+<p>The assets (application/javascript, text/css) are stored in database
+as well whatever their size is:</p>
+<ul class="simple">
+<li>a database doesn’t have thousands of them</li>
+<li>of course better for performance</li>
+<li>better portability of a database: when replicating a production
+instance for dev, the assets are included</li>
+</ul>
+<p>The default configuration is:</p>
+<blockquote>
+<p>{“image/”: 51200, “application/javascript”: 0, “text/css”: 0}</p>
+<p>Where the key is the beginning of the mimetype to configure and the
+value is the limit in size below which attachments are kept in DB.
+0 means no limit.</p>
+</blockquote>
+<p>Default configuration means:</p>
+<ul class="simple">
+<li>images mimetypes (image/png, image/jpeg, …) below 50KB are stored
+in database</li>
+<li>application/javascript are stored in database whatever their size</li>
+<li>text/css are stored in database whatever their size</li>
+</ul>
+<p>This option is only available on the filesystem storage that is used
+as default for attachments.</p>
+</li>
+</ul>
+<p>It is also possible to use different FS storages for attachments linked
+to different resource fields/models. You can configure it either on the
+<tt class="docutils literal">fs.storage</tt> directly, or in a server environment file:</p>
+<ul class="simple">
+<li>From the <tt class="docutils literal">fs.storage</tt>: Fields model_ids and field_ids will encode
+for which models/fields use this storage as default storage for
+attachments having these resource model/field. Note that if an
+attachment has both resource model and field, it will first take the
+FS storage where the field is explicitely linked, then is not found,
+the one where the model is explicitely linked.</li>
+<li>From a server environment file: In this case you just have to provide
+a comma-separated list of models (under the model_xmlids key) or
+fields (under the field_xmlids key). To do so, use the model/field XML
+ids provided by Odoo. See the Server Environment section for a
+concrete example.</li>
+</ul>
+<p>Another key feature of this module is the ability to get access to the
+attachments from URLs.</p>
+<ul>
+<li><p class="first"><tt class="docutils literal">Base URL</tt>: This is the base URL used to access the attachments from
+the filesystem storage itself. If your storage doesn’t provide a way
+to access the files from a URL, you can leave this field empty.</p>
+</li>
+<li><p class="first"><tt class="docutils literal">Is Directory Path In URL</tt>: Normally the directory patch configured
+on the storage is not included in the URL. If you want to include it,
+you can activate this option.</p>
+</li>
+<li><p class="first"><tt class="docutils literal">Use <span class="pre">X-Sendfile</span> To Serve Internal Url</tt>: If checked and odoo is
+behind a proxy that supports x-sendfile, the content served by the
+attachment’s internal URL will be served by the proxy using the
+filesystem url path if defined (This field is available on the
+attachment if the storage is configured with a base URL) If not, the
+file will be served by odoo that will stream the content read from the
+filesystem storage. This option is useful to avoid to serve files from
+odoo and therefore to avoid to load the odoo process.</p>
+<p>To be fully functional, this option requires the proxy to support
+x-sendfile (apache) or x-accel-redirect (nginx). You must also
+configure your proxy by adding for each storage a rule to redirect the
+url rooted at the ‘storagge code’ to the server serving the files. For
+example, if you have a storage with the code ‘my_storage’ and a server
+serving the files at the url ‘<a class="reference external" href="http://myserver.com">http://myserver.com</a>’, you must add the
+following rule in your proxy configuration:</p>
+<pre class="code nginx literal-block">
+<span class="k">location</span><span class="w"> </span><span class="s">/my_storage/</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="kn">internal</span><span class="p">;</span><span class="w">
+    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://myserver.com</span><span class="p">;</span><span class="w">
+</span><span class="p">}</span>
+</pre>
+<p>With this configuration a call to
+‘/web/content/&lt;att.id&gt;/&lt;att.name&gt;&lt;att.extension&gt;” for a file stored in
+the ‘my_storage’ storage will generate a response by odoo with the URI
+<tt class="docutils literal"><span class="pre">/my_storage/&lt;paht_in_storage&gt;/&lt;att.name&gt;-&lt;att.id&gt;-&lt;version&gt;&lt;att.extension&gt;</span></tt>
+in the headers <tt class="docutils literal"><span class="pre">X-Accel-Redirect</span></tt> and <tt class="docutils literal"><span class="pre">X-Sendfile</span></tt> and the proxy
+will redirect to
+<tt class="docutils literal"><span class="pre">http://myserver.com/&lt;paht_in_storage&gt;/&lt;att.name&gt;-&lt;att.id&gt;-&lt;version&gt;&lt;att.extension&gt;</span></tt>.</p>
+<p>see
+<a class="reference external" href="https://www.nginx.com/resources/wiki/start/topics/examples/x-accel/">https://www.nginx.com/resources/wiki/start/topics/examples/x-accel/</a>
+for more information.</p>
+</li>
+<li><p class="first"><tt class="docutils literal">Use Filename Obfuscation</tt>: If checked, the filename used to store
+the content into the filesystem storage will be obfuscated. This is
+useful to avoid to expose the real filename of the attachments outside
+of the Odoo database. The filename will be obfuscated by using the
+checksum of the content. This option is to avoid when the content of
+your filestore is shared with other systems (like your website) and
+you want to keep a meaningful filename to ensure SEO. This option is
+disabled by default.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="server-environment">
+<h3><a class="toc-backref" href="#toc-entry-3">Server Environment</a></h3>
+<p>When you configure a storage through the use of server environment file,
+you can provide values for the following keys:</p>
+<ul class="simple">
+<li><tt class="docutils literal">optimizes_directory_path</tt></li>
+<li><tt class="docutils literal">autovacuum_gc</tt></li>
+<li><tt class="docutils literal">base_url</tt></li>
+<li><tt class="docutils literal">is_directory_path_in_url</tt></li>
+<li><tt class="docutils literal">use_x_sendfile_to_serve_internal_url</tt></li>
+<li><tt class="docutils literal">use_as_default_for_attachments</tt></li>
+<li><tt class="docutils literal">force_db_for_default_attachment_rules</tt></li>
+<li><tt class="docutils literal">use_filename_obfuscation</tt></li>
+<li><tt class="docutils literal">model_xmlids</tt></li>
+<li><tt class="docutils literal">field_xmlids</tt></li>
+</ul>
+<p>For example, the configuration of my storage with code fsprod used to
+store the attachments by default could be:</p>
+<pre class="code ini literal-block">
+<span class="k">[fs_storage.fsprod]</span><span class="w">
+</span><span class="na">protocol</span><span class="o">=</span><span class="s">s3</span><span class="w">
+</span><span class="na">options={&quot;endpoint_url&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;https://my_s3_server/&quot;</span><span class="na">, &quot;key&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;KEY&quot;</span><span class="na">, &quot;secret&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;SECRET&quot;</span><span class="na">}</span><span class="w">
+</span><span class="na">directory_path</span><span class="o">=</span><span class="s">my_bucket</span><span class="w">
+</span><span class="na">use_as_default_for_attachments</span><span class="o">=</span><span class="s">True</span><span class="w">
+</span><span class="na">use_filename_obfuscation</span><span class="o">=</span><span class="s">True</span><span class="w">
+</span><span class="na">model_xmlids</span><span class="o">=</span><span class="s">base.model_res_lang,base.model_res_country</span><span class="w">
+</span><span class="na">field_xmlids</span><span class="o">=</span><span class="s">base.field_res_partner__image_128</span>
+</pre>
+</div>
+<div class="section" id="advanced-usage-using-attachment-as-a-file">
+<h3><a class="toc-backref" href="#toc-entry-4">Advanced usage: Using attachment as a file</a></h3>
+<p>The open method on the attachment can be used to open manipulate the
+attachment as a file object. The object returned by the call to the
+method implements methods from <tt class="docutils literal">io.IOBase</tt>. The method can ba called
+as any other python method. In such a case, it’s your responsibility to
+close the file at the end of your process.</p>
+<pre class="code python literal-block">
+<span class="n">attachment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">create</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test.txt&quot;</span><span class="p">})</span><span class="w">
+</span><span class="n">the_file</span> <span class="o">=</span> <span class="n">attachment</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">)</span><span class="w">
+</span><span class="k">try</span><span class="p">:</span><span class="w">
+</span>  <span class="n">the_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;content&quot;</span><span class="p">)</span><span class="w">
+</span><span class="k">finally</span><span class="p">:</span><span class="w">
+</span>  <span class="n">the_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre>
+<p>The result of the call to open also works in a context <tt class="docutils literal">with</tt> block.
+In such a case, when the code exit the block, the file is automatically
+closed.</p>
+<pre class="code python literal-block">
+<span class="n">attachment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">create</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test.txt&quot;</span><span class="p">})</span><span class="w">
+</span><span class="k">with</span> <span class="n">attachment</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">the_file</span><span class="p">:</span><span class="w">
+</span>  <span class="n">the_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;content&quot;</span><span class="p">)</span>
+</pre>
+<p>It’s always safer to prefer the second approach.</p>
+<p>When your attachment is stored into the odoo filestore or into an
+external filesystem storage, each time you call the open method, a new
+file is created. This way of doing ensures that if the transaction is
+rolled back the original content is preserved. Nevertheless you could
+have use cases where you would like to write to the existing file
+directly. For example you could create an empty attachment to store a
+csv report and then use the open method to write your content directly
+into the new file. To support this kind a use cases, the parameter
+new_version can be passed as False to avoid the creation of a new file.</p>
+<pre class="code python literal-block">
+<span class="n">attachment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">create</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test.txt&quot;</span><span class="p">})</span><span class="w">
+</span><span class="k">with</span> <span class="n">attachment</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">new_version</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span><span class="w">
+</span>    <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span><span class="w">
+</span>    <span class="o">....</span>
+</pre>
+</div>
+<div class="section" id="tips-tricks">
+<h3><a class="toc-backref" href="#toc-entry-5">Tips &amp; Tricks</a></h3>
+<ul>
+<li><p class="first">When working in multi staging environments, the management of the
+attachments can be tricky. For example, if you have a production
+instance and a staging instance based on a backup of the production
+environment, you may want to have the attachments shared between the
+two instances BUT you don’t want to have one instance removing or
+modifying the attachments of the other instance.</p>
+<p>To do so, you can add on your staging instances a new storage and
+declare it as the default storage to use for attachments. This way,
+all the new attachments will be stored in this new storage but the
+attachments created on the production instance will still be read from
+the production storage. Be careful to adapt the configuration of your
+storage to the production environment to make it read only. (The use
+of server environment files is a good way to do so).</p>
+</li>
+<li><p class="first">When enabling <tt class="docutils literal">Use As Default For Attachment</tt> you must be aware that
+this option applies from the point when the <tt class="docutils literal">fs_attachment</tt> has been
+loaded by Odoo. This means that some attachments (such as icons)
+created during the update of modules that are loaded before
+<tt class="docutils literal">fs_attachment</tt> will still be stored in the location defined in the
+<tt class="docutils literal">ir_attachment.location</tt> system parameter (which is <tt class="docutils literal">file</tt> by
+default, meaning the regular on-disk <tt class="docutils literal">filestore</tt> directory).</p>
+<p>A simple way to work around this issue is to set the
+<tt class="docutils literal">ir_attachment.location</tt> System Parameter record to <tt class="docutils literal">db</tt>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="changelog">
+<h2><a class="toc-backref" href="#toc-entry-6">Changelog</a></h2>
+<div class="section" id="section-1">
+<h3><a class="toc-backref" href="#toc-entry-7">18.0.2.2.0 (2025-10-20)</a></h3>
+<div class="section" id="features">
+<h4><a class="toc-backref" href="#toc-entry-8">Features</a></h4>
+<ul class="simple">
+<li>Adapt to handle {db_name} in directory_path.
+(<a class="reference external" href="https://github.com/OCA/storage/issues/db_name">#db_name</a>)</li>
+</ul>
+</div>
+</div>
+<div class="section" id="section-2">
+<h3><a class="toc-backref" href="#toc-entry-9">18.0.1.1.0 (2024-11-10)</a></h3>
+<div class="section" id="bugfixes">
+<h4><a class="toc-backref" href="#toc-entry-10">Bugfixes</a></h4>
+<ul>
+<li><p class="first">No crash o missign file.</p>
+<p>Prior to this change, Odoo was crashing as soon as access to a file
+stored into an external filesytem was not possible. This can lead to a
+complete system block. This change prevents this kind of blockage by
+ignoring access error to files stored into external system on read
+operations. These kind of errors are logged into the log files for
+traceability. (<a class="reference external" href="https://github.com/OCA/storage/issues/361">#361</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="section-3">
+<h3><a class="toc-backref" href="#toc-entry-11">16.0.1.0.8 (2023-12-20)</a></h3>
+<p><strong>Bugfixes</strong></p>
+<ul class="simple">
+<li>Fix the error retrieving attachment files when the storage is set to
+optimize directory paths.
+(<a class="reference external" href="https://github.com/OCA/storage/issues/312">#312</a>)</li>
+</ul>
+</div>
+<div class="section" id="section-4">
+<h3><a class="toc-backref" href="#toc-entry-12">16.0.1.0.6 (2023-12-02)</a></h3>
+<p><strong>Bugfixes</strong></p>
+<ul>
+<li><p class="first">Improve performance at creation of an attachment or when the
+attachment is updated.</p>
+<p>Before this change, when the fs_url was computed the computed value
+was always reassigned to the fs_url attribute even if the value was
+the same. In a lot of cases the value was the same and the
+reassignment was not necessary. Unfortunately this reassignment has as
+side effect to mark the record as dirty and generate a SQL update
+statement at the end of the transaction.
+(<a class="reference external" href="https://github.com/OCA/storage/issues/307">#307</a>)</p>
+</li>
+</ul>
+</div>
+<div class="section" id="section-5">
+<h3><a class="toc-backref" href="#toc-entry-13">16.0.1.0.5 (2023-11-29)</a></h3>
+<p><strong>Bugfixes</strong></p>
+<ul class="simple">
+<li>When manipulating the file system api through a local variable named
+<em>fs</em>, we observed some strange behavior when it was wrongly redefined
+in an enclosing scope as in the following example: <em>with fs.open(…)
+as fs</em>. This commit fixes this issue by renaming the local variable
+and therefore avoiding the name clash.
+(<a class="reference external" href="https://github.com/OCA/storage/issues/306">#306</a>)</li>
+</ul>
+</div>
+<div class="section" id="section-6">
+<h3><a class="toc-backref" href="#toc-entry-14">16.0.1.0.4 (2023-11-22)</a></h3>
+<p><strong>Bugfixes</strong></p>
+<ul class="simple">
+<li>Fix error when an url is computed for an attachment in a storage
+configure wihtout directory path.
+(<a class="reference external" href="https://github.com/OCA/storage/issues/302">#302</a>)</li>
+</ul>
+</div>
+<div class="section" id="section-7">
+<h3><a class="toc-backref" href="#toc-entry-15">16.0.1.0.3 (2023-10-17)</a></h3>
+<p><strong>Bugfixes</strong></p>
+<ul class="simple">
+<li>Fix access to technical models to be able to upload attachments for
+users with basic access
+(<a class="reference external" href="https://github.com/OCA/storage/issues/289">#289</a>)</li>
+</ul>
+</div>
+<div class="section" id="section-8">
+<h3><a class="toc-backref" href="#toc-entry-16">16.0.1.0.2 (2023-10-09)</a></h3>
+<p><strong>Bugfixes</strong></p>
+<ul class="simple">
+<li>Ensures python 3.9 compatibility.
+(<a class="reference external" href="https://github.com/OCA/storage/issues/285">#285</a>)</li>
+<li>If a storage is not used to store all the attachments by default, the
+call to the get_force_db_for_default_attachment_rules method must
+return an empty dictionary.
+(<a class="reference external" href="https://github.com/OCA/storage/issues/286">#286</a>)</li>
+</ul>
+</div>
+</div>
+<div class="section" id="bug-tracker">
+<h2><a class="toc-backref" href="#toc-entry-17">Bug Tracker</a></h2>
+<p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/storage/issues">GitHub Issues</a>.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us to smash it by providing a detailed and welcomed
+<a class="reference external" href="https://github.com/OCA/storage/issues/new?body=module:%20fs_attachment%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
+<p>Do not contact contributors directly about support or help with technical issues.</p>
+</div>
+<div class="section" id="credits">
+<h2><a class="toc-backref" href="#toc-entry-18">Credits</a></h2>
+<div class="section" id="authors">
+<h3><a class="toc-backref" href="#toc-entry-19">Authors</a></h3>
+<ul class="simple">
+<li>Camptocamp</li>
+<li>ACSONE SA/NV</li>
+</ul>
+</div>
+<div class="section" id="contributors">
+<h3><a class="toc-backref" href="#toc-entry-20">Contributors</a></h3>
+<ul class="simple">
+<li>Thierry Ducrest &lt;<a class="reference external" href="mailto:thierry.ducrest&#64;camptocamp.com">thierry.ducrest&#64;camptocamp.com</a>&gt;</li>
+<li>Guewen Baconnier &lt;<a class="reference external" href="mailto:guewen.baconnier&#64;camptocamp.com">guewen.baconnier&#64;camptocamp.com</a>&gt;</li>
+<li>Julien Coux &lt;<a class="reference external" href="mailto:julien.coux&#64;camptocamp.com">julien.coux&#64;camptocamp.com</a>&gt;</li>
+<li>Akim Juillerat &lt;<a class="reference external" href="mailto:akim.juillerat&#64;camptocamp.com">akim.juillerat&#64;camptocamp.com</a>&gt;</li>
+<li>Thomas Nowicki &lt;<a class="reference external" href="mailto:thomas.nowicki&#64;camptocamp.com">thomas.nowicki&#64;camptocamp.com</a>&gt;</li>
+<li>Vincent Renaville &lt;<a class="reference external" href="mailto:vincent.renaville&#64;camptocamp.com">vincent.renaville&#64;camptocamp.com</a>&gt;</li>
+<li>Denis Leemann &lt;<a class="reference external" href="mailto:denis.leemann&#64;camptocamp.com">denis.leemann&#64;camptocamp.com</a>&gt;</li>
+<li>Patrick Tombez &lt;<a class="reference external" href="mailto:patrick.tombez&#64;camptocamp.com">patrick.tombez&#64;camptocamp.com</a>&gt;</li>
+<li>Don Kendall &lt;<a class="reference external" href="mailto:kendall&#64;donkendall.com">kendall&#64;donkendall.com</a>&gt;</li>
+<li>Stephane Mangi &lt;<a class="reference external" href="mailto:stephane.mangin&#64;camptocamp.com">stephane.mangin&#64;camptocamp.com</a>&gt;</li>
+<li>Laurent Mignon &lt;<a class="reference external" href="mailto:laurent.mignon&#64;acsone.eu">laurent.mignon&#64;acsone.eu</a>&gt;</li>
+<li>Marie Lejeune &lt;<a class="reference external" href="mailto:marie.lejeune&#64;acsone.eu">marie.lejeune&#64;acsone.eu</a>&gt;</li>
+<li>Wolfgang Pichler &lt;<a class="reference external" href="mailto:wpichler&#64;callino.at">wpichler&#64;callino.at</a>&gt;</li>
+<li>Nans Lefebvre &lt;<a class="reference external" href="mailto:len&#64;lambdao.dev">len&#64;lambdao.dev</a>&gt;</li>
+<li>Mohamed Alkobrosli &lt;<a class="reference external" href="mailto:alkobroslymohamed&#64;gmail.com">alkobroslymohamed&#64;gmail.com</a>&gt;</li>
+</ul>
+</div>
+<div class="section" id="maintainers">
+<h3><a class="toc-backref" href="#toc-entry-21">Maintainers</a></h3>
+<p>This module is maintained by the OCA.</p>
+<a class="reference external image-reference" href="https://odoo-community.org">
+<img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" />
+</a>
+<p>OCA, or the Odoo Community Association, is a nonprofit organization whose
+mission is to support the collaborative development of Odoo features and
+promote its widespread use.</p>
+<p>Current <a class="reference external" href="https://odoo-community.org/page/maintainer-role">maintainer</a>:</p>
+<p><a class="reference external image-reference" href="https://github.com/lmignon"><img alt="lmignon" src="https://github.com/lmignon.png?size=40px" /></a></p>
+<p>This module is part of the <a class="reference external" href="https://github.com/OCA/storage/tree/18.0/fs_attachment">OCA/storage</a> project on GitHub.</p>
+<p>You are welcome to contribute. To learn how please visit <a class="reference external" href="https://odoo-community.org/page/Contribute">https://odoo-community.org/page/Contribute</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

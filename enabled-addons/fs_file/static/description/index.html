@@ -1,0 +1,632 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils: https://docutils.sourceforge.io/" />
+<title>Fs File</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 9511 2024-01-13 09:50:07Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+Despite the name, some widely supported CSS2 features are used.
+
+See https://docutils.sourceforge.io/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+.subscript {
+  vertical-align: sub;
+  font-size: smaller }
+
+.superscript {
+  vertical-align: super;
+  font-size: smaller }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left, table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right, table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+.align-top    {
+  vertical-align: top }
+
+.align-middle {
+  vertical-align: middle }
+
+.align-bottom {
+  vertical-align: bottom }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: gray; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic, pre.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* "booktabs" style (no vertical lines) */
+table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.docutils.booktabs * {
+  border: 0px;
+}
+table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="fs-file">
+<h1 class="title">Fs File</h1>
+
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! This file is generated by oca-gen-addon-readme !!
+!! changes will be overwritten.                   !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! source digest: sha256:0bc303d00c03dc80294d76cdb2e1da04dc22324cda864fa70c58d0f8cea9bdd6
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Alpha" src="https://img.shields.io/badge/maturity-Alpha-red.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/storage/tree/18.0/fs_file"><img alt="OCA/storage" src="https://img.shields.io/badge/github-OCA%2Fstorage-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/storage-18-0/storage-18-0-fs_file"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/storage&amp;target_branch=18.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
+<p>This addon defines a new field type FSFile which is a file field that
+stores a file in an external filesystem instead of the odoo’s filestore.
+This is useful for large files that you don’t want to store in the
+filestore. Moreover, the field value provides you an interface to access
+the file’s contents and metadata.</p>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">This is an alpha version, the data model and design can change at any time without warning.
+Only for development or testing purpose, do not use in production.
+<a class="reference external" href="https://odoo-community.org/page/development-status">More details on development status</a></p>
+</div>
+<p><strong>Table of contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#usage" id="toc-entry-1">Usage</a></li>
+<li><a class="reference internal" href="#changelog" id="toc-entry-2">Changelog</a><ul>
+<li><a class="reference internal" href="#section-1" id="toc-entry-3">16.0.1.0.6 (2024-02-23)</a></li>
+<li><a class="reference internal" href="#section-2" id="toc-entry-4">16.0.1.0.5 (2023-11-30)</a></li>
+<li><a class="reference internal" href="#section-3" id="toc-entry-5">16.0.1.0.4 (2023-10-17)</a></li>
+<li><a class="reference internal" href="#section-4" id="toc-entry-6">16.0.1.0.3 (2023-10-05)</a></li>
+<li><a class="reference internal" href="#section-5" id="toc-entry-7">16.0.1.0.1 (2023-09-29)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-8">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-9">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-10">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-11">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-12">Maintainers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="usage">
+<h1><a class="toc-backref" href="#toc-entry-1">Usage</a></h1>
+<p>The new field <strong>FSFile</strong> has been developed to allows you to store files
+in an external filesystem storage. Its design is based on the following
+principles:</p>
+<ul class="simple">
+<li>The content of the file must be read from the filesystem only when
+needed.</li>
+<li>It must be possible to manipulate the file content as a stream by
+default.</li>
+<li>Unlike Odoo’s Binary field, the content is the raw file content by
+default (no base64 encoding).</li>
+<li>To allows to exchange the file content with other systems, writing the
+content as base64 is possible. The read operation will return a json
+structure with the filename, the mimetype, the size and a url to
+download the file.</li>
+</ul>
+<p>This design allows to minimize the memory consumption of the server when
+manipulating large files and exchanging them with other systems through
+the default jsonrpc interface.</p>
+<p>Concretely, this design allows you to write code like this:</p>
+<pre class="code python literal-block">
+<span class="kn">from</span><span class="w"> </span><span class="nn">IO</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">odoo</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">odoo.addons.fs_file.fields</span><span class="w"> </span><span class="kn">import</span> <span class="n">FSFile</span><span class="w">
+
+</span><span class="k">class</span><span class="w"> </span><span class="nc">MyModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span><span class="w">
+</span>    <span class="n">_name</span> <span class="o">=</span> <span class="s1">'my.model'</span><span class="w">
+
+</span>    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">()</span><span class="w">
+</span>    <span class="n">file</span> <span class="o">=</span> <span class="n">FSFile</span><span class="p">()</span><span class="w">
+
+</span><span class="c1"># Create a new record with a raw content</span><span class="w">
+</span><span class="n">my_model</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">create</span><span class="p">({</span><span class="w">
+</span>    <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'My File'</span><span class="p">,</span><span class="w">
+</span>    <span class="s1">'file'</span><span class="p">:</span> <span class="n">BytesIO</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;content&quot;</span><span class="p">),</span><span class="w">
+</span><span class="p">})</span><span class="w">
+
+</span><span class="k">assert</span><span class="p">(</span><span class="n">my_model</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;content&quot;</span><span class="p">)</span><span class="w">
+
+</span><span class="c1"># Create a new record with a base64 encoded content</span><span class="w">
+</span><span class="n">my_model</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">create</span><span class="p">({</span><span class="w">
+</span>    <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'My File'</span><span class="p">,</span><span class="w">
+</span>    <span class="s1">'file'</span><span class="p">:</span> <span class="sa">b</span><span class="s2">&quot;content&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'base64'</span><span class="p">),</span><span class="w">
+</span><span class="p">})</span><span class="w">
+</span><span class="k">assert</span><span class="p">(</span><span class="n">my_model</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;content&quot;</span><span class="p">)</span><span class="w">
+
+</span><span class="c1"># Create a new record with a file content</span><span class="w">
+</span><span class="n">my_model</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">create</span><span class="p">({</span><span class="w">
+</span>    <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'My File'</span><span class="p">,</span><span class="w">
+</span>    <span class="s1">'file'</span><span class="p">:</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'my_file.txt'</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">),</span><span class="w">
+</span><span class="p">})</span><span class="w">
+</span><span class="k">assert</span><span class="p">(</span><span class="n">my_model</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;content&quot;</span><span class="p">)</span><span class="w">
+</span><span class="k">assert</span><span class="p">(</span><span class="n">my_model</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;my_file.txt&quot;</span><span class="p">)</span><span class="w">
+
+</span><span class="c1"># create a record with a file content as base64 encoded and a filename</span><span class="w">
+</span><span class="c1"># This method is useful to create a record from a file uploaded</span><span class="w">
+</span><span class="c1"># through the web interface.</span><span class="w">
+</span><span class="n">my_model</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">create</span><span class="p">({</span><span class="w">
+</span>    <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'My File'</span><span class="p">,</span><span class="w">
+</span>    <span class="s1">'file'</span><span class="p">:</span> <span class="p">{</span><span class="w">
+</span>        <span class="s1">'filename'</span><span class="p">:</span> <span class="s1">'my_file.txt'</span><span class="p">,</span><span class="w">
+</span>        <span class="s1">'content'</span><span class="p">:</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;content&quot;</span><span class="p">),</span><span class="w">
+</span>    <span class="p">},</span><span class="w">
+</span><span class="p">})</span><span class="w">
+</span><span class="k">assert</span><span class="p">(</span><span class="n">my_model</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;content&quot;</span><span class="p">)</span><span class="w">
+</span><span class="k">assert</span><span class="p">(</span><span class="n">my_model</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;my_file.txt&quot;</span><span class="p">)</span><span class="w">
+
+</span><span class="c1"># write the content of the file as base64 encoded and a filename</span><span class="w">
+</span><span class="c1"># This method is useful to update a record from a file uploaded</span><span class="w">
+</span><span class="c1"># through the web interface.</span><span class="w">
+</span><span class="n">my_model</span><span class="o">.</span><span class="n">write</span><span class="p">({</span><span class="w">
+</span>    <span class="s1">'file'</span><span class="p">:</span> <span class="p">{</span><span class="w">
+</span>        <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'my_file.txt'</span><span class="p">,</span><span class="w">
+</span>        <span class="s1">'file'</span><span class="p">:</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;content&quot;</span><span class="p">),</span><span class="w">
+</span>    <span class="p">},</span><span class="w">
+</span><span class="p">})</span><span class="w">
+
+</span><span class="c1"># the call to read() will return a json structure with the filename,</span><span class="w">
+</span><span class="c1"># the mimetype, the size and a url to download the file.</span><span class="w">
+</span><span class="n">info</span> <span class="o">=</span> <span class="n">my_model</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="w">
+</span><span class="k">assert</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">{</span><span class="w">
+</span>    <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;my_file.txt&quot;</span><span class="p">,</span><span class="w">
+</span>    <span class="s2">&quot;mimetype&quot;</span><span class="p">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span><span class="w">
+</span>    <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span><span class="w">
+</span>    <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/web/content/1234/my_file.txt&quot;</span><span class="p">,</span><span class="w">
+</span><span class="p">})</span><span class="w">
+
+</span><span class="c1"># use the field as a file stream</span><span class="w">
+</span><span class="c1"># In such a case, the content is read from the filesystem without being</span><span class="w">
+</span><span class="c1"># stored in memory.</span><span class="w">
+</span><span class="k">with</span> <span class="n">my_model</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;rb) as f:</span><span class="w">
+</span>  <span class="k">assert</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;content&quot;</span><span class="p">)</span><span class="w">
+
+</span><span class="c1"># use the field as a file stream to write the content</span><span class="w">
+</span><span class="c1"># In such a case, the content is written to the filesystem without being</span><span class="w">
+</span><span class="c1"># stored in memory. This kind of approach is useful to manipulate large</span><span class="w">
+</span><span class="c1"># files and to avoid to use too much memory.</span><span class="w">
+</span><span class="c1"># Transactional behaviour is ensured by the implementation!</span><span class="w">
+</span><span class="k">with</span> <span class="n">my_model</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span><span class="w">
+</span>    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;content&quot;</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="changelog">
+<h1><a class="toc-backref" href="#toc-entry-2">Changelog</a></h1>
+<div class="section" id="section-1">
+<h2><a class="toc-backref" href="#toc-entry-3">16.0.1.0.6 (2024-02-23)</a></h2>
+<p><strong>Bugfixes</strong></p>
+<ul>
+<li><p class="first">Fixes the creation of empty files.</p>
+<p>Before this change, the creation of empty files resulted in a
+constraint violation error. This was due to the fact that even if a
+name was given to the file it was not preserved into the FSFileValue
+object if no content was given. As result, when the corresponding
+ir.attachment was created in the database, the name was not set and
+the ‘required’ constraint was violated.
+(<a class="reference external" href="https://github.com/OCA/storage/issues/341">#341</a>)</p>
+</li>
+</ul>
+</div>
+<div class="section" id="section-2">
+<h2><a class="toc-backref" href="#toc-entry-4">16.0.1.0.5 (2023-11-30)</a></h2>
+<p><strong>Bugfixes</strong></p>
+<ul class="simple">
+<li>Ensure the cache is properly set when a new value is assigned to a
+FSFile field. If the field is stored the value to the cache must be a
+FSFileValue object linked to the attachment record used to store the
+file. Otherwise the value must be one given since it could be the
+result of a compute method.
+(<a class="reference external" href="https://github.com/OCA/storage/issues/290">#290</a>)</li>
+</ul>
+</div>
+<div class="section" id="section-3">
+<h2><a class="toc-backref" href="#toc-entry-5">16.0.1.0.4 (2023-10-17)</a></h2>
+<p><strong>Bugfixes</strong></p>
+<ul>
+<li><p class="first">Browse attachment with sudo() to avoid read access errors</p>
+<p>In models that have a multi fs image relation, a new line in form will
+trigger onchanges and will call the fs.file model ‘convert_to_cache()’
+method that will try to browse the attachment with user profile that
+could have no read rights on attachment model.
+(<a class="reference external" href="https://github.com/OCA/storage/issues/288">#288</a>)</p>
+</li>
+</ul>
+</div>
+<div class="section" id="section-4">
+<h2><a class="toc-backref" href="#toc-entry-6">16.0.1.0.3 (2023-10-05)</a></h2>
+<p><strong>Bugfixes</strong></p>
+<ul>
+<li><p class="first">Fix the <em>mimetype</em> property on <em>FSFileValue</em> objects.</p>
+<p>The <em>mimetype</em> value is computed as follow:</p>
+<ul class="simple">
+<li>If an attachment is set, the mimetype is taken from the attachment.</li>
+<li>If no attachment is set, the mimetype is guessed from the name of
+the file.</li>
+<li>If the mimetype cannot be guessed from the name, the mimetype is
+guessed from the content of the file.
+(<a class="reference external" href="https://github.com/OCA/storage/issues/284">#284</a>)</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="section-5">
+<h2><a class="toc-backref" href="#toc-entry-7">16.0.1.0.1 (2023-09-29)</a></h2>
+<p><strong>Features</strong></p>
+<ul class="simple">
+<li>Add a <em>url_path</em> property on the <em>FSFileValue</em> object. This property
+allows you to easily get access to the relative path of the file on
+the filesystem. This value is only available if the filesystem storage
+is configured with a <em>Base URL</em> value.
+(<a class="reference external" href="https://github.com/OCA/storage/issues/281">#281</a>)</li>
+</ul>
+<p><strong>Bugfixes</strong></p>
+<ul>
+<li><p class="first">The <em>url_path</em>, <em>url</em> and <em>internal_url</em> properties on the
+<em>FSFileValue</em> object return <em>None</em> if the information is not available
+(instead of <em>False</em>).</p>
+<p>The <em>url</em> property on the <em>FSFileValue</em> object returns the filesystem
+url nor the url field of the attachment.
+(<a class="reference external" href="https://github.com/OCA/storage/issues/281">#281</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="bug-tracker">
+<h1><a class="toc-backref" href="#toc-entry-8">Bug Tracker</a></h1>
+<p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/storage/issues">GitHub Issues</a>.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us to smash it by providing a detailed and welcomed
+<a class="reference external" href="https://github.com/OCA/storage/issues/new?body=module:%20fs_file%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
+<p>Do not contact contributors directly about support or help with technical issues.</p>
+</div>
+<div class="section" id="credits">
+<h1><a class="toc-backref" href="#toc-entry-9">Credits</a></h1>
+<div class="section" id="authors">
+<h2><a class="toc-backref" href="#toc-entry-10">Authors</a></h2>
+<ul class="simple">
+<li>ACSONE SA/NV</li>
+</ul>
+</div>
+<div class="section" id="contributors">
+<h2><a class="toc-backref" href="#toc-entry-11">Contributors</a></h2>
+<ul class="simple">
+<li>Laurent Mignon &lt;<a class="reference external" href="mailto:laurent.mignon&#64;acsone.eu">laurent.mignon&#64;acsone.eu</a>&gt;</li>
+<li>Marie Lejeune &lt;<a class="reference external" href="mailto:marie.lejeune&#64;acsone.eu">marie.lejeune&#64;acsone.eu</a>&gt;</li>
+<li>Hugues Damry &lt;<a class="reference external" href="mailto:hughes.damry&#64;acsone.eu">hughes.damry&#64;acsone.eu</a>&gt;</li>
+<li>Nguyen Minh Chien &lt;<a class="reference external" href="mailto:chien&#64;trobz.com">chien&#64;trobz.com</a>&gt;</li>
+<li>Denis Roussel &lt;&lt;<a class="reference external" href="mailto:denis.roussel&#64;acsone.eu">denis.roussel&#64;acsone.eu</a>&gt;</li>
+</ul>
+</div>
+<div class="section" id="maintainers">
+<h2><a class="toc-backref" href="#toc-entry-12">Maintainers</a></h2>
+<p>This module is maintained by the OCA.</p>
+<a class="reference external image-reference" href="https://odoo-community.org">
+<img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" />
+</a>
+<p>OCA, or the Odoo Community Association, is a nonprofit organization whose
+mission is to support the collaborative development of Odoo features and
+promote its widespread use.</p>
+<p>Current <a class="reference external" href="https://odoo-community.org/page/maintainer-role">maintainer</a>:</p>
+<p><a class="reference external image-reference" href="https://github.com/lmignon"><img alt="lmignon" src="https://github.com/lmignon.png?size=40px" /></a></p>
+<p>This module is part of the <a class="reference external" href="https://github.com/OCA/storage/tree/18.0/fs_file">OCA/storage</a> project on GitHub.</p>
+<p>You are welcome to contribute. To learn how please visit <a class="reference external" href="https://odoo-community.org/page/Contribute">https://odoo-community.org/page/Contribute</a>.</p>
+</div>
+</div>
+</div>
+</body>
+</html>

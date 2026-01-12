@@ -1,0 +1,479 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fs_attachment
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2023-10-29 00:15+0000\n"
+"Last-Translator: Ivorra78 <informatica@totmaterial.es>\n"
+"Language-Team: none\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
+
+#. module: fs_attachment
+#: model:ir.model,name:fs_attachment.model_ir_attachment
+#: model_terms:ir.ui.view,arch_db:fs_attachment.fs_storage_form_view
+msgid "Attachment"
+msgstr "Archivo adjunto"
+
+#. module: fs_attachment
+#: model_terms:ir.ui.view,arch_db:fs_attachment.fs_storage_form_view
+msgid "Attachment's Url"
+msgstr "Url del Archivo Adjunto"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_storage__autovacuum_gc
+msgid "Autovacuum Garbage Collection"
+msgstr "Recogida Automática de Basura"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_storage__base_url
+msgid "Base Url"
+msgstr "Url Base"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_storage__base_url_for_files
+msgid "Base Url For Files"
+msgstr "Url base Para Archivos"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_file_gc__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_file_gc__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_file_gc__display_name
+msgid "Display Name"
+msgstr "Mostrar Nombre"
+
+#. module: fs_attachment
+#: model:ir.model,name:fs_attachment.model_fs_storage
+msgid "FS Storage"
+msgstr "Almacenamiento FS"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_ir_attachment__fs_filename
+#: model:ir.model.fields,field_description:fs_attachment.field_product_document__fs_filename
+msgid "File Name into the filesystem storage"
+msgstr "Nombre de archivo en el almacenamiento del sistema de archivos"
+
+#. module: fs_attachment
+#: model:ir.model,name:fs_attachment.model_ir_binary
+msgid "File streaming helper model for controllers"
+msgstr "Modelo de ayuda de transmisión de archivos para controladores"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_ir_attachment__fs_storage_id
+#: model:ir.model.fields,field_description:fs_attachment.field_product_document__fs_storage_id
+msgid "Filesystem Storage"
+msgstr "Almacenamiento del sistema de Archivos"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_ir_attachment__fs_storage_code
+#: model:ir.model.fields,field_description:fs_attachment.field_product_document__fs_storage_code
+msgid "Filesystem Storage Code"
+msgstr "Código de almacenamiento del Sistema de Archivos"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_ir_attachment__fs_url
+#: model:ir.model.fields,field_description:fs_attachment.field_product_document__fs_url
+msgid "Filesystem URL"
+msgstr "URL del sistema de archivos"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_ir_attachment__fs_url_path
+#: model:ir.model.fields,field_description:fs_attachment.field_product_document__fs_url_path
+msgid "Filesystem URL Path"
+msgstr "Ruta URL del Sistema de Archivos"
+
+#. module: fs_attachment
+#: model:ir.model,name:fs_attachment.model_fs_file_gc
+msgid "Filesystem storage file garbage collector"
+msgstr ""
+"Recolector de basura de archivos de almacenamiento del sistema de archivos"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_storage__force_db_for_default_attachment_rules
+msgid "Force Db For Default Attachment Rules"
+msgstr "Forzar Db para Reglas de Adjuntos por Defecto"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_file_gc__id
+msgid "ID"
+msgstr "ID (identificación)"
+
+#. module: fs_attachment
+#: model:ir.model.fields,help:fs_attachment.field_fs_storage__use_x_sendfile_to_serve_internal_url
+msgid ""
+"If checked and odoo is behind a proxy that supports x-sendfile, the content "
+"served by the attachment's internal URL will be servedby the proxy using the "
+"fs_url if defined. If not, the file will be served by odoo that will stream "
+"the content read from the filesystem storage. This option is useful to avoid "
+"to serve files from odoo and therefore to avoid to load the odoo process. "
+msgstr ""
+"Si esta marcado y odoo esta detrás de un servidor que soporta x-sendfile, el "
+"contenido servido por la URL interna del adjunto será servido por el proxy "
+"usando fs_url si esta definido. Si no, el archivo será servido por odoo que "
+"transmitirá el contenido leído desde el almacenamiento del sistema de "
+"archivos. Esta opción es útil para evitar servir archivos desde odoo y por "
+"lo tanto evitar cargar el proceso odoo. "
+
+#. module: fs_attachment
+#: model:ir.model.fields,help:fs_attachment.field_fs_storage__autovacuum_gc
+msgid ""
+"If checked, the autovacuum of the garbage collection will be automatically "
+"executed when the storage is used to store attachments. Sometime, the "
+"autovacuum is to avoid when files in the storage are referenced by other "
+"systems (like a website). In such case, records in the fs.file.gc table must "
+"be manually processed."
+msgstr ""
+"Si está marcada, el autovacío de la recolección de basura se ejecutará "
+"automáticamente cuando el almacenamiento se utilice para guardar archivos "
+"adjuntos. A veces, el autovacío debe evitarse cuando los archivos del "
+"almacenamiento son referenciados por otros sistemas (como un sitio web). En "
+"tal caso, los registros de la tabla fs.file.gc deben procesarse manualmente."
+
+#. module: fs_attachment
+#: model:ir.model.fields,help:fs_attachment.field_fs_storage__optimizes_directory_path
+msgid ""
+"If checked, the directory path will be optimized to avoid too much files "
+"into the same directory. This options is used when the storage is used to "
+"store attachments. Depending on the storage, this option can be ignored. "
+"It's useful for storage based on real file. This way, files with similar "
+"properties will be stored in the same directory, avoiding overcrowding in "
+"the root directory and optimizing access times."
+msgstr ""
+"Si se marca, la ruta del directorio se optimizará para evitar demasiados "
+"archivos en el mismo directorio. Esta opción se utiliza cuando el "
+"almacenamiento se utiliza para almacenar archivos adjuntos. Dependiendo del "
+"almacenamiento, esta opción puede ser ignorada. Es útil para el "
+"almacenamiento basado en archivos reales. De esta forma, los ficheros con "
+"propiedades similares se almacenarán en el mismo directorio, evitando la "
+"saturación del directorio raíz y optimizando los tiempos de acceso."
+
+#. module: fs_attachment
+#: model:ir.model.fields,help:fs_attachment.field_fs_storage__use_filename_obfuscation
+msgid ""
+"If checked, the filename will be obfuscated. This option is useful to avoid "
+"to expose sensitive information trough the URL or in the remote storage. The "
+"obfuscation is done using a hash of the filename. The original filename is "
+"stored in the attachment metadata. The obfusation is to avoid if the storage "
+"is used to store files that are referenced by other systems (like a website) "
+"where the filename is important for SEO."
+msgstr ""
+"Si está marcada, el nombre del archivo será ofuscado. Esta opción es útil "
+"para evitar exponer información sensible a través de la URL o en el "
+"almacenamiento remoto. La ofuscación se realiza utilizando un hash del "
+"nombre del archivo. El nombre original del archivo se almacena en los "
+"metadatos del adjunto. La ofuscación es para evitar si el almacenamiento se "
+"utiliza para almacenar archivos que son referenciados por otros sistemas "
+"(como un sitio web) donde el nombre del archivo es importante para SEO."
+
+#. module: fs_attachment
+#: model:ir.model.fields,help:fs_attachment.field_fs_storage__use_as_default_for_attachments
+msgid "If checked, this storage will be used to store all the attachments "
+msgstr ""
+"Si se marca, este almacén se utilizará para almacenar todos los archivos "
+"adjuntos "
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_ir_attachment__internal_url
+#: model:ir.model.fields,field_description:fs_attachment.field_product_document__internal_url
+msgid "Internal URL"
+msgstr "URL Interna"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_storage__is_directory_path_in_url
+msgid "Is Directory Path In Url"
+msgstr "Está la Ruta del Directorio en la Url"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_file_gc__write_uid
+msgid "Last Updated by"
+msgstr "Última Actualización por"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_file_gc__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización el"
+
+#. module: fs_attachment
+#: model:ir.model.fields,help:fs_attachment.field_fs_storage__is_directory_path_in_url
+msgid ""
+"Normally the directory_path is for internal usage. If this flag is enabled "
+"the path will be used to compute the public URL."
+msgstr ""
+"Normalmente directory_path es para uso interno. Si se activa esta opción, la "
+"ruta se utilizará para calcular la URL pública."
+
+#. module: fs_attachment
+#. odoo-python
+#: code:addons/fs_attachment/models/ir_attachment.py:0
+msgid "Only administrators can execute this action."
+msgstr "Sólo los administradores pueden ejecutar esta acción."
+
+#. module: fs_attachment
+#. odoo-python
+#: code:addons/fs_attachment/models/fs_storage.py:0
+msgid "Only one storage can be used as default for attachments"
+msgstr ""
+"Sólo se puede utilizar un almacenamiento por defecto para los archivos "
+"adjuntos"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_storage__optimizes_directory_path
+msgid "Optimizes Directory Path"
+msgstr "Optimiza la Ruta del Directorio"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_file_gc__fs_storage_code
+msgid "Storage Code"
+msgstr "Código de Almacenamiento"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_file_gc__store_fname
+msgid "Stored Filename"
+msgstr "Nombre del Archivo Almacenado"
+
+#. module: fs_attachment
+#: model:ir.model.fields,help:fs_attachment.field_ir_attachment__fs_storage_code
+#: model:ir.model.fields,help:fs_attachment.field_product_document__fs_storage_code
+msgid ""
+"Technical code used to identify the storage backend into the code.This code "
+"must be unique. This code is used for example to define the storage backend "
+"to store the attachments via the configuration parameter 'ir_attachment."
+"storage.force.database' when the module 'fs_attachment' is installed."
+msgstr ""
+"Código técnico utilizado para identificar el servidor de almacenamiento en "
+"el código. Este código debe ser único. Este código se utiliza, por ejemplo, "
+"para definir el servidor de almacenamiento para guardar los archivos "
+"adjuntos mediante el parámetro de configuración \"ir_attachment.storage."
+"force.database\" cuando se instala el módulo \"fs_attachment\"."
+
+#. module: fs_attachment
+#: model:ir.model.fields,help:fs_attachment.field_ir_attachment__fs_url
+#: model:ir.model.fields,help:fs_attachment.field_product_document__fs_url
+msgid "The URL to access the file from the filesystem storage."
+msgstr ""
+"La URL para acceder al archivo desde el almacenamiento del sistema de "
+"archivos."
+
+#. module: fs_attachment
+#: model:ir.model.fields,help:fs_attachment.field_ir_attachment__internal_url
+#: model:ir.model.fields,help:fs_attachment.field_product_document__internal_url
+msgid "The URL to access the file from the server."
+msgstr "La URL para acceder al archivo desde el servidor."
+
+#. module: fs_attachment
+#. odoo-python
+#: code:addons/fs_attachment/models/fs_storage.py:0
+msgid ""
+"The force_db_for_default_attachment_rules can only be set if the storage is "
+"used as default for attachments."
+msgstr ""
+"La opción force_db_for_default_attachment_rules sólo puede establecerse si "
+"el almacenamiento se utiliza como predeterminado para los adjuntos."
+
+#. module: fs_attachment
+#. odoo-python
+#: code:addons/fs_attachment/models/fs_storage.py:0
+msgid "The force_db_for_default_attachment_rules is not a valid python dict."
+msgstr "El force_db_for_default_attachment_rules no es un dict. python válido."
+
+#. module: fs_attachment
+#: model:ir.model.fields,help:fs_attachment.field_ir_attachment__fs_filename
+#: model:ir.model.fields,help:fs_attachment.field_product_document__fs_filename
+msgid ""
+"The name of the file in the filesystem storage.To preserve the mimetype and "
+"the meaning of the filenamethe filename is computed from the name and the "
+"extension"
+msgstr ""
+"El nombre del archivo en el sistema de almacenamiento de archivos. Para "
+"preservar el mimetype y el significado del filenamethe nombre de archivo se "
+"calcula a partir del nombre y la extensión"
+
+#. module: fs_attachment
+#: model:ir.model.fields,help:fs_attachment.field_ir_attachment__fs_url_path
+#: model:ir.model.fields,help:fs_attachment.field_product_document__fs_url_path
+msgid "The path to access the file from the filesystem storage."
+msgstr ""
+"La ruta para acceder al archivo desde el almacenamiento del sistema de "
+"archivos."
+
+#. module: fs_attachment
+#: model:ir.model.fields,help:fs_attachment.field_ir_attachment__fs_storage_id
+#: model:ir.model.fields,help:fs_attachment.field_product_document__fs_storage_id
+msgid "The storage where the file is stored."
+msgstr "El almacén donde se guarda el archivo."
+
+#. module: fs_attachment
+#: model:ir.model.constraint,message:fs_attachment.constraint_fs_file_gc_store_fname_uniq
+msgid "The stored filename must be unique!"
+msgstr "¡El nombre de archivo almacenado debe ser único!"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_storage__use_as_default_for_attachments
+msgid "Use As Default For Attachments"
+msgstr "Usar por Defecto para Archivos Adjuntos"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_storage__use_filename_obfuscation
+msgid "Use Filename Obfuscation"
+msgstr "Utilizar la Ofuscación de Nombre de Archivo"
+
+#. module: fs_attachment
+#: model:ir.model.fields,field_description:fs_attachment.field_fs_storage__use_x_sendfile_to_serve_internal_url
+msgid "Use X-Sendfile To Serve Internal Url"
+msgstr "Usar X-Sendfile Para Servir Url Internas"
+
+#. module: fs_attachment
+#: model:ir.model.fields,help:fs_attachment.field_fs_storage__force_db_for_default_attachment_rules
+msgid ""
+"When storing attachments in an external storage, storage may be slow.If the "
+"storage is used to store odoo attachments by default, this could lead to a "
+"bad user experience since small images  (128, 256) are used in Odoo in "
+"list / kanban views. We want them to be fast to read.This field allows to "
+"force the store of some attachments in the odoo database. The value is a "
+"dict Where the key is the beginning of the mimetype to configure and the "
+"value is the limit in size below which attachments are kept in DB. 0 means "
+"no limit.\n"
+"Default configuration means:\n"
+"* images mimetypes (image/png, image/jpeg, ...) below 50KB are stored in "
+"database\n"
+"* application/javascript are stored in database whatever their size \n"
+"* text/css are stored in database whatever their size"
+msgstr ""
+"Cuando se almacenan archivos adjuntos en un almacenamiento externo, el "
+"almacenamiento puede ser lento.si el almacenamiento se utiliza para "
+"almacenar archivos adjuntos odoo por defecto, esto podría conducir a una "
+"mala experiencia de usuario ya que las imágenes pequeñas (128, 256) se "
+"utilizan en Odoo en la lista / vistas kanban. Este campo permite forzar el "
+"almacenamiento de algunos archivos adjuntos en la base de datos de Odoo. El "
+"valor es un dict Donde la clave es el comienzo del mimetype a configurar y "
+"el valor es el límite en tamaño por debajo del cual los archivos adjuntos se "
+"mantienen en DB. 0 significa sin limite.\n"
+"La configuración por defecto significa:\n"
+"* los mimetypes de imágenes (image/png, image/jpeg, ...) por debajo de 50KB "
+"se almacenan en base de datos\n"
+"* las aplicaciones/javascript se almacenan en la base de datos sea cual sea "
+"su tamaño \n"
+"* texto/css se almacenan en la base de datos sea cual sea su tamaño"
+
+#. module: fs_attachment
+#. odoo-python
+#: code:addons/fs_attachment/models/ir_attachment.py:0
+msgid ""
+"You can't write on multiple attachments with different mimetypes at the same "
+"time."
+msgstr ""
+"No se puede escribir en varios archivos adjuntos con diferentes tipos de "
+"mimo tipos al mismo tiempo."
+
+#~ msgid "Field"
+#~ msgstr "Campo"
+
+#~ msgid ""
+#~ "Field %(field)s already stored in another FS storage ('%(other_storage)s')"
+#~ msgstr ""
+#~ "Campo %(field)s ya almacenado en otro FS storage ('%(other_storage)s')"
+
+#~ msgid "Field Xmlids"
+#~ msgstr "Campo Xmlids"
+
+#~ msgid "Fields"
+#~ msgstr "Campos"
+
+#~ msgid ""
+#~ "If specified, all attachments linked to this field will be stored in the "
+#~ "provided storage."
+#~ msgstr ""
+#~ "Si se especifica, todos los adjuntos vinculados a este campo se guardarán "
+#~ "en el almacenamiento proporcionado."
+
+#~ msgid ""
+#~ "If specified, all attachments linked to this model will be stored in the "
+#~ "provided storage."
+#~ msgstr ""
+#~ "Si se especifica, todos los archivos adjuntos vinculados a este modelo se "
+#~ "almacenarán en el almacenamiento proporcionado."
+
+#~ msgid ""
+#~ "List of fields such as attachments linked to one of these fields will be "
+#~ "stored in this storage. NB: If the attachment is linked to a field that "
+#~ "is in one FS storage, and the related model is in another FS storage, we "
+#~ "will store it into the storage linked to the resource field."
+#~ msgstr ""
+#~ "La lista de campos, como los anexos vinculados a uno de estos campos, se "
+#~ "almacenará en este almacén. Nota: Si el anexo está vinculado a un campo "
+#~ "que se encuentra en un almacén FS, y el modelo relacionado se encuentra "
+#~ "en otro almacén FS, lo almacenaremos en el almacén vinculado al campo de "
+#~ "recurso."
+
+#~ msgid ""
+#~ "List of fields xml ids such as attachments linked to one of these fields "
+#~ "will be stored in this storage. NB: If the attachment is linked to a "
+#~ "field that is in one FS storage, and the related model is in another FS "
+#~ "storage, we will store it into the storage linked to the resource field."
+#~ msgstr ""
+#~ "Lista de campos xml ids como los anexos vinculados a uno de estos campos "
+#~ "se almacenarán en este almacenamiento. NB: Si el anexo está vinculado a "
+#~ "un campo que se encuentra en un almacenamiento FS, y el modelo "
+#~ "relacionado se encuentra en otro almacenamiento FS, lo almacenaremos en "
+#~ "el almacenamiento vinculado al campo de recurso."
+
+#~ msgid ""
+#~ "List of models such as attachments linked to one of these models will be "
+#~ "stored in this storage."
+#~ msgstr ""
+#~ "La lista de modelos, así como los anexos vinculados a uno de estos "
+#~ "modelos, se almacenarán en este almacén."
+
+#~ msgid ""
+#~ "List of models xml ids such as attachments linked to one of these models "
+#~ "will be stored in this storage."
+#~ msgstr ""
+#~ "Lista de modelos xml ids como los archivos adjuntos vinculados a uno de "
+#~ "estos modelos se almacenarán en este almacenamiento."
+
+#~ msgid "Model"
+#~ msgstr "Modelo"
+
+#~ msgid ""
+#~ "Model %(model)s already stored in another FS storage ('%(other_storage)s')"
+#~ msgstr ""
+#~ "El modelo %(model)s ya está almacenado en otro almacén FS "
+#~ "('%(other_storage)s')"
+
+#~ msgid "Model Xmlids"
+#~ msgstr "Modelo Xmlids"
+
+#~ msgid "Models"
+#~ msgstr "Modelos"
+
+#~ msgid "Storage"
+#~ msgstr "Almacenamiento"
+
+#, python-format
+#~ msgid "Storage '%s' is disabled (see environment configuration)."
+#~ msgstr ""
+#~ "El almacenamiento '%s' está deshabilitado (ver configuración del entorno)."
+
+#, python-format
+#~ msgid "Storages are disabled (see environment configuration)."
+#~ msgstr ""
+#~ "Los almacenamientos están desactivados (véase la configuración del "
+#~ "entorno)."
+
+#~ msgid "Last Modified on"
+#~ msgstr "Última Modificación el"

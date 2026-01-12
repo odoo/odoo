@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2023 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="fs_storage_form_view">
+        <field name="name">fs.storage.form (in fs_attachment)</field>
+        <field name="model">fs.storage</field>
+        <field name="inherit_id" ref="fs_storage.fs_storage_form_view" />
+        <field name="arch" type="xml">
+            <field name="options" position="after">
+                <separator string="Attachment" />
+                <field name="optimizes_directory_path" />
+                <field name="autovacuum_gc" />
+                <field name="use_as_default_for_attachments" />
+                <field
+                    name="force_db_for_default_attachment_rules"
+                    widget="ace"
+                    options="{'mode': 'python'}"
+                    invisible="not use_as_default_for_attachments"
+                />
+                <separator string="Attachment's Url" />
+                <field name="base_url" />
+                <field name="is_directory_path_in_url" />
+                <field name="use_filename_obfuscation" />
+                <field name="use_x_sendfile_to_serve_internal_url" />
+            </field>
+        </field>
+    </record>
+</odoo>

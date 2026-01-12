@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="fs_storage_tree_view" model="ir.ui.view">
+        <field name="name">fs.storage.list (in fs_storage)</field>
+        <field name="model">fs.storage</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code" />
+                <field name="name" />
+                <field name="protocol" />
+            </list>
+        </field>
+    </record>
+    <record id="fs_storage_form_view" model="ir.ui.view">
+        <field name="name">fs.storage.form (in fs_storage)</field>
+        <field name="model">fs.storage</field>
+        <field name="arch" type="xml">
+            <form string="FS Storage">
+                <header>
+                    <button
+                        type="object"
+                        name="action_test_config"
+                        string="Test connection"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group name="config">
+                        <group>
+                            <field name="code" />
+                            <field name="protocol" />
+                            <field name="is_cacheable" />
+                            <field name="directory_path" />
+                            <field name="eval_options_from_env" />
+                            <field
+                                name="options"
+                                widget="ace"
+                                options="{'mode': 'python'}"
+                                placeholder="Enter you fsspec options here."
+                            />
+                            <field name="model_ids" widget="many2many">
+                                <list>
+                                    <field name="name" />
+                                    <field name="model" />
+                                </list>
+                            </field>
+                            <field name="field_ids" widget="many2many">
+                                <list>
+                                    <field name="name" />
+                                    <field name="model" />
+                                </list>
+                            </field>
+                            <field name="check_connection_method" />
+                        </group>
+                        <group>
+                            <notebook colspan="2">
+                                <page string="Protocol Descr" colspan="2">
+                                    <group colspan="2">
+                                        <field
+                                            name="protocol_descr"
+                                            nolabel="1"
+                                            colspan="2"
+                                        />
+                                    </group>
+                                </page>
+                                <page string="Available options" colspan="2">
+                                    <group colspan="2">
+                                        <field name="options_protocol" />
+                                        <label for="options_properties" colspan="2" />
+                                        <field
+                                            name="options_properties"
+                                            nolabel="1"
+                                            colspan="2"
+                                        />
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="fs_storage_search_view" model="ir.ui.view">
+        <field name="name">fs.storage.search (in fs_storage)</field>
+        <field name="model">fs.storage</field>
+        <field name="arch" type="xml">
+            <search string="FS Storage">
+                <field name="name" />
+                <field name="code" />
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="act_open_fs_storage_view">
+        <field name="name">FS Storage</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">fs.storage</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="fs_storage_search_view" />
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+    <record model="ir.actions.act_window.view" id="act_open_fs_storage_view_form">
+        <field name="act_window_id" ref="act_open_fs_storage_view" />
+        <field name="sequence" eval="20" />
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="fs_storage_form_view" />
+    </record>
+    <record model="ir.actions.act_window.view" id="act_open_fs_storage_view_tree">
+        <field name="act_window_id" ref="act_open_fs_storage_view" />
+        <field name="sequence" eval="10" />
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="fs_storage_tree_view" />
+    </record>
+    <menuitem
+        id="menu_storage"
+        parent="base.menu_custom"
+        sequence="100"
+        action="act_open_fs_storage_view"
+    />
+    <menuitem
+        id="menu_fs_storage"
+        parent="menu_storage"
+        sequence="10"
+        action="act_open_fs_storage_view"
+    />
+</odoo>

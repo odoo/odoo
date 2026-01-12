@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="storage_backend_view_tree" model="ir.ui.view">
+        <field name="model">storage.backend</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="backend_type" />
+            </list>
+        </field>
+    </record>
+    <record id="storage_backend_view_form" model="ir.ui.view">
+        <field name="model">storage.backend</field>
+        <field name="arch" type="xml">
+            <form string="Storage Backend">
+                <header>
+                    <field name="has_validation" invisible="1" />
+                    <button
+                        type="object"
+                        name="action_test_config"
+                        string="Test connection"
+                        invisible="has_validation == False"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group name="config">
+                        <field name="backend_type" />
+                        <field name="directory_path" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="storage_backend_view_search" model="ir.ui.view">
+        <field name="model">storage.backend</field>
+        <field name="arch" type="xml">
+            <search string="Storage Backend">
+                <field name="name" />
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="act_open_storage_backend_view">
+        <field name="name">Storage Backend</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">storage.backend</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="storage_backend_view_search" />
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+    <record model="ir.actions.act_window.view" id="act_open_storage_backend_view_form">
+        <field name="act_window_id" ref="act_open_storage_backend_view" />
+        <field name="sequence" eval="20" />
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="storage_backend_view_form" />
+    </record>
+    <record model="ir.actions.act_window.view" id="act_open_storage_backend_view_tree">
+        <field name="act_window_id" ref="act_open_storage_backend_view" />
+        <field name="sequence" eval="10" />
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="storage_backend_view_tree" />
+    </record>
+    <menuitem
+        id="menu_storage"
+        parent="base.menu_custom"
+        sequence="100"
+        action="act_open_storage_backend_view"
+    />
+    <menuitem
+        id="menu_storage_backend"
+        parent="menu_storage"
+        sequence="10"
+        action="act_open_storage_backend_view"
+    />
+</odoo>

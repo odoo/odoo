@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="fs_image.AltTextDialog">
+        <Dialog size="'md'" title="props.title">
+            <div class="form-group row">
+                <t t-if="props.readonly">
+                    <span t-out="props.value or ''" />
+                </t>
+                <div class="col-sm-12 o_field_widget o_field_text">
+                    <input
+                        type="text"
+                        id="altText"
+                        t-ref="altText"
+                        t-att-value="props.altText"
+                        class="o_input"
+                    />
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button
+                    class="btn btn-primary"
+                    t-ref="btn-confirm"
+                    t-on-click="onConfirm"
+                >Save changes</button>
+                <button
+                    class="btn btn-secondary"
+                    t-ref="btn-close"
+                    t-on-click="onClose"
+                >Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
