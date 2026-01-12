@@ -69,7 +69,8 @@ class PosOrder(models.Model):
         draft = True if order.get('state') == 'draft' else False
         pos_session = self.env['pos.session'].browse(order['session_id'])
         if pos_session.state == 'closing_control' or pos_session.state == 'closed':
-            order['session_id'] = self._get_valid_session(order).id
+            pos_session = self._get_valid_session(order)
+            order['session_id'] = pos_session.id
 
         if not order.get('source'):
             order['source'] = 'pos'
@@ -81,6 +82,9 @@ class PosOrder(models.Model):
                     "partner_id": False,
                     "to_invoice": False,
                 })
+
+        if not order.get('company_id'):
+            order['company_id'] = pos_session.config_id.company_id.id
 
         pos_order = False
         record_uuid_mapping = order.pop('relations_uuid_mapping', {})
