@@ -27,7 +27,9 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
 
     def test_attachment_delete_linked_to_public_channel(self):
         """Test access to delete an attachment associated with a public channel"""
-        channel = self.env["discuss.channel"].create({"name": "public channel"})
+        channel = self.env["discuss.channel"].create(
+            {"group_public_id": None, "name": "public channel"}
+        )
         self._execute_subtests_delete(
             product(
                 (self.guest, self.user_portal, self.user_public),
