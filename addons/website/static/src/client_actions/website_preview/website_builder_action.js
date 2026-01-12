@@ -279,7 +279,7 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     async onEditPage() {
-        if (!this.websiteContext) {
+        if (!this.websiteContent.el) {
             await this.iframeLoaded;
         }
         this.websiteContext.showResourceEditor = false;
