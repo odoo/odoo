@@ -36,7 +36,7 @@ test("validSelection", async () => {
     // Partner
     preset.identification = "address";
     expect(comp.validSelection).toBeEmpty();
-    comp.state.phone = "987-654-3210";
+    comp.state.phone = "+1987-654-3210";
     comp.state.street = "21, Wonderfull Street";
     comp.state.city = "Vice City";
     comp.state.zip = "000021";
