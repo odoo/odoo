@@ -111,6 +111,22 @@ const DIALOG_SIZES = {
     small: "sm",
 };
 
+export class GetActionRequest {
+    /**
+     * Get the default single record actionRequest (model-specific).
+     * @param {object} state router state
+     * @return {ActionRequest}
+     */
+    static _forState(state) {
+        return {
+            res_model: state.model,
+            res_id: state.resId === "new" ? undefined : state.resId,
+            type: "ir.actions.act_window",
+            views: [[state.view_id ? state.view_id : false, "form"]],
+        };
+    }
+}
+
 // -----------------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------------
@@ -541,12 +557,7 @@ export function makeActionManager(env, router = _router) {
             }
         } else if (state.model) {
             if (state.resId || state.view_type === "form") {
-                actionRequest = {
-                    res_model: state.model,
-                    res_id: state.resId === "new" ? undefined : state.resId,
-                    type: "ir.actions.act_window",
-                    views: [[state.view_id ? state.view_id : false, "form"]],
-                };
+                actionRequest = GetActionRequest._forState(state);
             } else {
                 // This is a window action on a multi-record view => restores it from
                 // the session storage
