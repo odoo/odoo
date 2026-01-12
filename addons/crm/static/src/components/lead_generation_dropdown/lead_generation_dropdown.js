@@ -53,7 +53,7 @@ export class LeadGenerationDropdown extends Component {
                     moduleName: "website",
                     moduleXmlId: "base.module_website",
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    title: _t("Create a landing page"),
+                    title: _t("Website"),
                 },
                 {
                     description: _t("Send an email and get leads from replies"),
@@ -73,7 +73,7 @@ export class LeadGenerationDropdown extends Component {
                     moduleName: "survey",
                     moduleXmlId: "base.module_survey",
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    title: _t("Send a Survey"),
+                    title: _t("Survey"),
                 },
                 {
                     description: _t("Generate leads from Outlook & Gmail"),
@@ -182,7 +182,11 @@ export class LeadGenerationDropdown extends Component {
 
     onClickAction(element) {
         if (!element.hasAccess) {
-            return;
+            return this.requestAccess(
+                element.moduleName,
+                element.title,
+                element.status !== MODULE_STATUS.INSTALLED
+            );
         }
 
         if (element.status === MODULE_STATUS.INSTALLED) {
@@ -240,6 +244,26 @@ export class LeadGenerationDropdown extends Component {
             type: "ir.actions.client",
             tag: "import",
             params: { active_model: resModel, context },
+        });
+    }
+
+    /**
+     * Display a dialog to request access to a module from the administrator
+     * @param {string} moduleName Identifier of the requested module. eg. mass_mailing
+     * @param {string} title The display name of the module. Will be displayed in the request email
+     * @param {boolean} install Specify whether to send an installation request for a module not yet
+     * present in the database (true) or request access to an already installed module (false)
+     */
+    requestAccess(moduleName, title, install) {
+        const { id } = this.modulesInfo[moduleName];
+        this.action.doAction({
+            type: "ir.actions.act_window",
+            target: "new",
+            name: install ? _t('Install request for "%s"', title) : _t('Access request for "%s"', title),
+            view_mode: "form",
+            views: [[false, "form"]],
+            res_model: "base.module.install.request",
+            context: { default_module_id: id, default_qweb_template_xmlid: install ? undefined : 'crm.crm_module_access_request_template' },
         });
     }
 }
