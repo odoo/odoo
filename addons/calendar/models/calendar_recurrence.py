@@ -43,6 +43,7 @@ RRULE_WEEKDAY_TO_FIELD = {
 RRULE_WEEKDAYS = {'SUN': 'SU', 'MON': 'MO', 'TUE': 'TU', 'WED': 'WE', 'THU': 'TH', 'FRI': 'FR', 'SAT': 'SA'}
 
 RRULE_TYPE_SELECTION = [
+    ('none', 'None'),
     ('daily', 'Days'),
     ('weekly', 'Weeks'),
     ('monthly', 'Months'),
@@ -103,7 +104,7 @@ class CalendarRecurrence(models.Model):
         default=lambda self: self.env.context.get('tz') or self.env.user.tz)
     rrule = fields.Char(compute='_compute_rrule', inverse='_inverse_rrule', store=True)
     dtstart = fields.Datetime(compute='_compute_dtstart')
-    rrule_type = fields.Selection(RRULE_TYPE_SELECTION, default='weekly')
+    rrule_type = fields.Selection(RRULE_TYPE_SELECTION, default='none')
     end_type = fields.Selection(END_TYPE_SELECTION, default='count')
     interval = fields.Integer(default=1)
     count = fields.Integer(default=1)

@@ -247,12 +247,8 @@
                                     <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}" readonly="not user_can_edit"/>
                                     <field name="recurrence_id" invisible="1" />
                                     <field name="rrule_type" invisible="1" />
-                                    <label for="recurrency" string="Recurrent"/>
-                                    <div class="d-flex align-items-baseline gap-1">
-                                        <field name="recurrency" widget="boolean_toggle" options="{'autosave': False}" class="w-auto" readonly="not user_can_edit"/>
-                                        <span invisible="not recurrency" class="mx-1">Repeat:</span>
-                                        <field name="rrule_type_ui" class="w-auto o_input" invisible="not recurrency" required="recurrency" readonly="not user_can_edit"/>
-                                    </div>
+                                    <field name="rrule_type_ui" readonly="not user_can_edit"/>
+                                    <field name="recurrency" invisible="1"/> <!-- Used to display recurrent fields. -->
                                     <label for="interval" class="fw-bold text-900" invisible="not recurrency or rrule_type_ui != 'custom'"/>
                                     <div class="d-flex gap-1" invisible="not recurrency or rrule_type_ui != 'custom'">
                                         <field name="interval" string="Repeat every" class="oe_inline w-auto o_input_5ch" />

@@ -1014,7 +1014,6 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
     def test_recurring_ui_options_daily(self):
         with Form(self.env['calendar.event']) as calendar_form:
             calendar_form.name = 'test recurrence daily'
-            calendar_form.recurrency = True
             calendar_form.rrule_type_ui = 'daily'
             calendar_form.count = 2
             calendar_form.start = datetime(2019, 6, 23, 16)
@@ -1030,7 +1029,6 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
     def test_recurring_ui_options_monthly(self):
         with Form(self.env['calendar.event']) as calendar_form:
             calendar_form.name = 'test recurrence monthly'
-            calendar_form.recurrency = True
             calendar_form.rrule_type_ui = 'monthly'
             calendar_form.count = 2
             calendar_form.start = datetime(2019, 6, 11, 16)
@@ -1047,7 +1045,6 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
     def test_recurring_ui_options_yearly(self):
         with Form(self.env['calendar.event']) as calendar_form:
             calendar_form.name = 'test recurrence yearly'
-            calendar_form.recurrency = True
             calendar_form.rrule_type_ui = 'yearly'
             calendar_form.count = 2
             calendar_form.start = datetime(2019, 6, 11, 16)

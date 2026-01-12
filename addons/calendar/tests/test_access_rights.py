@@ -360,7 +360,6 @@ class TestAccessRights(TransactionCase):
             event_form.name = 'yearly Team Meeting'
             event_form.start = datetime(2024, 1, 15, 9, 0)
             event_form.stop = datetime(2024, 1, 15, 10, 0)
-            event_form.recurrency = True
             event_form.rrule_type_ui = 'yearly'
             event_form.count = 3
             event_form.alarm_ids.add(alarm)
