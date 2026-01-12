@@ -27,7 +27,6 @@ class DisplayDriver(Driver):
         self.device_type = 'display'
         self.device_connection = 'hdmi'
         self.device_name = device['name']
-        self.owner = False
         self.customer_display_data = {}
 
         saved_url, self.orientation = helpers.load_browser_state()
