@@ -154,7 +154,16 @@ export class ProductListPage extends Component {
     }
 
     getProducts(category) {
-        return category.associatedProducts || this.selfOrder.productByCategIds[category.id] || [];
+        const products =
+            category.associatedProducts || this.selfOrder.productByCategIds[category.id] || [];
+
+        if (!products.length) {
+            return [];
+        }
+
+        return products.filter(
+            (product) => product.self_order_available && this.isProductAvailable(product)
+        );
     }
 
     toggleSubCategoryPanel() {
