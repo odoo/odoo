@@ -114,6 +114,8 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
 
         cls.picking_A = cls.po_A.picking_ids[0]
         cls.picking_A.scheduled_date = (datetime.today() + timedelta(days=10))
+        cls.orderpoint_A.invalidate_recordset()
+        cls.orderpoint_B.invalidate_recordset()
 
     def test_01_pre_updateA_post(self):
         """

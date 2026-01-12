@@ -393,7 +393,7 @@ class TestProcRule(TransactionCase):
         orderpoint.qty_to_order = 10.0
         self.assertEqual(orderpoint.qty_to_order_manual, 10.0)
         orderpoint.action_replenish()
-        self.assertEqual(orderpoint.qty_to_order, 0)
+        self.assertEqual(orderpoint.qty_to_order, 5.5)
         orderpoint._compute_qty_to_order_to_max()   # force recompute because replenishing triggers a window refresh
         self.assertEqual(orderpoint.qty_to_order_to_max, 5.5)
 

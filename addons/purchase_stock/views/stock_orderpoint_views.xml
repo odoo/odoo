@@ -7,8 +7,11 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_category_id']" position="after">
                 <field string="Vendor" name="effective_vendor_id"/>
-                <field name="available_vendor"/>
+                <field string="Available Vendors" name="allowed_partner_ids"/>
             </xpath>
+            <filter name="groupby_category" position="after">
+                <filter string="Vendor" name="groupby_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+            </filter>
         </field>
     </record>
 </odoo>

@@ -379,6 +379,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_on_hand = False
                 orderpoint.qty_forecast = False
                 continue
+            orderpoint.invalidate_recordset(fnames=['qty_to_order_computed'])
             orderpoint_context = orderpoint._get_product_context()
             product_context = frozendict({**orderpoint_context})
             orderpoints_contexts[product_context] |= orderpoint
@@ -475,6 +476,7 @@ class StockWarehouseOrderpoint(models.Model):
         # The check is on purpose. We only want to consider the horizon days if the forecast is negative and
         # there is already something to resupply base on lead times.
         if float_compare(self.qty_forecast, self.product_min_qty, precision_rounding=rounding) < 0:
+            self.invalidate_recordset(fnames=['qty_to_order_computed'])
             product_context = self._get_product_context()
             qty_forecast_with_visibility = self.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + qty_in_progress
             qty_to_order = max(self.product_min_qty, self.product_max_qty) - qty_forecast_with_visibility
@@ -741,8 +743,13 @@ class StockWarehouseOrderpoint(models.Model):
                             if global_horizon_days:
                                 date -= relativedelta.relativedelta(days=int(global_horizon_days))
                             values = orderpoint._prepare_procurement_values(date=date)
+                            product_uom = orderpoint.product_uom
+                            qty_to_order = orderpoint.qty_to_order
+                            if orderpoint.replenishment_uom_id and orderpoint.replenishment_uom_id != orderpoint.product_uom:
+                                product_uom = orderpoint.replenishment_uom_id
+                                qty_to_order = orderpoint.product_uom._compute_quantity(orderpoint.qty_to_order, orderpoint.replenishment_uom_id)
                             procurements.append(self.env['stock.rule'].Procurement(
-                                orderpoint.product_id, orderpoint.qty_to_order, orderpoint.product_uom,
+                                orderpoint.product_id, qty_to_order, product_uom,
                                 orderpoint.location_id, orderpoint.name, origin,
                                 orderpoint.company_id, values))
 

@@ -21,8 +21,8 @@ class ProductReplenish(models.TransientModel):
             orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', 'in', [product_tmpl_id.product_variant_id.id, product_id.id]), ("warehouse_id", "=", res['warehouse_id'])], limit=1)
             if orderpoint.route_id:
                 res['route_id'] = orderpoint.route_id.id
-            if orderpoint.supplier_id:
-                res['supplier_id'] = orderpoint.supplier_id.id
+            if orderpoint.effective_supplier_id:
+                res['supplier_id'] = orderpoint.effective_supplier_id.id
         return res
 
     @api.onchange('route_id')

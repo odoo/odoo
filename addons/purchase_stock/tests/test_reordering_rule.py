@@ -22,6 +22,7 @@ class TestReorderingRule(TransactionCase):
     def setUpClass(cls):
         super(TestReorderingRule, cls).setUpClass()
         cls.env.user.group_ids += cls.env.ref('uom.group_uom')
+        cls.env.user.group_ids += cls.env.ref('stock.group_stock_multi_locations')
         cls.partner = cls.env['res.partner'].create({
             'name': 'Smith'
         })
@@ -296,6 +297,100 @@ class TestReorderingRule(TransactionCase):
                 'product_min_qty': 2,
                 'product_max_qty': 1,
             })
+
+    def test_reordering_rule_best_vendor_price_selection(self):
+        """ Check that when multiple vendor price rules exist for multiple vendors,
+        the reordering rule always applies the correct vendor and vendor price rule
+        depending on the ordered quantity and selected Vendor."""
+
+        partner1 = self.partner
+        partner2 = self.env['res.partner'].create({'name': "Vendor V2"})
+        uom_unit = self.env.ref('uom.product_uom_unit')
+
+        product_form = Form(self.env['product.product'])
+        product_form.name = "Product A"
+        product_form.is_storable = True
+        price_rules = [
+            {'partner': partner1, 'min_qty': 1.0, 'price': 1.0},
+            {'partner': partner2, 'min_qty': 1.0, 'price': 10.0},
+            {'partner': partner2, 'min_qty': 5.0, 'price': 5.0},
+        ]
+        for rule in price_rules:
+            with product_form.seller_ids.new() as s:
+                s.partner_id = rule['partner']
+                s.min_qty = rule['min_qty']
+                s.price = rule['price']
+                s.product_uom_id = uom_unit
+        product = product_form.save()
+
+        # Reordering rule without vendor → should pick Vendor V1 → 2 @ $1
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'product_min_qty': 2,
+            'product_max_qty': 2,
+        })
+        orderpoint.invalidate_recordset()
+        orderpoint.action_replenish()
+
+        pol = self.env['purchase.order'].search([('product_id', '=', product.id)]).order_line
+        self.assertRecordValues(pol, [{
+            'partner_id': partner1.id, 'price_unit': 1.0, 'product_qty': 2.0}
+        ])
+        pol.order_id.button_cancel()
+
+        # Reordering rule with Vendor V2 → 4 @ $10
+        orderpoint.partner_id = partner2
+        orderpoint.product_min_qty = 4.0
+        orderpoint.product_max_qty = 4.0
+        orderpoint.invalidate_recordset()
+        orderpoint.action_replenish()
+
+        pol = self.env['purchase.order'].search([('product_id', '=', product.id), ('state', '=', 'draft')]).order_line
+        self.assertRecordValues(pol, [
+            {'partner_id': partner2.id, 'price_unit': 10.0, 'product_qty': 4.0}
+        ])
+        pol.order_id.button_cancel()
+
+        # Reordering rule with Vendor V2 → 5 @ $5
+        orderpoint.product_min_qty = 5.0
+        orderpoint.product_max_qty = 5.0
+        orderpoint.invalidate_recordset()
+        orderpoint.action_replenish()
+
+        pol = self.env['purchase.order'].search([('product_id', '=', product.id), ('state', '=', 'draft')]).order_line
+        self.assertRecordValues(pol, [{
+            'partner_id': partner2.id, 'price_unit': 5.0, 'product_qty': 5.0
+        }])
+
+    def test_reordering_rule_prefer_replenishment_uom(self):
+        """ Check that the replenishment_uom_id defined on a reordering rule
+        is preferred over the supplier's default UoM on the generated
+        purchase order line, allowing users to purchase products in the exact
+        units they want.
+
+        - Use storable product with a vendor using UoM = Unit
+        - Add Pack of 6 to the product's available UoMs
+        - Create a reordering rule with replenishment_uom_id = Pack of 6
+        - Trigger the reordering rule manually
+        - Verify that the generated purchase order line uses Pack of 6
+          instead of the supplier's Unit
+        """
+        uom_pack_6 = self.env.ref('uom.product_uom_pack_6')
+        product = self.product_01
+        product.uom_ids |= uom_pack_6
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'product_min_qty': 1,
+            'product_max_qty': 12,
+            'replenishment_uom_id': uom_pack_6.id,
+        })
+        orderpoint.action_replenish()
+
+        pol = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertRecordValues(pol, [
+            {'partner_id': self.partner.id, 'product_uom_id': uom_pack_6.id, 'product_qty': 2.0, 'product_uom_qty': 12.0}
+        ])
 
     def test_reordering_rule_triggered_two_times(self):
         """
@@ -868,7 +963,6 @@ class TestReorderingRule(TransactionCase):
             'product_min_qty': 1,
             'product_max_qty': 5,
             'route_id': route_buy_id,
-            'supplier_id': self.product_01.seller_ids.id,
         })
         orderpoint.action_replenish()
 
@@ -897,6 +991,7 @@ class TestReorderingRule(TransactionCase):
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
 
         orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', self.product_01.id)])
+        orderpoint.invalidate_recordset()
         self.assertRecordValues(orderpoint, [
             {'qty_forecast': -1, 'qty_to_order': 1},
         ])
@@ -1104,6 +1199,7 @@ class TestReorderingRule(TransactionCase):
         })
         out_today._action_confirm()
 
+        orderpoint.invalidate_recordset()
         # Horizon days should be used something is found within lead times
         replenishment_info = loads(self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id}).json_lead_days)
         self.assertEqual(replenishment_info['lead_horizon_date'], format_date(orderpoint.env, today + td(days=3) + td(days=1)))
@@ -1127,7 +1223,7 @@ class TestReorderingRule(TransactionCase):
             'seller_ids': [(0, 0, {'partner_id': self.partner.id})],
         })
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        self.env['stock.warehouse.orderpoint'].create({
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'warehouse_id': warehouse.id,
             'location_id': warehouse.lot_stock_id.id,
             'product_id': product.id,
@@ -1135,6 +1231,7 @@ class TestReorderingRule(TransactionCase):
             'product_max_qty': 5,
         })
         # run the scheduler
+        orderpoint.invalidate_recordset()
         self.env['stock.rule'].run_scheduler()
         # check that the PO line is created
         po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
@@ -1181,7 +1278,7 @@ class TestReorderingRule(TransactionCase):
             'product_max_qty': 500,
         })
         product.seller_ids.with_context(orderpoint_id=orderpoint.id).action_set_supplier()
-        self.assertEqual(orderpoint.supplier_id, product.seller_ids, 'The supplier should be set in the orderpoint')
+        self.assertEqual(orderpoint.partner_id, product.seller_ids.partner_id, 'The supplier should be set in the orderpoint')
         self.assertEqual(orderpoint.product_uom, product.uom_id, 'The orderpoint uom should be the same as the product uom')
         self.assertEqual(orderpoint.qty_to_order, 6000)
 
@@ -1475,3 +1572,40 @@ class TestReorderingRule(TransactionCase):
         self.product_01.seller_ids = False
         orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
         self.assertTrue(orderpoint.show_supply_warning)
+
+    def test_orderpoint_warning_purchase_stock_multicompany(self):
+        """ Check that the supply warning computes correctly per company in a multi-company setup.
+
+        If a vendor exists only in one company, the reordering rule in that company
+        should not show a warning, while the rule in the other company without any
+        supplier should show a warning (warning icon).
+        """
+        company_a, company_b = self.env['res.company'].create([{'name': 'Company A'}, {'name': 'Company B'}])
+        warehouse_a, warehouse_b = self.env['stock.warehouse'].search([('company_id', 'in', [company_a.id, company_b.id])])
+        uom_unit = self.env.ref('uom.product_uom_unit')
+
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Product Supply Warning MultiCo'
+        product_form.is_storable = True
+        with product_form.seller_ids.new() as s:
+            s.partner_id = self.partner
+            s.min_qty = 1.0
+            s.price = 10.0
+            s.product_uom_id = uom_unit
+            s.company_id = company_a
+        product = product_form.save()
+
+        def _create_orderpoint(company, warehouse):
+            return self.env['stock.warehouse.orderpoint'].with_company(company).create({
+                'warehouse_id': warehouse.id,
+                'location_id': warehouse.lot_stock_id.id,
+                'product_id': product.id,
+                'product_min_qty': 5.0,
+                'product_max_qty': 10.0,
+            })
+
+        orderpoint_a = _create_orderpoint(company_a, warehouse_a)
+        self.assertFalse(orderpoint_a.show_supply_warning, "Company A has vendor price rules → should display info icon (no warning).")
+
+        orderpoint_b = _create_orderpoint(company_b, warehouse_b)
+        self.assertTrue(orderpoint_b.show_supply_warning, "Company B has no vendor price rules → should display warning icon.")
