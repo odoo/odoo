@@ -338,26 +338,23 @@ class TestAccountAccount(TestAccountMergeCommon):
         with self.assertRaises(UserError):
             account.reconcile = False
 
-    def test_remove_account_from_account_group(self):
-        """Test if an account is well removed from account group"""
-        group = self.env['account.group'].create({
-            'name': 'test_group',
-            'code_prefix_start': 401000,
-            'code_prefix_end': 402000,
-            'company_id': self.env.company.id
+    def test_update_account_parent(self):
+        """Test if we can set and remove parents from accounts"""
+        parent_account = self.env['account.account'].create({
+            'name': 'test_parent',
+            'code': 40,
+            'account_type': 'income',
+            'active': False,
         })
 
-        account_1 = self.company_data['default_account_revenue'].copy({'code': 401000})
-        account_2 = self.company_data['default_account_revenue'].copy({'code': 402000})
+        account_1 = self.company_data['default_account_revenue'].copy({'code': 401000, 'parent_id': parent_account.id})
+        account_2 = self.company_data['default_account_revenue'].copy({'code': 402000, 'parent_id': parent_account.id})
 
-        self.assertRecordValues(account_1 + account_2, [{'group_id': group.id}] * 2)
+        self.assertRecordValues(account_1 + account_2, [{'parent_id': parent_account.id}] * 2)
 
-        group.code_prefix_end = 401000
+        account_2.parent_id = None
 
-        # Because group_id must depend on the group start and end, but there is no way of making this dependency explicit.
-        (account_1 | account_2).invalidate_recordset(fnames=['group_id'])
-
-        self.assertRecordValues(account_1 + account_2, [{'group_id': group.id}, {'group_id': False}])
+        self.assertRecordValues(account_1 + account_2, [{'parent_id': parent_account.id}, {'parent_id': None}])
 
     def test_name_create(self):
         """name_create should only be possible when importing
@@ -935,89 +932,45 @@ class TestAccountAccount(TestAccountMergeCommon):
         self.assertRecordValues(account.with_company(self.company_data_2['company'].id), [{'code': 'test2'}])
         self.assertRecordValues(account.with_company(company_3.id), [{'code': 'test3'}])
 
-    def test_account_group_hierarchy_consistency(self):
-        """ Test if the hierarchy of account groups is consistent when creating, deleting and recreating an account group """
-        def create_account_group(name, code_prefix, company):
-            return self.env['account.group'].create({
-                'name': name,
-                'code_prefix_start': code_prefix,
-                'code_prefix_end': code_prefix,
-                'company_id': company.id
-            })
+    def test_muticompany_account_parents(self):
+        """ Ensure that parent accounts are allowed only if they belong to a parent company """
 
-        group_1 = create_account_group('group_1', 1, self.env.company)
-        group_10 = create_account_group('group_10', 10, self.env.company)
-        group_100 = create_account_group('group_100', 100, self.env.company)
-        group_101 = create_account_group('group_101', 101, self.env.company)
+        unrelated_company = self.env['res.company'].create({'name': 'Unrelated company'})
+        branch_company_a = self.env['res.company'].create({'name': 'Branch Company A', 'parent_id': self.env.company.id})
+        branch_company_b = self.env['res.company'].create({'name': 'Branch Company B', 'parent_id': branch_company_a.id})
 
-        self.assertEqual(len(group_1.parent_id), 0)
-        self.assertEqual(group_10.parent_id, group_1)
-        self.assertEqual(group_100.parent_id, group_10)
-        self.assertEqual(group_101.parent_id, group_10)
-
-        # Delete group_101 and recreate it
-        group_101.unlink()
-        group_101 = create_account_group('group_101', 101, self.env.company)
-
-        self.assertEqual(len(group_1.parent_id), 0)
-        self.assertEqual(group_10.parent_id, group_1)
-        self.assertEqual(group_100.parent_id, group_10)
-        self.assertEqual(group_101.parent_id, group_10)
-
-        # The root becomes a child and vice versa
-        group_3 = create_account_group('group_3', 3, self.env.company)
-        group_31 = create_account_group('group_31', 31, self.env.company)
-        group_3.code_prefix_start = 312
-        self.assertEqual(len(group_31.parent_id), 0)
-        self.assertEqual(group_3.parent_id, group_31)
-
-    def test_muticompany_account_groups(self):
-        """
-            Ensure that account groups are always in a root company
-            Ensure that accounts and account groups from a same company tree match
-        """
-
-        branch_company = self.env['res.company'].create({
-            'name': 'Branch Company',
-            'parent_id': self.env.company.id,
+        account_root = self.env['account.account'].create({
+            'name': 'Root Company Account',
+            'code': 10,
+            'account_type': 'income',
+        })
+        # Ok to set a parent account from a root company
+        account_branch_a = self.env['account.account'].with_company(branch_company_a).create({
+            'name': 'Branch A Account',
+            'code': 101,
+            'parent_id': account_root.id,
+        })
+        # Ok to set a parent account from a parent, non-root company
+        account_branch_b = self.env['account.account'].with_company(branch_company_b).create({
+            'name': 'Branch B Account',
+            'code': 1011,
+            'parent_id': account_branch_a.id,
         })
 
-        parent_group = self.env['account.group'].create({
-            'name': 'Parent Group',
-            'code_prefix_start': '123',
-            'code_prefix_end': '124'
-        })
-        child_group = self.env['account.group'].with_company(branch_company).create({
-            'name': 'Child Group',
-            'code_prefix_start': '125',
-            'code_prefix_end': '126',
-        })
-        self.assertEqual(
-            child_group.company_id,
-            child_group.company_id.root_id,
-            "company_id should never be a branch company"
-        )
+        # Reset parent
+        account_branch_b.parent_id = None
 
-        branch_account = self.env['account.account'].with_company(branch_company).create({
-            'name': 'Branch Account',
-            'code': '1234',
-        })
-        self.assertEqual(
-            branch_account.group_id,
-            parent_group,
-            "group_id computation should work for accounts that are not in the root company"
-        )
+        # Not allowed to set a parent account from a child company
+        with self.assertRaisesRegex(UserError, "no company crossover is allowed"):
+            account_branch_a.with_company(branch_company_b).parent_id = account_branch_b
 
-        parent_account = self.env['account.account'].create({
-            'name': 'Parent Account',
-            'code': '1235'
+        # Not allowed to set a parent account from an unrelated company
+        account_unrelated_company = self.env['account.account'].with_company(unrelated_company).create({
+            'name': 'Unrelated Company Account',
+            'code': 20,
         })
-        parent_account.with_company(branch_company).code = '1256'
-        self.assertEqual(
-            parent_account.with_company(branch_company).group_id,
-            child_group,
-            "group_id computation should work if company_id is not in self.env.companies"
-        )
+        with self.assertRaisesRegex(UserError, "no company crossover is allowed"):
+            account_branch_a.parent_id = account_unrelated_company
 
     def test_compute_account(self):
         account_sale = self.company_data['default_account_revenue'].copy()

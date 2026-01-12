@@ -7,7 +7,7 @@
         <field name="country_id" ref="base.it"/>
         <field name="availability_condition">country</field>
         <field name="allow_foreign_vat" eval="True"/>
-        <field name="filter_hierarchy">never</field>
+        <field name="filter_subtotal">never</field>
         <field name="integer_rounding">HALF-UP</field>
         <field name="use_sections" eval="True"/>
         <field name="section_report_ids" eval="[Command.set([ref('l10n_it.tax_annual_report_vat_va'),
