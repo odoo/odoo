@@ -9,6 +9,7 @@ export class DynamicSnippetCarouselOption extends BaseOptionComponent {
     setup() {
         super.setup();
         const { getModelNameFilter } = this.dependencies.dynamicSnippetCarouselOption;
-        this.dynamicOptionParams = useDynamicSnippetOption(getModelNameFilter());
+        this.modelNameFilter = getModelNameFilter();
+        this.dynamicOptionParams = useDynamicSnippetOption(this.modelNameFilter);
     }
 }
