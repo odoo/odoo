@@ -426,6 +426,8 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
             const index = this.$target.find('.carousel-item.active').index();
             this.$('.carousel:first li[data-bs-target]:eq(' + index + ')')
                 .css('background-image', 'url(' + $img.attr('src') + ')');
+            const carouselEl = this.$target.find('.carousel');
+            this._refreshPublicWidgets(carouselEl);
         });
 
         // When the snippet is empty, an edition button is the default content
