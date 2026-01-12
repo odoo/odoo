@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 
@@ -50,3 +51,10 @@ class TestAccountReport(AccountTestInvoicingCommon):
         expression = copy.line_ids[1].expression_ids
         self.assertEqual(expression.formula, 'test_line_1_COPY.balance')
         self.assertEqual(expression.subformula, 'if_other_expr_above(test_line_1_COPY.balance, USD(0))')
+
+        with self.assertRaisesRegex(ValidationError, "Invalid formula for expression 'balance' of line 'test_line_2'"):
+            expression.write({
+                'engine': 'account_codes',
+                'formula': 'test(12)',
+                },
+            )
