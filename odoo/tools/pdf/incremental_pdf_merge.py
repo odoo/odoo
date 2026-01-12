@@ -579,6 +579,8 @@ class IncrementalPdfMerge:
         # 6. Construct the PDF trailer
         self._write_trailer(pdf_reader, original_startxref, xref_start, new_size)
 
+        # self._write_xref_stream(pdf_reader, new_xref_entries, original_startxref)
+
     def _write_objects(self, incremented_objects):
         """
         Serializes a collection of PDF objects to the output stream.
@@ -603,6 +605,100 @@ class IncrementalPdfMerge:
             output.write(b"\nendobj\n")
 
         return new_xref_entries
+
+    def _write_xref_stream(self, pdf_reader, new_xref_entries, original_startxref):
+        """
+        Writes a fully compliant XRef Stream that indexes itself to satisfy
+        PDF checkers like QPDF.
+        """
+        output = self.output_stream
+
+        # 1. Capture the start offset of this new object immediately
+        # We need this to add the object to its own index.
+        xref_start_offset = output.tell()
+
+        # 2. Determine the new Object ID
+        # Get original size from trailer; max with any new updates
+        original_size = int(pdf_reader.trailer.get("/Size", 0))
+        max_updated_id = max(new_xref_entries.keys()) if new_xref_entries else 0
+
+        # Calculate the ID for this XRef stream (next available ID)
+        current_highest_id = max(original_size - 1, max_updated_id)
+        xref_stream_obj_id = current_highest_id + 1
+
+        # 3. [CRITICAL FIX] Add the XRef Stream itself to the index
+        # This ensures 'Size' matches the highest object ID found in the map.
+        new_xref_entries[xref_stream_obj_id] = xref_start_offset
+
+        # 4. Prepare the Stream Data (Hex Encoded)
+        sorted_ids = sorted(new_xref_entries.keys())
+        index_array = []
+        stream_data_hex = []
+
+        i = 0
+        while i < len(sorted_ids):
+            start_j = i
+            # Find contiguous chunks
+            while i + 1 < len(sorted_ids) and sorted_ids[i + 1] == sorted_ids[i] + 1:
+                i += 1
+            chunk_ids = sorted_ids[start_j: i + 1]
+
+            # Add to /Index array: [First Object ID, Count]
+            index_array.append(chunk_ids[0])
+            index_array.append(len(chunk_ids))
+
+            # Generate Hex Data for this chunk
+            for oid in chunk_ids:
+                if oid == 0:
+                    # Free Object: Type 0, Gen 65535
+                    stream_data_hex.append("0000000000FFFF")
+                else:
+                    # Normal Object: Type 1, Offset (Hex), Gen 0
+                    offset = new_xref_entries[oid]
+                    # Format offset as 8-char Hex (4 bytes)
+                    stream_data_hex.append(f"01{offset:08X}0000")
+            i += 1
+
+        # Join data and add the EOD marker
+        stream_content_str = "".join(stream_data_hex) + ">"
+
+        # 5. [CRITICAL FIX] Calculate exact stream length
+        stream_length = len(stream_content_str)
+
+        # 6. Construct the Stream Dictionary
+        xref_dict = DictionaryObject()
+        xref_dict.update({
+            NameObject("/Type"): NameObject("/XRef"),
+            NameObject("/Size"): NumberObject(xref_stream_obj_id + 1),
+            NameObject("/W"): ArrayObject([NumberObject(1), NumberObject(4), NumberObject(2)]),
+            NameObject("/Root"): pdf_reader.trailer.raw_get("/Root"),
+            NameObject("/Info"): pdf_reader.trailer.raw_get("/Info"),
+            NameObject("/Prev"): NumberObject(original_startxref),
+            NameObject("/Filter"): NameObject("/ASCIIHexDecode"),
+            NameObject("/Index"): ArrayObject([NumberObject(x) for x in index_array]),
+            NameObject("/Length"): NumberObject(stream_length)  # Fixes 'lacks /Length' warning
+        })
+
+        # Copy ID/Encrypt if present
+        if hasattr(pdf_reader, "_ID"):
+            xref_dict[NameObject("/ID")] = pdf_reader._ID
+        if hasattr(pdf_reader, "_encrypt"):
+            xref_dict[NameObject("/ENCRYPT")] = pdf_reader._encrypt
+
+        # 7. Write everything to the file
+        # Header
+        output.write(b_(f"{xref_stream_obj_id} 0 obj\n"))
+
+        # Dictionary
+        xref_dict.write_to_stream(output, None)
+
+        # Stream Content
+        output.write(b"\nstream\n")
+        output.write(b_(stream_content_str))
+        output.write(b"\nendstream\nendobj\n")
+
+        # Trailer / EOF
+        output.write(b_(f"\nstartxref\n{xref_start_offset}\n%%EOF\n"))
 
     def _write_xref_table(self, new_xref_entries):
         """
@@ -694,7 +790,7 @@ class IncrementalPdfMerge:
             {
                 NameObject(TK.SIZE): NumberObject(size),
                 NameObject(TK.ROOT): pdf_reader.trailer.raw_get(TK.ROOT),
-                NameObject(TK.INFO): pdf_reader.trailer[TK.INFO],
+                NameObject(TK.INFO): pdf_reader.trailer.raw_get(TK.INFO),
                 NameObject(TK.PREV): NumberObject(original_startxref)
             }
         )

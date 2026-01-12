@@ -2,7 +2,7 @@ import base64
 import datetime
 import hashlib
 import io
-from typing import Optional, cast
+from typing import Optional, cast, Any
 from asn1crypto import cms, algos, core, x509
 import logging
 
@@ -40,7 +40,7 @@ from odoo.tools.pdf import (
     create_string_object
 )
 
-from .incremental_pdf_merge import IncrementalPdfMerge
+from .incremental_pdf_merge import IncrementalPdfMerge, b_
 from .constants import TrailerKeys as TK, PageAttributes as PG, CatalogDictionary as CD, InteractiveFormDictEntries as IF
 
 _logger = logging.getLogger(__name__)
@@ -122,13 +122,13 @@ class PdfSigner:
             pdf_reader = PdfFileReader(io.BytesIO(self.pdf_raw), strict=False)
 
         # 2. Prepare the Signature Field Structure
-        self._setup_form(pdf_reader, visible_signature, field_name,  signer)
+        self._setup_form(pdf_reader, True, field_name, incremented_objects, signer)
 
-        # 3. Track Root modifications
-        root_entry = pdf_reader.trailer.raw_get(TK.ROOT)
-        if isinstance(root_entry, IndirectObject):
-            # If Root is indirect, we must explicitly track it for the incremental update
-            incremented_objects[root_entry.idnum] = pdf_reader.trailer[TK.ROOT]
+        # # 3. Track Root modifications
+        # root_entry = pdf_reader.trailer.raw_get(TK.ROOT)
+        # if isinstance(root_entry, IndirectObject):
+        #     # If Root is indirect, we must explicitly track it for the incremental update
+        #     incremented_objects[root_entry.idnum] = pdf_reader.trailer[TK.ROOT]
 
         # 4. Write the Incremental Update (with empty signature placeholders)
         pdf_merger._write_incremented_pdf(pdf_reader, incremented_objects)
@@ -160,6 +160,7 @@ class PdfSigner:
             pdf_reader: PdfFileReader,
             visible_signature: bool,
             field_name: str,
+            incremented_objects: dict[int, Any],
             signer: Optional[ResUsers] = None
     ) -> None:
         """
@@ -220,40 +221,210 @@ class PdfSigner:
             NameObject("/P"): page.indirect_reference,
         })
 
-        # --- 3. CONSTRUCT VISUAL APPEARANCE (Optional) ---
+        # # --- 3. CONSTRUCT VISUAL APPEARANCE (Optional) ---
+        # if visible_signature:
+        #     # 3a. Prepare Text Content
+        #     date_str = datetime.datetime.now().strftime("%Y-%m-%d")
+        #     line1 = f"Digitally signed by {signer.name} <{signer.email}>"
+        #     line2 = f"Date: {date_str}"
+        #     # TODO: Sanitize to prevent PDF crashes if needed
+        #
+        #     # 3b. Dynamic Dimension Calculation
+        #     # Heuristic: Average char width ~0.55 * fontSize for Helvetica
+        #     font_size = 10
+        #     padding = 5
+        #     avg_char_width = font_size * 0.55
+        #     max_char_count = max(len(line1), len(line2))
+        #
+        #     calc_width = (max_char_count * avg_char_width) + (padding * 4)  # Extra padding for safety
+        #     calc_height = (font_size * 2) + (padding * 4)  # Height for 2 lines + padding
+        #
+        #     # 3c. Positioning (Top-Right, accounting for margin)
+        #     origin = page.mediabox.upper_right
+        #     margin = 20  # Distance from edge of paper
+        #
+        #     x1 = float(origin[0]) - margin - calc_width
+        #     y1 = float(origin[1]) - margin - calc_height
+        #     x2 = float(origin[0]) - margin
+        #     y2 = float(origin[1]) - margin
+        #     rect = [x1, y1, x2, y2]
+        #
+        #     # 3d. Create Form XObject Stream
+        #     stream = StreamObject()
+        #     stream.update({
+        #         NameObject("/BBox"): ArrayObject([
+        #             FloatObject(0), FloatObject(0),
+        #             FloatObject(calc_width), FloatObject(calc_height)
+        #         ]),
+        #         NameObject("/Resources"): DictionaryObject({
+        #             NameObject("/Font"): DictionaryObject({
+        #                 NameObject("/F1"): DictionaryObject({
+        #                     NameObject("/Type"): NameObject("/Font"),
+        #                     NameObject("/Subtype"): NameObject("/Type1"),
+        #                     NameObject("/BaseFont"): NameObject("/Helvetica")
+        #                 })
+        #             })
+        #         }),
+        #         NameObject("/Type"): NameObject("/XObject"),
+        #         NameObject("/Subtype"): NameObject("/Form")
+        #     })
+        #
+        #     # 3e. Drawing Operations
+        #     leading = font_size + 2
+        #     txt_x = padding
+        #     txt_y = calc_height - padding - (font_size * 0.8)
+        #
+        #     # q = Save State
+        #     # BT = Begin Text
+        #     # /F1 {size} Tf = Set Font
+        #     # {leading} TL = Set Line Spacing
+        #     # {x} {y} Td = Move Cursor
+        #     # (...) Tj = Draw Text
+        #     # T* = New Line
+        #     # ET = End Text
+        #     # Q = Restore State
+        #     pdf_ops = (
+        #         f"q BT "
+        #         f"/F1 {font_size} Tf "
+        #         f"{leading} TL "
+        #         f"{txt_x:.2f} {txt_y:.2f} Td "
+        #         f"({line1}) Tj T* "
+        #         f"({line2}) Tj "
+        #         f"ET Q"
+        #     )
+        #
+        #     stream._data = b_(pdf_ops)
+        #
+        #     # Update Field
+        #     signature_appearance = DictionaryObject()
+        #     signature_appearance.update({
+        #         NameObject("/N"): stream  # Normal appearance
+        #     })
+        #
+        #     signature_field.update({
+        #         NameObject("/Rect"): ArrayObject([FloatObject(x) for x in rect]),
+        #         NameObject("/AP"): signature_appearance,
+        #     })
+        # if visible_signature:
+        #     origin = page.mediabox.upper_right  # retrieves the top-right coordinates of the page
+        #     rect_size = (200, 20)  # dimensions of the box (width, height)
+        #     padding = 5
+        #
+        #     # Box that will contain the signature, defined as [x1, y1, x2, y2]
+        #     # where (x1, y1) is the bottom left coordinates of the box,
+        #     # and (x2, y2) the top-right coordinates.
+        #     rect = [
+        #         origin[0] - rect_size[0] - padding,
+        #         origin[1] - rect_size[1] - padding,
+        #         origin[0] - padding,
+        #         origin[1] - padding
+        #     ]
+        #
+        #     # Here is defined the StreamObject that contains the information about the visible
+        #     # parts of the signature
+        #     #
+        #     # Dictionary contents:
+        #     # /BBox = coordinates of the 'visible' box, relative to the /Rect definition of the signature field
+        #     # /Resources = resources needed to properly render the signature,
+        #     #   /Font = dictionary containing the information about the font used by the signature
+        #     #       /F1 = font resource, used to define a font that will be usable in the signature
+        #     stream = StreamObject()
+        #     stream.update({
+        #         NameObject("/BBox"): ArrayObject([NumberObject(0), NumberObject(0), NumberObject(rect_size[0]), NumberObject(rect_size[1])]),
+        #         NameObject("/Resources"): DictionaryObject({
+        #             NameObject("/Font"): DictionaryObject({
+        #                 NameObject("/F1"): DictionaryObject({
+        #                     NameObject("/Type"): NameObject("/Font"),
+        #                     NameObject("/Subtype"): NameObject("/Type1"),
+        #                     NameObject("/BaseFont"): NameObject("/Helvetica")
+        #                 })
+        #             })
+        #         }),
+        #         NameObject("/Type"): NameObject("/XObject"),
+        #         NameObject("/Subtype"): NameObject("/Form")
+        #     })
+        #
+        #     #
+        #     content = "Digitally signed"
+        #     content = create_string_object(
+        #         f'{content} by {signer.name} <{signer.email}>') if signer is not None else create_string_object(content)
+        #
+        #     # Setting the parameters used to display the text object of the signature
+        #     # More details on this subject can be found in the sections 4.3 and 5.3
+        #     # of the Adobe PDF Reference (v1.7) https://ia601001.us.archive.org/1/items/pdf1.7/pdf_reference_1-7.pdf
+        #     #
+        #     # Parameters:
+        #     # q = saves the the current graphics state on the graphics state stack
+        #     # 0.5 0 0 0.5 0 0 cm = modification of the current transformation matrix. Here used to scale down the text size by 0.5 in x and y
+        #     # BT = begin text object
+        #     # /F1 = reference to the font resource named F1
+        #     # 12 Tf = set the font size to 12
+        #     # 0 TL = defines text leading, the space between lines, here set to 0
+        #     # 0 10 Td = moves the text to the start of the next line, expressed in text space units. Here (x, y) = (0, 10)
+        #     # (text_content) Tj = renders a text string
+        #     # ET = end text object
+        #     # Q = Restore the graphics state by removing the most recently saved state from the stack and making it the current state
+        #     stream._data = f"q 0.5 0 0 0.5 0 0 cm BT /F1 12 Tf 0 TL 0 10 Td ({content}) Tj ET Q".encode()
+        #     signature_appearence = DictionaryObject()
+        #     signature_appearence.update({
+        #         NameObject("/N"): stream
+        #     })
+        #     signature_field.update({
+        #         NameObject("/AP"): signature_appearence,
+        #     })
+        #
+        #     signature_field.update({
+        #         NameObject("/Rect"): ArrayObject([NumberObject(x) for x in rect])
+        #     })
         if visible_signature:
-            # 3a. Prepare Text Content
+
+            # ------------------------------------------------------------------
+            # 1. Text content
+            # ------------------------------------------------------------------
             date_str = datetime.datetime.now().strftime("%Y-%m-%d")
             line1 = f"Digitally signed by {signer.name} <{signer.email}>"
             line2 = f"Date: {date_str}"
-            # TODO: Sanitize to prevent PDF crashes if needed
 
-            # 3b. Dynamic Dimension Calculation
-            # Heuristic: Average char width ~0.55 * fontSize for Helvetica
+            # ------------------------------------------------------------------
+            # 2. Dynamic size calculation (SAFE HEURISTIC)
+            # ------------------------------------------------------------------
             font_size = 10
             padding = 5
             avg_char_width = font_size * 0.55
-            max_char_count = max(len(line1), len(line2))
 
-            calc_width = (max_char_count * avg_char_width) + (padding * 4)  # Extra padding for safety
-            calc_height = (font_size * 2) + (padding * 4)  # Height for 2 lines + padding
+            max_chars = max(len(line1), len(line2))
 
-            # 3c. Positioning (Top-Right, accounting for margin)
+            calc_width = int((max_chars * avg_char_width) + (padding * 4))
+            calc_height = int((font_size * 2) + (padding * 4))
+
+            # ------------------------------------------------------------------
+            # 3. Positioning (top-right of page)
+            # ------------------------------------------------------------------
             origin = page.mediabox.upper_right
-            margin = 20  # Distance from edge of paper
+            margin = 20
 
-            x1 = float(origin[0]) - margin - calc_width
-            y1 = float(origin[1]) - margin - calc_height
-            x2 = float(origin[0]) - margin
-            y2 = float(origin[1]) - margin
+            x2 = int(origin[0] - margin)
+            y2 = int(origin[1] - margin)
+            x1 = int(x2 - calc_width)
+            y1 = int(y2 - calc_height)
+
             rect = [x1, y1, x2, y2]
 
-            # 3d. Create Form XObject Stream
+            # ------------------------------------------------------------------
+            # 4. Create appearance stream (Form XObject)
+            # ------------------------------------------------------------------
             stream = StreamObject()
             stream.update({
+                NameObject("/Type"): NameObject("/XObject"),
+                NameObject("/Subtype"): NameObject("/Form"),
                 NameObject("/BBox"): ArrayObject([
-                    FloatObject(0), FloatObject(0),
-                    FloatObject(calc_width), FloatObject(calc_height)
+                    NumberObject(0), NumberObject(0),
+                    NumberObject(calc_width), NumberObject(calc_height)
+                ]),
+                NameObject("/Matrix"): ArrayObject([
+                    NumberObject(1), NumberObject(0),
+                    NumberObject(0), NumberObject(1),
+                    NumberObject(0), NumberObject(0)
                 ]),
                 NameObject("/Resources"): DictionaryObject({
                     NameObject("/Font"): DictionaryObject({
@@ -263,46 +434,39 @@ class PdfSigner:
                             NameObject("/BaseFont"): NameObject("/Helvetica")
                         })
                     })
-                }),
-                NameObject("/Type"): NameObject("/XObject"),
-                NameObject("/Subtype"): NameObject("/Form")
+                })
             })
 
-            # 3e. Drawing Operations
-            leading = font_size + 2
-            txt_x = padding
-            txt_y = calc_height - padding - (font_size * 0.8)
+            # ------------------------------------------------------------------
+            # 5. Deterministic text layout (NO T*)
+            # ------------------------------------------------------------------
+            text_y_top = calc_height - padding - font_size
+            text_y_bottom = text_y_top - (font_size + 2)
 
-            # q = Save State
-            # BT = Begin Text
-            # /F1 {size} Tf = Set Font
-            # {leading} TL = Set Line Spacing
-            # {x} {y} Td = Move Cursor
-            # (...) Tj = Draw Text
-            # T* = New Line
-            # ET = End Text
-            # Q = Restore State
             pdf_ops = (
-                f"q BT "
+                "q 1 0 0 1 0 0 cm "
+                "BT "
                 f"/F1 {font_size} Tf "
-                f"{leading} TL "
-                f"{txt_x:.2f} {txt_y:.2f} Td "
-                f"({line1}) Tj T* "
+                f"{padding} {text_y_top} Td "
+                f"({line1}) Tj "
+                f"0 {- (font_size + 2)} Td "
                 f"({line2}) Tj "
-                f"ET Q"
+                "ET Q"
             )
 
-            stream._data = pdf_ops.encode("latin-1")
+            stream._data = b_(pdf_ops)
 
-            # Update Field
+            # ------------------------------------------------------------------
+            # 6. Attach appearance to signature field
+            # ------------------------------------------------------------------
             signature_appearance = DictionaryObject()
             signature_appearance.update({
-                NameObject("/N"): stream  # Normal appearance
+                NameObject("/N"): stream
             })
 
             signature_field.update({
-                NameObject("/Rect"): ArrayObject([FloatObject(x) for x in rect]),
-                NameObject("/AP"): signature_appearance,
+                NameObject("/Rect"): ArrayObject([NumberObject(x) for x in rect]),
+                NameObject("/AP"): signature_appearance
             })
         else:
             # Invisible signature (Zero-width rect)
@@ -314,7 +478,13 @@ class PdfSigner:
         # /Contents: A large hex string (0-padded) to hold the CMS signature later.
         # /ByteRange: A placeholder array [0, 0, 0, 0] to hold offsets later.
         # Reserve 60 bytes for ByteRange (enough for four 10-digit integers).
-        byte_range_placeholder = TextStringObject(" " * 60)
+        # byte_range_placeholder = TextStringObject(" " * 60)
+        byte_range_placeholder = ArrayObject([
+            NumberObject(0),
+            NumberObject(9999999999),
+            NumberObject(9999999999),
+            NumberObject(9999999999)
+        ])
 
         signature_field_value = DictionaryObject()
         signature_field_value.update({
@@ -350,6 +520,16 @@ class PdfSigner:
         if PG.ANNOTS not in page:
             page[NameObject(PG.ANNOTS)] = ArrayObject()
         page[NameObject(PG.ANNOTS)].append(signature_field_ref)
+
+
+        incremented_objects[page.indirect_reference.idnum] = page
+        pdf_reader.cache_indirect_object(page.indirect_reference.generation, page.indirect_reference.idnum, page)
+
+        root_entry = pdf_reader.trailer.raw_get(TK.ROOT)
+        if isinstance(root_entry, IndirectObject):
+            # If Root is indirect, we must explicitly track it for the incremental update
+            incremented_objects[root_entry.idnum] = catalog
+            pdf_reader.cache_indirect_object(root_entry.generation, root_entry.idnum, catalog)
 
     def _get_cms_object(self, digest: bytes) -> Optional[cms.ContentInfo]:
         """
@@ -475,8 +655,8 @@ class PdfSigner:
         # 2. LOCATE PLACEHOLDERS (ByteRange and Contents)
         # Search forward from the object start to find the specific keys belonging to it
         br_key_pos = pdf_buffer.find(b"/ByteRange", sig_obj_start)
-        array_start = pdf_buffer.find(b"(", br_key_pos)
-        array_end = pdf_buffer.find(b")", array_start) + 1
+        array_start = pdf_buffer.find(b"[", br_key_pos)
+        array_end = pdf_buffer.find(b"]", array_start) + 1
         placeholder_len = array_end - array_start
 
         # Locate Contents hex string < ... >
@@ -494,14 +674,41 @@ class PdfSigner:
         val3 = hex_end + 1  # The index after the '>'
         val4 = len(pdf_buffer) - val3
 
-        # 4. UPDATE BYTERANGE
-        # We format the array and pad with spaces to maintain the exact byte count
-        new_range_str = f"[{val1} {val2} {val3} {val4}]".encode('ascii')
-        if len(new_range_str) > placeholder_len:
-            raise ValueError("ByteRange string exceeds reserved placeholder space.")
+        # # 4. UPDATE BYTERANGE
+        # # We format the array and pad with spaces to maintain the exact byte count
+        # new_range_str = f"[{val1} {val2} {val3} {val4}]".encode('ascii')
+        # if len(new_range_str) > placeholder_len:
+        #     raise ValueError("ByteRange string exceeds reserved placeholder space.")
+        #
+        # # Pad with spaces to fit exact placeholder size
+        # pdf_buffer[array_start:array_end] = new_range_str.ljust(placeholder_len, b" ")
+        # 4. UPDATE BYTERANGE (Zero-Padding Strategy)
+        # Goal: Transform "[0 999...]" into "[0 123 456 0000000789]"
+        # This keeps the total length IDENTICAL and valid.
 
-        # Pad with spaces to fit exact placeholder size
-        pdf_buffer[array_start:array_end] = new_range_str.ljust(placeholder_len, b" ")
+        # 1. Create the first part of the array string: "[0 123 456 "
+        # We purposely leave a trailing space after val3 so val4 is separated.
+        prefix = f"[{val1} {val2} {val3} ".encode('ascii')
+        suffix = b"]"
+
+        # 2. Calculate how much room is left for the last number
+        # Total Available - Prefix length - Suffix length
+        # e.g., 40 - 15 - 1 = 24 bytes available for val4
+        available_len_for_val4 = placeholder_len - len(prefix) - len(suffix)
+
+        if available_len_for_val4 < len(str(val4)):
+            raise ValueError(f"Not enough space! Need {len(str(val4))}, have {available_len_for_val4}")
+
+        # 3. Format val4 with leading zeros to fill that space EXACTLY
+        # e.g., if we have 10 bytes and val4 is "99", we get "0000000099"
+        s_val4 = str(val4).zfill(available_len_for_val4).encode('ascii')
+
+        # 4. Combine them
+        new_range_str = prefix + s_val4 + suffix
+
+        # 5. Overwrite the buffer
+        # This is now guaranteed to match placeholder_len exactly.
+        pdf_buffer[array_start:array_end] = new_range_str
 
         # 5. HASH THE DOCUMENT
         # We take every byte EXCEPT the hole between hex_start-1 and hex_end+1
