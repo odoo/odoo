@@ -147,7 +147,6 @@ class CtypesTerminalDriver(Driver, ABC):
         self.device_type = 'payment'
         self.device_connection = 'network'
         self.cid = None
-        self.owner = None
         self.queue_actions = Queue()
         self.terminal_busy = False
 
