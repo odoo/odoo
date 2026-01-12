@@ -2519,13 +2519,15 @@ input[value*="data-oe-translation-initial-sha"] {
     // Text highlight SVG container.
     > .o_text_highlight_item {
         position: relative;
-        display: inline-block;
+        display: inline-flex;
         line-height: normal;
         white-space: pre-wrap;
         isolation: isolate;
 
         > * {
             text-decoration: none;
+            display: inline;
+            white-space: nowrap;
         }
         svg {
             z-index: -1;
