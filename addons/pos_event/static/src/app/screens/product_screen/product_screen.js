@@ -16,8 +16,14 @@ patch(ProductScreen.prototype, {
         if (!product.event_id) {
             return super.getProductImage(product);
         }
-
+        console.log(product)
         return `/web/image?model=event.event&id=${product.event_id.id}&field=image_1024&unique=${product.event_id.write_date}`;
+
+        // return (
+        //     (product.image_1024 &&
+        //         `/web/image?model=event.event&id=${product.event_id.id}&field=image_1024&unique=${product.event_id.write_date}`) ||
+        //     ""
+        // );
     },
     async addProductToOrder(product) {
         if (!product.event_id) {

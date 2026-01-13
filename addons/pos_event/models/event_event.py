@@ -6,6 +6,7 @@ class EventEvent(models.Model):
     _inherit = ['event.event', 'pos.load.mixin']
 
     image_1024 = fields.Image("PoS Image", max_width=1024, max_height=1024)
+    image_128 = fields.Image("PoS Image", max_width=128, max_height=128)
     pos_price_total = fields.Monetary('PoS Total (Tax Included)', compute='_compute_pos_price_total', groups='point_of_sale.group_pos_user')
 
     @api.depends('company_id.currency_id', 'registration_ids.pos_order_line_id.price_subtotal_incl',

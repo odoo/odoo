@@ -1,20 +1,10 @@
-.product {
-    --btn-border-color: #{$o-gray-200};
-
-    &:hover {
-        border: $border-width solid $border-color;
-        --btn-hover-bg: #{$o-view-background-color};
-    }
-
-    .rightpane & {
-        min-height: 6rem;
-        border: $border-width solid var(--border-color);
-        background-color: var(--bg, var(--btn-bg));
-        box-shadow: 0 ($border-width * 4) var(--border-color);
-        &:active, .active {
-            transform: translateY($border-width * 2);
-            box-shadow: 0 ($border-width * 2) var(--border-color);
-        }
+.rightpane .product {
+    min-height: 6rem;
+    border: transparent;
+    border-bottom: ($border-width * 4) solid var(--btn-border-color);
+    &:active {
+        margin-top: $border-width * 3;
+        border-bottom: ($border-width * 1)  solid var(--btn-border-color);
     }
 }
 
@@ -68,5 +58,7 @@
 }
 
 .product-cart-qty {
-    font-size: 1.75rem;
+    min-width: 1.5625rem;
+    font-size: 1.25rem;
+    text-align: center;
 }

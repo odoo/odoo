@@ -167,15 +167,25 @@ select > option {
     height: calc(var(--btn-height-size) * 2);
 }
 
+.product {
+    --btn-bg: #{$white};
+    --btn-border-color: #{$o-gray-300};
+    --btn-hover-bg: #{darken($white, 3%)};
+    --btn-hover-border-color: #{$o-gray-300};
+    --btn-active-bg: #{$o-gray-100};
+    --btn-active-border-color: #{$o-gray-300};
+}
+
 // Set all the colors but the "no-color" one
 @for $size from 2 through length($o-colors) {
     .o_colorlist_item_color_transparent_#{$size - 1} {
         $-border-color: adjust-color(nth($o-colors, $size), $lightness: 15%, $saturation: 5%);
         $-background-color: mix(nth($o-colors, $size), $white, 15%);
-        --bg: #{$-background-color};
-        --hover-bg: #{darken($-background-color, 5%)};
+        --btn-bg: #{$-background-color};
+        --btn-border-color: #{$-border-color};
+        --btn-hover-bg: #{darken($-background-color, 3%)};
+        --btn-hover-border-color: #{$-border-color};
         --btn-active-bg: #{darken($-background-color, 10%)};
-        --border-color: #{$-border-color};
         --btn-active-border-color: #{$-border-color};
     }
 

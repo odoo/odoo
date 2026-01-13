@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.ProductCard">
         <article tabindex="0"
-            t-attf-class="{{props.class}} {{props.productCartQty ? 'active' : ''}} {{props.color ? `o_colorlist_item_color_transparent_${props.color}` : ''}} product position-relative btn btn-light d-flex p-0 rounded-3 text-start cursor-pointer"
+            t-attf-class="{{props.class}} {{props.color ? `o_colorlist_item_color_transparent_${props.color}` : ''}} product position-relative btn btn-light d-flex p-0 rounded-3 text-start cursor-pointer"
             t-on-keypress="(event) => event.code === 'Space' ? props.onClick(event) : ()=>{}"
             t-on-click.stop="props.onClick"
             t-att-data-product-id="props.productId"
@@ -22,7 +22,7 @@
                     t-esc="props.name" />
                 <span t-if="props.productCartQty"
                     t-out="this.productQty"
-                    class="product-cart-qty position-absolute top-0 end-0 m-1 px-2 rounded bg-black bg-opacity-75 text-white fw-bolder lh-sm shadow-sm"
+                    class="product-cart-qty position-absolute top-0 end-0 m-1 px-1 rounded bg-black bg-opacity-75 text-white fw-bolder lh-sm shadow-sm"
                     t-att-class="{'text-danger': this.productQty lt 0}"/>
             </div>
             <span t-if="props.comboExtraPrice" style="font-size: 0.75rem;" class="price-extra px-2 py-0 rounded-1 text-bg-info position-absolute top-0 end-0 mt-1 me-1">
