@@ -112,6 +112,10 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                 channelInfo["livechat_looking_for_help_since_dt"] =
                     channel.livechat_looking_for_help_since_dt;
                 channelInfo["livechat_end_dt"] = channel.livechat_end_dt;
+                channelInfo["livechat_lang_id"] = mailDataHelpers.Store.one(
+                    this.env["res.lang"].browse(channel.livechat_lang_id),
+                    makeKwArgs({ fields: ["name", "code"] })
+                );
                 channelInfo["livechat_note"] = ["markup", channel.livechat_note];
                 channelInfo["livechat_status"] = channel.livechat_status;
                 channelInfo["livechat_expertise_ids"] = mailDataHelpers.Store.many(

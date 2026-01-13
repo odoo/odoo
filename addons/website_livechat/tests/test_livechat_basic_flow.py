@@ -181,6 +181,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "livechat_channel_id": self.livechat_channel.id,
                         "livechat_channel_member_history_ids": channel.livechat_channel_member_history_ids.ids,
                         "livechat_end_dt": False,
+                        "livechat_lang_id": channel.livechat_lang_id.id,
                         "livechat_note": False,
                         "livechat_status": "in_progress",
                         "livechat_outcome": "no_failure",

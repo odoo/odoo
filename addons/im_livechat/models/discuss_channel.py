@@ -437,6 +437,7 @@ class DiscussChannel(models.Model):
         if res.is_for_internal_users():
             res.one("livechat_channel_id", ["name"], predicate=is_livechat_channel, sudo=True)
             res.attr("description", predicate=is_livechat_channel)
+            res.one("livechat_lang_id", ["name", "code"], predicate=is_livechat_channel)
             res.attr("livechat_note", predicate=is_livechat_channel)
             res.attr("livechat_outcome", predicate=is_livechat_channel)
             res.attr("livechat_status", predicate=is_livechat_channel)
