@@ -23,7 +23,7 @@ export class ReturnOrderDialog extends Component {
     setup() {
         this.dialog = useService('dialog');
         this.orm = useService('orm');
-        this.state =  useState({ returnableLines: [] });
+        this.state =  useState({ returnableLines: [], returnReason: null });
         this.title = _t("Request a return");
 
         onWillStart(async () => {
@@ -63,6 +63,7 @@ export class ReturnOrderDialog extends Component {
 
     onReturnReasonChange() {
         const returnReason = document.querySelector('select[name="return_reason"]');
+        this.state.returnReason = returnReason.value;
         returnReason.classList.remove('is-invalid');
     }
 
@@ -84,11 +85,10 @@ export class ReturnOrderDialog extends Component {
         }
         const selectedlines = this.state.returnableLines.filter(line => line.quantity);
         this.dialog.add(ConfirmationDialog, {
-            title: '',
+            title: 'Print the return request label.',
             body: markup(
-                _t("<strong>Print the return request label.</strong><br/>") +
-                _t("Add this label in your package and send it to this address:<br/><br/>") +
-                `<strong>${this.content.company_name}</strong><br/>${this.content.warehouse_address}`
+                _t("Download, print and add this label in your package and send it to this address:<br/><br/>") +
+                `<div class='card border'><div class='card-body'><b class="d-block mb-2">${this.content.company_name}</b><span class='text-muted'>${this.content.warehouse_address.replace('\n\n', ' ').replace('\n', ' ')}</span></div></div>`
             ),
             confirmLabel: _t("Download Label"),
             confirm: async () => {
@@ -107,6 +107,7 @@ export class ReturnOrderDialog extends Component {
                 }
                 this.props.close();
             },
+            size: "md",
         });
     }
 
