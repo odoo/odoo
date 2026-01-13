@@ -49,9 +49,9 @@ class StockPicking(models.Model):
                 )
 
     def _action_done(self):
-        super(StockPicking, self)._action_done()
         for picking in self.filtered(lambda p: p.picking_type_id.l10n_it_ddt_sequence_id):
             picking.l10n_it_ddt_number = picking.picking_type_id.l10n_it_ddt_sequence_id.next_by_id()
+        super()._action_done()
 
 
 class StockPickingType(models.Model):
