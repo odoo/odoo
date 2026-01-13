@@ -212,6 +212,8 @@ class HrEmployee(models.Model):
         ("other", "Other")], compute="_compute_work_location_type", tracking=True)
 
     # All version fields needing a specific group to be accessible should also have `inherited=True` set on its definition to make sure those fields are linked to `_inherits` on `hr.version`
+    first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_manager", store=True,
+                                    help="The date of the first contract of the employee in the company.")
     contract_date_start = fields.Date(readonly=False, related="version_id.contract_date_start", inherited=True, groups="hr.group_hr_manager")
     contract_date_end = fields.Date(readonly=False, related="version_id.contract_date_end", inherited=True, groups="hr.group_hr_manager")
     trial_date_end = fields.Date(readonly=False, related="version_id.trial_date_end", inherited=True, groups="hr.group_hr_manager")
@@ -562,6 +564,11 @@ class HrEmployee(models.Model):
             ('doctor', self.env._('Doctor')),
             ('other', self.env._('Other')),
         ]
+
+    @api.depends('version_ids.contract_date_start')
+    def _compute_first_contract_date(self):
+        for employee in self:
+            employee.first_contract_date = employee._get_first_contract_date()
 
     def _get_first_versions(self):
         self.ensure_one()
