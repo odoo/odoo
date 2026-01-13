@@ -433,7 +433,6 @@ export class Message extends Record {
         return Boolean(
             !this.is_transient &&
                 !this.isPending &&
-                this.thread &&
                 this.store.self.type === "partner" &&
                 this.store.self.isInternalUser &&
                 this.persistent
