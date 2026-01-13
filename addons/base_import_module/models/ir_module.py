@@ -496,7 +496,7 @@ class IrModuleModule(models.Model):
         import requests  # noqa: PLC0415
         try:
             resp = requests.post(
-                f"{APPS_URL}/loempia/listindustrycategory",
+                f"{APPS_URL}/loempia/listindustrycategory/{major_version}",
                 json={'params': {}},
                 timeout=5.0,
             )
