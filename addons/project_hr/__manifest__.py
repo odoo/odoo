@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Project - Skills',
+    'name': 'Project - HR',
     'summary': 'Project skills',
     'description': """
         Search project tasks according to the assignees' skills
