@@ -659,7 +659,7 @@ class Website(models.CachedModel):
     @api.model
     def configurator_init(self):
         r = dict()
-        current_website = self.get_current_website()
+        current_website = self.get_current_website(fallback=True)
         company = current_website.company_id
         configurator_features = self.env['website.configurator.feature'].search([])
         r['features'] = [{
@@ -721,7 +721,7 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_apply(self, **kwargs):
-        website = self.get_current_website()
+        website = self.get_current_website(fallback=True)
         theme_name = kwargs['theme_name']
         theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
         redirect_url = theme.button_choose_theme()
@@ -891,7 +891,7 @@ class Website(models.CachedModel):
         industry = kwargs['industry_name']
 
         IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
-        text_generation_target_lang = self.get_current_website().default_lang_id.code
+        text_generation_target_lang = self.get_current_website(fallback=True).default_lang_id.code
         # If the target language is not English, we need a good translation
         # coverage. But if the target lang is en_XX it's ok to have en_US text.
         text_must_be_translated_for_openai = not text_generation_target_lang.startswith('en_')
@@ -1395,7 +1395,7 @@ class Website(models.CachedModel):
     # ----------------------------------------------------------
 
     @api.model
-    def get_current_website(self, fallback=True):
+    def get_current_website(self, fallback=None):
         """ The current website is returned in the following order:
 
         - the website forced in session `force_website_id`
