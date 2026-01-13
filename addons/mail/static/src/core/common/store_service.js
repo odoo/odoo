@@ -1,6 +1,11 @@
 import { Store as BaseStore, fields, makeStore, storeInsertFns } from "@mail/core/common/record";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
-import { cleanTerm, generateEmojisOnHtml, prettifyMessageText } from "@mail/utils/common/format";
+import {
+    attClassObjectToString,
+    cleanTerm,
+    generateEmojisOnHtml,
+    prettifyMessageText,
+} from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
@@ -211,11 +216,12 @@ export class Store extends BaseStore {
     }
 
     discussDropdownMenuClass(ctx) {
-        const res = ["o-discuss-dropdownMenu", "d-flex", "flex-column", "border-secondary"];
-        if (this.shouldSimulateDarkTheme(ctx)) {
-            res.push("o-simulateDarkTheme");
-        }
-        return res.join(" ");
+        const simulateDarkTheme = this.shouldSimulateDarkTheme(ctx);
+        return attClassObjectToString({
+            "o-discuss-dropdownMenu d-flex flex-column border-secondary": true,
+            "o-simulateDarkTheme": simulateDarkTheme,
+            "bg-view": !simulateDarkTheme,
+        });
     }
 
     standaloneInboxMessages = fields.Many("mail.message", {
