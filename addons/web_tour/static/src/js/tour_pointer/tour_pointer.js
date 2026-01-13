@@ -1,4 +1,4 @@
-import { Component, reactive, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onWillDestroy, reactive, useEffect, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { usePosition } from "@web/core/position/position_hook";
@@ -46,6 +46,16 @@ class TourPointerPopover extends Component {
         await this.orm.call("res.users", "switch_tour_enabled", [false]);
         browser.location.reload();
     }
+}
+
+function getCenter(el) {
+    const rect = el.getBoundingClientRect();
+    const cw = rect.width / 2 + rect.left;
+    const ch = rect.height / 2 + rect.top;
+    return {
+        left: cw,
+        top: ch,
+    };
 }
 
 /**
@@ -163,6 +173,25 @@ export class TourPointer extends Component {
             pointerPositionOptions
         );
 
+        const onOverlayPatched = () => {
+            const trigger = this.props.pointerState.trigger;
+            if (trigger && trigger.isConnected) {
+                const center = getCenter(trigger);
+                let parent = trigger.ownerDocument.elementFromPoint(center.left, center.top);
+                let below = true;
+                while (parent) {
+                    if (parent === trigger) {
+                        below = false;
+                        break;
+                    }
+                    parent = parent.parentElement;
+                }
+                this.state.below = below;
+            }
+        };
+        this.env.bus.addEventListener("OVERLAY-PATCHED", onOverlayPatched);
+        onWillDestroy(() => this.env.bus.removeEventListener("OVERLAY-PATCHED", onOverlayPatched));
+
         useEffect(
             () => {
                 const trigger = this.trigger;
@@ -224,7 +253,12 @@ export class TourPointer extends Component {
     }
 
     get isVisible() {
-        return this.trigger && isInPage(this.trigger) && this.triggerPosition !== "unknow";
+        return (
+            this.trigger &&
+            !this.state.below &&
+            isInPage(this.trigger) &&
+            this.triggerPosition !== "unknow"
+        );
     }
 
     /**

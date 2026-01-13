@@ -60,6 +60,9 @@ export class OverlayContainer extends Component {
             },
             () => [this.root.el]
         );
+        useEffect(() => {
+            this.env.bus.trigger("OVERLAY-PATCHED");
+        });
     }
 
     get sortedOverlays() {
