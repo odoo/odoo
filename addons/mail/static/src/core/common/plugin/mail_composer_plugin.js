@@ -3,6 +3,7 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
+import { messageUrlRegExp } from "@mail/utils/common/format";
 
 /**
  * This plugin works with the composer used in Discuss, ChatWindow and Chatter.
@@ -10,7 +11,7 @@ import { withSequence } from "@html_editor/utils/resource";
  */
 export class MailComposerPlugin extends Plugin {
     static id = "mail_composer";
-    static dependencies = ["clipboard", "hint", "input", "selection"];
+    static dependencies = ["clipboard", "hint", "input", "link", "selection"];
     resources = {
         before_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
         bypass_paste_image_files: () => true,
@@ -35,6 +36,7 @@ export class MailComposerPlugin extends Plugin {
             }
         },
         input_handlers: this.config.composerPluginDependencies.onInput.bind(this),
+        paste_text_overrides: this.handlePasteText.bind(this),
     };
 
     setup() {
@@ -53,5 +55,14 @@ export class MailComposerPlugin extends Plugin {
             "focusout",
             this.config.composerPluginDependencies.onFocusout
         );
+    }
+
+    handlePasteText(selection, text) {
+        const messageMatch = messageUrlRegExp.exec(text);
+        if (!messageMatch) {
+            return false;
+        }
+        this.dependencies.link.insertLink(text, text);
+        return true;
     }
 }

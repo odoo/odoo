@@ -33,7 +33,7 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { createElementWithContent } from "@web/core/utils/html";
-import { getOrigin, url } from "@web/core/utils/urls";
+import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
@@ -444,16 +444,8 @@ export class Message extends Component {
         editedEl?.replaceChildren(renderToElement("mail.Message.edited"));
         const channelLinks = bodyEl.querySelectorAll("a.o_channel_redirect");
         this.store.handleValidChannelMention(Array.from(channelLinks));
-        for (const el of bodyEl.querySelectorAll(".o_message_redirect")) {
-            // only transform links targetting the same database
-            if (el.getAttribute("href")?.startsWith(getOrigin())) {
-                const message = this.store["mail.message"].get(el.dataset.oeId);
-                if (message?.thread?.displayName) {
-                    el.classList.add("o_message_redirect_transformed");
-                    el.replaceChildren(renderToElement("mail.Message.messageLink", { message }));
-                }
-            }
-        }
+        const messageLinks = bodyEl.querySelectorAll("a.o_message_redirect");
+        this.store.prettifyMessageMentions(Array.from(messageLinks));
     }
 
     getAuthorAttClass() {
