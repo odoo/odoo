@@ -16,11 +16,15 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { makeRecordFieldLocalId } from "@mail/model/misc";
+import { Store } from "@mail/model/store";
+import { toRawValue } from "@mail/utils/common/local_storage";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
+    getService,
     makeKwArgs,
     mockService,
     patchWithCleanup,
@@ -98,14 +102,21 @@ test("rendering with chat push notification default permissions", async () => {
 
 test("can quickly dismiss 'Turn on notification' suggestion", async () => {
     patchBrowserNotification("default");
+    const IS_NOTIFICATION_PERMISSION_LS = makeRecordFieldLocalId(
+        Store.localId(),
+        "isNotificationPermissionDismissed"
+    );
     await start();
     await contains(".o-mail-MessagingMenu-counter:text('1')");
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem");
-    await contains(".o-mail-NotificationItem-name:text('Turn on notifications')");
+    await contains(".o-mail-NotificationItem:has(:text('Turn on notifications'))");
+    expect(localStorage.getItem(IS_NOTIFICATION_PERMISSION_LS)).toBe(null);
+    expect(getService("mail.store").isNotificationPermissionDismissed).toBe(false);
     await click(".o-mail-NotificationItem:contains(Turn on notifications) [title='Dismiss']");
-    await contains(".o-mail-NotificationItem-name:text('Turn on notifications')", { count: 0 });
+    await contains(".o-mail-NotificationItem:has(:text('Turn on notifications'))", { count: 0 });
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
+    expect(localStorage.getItem(IS_NOTIFICATION_PERMISSION_LS)).toBe(toRawValue(true));
+    expect(getService("mail.store").isNotificationPermissionDismissed).toBe(true);
 });
 
 test("rendering with chat push notification permissions denied", async () => {
