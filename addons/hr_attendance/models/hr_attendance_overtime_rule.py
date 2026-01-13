@@ -281,6 +281,28 @@ class HrAttendanceOvertimeRule(models.Model):
         delta = sum((i[1] - i[0]).total_seconds() for i in expected_work_time)
         expected_hours = delta / 3600.0
 
+        if version.is_flexible:
+            # Leaves inside the virtual attendance are already deducted, the ones outside of it reduce their day down to 0
+            emp = version.employee_id
+            calendar = version.resource_calendar_id
+            tz = timezone(emp._get_tz())
+            period_start, period_end = utc.localize(date_start), utc.localize(date_end)
+            leave_intervals = calendar._leave_intervals_batch(
+                period_start,
+                period_end,
+                tz=tz,
+                resources=emp.resource_id,
+                domain=[('company_id', 'in', [False, emp.company_id.id]), ('time_type', '=', 'leave')])[emp.resource_id.id]
+            virtual_attendance_intervals = calendar._attendance_intervals_batch(
+                period_start, period_end, resources=emp.resource_id, tz=tz)[emp.resource_id.id]
+            leaves_outside = leave_intervals - virtual_attendance_intervals
+            expected_hours = 0.0
+            for day in rrule(freq=DAILY, dtstart=date_start, until=date_end):
+                day_start = tz.localize(day)
+                day_interval = Intervals([(day_start, day_start + timedelta(days=1), self.env['resource.calendar'])])
+                day_expected_hours = sum_intervals(expected_work_time & day_interval)
+                expected_hours += max(0.0, day_expected_hours - sum_intervals(leaves_outside & day_interval))
+
         return expected_hours
 
     def _get_daterange_overtime_intervals_for_quantity_rule(self, start, stop, attendance_intervals, schedule):  # TODO: TO REMOVE IN MASTER
