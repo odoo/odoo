@@ -62,6 +62,34 @@ class TestViews(TransactionCase):
             base.inherit_children_ids.get_combined_arch(),
         )
 
+    def test_save_view_delay_translations(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.first_view.with_context(lang='fr_FR').arch = "<div>Bonjour Monde</div>"
+
+        # delayed translations are enabled by default (SavePlugin.saveView uses it by default)
+        self.first_view.with_context(delay_translations=True).save(value='<div>New World</div>', xpath='/div')
+        self.assertEqual(
+            self.first_view.with_context(lang='fr_FR').arch,
+            '<div>Bonjour Monde</div>',
+        )
+        delayed_translation = self.first_view.with_context(lang='fr_FR', edit_translations=True).arch
+        self.assertIn(
+            '<div><span class="o_delay_translation"',
+            delayed_translation,
+        )
+        self.assertIn(
+            '>New World</span></div>',
+            delayed_translation,
+        )
+
+        # delayed translations can be disabled thanks to ir.config_parameter
+        self.env['ir.config_parameter'].sudo().set_param('website.disable_delay_translations', '1')
+        self.first_view.with_context(delay_translations=True).save(value='<div>All New World</div>', xpath='/div')
+        self.assertEqual(
+            self.first_view.with_context(lang='fr_FR').arch,
+            '<div>All New World</div>',
+        )
+
     def test_find_available_name(self):
         View = self.env['ir.ui.view']
         used_names = ['Unrelated name']

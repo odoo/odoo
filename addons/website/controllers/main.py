@@ -777,9 +777,12 @@ class Website(Home):
 
     @http.route('/website/save_xml', type='jsonrpc', auth='user', website=True)
     def save_xml(self, view_id, arch):
+        disable_delay_translations = self.env['ir.config_parameter'].sudo().get_param(
+            'website.disable_delay_translations'
+        ) not in ('False', '0', '', False)
         request.env['ir.ui.view'].browse(view_id).with_context(
             lang=request.website.default_lang_id.code,
-            delay_translations=True,
+            delay_translations=not disable_delay_translations,
         ).arch = arch
 
     @http.route("/website/get_switchable_related_views", type="jsonrpc", auth="user", website=True, readonly=True)

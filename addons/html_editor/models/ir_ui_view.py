@@ -291,6 +291,12 @@ class IrUiView(models.Model):
         """
         self.ensure_one()
 
+        if self.env.context.get('delay_translations'):
+            disable_delay_translations = self.env['ir.config_parameter'].sudo().get_param(
+                'website.disable_delay_translations'
+            ) not in ('False', '0', '', False)
+            self.env = self.with_context(delay_translations=not disable_delay_translations).env
+
         arch_section = html.fromstring(
             value, parser=html.HTMLParser(encoding='utf-8'))
 
