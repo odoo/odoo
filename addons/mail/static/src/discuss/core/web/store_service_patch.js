@@ -28,7 +28,7 @@ const StorePatch = {
         const channelsNeedactionCounter = Object.values(
             this.store["discuss.channel"].records
         ).reduce((acc, channel) => acc + channel.message_needaction_counter, 0);
-        return super.computeGlobalCounter() + channelsContribution + channelsNeedactionCounter;
+        return super.computeGlobalCounter() + channelsContribution - channelsNeedactionCounter;
     },
     /** @returns {import("models").DiscussChannel[]} */
     getSelfImportantChannels() {
