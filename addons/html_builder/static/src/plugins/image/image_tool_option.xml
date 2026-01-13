@@ -36,11 +36,11 @@
 
 <t t-name="html_builder.ImageAndFaOption">
     <BuilderRow label.translate="Alignment">
-        <BuilderSelect>
-            <BuilderSelectItem action="'imageAlignClassAction'" actionParam="''" title.translate="Unalign">None</BuilderSelectItem>
-            <BuilderSelectItem action="'imageAlignClassAction'" actionParam="'me-auto float-start'" title.translate="Align Left">Left</BuilderSelectItem>
-            <BuilderSelectItem action="'imageAlignClassAction'" actionParam="'mx-auto d-block'" title.translate="Align Center">Center</BuilderSelectItem>
-            <BuilderSelectItem action="'imageAlignClassAction'" actionParam="'ms-auto float-end'" title.translate="Align Right">Right</BuilderSelectItem>
+        <BuilderSelect action="'imageAlignClassAction'">
+            <BuilderSelectItem actionParam="''" title.translate="Unalign">None</BuilderSelectItem>
+            <BuilderSelectItem ltrRtlMapping="'left-right'" actionParam="'me-auto float-start'" title.translate="Align Left">Left</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'mx-auto d-block'" title.translate="Align Center">Center</BuilderSelectItem>
+            <BuilderSelectItem ltrRtlMapping="'left-right'" actionParam="'ms-auto float-end'" title.translate="Align Right">Right</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Style">

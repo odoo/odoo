@@ -9,7 +9,7 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { SavePlugin } from "@html_builder/core/save_plugin";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, delay, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, delay, queryOne, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -281,4 +281,99 @@ test("System should not crash if an asynchronous useDomState is working with rem
     await useDomStateStarted.promise;
     queryOne(":iframe .test").remove();
     editingElRemoved.resolve();
+});
+
+describe("useSelectableLtrRtlComponent", () => {
+    test("Should register 2*2 ltrRtlMapping with the same name in different parents", async () => {
+        addBuilderOption(
+            class TestOptionComponent extends BaseOptionComponent {
+                static selector = "div.test-options-target";
+                static template = xml`
+                    <BuilderButtonGroup>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'a'">A</BuilderButton>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'b'">B</BuilderButton>
+                    </BuilderButtonGroup>
+                    <BuilderButtonGroup>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'c'">C</BuilderButton>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'d'">D</BuilderButton>
+                    </BuilderButtonGroup>
+                `;
+            }
+        );
+        expect.errors(0);
+        await setupHTMLBuilder(`<div class="test-options-target">Target</div>`);
+        await contains(":iframe .test-options-target").click();
+        await tick();
+        for (const cls of ["a", "b", "c", "d"]) {
+            expect(`[data-class-action=${cls}]`).toBeVisible();
+        }
+        expect.verifyErrors([]);
+    });
+    test("Registering only 1 ltrRtlMapping should crash", async () => {
+        patchWithCleanup(console, {
+            warn: (msg) => expect.step(msg),
+        });
+        addBuilderOption(
+            class TestOptionComponent extends BaseOptionComponent {
+                static selector = "div.test-options-target";
+                static template = xml`
+                    <BuilderButtonGroup>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'d-none'">Hide</BuilderButton>
+                    </BuilderButtonGroup>
+                `;
+            }
+        );
+        await setupHTMLBuilder(`<div class="test-options-target">Target</div>`);
+        await contains(":iframe .test-options-target").click();
+        await tick();
+        expect.waitForErrors([
+            `ltrRtlMapping "test" has been found only once. They should always come in pair and shouldn't have different render conditions.`,
+        ]);
+        expect.verifySteps(["[Owl] Unhandled error. Destroying the root component"]);
+    });
+    test("Registering 2 ltrRtlMapping with different rendering conditions should crash", async () => {
+        patchWithCleanup(console, {
+            warn: (msg) => expect.step(msg),
+        });
+        addBuilderOption(
+            class TestOptionComponent extends BaseOptionComponent {
+                static selector = "div.test-options-target";
+                static template = xml`
+                    <BuilderButtonGroup>
+                        <BuilderButton t-if="true" ltrRtlMapping="'test'" classAction="'button-a'">A</BuilderButton>
+                        <BuilderButton t-if="false" ltrRtlMapping="'test'" classAction="'button-b'">B</BuilderButton>
+                    </BuilderButtonGroup>
+                `;
+            }
+        );
+        await setupHTMLBuilder(`<div class="test-options-target">Target</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect.waitForErrors([
+            `ltrRtlMapping "test" has been found only once. They should always come in pair and shouldn't have different render conditions.`,
+        ]);
+        expect.verifySteps(["[Owl] Unhandled error. Destroying the root component"]);
+    });
+    test("Registering 3 identical ltrRtlMapping should crash", async () => {
+        patchWithCleanup(console, {
+            warn: (msg) => expect.step(msg),
+        });
+        addBuilderOption(
+            class TestOptionComponent extends BaseOptionComponent {
+                static selector = "div.test-options-target";
+                static template = xml`
+                    <BuilderButtonGroup>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'button-a'">Button A</BuilderButton>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'button-b'">Button B</BuilderButton>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'button-c'">Button C</BuilderButton>
+                    </BuilderButtonGroup>
+                `;
+            }
+        );
+        await setupHTMLBuilder(`<div class="test-options-target">Target</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect.waitForErrors([
+            `ltrRtlMapping "test" has been found more than twice. They should always come in pair.`,
+        ]);
+        expect.verifySteps(["[Owl] Unhandled error. Destroying the root component"]);
+    });
 });

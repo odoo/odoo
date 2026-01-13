@@ -19,9 +19,9 @@
         </BuilderRow>
         <BuilderRow label.translate="Alignment" t-if="!this.isActiveItem('so_width_100')" level="1">
             <BuilderButtonGroup>
-                <BuilderButton icon="'fa-align-left'" title.translate="Left" classAction="'me-auto'"/>
+                <BuilderButton ltrRtlMapping="'left-right'" classAction="'me-auto'" icon="'fa-align-left'" title.translate="Left"/>
                 <BuilderButton icon="'fa-align-center'" title.translate="Center" classAction="'mx-auto'"/>
-                <BuilderButton icon="'fa-align-right'" title.translate="Right" classAction="'ms-auto'"/>
+                <BuilderButton ltrRtlMapping="'left-right'" classAction="'ms-auto'" icon="'fa-align-right'" title.translate="Right"/>
             </BuilderButtonGroup>
         </BuilderRow>
     </t>
@@ -31,8 +31,13 @@
     </BuilderRow>
     <BuilderRow label.translate="Decoration">
         <BuilderSelect>
+            <t t-set="left">Left line</t>
+            <t t-set="right">Right line</t>
             <BuilderSelectItem classAction="'s_blockquote_default'">None</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_blockquote_with_line'" id="'blockquote_with_line_opt'">Left line</BuilderSelectItem>
+            <BuilderSelectItem
+                id="'blockquote_with_line_opt'"
+                classAction="'s_blockquote_with_line'"
+                t-out="this.env.langDir.content === 'ltr' ? left : right"/>
             <BuilderSelectItem classAction="'s_blockquote_with_icon'">Icon</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
@@ -48,9 +53,13 @@
         </BuilderRow>
         <BuilderRow t-if="this.isActiveItem('blockquote_show_author_opt')" label.translate="Author Alignment" level="1">
             <BuilderSelect>
-                <BuilderSelectItem classAction="'flex-row align-items-start justify-content-start text-start'">Left</BuilderSelectItem>
+                <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'flex-row align-items-start justify-content-start text-start'">
+                    Left
+                </BuilderSelectItem>
                 <BuilderSelectItem classAction="'flex-column align-items-center text-center'">Center</BuilderSelectItem>
-                <BuilderSelectItem classAction="'flex-row-reverse align-items-start justify-content-start text-end'">Right</BuilderSelectItem>
+                <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'flex-row-reverse align-items-start justify-content-start text-end'">
+                    Right
+                </BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
     </BuilderContext>

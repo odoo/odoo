@@ -92,13 +92,15 @@
             action="'productPageContainerOrder'"
             applyTo="'#product_detail_main'"
         >
-            <BuilderButton
-                actionParam="{ previewClass: ''}"
+            <BuilderButton ltrRtlMapping="'left-right'"
+                title.translate="Image on the left"
+                actionParam="{ previewClass: '' }"
                 actionValue="'regular'"
                 iconImg="'/website/static/src/img/snippets_options/image_left.svg'"
             />
-            <BuilderButton
-                actionParam="{ previewClass: 'flex-lg-row-reverse'}"
+            <BuilderButton ltrRtlMapping="'left-right'"
+                title.translate="Image on the right"
+                actionParam="{ previewClass: 'flex-lg-row-reverse' }"
                 actionValue="'inverse'"
                 iconImg="'/website/static/src/img/snippets_options/image_right.svg'"
             />
@@ -146,8 +148,20 @@
     >
 	    <BuilderRow label.translate="Thumbnails" level="1">
 	        <BuilderButtonGroup action="'websiteConfig'" id="'o_wsale_thumbnail_pos'">
-	            <BuilderButton className="'fa fa-fw fa-long-arrow-left'" actionParam="{ views: ['website_sale.carousel_product_indicators_left'] }" title.translate="Left"></BuilderButton>
-	            <BuilderButton className="'fa fa-fw fa-long-arrow-down'" actionParam="{ views: ['website_sale.carousel_product_indicators_bottom'] }" title.translate="Bottom"></BuilderButton>
+                <t t-set="isSameLangDir" t-value="this.env.langDir.content === this.env.langDir.builder"/>
+                <t t-set="left">Left</t>
+                <t t-set="right">Right</t>
+                <BuilderButton t-if="isSameLangDir"
+                    title="this.env.langDir.builder === 'ltr' ? left : right"
+                    icon="'fa-fw fa-long-arrow-left'"
+                    actionParam="{ views: ['website_sale.carousel_product_indicators_left'] }"
+                />
+                <BuilderButton icon="'fa-fw fa-long-arrow-down'" actionParam="{ views: ['website_sale.carousel_product_indicators_bottom'] }" title.translate="Bottom"/>
+                <BuilderButton t-if="!isSameLangDir"
+                    title="this.env.langDir.builder === 'ltr' ? right : left"
+                    icon="'fa-fw fa-long-arrow-right'"
+                    actionParam="{ views: ['website_sale.carousel_product_indicators_left'] }"
+                />
 	        </BuilderButtonGroup>
 	    </BuilderRow>
     </t>

@@ -155,8 +155,8 @@
                 <i class="fa fa-eye-slash"/>
             </BuilderButton>
             <BuilderButton title.translate="Top" actionValue="'top'" iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"/>
-            <BuilderButton title.translate="Left" actionValue="'left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
-            <BuilderButton title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" actionValue="'left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
         </BuilderButtonGroup>
     </BuilderRow>
     <BuilderRow label.translate="Link to country">
@@ -451,9 +451,9 @@
 <t t-name="website.s_website_form_submit_option">
     <BuilderRow label.translate="Button Position">
         <BuilderSelect>
-            <BuilderSelectItem classAction="'text-start s_website_form_no_submit_label'">Left</BuilderSelectItem>
+            <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'text-start s_website_form_no_submit_label'">Left</BuilderSelectItem>
             <BuilderSelectItem classAction="'text-center s_website_form_no_submit_label'">Center</BuilderSelectItem>
-            <BuilderSelectItem classAction="'text-end s_website_form_no_submit_label'">Right</BuilderSelectItem>
+            <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'text-end s_website_form_no_submit_label'">Right</BuilderSelectItem>
             <BuilderSelectItem classAction="''">Input Aligned</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>

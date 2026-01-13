@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, markup, onMounted } from "@odoo/owl";
+import { Component, markup, onMounted, xml } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import {
     clickableBuilderComponentProps,
@@ -7,16 +7,19 @@ import {
     useSelectableItemComponent,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
+import { BuilderSelectableWrapperComponent } from "./builder_selectable_wrapper_component";
 
-export class BuilderSelectItem extends Component {
-    static template = "html_builder.BuilderSelectItem";
-    static props = {
-        ...clickableBuilderComponentProps,
-        title: { type: String, optional: true },
-        label: { type: String, optional: true },
-        className: { type: String, optional: true },
-        slots: { type: Object, optional: true },
-    };
+const builderSelectItemProps = {
+    ...clickableBuilderComponentProps,
+    title: { type: String, optional: true },
+    label: { type: String, optional: true },
+    className: { type: String, optional: true },
+    slots: { type: Object, optional: true },
+};
+
+export class BuilderSelectItemInternal extends Component {
+    static template = "html_builder.BuilderSelectItemInternal";
+    static props = { ...builderSelectItemProps };
     static defaultProps = {
         className: "",
     };
@@ -72,4 +75,19 @@ export class BuilderSelectItem extends Component {
         this.operation.revert();
         this.removeKeydown();
     }
+}
+
+export class BuilderSelectItem extends BuilderSelectableWrapperComponent {
+    static template = xml`
+        <BuilderSelectItemInternal t-props="this.forwardedProps">
+            <t t-slot="default"/>
+        </BuilderSelectItemInternal>
+        `;
+    static components = { BuilderSelectItemInternal };
+    static props = {
+        ltrRtlMapping: { type: String, optional: true },
+        isLabelLinkedToContent: { type: Boolean, optional: true },
+        slots: { type: Object, optional: true },
+        ...builderSelectItemProps,
+    };
 }

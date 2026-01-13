@@ -10,6 +10,7 @@ import {
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import { onMounted, onWillDestroy, onWillStart, onWillUpdateProps, status, toRaw } from "@odoo/owl";
 import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
+import { localization } from "@web/core/l10n/localization";
 import { useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
 import { useDebounced } from "@web/core/utils/timing";
@@ -62,13 +63,13 @@ export function useDomState(getState, { checkEditingElement = true } = {}) {
     return state;
 }
 
-export function useActionInfo() {
+export function useActionInfo({ stringify = true } = {}) {
     const comp = useComponent();
 
     const getParam = (paramName) => {
         let param = comp.props[paramName];
         param = param === undefined ? comp.env.weContext[paramName] : param;
-        if (typeof param === "object") {
+        if (stringify && typeof param === "object") {
             param = JSON.stringify(param);
         }
         return param;
@@ -85,6 +86,8 @@ export function useActionInfo() {
         styleActionValue: comp.props.styleActionValue,
         attributeAction: getParam("attributeAction"),
         attributeActionValue: comp.props.attributeActionValue,
+        dataAttributeAction: getParam("dataAttributeAction"),
+        dataAttributeActionValue: comp.props.dataAttributeActionValue,
     };
 }
 
@@ -132,6 +135,13 @@ export function useBuilderComponent() {
     if (Object.keys(weContext).length) {
         newEnv.weContext = { ...comp.env.weContext, ...weContext };
     }
+    if (!oldEnv.langDir) {
+        newEnv.langDir = {
+            content: oldEnv.editor.config.isEditableRTL ? "rtl" : "ltr",
+            builder: localization.direction,
+        };
+    }
+
     useSubEnv(newEnv);
 }
 export function useDependencyDefinition(id, item, { onReady } = {}) {
@@ -209,6 +219,7 @@ export function useGetItemValue() {
 export function useSelectableComponent(id, { onItemChange } = {}) {
     useBuilderComponent();
     const selectableItems = [];
+    const ltrRtlMappedItems = new Map();
     const refreshCurrentItemDebounced = useDebounced(refreshCurrentItem, 0, { immediate: true });
     const env = useEnv();
 
@@ -234,6 +245,70 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
         }
         if (currentItem) {
             onItemChange?.(currentItem);
+        }
+    }
+
+    onMounted(() => {
+        for (const [ltrRtlMapping, mappedItems] of ltrRtlMappedItems.entries()) {
+            if (mappedItems.length === 1) {
+                throw new Error(
+                    `ltrRtlMapping "${ltrRtlMapping}" has been found only once. They should always come in pair and shouldn't have different render conditions.`
+                );
+            }
+        }
+    });
+
+    function handleLtrRtl({ ltrRtlMapping, isLabelLinkedToContent, langDir }) {
+        const mappedItems = ltrRtlMappedItems.get(ltrRtlMapping);
+        if (mappedItems.length === 2) {
+            const labelProps = ["title", "label", "slots"];
+            if (langDir.content === "ltr" && langDir.builder === "ltr") {
+                return;
+            }
+            if (langDir.builder === "rtl" && !isLabelLinkedToContent) {
+                revertItemPropsState(mappedItems, labelProps);
+            }
+            // The action depends on whether both builder and iframe have the
+            // same direction or not: if both are the same, the 1st button
+            // should have a "start" action (in English: left = start, in
+            // Arabic: right = start). If both are different, the 1st button
+            // should have an "end" action (builder in English with an iframe
+            // in Arabic: left = end, right = start).
+            if (langDir.content !== langDir.builder) {
+                const revertProps = [
+                    "className",
+                    "actionParam",
+                    "actionValue",
+                    "classAction",
+                    "styleAction",
+                    "styleActionValue",
+                    "attributeAction",
+                    "attributeActionValue",
+                    "dataAttributeAction",
+                    "dataAttributeActionValue",
+                ];
+                if (isLabelLinkedToContent) {
+                    revertProps.push(...labelProps);
+                }
+                revertItemPropsState(mappedItems, revertProps);
+            }
+        } else if (mappedItems.length > 2) {
+            throw new Error(
+                `ltrRtlMapping "${ltrRtlMapping}" has been found more than twice. They should always come in pair.`
+            );
+        }
+    }
+
+    function revertItemPropsState(items, propsState) {
+        const startItemState = items[0].getItemState();
+        const endItemState = items[1].getItemState();
+        for (const prop of propsState) {
+            if (startItemState[prop] !== undefined || endItemState[prop] !== undefined) {
+                [endItemState[prop], startItemState[prop]] = [
+                    startItemState[prop],
+                    endItemState[prop],
+                ];
+            }
         }
     }
 
@@ -268,6 +343,28 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
             items: selectableItems,
             refreshCurrentItem: () => refreshCurrentItem(),
             getSelectableState: () => state,
+            addLtrRtlMappedItem: (item) => {
+                if (!ltrRtlMappedItems.has(item.ltrRtlMapping)) {
+                    ltrRtlMappedItems.set(item.ltrRtlMapping, [item]);
+                } else {
+                    ltrRtlMappedItems.get(item.ltrRtlMapping).push(item);
+                }
+            },
+            removeLtrRtlMappedItem: (item) => {
+                const mappedItems = ltrRtlMappedItems.get(item.ltrRtlMapping);
+                if (!mappedItems) {
+                    return;
+                }
+                if (mappedItems.length === 1) {
+                    ltrRtlMappedItems.delete(item.ltrRtlMapping);
+                    return;
+                }
+                const index = mappedItems.indexOf(item);
+                if (index !== -1) {
+                    mappedItems.splice(index, 1);
+                }
+            },
+            updateLtrRtlMappedItem: handleLtrRtl,
         },
     });
 }
@@ -337,6 +434,53 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
     }
 
     return { state, operation };
+}
+/**
+ * Registers selectable items to be able to switch their props if needed in some
+ * contexts with RTL languages.
+ *
+ * Many options are selectable components (BuilderButtonGroup or BuilderSelect)
+ * with at least a "Left" and a "Right" button, but their action actually
+ * depends on the start and end of the line (e.g. `flex-row` vs
+ * `flex-row-reverse`). They need some logic to work across all 4 possible
+ * combinations of LTR / RTL in the builder and the iframe (LTR-LTR, LTR-RTL,
+ * RTL-LTR, RTL-RTL).
+ *
+ * The place of the button (visually on the left or on the right) depends on the
+ * _backend language_: in English, the 1st button is on the left, the 2nd is on
+ * the right. In Arabic, the 1st button is on the right, the 2nd is on the left.
+ * Similarly, in a dropdown, LTR-speaking people will think of "left" as the 1st
+ * element: it comes at the top. But RTL-speaking people will think of "right"
+ * as the 1st element: it should come at the top.
+ * That is why we need to adapt each button's label, icon, and action.
+ *
+ * @param {{ ltrRtlMapping: string, isLabelLinkedToContent: boolean, getItemState: Function }}
+ */
+export function useSelectableLtrRtlComponent({
+    ltrRtlMapping,
+    isLabelLinkedToContent,
+    getItemState = () => {},
+}) {
+    const env = useEnv();
+    if (ltrRtlMapping && env.selectableContext) {
+        const ltrRtlMappedItem = {
+            ltrRtlMapping,
+            isLabelLinkedToContent,
+            getItemState,
+            langDir: env.langDir,
+        };
+        env.selectableContext.addLtrRtlMappedItem(ltrRtlMappedItem);
+
+        onWillStart(() => {
+            env.selectableContext.updateLtrRtlMappedItem(ltrRtlMappedItem);
+        });
+        onWillUpdateProps(async () => {
+            env.selectableContext.updateLtrRtlMappedItem(ltrRtlMappedItem);
+        });
+        onWillDestroy(() => {
+            env.selectableContext.removeLtrRtlMappedItem(ltrRtlMappedItem);
+        });
+    }
 }
 
 function usePrepareAction(getAllActions) {

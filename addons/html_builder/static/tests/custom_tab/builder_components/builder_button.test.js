@@ -7,10 +7,10 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
-import { describe, expect, test } from "@odoo/hoot";
+import { before, describe, expect, getFixture, test } from "@odoo/hoot";
 import { animationFrame, click, hover, runAllTimers } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -864,4 +864,98 @@ test("consecutive dynamic applyTo", async () => {
     await contains("[data-class-action='actionClass']").click();
     expect(":iframe .second .a").not.toHaveClass("actionClass");
     expect(":iframe .second .b").toHaveClass("actionClass");
+});
+
+describe("LTR - RTL compatibility", () => {
+    before(() => {
+        addBuilderOption({
+            selector: ".selector",
+            template: xml`
+                <BuilderButtonGroup>
+                    <BuilderButton ltrRtlMapping="'left-right'" title="'Left'" icon="'fa-arrow-left'" classAction="'class-a'"/>
+                    <BuilderButton ltrRtlMapping="'left-right'" title="'Right'" icon="'fa-arrow-right'" classAction="'class-b'"/>
+                </BuilderButtonGroup>
+            `,
+        });
+    });
+
+    test("Iframe and Builder LTR", async () => {
+        await setupHTMLBuilder(`<div class="selector">Hello</div>`);
+        await contains(":iframe .selector").click();
+        expect(".o-hb-button-group .o-hb-btn:eq(0)").toHaveAttribute("title", "Left");
+        expect(".o-hb-button-group .o-hb-btn:eq(1)").toHaveAttribute("title", "Right");
+        await contains(".o-hb-button-group .o-hb-btn:eq(0)").click();
+        expect(":iframe .selector").toHaveClass("class-a");
+        expect(":iframe .selector").not.toHaveClass("class-b");
+        await contains(".o-hb-button-group .o-hb-btn:eq(1)").click();
+        expect(":iframe .selector").toHaveClass("class-b");
+        expect(":iframe .selector").not.toHaveClass("class-a");
+    });
+
+    test("Iframe and Builder RTL", async () => {
+        onRpc("/web/webclient/translations", () => ({
+            hash: "aaa",
+            lang: "ar-001",
+            lang_parameters: {
+                direction: "rtl",
+                grouping: "[3,0]",
+                date_format: "%m/%d/%Y",
+                time_format: "%H:%M:%S",
+            },
+            modules: {},
+        }));
+        // Visual styling to run the test in debug.
+        getFixture().style.setProperty("direction", "rtl");
+
+        await setupHTMLBuilder(`<div class="selector">Hello</div>`, { iframeLangDir: "rtl" });
+        await contains(":iframe .selector").click();
+        expect(".o-hb-button-group .o-hb-btn:eq(0)").toHaveAttribute("title", "Right");
+        expect(".o-hb-button-group .o-hb-btn:eq(1)").toHaveAttribute("title", "Left");
+        await contains(".o-hb-button-group .o-hb-btn:eq(0)").click();
+        expect(":iframe .selector").toHaveClass("class-a");
+        expect(":iframe .selector").not.toHaveClass("class-b");
+        await contains(".o-hb-button-group .o-hb-btn:eq(1)").click();
+        expect(":iframe .selector").toHaveClass("class-b");
+        expect(":iframe .selector").not.toHaveClass("class-a");
+    });
+
+    test("Iframe LTR and Builder RTL", async () => {
+        onRpc("/web/webclient/translations", () => ({
+            hash: "aaa",
+            lang: "ar-001",
+            lang_parameters: {
+                direction: "rtl",
+                grouping: "[3,0]",
+                date_format: "%m/%d/%Y",
+                time_format: "%H:%M:%S",
+            },
+            modules: {},
+        }));
+        // Visual styling to run the test in debug.
+        getFixture().style.setProperty("direction", "rtl");
+
+        await setupHTMLBuilder(`<div class="selector">Hello</div>`);
+        await contains(":iframe .selector").click();
+        expect(".o-hb-button-group .o-hb-btn:eq(0)").toHaveAttribute("title", "Right");
+        expect(".o-hb-button-group .o-hb-btn:eq(1)").toHaveAttribute("title", "Left");
+        await contains(".o-hb-button-group .o-hb-btn:eq(0)").click();
+        expect(":iframe .selector").toHaveClass("class-b");
+        expect(":iframe .selector").not.toHaveClass("class-a");
+        await contains(".o-hb-button-group .o-hb-btn:eq(1)").click();
+        expect(":iframe .selector").toHaveClass("class-a");
+        expect(":iframe .selector").not.toHaveClass("class-b");
+    });
+
+    test("Iframe RTL and Builder LTR", async () => {
+        await setupHTMLBuilder(`<div class="selector">Hello</div>`, { iframeLangDir: "rtl" });
+        await contains(":iframe .selector").click();
+        expect(".o-hb-button-group .o-hb-btn:eq(0)").toHaveAttribute("title", "Left");
+        expect(".o-hb-button-group .o-hb-btn:eq(1)").toHaveAttribute("title", "Right");
+        await contains(".o-hb-button-group .o-hb-btn:eq(0)").click();
+        expect(":iframe .selector").toHaveClass("class-b");
+        expect(":iframe .selector").not.toHaveClass("class-a");
+        await contains(".o-hb-button-group .o-hb-btn:eq(1)").click();
+        expect(":iframe .selector").toHaveClass("class-a");
+        expect(":iframe .selector").not.toHaveClass("class-b");
+    });
 });

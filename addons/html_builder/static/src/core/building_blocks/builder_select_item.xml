@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.BuilderSelectItem">
+<t t-name="html_builder.BuilderSelectItemInternal">
     <BuilderComponent>
         <div
             t-attf-class="o-hb-select-dropdown-item d-flex flex-column cursor-pointer o-dropdown-item dropdown-item o-navigable #{ this.props.className }"
@@ -14,6 +14,8 @@
             t-att-data-style-action-value="this.info.styleActionValue"
             t-att-data-attribute-action="this.info.attributeAction"
             t-att-data-attribute-action-value="this.info.attributeActionValue"
+            t-att-data-data-attribute-action="this.info.dataAttributeAction"
+            t-att-data-data-attribute-action-value="this.info.dataAttributeActionValue"
             t-att-title="this.props.title"
             t-on-click="this.onClick"
             t-on-pointerenter="this.onPointerEnter"
