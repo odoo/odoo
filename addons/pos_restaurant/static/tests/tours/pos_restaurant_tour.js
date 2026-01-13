@@ -14,6 +14,7 @@ import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import { delay } from "@web/core/utils/concurrency";
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import * as PreparationReceipt from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
@@ -254,6 +255,11 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
             // Check empty course gets remove after fire course.
             ProductScreen.clickCourseButton(),
             ProductScreen.selectCourseLine("Course 2"),
+            {
+                content: "Wait atleast 1 sec so that courses have different fired_date timestamps",
+                trigger: "body",
+                run: async () => await delay(1000),
+            },
             ProductScreen.fireCourseButton(),
             Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
