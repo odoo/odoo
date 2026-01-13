@@ -210,6 +210,13 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 subtotal_vals.pop('percent', None)
                 subtotal_vals['currency_dp'] = 2
 
+        if invoice.currency_id != invoice.company_id.currency_id:
+            vals_list.append({
+                'currency': invoice.company_id.currency_id,
+                'currency_dp': self._get_currency_decimal_places(invoice.company_id.currency_id),
+                'tax_amount': taxes_vals['tax_amount'],
+            })
+
         return vals_list
 
     def _get_invoice_line_item_vals(self, line, taxes_vals):
@@ -258,6 +265,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals['vals'].update({
             'customization_id': self._get_customization_ids()['ubl_bis3'],
             'profile_id': 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
+            'tax_currency_code': None if invoice.currency_id == invoice.company_id.currency_id else invoice.company_id.currency_id.name,
             'currency_dp': 2,
             'ubl_version_id': None,
         })
@@ -339,7 +347,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 break
 
         for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
-            if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')) != 1:
+            if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type not in ('fixed', 'code'))) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
                 # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
                 constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})

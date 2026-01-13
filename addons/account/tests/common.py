@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, Command
-from odoo.tests.common import TransactionCase, HttpCase, tagged, Form
+from odoo import fields, models, Command
+from odoo.tools import config, file_path, file_open
+from odoo.tests import save_test_file, Form, HttpCase, TransactionCase
 
 import base64
+import logging
+import re
 
 from contextlib import contextmanager
 from lxml import etree
 from unittest import SkipTest
 from unittest.mock import patch
+
+_logger = logging.getLogger(__name__)
 
 
 def instantiate_accountman(cls):
@@ -29,7 +34,9 @@ def instantiate_accountman(cls):
     cls.env = cls.env(user=cls.user)
     cls.cr = cls.env.cr
 
+
 class AccountTestInvoicingCommon(TransactionCase):
+    extra_tags = ['-standard', 'external'] if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else []
 
     @classmethod
     def safe_copy(cls, record):
@@ -61,6 +68,7 @@ class AccountTestInvoicingCommon(TransactionCase):
 
         cls.company_data_2 = cls.setup_company_data('company_2_data', chart_template=chart_template_ref)
         cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template_ref)
+        cls.tax_number = 0
 
         cls.user.write({
             'company_ids': [Command.set((cls.company_data['company'] + cls.company_data_2['company']).ids)],
@@ -79,6 +87,14 @@ class AccountTestInvoicingCommon(TransactionCase):
         })
 
         cls.currency_data = cls.setup_multi_currency_data()
+
+        # ==== Product category ====
+        cls.product_category = cls.env['product.category'].create({
+            'name': 'Test Category',
+        })
+
+        # ==== UOM ====
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
 
         # ==== Taxes ====
         cls.tax_sale_a = cls.company_data['default_tax_sale']
@@ -192,6 +208,22 @@ class AccountTestInvoicingCommon(TransactionCase):
         bank_journal = cls.company_data['default_journal_bank']
         cls.inbound_payment_method_line = bank_journal.inbound_payment_method_line_ids[0]
         cls.outbound_payment_method_line = bank_journal.outbound_payment_method_line_ids[0]
+
+    @classmethod
+    def _create_product(cls, **create_values):
+        # OVERRIDE
+        create_values.setdefault('property_account_income_id', cls.company_data['default_account_revenue'].id)
+        create_values.setdefault('property_account_expense_id', cls.company_data['default_account_expense'].id)
+        create_values.setdefault('taxes_id', [Command.set(cls.tax_sale_a.ids)])
+        return cls.env['product.product'].create({
+            'name': "Test Product",
+            'type': 'consu',
+            'list_price': 100.0,
+            'standard_price': 50.0,
+            'uom_id': cls.uom_unit.id,
+            'categ_id': cls.product_category.id,
+             **create_values,
+        })
 
     @classmethod
     def change_company_country(cls, company, country):
@@ -327,6 +359,30 @@ class AccountTestInvoicingCommon(TransactionCase):
         }
 
     @classmethod
+    def setup_other_currency(cls, code, **kwargs):
+        kwargs.setdefault('rates', [
+            ('1900-01-01', 1.0),
+            ('2016-01-01', 3.0),
+            ('2017-01-01', 2.0),
+        ])
+        rates = kwargs.pop('rates', [])
+        currency = cls.env['res.currency'].with_context(active_test=False).search([('name', '=', code.upper())])
+        currency.action_unarchive()
+        currency.rate_ids.unlink()
+        currency.write({
+            'active': True,
+            'rate_ids': [Command.create(
+                {
+                    'name': rate_date,
+                    'rate': rate,
+                    'company_id': cls.env.company.id,
+                }
+            ) for rate_date, rate in rates],
+            **kwargs,
+        })
+        return currency
+
+    @classmethod
     def _instantiate_basic_test_tax_group(cls, company=None, country=None):
         company = company or cls.env.company
         vals = {
@@ -338,6 +394,53 @@ class AccountTestInvoicingCommon(TransactionCase):
         if country:
             vals['country_id'] = country.id
         return cls.env['account.tax.group'].sudo().create(vals)
+
+    def group_of_taxes(self, taxes, **kwargs):
+        self.tax_number += 1
+        return self.env['account.tax'].create({
+            'name': f"group_({self.tax_number})",
+            **kwargs,
+            'amount_type': 'group',
+            'children_tax_ids': [Command.set(taxes.ids)],
+        })
+
+    def percent_tax(self, amount, **kwargs):
+        self.tax_number += 1
+        return self.env['account.tax'].create({
+            'name': f"percent_{amount}_({self.tax_number})",
+            **kwargs,
+            'amount_type': 'percent',
+            'amount': amount,
+        })
+
+    def division_tax(self, amount, **kwargs):
+        self.tax_number += 1
+        return self.env['account.tax'].create({
+            'name': f"division_{amount}_({self.tax_number})",
+            **kwargs,
+            'amount_type': 'division',
+            'amount': amount,
+        })
+
+    def fixed_tax(self, amount, **kwargs):
+        self.tax_number += 1
+        return self.env['account.tax'].create({
+            'name': f"fixed_{amount}_({self.tax_number})",
+            **kwargs,
+            'amount_type': 'fixed',
+            'amount': amount,
+        })
+
+    def python_tax(self, formula, **kwargs):
+        self.ensure_installed('account_tax_python')
+        self.tax_number += 1
+        return self.env['account.tax'].create({
+            'name': f"code_({self.tax_number})",
+            **kwargs,
+            'amount_type': 'code',
+            'amount': 0.0,
+            'python_compute': formula,
+        })
 
     @classmethod
     def setup_armageddon_tax(cls, tax_name, company_data):
@@ -516,6 +619,96 @@ class AccountTestInvoicingCommon(TransactionCase):
 
         return line
 
+    @classmethod
+    def _prepare_record_kwargs(cls, model_name: str, kwargs: dict):
+        for key, value in kwargs.items():
+            if isinstance(value, models.BaseModel):
+                if cls.env[model_name]._fields[key].type in ('one2many', 'many2many'):
+                    kwargs[key] = [Command.set(value.ids)]
+                else:
+                    kwargs[key] = value.id
+
+        none_keys = [key for key, val in kwargs.items() if val is None]
+        for key in none_keys:
+            del kwargs[key]
+
+    @classmethod
+    def _prepare_invoice_line(cls, price_unit=None, product_id=None, quantity=1.0, tax_ids=None, **line_args):
+        assert price_unit is not None or product_id is not None, "Either `price_unit` or `product_id` must be filled!"
+        invoice_line_args = {
+            'price_unit': price_unit,
+            'product_id': product_id,
+            'tax_ids': tax_ids,
+            'quantity': quantity,
+            **line_args,
+        }
+        cls._prepare_record_kwargs('account.move.line', invoice_line_args)
+        return Command.create(invoice_line_args)
+
+    @classmethod
+    def _create_invoice(cls, move_type='out_invoice', invoice_date=None, date=None, post=False, **invoice_args):
+        """
+        This method quickly generates an ``account.move`` record with some quality of life helpers.
+        These quality of life helpers are:
+
+        - if `invoice_date`/`date` is filled but not the other, autofill the other date fields
+        - if no `date` or `invoice_date` is passed, set the `invoice_date` to today by default
+        - allow passing record immediately instead of getting the id / creating [Command.set(...)] everytime for one2many/many2many fields
+        - allow passing None value in `invoice_args`, they will be filtered out before calling the move `create` method
+
+        :param post: if True, the invoice will be posted
+        :param invoice_args: additional overrides on the `account.move` `create` call
+        :return: the created ``account.move`` record
+        """
+        # QoL: if `invoice_date`/`date` is filled but not the other, autofill the other date fields
+        if move_type in cls.env['account.move'].get_invoice_types():
+            if invoice_date and not date:
+                date = invoice_date
+            elif date and not invoice_date:
+                invoice_date = date
+            elif not date and not invoice_date:
+                invoice_date = fields.Date.today()
+
+        invoice_args |= {'date': date, 'invoice_date': invoice_date}
+
+        # QoL: allow passing record immediately instead of getting the id / creating [Command.set(...)] everytime
+        # QoL: delete all keys with None value from invoice_args
+        cls._prepare_record_kwargs('account.move', invoice_args)
+
+        invoice = cls.env['account.move'].create([{
+            'move_type': move_type,
+            'partner_id': cls.partner_a.id,
+            'invoice_line_ids': [  # default invoice_line_ids
+                cls._prepare_invoice_line(product_id=cls.product_a),
+                cls._prepare_invoice_line(product_id=cls.product_b),
+            ],
+            **invoice_args,
+        }])
+
+        if post:
+            invoice.action_post()
+
+        cls.env.flush_all()
+        return invoice
+
+    @classmethod
+    def _create_invoice_one_line(cls, price_unit=None, product_id=None, name=None, quantity=1.0, tax_ids=None, discount=None, account_id=None, move_name=None, **invoice_args):
+        return cls._create_invoice(
+            invoice_line_ids=[
+                cls._prepare_invoice_line(
+                    price_unit=price_unit,
+                    product_id=product_id,
+                    name=name,
+                    quantity=quantity,
+                    tax_ids=tax_ids,
+                    discount=discount,
+                    account_id=account_id,
+                )
+            ],
+            name=move_name,
+            **invoice_args,
+        )
+
     @contextmanager
     def mocked_get_payment_method_information(self, code='none'):
         self.ensure_installed('account_payment')
@@ -583,6 +776,279 @@ class AccountTestInvoicingCommon(TransactionCase):
     ####################################################
     # Xml Comparison
     ####################################################
+
+    @classmethod
+    def _get_xml_ignore_schema(cls, subfolder: str) -> etree._Element | None:
+        """
+        Recursively look for the closest `ignore_schema.xml` from the given `subfolder`, and
+        return its content as an XML element object if found.
+
+        For example, if the given `subfolder` parameter is `foo/bar/egg`, this method will search for
+        an `ignore_schema.xml` file from these paths, in order:
+
+        - /tests/test_files/foo/bar/egg/ignore_schema.xml
+        - /tests/test_files/foo/bar/ignore_schema.xml
+        - /tests/test_files/foo/ignore_schema.xml
+        - /tests/test_files/ignore_schema.xml
+
+        :param subfolder: the subfolder of the path of XML file to save/assert. (e.g. "folder_1", "folder_outer/folder_inner")
+        :return: _Element object if an `ignore_schema.xml` file is found, otherwise nothing will be returned.
+        """
+        subfolders = subfolder.split('/')
+        ignore_schema_paths = []
+        while subfolders:
+            ignore_schema_paths.append(f"{cls.test_module}/tests/test_files/{'/'.join(subfolders)}/ignore_schema.xml")
+            subfolders.pop()
+        ignore_schema_paths.append(f"{cls.test_module}/tests/test_files/ignore_schema.xml")
+
+        for ignore_schema_path in ignore_schema_paths:
+            try:
+                with file_open(ignore_schema_path, 'rb') as f:
+                    return etree.fromstring(f.read())
+            except FileNotFoundError:
+                pass
+
+    @classmethod
+    def _clear_xml_content(cls, xml_element: etree._Element, clean_namespaces=True):
+        """
+        Clears an _Element object by removing all its children and deleting all of their attributes and namespaces.
+        """
+        for child in xml_element:
+            xml_element.remove(child)
+
+        for attrib_key in xml_element.attrib:
+            del xml_element.attrib[attrib_key]
+
+        if clean_namespaces:
+            etree.cleanup_namespaces(xml_element)
+
+    @classmethod
+    def _merge_two_xml(
+            cls,
+            primary_xml: etree._Element,
+            secondary_xml: etree._Element,
+            overwrite_on_conflict=True,
+            add_on_absent=True,
+    ):
+        """
+        This method takes two _Element objects, and merge the content of the second _Element to the first one recursively.
+        Here, we go through every text, and attribute of the secondary_xml and its children; and apply the following operation:
+
+        - Search for a matching child element / attribute on the `primary_xml`
+        - If a match is found, overwrite the matching `primary_xml` attribute/child/text if `overwrite_on_conflict` is True
+        - If a match is not found, add on `primary_xml` if `add_on_absent` is True
+
+        Warning: The `tag` of the two `_Element` object must be the same.
+
+        For example:
+        Before calling this method,
+        primary_xml
+        <a attr_1="old_attr_1">
+            <b>old b text</b>
+        </a>
+
+        secondary_xml
+        <a attr_1="new_attr_1" attr_2="new_attr_2>
+            <b attr_b="new_attr_b">new text</b>
+            <c>new element</c>
+        </a>
+
+        [#1] Resulting primary_xml post call with default optional parameters (overwrite_on_conflict True, add_on_absent True)
+        <a attr_1="new_attr_1" attr_2="new_attr_2>
+            <b attr_b="new_attr_b">new text</b>
+            <c>new element</c>
+        </a>
+
+        [#2] Resulting primary_xml post call with (overwrite_on_conflict True, add_on_absent False)
+        <a attr_1="new_attr_1">
+            <b>new text</b>
+        </a>
+
+        [#3] Resulting primary_xml post call with (overwrite_on_conflict False, add_on_absent True)
+        <a attr_1="old_attr_1" attr_2="new_attr_2>
+            <b attr_b="new_attr_b">old b text</b>
+            <c>new element</c>
+        </a>
+
+        [#4] Resulting primary_xml post call with (overwrite_on_conflict False, add_on_absent False)
+        No change will be made with these configuration.
+
+        :param primary_xml: The primary _Element object to be written on to.
+        :param secondary_xml: The second _Element object in which content is used as reference.
+        :param overwrite_on_conflict: If True and matching attribute/child element is found, the original content is overwritten.
+        :param add_on_absent: If True and matching attribute/child element is not found, it will be added on the primary_xml.
+        :return:
+        """
+        if primary_xml.tag != secondary_xml.tag:
+            return
+
+        for new_attrib_key, new_attrib_val in secondary_xml.items():
+            if ((new_attrib_key not in primary_xml.attrib and add_on_absent) or
+                    (new_attrib_key in primary_xml.attrib and overwrite_on_conflict)):
+                primary_xml.attrib[new_attrib_key] = new_attrib_val
+
+        if secondary_xml.text and ((not primary_xml.text and overwrite_on_conflict) or (primary_xml.text and overwrite_on_conflict)):
+            primary_xml.text = secondary_xml.text
+
+        for new_child in secondary_xml.getchildren():
+            found_match = False
+            for current_child in primary_xml.getchildren():
+                if current_child.tag == new_child.tag:
+                    cls._merge_two_xml(
+                        current_child,
+                        new_child,
+                        overwrite_on_conflict=overwrite_on_conflict,
+                        add_on_absent=add_on_absent,
+                    )
+                    found_match = True
+
+            if not found_match and add_on_absent:
+                primary_xml.append(new_child)
+
+    @classmethod
+    def _prepare_xml_ignore_schema(cls, xml_schema: etree._Element):
+        """
+        Hook method called on a found ignore schema XML element before we apply them to the main XML element to save.
+        Here, we preprocess the `___inherit___` attribute of the main schema XML and process them,
+        so that the final `xml_schema` contains the schema of the parent schema(s) too.
+
+        This method can optionally be extended to modify the schema manually python-side.
+        """
+        # TO EXTEND
+        if '___inherit___' in xml_schema.attrib:
+            # Merge current XML schema with the parent(s)
+            next_inherit = xml_schema.attrib['___inherit___']
+
+            while next_inherit:
+                with file_open(next_inherit, 'rb') as f:
+                    xml_main_schema = etree.fromstring(f.read())
+                next_inherit = xml_main_schema.attrib.get('___inherit___')
+
+                cls._merge_two_xml(xml_main_schema, xml_schema)
+                cls._clear_xml_content(xml_schema)
+                cls._merge_two_xml(xml_schema, xml_main_schema)
+
+    @classmethod
+    def _rebuild_xml_with_sorted_namespaces(cls, root: etree._Element) -> etree._Element:
+        # Collect all namespaces and prefixes
+        all_nsmap = {
+            prefix: uri
+            for elem in root.iter()
+            for prefix, uri in elem.nsmap.items()
+        }
+
+        # Sort all namespaces
+        nsmap_str_keys = [key for key in all_nsmap if isinstance(key, str)]
+        sorted_nsmap_keys = [
+            *((None,) if None in all_nsmap else ()),
+            *sorted(nsmap_str_keys),
+        ]
+        sorted_nsmap = {
+            nsmap_key: all_nsmap[nsmap_key]
+            for nsmap_key in sorted_nsmap_keys
+        }
+
+        # Build a new root element with the sorted namespaces and all original root attrib & children
+        new_root = etree.Element(root.tag, nsmap=sorted_nsmap)
+        new_root.text = root.text
+        for attrib_key, attrib_val in root.attrib.items():
+            new_root.attrib[attrib_key] = attrib_val
+        for child in root.getchildren():
+            new_root.append(child)
+
+        return new_root
+
+    def _get_test_file_path(self, file_name: str, subfolder=''):
+        optional_subfolder = f"{subfolder}/" if subfolder else ''
+        return file_path(f"{self.test_module}/tests/test_files/{optional_subfolder}{file_name}")
+
+    def assert_xml(
+            self,
+            xml_element: str | bytes | etree._Element,
+            test_name: str,
+            subfolder='',
+            xpath_to_apply='',
+            force_save=False,
+    ):
+        """
+        Helper to save/assert an XML element/string/bytes to an XML file.
+        By default, this method will assert the passed XML content to the test XML file.
+        To switch to save mode, add a `SAVE_XML` tag when calling the test;
+        This mode will instead do the following:
+
+        - Reindent the XML element by `\t`
+        - Save the XML element to a temporary folder for potential external testing
+        - Patch the XML element with `___ignore___` values, following the corresponding schema on the closest `ignore_schema.xml`
+        - Canonicalize the XML element to ensure consistency in their namespaces & attributes order
+        - Save the XML element content to the test file
+
+        :param xml_element: the _Element/str/bytes content to be saved or asserted
+        :param test_name: the test file name
+        :param subfolder: the test file subfolder(s), separated by `/` if there is more than one
+        :param xpath_to_apply: optional `xpath` string to be applied on the expected file
+        :param force_save: force the assert method to save the XML to the test file instead of asserting it
+        :return:
+        """
+        file_name = f"{test_name}.xml"
+        test_file_path = self._get_test_file_path(file_name, subfolder=subfolder)
+        if isinstance(xml_element, str):
+            xml_element = xml_element.encode()
+        if isinstance(xml_element, bytes):
+            xml_element = etree.fromstring(xml_element)
+
+        if 'SAVE_XML' in config['test_tags'] or force_save:
+            # Save the XML to tmp folder before modifying some elements with `___ignore___`
+            etree.indent(xml_element, space='\t')
+            with patch.object(re, 'fullmatch', lambda _arg1, _arg2: True):
+                save_test_file(
+                    test_name=test_name,
+                    content=etree.tostring(xml_element, pretty_print=True, encoding='UTF-8'),
+                    prefix=f"{self.test_module}",
+                    extension='xml',
+                    document_type='Invoice XML',
+                    date_format='',
+                )
+            # Search for closest `ignore_schema.xml` from the file path and apply the change to xml_element
+            xml_ignore_schema = self._get_xml_ignore_schema(subfolder)
+            if xml_ignore_schema is not None:
+                self._prepare_xml_ignore_schema(xml_ignore_schema)
+                self._merge_two_xml(
+                    xml_element,
+                    xml_ignore_schema,
+                    overwrite_on_conflict=True,
+                    add_on_absent=False,
+                )
+                etree.indent(xml_element, space='\t')
+
+            # Canonicalize & re-sort the namespaces
+            canonicalized_xml_str = etree.canonicalize(xml_element)
+            xml_element = etree.fromstring(canonicalized_xml_str)
+            xml_element = self._rebuild_xml_with_sorted_namespaces(xml_element)
+
+            # Save the xml_element content
+            with file_open(test_file_path, 'wb') as f:
+                f.write(etree.tostring(xml_element, pretty_print=True, encoding='UTF-8'))
+                _logger.info("Saved the generated xml content to %s", file_name)
+        else:
+            with file_open(test_file_path, 'rb') as f:
+                expected_xml_str = f.read()
+
+            expected_xml_tree = etree.fromstring(expected_xml_str)
+            if xpath_to_apply:
+                expected_xml_tree = self.with_applied_xpath(expected_xml_tree, xpath_to_apply)
+            try:
+                self.assertXmlTreeEqual(xml_element, expected_xml_tree)
+            except AssertionError:
+                if not force_save and 'SAVE_XML_ON_FAIL' in config['test_tags']:
+                    self.assert_xml(
+                        xml_element=xml_element,
+                        test_name=test_name,
+                        subfolder=subfolder,
+                        xpath_to_apply=xpath_to_apply,
+                        force_save=True,
+                    )
+                else:
+                    raise
 
     def _turn_node_as_dict_hierarchy(self, node, path=''):
         ''' Turn the node as a python dictionary to be compared later with another one.

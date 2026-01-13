@@ -9,8 +9,6 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo import fields
 from odoo.tools import misc
 
-from lxml import etree
-
 
 class TestUBLCommon(AccountTestInvoicingCommon):
 
@@ -235,19 +233,16 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         self.assertTrue(attachment)
 
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
-        xml_etree = self.get_xml_tree_from_string(xml_content)
+        expected_file_path = expected_file_path.replace('.xml', '')
+        if '/' not in expected_file_path:
+            expected_file_path = '/' + expected_file_path
+        subfolder, test_name = expected_file_path.rsplit('/', maxsplit=1)
 
-        expected_file_full_path = misc.file_path(f'{self.test_module}/tests/test_files/{expected_file_path}')
-        expected_etree = etree.parse(expected_file_full_path).getroot()
-
-        modified_etree = self.with_applied_xpath(
-            expected_etree,
-            xpaths
-        )
-
-        self.assertXmlTreeEqual(
-            xml_etree,
-            modified_etree,
+        self.assert_xml(
+            xml_element=xml_content,
+            test_name=test_name,
+            subfolder=subfolder,
+            xpath_to_apply=xpaths,
         )
 
         return attachment
