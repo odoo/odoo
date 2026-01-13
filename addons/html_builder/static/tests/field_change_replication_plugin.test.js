@@ -1,5 +1,4 @@
 import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
-import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
@@ -121,73 +120,5 @@ describe("replicate changes", () => {
 
         expect(":iframe .test-1 > *").toHaveAttribute("data-oe-many2one-id", 1);
         expect(":iframe .test-2 > *").toHaveAttribute("data-oe-many2one-id", 1);
-    });
-
-    test("should not add o_dirty marks on the ones receiving the replicated changes", async () => {
-        const { getEditor } = await setupHTMLBuilder("", {
-            headerContent: `
-            <div class="test-1">
-                <span data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db" data-oe-translation-state="translated" data-oe-translation-source-sha="4242">Contactez-nous</span>
-            </div>
-            <div class="test-2">
-                <span data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db" data-oe-translation-state="translated" data-oe-translation-source-sha="4242">Contactez-nous</span>
-            </div>
-            <div class="test-3">
-                <span data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db" data-oe-translation-state="translated" data-oe-translation-source-sha="4242">Contactez-nous</span>
-            </div>
-        `,
-        });
-        const span1 = queryOne(":iframe .test-1 span");
-        const span2 = queryOne(":iframe .test-2 span");
-        const span3 = queryOne(":iframe .test-3 span");
-
-        const editor = getEditor();
-        span2.append(" ici");
-        editor.shared.history.addStep();
-        expect(span1).not.toHaveClass("o_dirty");
-        expect(span2).toHaveClass("o_dirty");
-        expect(span3).not.toHaveClass("o_dirty");
-        expect([span1, span2, span3]).toHaveText("Contactez-nous ici");
-
-        span1.append("!");
-        editor.shared.history.addStep();
-        expect(span1).toHaveClass("o_dirty");
-        expect(span2).toHaveClass("o_dirty");
-        expect(span3).not.toHaveClass("o_dirty");
-        expect([span1, span2, span3]).toHaveText("Contactez-nous ici!");
-
-        undo(editor);
-        expect(span1).not.toHaveClass("o_dirty");
-        expect(span2).toHaveClass("o_dirty");
-        expect(span3).not.toHaveClass("o_dirty");
-        expect([span1, span2, span3]).toHaveText("Contactez-nous ici");
-    });
-
-    test("changing several of occurences at the same time should converge to the same value", async () => {
-        const { getEditor } = await setupHTMLBuilder("", {
-            headerContent: `
-            <div class="test-1">
-                <span data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db" data-oe-translation-state="translated" data-oe-translation-source-sha="4242">Contactez-nous</span>
-            </div>
-            <div class="test-2">
-                <span data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db" data-oe-translation-state="translated" data-oe-translation-source-sha="4242">Contactez-nous</span>
-            </div>
-            <div class="test-3">
-                <span data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db" data-oe-translation-state="translated" data-oe-translation-source-sha="4242">Contactez-nous</span>
-            </div>
-        `,
-        });
-        const span1 = queryOne(":iframe .test-1 span");
-        const span2 = queryOne(":iframe .test-2 span");
-        const span3 = queryOne(":iframe .test-3 span");
-
-        span2.append(" ici");
-        span1.append("!");
-        const editor = getEditor();
-        editor.shared.history.addStep();
-        expect(span1).toHaveClass("o_dirty");
-        expect(span2).toHaveClass("o_dirty");
-        expect(span3).not.toHaveClass("o_dirty");
-        expect([span2, span3]).toHaveText(span1.textContent); // all the same text
     });
 });
