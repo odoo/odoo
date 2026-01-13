@@ -232,8 +232,6 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         select_tables_perf = {
             # website queries
             'ir_attachment': 1,
-            # website_livechat _post_process_response_from_cache queries
-            'website': 1,
             # website_crm_iap_reveal _serve_page queries
             'website_visitor': 1,
         }
@@ -258,8 +256,6 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         select_tables_perf = {
             # website queries
             'ir_attachment': 1,
-            # website_livechat _post_process_response_from_cache queries
-            'website': 1,
             # website_crm_iap_reveal _serve_page queries
             'website_visitor': 1,
         }
@@ -281,8 +277,6 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         select_tables_perf = {
             # website queries
             'ir_attachment': 1,
-            # website_livechat _post_process_response_from_cache queries
-            'website': 1,
             # website_crm_iap_reveal _serve_page queries
             'website_visitor': 1,
         }
@@ -297,7 +291,6 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
 
         # To add queries here you must ask the permission to al
         queries = {
-            'website': 1,
             'res_company': 2,
             'product_pricelist': 4,
             'product_template': 3,

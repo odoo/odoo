@@ -8,7 +8,6 @@ import json
 import logging
 import re
 import requests
-import threading
 import types
 import werkzeug.routing
 
@@ -114,10 +113,16 @@ class Website(models.CachedModel):
     # translatable field, such as contact_us_link_url by website_sale, as
     # translating to an invalid language would result in an error.
     _clear_cache_name = 'default'
-    _cached_data_fields = (
-        'user_id', 'company_id', 'default_lang_id', 'homepage_url',
-        'domain', 'cookies_bar', 'sequence',
-    )
+
+    @property
+    def _cached_data_fields(self):
+        return [
+            f.name
+            for f in self._fields.values()
+            if f.name != 'id'
+            if f.prefetch is True
+            if not f.groups
+        ]
 
     @tools.ormcache(cache='default')
     def _cached_data(self):
@@ -365,7 +370,7 @@ class Website(models.CachedModel):
 
         result = super(Website, self - public_user_to_change_websites).write(values)
 
-        if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
+        if any(key in values for key in ["cdn_activated", "cdn_url", "cdn_filters", "domain"]):
             # invalidate the caches from static node at compile time
             if any(self._ids):
                 self.env.registry.clear_cache()
@@ -418,8 +423,8 @@ class Website(models.CachedModel):
 
             try:
                 parsed = urlparse(record.domain)
-            except ValueError:
-                raise ValidationError(_("The provided website domain is not a valid URL."))
+            except ValueError as e:
+                raise ValidationError(_("The provided website domain is not a valid URL.")) from e
 
             if tools.urls._contains_dot_segments(parsed.path):
                 raise ValidationError(_("The domain path cannot contain relative path segments like '/./' or '/../'."))
@@ -1395,116 +1400,56 @@ class Website(models.CachedModel):
     # ----------------------------------------------------------
 
     @api.model
-    def get_current_website(self, fallback=None):
-        """ The current website is returned in the following order:
+    def get_current_website(self, fallback: bool | None = None):
+        """Return the current website record, or an empty recordset.
 
-        - the website forced in session `force_website_id`
-        - the website set in context
-        - (if frontend or fallback) the website matching the request's "domain"
-        - arbitrary the first website found in the database if `fallback` is set
-          to `True`
-        - empty browse record
+        We look for the current website (or a good enough one) looking
+        at, in order:
+
+        1. The ``website_id`` context.
+        2. The ``host_id`` context or ``ir.http._get_host_id()`` (domain
+           lookup), if ``fallback`` is ``None`` or ``True``
+        3. The first installed website, if ``fallback`` is ``True``.
+
+        Otherwise, if the contexts are missing, or contain a bad id, and
+        we can't fallback further: it returns an empty recordset.
+
+        ==============  ==============  =============  =============
+        Lookup order    fallback=False  fallback=None  fallback=True
+        ==============  ==============  =============  =============
+        website_id      Yes             Yes            Yes
+        host_id         No              Yes            Yes
+        first website   No              No             Yes
+        ==============  ==============  =============  =============
         """
-        is_frontend_request = request and getattr(request, 'is_frontend', False)
-        if request and request.session.get('force_website_id'):
-            website_id = self.browse(request.session['force_website_id']).exists()
-            if not website_id:
-                # Don't crash is session website got deleted
-                request.session.pop('force_website_id')
+        existing_ids = self.get_all().ids
+        if website_id := self.env.context.get('website_id'):
+            # during the match of env['ir.http'], the website information was
+            # added from the request.
+            if website_id in existing_ids:
+                return self.browse(website_id)
+
+        if fallback is False:
+            return self.browse(False).with_context(website_id=False)
+
+        if 'host_id' in self.env.context:
+            # during the match of env['ir.http'], the website information was
+            # added from the request.
+            website_id = self.env.context.get('host_id')
+        else:
+            # The request is not currently accessible for this route; you must
+            # call the fallback which will be done with respect to the URL on
+            # the current thread.
+            website_id = self.env['ir.http']._get_host_id()
+
+        if website_id not in existing_ids:
+            if fallback and existing_ids:
+                # TODO: check if we can remove it
+                website_id = existing_ids[0]
             else:
-                return website_id
+                website_id = False
 
-        website_id = self.env.context.get('website_id')
-        if website_id:
-            return self.browse(website_id)
-
-        if not is_frontend_request and not fallback:
-            # It's important than backend requests with no fallback requested
-            # don't go through
-            return self.browse(False)
-
-        # Reaching this point means that:
-        # - We didn't find a website in the session or in the context.
-        # - And we are either:
-        #   - in a frontend context
-        #   - in a backend context (or early in the dispatch stack) and a
-        #     fallback website is requested.
-        # We will now try to find a website matching the request host/domain (if
-        # there is one on request) or return a random one.
-
-        # The format of `httprequest.host` is `domain:port`
-        domain_name = (
-            request and request.httprequest.host
-            or hasattr(threading.current_thread(), 'url') and threading.current_thread().url
-            or '')
-        website_id = self.sudo()._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
-
-    @api.model
-    @tools.ormcache('domain_name', 'fallback')
-    def _get_current_website_id(self, domain_name, fallback=True):
-        """Get the current website id.
-
-        First find the website for which the configured `domain` (after
-        ignoring a potential scheme) is equal to the given
-        `domain_name`. If a match is found, return it immediately.
-
-        If there is no website found for the given `domain_name`, either
-        fallback to the first found website (no matter its `domain`) or return
-        False depending on the `fallback` parameter.
-
-        :param domain_name: the domain for which we want the website.
-            In regard to the `url_parse` method, only the `netloc` part should
-            be given here, no `scheme`.
-        :type domain_name: string
-
-        :param fallback: if True and no website is found for the specificed
-            `domain_name`, return the first website (without filtering them)
-        :type fallback: bool
-
-        :return: id of the found website, or False if no website is found and
-            `fallback` is False
-        :rtype: int or False
-
-        :raises: if `fallback` is True but no website at all is found
-        """
-        def _remove_port(domain_name):
-            return (domain_name or '').split(':')[0]
-
-        def _filter_domain(website, domain_name, ignore_port=False):
-            """Ignore `scheme` from the `domain`, just match the `netloc` which
-            is host:port in the version of `url_parse` we use."""
-            website_domain = get_base_domain(website.domain_punycode)
-            if ignore_port:
-                website_domain = _remove_port(website_domain)
-                domain_name = _remove_port(domain_name)
-            return website_domain.lower() == (domain_name or '').lower()
-
-        # We need to test two possibilities unicode or punycode (safety guard)
-        domain_name = domain_name.encode("idna").decode("ascii")
-        domain_name_idna = domain_name.encode("ascii").decode("idna")
-
-        # TODO: in master, store the computed field domain_punycode to avoid
-        #       the need to search on domain_name and domain_name_idna.
-        found_websites = self.search([
-            '|',
-            ('domain', 'ilike', _remove_port(domain_name)),
-            ('domain', 'ilike', _remove_port(domain_name_idna)),
-        ])
-        # Filter for the exact domain (to filter out potential subdomains) due
-        # to the use of ilike.
-        # `domain_name` could be an empty string, in that case multiple website
-        # without a domain will be returned
-        websites = found_websites.filtered(lambda w: _filter_domain(w, domain_name))
-        # If there is no domain matching for the given port, ignore the port.
-        websites = websites or found_websites.filtered(lambda w: _filter_domain(w, domain_name, ignore_port=True))
-
-        if not websites:
-            if not fallback:
-                return False
-            return self.search([], limit=1).id
-
-        return websites[0].id
 
     def _force(self):
         self._force_website(self.id)
@@ -1582,8 +1527,10 @@ class Website(models.CachedModel):
             generation and can be overridden by modules setting up new HTML
             controllers for dynamic pages (e.g. blog).
             By default, returns template views marked as pages.
+
             :param str query_string: a (user-provided) string, fetches pages
                                      matching the string
+
             :param boolean ignore_custom_homepage: used to exclude the hompage url
                 from the page list if the homepage is not ``/``
             :returns: a list of mappings with two keys: ``name`` is the displayable

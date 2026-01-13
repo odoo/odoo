@@ -12,7 +12,6 @@ from odoo.tools import float_round, is_html_empty, lazy
 from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import adapt_translated_field_value, html_translate
 
-from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import text_from_html
 
 # A delimiter that users aren't likely to search for in product codes.
@@ -1381,7 +1380,7 @@ class ProductTemplate(models.Model):
             product_or_template, quantity, date, currency, pricelist, **kwargs
         )
 
-        if website := ir_http.get_request_website():
+        if website := self.env['website'].get_current_website(fallback=False):
             price = product_or_template._apply_taxes_to_price(price, currency, website=website)
 
         return price, pricelist_rule_id
@@ -1590,7 +1589,7 @@ class ProductTemplate(models.Model):
             product_or_template, date, currency, pricelist, **kwargs
         )
 
-        if (website := ir_http.get_request_website()) and product_or_template.is_product_variant:
+        if (website := self.env['website'].get_current_website(fallback=False)) and product_or_template.is_product_variant:
             max_quantity = product_or_template._get_max_quantity(website, request.cart, **kwargs)
             if max_quantity is not None:
                 if uom:
