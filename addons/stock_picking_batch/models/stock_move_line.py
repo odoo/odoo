@@ -161,6 +161,7 @@ class StockMoveLine(models.Model):
         """ Try to add move lines to existing waves if possible, return move lines of which no appropriate waves were found to link to
          :param nearest_parent_locations (defaultdict): the key is the move line and the value is the nearest parent location in the wave locations list"""
         remaining_lines = OrderedSet()
+        batches_to_validate_ids = self.env.context.get('batches_to_validate', False)
         for (picking_type, lines) in self.grouped(lambda l: l.picking_type_id).items():
             if lines:
                 domain = [
@@ -180,6 +181,8 @@ class StockMoveLine(models.Model):
                     domain = expression.AND([domain, [('picking_ids.location_id', 'in', lines.location_id.ids)]])
                 if picking_type.batch_group_by_dest_loc:
                     domain = expression.AND([domain, [('picking_ids.location_dest_id', 'in', lines.location_dest_id.ids)]])
+                if batches_to_validate_ids:
+                    domain = expression.AND([domain, [('id', 'not in', batches_to_validate_ids)]])
                 domain = lines._get_potential_existing_waves_extra_domain(domain, picking_type)
 
                 potential_waves = self.env['stock.picking.batch'].search(domain)
