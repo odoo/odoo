@@ -16,7 +16,7 @@ class IrAttachment(models.Model):
     def create(self, vals_list):
         website = self.env['website'].get_current_website(fallback=False)
         for vals in vals_list:
-            if website and 'website_id' not in vals and 'not_force_website_id' not in self.env.context:
+            if website and 'website_id' not in vals:
                 vals['website_id'] = website.id
         return super().create(vals_list)
 

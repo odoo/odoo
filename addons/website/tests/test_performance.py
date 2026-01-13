@@ -153,7 +153,7 @@ class TestStandardPerformance(UtilPerf):
         website_id = self.ref('website.default_website')
         url = f'/web/image/website/{website_id}/favicon'
         select_tables_perf = {
-            'website': 2,
+            'website': 1,
             # 1. `_find_record()` performs an access right check through
             #    `exists()` which perform a request on the website.
             # 2. `_get_stream_from` ends up reading the requested record to
@@ -227,7 +227,6 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'website_page': 2,
                     # 1. `_serve_page` search page matching URL..
                     # 2. ..then reads it (`is_visible`)
-                    'website': 1,
                     # menu and layout
                     'website_menu': 1,
                     'ir_ui_view': 1,
@@ -250,12 +249,11 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'website_page': 2,
                     # 1. `_serve_page` search page matching URL..
                     # 2. ..then reads it (`is_visible`)
-                    'website': 1,
                     # menu and layout
                     'website_menu': 1,
                     'ir_ui_view': 1,
                 }
-                expected_query_count = 1 if cache else 6
+                expected_query_count = 1 if cache else 5
                 insert_tables_perf = {}
                 self.page.track = True
 
@@ -280,7 +278,6 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'website_page': 2,
                     # 1. the menu prefetching is also prefetching all menu's pages
                     # 2. find page matching the `/` url
-                    'website': 1,
                     # layout
                     'ir_ui_view': 1,
                 }
@@ -335,12 +332,11 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'website_page': 2,
             # 1. `_serve_page` search page matching URL..
             # 2. ..then reads it (`is_visible`)
-            'website': 1,
             'website_menu': 1,
             'ir_ui_view': 1,
         }
-        self._check_url_hot_query(self.page.url, 6, select_tables_perf, nocache=True)
-        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), 6)
+        self._check_url_hot_query(self.page.url, 5, select_tables_perf, nocache=True)
+        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), 5)
 
 
 @tagged('-at_install', 'post_install')

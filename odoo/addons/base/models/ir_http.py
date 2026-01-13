@@ -326,11 +326,14 @@ class IrHttp(models.AbstractModel):
         session_expired_exc = None
         try:
             if request.session.uid is not None:
+                # website_id listed here, not overridable on purpose.
+                safe_context = submap(request.env.context, ('lang', 'tz', 'website_id'))
                 try:
                     check(request.session, request)
                 except SessionExpiredException as exc:
                     session_expired_exc = exc  # save the traceback
-                    request.env = api.Environment(request.env.cr, None, request.session.context)
+                    safe_context.update(request.session.context)
+                    request.env = api.Environment(request.env.cr, None, safe_context)
             getattr(cls, f'_auth_method_{auth}')()
         except SessionExpiredException as exc:
             if session_expired_exc:
