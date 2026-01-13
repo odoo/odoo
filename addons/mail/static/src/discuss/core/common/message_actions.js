@@ -6,10 +6,9 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 
 registerMessageAction("set-new-message-separator", {
-    condition: ({ message, thread }) =>
-        thread &&
-        thread.channel?.self_member_id &&
-        thread.eq(message.thread) &&
+    condition: ({ message, channel }) =>
+        channel?.self_member_id &&
+        channel.eq(message.channel_id) &&
         !message.hasNewMessageSeparator &&
         message.persistent,
     icon: "fa fa-eye-slash",

@@ -2,8 +2,8 @@ import { registerMessageAction } from "@mail/core/common/message_actions";
 import { _t } from "@web/core/l10n/translation";
 
 registerMessageAction("create-or-view-thread", {
-    condition: ({ message, thread }) =>
-        message.thread?.eq(thread) && message.channel_id?.canCreateSubChannels,
+    condition: ({ message, channel }) =>
+        message.channel_id?.eq(channel) && message.channel_id?.canCreateSubChannels,
     icon: "fa fa-comments-o",
     onSelected: ({ message }) => {
         if (message.linkedSubChannel) {
