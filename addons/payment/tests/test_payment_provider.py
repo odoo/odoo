@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from json.decoder import JSONDecodeError
 from unittest.mock import patch
 
 import requests
-from requests.exceptions import JSONDecodeError
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
