@@ -1,5 +1,5 @@
-import { Component, useEffect, useRef } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { usePosition } from "@web/core/position/position_hook";
 
@@ -166,6 +166,20 @@ export class TourPointer extends Component {
                 dimensions = null;
             }
         });
+        this.state = useState({ triggerBelow: false });
+        const uiService = useService("ui");
+        const onActiveElementChanged = () => {
+            const activeEl = uiService.activeElement;
+            const pointerAnchor = this.props.pointerState.anchor;
+            if (pointerAnchor) {
+                this.state.triggerBelow = !activeEl.contains(pointerAnchor);
+            }
+        };
+        useBus(uiService.bus, "active-element-changed", onActiveElementChanged);
+    }
+
+    get isVisible() {
+        return this.props.pointerState.isVisible && !this.state.triggerBelow;
     }
 
     get content() {
