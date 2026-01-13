@@ -19,9 +19,6 @@ const livechatChannelInfoListPatch = {
     CLOSED_ON_TEXT(channel) {
         return _t("(closed on: %(date)s)", { date: formatDateTime(channel.livechat_end_dt) });
     },
-    get countryLanguageLabel() {
-        return _t("Country & Language");
-    },
 };
 
 patch(LivechatChannelInfoList.prototype, livechatChannelInfoListPatch);

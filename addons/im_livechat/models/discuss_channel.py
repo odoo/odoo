@@ -437,6 +437,7 @@ class DiscussChannel(models.Model):
         super()._store_channel_fields(res)
         res.attr("chatbot_current_step")
         res.one("country_id", ["code", "name"], predicate=is_livechat_channel)
+        res.one("livechat_lang_id", ["name"], predicate=is_livechat_channel)
         res.attr("livechat_end_dt", predicate=is_livechat_channel)
         # sudo - res.partner: accessing livechat operator is allowed
         res.one(
@@ -650,7 +651,7 @@ class DiscussChannel(models.Model):
         return Markup("").join(parts)
 
     def _store_livechat_extra_fields(self, res: Store.FieldList):
-        pass
+        res.one("livechat_lang_id", ["name"], predicate=is_livechat_channel)
 
     def _apply_livechat_feedback(self, rate, reason=None):
         """Post customer feedback and apply its rating to the live chat session.
