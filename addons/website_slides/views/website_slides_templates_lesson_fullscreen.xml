@@ -15,9 +15,9 @@
 
             <div class="o_wslides_slide_fs_header d-flex flex-shrink-0 text-white">
                 <div class="d-flex">
-                    <a class="o_wslides_fs_toggle_sidebar d-flex align-items-center px-3" href="#" title="Lessons">
+                    <button class="o_wslides_fs_toggle_sidebar d-flex align-items-center px-3 border-0" title="Lessons">
                         <i class="fa fa-bars"/><span class="d-none d-md-inline-block ms-1">Lessons</span>
-                    </a>
+                    </button>
                     <a class="o_wslides_fs_review d-flex align-items-center" title="Reviews" t-if="slide.channel_id.allow_comment">
                         <t t-call="portal_rating.rating_stars_static_popup_composer"
                             rating_avg="rating_avg"
@@ -40,10 +40,10 @@
                     </a>
                 </div>
                 <div class="d-flex ms-auto">
-                    <a class="o_wslides_share d-flex align-items-center px-3" href="#" title="Share">
+                    <button class="o_wslides_share d-flex align-items-center px-3 border-0" title="Share">
                         <i class="fa fa-share-alt"/>
                         <span class="d-none d-md-inline-block ms-2">Share</span>
-                    </a>
+                    </button>
                     <a class="d-flex align-items-center px-3 o_wslides_fs_exit_fullscreen" t-attf-href="/slides/slide/#{slug(slide)}" title="Exit Fullscreen">
                         <i class="fa fa-sign-out"/><span class="d-none d-md-inline-block ms-1">Exit Fullscreen</span>
                     </a>
@@ -86,7 +86,7 @@
                             </t>
                         </ul>
                     </div>
-                    <a href="#" class="o_wslides_fs_toggle_sidebar d-md-none bg-black-50"/>
+                    <button class="o_wslides_fs_toggle_sidebar d-md-none bg-black-50"/>
                 </div>
             </div>
         </div>
@@ -134,6 +134,7 @@
                     t-att-data-website-share-url="slide.website_share_url"
                     t-att-data-email-sharing="bool(slide.channel_id.share_slide_template_id)">
                     <div class="ms-2 o_wslides_sidebar_content overflow-hidden">
+                        <!-- TODO complex to convert in button  -->
                         <a t-if="can_access" class="d-block" href="#">
                             <div class="d-flex">
                                 <t t-if="is_member" t-call="website_slides.slide_sidebar_done_button"/>
@@ -182,9 +183,9 @@
                                 t-att-data-is-member-or-invited="is_member_or_invited"
                                 t-att-data-session-answers="session_answers"
                                 t-att-data-website-share-url="slide.website_share_url">
-                                <a t-if="can_access" class="o_wslides_fs_slide_quiz o_wslides_fs_slide_name" href="#" t-att-index="i">
+                                <button t-if="can_access" class="o_wslides_fs_slide_quiz o_wslides_fs_slide_name border-0 bg-transparent" t-att-index="i">
                                     <i class="fa fa-flag-checkered text-warning"/>Quiz
-                                </a>
+                                </button>
                                 <span t-else="" class="text-600">
                                     <i class="fa fa-flag-checkered text-warning"/>Quiz
                                 </span>

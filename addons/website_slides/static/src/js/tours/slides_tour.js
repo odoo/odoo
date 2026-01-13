@@ -45,12 +45,12 @@ registerWebsitePreviewTour('slides_tour', {
     tooltipPosition: 'bottom',
     run: "click",
 }, {
-    trigger: '.o_iframe:iframe a.btn-primary.o_wslides_js_slide_upload',
+    trigger: '.o_iframe:iframe button.btn-primary.o_wslides_js_slide_upload',
     content: markup(_t("Your first section is created, now it's time to add lessons to your course. Click on <b>Add Content</b> to upload a document, create an article or link a video.")),
     tooltipPosition: 'bottom',
     run: "click",
 }, {
-    trigger: ':iframe a[data-slide-category="document"]',
+    trigger: ':iframe button[data-slide-category="document"]',
     content: markup(_t("First, let's add a <b>Document</b>. It has to be a .pdf file.")),
     tooltipPosition: 'bottom',
     run: "click",

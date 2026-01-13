@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
             expectUnloadPage: true,
         },
         {
-            trigger: 'a:contains("Join this Course")',
+            trigger: 'button:contains("Join this Course")',
             run: "click",
             expectUnloadPage: true,
         },

@@ -8,7 +8,7 @@
         background-image: linear-gradient(-6deg, $o-wslides-color-dark1, $o-wslides-color-dark2);
         height: 50px;
 
-        > div > a {
+        > div > a, button {
             background-color: rgba($o-wslides-color-dark3, 0.5);
             @include o-hover-text-color(rgba(white, 0.8), white);
             text-decoration: none!important;
@@ -68,7 +68,7 @@
             }
         }
 
-        a {
+        a, button {
             text-decoration: none !important;
             @include o-hover-text-color(rgba(white, 0.8), white);
         }
@@ -85,7 +85,7 @@
                 box-shadow: inset 2px 0 0 map-get($theme-colors, 'primary');
                 background-color: rgba($o-wslides-color-dark3, 0.5);
 
-                &, a {
+                &, a, button {
                     color: white;
                 }
             }

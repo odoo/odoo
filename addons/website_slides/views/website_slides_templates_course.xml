@@ -57,7 +57,7 @@
                 <div class="col d-md-none py-1">
                     <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
                         <div class="btn-group w-100">
-                            <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</a>
+                            <button class="btn bg-black-25 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</button>
 
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="/slides">Home</a>
@@ -87,7 +87,7 @@
                         </div>
 
                         <div class="btn-group ms-1 position-static">
-                            <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Search"><i class="fa fa-search"></i></a>
+                            <button class="btn bg-black-25 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Search"><i class="fa fa-search"></i></button>
                             <div class="dropdown-menu dropdown-menu-end w-100" style="right: 10px;">
                                 <t t-call="website.website_search_box_input"
                                     _classes.f="px-3"
@@ -209,6 +209,7 @@
                                                 <span t-attf-class="badge o_wslides_channel_tag #{'o_color_'+str(channel_tag.color)}" t-out="channel_tag.name"/>
                                             </t>
                                         </t>
+                                        <!-- TODO -->
                                         <a t-if="channel.can_upload"
                                             class="o_wslides_js_channel_tag_add badge text-bg-primary fw-normal m-1 o_not_editable"
                                             role="button"
@@ -295,19 +296,19 @@
                             <a t-if="len(channel.prerequisite_channel_ids) == 1"
                                 t-attf-href="/slides/{{channel.prerequisite_channel_ids[0].id}}"
                                 t-out="channel.prerequisite_channel_ids[0].name"/>
-                            <a t-else="" href="#" class="o_wslides_js_prerequisite_course"
+                            <button t-else="" class="o_wslides_js_prerequisite_course border-0 bg-transparent btn-link p-0 text-primary"
                                 t-att-data-channels="json.dumps(
                                     [{'course_id': course.id, 'course_name': course.name}
                                     for course in channel.prerequisite_channel_ids]
                                 )">
                                 courses
-                            </a>
+                            </button>
                             to unlock
                         </small>
                         <small>
                             or
-                            <a role="button" class="o_wslides_js_course_join_link"
-                                title="Start Course" aria-label="Start Course" href="#"
+                            <button class="o_wslides_js_course_join_link border-0 bg-transparent btn-link p-0 text-primary"
+                                title="Start Course" aria-label="Start Course"
                                 t-att-data-channel-id="channel.id"
                                 t-att-data-channel-enroll="channel.enroll"
                                 t-att-data-invite-hash="invite_hash"
@@ -317,13 +318,13 @@
                                 t-att-data-is-partner-without-user="is_partner_without_user">
                                 <t t-if="channel.channel_type == 'documentation'">start</t>
                                 <t t-else="">join</t>
-                            </a> anyway
+                            </button> anyway
                         </small>
                     </div>
                 </div>
             </div>
-            <a t-else="" role="button" class="btn btn-primary o_wslides_js_course_join_link"
-               title="Start Course" aria-label="Start Course" href="#"
+            <button t-else="" class="btn btn-primary o_wslides_js_course_join_link"
+               title="Start Course" aria-label="Start Course"
                t-att-data-channel-id="channel.id"
                t-att-data-channel-enroll="channel.enroll"
                t-att-data-invite-hash="invite_hash"
@@ -335,7 +336,7 @@
                     <t t-if="channel.channel_type == 'documentation'">Start this Course</t>
                     <t t-else="">Join this Course</t>
                 </span>
-            </a>
+            </button>
         </t>
         <div t-elif="not invite_preview and channel.enroll == 'invite' and not channel.is_member and not channel.is_member_invited" class="text-center">
             <div t-if="channel.prerequisite_channel_ids and not channel.prerequisite_user_has_completed" class="text-center">
@@ -350,20 +351,20 @@
                             <a t-if="len(channel.prerequisite_channel_ids) == 1"
                                 t-attf-href="/slides/{{channel.prerequisite_channel_ids[0].id}}"
                                 t-out="channel.prerequisite_channel_ids[0].name"/>
-                            <a t-else="" href="#" class="o_wslides_js_prerequisite_course"
+                            <button t-else="" class="o_wslides_js_prerequisite_course border-0 bg-transparent btn-link p-0 text-primary"
                                 t-att-data-channels="json.dumps(
                                     [{'course_id': course.id, 'course_name': course.name}
                                     for course in channel.prerequisite_channel_ids]
                                 )">
                                 courses
-                            </a>
+                            </button>
                             to unlock
                         </small>
                         <small t-if="is_public_user">
                             or <a t-att-href="'/web/login?redirect=/slides/%s' % (slug(channel))">sign in</a> to request access
                         </small>
                         <small t-else="">
-                            or <a href="#" class="o_wslides_js_channel_enroll" t-att-data-channel-id="channel.id">request</a> direct access
+                            or <button class="o_wslides_js_channel_enroll border-0 bg-transparent btn-link p-0 text-primary" t-att-data-channel-id="channel.id">request</button> direct access
                         </small>
                     </div>
                 </div>
@@ -441,14 +442,12 @@
                         </div>
                         <t t-if="category_id">
                             <div class="d-flex o_not_editable">
-                                <a  t-if="channel.can_publish"
-                                    class="o_text_link text-danger o_wslides_js_category_delete px-3 py-2"
-                                    role="button"
+                                <button t-if="channel.can_publish"
+                                    class="o_text_link text-danger o_wslides_js_category_delete px-3 py-2 border-0 bg-transparent"
                                     aria-label="Delete Category"
-                                    href="#"
                                     t-att-data-category-id="category_id">
                                     <i class="fa fa-trash"/>
-                                </a>
+                                </button>
                             </div>
                             <div class="d-flex ms-2 o_not_editable">
                                 <span t-field="category['category'].total_slides"/><span class="ms-1">Lessons</span>
@@ -456,18 +455,16 @@
                                 <span class="ms-1" t-field="category['category'].completion_time" t-options="{'widget': 'duration', 'format' : 'short', 'unit': 'hour', 'round': 'minute'}"/>
                             </div>
                             <div class="d-flex border-start ms-2 o_not_editable">
-                                <a  t-if="channel.can_upload"
-                                    class="o_text_link o_wslides_js_slide_upload px-3 py-2"
-                                    role="button"
+                                <button t-if="channel.can_upload"
+                                    class="o_text_link o_wslides_js_slide_upload px-3 py-2 border-0 bg-transparent"
                                     aria-label="Add Content"
-                                    href="#"
                                     t-att-data-modules-to-install="modules_to_install"
                                     t-att-data-channel-id="channel.id"
                                     t-att-data-category-id="category_id"
                                     t-att-data-can-upload="channel.can_upload"
                                     t-att-data-can-publish="channel.can_publish">
                                     <i class="fa fa-plus me-1"/> <span class="d-none d-md-inline-block">Add Content</span>
-                                </a>
+                                </button>
                             </div>
                         </t>
                     </div>
@@ -484,18 +481,15 @@
             </t>
         </ul>
         <div t-if="channel.can_upload" class="o_wslides_content_actions o_not_editable btn-group">
-            <a  class="o_wslides_js_slide_upload me-1 border btn btn-primary"
-                role="button"
+            <button class="o_wslides_js_slide_upload me-1 border btn btn-primary"
                 aria-label="Add Content"
-                href="#"
                 t-att-data-open-modal="enable_slide_upload"
                 t-att-data-modules-to-install="modules_to_install"
                 t-att-data-channel-id="channel.id"
                 t-att-data-can-upload="channel.can_upload"
-                t-att-data-can-publish="channel.can_publish"><i class="fa fa-plus me-1"/><span>Add Content</span></a>
-            <a class="o_wslides_js_slide_section_add border btn btn-light bg-white" t-attf-channel_id="#{channel.id}"
-                href="#" role="button"
-                groups="website_slides.group_website_slides_officer"><i class="fa fa-folder-o me-1"/><span>Add Section</span></a>
+                t-att-data-can-publish="channel.can_publish"><i class="fa fa-plus me-1"/><span>Add Content</span></button>
+            <button class="o_wslides_js_slide_section_add border btn btn-light bg-white" t-attf-channel_id="#{channel.id}"
+                groups="website_slides.group_website_slides_officer"><i class="fa fa-folder-o me-1"/><span>Add Section</span></button>
         </div>
         <t t-if="not channel.slide_ids and channel.can_publish" t-call="website_slides.course_slides_list_sample"/>
         <t t-elif="slide_count == 0 and not channel.can_publish" t-call="website_slides.course_slides_list_placeholder"/>
@@ -603,6 +597,7 @@
             <a name="o_wslides_list_slide_add_quizz" t-if="channel.can_upload and not slide.question_ids" t-attf-href="/slides/slide/#{slug(slide)}?quiz_quick_create" aria-label="Add quiz">
                 <span class="badge text-bg-primary badge-hide fw-normal m-1">Add Quiz</span>
             </a>
+            <!-- TODO -->
             <a t-if="channel.can_upload" href="#" name="o_wslides_slide_toggle_is_preview" aria-label="Preview">
                 <span t-att-data-slide-id="slide.id" t-attf-class="o_wslides_js_slide_toggle_is_preview badge #{'text-bg-success' if slide.is_preview else 'text-bg-primary badge-hide'} fw-normal m-1"><span>Preview</span></span>
             </a>
@@ -627,7 +622,7 @@
             <span t-if="channel.can_publish" class="d-none d-md-flex">
                 <a t-if="slide.slide_category == 'article'" class="mx-2 o_text_link text-primary o_not_editable" target="_blank" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1" title="Edit"><span class="fa fa-pencil"/></a>
                 <a t-else="" class="mx-2 o_text_link text-primary o_not_editable" target="_blank" t-attf-href="/odoo/slide.slide/{{slide.id}}" title="Edit in backend"><span class="fa fa-pencil"/></a>
-                <a href="#" t-att-data-slide-id="slide.id" class="o_text_link text-danger mx-2 o_wslides_js_slide_archive o_not_editable" title="Delete"><span class="fa fa-trash"/></a>
+                <button t-att-data-slide-id="slide.id" class="o_text_link text-danger mx-2 o_wslides_js_slide_archive o_not_editable border-0 bg-transparent" title="Delete"><span class="fa fa-trash"/></button>
             </span>
         </div>
     </li>
@@ -668,7 +663,7 @@
         <div class="container">
             <div class="row">
                 <nav class="navbar navbar-expand-lg navbar-light bg-transparent col">
-                    <a class="navbar-brand d-lg-none" href="#">Filter &amp; order</a>
+                    <button class="navbar-brand d-lg-none border-0 bg-transparent">Filter &amp; order</button>
 
                     <div class="ms-auto d-lg-none" t-if="search_slide_category or search">
                         <a t-att-href="'/slides/%s' % (slug(channel))" class="btn btn-info me-3">
@@ -711,15 +706,15 @@
                         <div class="col-12 d-flex align-items-start">
                             <ul class="navbar-nav me-auto">
                                 <li class="nav-item dropdown ms-lg-auto">
-                                    <a class="nav-link dropdown-toggle dropdown-toggle align-items-center d-flex" type="button" id="slidesChannelDropdownSort"
-                                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
+                                    <button class="nav-link dropdown-toggle dropdown-toggle align-items-center d-flex" type="button" id="slidesChannelDropdownSort"
+                                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <b>Order by</b>
                                         <span class="d-none d-xl-inline">:
                                             <t t-if="sorting == 'most_voted'">Most Voted</t>
                                             <t t-elif="sorting == 'most_viewed'">Most Viewed</t>
                                             <t t-else="">Newest</t>
                                         </span>
-                                    </a>
+                                    </button>
                                     <div class="dropdown-menu" aria-labelledby="slidesChannelDropdownSort" role="menu">
                                         <h6 class="dropdown-header">Sort by</h6>
                                         <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('slide_category', sorting='latest'))"
@@ -761,6 +756,7 @@
                         <span t-attf-class="badge o_wslides_channel_tag #{'o_color_'+str(channel_tag.color)}" t-out="channel_tag.name"/>
                     </t>
                 </t>
+                <!-- TODO -->
                 <a t-if="channel.can_upload"
                     class="o_wslides_js_channel_tag_add badge text-bg-primary fw-normal m-1"
                     role="button"
@@ -773,20 +769,18 @@
             </div>
 
             <div t-if="channel.can_upload" class="text-end pb-2 col-auto">
-                <a class="btn btn-primary py-1 o_wslides_js_slide_upload"
-                    title="Upload Document" role="button"
-                    href="#"
+                <button class="btn btn-primary py-1 o_wslides_js_slide_upload"
+                    title="Upload Document"
                     t-att-data-channel-id="channel.id"
                     t-att-data-can-upload="channel.can_upload"
                     t-att-data-can-publish="channel.can_publish">
                     <i class="fa fa-cloud-upload me-1"/>Add Content
-                </a>
-                <a class="btn btn-secondary py-1 o_wslides_js_slide_section_add"
-                    title="Add Section" role="button"
-                    href="#"
+                </button>
+                <button class="btn btn-secondary py-1 o_wslides_js_slide_section_add"
+                    title="Add Section"
                     t-att-channel_id="channel.id">
                     <i class="fa fa-folder-o me-1"/>Add a section
-                </a>
+                </button>
             </div>
         </div>
     </div>

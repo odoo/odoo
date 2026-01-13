@@ -138,13 +138,13 @@
             </small>
             <small t-else="" class="text-center mb-2">
                 There are some
-                <a href="#" class="o_wslides_js_prerequisite_course"
+                <button class="o_wslides_js_prerequisite_course border-0 bg-transparent btn-link p-0 text-primary"
                    t-att-data-channels="json.dumps([
                       {'course_id': course.id, 'course_name': course.name}
                       for course in channel.prerequisite_channel_ids]
                    )">
                     prerequisite courses.
-                </a>
+                </button>
             </small>
         </t>
         <t t-if="invite_preview">
