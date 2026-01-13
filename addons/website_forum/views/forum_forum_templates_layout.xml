@@ -30,7 +30,7 @@
         <t t-if="_page_name == 'single_question'">
             <div class="flex-grow-1">
                 <div class="o_wforum_breadcrumb_root_single d-flex align-items-center mb-2">
-                    <a t-attf-href="/forum/#{ _forum_slug }">
+                    <a t-if="breadcrumb_kind == 'base'" t-attf-href="/forum/#{ _forum_slug }">
                         <i class="d-inline-block fa fa-angle-left me-2 small"/><t t-out="_forum_name"/>
                     </a>
                     <button class="btn d-lg-none position-relative ms-auto p-2" data-bs-toggle="offcanvas" data-bs-target="#o_wforum_offcanvas">
