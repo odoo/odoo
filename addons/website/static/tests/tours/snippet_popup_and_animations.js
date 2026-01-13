@@ -160,8 +160,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that the popup has been closed",
-            trigger:
-                ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') i.fa-eye-slash",
+            trigger: ":iframe [data-snippet=s_popup] > .modal:not(:visible)",
         },
         ...scrollToSnippet("s_three_columns"),
         clickOnElement(
