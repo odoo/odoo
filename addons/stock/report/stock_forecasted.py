@@ -171,7 +171,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
         res['user_can_edit_pickings'] = self.env.user.has_group('stock.group_stock_manager')
         return res
 
-    def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
+    def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, is_pre_reserved=False, in_transit=False, read=True):
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
         delivery_late = move_out.state != 'done' and move_out.date < datetime.now() if move_out else False
@@ -197,6 +197,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
             'move_out': move_out,
             'move_in': move_in,
             'reservation': self._get_reservation_data(reserved_move) if reserved_move else False,
+            'is_pre_reserved': is_pre_reserved,
             'in_transit': in_transit,
             'is_matched': any(move_id in [move_in_id, move_out_id] for move_id in move_to_match_ids),
             'uom_id' : product.uom_id.read()[0] if read else product.uom_id,
@@ -309,11 +310,12 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 if float_is_zero(in_['qty'], precision_rounding=product_rounding):
                     index_to_remove.append(index)
                     continue
-                if only_matching_move_dest and in_['move_dests'] and out.id not in in_['move_dests']:
+                is_pre_reserved = out.id in in_['move_dests']
+                if only_matching_move_dest and not is_pre_reserved:
                     continue
                 taken_from_in = min(demand, in_['qty'])
                 demand -= taken_from_in
-                lines.append(self._prepare_report_line(taken_from_in, move_in=in_['move'], move_out=out, read=read))
+                lines.append(self._prepare_report_line(taken_from_in, move_in=in_['move'], move_out=out, is_pre_reserved=is_pre_reserved, read=read))
                 in_['qty'] -= taken_from_in
                 if in_['qty'] <= 0:
                     index_to_remove.append(index)
