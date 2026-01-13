@@ -4929,7 +4929,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'hr_sign',
             'hr_skills',
             'hr_skills_slides',
-            'hr_skills_survey',
+            'hr_survey',
             'hr_timesheet',
             'hr_work_entry',
             'hr_work_entry_holidays_enterprise',
