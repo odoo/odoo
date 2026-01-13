@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Status reasons -->
+
+        <record id="peppol_clarification_reason_non" model="account.peppol.clarification">
+            <field name="code">NON</field>
+            <field name="name">No Issue</field>
+            <field name="description">Indicates that receiver of the documents sends the message just to update the status and there are no problems with document processing.</field>
+        </record>
+
+        <record id="peppol_clarification_reason_ref" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusReason</field>
+            <field name="code">REF</field>
+            <field name="name">References incorrect</field>
+            <field name="description">Indicates that the received document did not contain references as required by the receiver for correctly routing the document for approval or processing.</field>
+        </record>
+
+        <record id="peppol_clarification_reason_leg" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusReason</field>
+            <field name="code">LEG</field>
+            <field name="name">Legal information incorrect</field>
+            <field name="description">Information in the received document is not according to legal requirements.</field>
+        </record>
+
+        <record id="peppol_clarification_reason_rec" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusReason</field>
+            <field name="code">REC</field>
+            <field name="name">Receiver unknown</field>
+            <field name="description">The party to which the document is addressed is not known.</field>
+        </record>
+
+        <record id="peppol_clarification_reason_qua" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusReason</field>
+            <field name="code">QUA</field>
+            <field name="name">Item quality insufficient</field>
+            <field name="description">Unacceptable or incorrect quality.</field>
+        </record>
+
+        <record id="peppol_clarification_reason_del" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusReason</field>
+            <field name="code">DEL</field>
+            <field name="name">Delivery issues</field>
+            <field name="description">Delivery proposed or provided is not acceptable.</field>
+        </record>
+
+        <record id="peppol_clarification_reason_pri" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusReason</field>
+            <field name="code">PRI</field>
+            <field name="name">Prices incorrect</field>
+            <field name="description">Prices not according to previous expectation.</field>
+        </record>
+
+        <record id="peppol_clarification_reason_qty" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusReason</field>
+            <field name="code">QTY</field>
+            <field name="name">Quantity incorrect</field>
+            <field name="description">Quantity not according to previous expectation.</field>
+        </record>
+
+        <record id="peppol_clarification_reason_itm" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusReason</field>
+            <field name="code">ITM</field>
+            <field name="name">Items incorrect</field>
+            <field name="description">Items not according to previous expectation.</field>
+        </record>
+
+        <record id="peppol_clarification_reason_pay" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusReason</field>
+            <field name="code">PAY</field>
+            <field name="name">Payment terms incorrect</field>
+            <field name="description">Payment terms not according to previous expectation.</field>
+        </record>
+
+        <record id="peppol_clarification_reason_unr" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusReason</field>
+            <field name="code">UNR</field>
+            <field name="name">Not recognized</field>
+            <field name="description">Commercial transaction not recognized.</field>
+        </record>
+
+        <record id="peppol_clarification_reason_fin" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusReason</field>
+            <field name="code">FIN</field>
+            <field name="name">Finance incorrect</field>
+            <field name="description">Finance terms not according to previous expectation.</field>
+        </record>
+
+        <record id="peppol_clarification_reason_ppd" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusReason</field>
+            <field name="code">PPD</field>
+            <field name="name">Partially Paid</field>
+            <field name="description">Payment is partially but not fully paid.</field>
+        </record>
+
+        <record id="peppol_clarification_reason_oth" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusReason</field>
+            <field name="code">OTH</field>
+            <field name="name">Other</field>
+            <field name="description">Reason for status is not defined by code.</field>
+        </record>
+
+        <!-- Status Actions -->
+
+        <record id="peppol_clarification_action_noa" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusAction</field>
+            <field name="code">NOA</field>
+            <field name="name">No action required</field>
+            <field name="description">No action required.</field>
+        </record>
+
+        <record id="peppol_clarification_action_pin" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusAction</field>
+            <field name="code">PIN</field>
+            <field name="name">Provide information</field>
+            <field name="description">Missing information requested without re-issuing invoice.</field>
+        </record>
+
+        <record id="peppol_clarification_action_nin" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusAction</field>
+            <field name="code">NIN</field>
+            <field name="name">Issue new invoice</field>
+            <field name="description">Request to re-issue a corrected invoice.</field>
+        </record>
+
+        <record id="peppol_clarification_action_cnf" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusAction</field>
+            <field name="code">CNF</field>
+            <field name="name">Credit fully</field>
+            <field name="description">Request to fully cancel the referenced invoice with a credit note.</field>
+        </record>
+
+        <record id="peppol_clarification_action_cnp" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusAction</field>
+            <field name="code">CNP</field>
+            <field name="name">Credit partially</field>
+            <field name="description">Request to issue partial credit note for corrections only.</field>
+        </record>
+
+        <record id="peppol_clarification_action_cna" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusAction</field>
+            <field name="code">CNA</field>
+            <field name="name">Credit the amount</field>
+            <field name="description">Request to repay the amount paid on the invoice.</field>
+        </record>
+
+        <record id="peppol_clarification_action_oth" model="account.peppol.clarification">
+            <field name="list_identifier">OPStatusAction</field>
+            <field name="code">OTH</field>
+            <field name="name">Other</field>
+            <field name="description">Requested action is not defined by code.</field>
+        </record>
+    </data>
+</odoo>
