@@ -1002,6 +1002,26 @@ test("toggle_star message", async () => {
     await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star-o");
 });
 
+test("can star a persistent message without thread", async () => {
+    const pyEnv = await startServer();
+    const messageId = pyEnv["mail.message"].create({
+        body: "Test",
+        message_type: "user_notification",
+        needaction: true,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-Message:not([data-starred]):contains('Test')");
+    await click(".o-mail-Message:contains('Test') [title='Mark as Todo']");
+    await contains(".o-mail-Message[data-starred]:contains('Test')");
+});
+
 test("Name of message author is only displayed in chat window for partners others than the current user", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "channel" });
