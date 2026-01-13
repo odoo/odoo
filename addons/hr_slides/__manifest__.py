@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Skills e-learning',
+    'name': 'HR - E-Learning',
     'category': 'Human Resources/Employees',
     'summary': 'Add completed courses to resume of your employees',
     'description':
@@ -25,8 +25,8 @@ This module add completed courses to resume for employees.
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            'hr_skills_slides/static/src/scss/**/*',
-            'hr_skills_slides/static/src/fields/**/*',
+            'hr_slides/static/src/scss/**/*',
+            'hr_slides/static/src/fields/**/*',
         ],
     },
     'author': 'Odoo S.A.',

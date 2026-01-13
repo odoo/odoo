@@ -17,24 +17,16 @@
                     <field name="courses_completion_text" widget="statinfo" string="Courses"/>
                 </button>
             </button>
-        </field>
-    </record>
-
-    <record id="hr_employee_public_resume_view_form_inherit" model="ir.ui.view">
-        <field name="name">hr.employee.view.form.inherit.resume.slides</field>
-        <field name="model">hr.employee.public</field>
-        <field name="inherit_id" ref="hr.hr_employee_public_view_form_inherit"/>
-        <field name="arch" type="xml">
             <xpath expr="//field[@name='external_url']" position="after">
                 <field name="course_url"/>
             </xpath>
         </field>
     </record>
 
-    <record id="hr_employee_resume_view_form_inherit" model="ir.ui.view">
+    <record id="hr_employee_public_resume_view_form_inherit" model="ir.ui.view">
         <field name="name">hr.employee.view.form.inherit.resume.slides</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.hr_employee_view_form"/>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='external_url']" position="after">
                 <field name="course_url"/>
