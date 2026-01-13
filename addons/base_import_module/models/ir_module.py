@@ -16,7 +16,6 @@ from os.path import join as opj
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.fields import Domain
-from odoo.http import request
 from odoo.modules.module import MANIFEST_NAMES, Manifest
 from odoo.release import major_version
 from odoo.tools import BinaryBytes, SQL, convert_file
@@ -111,9 +110,6 @@ class IrModuleModule(models.Model):
         # Do not involve specific website during import by resetting
         # information used by website's get_current_website.
         self = self.with_context(website_id=None)  # noqa: PLW0642
-        force_website_id = None
-        if request and request.session.get('force_website_id'):
-            force_website_id = request.session.pop('force_website_id')
 
         known_mods = self.search([])
         known_mods_names = {m.name: m for m in known_mods}
@@ -319,10 +315,6 @@ class IrModuleModule(models.Model):
 
         mod._update_from_terp(terp)
         _logger.info("Successfully imported module '%s'", module)
-
-        if force_website_id:
-            # Restore neutralized website_id.
-            request.session['force_website_id'] = force_website_id
 
         return True
 

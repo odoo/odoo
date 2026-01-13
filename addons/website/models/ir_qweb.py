@@ -6,7 +6,6 @@ from collections import OrderedDict
 from odoo import models
 from odoo.http import request
 from odoo.tools import lazy
-from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
 
@@ -127,9 +126,7 @@ class IrQweb(models.AbstractModel):
 
         atts = super()._post_processing_att(tagName, atts)
 
-        website = ir_http.get_request_website()
-        if not website and self.env.context.get('website_id'):
-            website = self.env['website'].browse(self.env.context['website_id'])
+        website = self.env['website'].get_current_website(fallback=False)
         if website and tagName == 'img' and 'loading' not in atts:
             atts['loading'] = 'lazy'  # default is auto
 
