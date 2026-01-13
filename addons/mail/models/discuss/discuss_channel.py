@@ -493,7 +493,8 @@ class DiscussChannel(models.Model):
             if channels_to_check := self.filtered(lambda channel: channel.active != vals["active"]):
                 if failing_channels := channels_to_check.filtered(
                     lambda channel: channel.channel_type in ["channel", "group"]
-                    and channel.self_member_id.channel_role != "owner"
+                    # sudo: discuss.channel.member - allow reading channel_role for access checks
+                    and channel.self_member_id.sudo().channel_role != "owner"
                     and not self.env.user.has_group("base.group_system")
                 ):
                     raise UserError(

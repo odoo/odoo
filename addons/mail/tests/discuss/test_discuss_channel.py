@@ -61,6 +61,12 @@ class TestChannelInternals(MailCommon, HttpCase):
             len(channels.filtered(lambda c: c.self_member_id.sudo().channel_role == "owner")), 3
         )
 
+    @users("employee")
+    def test_channel_archive_as_employee(self):
+        channel = self.env["discuss.channel"].create({"name": "Archive Access Test"})
+        channel.write({"active": False})
+        self.assertFalse(channel.active)
+
     @users('employee')
     @freeze_time("2020-03-22 10:42:06")
     def test_channel_members(self):
