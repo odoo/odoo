@@ -4,7 +4,7 @@ import pytz
 
 from calendar import monthrange
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from pytz import timezone
@@ -386,6 +386,15 @@ class HrAttendance(models.Model):
                     else:
                         # Count time before, during and after 'working hours'
                         pre_work_time, work_duration, post_work_time, planned_work_duration = attendances._get_pre_post_work_time(emp, working_times, attendance_date)
+                        if emp.is_flexible:
+                            tz = timezone(emp.tz) if emp.tz else None
+                            leave_intervals = emp.resource_calendar_id._leave_intervals_batch(
+                                start,
+                                stop,
+                                tz=tz,
+                                resources=emp.resource_id,
+                                domain=[('company_id', 'in', [False, emp.company_id.id])])[emp.resource_id.id]
+                            planned_work_duration -= self.leave_duration_outside_flexible_working_hours(leave_intervals, tz)
                         # Overtime within the planned work hours + overtime before/after work hours is > company threshold
                         total_overtime_duration = pre_work_time + work_duration + post_work_time - planned_work_duration
                         if total_overtime_duration > company_threshold and total_overtime_duration > 0:
@@ -553,6 +562,19 @@ class HrAttendance(models.Model):
         # This record only exists if the scenario has been already launched
         demo_tag = self.env.ref('hr_attendance.resource_calendar_std_38h', raise_if_not_found=False)
         return bool(demo_tag) or bool(self.env['ir.module.module'].search_count([('demo', '=', True)]))
+
+    def leave_duration_outside_flexible_working_hours(self, leave_intervals, tz):
+        for interval in leave_intervals:
+            leave_date_from, leave_date_to = interval[0], interval[1]
+            allocate_hours = interval[2].calendar_id.hours_per_day
+            midpoint = tz.localize(datetime.combine(leave_date_from.date(), time(12, 0)))
+            end_time = (midpoint + timedelta(hours=allocate_hours / 2)).astimezone(tz)
+
+            if leave_date_from > end_time or leave_date_from < end_time < leave_date_to:
+                reference_dt = leave_date_from if leave_date_from >= end_time else leave_date_to
+                outside_leave = (reference_dt - end_time).total_seconds() / 3600.0
+                return outside_leave
+        return 0
 
     def _load_demo_data(self):
         if self.has_demo_data():
