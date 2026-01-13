@@ -117,7 +117,10 @@ def get_view_arch_from_file(filepath, xmlid):
 
         elif node.tag == 'template':
             # The following dom operations has been copied from convert.py's _tag_template()
+            # TODO: Refactor from file method and code conversion method. Ideally, this method
+            # should be refactored to use a common logic as _tag_template() or utilize a common AST.
             if not node.get('inherit_id'):
+                node.attrib.clear()
                 node.set('t-name', xmlid)
                 node.tag = 't'
             else:
