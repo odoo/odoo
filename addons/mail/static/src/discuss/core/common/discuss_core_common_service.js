@@ -18,11 +18,8 @@ export class DiscussCoreCommon {
 
     setup() {
         this.busService.subscribe("discuss.channel/delete", (payload, metadata) => {
-            const thread = this.store["mail.thread"].insert({
-                id: payload.id,
-                model: "discuss.channel",
-            });
-            this._handleNotificationChannelDelete(thread, metadata);
+            const channel = this.store["discuss.channel"].insert(payload.id);
+            this._handleNotificationChannelDelete(channel, metadata);
         });
         this.busService.subscribe("discuss.channel/new_message", (payload, metadata) => {
             // Insert should always be done before any async operation. Indeed,
@@ -59,13 +56,13 @@ export class DiscussCoreCommon {
     }
 
     /**
-     * @param {import("models").Thread} thread
+     * @param {import("models").DiscussChannel} channel
      * @param {{ notifId: number}} metadata
      */
-    async _handleNotificationChannelDelete(thread, metadata) {
-        await thread.closeChatWindow();
-        thread.messages.splice(0, thread.messages.length);
-        thread.delete();
+    async _handleNotificationChannelDelete(channel, metadata) {
+        await channel.closeChatWindow();
+        channel.messages.splice(0, channel.messages.length);
+        channel.delete();
     }
 
     async _handleNotificationNewMessage(payload, { id: notifId }) {

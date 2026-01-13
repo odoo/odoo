@@ -22,7 +22,7 @@ export class LivechatSessionFormRenderer extends FormRenderer {
                     return () => channel.shadowedBySelf--;
                 }
             },
-            () => [this.thread?.channel]
+            () => [this.channel]
         );
         onWillStart(() => this.getChannel(this.props));
         onWillUpdateProps(async (nextProps) => {
@@ -34,16 +34,13 @@ export class LivechatSessionFormRenderer extends FormRenderer {
     }
 
     /**
-     * Restore the discuss thread according to record id in the props if
+     * Restore the discuss channel according to record id in the props if
      * necessary.
      *
      * @param {Props} props
      */
     async getChannel(props) {
-        this.thread = await this.store["mail.thread"].getOrFetch({
-            model: "discuss.channel",
-            id: props.record.resId,
-        });
+        this.channel = await this.store["discuss.channel"].getOrFetch(props.record.resId);
     }
 
     redirectToSessions() {
