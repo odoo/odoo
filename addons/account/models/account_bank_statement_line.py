@@ -143,6 +143,12 @@ class AccountBankStatementLine(models.Model):
         string="Statement Name",
         related='statement_id.name',
     )
+    statement_problem_description = fields.Text(
+        related='statement_id.problem_description',
+    )
+    statement_first_line_index = fields.Char(
+        related="statement_id.first_line_index",
+    )
 
     # Technical field to store details about the bank statement line
     transaction_details = fields.Json(readonly=True)

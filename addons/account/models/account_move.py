@@ -2817,6 +2817,12 @@ class AccountMove(models.Model):
             ):
                 raise ValidationError(_("The currency rate must be strictly positive."))
 
+    # @api.constrains('journal_id', 'statement_id', 'date')
+    # def _check_statement_journal(self):
+    #     for move in self:
+            # if not move.statement_id and move.journal_id.type == 'bank':
+            #     raise ValidationError(_("Bank statements must be linked to a journal of type Bank."))
+
     # -------------------------------------------------------------------------
     # CATALOG
     # -------------------------------------------------------------------------
