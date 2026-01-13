@@ -9,8 +9,12 @@
     </BuilderRow>
     <BuilderRow label.translate="Direction">
         <BuilderSelect>
-            <BuilderSelectItem classAction="'s_announcement_scroll_direction_left'">Left</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_announcement_scroll_direction_right'">Right</BuilderSelectItem>
+            <BuilderSelectItem classAction="`s_announcement_scroll_direction_${this.langDir.frontend === 'ltr' ? 'left' : 'right'}`">
+                Left
+            </BuilderSelectItem>
+            <BuilderSelectItem classAction="`s_announcement_scroll_direction_${this.langDir.frontend === 'ltr' ? 'right' : 'left'}`">
+                Right
+            </BuilderSelectItem>
             <BuilderSelectItem id="'announcement_scroll_direction_none_opt'"
                     classAction="'s_announcement_scroll_direction_none'">
                 None

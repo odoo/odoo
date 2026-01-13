@@ -5,7 +5,7 @@
     <BuilderRow label.translate="Slide">
         <BuilderButton type="'success'" title.translate="Add Slide"  action="'addSlide'">Add Slide</BuilderButton>
     </BuilderRow>
-    
+
     <BuilderRow label.translate="Style">
         <BuilderSelect>
             <BuilderSelectItem classAction="''">Regular</BuilderSelectItem>
@@ -70,18 +70,23 @@
 </t>
 
 <t t-name="website.CarouselItemHeaderMiddleButtons">
+    <t t-set="backward">Move Backward</t>
+    <t t-set="forward">Move Forward</t>
+    <t t-set="slidePrev" t-value="() => this.slide('prev')"/>
+    <t t-set="slideNext" t-value="() => this.slide('next')"/>
+    <t t-set="areFrontendBackendSame" t-value="this.langDir.frontend === this.langDir.backend"/>
     <button class="btn btn-primary ms-0 py-0 px-1 me-1"
-            title="Move Backward"
-            aria-label="Move Backward"
+            t-att-title="areFrontendBackendSame ? backward : forward"
+            t-att-aria-label="areFrontendBackendSame ? backward : forward"
             t-att-class="{ disabled: !state.hasMultiItems }"
-            t-on-click="() => this.slide('prev')">
+            t-on-click="areFrontendBackendSame ? slidePrev : slideNext">
         <span class="fa fa-fw fa-angle-left"/>
     </button>
     <button class="btn btn-primary py-0 px-1 me-2"
-            title="Move Forward"
-            aria-label="Move Forward"
+            t-att-title="areFrontendBackendSame ? forward : backward"
+            t-att-aria-label="areFrontendBackendSame ? forward : backward"
             t-att-class="{ disabled: !state.hasMultiItems }"
-            t-on-click="() => this.slide('next')">
+            t-on-click="areFrontendBackendSame ? slideNext : slidePrev">
         <span class="fa fa-fw fa-angle-right"/>
     </button>
     <button class="btn btn-success ms-0 py-0 px-1 me-1"

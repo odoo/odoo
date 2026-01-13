@@ -2,9 +2,19 @@
     <t t-name="mass_mailing.ImageAndFaOption">
         <BuilderRow label.translate="Alignment">
             <BuilderSelect>
-                <BuilderSelectItem classAction="'float-start'">Left</BuilderSelectItem>
-                <BuilderSelectItem classAction="'mx-auto'">Center</BuilderSelectItem>
-                <BuilderSelectItem classAction="'float-end'">Right</BuilderSelectItem>
+                <t t-set="left">Left</t>
+                <t t-set="right">Right</t>
+                <t t-set="alignLeft">Align Left</t>
+                <t t-set="alignRight">Align Right</t>
+                <BuilderSelectItem
+                    classAction="'float-start'"
+                    title="this.langDir.frontend === 'ltr' ? alignLeft : alignRight"
+                    t-out="this.langDir.frontend === 'ltr' ? left : right"/>
+                <BuilderSelectItem classAction="'mx-auto'" title.translate="Align Center">Center</BuilderSelectItem>
+                <BuilderSelectItem
+                    classAction="'float-end'"
+                    title="this.langDir.frontend === 'ltr' ? alignRight : alignLeft"
+                    t-out="this.langDir.frontend === 'ltr' ? right : left"/>
             </BuilderSelect>
         </BuilderRow>
         <t t-call="mass_mailing.BorderOption"/>

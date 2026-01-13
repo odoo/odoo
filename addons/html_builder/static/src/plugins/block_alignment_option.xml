@@ -4,9 +4,13 @@
 <t t-name="html_builder.BlockAlignmentOption">
     <BuilderRow label.translate="Alignment" t-if="!this.isActiveItem('so_width_100')" level="1">
         <BuilderButtonGroup>
-            <BuilderButton icon="'fa-align-left'" title.translate="Left" classAction="'me-auto'"/>
+            <BuilderButtonLtrRtl position="'start'"
+                classAction="{ sameDir: 'me-auto', diffDir: 'ms-auto' }"
+                icon="'fa-align-left'"/>
             <BuilderButton icon="'fa-align-center'" title.translate="Center" classAction="'mx-auto'"/>
-            <BuilderButton icon="'fa-align-right'" title.translate="Right" classAction="'ms-auto'"/>
+            <BuilderButtonLtrRtl position="'end'"
+                classAction="{ sameDir: 'ms-auto', diffDir: 'me-auto' }"
+                icon="'fa-align-right'"/>
         </BuilderButtonGroup>
     </BuilderRow>
 </t>

@@ -34,19 +34,28 @@
         </BuilderRow>
         <BuilderRow t-if="isActiveItem('regular_opt')" label.translate="Alignment" level="1">
             <BuilderSelect applyTo="'.s_tabs_nav .nav'">
-                <BuilderSelectItem classAction="''">Left</BuilderSelectItem>
+                <t t-set="left">Left</t>
+                <t t-set="right">Right</t>
+                <BuilderSelectItem classAction="''" t-out="this.langDir.frontend === 'ltr' ? left : right"/>
                 <BuilderSelectItem classAction="'justify-content-center mx-auto'">Center</BuilderSelectItem>
-                <BuilderSelectItem classAction="'justify-content-end ms-auto'">Right</BuilderSelectItem>
+                <BuilderSelectItem classAction="'justify-content-end ms-auto'" t-out="this.langDir.frontend === 'ltr' ? right : left"/>
             </BuilderSelect>
         </BuilderRow>
     </t>
     <BuilderRow label.translate="Slide">
         <BuilderButtonGroup applyTo="'.s_tabs_content'">
-            <BuilderButton className="'fa fa-fw fa-long-arrow-left'" title.translate="Slide to left" classAction="'s_tabs_slide_right'"/>
-            <BuilderButton className="'fa fa-fw fa-long-arrow-up'" title.translate="Slide up" classAction="'s_tabs_slide_down'"/>
-            <BuilderButton className="'fa fa-fw fa-long-arrow-down'" title.translate="Slide down" classAction="'s_tabs_slide_up'"/>
-            <BuilderButton className="'fa fa-fw fa-long-arrow-right'" title.translate="Slide to right" classAction="'s_tabs_slide_left'"/>
-            <BuilderButton className="'fa fa-fw fa-ban'" title.translate="No Slide Effect" classAction="''"/>
+            <t t-set="slideToLeft">Slide to left</t>
+            <t t-set="slideToRight">Slide to right</t>
+            <t t-set="label" t-value="{ left: slideToLeft, right: slideToRight }"/>
+            <BuilderButtonLtrRtl position="'start'" label="label"
+                icon="'fa-fw fa-long-arrow-left'"
+                classAction="{ sameDir: 's_tabs_slide_right', diffDir: 's_tabs_slide_left' }"/>
+            <BuilderButton icon="'fa-fw fa-long-arrow-up'" title.translate="Slide up" classAction="'s_tabs_slide_down'"/>
+            <BuilderButton icon="'fa-fw fa-long-arrow-down'" title.translate="Slide down" classAction="'s_tabs_slide_up'"/>
+             <BuilderButtonLtrRtl position="'end'" label="label"
+                icon="'fa-fw fa-long-arrow-right'"
+                classAction="{ sameDir: 's_tabs_slide_left', diffDir: 's_tabs_slide_right' }"/>
+            <BuilderButton icon="'fa-fw fa-ban'" title.translate="No Slide Effect" classAction="''"/>
         </BuilderButtonGroup>
     </BuilderRow>
 </t>

@@ -22,6 +22,7 @@ export class GalleryElementOption extends BaseOptionComponent {
     static selector =
         ".s_image_gallery img, .s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item";
     setup() {
+        super.setup();
         this.state = useDomState((editingElement) => {
             const isImageWall = editingElement.closest('[data-snippet="s_images_wall"]');
             if (isImageWall) {
