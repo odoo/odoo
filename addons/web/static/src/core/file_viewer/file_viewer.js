@@ -1,6 +1,6 @@
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useBackButton, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
 
@@ -77,6 +77,7 @@ export class FileViewer extends Component {
             },
             () => [this.iframeViewerPdfRef.el]
         );
+        useBackButton(() => this.close());
     }
 
     onImageLoaded() {
