@@ -1682,8 +1682,9 @@ class PosSession(models.Model):
         self.start_at = fields.Datetime.now()
 
         cash_payment_method_ids = self.config_id.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
-        if cash_payment_method_ids:
+        if notes:
             self.opening_notes = notes
+        if cash_payment_method_ids:
             difference = cashbox_value - self.cash_register_balance_start
             self._post_cash_details_message('Opening cash', self.cash_register_balance_start, difference, notes)
             self.cash_register_balance_start = cashbox_value
