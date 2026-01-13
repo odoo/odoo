@@ -227,7 +227,12 @@ export class MessageAction extends Action {
     }
 
     get params() {
-        return Object.assign(super.params, { message: this.messageFn(), thread: this.threadFn() });
+        const thread = this.threadFn();
+        return Object.assign(super.params, {
+            message: this.messageFn(),
+            channel: thread?.channel,
+            thread,
+        });
     }
 }
 
