@@ -30,24 +30,24 @@ if [ ! -d /home/pi/odoo/setup/iot_box_builder -a -d /home/pi/odoo/addons/iot_box
 fi
 
 # set locale to en_US
-echo "set locale to en_US"
+echo "Configuring locale to en_US.UTF-8"
 echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
-dpkg-reconfigure locales
+locale-gen en_US.UTF-8
+echo 'LANG=en_US.UTF-8' > /etc/default/locale
 
 # Aliases
-echo  "alias ll='ls -al'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias odoo='sudo systemctl stop odoo; sudo -u odoo /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias odoo_logs='less -R +F /var/log/odoo/odoo-server.log'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias odoo_conf='cat /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias install='sudo chroot /root_bypass_ramdisks/'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias blackbox='ls /dev/serial/by-path/'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias nano='sudo -u odoo nano -l'" | tee -a /home/pi/.bashrc
-echo  "alias vim='sudo -u odoo vim -u /home/pi/.vimrc'" | tee -a /home/pi/.bashrc
-echo  "alias odoo_luxe='printf \" ______\n< Luxe >\n ------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\ \n                ||----w |\n                ||     ||\n\"'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias odoo_start='sudo systemctl start odoo'" >> /home/pi/.bashrc
-echo  "alias odoo_stop='sudo systemctl stop odoo'" >> /home/pi/.bashrc
-echo  "alias odoo_restart='sudo systemctl restart odoo'" >> /home/pi/.bashrc
-echo "
+cat <<'EOF' | tee -a ~/.bashrc /home/pi/.bashrc
+alias ll='ls -al'
+alias odoo='sudo systemctl stop odoo; sudo -u odoo /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf'
+alias odoo_logs='less -R +F /var/log/odoo/odoo-server.log'
+alias odoo_conf='cat /home/pi/odoo.conf'
+alias install='sudo chroot /root_bypass_ramdisks/'
+alias blackbox='ls /dev/serial/by-path/'
+alias odoo_luxe='printf " ______\n< Luxe >\n ------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\ \n                ||----w |\n                ||     ||\n"'
+alias odoo_start='sudo systemctl start odoo'
+alias odoo_stop='sudo systemctl stop odoo'
+alias odoo_restart='sudo systemctl restart odoo'
+
 odoo_help() {
   echo '-------------------------------'
   echo ' Welcome to Odoo IoT Box tools'
@@ -69,47 +69,47 @@ odoo_help() {
 }
 
 odoo_dev() {
-  if [ -z \"\$1\" ]; then
+  if [ -z "$1" ]; then
     odoo_help
     return
   fi
-  pwd=\$(pwd)
+  pwd=$(pwd)
   cd /home/pi/odoo
   sudo -u odoo git remote add dev https://github.com/odoo-dev/odoo.git
-  sudo -u odoo git fetch dev \$1 --depth=1 --prune
+  sudo -u odoo git fetch dev "$1" --depth=1 --prune
   sudo -u odoo git reset --hard FETCH_HEAD
-  sudo -u odoo git branch -m \$1
+  sudo -u odoo git branch -m "$1"
   sudo -u odoo pip3 install -r /home/pi/odoo/setup/iot_box_builder/configuration/requirements.txt --break-system-package
-  sudo chroot /root_bypass_ramdisks /bin/bash -c \"export DEBIAN_FRONTEND=noninteractive && xargs apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install < /home/pi/odoo/setup/iot_box_builder/configuration/packages.txt\"
-  cd \$pwd
+  sudo chroot /root_bypass_ramdisks /bin/bash -c "export DEBIAN_FRONTEND=noninteractive && xargs apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install < /home/pi/odoo/setup/iot_box_builder/configuration/packages.txt"
+  cd "$pwd"
 }
 
 odoo_origin() {
-  if [ -z \"\$1\" ]; then
+  if [ -z "$1" ]; then
     odoo_help
     return
   fi
-  pwd=\$(pwd)
+  pwd=$(pwd)
   cd /home/pi/odoo
   sudo -u odoo git remote set-url origin https://github.com/odoo/odoo.git  # ensure odoo repository
-  sudo -u odoo git fetch origin \$1 --depth=1 --prune
+  sudo -u odoo git fetch origin "$1" --depth=1 --prune
   sudo -u odoo git reset --hard FETCH_HEAD
-  sudo -u odoo git branch -m \$1
-  sudo chroot /root_bypass_ramdisks /bin/bash -c \"export DEBIAN_FRONTEND=noninteractive && xargs apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install < /home/pi/odoo/setup/iot_box_builder/configuration/packages.txt\"
+  sudo -u odoo git branch -m "$1"
+  sudo chroot /root_bypass_ramdisks /bin/bash -c "export DEBIAN_FRONTEND=noninteractive && xargs apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install < /home/pi/odoo/setup/iot_box_builder/configuration/packages.txt"
   sudo -u odoo pip3 install -r /home/pi/odoo/setup/iot_box_builder/configuration/requirements.txt --break-system-package
-  cd \$pwd
+  cd "$pwd"
 }
 
 pip() {
-  if [[ -z \"\$1\" || -z \"\$2\" ]]; then
+  if [[ -z "$1" || -z "$2" ]]; then
     odoo_help
     return 1
   fi
-  additional_arg=\"\"
-  if [ \"\$1\" == \"install\" ]; then
-    additional_arg=\"--user\"
+  additional_arg=""
+  if [ "$1" == "install" ]; then
+    additional_arg="--user"
   fi
-  pip3 \"\$1\" \"\$2\" --break-system-package \$additional_arg
+  pip3 "$1" "$2" --break-system-package $additional_arg
 }
 
 devtools() {
@@ -120,19 +120,19 @@ devtools() {
     echo 'If no action name is provided, all actions will be enabled/disabled.'
     echo 'To enable/disable multiple actions, enclose them in quotes separated by commas.'
   }
-  case \"\$1\" in
+  case "$1" in
     enable|disable)
-      case \"\$2\" in
+      case "$2" in
         general|actions|longpolling)
           if ! grep -q '^\[devtools\]' /home/pi/odoo.conf; then
-            sudo -u odoo bash -c \"printf '\n[devtools]\n' >> /home/pi/odoo.conf\"
+            sudo -u odoo bash -c "printf '\n[devtools]\n' >> /home/pi/odoo.conf"
           fi
-          if [ \"\$1\" == \"disable\" ]; then
-            value=\"\${3:-*}\" # Default to '*' if no action name is provided
-            devtools enable \"\$2\" # Remove action/general/longpolling from conf to avoid duplicate keys
-            sudo sed -i \"/^\[devtools\]/a\\\\\$2 = \$value\" /home/pi/odoo.conf
-          elif [ \"\$1\" == \"enable\" ]; then
-            sudo sed -i \"/\[devtools\]/,/\[/{/\$2 =/d}\" /home/pi/odoo.conf
+          if [ "$1" == "disable" ]; then
+            value="${3:-*}" # Default to '*' if no action name is provided
+            devtools enable "$2" # Remove action/general/longpolling from conf to avoid duplicate keys
+            sudo sed -i "/^\[devtools\]/a\\$2 = $value" /home/pi/odoo.conf
+          elif [ "$1" == "enable" ]; then
+            sudo sed -i "/\[devtools\]/,/\[/{/$2 =/d}" /home/pi/odoo.conf
           fi
           ;;
         *)
@@ -147,7 +147,12 @@ devtools() {
       ;;
   esac
 }
-" | tee -a ~/.bashrc /home/pi/.bashrc
+EOF
+
+cat <<'EOF' | tee -a /home/pi/.bashrc
+alias nano='sudo -u odoo nano -l'
+alias vim='sudo -u odoo vim -u /home/pi/.vimrc'
+EOF
 
 # Change default hostname from 'raspberrypi' to 'iotbox'
 echo iotbox | tee /etc/hostname
@@ -168,27 +173,34 @@ password="$(openssl rand -base64 12)"
 echo "pi:${password}" | chpasswd
 echo TrustedUserCAKeys /etc/ssh/ca.pub >> /etc/ssh/sshd_config
 
-echo "Acquire::Retries "16";" > /etc/apt/apt.conf.d/99acquire-retries
 # KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
 # http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
-xargs apt-get -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install < /home/pi/odoo/setup/iot_box_builder/configuration/packages.txt
+xargs -r -a /home/pi/odoo/setup/iot_box_builder/configuration/packages.txt \
+    apt-get -y -qq \
+    --no-install-recommends \
+    -o Dpkg::Options::="--force-confdef" \
+    -o Dpkg::Options::="--force-confold" \
+    -o Acquire::Retries=16 \
+    install
 apt-get -y -qq autoremove
 
 apt-get -qq clean
-localepurge
-rm -rfv /usr/share/doc
+rm -rfv /usr/share/doc /usr/share/locale/*
 
 # Remove the default nginx website, we have our own config in /etc/nginx/conf.d/
 rm /etc/nginx/sites-enabled/default
 cd /home/pi/odoo/
-pip3 install -r /home/pi/odoo/setup/iot_box_builder/configuration/requirements.txt --break-system-package
+pip3 install \
+    --no-cache-dir \
+    --break-system-package \
+    -r /home/pi/odoo/setup/iot_box_builder/configuration/requirements.txt
 
 # Create Odoo user for odoo service and disable password login
 adduser --disabled-password --gecos "" --shell /usr/sbin/nologin odoo
 
 # odoo user doesn't need to type its password to run sudo commands
-cp /etc/sudoers.d/010_pi-nopasswd /etc/sudoers.d/010_odoo-nopasswd
-sed -i 's/pi/odoo/g' /etc/sudoers.d/010_odoo-nopasswd
+echo "odoo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/010_odoo-nopasswd
+chmod 440 /etc/sudoers.d/010_odoo-nopasswd
 
 # copy the odoo.conf file to the overwrite directory
 mv -v "/home/pi/odoo/setup/iot_box_builder/configuration/odoo.conf" "/home/pi/"
@@ -202,8 +214,7 @@ usermod -a -G lp odoo
 usermod -a -G input odoo
 usermod -a -G dialout odoo
 usermod -a -G pi odoo
-mkdir -v /var/log/odoo
-chown odoo:odoo /var/log/odoo
+install -d -o odoo -g odoo /var/log/odoo
 chown odoo:odoo -R /home/pi/odoo/
 
 # logrotate is very picky when it comes to file permissions
@@ -212,23 +223,25 @@ chmod -R 644 /etc/logrotate.d/
 chown root:root /etc/logrotate.conf
 chmod 644 /etc/logrotate.conf
 
-update-rc.d -f hostapd remove
-update-rc.d -f nginx remove
-update-rc.d -f dnsmasq remove
-
-systemctl enable ramdisks.service
-systemctl disable dphys-swapfile.service
-systemctl enable ssh
-systemctl set-default graphical.target
-systemctl disable getty@tty1.service
-systemctl disable systemd-timesyncd.service
 systemctl unmask hostapd.service
-systemctl disable hostapd.service
-systemctl disable cups-browsed.service
-systemctl disable userconfig.service
-systemctl enable labwc.service
-systemctl enable odoo.service
-systemctl enable odoo-led-manager.service
+systemctl set-default graphical.target
+
+systemctl enable \
+    ramdisks.service \
+    ssh \
+    labwc.service \
+    odoo.service \
+    odoo-led-manager.service
+
+systemctl disable \
+    dphys-swapfile.service \
+    getty@tty1.service \
+    systemd-timesyncd.service \
+    hostapd.service \
+    cups-browsed.service \
+    userconfig.service \
+    nginx.service \
+    dnsmasq.service
 
 # create dirs for ramdisks
 create_ramdisk_dir () {

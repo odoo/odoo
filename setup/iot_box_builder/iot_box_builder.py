@@ -23,8 +23,6 @@ IOTBOX_IMAGE = "iotbox.img"
 IOTBOX_VERSION = datetime.now().strftime('%Y.%m.%0d')
 RASPI_IMAGE = "2025-10-01-raspios-trixie-armhf-lite.img.xz"
 RASPI_IMAGE_URl = f"https://downloads.raspberrypi.com/raspios_lite_armhf/images/raspios_lite_armhf-2025-10-02/{RASPI_IMAGE}"
-NGROK_TGZ = "ngrok-v3-stable-linux-arm.tgz"
-NGROK_URL = f"https://bin.equinox.io/c/bNyj1mQVY4c/{NGROK_TGZ}"
 BUILD_DIR = "/iot_build"
 RASPI_PATH = f"{BUILD_DIR}/rpi/images"
 BOX_MOUNT_POINT = "/iot_build/mnt"
@@ -33,7 +31,6 @@ SYSTEM_INCREASE_MiB = 2816
 SYSTEM_INCREASE_AMOUNT_SECTORS = SYSTEM_INCREASE_MiB * 2048
 QEMU_ARM_STATIC = "/usr/bin/qemu-arm-static"
 BEFORE_INIT_FILES = Path(__file__).parent / 'overwrite_before_init'
-AFTER_INIT_FILES = Path(__file__).parent / 'overwrite_after_init'
 BUILD_UTILS_FILES = Path(__file__).parent / 'build_utils'
 RPI_ODOO_CLONE_DIR = f"{BUILD_DIR}/overwrite_before_init/home/pi/odoo"
 
@@ -82,7 +79,6 @@ class KvmIotBuilder:
             '-aq',
         ]
         subprocess.run(rsync_cmd + [f'{BEFORE_INIT_FILES}', f'{self.login}@127.0.0.1:{BUILD_DIR}'], check=True)
-        subprocess.run(rsync_cmd + [f'{AFTER_INIT_FILES}', f'{self.login}@127.0.0.1:{BUILD_DIR}'], check=True)
         subprocess.run(rsync_cmd + [f'{BUILD_UTILS_FILES}', f'{self.login}@127.0.0.1:{BUILD_DIR}'], check=True)
 
     def run(self):
@@ -125,7 +121,6 @@ class KvmIotBuilder:
             f'sudo chroot {BOX_MOUNT_POINT} /bin/bash -c /etc/init_image.sh',
             f'sudo cp /tmp/ca.pub {BOX_MOUNT_POINT}/etc/ssh/ca.pub',
             f'sudo cp /tmp/iotbox_version {BOX_MOUNT_POINT}/var/odoo/',
-            f'sudo cp -a {BUILD_DIR}/overwrite_after_init/* {BOX_MOUNT_POINT}',
             f'sudo chown 1001:1001 -R {BOX_MOUNT_POINT}/home/odoo/',
             f'cd /home/{self.login}',
             'sudo umount -v /dev/loop0p1',
