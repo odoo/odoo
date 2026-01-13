@@ -3,7 +3,6 @@ import { LivechatChannelInfoList } from "@im_livechat/core/web/livechat_channel_
 import { compareDatetime } from "@mail/utils/common/misc";
 
 import { toLocaleDateTimeString } from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {LivechatChannelInfoList} */
@@ -18,9 +17,6 @@ const livechatChannelInfoListPatch = {
     },
     CLOSED_ON_TEXT(channel) {
         return toLocaleDateTimeString(channel.livechat_end_dt);
-    },
-    get countryLanguageLabel() {
-        return _t("Country & Language");
     },
 };
 
