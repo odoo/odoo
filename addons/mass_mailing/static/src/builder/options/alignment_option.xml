@@ -3,9 +3,9 @@
     <BuilderRow label.translate="Alignment" t-if="!this.isActiveItem('so_width_100')">
         <BuilderButtonGroup>
             <!-- TODO EGGMAIL: investigate how margins behave in email clients -->
-            <BuilderButton icon="'fa-align-left'" title.translate="Left" classAction="'me-auto'"/>
+            <BuilderButtonLtrRtl position="'start'" icon="'fa-align-left'" classAction="{ sameDir: 'me-auto', diffDir: 'ms-auto' }"/>
             <BuilderButton icon="'fa-align-center'" title.translate="Center" classAction="'mx-auto'"/>
-            <BuilderButton icon="'fa-align-right'" title.translate="Right" classAction="'ms-auto'"/>
+            <BuilderButtonLtrRtl position="'end'" icon="'fa-align-right'" classAction="{ sameDir: 'ms-auto', diffDir: 'me-auto' }"/>
         </BuilderButtonGroup>
     </BuilderRow>
 </t>

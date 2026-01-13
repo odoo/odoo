@@ -5,7 +5,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { BuilderDateTimePicker } from "./building_blocks/builder_datetimepicker";
 import { BuilderSlidingPanel } from "./building_blocks/builder_sliding_panel";
 import { BuilderRow } from "./building_blocks/builder_row";
-import { BuilderButton } from "./building_blocks/builder_button";
+import { BuilderButton, BuilderButtonLtrRtl } from "./building_blocks/builder_button";
 import { BuilderNumberInput } from "./building_blocks/builder_number_input";
 import { BuilderSelect } from "./building_blocks/builder_select";
 import { BuilderSelectItem } from "./building_blocks/builder_select_item";
@@ -49,6 +49,7 @@ export class BuilderComponentPlugin extends Plugin {
             DropdownItem,
             BuilderButtonGroup,
             BuilderButton,
+            BuilderButtonLtrRtl,
             BuilderTextInput,
             BuilderNumberInput,
             BuilderRange,

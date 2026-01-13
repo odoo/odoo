@@ -12,16 +12,14 @@
                     actionParam="'card-img-top'"
                     iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"
                     title.translate="Top"/>
-                <BuilderButton
-                    classAction="'o_card_img_horizontal flex-lg-row'"
-                    actionParam="'rounded-start'"
-                    iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"
-                    title.translate="Left"/>
-                <BuilderButton
-                    classAction="'o_card_img_horizontal flex-lg-row-reverse'"
-                    actionParam="'rounded-end'"
-                    iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"
-                    title.translate="Right"/>
+                <BuilderButtonLtrRtl position="'start'"
+                    classAction="{ sameDir: 'o_card_img_horizontal flex-lg-row', diffDir: 'o_card_img_horizontal flex-lg-row-reverse' }"
+                    actionParam="{ sameDir: 'rounded-start', diffDir: 'rounded-end' }"
+                    iconImg="'/html_builder/static/img/options/pos_left.svg'"/>
+                <BuilderButtonLtrRtl position="'end'"
+                    classAction="{ sameDir: 'o_card_img_horizontal flex-lg-row-reverse', diffDir: 'o_card_img_horizontal flex-lg-row' }"
+                    actionParam="{ sameDir: 'rounded-end', diffDir: 'rounded-start' }"
+                    iconImg="'/html_builder/static/img/options/pos_right.svg'"/>
                 <BuilderButton
                     id="'card_img_bottom_opt'"
                     classAction="'o_card_img_bottom flex-column-reverse'"
@@ -31,7 +29,7 @@
             </BuilderButtonGroup>
 
         <!-- Remove image -->
-            <BuilderButton 
+            <BuilderButton
                 action="'removeCoverImage'"
                 preview="false"
                 icon="'oi-close'"

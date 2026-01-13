@@ -35,7 +35,9 @@
     <BuilderRow label.translate="Title Position">
         <BuilderSelect>
             <BuilderSelectItem classAction="''">Top</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_rating_inline'">Left</BuilderSelectItem>
+            <t t-set="left">Left</t>
+            <t t-set="right">Right</t>
+            <BuilderSelectItem classAction="'s_rating_inline'" t-out="this.langDir.frontend === 'ltr' ? left : right"/>
             <BuilderSelectItem classAction="'s_rating_no_title'">None</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>

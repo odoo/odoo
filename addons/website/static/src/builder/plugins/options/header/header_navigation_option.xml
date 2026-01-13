@@ -37,75 +37,85 @@
         'website.template_header_vertical_align_right',
     ]"/>
 
+    <t t-set="isFrontendLTR" t-value="this.langDir.frontend === 'ltr'"/>
+    <t t-set="areFrontendBackendSame" t-value="this.langDir.frontend === this.langDir.backend"/>
+    <t t-set="alignLeft">Align Left</t>
+    <t t-set="alignRight">Align Right</t>
+
     <BuilderRow label.translate="Desktop Menu" tooltip.translate="Change the burger button position/menu items alignment">
         <!-- Reason why we enable this option for those templates only:
             website.template_header_hamburger => Hamburger Icon Position
             website.template_header_sidebar => Sidebar Position
         -->
         <BuilderButtonGroup action="'websiteConfig'" t-if="hasSomeViews(['website.template_header_hamburger', 'website.template_header_sidebar'])">
-            <BuilderButton
+            <t t-set="positionLeft" t-value="{ views: [], vars: { 'hamburger-position': 'left' } }"/>
+            <t t-set="positionRight" t-value="{
+                views: ['website.template_header_hamburger_align_right', 'website.template_header_sidebar_position_right'],
+                vars: { 'hamburger-position': 'right' },
+            }"/>
+            <BuilderButtonLtrRtl position="'start'"
                 icon="'fa-long-arrow-left'"
-                actionParam="{
-                    views: [],
-                    vars: { 'hamburger-position': 'left' }
-                }"/>
-            <BuilderButton
+                actionParam="{ sameDir: positionLeft, diffDir: positionRight }"/>
+            <BuilderButtonLtrRtl position="'end'"
                 icon="'fa-long-arrow-right'"
-                actionParam="{
-                    views: ['website.template_header_hamburger_align_right', 'website.template_header_sidebar_position_right'],
-                    vars: { 'hamburger-position': 'right' }
-                }"/>
+                actionParam="{ sameDir: positionRight, diffDir: positionLeft }"/>
         </BuilderButtonGroup>
 
         <BuilderSelect action="'websiteConfig'">
-            <BuilderSelectItem actionParam="{ views: align_left_views }">
-                <span><i class="fa fa-align-left fa-fw"></i></span>
+            <BuilderSelectItem actionParam="{ views: areFrontendBackendSame ? align_left_views : align_right_views }">
+                <div t-att-title="isFrontendLTR ? alignLeft : alignRight">
+                    <i class="fa fa-align-left fa-fw" role="img" aria-hidden="true"/>
+                    <span class="visually-hidden" t-out="isFrontendLTR ? alignLeft : alignRight"/>
+                </div>
             </BuilderSelectItem>
             <BuilderSelectItem actionParam="{ views: align_center_views }">
-                <span><i class="fa fa-align-center fa-fw"></i></span>
+                <div title="Center">
+                    <i class="fa fa-align-center fa-fw" role="img" aria-hidden="true"/>
+                    <span class="visually-hidden">Center</span>
+                </div>
             </BuilderSelectItem>
-            <BuilderSelectItem actionParam="{ views: align_right_views }">
-                <span><i class="fa fa-align-right fa-fw"></i></span>
+            <BuilderSelectItem actionParam="{ views: areFrontendBackendSame ? align_right_views : align_left_views }">
+                <div t-att-title="isFrontendLTR ? alignRight : alignLeft">
+                    <i class="fa fa-align-right fa-fw" role="img" aria-hidden="true"/>
+                    <span class="visually-hidden" t-out="isFrontendLTR ? alignRight : alignLeft"/>
+                </div>
             </BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
 
     <BuilderRow label.translate="Mobile Menu">
         <BuilderButtonGroup action="'websiteConfig'">
-            <BuilderButton icon="'fa-long-arrow-left'"
-                actionParam="{
-                    views: ['website.template_header_mobile_position_left'],
-                    vars: { 'hamburger-position-mobile': 'left' }
-                }"/>
-            <BuilderButton
+            <t t-set="positionLeft" t-value="{
+                views: ['website.template_header_mobile_position_left'],
+                vars: { 'hamburger-position-mobile': 'left' },
+            }"/>
+            <t t-set="positionRight" t-value="{ views: [], vars: { 'hamburger-position-mobile': 'right' } }"/>
+            <BuilderButtonLtrRtl position="'start'"
+                icon="'fa-long-arrow-left'"
+                actionParam="{ sameDir: positionLeft, diffDir: positionRight }"/>
+            <BuilderButtonLtrRtl position="'end'"
                 icon="'fa-long-arrow-right'"
-                actionParam="{
-                    views: [],
-                    vars: { 'hamburger-position-mobile': 'right' }
-                }"/>
+                actionParam="{ sameDir: positionRight, diffDir: positionLeft }"/>
         </BuilderButtonGroup>
 
         <BuilderSelect action="'websiteConfig'">
-            <BuilderSelectItem
-                actionParam="{
-                    views: [],
-                }"
-            >
-                <span><i class="fa fa-align-left fa-fw"></i></span>
+            <BuilderSelectItem actionParam="{ views: areFrontendBackendSame ? [] : ['website.template_header_mobile_align_right'] }">
+                <div t-att-title="isFrontendLTR ? alignLeft : alignRight">
+                    <i class="fa fa-align-left fa-fw" role="img" aria-hidden="true"/>
+                    <span class="visually-hidden" t-out="isFrontendLTR ? alignLeft : alignRight"/>
+                </div>
             </BuilderSelectItem>
-            <BuilderSelectItem
-                actionParam="{
-                    views: ['website.template_header_mobile_align_center'],
-                }"
-            >
-                <span><i class="fa fa-align-center fa-fw"></i></span>
+            <BuilderSelectItem actionParam="{ views: ['website.template_header_mobile_align_center'] }">
+                <div title="Center">
+                    <i class="fa fa-align-center fa-fw" role="img" aria-hidden="true"/>
+                    <span class="visually-hidden">Center</span>
+                </div>
             </BuilderSelectItem>
-            <BuilderSelectItem
-                actionParam="{
-                    views: ['website.template_header_mobile_align_right'],
-                }"
-            >
-                <span><i class="fa fa-align-right fa-fw"></i></span>
+            <BuilderSelectItem actionParam="{ views: areFrontendBackendSame ? ['website.template_header_mobile_align_right'] : [] }">
+                <div t-att-title="isFrontendLTR ? alignRight : alignLeft">
+                    <i class="fa fa-align-right fa-fw" role="img" aria-hidden="true"/>
+                    <span class="visually-hidden" t-out="isFrontendLTR ? alignRight : alignLeft"/>
+                </div>
             </BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>

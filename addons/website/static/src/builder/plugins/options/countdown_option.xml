@@ -159,9 +159,13 @@
         </BuilderRow>
         <BuilderRow label.translate="Alignment" level="2">
             <BuilderButtonGroup applyTo="'.s_countdown_inline_wrapper'">
-                <BuilderButton icon="'fa-align-left'" title.translate="Left" classAction="''"/>
+                <BuilderButtonLtrRtl position="'start'"
+                    classAction="{ sameDir: '', diffDir: 'align-self-end text-end' }"
+                    icon="'fa-align-left'"/>
                 <BuilderButton icon="'fa-align-center'" title.translate="Center" classAction="'align-self-center text-center'"/>
-                <BuilderButton icon="'fa-align-right'" title.translate="Right" classAction="'align-self-end text-end'"/>
+                <BuilderButtonLtrRtl position="'end'"
+                    classAction="{ sameDir: 'align-self-end text-end', diffDir: '' }"
+                    icon="'fa-align-right'"/>
             </BuilderButtonGroup>
         </BuilderRow>
         <BuilderRow label.translate="Font Monospace" applyTo="'.s_countdown_inline'" level="2">

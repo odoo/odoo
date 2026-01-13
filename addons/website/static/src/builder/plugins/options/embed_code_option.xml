@@ -11,9 +11,13 @@
     </BuilderRow>
     <BuilderRow label.translate="Alignment">
         <BuilderButtonGroup>
-            <BuilderButton className="'fa fa-fw fa-align-left'" title.translate="Left" classAction="'text-start'"/>
-            <BuilderButton className="'fa fa-fw fa-align-center'" title.translate="Center" classAction="'text-center'"/>
-            <BuilderButton className="'fa fa-fw fa-align-right'" title.translate="Right" classAction="'text-end'"/>
+            <BuilderButtonLtrRtl position="'start'"
+                classAction="{ sameDir: 'text-start', diffDir: 'text-end' }"
+                icon="'fa-fw fa-align-left'"/>
+            <BuilderButton icon="'fa-fw fa-align-center'" title.translate="Center" classAction="'text-center'"/>
+            <BuilderButtonLtrRtl position="'end'"
+                classAction="{ sameDir: 'text-end', diffDir: 'text-start' }"
+                icon="'fa-fw fa-align-right'"/>
         </BuilderButtonGroup>
     </BuilderRow>
 </t>

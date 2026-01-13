@@ -9,6 +9,7 @@ import {
     toRaw,
 } from "@odoo/owl";
 import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
+import { localization } from "@web/core/l10n/localization";
 import { useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
 import { useDebounced } from "@web/core/utils/timing";
@@ -942,6 +943,14 @@ export function useInputDebouncedCommit(ref) {
     // holding up/down on a number or range input.
 }
 
+export function useLanguageDirection() {
+    const comp = useComponent();
+    return {
+        frontend: comp.env.editor.config.isEditableRTL ? "rtl" : "ltr",
+        backend: localization.direction,
+    };
+}
+
 export const basicContainerBuilderComponentProps = {
     id: { type: String, optional: true },
     applyTo: { type: String, optional: true },
@@ -1182,6 +1191,8 @@ export class BaseOptionComponent extends Component {
         this.processThrough = context.processThrough;
         /** @type { EditorContext['checkPredicates'] } **/
         this.checkPredicates = context.checkPredicates;
+
+        this.langDir = useLanguageDirection();
 
         this.isActiveItem = useIsActiveItem();
         const comp = useComponent();

@@ -16,9 +16,13 @@
 <t t-name="website.TableOfContentNavbarOption">
     <BuilderRow label.translate="Position" action="'navbarPosition'">
         <BuilderButtonGroup>
-            <BuilderButton icon="'fa-long-arrow-left'" title.translate="Left" actionParam="'left'"/>
+            <BuilderButtonLtrRtl position="'start'"
+                actionParam="{ sameDir: 'left', diffDir: 'right'}"
+                icon="'fa-long-arrow-left'"/>
             <BuilderButton icon="'fa-long-arrow-up'" title.translate="Top" actionParam="'top'"/>
-            <BuilderButton icon="'fa-long-arrow-right'" title.translate="Right" actionParam="'right'"/>
+            <BuilderButtonLtrRtl position="'end'"
+                actionParam="{ sameDir: 'right', diffDir: 'left' }"
+                icon="'fa-long-arrow-right'"/>
         </BuilderButtonGroup>
     </BuilderRow>
     <BuilderRow label.translate="Sticky" tooltip.translate="Keep this element fixed while scrolling">

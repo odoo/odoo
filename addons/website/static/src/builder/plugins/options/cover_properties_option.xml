@@ -29,9 +29,11 @@
 
     <BuilderRow label.translate="Text Alignment" t-if="this.state.useTextAlign">
         <BuilderSelect>
-            <BuilderSelectItem classAction="''">Left</BuilderSelectItem>
+            <t t-set="left">Left</t>
+            <t t-set="right">Right</t>
+            <BuilderSelectItem classAction="''" t-out="this.langDir.frontend === 'ltr' ? left : right"/>
             <BuilderSelectItem classAction="'text-center'">Centered</BuilderSelectItem>
-            <BuilderSelectItem classAction="'text-end'">Right</BuilderSelectItem>
+            <BuilderSelectItem classAction="'text-end'" t-out="this.langDir.frontend === 'ltr' ? right : left"/>
         </BuilderSelect>
     </BuilderRow>
 </BuilderContext>

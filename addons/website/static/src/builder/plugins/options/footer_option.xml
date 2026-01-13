@@ -92,9 +92,11 @@
             varsOnClean: {'footer-scrolltop': 'false'}
         }"/>
         <BuilderSelect t-if="this.isActiveItem('footer_scrolltop_opt')" applyTo="'#o_footer_scrolltop_wrapper'">
-            <BuilderSelectItem classAction="'justify-content-start'">Left</BuilderSelectItem>
+            <t t-set="left">Left</t>
+            <t t-set="right">Right</t>
+            <BuilderSelectItem classAction="'justify-content-start'" t-out="this.langDir.frontend === 'ltr' ? left : right"/>
             <BuilderSelectItem classAction="'justify-content-center'">Center</BuilderSelectItem>
-            <BuilderSelectItem classAction="'justify-content-end'">Right</BuilderSelectItem>
+            <BuilderSelectItem classAction="'justify-content-end'" t-out="this.langDir.frontend === 'ltr' ? right : left"/>
         </BuilderSelect>
     </BuilderRow>
 </t>

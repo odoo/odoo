@@ -71,8 +71,14 @@
                 </BuilderRow>
                 <BuilderRow label.translate="Position" level="1">
                     <BuilderSelect actionParam="'position'">
-                        <BuilderSelectItem actionValue="'left'">Left</BuilderSelectItem>
-                        <BuilderSelectItem actionValue="'right'">Right</BuilderSelectItem>
+                        <t t-set="left">Left</t>
+                        <t t-set="right">Right</t>
+                        <BuilderSelectItem actionValue="'left'"
+                            t-out="this.langDir.frontend === 'ltr' ? left : right"
+                        />
+                        <BuilderSelectItem actionValue="'right'"
+                            t-out="this.langDir.frontend === 'ltr' ? right : left"
+                        />
                     </BuilderSelect>
                 </BuilderRow>
             </BuilderContext>

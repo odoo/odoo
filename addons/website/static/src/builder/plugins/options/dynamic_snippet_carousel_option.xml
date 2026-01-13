@@ -5,11 +5,17 @@
     <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
         <BuilderRow label.translate="Arrow Position">
             <BuilderSelect>
+                <t t-set="left">Bottom Left</t>
+                <t t-set="right">Bottom Right</t>
                 <BuilderSelectItem classAction="''">Default</BuilderSelectItem>
                 <BuilderSelectItem classAction="'o_arrows_inside'">Inside</BuilderSelectItem>
-                <BuilderSelectItem classAction="'o_arrows_bottom o_arrows_bottom_left'">Bottom Left</BuilderSelectItem>
+                <BuilderSelectItem
+                    classAction="'o_arrows_bottom o_arrows_bottom_left'"
+                    t-out="this.langDir.frontend === 'ltr' ? left : right"/>
                 <BuilderSelectItem classAction="'o_arrows_bottom o_arrows_bottom_center'">Bottom Center</BuilderSelectItem>
-                <BuilderSelectItem classAction="'o_arrows_bottom o_arrows_bottom_right'">Bottom Right</BuilderSelectItem>
+                <BuilderSelectItem
+                    classAction="'o_arrows_bottom o_arrows_bottom_right'"
+                    t-out="this.langDir.frontend === 'ltr' ? right : left"/>
             </BuilderSelect>
         </BuilderRow>
 	    <BuilderRow label.translate="Slider Speed" t-if="numberOfRecords > 1">

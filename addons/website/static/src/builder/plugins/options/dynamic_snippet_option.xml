@@ -46,8 +46,12 @@
     </BuilderRow>
     <BuilderRow label.translate="Cover Image" t-if="isSingleMode and !!showCoverImageOption?.()">
         <BuilderButtonGroup>
-            <BuilderButton title.translate="Left" classAction="'s_dynamic_snippet_cover_left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
-            <BuilderButton title.translate="Right" classAction="''" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+            <BuilderButtonLtrRtl position="'start'"
+                classAction="{ sameDir: 's_dynamic_snippet_cover_left', diffDir: '' }"
+                iconImg="'/html_builder/static/img/options/pos_left.svg'"/>
+            <BuilderButtonLtrRtl position="'end'"
+                classAction="{ sameDir: '', diffDir: 's_dynamic_snippet_cover_left' }"
+                iconImg="'/html_builder/static/img/options/pos_right.svg'"/>
         </BuilderButtonGroup>
     </BuilderRow>
     <BuilderRow id="number_of_records_opt_row" label.translate="Fetched Elements" t-if="!!dynamicOptionParams.domState.filterId or isSingleMode">
@@ -59,8 +63,10 @@
     </BuilderRow>
     <BuilderRow label.translate="Section Title" t-if="!isSingleMode">
         <BuilderButtonGroup applyTo="'.s_dynamic_snippet_title'">
+            <t t-set="left">Left</t>
+            <t t-set="right">Right</t>
             <BuilderButton label.translate="Top" classAction="dynamicOptionParams.getSnippetTitleClasses('top')"/>
-            <BuilderButton label.translate="Left" classAction="dynamicOptionParams.getSnippetTitleClasses('left')"/>
+            <BuilderButton label="this.langDir.frontend === 'ltr' ? left : right" classAction="dynamicOptionParams.getSnippetTitleClasses('left')"/>
             <BuilderButton label.translate="None" title.translate="No title" classAction="dynamicOptionParams.getSnippetTitleClasses('none')"/>
         </BuilderButtonGroup>
     </BuilderRow>

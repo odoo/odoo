@@ -4,8 +4,10 @@
 <t t-name="website.SocialMediaOption">
     <BuilderRow label.translate="Title Position">
         <BuilderSelect applyTo="'.s_share_title, .s_social_media_title'">
+            <t t-set="left">Left</t>
+            <t t-set="right">Right</t>
             <BuilderSelectItem classAction="'d-block'">Top</BuilderSelectItem>
-            <BuilderSelectItem classAction="''">Left</BuilderSelectItem>
+            <BuilderSelectItem classAction="''" t-out="this.langDir.frontend === 'ltr' ? left : right"/>
             <BuilderSelectItem classAction="'d-none'">None</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
