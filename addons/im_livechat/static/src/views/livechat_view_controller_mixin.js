@@ -10,13 +10,8 @@ export const LivechatViewControllerMixin = (ViewController) =>
 
         async openRecord(record) {
             if (this.ui.isSmall) {
-                const thread = await this.store["mail.thread"].getOrFetch({
-                    model: "discuss.channel",
-                    id: record.resId,
-                });
-                if (thread) {
-                    return thread.open();
-                }
+                const channel = await this.store["discuss.channel"].getOrFetch(record.resId);
+                channel?.open();
             }
             return super.openRecord(record);
         }
