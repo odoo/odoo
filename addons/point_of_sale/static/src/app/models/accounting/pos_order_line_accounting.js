@@ -72,6 +72,11 @@ export class PosOrderlineAccounting extends Base {
     get displayPriceUnitExcl() {
         return this.unitPrices.total_excluded;
     }
+    get displayPriceUnitNoDiscount() {
+        return this.config.iface_tax_included === "total"
+            ? this.unitPrices.no_discount_total_included
+            : this.unitPrices.no_discount_total_excluded;
+    }
 
     get priceIncl() {
         return this.currency.round(this.prices.total_included * this.order_id.orderSign);
