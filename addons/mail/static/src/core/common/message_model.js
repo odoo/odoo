@@ -467,7 +467,6 @@ export class Message extends Record {
         return Boolean(
             !this.is_transient &&
                 !this.isPending &&
-                this.thread &&
                 this.store.self_user?.share === false &&
                 this.persistent
         );
