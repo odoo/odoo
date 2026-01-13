@@ -2737,3 +2737,33 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             {'partner_id': self.partner_a.id, 'picking_type_id': self.warehouse_3_steps_pull.pack_type_id.id},
             {'partner_id': self.partner_a.id, 'picking_type_id': self.warehouse_3_steps_pull.out_type_id.id},
         ])
+
+    def test_sale_order_cancel_with_internal_transfers(self):
+        """ Ensure that any undelivered quantities remaining in internal locations are moved back into stock
+        by creating the appropriate reverse pickings when a Sale Order is cancelled.
+        Steps:
+        1. Create a Sale Order with quantity 10 and confirm it.
+        2. Validate the Pick.
+        3. Deliver 5 units and generate a backorder for the remaining 5.
+        4. Cancel the Sale Order.
+        5. Validate the reverse picking.
+        6. Verify that the stock quantity is restored in WH/Stock.
+        """
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_ship'
+        stock_location = warehouse.lot_stock_id
+        self.env['stock.quant']._update_available_quantity(self.test_product_delivery, stock_location, 10)
+
+        sale_order = self._get_new_sale_order(amount=10, product=self.test_product_delivery)
+        sale_order.action_confirm()
+        pick = sale_order.picking_ids
+        pick.button_validate()
+        delivery = sale_order.picking_ids - pick
+        delivery.move_ids.quantity = 5
+        backorder_wizard_dict = delivery.button_validate()
+        Form.from_action(self.env, backorder_wizard_dict).save().process()
+        sale_order.action_cancel()
+        self.assertEqual(delivery.backorder_ids.state, 'cancel')
+        reverse_picking = sale_order.picking_ids[0]
+        reverse_picking.button_validate()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.test_product_delivery, stock_location), 5)
