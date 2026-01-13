@@ -1812,7 +1812,7 @@ test("toolbar update should be run only once", async () => {
     await waitFor(".o-we-toolbar");
     counter = 0;
     click(".o-we-toolbar .btn[name='bold']");
-    await animationFrame();
+    await waitFor(".btn[name='bold'].active");
     expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
     expect(counter).toBe(1);
 });
