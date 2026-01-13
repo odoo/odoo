@@ -53,6 +53,12 @@ export class SearchMessageInput extends Component {
         this.props.closeSearch?.();
     }
 
+    onClickClearSearch() {
+        this.state.searchTerm = "";
+        this.state.searchedTerm = "";
+        this.props.messageSearch.clear();
+    }
+
     onKeydownSearch(ev) {
         if (ev.key !== "Enter") {
             return;
