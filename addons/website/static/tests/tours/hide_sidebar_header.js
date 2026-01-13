@@ -28,6 +28,10 @@ registerWebsitePreviewTour(
             trigger: ":iframe .o_loading_screen",
         },
         {
+            content: "Wait for the loading screen to disappear",
+            trigger: ":iframe :not(.o_loading_screen)",
+        },
+        {
             content: "Wait for the builder to mount after iframe reload",
             trigger: ":iframe body.editor_enable",
         },
