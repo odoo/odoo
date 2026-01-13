@@ -518,3 +518,28 @@ class TestEdiZatca(TestSaEdiCommon):
 
         for field_name in expected_error_fields:
             self.assertIn(field_name, error_message, f"Error message should contain '{field_name}'")
+
+    def test_otp_validation_without_company_street(self):
+        """Test that validating OTP fails when the company street is missing."""
+        self.company.street = False
+
+        journal = self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(self.company),
+            ('type', '=', 'sale'),
+        ], limit=1)
+
+        wizard = self.env['l10n_sa_edi.otp.wizard'].create({
+            'journal_id': journal.id,
+            'l10n_sa_otp': '123456',
+        })
+
+        self.assertFalse(journal.l10n_sa_csr_errors)
+
+        wizard.validate()
+
+        self.assertTrue(journal.l10n_sa_csr_errors)
+        self.assertEqual(
+            str(journal.l10n_sa_csr_errors),
+            '<p>Please, make sure all the following fields have been '
+            'correctly set on the Company:\n - Street</p>'
+        )
