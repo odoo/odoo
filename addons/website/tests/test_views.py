@@ -505,6 +505,40 @@ class TestViewSaving(TestViewSavingCommon):
             )
         )
 
+    def test_save_view_delay_translations(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        view = self.env['ir.ui.view'].create({
+            'name': 'test_view',
+            'type': 'qweb',
+            'key': 'website.test_view',
+            'arch_db': '<span>Hello World</span>'
+        })
+        view.with_context(lang='fr_FR').arch = "<div>Bonjour Monde</div>"
+
+        # delayed translations are enabled by default (SavePlugin.saveView uses it by default)
+        view.with_context(delay_translations=True).save(value='<div>New World</div>', xpath='/div')
+        self.assertEqual(
+            view.with_context(lang='fr_FR').arch,
+            '<div>Bonjour Monde</div>',
+        )
+        delayed_translation = view.with_context(lang='fr_FR', edit_translations=True).arch
+        self.assertIn(
+            '<div><span class="o_delay_translation"',
+            delayed_translation,
+        )
+        self.assertIn(
+            '>New World</span></div>',
+            delayed_translation,
+        )
+
+        # delayed translations can be disabled thanks to ir.config_parameter
+        self.env['ir.config_parameter'].sudo().set_bool('website.disable_delay_translations', True)
+        view.with_context(delay_translations=True).save(value='<div>All New World</div>', xpath='/div')
+        self.assertEqual(
+            view.with_context(lang='fr_FR').arch,
+            '<div>All New World</div>',
+        )
+
 
 @tagged('-at_install', 'post_install')
 class TestCowViewSaving(TestViewSavingCommon, HttpCase):

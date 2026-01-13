@@ -662,6 +662,11 @@ class IrUiView(models.Model):
             ], limit=1)
             if website_specific_view:
                 self = website_specific_view
+        if self.env.context.get('delay_translations'):
+            disable_delay_translations = self.env['ir.config_parameter'].sudo().get_bool(
+                'website.disable_delay_translations'
+            )
+            self.env = self.with_context(delay_translations=not disable_delay_translations).env
         arch_section = html.fromstring(value)
 
         if xpath is None:
