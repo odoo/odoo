@@ -1,18 +1,22 @@
 from __future__ import annotations
 
+import contextvars
+import copy
 import enum
 import logging
+import os
 import threading
 import time
-import os
-import psycopg2
-import psycopg2.errors
 import typing
 from datetime import datetime, timedelta, timezone
+
+import psycopg2
+import psycopg2.errors
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, sql_db
 from odoo.exceptions import LockError, UserError
+from odoo.http.dispatcher import serialize_exception
 from odoo.modules import Manifest
 from odoo.modules.registry import Registry
 from odoo.tools import SQL, config
@@ -20,6 +24,7 @@ from odoo.tools.constants import GC_UNLINK_LIMIT
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
+
     from odoo.sql_db import BaseCursor
 
 _logger = logging.getLogger(__name__)
@@ -58,6 +63,30 @@ class CompletionStatus(enum.StrEnum):
     FULLY_DONE = 'fully done'
     PARTIALLY_DONE = 'partially done'
     FAILED = 'failed'
+
+
+class ListLogHandler(logging.Handler):
+    def __init__(self, logger, level=logging.NOTSET):
+        super().__init__(level)
+        self.logger = logger
+        self.list_log_handler = contextvars.ContextVar('list_log_handler', default=None)
+
+    def emit(self, record):
+        logs = self.list_log_handler.get(None)
+        if logs is None:
+            return
+        record = copy.copy(record)
+        logs.append(record)
+
+    def __enter__(self):
+        # set a list in the current context
+        logs = []
+        self.list_log_handler.set(logs)
+        self.logger.addHandler(self)
+        return logs
+
+    def __exit__(self, *exc):
+        self.logger.removeHandler(self)
 
 
 class IrCron(models.Model):
@@ -136,7 +165,23 @@ class IrCron(models.Model):
         job = self._acquire_one_job(cron_cr, self.id, include_not_ready=True)
         if not job:
             raise UserError(self.env._("Job '%s' already executing", self.name))
-        self._process_job(cron_cr, job)
+
+        with ListLogHandler(_logger, logging.ERROR) as capture:
+            self._process_job(cron_cr, job)
+        if log_record := next((lr for lr in capture if hasattr(lr, 'exc_info')), None):
+            _exc_type, exception, _traceback = log_record.exc_info
+            e = RuntimeError()
+            e.__cause__ = exception
+            error = {
+                'code': 0,  # we don't care of this code
+                'message': "Odoo Server Error",
+                'data': serialize_exception(e),
+            }
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_exception',
+                'params': error,
+            }
         return True
 
     @staticmethod
