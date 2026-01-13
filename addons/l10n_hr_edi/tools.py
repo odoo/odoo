@@ -6,6 +6,7 @@ edi_proxy_user cannot be used as a basis as it is too closely tied to Odoo's own
 
 import logging
 import requests
+from json import JSONDecodeError
 
 from odoo.exceptions import UserError
 
@@ -80,14 +81,14 @@ def _make_request(company, endpoint_type, params=False):
     if response.status_code != 200:
         try:
             error_message = response.json().get('errors')
-        except (requests.exceptions.JSONDecodeError, TypeError):
+        except (JSONDecodeError, TypeError):
             error_message = False
         raise UserError(company.env._("Error handling request: %s", error_message) if error_message else company.env._("HTTP %s: Connection error.", response.status_code))
 
     if endpoint != endpoints['receive']:
         try:
             response_json = response.json()
-        except (requests.exceptions.JSONDecodeError, TypeError):
+        except (JSONDecodeError, TypeError):
             raise MojEracunServiceError('Invalid response format received')
         if 'error' in response_json:
             message = company.env._('The url that this service requested returned an error. The url it tried to contact was %(url)s. %(error_message)s', url=url, error_message=response_json['error']['message'])
