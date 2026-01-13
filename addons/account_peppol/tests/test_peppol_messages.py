@@ -46,7 +46,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'refresh_token': 'deadbeef-0000-0000-0000-000000000000',
         })
 
-        cls.invalid_partner, cls.valid_partner = cls.env['res.partner'].create([{
+        cls.invalid_partner, cls.valid_partner, cls.incoming_invoice_partner = cls.env['res.partner'].create([{
             'name': 'Wintermute',
             'city': 'Charleroi',
             'country_id': cls.env.ref('base.be').id,
@@ -59,6 +59,12 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'country_id': cls.env.ref('base.be').id,
             'peppol_eas': '0208',
             'peppol_endpoint': '2718281828',
+        }, {
+            'name': 'SupplierOfficialName Ltd',
+            'vat': 'GB123456782',
+            'country_id': cls.env.ref('base.uk').id,
+            'peppol_eas': '0088',
+            'peppol_endpoint': '9482348239847239874',
         }])
 
         cls.env['res.partner.bank'].create({
@@ -727,12 +733,19 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         with mock_lookup_success('0208:2718281828') as (mocked_lookup, _mocked_service_groups):
             # Test that the constraint 'not_sale_document' is removed for self-billed invoices
             wizard = self.create_send_and_print(vendor_bill, default=True)
-            mocked_lookup.assert_called_once()
+            response_module_installed = self.env['ir.module.module']._get('account_peppol_response').state == 'installed'
+            if response_module_installed:
+                mocked_lookup.assert_called(n_times=2)
+            else:
+                mocked_lookup.assert_called_once()
             self.assertTrue(wizard.sending_methods and 'peppol' in wizard.sending_methods)
 
             # Test that vendor bills can be sent as soon as the format allows (bis3) and the journal is in self-billing
             self.create_send_and_print(vendor_bill, default=True)
-            mocked_lookup.assert_called(n_times=2)
+            if response_module_installed:
+                mocked_lookup.assert_called(n_times=4)
+            else:
+                mocked_lookup.assert_called(n_times=2)
 
     def test_receive_self_billed_invoice_from_peppol(self):
         """Test receiving a self-billed invoice from Peppol.
@@ -745,7 +758,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
         # Receive the self-billed invoice (using existing mock data)
         # The mock data already includes a document that will be processed
-        with mock_documents_retrieval([{'uuid': self.MESSAGE_UUID, 'direction': 'incoming', 'filename': 'incoming_self_billed_invoice'}]), mock_ack():
+        with mock_documents_retrieval([{'uuid': self.MESSAGE_UUID, 'direction': 'incoming', 'filename': 'incoming_self_billed_invoice'}], identifier='0208:0477472701'), mock_ack():
             self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
 
         # Verify the self-billed invoice was created correctly

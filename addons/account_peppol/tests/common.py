@@ -41,6 +41,7 @@ def mock_lookup_success(peppol_identifier, services=None):
         services = [
             'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1',
             'urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1',
+            'urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2::ApplicationResponse##urn:fdc:peppol.eu:poacc:trns:invoice_response:3::2.1',
         ]
     json_response = {
         "result": {
@@ -51,7 +52,7 @@ def mock_lookup_success(peppol_identifier, services=None):
             'services': [
                 {
                     "href": f"http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{quote_plus(peppol_identifier)}/services/busdox-docid-qns%3A%3A{quote_plus(service)}",
-                    "document_id": service,
+                    "document_id": f"busdox-docid-qns::{service}",
                 }
                 for service in services
             ],
@@ -199,7 +200,19 @@ def mock_send_document(messages: list[dict] | None = None):
 
 
 @contextmanager
-def mock_documents_retrieval(messages=None):
+def mock_send_response(messages: list[dict] | None = None):
+    def return_json(request: PreparedRequest):
+        body = json.loads(request.body)
+        num_responses = len(body['params']['reference_uuids'])
+        returned_messages = messages if messages is not None else [{'message_uuid': '22222222-2222-4222-8222-222222222222'}] * num_responses
+        assert len(returned_messages) == num_responses, f"Expected {num_responses} messages but got {len(returned_messages)}"
+        return {'result': {'messages': returned_messages}}
+    with MockHTTPClient(method='POST', url='https://peppol.test.odoo.com/api/peppol/1/send_response', return_json=return_json) as mock_response:
+        yield mock_response
+
+
+@contextmanager
+def mock_documents_retrieval(messages=None, identifier=None):
     if messages is None:
         messages = [
             {'uuid': '11111111-1111-4111-8111-111111111111', 'direction': 'incoming', 'filename': 'incoming_invoice', 'state': 'done', 'sender': '0208:2718281828'},
@@ -214,7 +227,7 @@ def mock_documents_retrieval(messages=None):
                     'uuid': message['uuid'],
                     'state': message.get('state', 'done'),
                     'direction': message.get('direction', 'incoming'),
-                    'document_type': 'Invoice',
+                    'document_type': message.get('document_type', 'Invoice'),
                     'sender': message.get('sender', '0208:2718281828'),
                     'receiver': '0208:0477472701',
                     'timestamp': '2022-12-30',
@@ -224,23 +237,37 @@ def mock_documents_retrieval(messages=None):
         }
     }
 
-    def get_document_response_json(request: PreparedRequest):
-        uuid = json.loads(request.body)['params']['message_uuids'][0]
-        message_params = next((m for m in messages if m['uuid'] == uuid), {})
-        direction = message_params.get('direction') or 'incoming'
+    send_response_response_json = {
+        'result': {
+            'messages': [
+                {'message_uuid': '22222222-2222-4222-8222-222222222222'}
+                for message in all_documents_json['result']['messages']
+                if message['direction'] == 'incoming' and message['document_type'] == 'Invoice'
+            ],
+        },
+    }
 
-        return {'result': {uuid: {
-            'accounting_supplier_party': message_params.get('sender', False),
-            'filename': f"{message_params.get('filename', 'incoming_invoice')}.xml",
-            'enc_key': file_open('account_peppol/tests/assets/enc_key', mode='r').read() if direction == 'incoming' else '',
-            'document': b64encode(file_open(f'account_peppol/tests/assets/{message_params.get("filename", "incoming_invoice")}', mode='rb').read()).decode('utf-8') if direction == 'incoming' else '',
-            'state': message_params.get('state', 'done'),
-            'direction': direction,
-            'document_type': 'Invoice',
-        }}}
+    def get_document_response_json(request: PreparedRequest):
+        uuids = json.loads(request.body)['params']['message_uuids']
+        messages_params = {m['uuid']: m for m in messages if m['uuid'] in uuids}
+
+        return {'result': {
+            uuid: {
+                'accounting_supplier_party': message_params.get('sender', False),
+                'filename': f"{message_params.get('filename', 'incoming_invoice')}.xml",
+                'enc_key': file_open('account_peppol/tests/assets/enc_key', mode='r').read() if message_params.get('direction', 'incoming') == 'incoming' else '',
+                'document': b64encode(file_open(f'account_peppol/tests/assets/{message_params.get("filename", "incoming_invoice")}', mode='rb').read()).decode('utf-8') if message_params.get('direction', 'incoming') == 'incoming' else '',
+                'state': message_params.get('state', 'done'),
+                'direction': message_params.get('direction', 'incoming'),
+                'document_type': message_params.get('document_type', 'Invoice'),
+                'origin_message_uuid': message_params.get('origin_message_uuid', uuid),
+            } for uuid, message_params in messages_params.items()
+        }}
 
     with (
         MockHTTPClient(method='POST', url='https://peppol.test.odoo.com/api/peppol/1/get_all_documents', return_json=all_documents_json),
         MockHTTPClient(method='POST', url='https://peppol.test.odoo.com/api/peppol/1/get_document', return_json=get_document_response_json),
+        MockHTTPClient(method='POST', url='https://peppol.test.odoo.com/api/peppol/1/send_response', return_json=send_response_response_json),
+        mock_lookup_success(identifier or '0088:9482348239847239874'),
     ):
         yield
