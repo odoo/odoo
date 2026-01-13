@@ -954,6 +954,7 @@ export class TablePlugin extends Plugin {
             return;
         }
         if (!selectionData.documentSelectionIsInEditable) {
+            this.deselectTable();
             return;
         }
         const selection = selectionData.editableSelection;
