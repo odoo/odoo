@@ -2335,5 +2335,33 @@ describe("Selection not collapsed", () => {
             await tick(); // Wait for the selection change to be handled
             expect(getContent(el)).toBe("<p>wonderful []</p>");
         });
+
+        test.tags("mobile");
+        test("should convert list item to paragraph in one backspace on mobile (1)", async () => {
+            const { editor, el } = await setupEditor("<ol><li><br>[]</li></ol>");
+            await backspaceAndroid(editor);
+            await animationFrame();
+            expect(getContent(el)).toBe(
+                `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+            );
+        });
+
+        test.tags("mobile");
+        test("should convert list item to paragraph in one backspace on mobile (2)", async () => {
+            const { editor, el } = await setupEditor(
+                `<ol><li class="oe-nested"><ol><li>[]abc</li></ol></li></ol>`
+            );
+            await backspaceAndroid(editor);
+            await animationFrame();
+            expect(getContent(el)).toBe(`<p>[]abc</p>`);
+        });
+
+        test.tags("mobile");
+        test("should convert list item to paragraph in one backspace on mobile (3)", async () => {
+            const { editor, el } = await setupEditor(`<ol><li>[]abc</li><li>def</li></ol>`);
+            await backspaceAndroid(editor);
+            await animationFrame();
+            expect(getContent(el)).toBe(`<p>[]abc</p><ol><li>def</li></ol>`);
+        });
     });
 });
