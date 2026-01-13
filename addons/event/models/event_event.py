@@ -617,6 +617,21 @@ class EventEvent(models.Model):
             if not (url.scheme and url.netloc):
                 raise ValidationError(_('Please enter a valid event URL.'))
 
+    @api.constrains('company_id', 'event_ticket_ids')
+    def _check_consistent_company_id(self):
+        if len(self.env.companies) == 1:
+            return
+        problematic_tickets = self.event_ticket_ids.filtered(
+            lambda r: r.product_id.company_id != self.company_id
+        )
+        if problematic_tickets:
+            raise ValidationError(_(
+                "User Error: You can't include any ticket(s) (ids: %s) belonging to a different company than the company of the following event (ids: %s).\n"
+                "If you are modifying the company_id value on the product template, please ensure that the product is not tied to any of the event(s) listed above.",
+                ", ".join(str(t.id) for t in problematic_tickets),
+                ", ".join(str(t.id) for t in self)
+            ))
+
     @api.onchange('event_url')
     def _onchange_event_url(self):
         """Correct the url by adding scheme if it is missing."""

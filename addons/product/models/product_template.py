@@ -666,6 +666,15 @@ class ProductTemplate(models.Model):
                 'image_128',
                 'can_image_1024_be_zoomed',
             ])
+        if len(self.env.companies) > 1 and 'company_id' in vals:
+            tickets = []
+            for variant in self.product_variant_ids:
+                tickets += self.env['event.event.ticket'].sudo().search([
+                    ('product_id.id', '=', variant.id),
+                ])
+            if tickets:
+                for ticket in tickets:
+                    ticket.event_id._check_consistent_company_id()
         for product_template in self:
             if "type" in vals and vals.get("type") != "combo":
                 product_template.combo_ids = False
