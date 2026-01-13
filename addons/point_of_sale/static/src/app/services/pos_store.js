@@ -41,6 +41,7 @@ import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
 import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
+import { Domain } from "@web/core/domain";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -1628,10 +1629,15 @@ export class PosStore extends WithLazyGetterTrap {
     }
     async getServerOrders() {
         await this.syncAllOrders();
-        return await this.data.loadServerOrders([
+        const config_domain = new Domain([
             ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
-            ["state", "=", "draft"],
         ]);
+        return await this.data.loadServerOrders(
+            Domain.and([config_domain, this.getServerOrdersDomain()]).toList()
+        );
+    }
+    getServerOrdersDomain() {
+        return new Domain([["state", "=", "draft"]]);
     }
     async getProductInfo(productTemplate, quantity, priceExtra = 0, productProduct = false) {
         const order = this.getOrder();
