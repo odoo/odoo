@@ -327,8 +327,12 @@ class StockMove(models.Model):
                 'product_qty': wip_production.product_qty + quantity_to_remove
             }).change_prod_qty()
 
+        productions = productions - wip_production
+        if self.env.context.get('failed_quality'):
+            productions = productions.sorted(lambda p: (p.lot_producing_id.id != self.env.context.get('failed_lot_id'), not p.subcontracting_has_been_recorded))
+
         # Cancel productions until reach new_quantity
-        for production in (productions - wip_production):
+        for production in productions:
             if float_compare(quantity_to_remove, production.product_qty, precision_rounding=production.product_uom_id.rounding) >= 0:
                 if len(productions + wip_production) == 1:
                     production.qty_producing = 0
