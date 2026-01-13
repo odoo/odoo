@@ -5,6 +5,7 @@ import functools
 import imaplib
 import logging
 import poplib
+import math
 
 from imaplib import IMAP4, IMAP4_SSL
 from poplib import POP3, POP3_SSL
@@ -262,6 +263,49 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             # no server is active anymore
             self.env['ir.cron']._commit_progress(deactivate=True)
 
+    def _get_server_urgency_map(self):
+        """
+        Calculates an "urgency ratio" for each server, determined by a combination of
+        server priority and last-checked time (date).
+        We determine a target interval based on priority and cron interval, then calculate the urgency ratio
+        indicating how due each server is compared to its target.
+        This allows us to ensure that:
+        - All servers are checked regularly without completely ignoring low priority servers
+        - Urgency scales fairly regardless of the number of servers/server load
+
+        Returns a dictionary: {server_id: urgency_ratio}
+        """
+        if not self:
+            return {}
+
+        now = fields.Datetime.now()
+
+        # Use the current fetchmail interval as the base interval
+        fetchmail_cron = self.env.ref('mail.ir_cron_mail_gateway_action', raise_if_not_found=False)
+        minutes_per_interval = {'minutes': 1, 'hours': 60, 'days': 1440, 'weeks': 10080, 'months': 43200}
+        if fetchmail_cron and fetchmail_cron.interval_type in minutes_per_interval:
+            base_interval_minutes = float(fetchmail_cron.interval_number * minutes_per_interval[fetchmail_cron.interval_type])
+        else:
+            base_interval_minutes = 5.0  # Default to 5 minutes
+
+        # The time difference between priority levels will scale with the number of servers.
+        priority_difference_minutes = math.log10(max(len(self), 10))
+        urgency_map = {}  # Dictionary to hold {server_id: urgency_ratio}
+
+        # Calculate the urgency ratio for each server.
+        for server in self:
+            server_priority = server.priority if server.priority else 5  # Default priority is 5
+            target_interval_minutes = base_interval_minutes + ((server_priority - 1.0) * priority_difference_minutes)
+            if not server.date:
+                urgency_map[server.id] = 3.0  # Consider never-checked servers as 3x overdue
+                continue
+
+            age_delta = now - server.date
+            age_minutes = age_delta.total_seconds() / 60.0
+            urgency_ratio = age_minutes / target_interval_minutes
+            urgency_map[server.id] = urgency_ratio
+        return urgency_map
+
     def _fetch_mail(self, batch_limit=50) -> Exception | None:
         """ Fetch e-mails from multiple servers.
 
@@ -269,6 +313,8 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         """
         result_exception = None
         servers = self.with_context(fetchmail_cron_running=True)
+        urgency_map = servers._get_server_urgency_map()
+        servers = servers.sorted(key=lambda s: urgency_map.get(s.id, 0.0), reverse=True)
         total_remaining = len(servers)  # number of remaining messages + number of unchecked servers
         self.env['ir.cron']._commit_progress(remaining=total_remaining)
 
