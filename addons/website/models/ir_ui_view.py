@@ -498,6 +498,11 @@ class IrUiView(models.Model):
             ], limit=1)
             if website_specific_view:
                 self = website_specific_view
+        if self.env.context.get('delay_translations'):
+            disable_delay_translations = self.env['ir.config_parameter'].sudo().get_param(
+                'website.disable_delay_translations'
+            ) not in ('False', '0', '', False)
+            self.env = self.with_context(delay_translations=not disable_delay_translations).env
         super().save(value, xpath=xpath)
 
     @api.model
