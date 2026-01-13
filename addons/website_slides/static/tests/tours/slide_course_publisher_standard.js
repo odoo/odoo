@@ -61,6 +61,10 @@ registerWebsitePreviewTour(
             {
                 trigger: "body:not(:has(.modal))",
             },
+            {
+                content: "wait the slide course main is in body before edition",
+                trigger: ":iframe main .o_wslides_course_main",
+            },
             ...clickOnEditAndWaitEditMode(),
             {
                 content: "eLearning: double click image to edit it",
