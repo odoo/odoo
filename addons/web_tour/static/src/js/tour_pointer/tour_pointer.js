@@ -1,5 +1,5 @@
 import { Component, reactive, useEffect, useRef, useState } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { usePosition } from "@web/core/position/position_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -94,6 +94,7 @@ export class TourPointer extends Component {
             direction: "bottom", //The side towards which the ball hangs
             triggerPosition: "unknow",
             scrollParent: undefined,
+            triggerBelow: false,
         });
 
         const anchorPositionOptions = {
@@ -195,6 +196,7 @@ export class TourPointer extends Component {
         );
 
         const popoverOptions = {
+            setActiveElement: false,
             onClose: () => {
                 this.state.showContent = false;
             },
@@ -205,6 +207,15 @@ export class TourPointer extends Component {
             set: () => {},
             enumerable: true,
         });
+        const uiService = useService("ui");
+        const onActiveElementChanged = () => {
+            const activeEl = uiService.activeElement;
+            const pointerAnchor = this.trigger;
+            if (pointerAnchor) {
+                this.state.triggerBelow = !activeEl.contains(pointerAnchor);
+            }
+        };
+        useBus(uiService.bus, "active-element-changed", onActiveElementChanged);
 
         this.popover = usePopover(TourPointerPopover, popoverOptions);
     }
@@ -224,7 +235,12 @@ export class TourPointer extends Component {
     }
 
     get isVisible() {
-        return this.trigger && isInPage(this.trigger) && this.triggerPosition !== "unknow";
+        return (
+            this.trigger &&
+            isInPage(this.trigger) &&
+            this.triggerPosition !== "unknow" &&
+            !this.state.triggerBelow
+        );
     }
 
     /**
