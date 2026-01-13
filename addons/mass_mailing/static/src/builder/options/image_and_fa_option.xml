@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mass_mailing.ImageAndFaOption" t-inherit="html_builder.ImageAndFaOption" t-inherit-mode="primary">
+    <xpath expr="//BuilderRow[@label.translate='Padding']" position="replace">
+        <t t-call="mass_mailing.HorizontalPaddingOption"/>
+        <t t-call="mass_mailing.VerticalPaddingOption"/>
+    </xpath>
+</t>
+
+</templates>

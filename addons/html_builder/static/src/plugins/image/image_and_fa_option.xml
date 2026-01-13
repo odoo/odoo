@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ImageAndFaOption">
+    <BuilderRow label.translate="Alignment">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''" title.translate="Unalign">None</BuilderSelectItem>
+            <BuilderSelectItem classAction="'me-auto float-start'" title.translate="Align Left">Left</BuilderSelectItem>
+            <BuilderSelectItem classAction="'mx-auto d-block'" title.translate="Align Center">Center</BuilderSelectItem>
+            <BuilderSelectItem classAction="'ms-auto float-end'" title.translate="Align Right">Right</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Padding">
+        <BuilderNumberInput styleAction="'padding'" unit="'px'" composable="true"/>
+    </BuilderRow>
+</t>
+
+</templates>
