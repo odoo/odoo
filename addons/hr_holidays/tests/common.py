@@ -25,6 +25,9 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.user_hrmanager_id = cls.user_hrmanager.id
         cls.user_hrmanager.tz = 'Europe/Brussels'
 
+        cls.user_hrresponsible = mail_new_test_user(cls.env, login='jeremy', groups='base.group_user,hr_holidays.group_hr_holidays_responsible')
+        cls.user_hrresponsible_id = cls.user_hrresponsible.id
+
         cls.user_employee = mail_new_test_user(cls.env, login='enguerran', password='enguerran', groups='base.group_user')
         cls.user_employee_id = cls.user_employee.id
 
@@ -51,6 +54,12 @@ class TestHrHolidaysCommon(common.TransactionCase):
             'department_id': cls.rd_dept.id,
         })
         cls.employee_hruser_id = cls.employee_hruser.id
+
+        cls.employee_hrresponsible = cls.env['hr.employee'].create({
+            'name': 'Jeremy HrResp',
+            'user_id': cls.user_hrresponsible_id,
+            'department_id': cls.rd_dept.id,
+        })
 
         cls.employee_hrmanager = cls.env['hr.employee'].create({
             'name': 'Bastien HrManager',

@@ -232,6 +232,14 @@ class TestSelfAccessRights(TestHrCommon):
         # Searching user based on employee_id field should not raise bad query error
         self.env['res.users'].with_user(self.richard).search([('employee_id', 'ilike', 'Hubert')])
 
+    # Write hr.department
+    def testWriteDepartmentEmployee(self):
+        with self.assertRaises(AccessError):
+            self.env['hr.department'].with_user(self.richard).create({'name': 'New Dept'})
+        dept = self.env['hr.department'].create({'name': 'New Dept'})
+        with self.assertRaises(AccessError):
+            dept.with_user(self.richard).write({'name': 'Renamed Dept'})
+
     def test_onchange_readable_fields_with_no_access(self):
         """
             The purpose is to test that the onchange logic takes into account `SELF_READABLE_FIELDS`.

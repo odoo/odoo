@@ -74,6 +74,9 @@
                                         <div t-if="line.payment_status == 'waiting'" class="button send_force_done" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
                                             Force done
                                         </div>
+                                        <div t-if="line.payment_status == 'waitingCancel'" class="button send_force_done" title="Force Cancel" t-on-click="() => line.set_payment_status('retry')">
+                                            Force cancel
+                                        </div>
                                     </div>
                                 </t>
                                 <t t-elif="line.payment_status == 'reversing'">

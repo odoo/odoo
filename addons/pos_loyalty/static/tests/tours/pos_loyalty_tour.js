@@ -622,7 +622,9 @@ registry.category("web_tour.tours").add("test_confirm_coupon_programs_one_by_one
                     // Create 5 orders that will be synced one by one
                     for (let i = 0; i < 5; i++) {
                         const order = posmodel.createNewOrder();
-                        const product = posmodel.models["product.product"].getFirst();
+                        const product = posmodel.models["product.product"].find(
+                            (el) => el.attribute_line_ids.length == 0
+                        );
                         const pm = posmodel.models["pos.payment.method"].getFirst();
                         const program = posmodel.models["loyalty.program"].find(
                             (p) => p.program_type === "gift_card"

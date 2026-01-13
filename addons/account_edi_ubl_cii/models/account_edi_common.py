@@ -487,7 +487,7 @@ class AccountEdiCommon(models.AbstractModel):
         acc_number_partner_bank_dict = {
             bank.sanitized_acc_number: bank
             for bank in ResPartnerBank.with_context(active_test=False).search(
-                [('company_id', 'in', [False, invoice.company_id.id]), ('acc_number', 'in', bank_details)]
+                [('partner_id', '=', partner.id), ('acc_number', 'in', bank_details)]
             )
         }
         for account_number in bank_details:
