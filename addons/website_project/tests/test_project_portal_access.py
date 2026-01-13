@@ -2,6 +2,7 @@
 
 from re import search
 
+from odoo import http
 from odoo.tests import HttpCase
 
 from odoo.addons.mail.controllers.thread import ThreadController
@@ -32,3 +33,25 @@ class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
                 ('author_id', '=', self.user_portal.partner_id.id),
             ])
         )
+
+    def test_portal_task_submission(self):
+        """ Public user should be able to submit a task"""
+        self.authenticate(None, None)
+        partner = self.env['res.partner'].create({
+            'name': 'Jean Michel',
+            'email': 'jean@michel.com',
+        })
+        ticket_data = {
+            'name': 'FIX',
+            'partner_name': 'Not Jean Michel',
+            'email_from': 'jean@michel.com',
+            'partner_phone': '+1234567',
+            'partner_company_name': 'foo',
+            'description': 'Fix this',
+            'project_id': self.project_portal.id,
+            'csrf_token': http.Request.csrf_token(self),
+        }
+        response = self.url_open('/website/form/project.task', data=ticket_data)
+        task = self.env['project.task'].browse(response.json().get('id'))
+        self.assertTrue(task.exists())
+        self.assertEqual(partner.name, 'Jean Michel')
