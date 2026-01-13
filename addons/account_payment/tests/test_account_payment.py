@@ -7,6 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
+from odoo.addons.base.models.ir_qweb import QWebError
 
 
 @tagged('-at_install', 'post_install')
@@ -440,3 +441,22 @@ class TestAccountPayment(AccountPaymentCommon):
         invoice_2.action_post()
         wizard = payment_register_wizard(invoice_1 + invoice_2)
         self.assertEqual(wizard.suitable_payment_token_ids, parent_token)
+
+    def test_generate_and_send_invoice_with_qr_code(self):
+        """Test generating & sending invoices with QR codes enabled."""
+        self.env.company.link_qr_code = True
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'invoice_line_ids': [Command.create({'name': "$100", 'price_unit': 100.0})],
+        })
+        move.action_post()
+
+        with patch.object(
+            move.__class__, '_generate_portal_payment_qr', wraps=move._generate_portal_payment_qr,
+        ) as payment_qr_mock:
+            self._assert_does_not_raise(
+                QWebError,
+                self.env['account.move.send']._generate_and_send_invoices(move),
+            )
+            self.assertTrue(payment_qr_mock.called)
