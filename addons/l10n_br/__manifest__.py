@@ -56,6 +56,7 @@ Create electronic sales invoices with Avatax.
         'base_address_extended',
         'l10n_latam_base',
         'l10n_latam_invoice_document',
+        'uom'
     ],
     'auto_install': ['account'],
     'data': [
