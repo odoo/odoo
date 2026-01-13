@@ -80,6 +80,10 @@ test("Search a message", async () => {
     await insertText(".o_searchview_input", "message");
     triggerHotkey("Enter");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
+    expect(".o_searchview_input").toHaveValue("message");
+    await click("i[aria-label='Clear Search']");
+    await contains(".o-mail-SearchMessagesPanel:not(:has(.o-mail-Message))");
+    expect(".o_searchview_input").toHaveValue("");
 });
 
 test.tags("desktop");
