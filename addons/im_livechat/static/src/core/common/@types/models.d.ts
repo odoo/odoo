@@ -66,6 +66,7 @@ declare module "models" {
         livechat_operator_id: ResPartner;
         livechatVisitorMember: ChannelMember;
         transcriptUrl: Readonly<string>;
+        livechat_lang_id: ResLang;
     }
 
     export interface Models {
