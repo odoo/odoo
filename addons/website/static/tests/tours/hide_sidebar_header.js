@@ -28,12 +28,8 @@ registerWebsitePreviewTour(
             trigger: ":iframe .o_loading_screen",
         },
         {
-            content: "Wait for the loading screen to disappear",
-            trigger: ":iframe:not(:has(.o_loading_screen))",
-        },
-        {
-            content: "Wait for the 'Content Saved' notification",
-            trigger: ".o_notification :contains('Content Saved')",
+            content: "Wait for the builder to mount after iframe reload",
+            trigger: ":iframe body.editor_enable",
         },
         {
             content: "Check that the header changed to 'Sidebar'",
