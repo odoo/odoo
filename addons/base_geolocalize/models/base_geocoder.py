@@ -3,7 +3,7 @@
 import requests
 import logging
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
@@ -82,21 +82,7 @@ class GeoCoder(models.AbstractModel):
         Use Openstreemap Nominatim service to retrieve location
         :return: (latitude, longitude) or None if not found
         """
-        if not addr:
-            _logger.info('invalid address given')
-            return None
-        url = 'https://nominatim.openstreetmap.org/search'
-        try:
-            headers = {'User-Agent': 'Odoo (http://www.odoo.com/contactus)'}
-            response = requests.get(url, headers=headers, params={'format': 'json', 'q': addr})
-            _logger.info('openstreetmap nominatim service called')
-            if response.status_code != 200:
-                _logger.warning('Request to openstreetmap failed.\nCode: %s\nContent: %s', response.status_code, response.content)
-            result = response.json()
-        except Exception as e:
-            self._raise_query_error(e)
-        geo = result[0]
-        return float(geo['lat']), float(geo['lon'])
+        self.env.company._call_nominatim(addr)
 
     @api.model
     def _call_googlemap(self, addr, **kw):
