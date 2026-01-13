@@ -16,6 +16,10 @@ from odoo.tools import SQL
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
 ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.-]+$')
 ACCOUNT_CODE_NUMBER_REGEX = re.compile(r'(.*?)(\d*)(\D*?)$')
+ACCOUNT_TYPE_TO_JOURNAL_TYPE = {
+    'asset_cash': 'bank',
+    'liability_credit_card': 'credit',
+}
 
 
 class AccountAccount(models.Model):
@@ -1047,6 +1051,8 @@ class AccountAccount(models.Model):
 
         records = self.env['account.account'].union(records_list)
         records._ensure_code_is_unique()
+        if not self.env.context.get('skip_auto_account_journal_creation'):  # Prevents infinite recursion when creating default accounts for journals
+            records._create_default_journals()
         return records
 
     def write(self, vals):
@@ -1113,6 +1119,28 @@ class AccountAccount(models.Model):
                 raise ValidationError(
                     _("Account codes must be unique. You can't create accounts with these duplicate codes: %s", ", ".join(duplicate_codes))
                 )
+
+    def _create_default_journals(self):
+        """ Create the account journals for the accounts that are of type 'asset_cash' or 'liability_credit_card'."""
+        if self.env.context.get('chart_template_load'):
+            return
+
+        accounts = self.filtered(lambda account: account.account_type in {'asset_cash', 'liability_credit_card'})
+        if not accounts:
+            return
+
+        journals = self.env['account.journal'].search([('default_account_id', 'in', accounts.ids)])
+        accounts -= journals.default_account_id
+
+        self.env['account.journal'].create([
+        {
+            'name': account.name,
+            'type': ACCOUNT_TYPE_TO_JOURNAL_TYPE[account.account_type],
+            'default_account_id': account.id,
+            'company_id': (account.company_ids[:1] or self.env.company).id,
+        }
+            for account in accounts
+        ])
 
     def _load_records_write(self, values):
         if 'prefix' in values:
