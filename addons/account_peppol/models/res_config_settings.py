@@ -6,7 +6,11 @@ class ResConfigSettings(models.TransientModel):
 
     account_peppol_edi_user = fields.Many2one(related='company_id.account_peppol_edi_user')
     account_peppol_edi_mode = fields.Selection(related='account_peppol_edi_user.edi_mode')
-    account_peppol_contact_email = fields.Char(related='company_id.account_peppol_contact_email', readonly=False)
+    account_peppol_contact_email = fields.Char(
+        compute='_compute_account_peppol_contact_email',
+        inverse='_inverse_account_peppol_contact_email',
+    )
+
     account_peppol_eas = fields.Selection(related='company_id.peppol_eas', readonly=False)
     account_peppol_edi_identification = fields.Char(related='account_peppol_edi_user.edi_identification')
     account_peppol_endpoint = fields.Char(related='company_id.peppol_endpoint', readonly=False)
@@ -18,6 +22,14 @@ class ResConfigSettings(models.TransientModel):
     peppol_use_parent_company = fields.Boolean(compute='_compute_peppol_use_parent_company')
     peppol_parent_company_name = fields.Char(compute='_compute_peppol_use_parent_company')
     account_is_token_out_of_sync = fields.Boolean(related='account_peppol_edi_user.is_token_out_of_sync', readonly=False)
+    peppol_participation_role = fields.Selection(
+        selection=[
+            ('sending_and_receiving', 'Sending & Receiving'),
+            ('sending_only', 'Sending Only'),
+        ],
+        compute='_compute_peppol_participation_role',
+        inverse='_inverse_peppol_participation_role',
+    )
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -36,6 +48,53 @@ class ResConfigSettings(models.TransientModel):
             else:
                 setting.peppol_parent_company_name = None
 
+    @api.depends('account_peppol_proxy_state')
+    def _compute_peppol_participation_role(self):
+        for record in self:
+            state = record.company_id.account_peppol_proxy_state
+            if state == 'sender':
+                record.peppol_participation_role = 'sending_only'
+            elif state in ('smp_registration', 'receiver'):
+                record.peppol_participation_role = 'sending_and_receiving'
+            else:
+                record.peppol_participation_role = False
+
+    def _inverse_peppol_participation_role(self):
+        for record in self:
+            if record.account_peppol_edi_user:
+                if record.peppol_participation_role == 'sending_only' and record.account_peppol_proxy_state != 'sender':
+                    # Reset the participant back to sender and unregister it from the SMP
+                    record.account_peppol_edi_user._peppol_deregister_participant_to_sender()
+                elif record.peppol_participation_role == 'sending_and_receiving' and record.account_peppol_proxy_state not in ('smp_registration', 'receiver'):
+                    # Set the participant to sender as well as register it on the SMP
+                    record.account_peppol_edi_user._peppol_register_sender_as_receiver()
+                    record.account_peppol_edi_user._peppol_get_participant_status()
+
+    @api.depends('company_id.account_peppol_contact_email')
+    def _compute_account_peppol_contact_email(self):
+        for record in self:
+            record.account_peppol_contact_email = record.company_id.account_peppol_contact_email
+
+    def _inverse_account_peppol_contact_email(self):
+        for record in self:
+            company = record.company_id
+            if record.account_peppol_contact_email == company.account_peppol_contact_email:
+                continue
+
+            # Update company field
+            company.account_peppol_contact_email = record.account_peppol_contact_email
+
+            # Sync with IAP (Peppol proxy)
+            params = {
+                'update_data': {
+                    'peppol_contact_email': record.account_peppol_contact_email,
+                }
+            }
+            record.account_peppol_edi_user._call_peppol_proxy(
+                endpoint='/api/peppol/1/update_user',
+                params=params,
+            )
+
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -45,6 +104,7 @@ class ResConfigSettings(models.TransientModel):
         registration_action = registration_wizard._action_open_peppol_form(reopen=False)
         return registration_action
 
+    # Deprecated
     def button_open_peppol_config_wizard(self):
         return {
             'type': 'ir.actions.act_window',
@@ -69,6 +129,7 @@ class ResConfigSettings(models.TransientModel):
             }
         }
 
+    # Dreprecated
     def button_peppol_register_sender_as_receiver(self):
         """Register the existing user as a receiver."""
         self.ensure_one()
@@ -86,3 +147,11 @@ class ResConfigSettings(models.TransientModel):
         """
         self.ensure_one()
         self.account_peppol_edi_user._peppol_out_of_sync_disconnect_this_database()
+
+    def button_peppol_deregister(self):
+        """Unregister the user from Peppol network."""
+        self.ensure_one()
+
+        if self.account_peppol_edi_user:
+            self.account_peppol_edi_user._peppol_deregister_participant()
+        return True
