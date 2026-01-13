@@ -130,7 +130,7 @@ class EventCase(common.TransactionCase):
         })
         cls.event_question_2 = cls.env['event.question'].create({
             'title': 'Question2',
-            'question_type': 'simple_choice',
+            'question_type': 'radio',
             'event_type_ids': [Command.set(cls.event_type_questions.ids)],
             'once_per_order': True,
             'answer_ids': [
@@ -143,6 +143,16 @@ class EventCase(common.TransactionCase):
             'question_type': 'text_box',
             'event_type_ids': [Command.set(cls.event_type_questions.ids)],
             'once_per_order': True,
+        })
+        cls.event_question_4 = cls.env['event.question'].create({
+            'title': 'Question4',
+            'question_type': 'checkbox',
+            'once_per_order': False,
+            'event_type_ids': [Command.set(cls.event_type_questions.ids)],
+            'answer_ids': [
+                (0, 0, {'name': 'Q4-Answer1'}),
+                (0, 0, {'name': 'Q4-Answer2'})
+            ],
         })
 
     @classmethod

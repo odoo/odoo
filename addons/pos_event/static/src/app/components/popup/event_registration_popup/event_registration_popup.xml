@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_event.QuestionInputs">
-        <div t-foreach="questions" t-as="question" t-key="question.id" class="global_question input-group mt-3">
+        <div t-foreach="questions" t-as="question" t-key="question.id"
+            t-attf-class="global_question input-group mt-3 {{question.question_type === 'radio' ? 'flex-nowrap' : ''}}">
             <span class="input-group-text">
                 <t t-esc="question.title"/>
                 <span t-if="question.is_mandatory_answer" class="text-danger">*</span>
@@ -12,6 +13,21 @@
                     <t t-esc="choice.name"/>
                 </option>
             </select>
+            <div t-elif="question.question_type === 'radio'" class="d-flex flex-wrap mt-2 ms-2">
+                <div t-foreach="question.answer_ids" t-as="answer" t-key="answer.id" class="form-check me-3">
+                    <input type="radio" class="form-check-input"
+                        t-att-value="answer.id"
+                        t-attf-name="registration_{{data_index}}-question_{{question.id}}"
+                        t-model="stateObject[question.id]"/>
+                    <span t-out="answer.name"/>
+                </div>
+            </div>
+            <div t-elif="question.question_type === 'checkbox'" class="ms-2">
+                <div t-foreach="question.answer_ids" t-as="answer" t-key="answer.id" class="d-flex form-check">
+                    <input type="checkbox" class="form-check-input" t-model="stateObject[question.id][answer.id]"/>
+                    <span class="ms-2" t-out="answer.name"/>
+                </div>
+            </div>
             <input t-else="" t-model="stateObject[question.id]" class="form-control flex-grow-1"/>
         </div>
     </t>

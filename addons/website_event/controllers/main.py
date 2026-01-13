@@ -412,12 +412,17 @@ class WebsiteEventController(http.Controller):
                 registrations.setdefault(registration_index, dict())[field_name] = int(value) or False
                 continue
 
-            if len(key_values) != 3:
+            if len(key_values) == 3:
+                registration_index, question_type, question_id = key_values
+            elif len(key_values) == 4:
+                registration_index, question_type, question_id, _unused_answer_id = key_values
+                if question_type != 'checkbox':
+                    continue
+            else:
                 continue
 
-            registration_index, question_type, question_id = key_values
             answer_values = None
-            if question_type == 'simple_choice':
+            if question_type in ['simple_choice', 'radio', 'checkbox']:
                 answer_values = {
                     'question_id': int(question_id),
                     'value_answer_id': int(value)

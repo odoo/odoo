@@ -156,10 +156,20 @@ patch(ProductScreen.prototype, {
             (acc, [questionId, answer]) => {
                 const question = this.pos.models["event.question"].get(parseInt(questionId));
                 if (
-                    question.question_type === "simple_choice" &&
+                    ["simple_choice", "radio"].includes(question.question_type) &&
                     this.pos.models["event.question.answer"].get(parseInt(answer))
                 ) {
-                    acc.globalSimpleChoice[questionId] = answer;
+                    acc.globalSimpleChoice[questionId] = [answer];
+                } else if (question.question_type === "checkbox") {
+                    acc.globalSimpleChoice[questionId] = [];
+                    for (const [answerId, isChecked] of Object.entries(answer)) {
+                        if (
+                            isChecked &&
+                            this.pos.models["event.question.answer"].get(parseInt(answerId))
+                        ) {
+                            acc.globalSimpleChoice[questionId].push(answerId);
+                        }
+                    }
                 } else if (answer) {
                     acc.globalTextAnswer[questionId] = answer;
                 }
@@ -207,14 +217,23 @@ patch(ProductScreen.prototype, {
                             parseInt(questionId)
                         );
                         if (
-                            question.question_type === "simple_choice" &&
+                            ["simple_choice", "radio"].includes(question.question_type) &&
                             this.pos.models["event.question.answer"].get(parseInt(answer))
                         ) {
-                            acc.simpleChoice[questionId] = answer;
+                            acc.simpleChoice[questionId] = [answer];
+                        } else if (question.question_type === "checkbox") {
+                            acc.simpleChoice[questionId] = [];
+                            for (const [answerId, isChecked] of Object.entries(answer)) {
+                                if (
+                                    isChecked &&
+                                    this.pos.models["event.question.answer"].get(parseInt(answerId))
+                                ) {
+                                    acc.simpleChoice[questionId].push(answerId);
+                                }
+                            }
                         } else if (answer) {
                             acc.textAnswer[questionId] = answer;
                         }
-
                         return acc;
                     },
                     { simpleChoice: {}, textAnswer: {} }
@@ -227,32 +246,45 @@ patch(ProductScreen.prototype, {
                     event_slot_id: slotSelected,
                     pos_order_line_id: line,
                     partner_id: this.pos.getOrder().partner_id,
+                    // TODO this is partially done in ongoing fix 4919080
                     registration_answer_ids: Object.entries({
                         ...textAnswer,
                         ...globalTextAnswer,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_text_box: answer,
-                        },
-                    ]),
-                    registration_answer_choice_ids: Object.entries({
-                        ...simpleChoice,
-                        ...globalSimpleChoice,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_answer_id: this.pos.models["event.question.answer"].get(
-                                parseInt(answer)
-                            ),
-                        },
-                    ]),
+                    })
+                        .map(([questionId, answer]) => [
+                            "create",
+                            {
+                                question_id: this.pos.models["event.question"].get(
+                                    parseInt(questionId)
+                                ),
+                                value_text_box: answer,
+                            },
+                        ])
+                        .concat(
+                            Object.entries({
+                                ...simpleChoice,
+                                ...globalSimpleChoice,
+                            })
+                                .map(([questionId, answers]) => {
+                                    // Note: map / flatMap more elegant?
+                                    const createValues = [];
+                                    answers.forEach((answer) =>
+                                        createValues.push([
+                                            "create",
+                                            {
+                                                question_id: this.pos.models["event.question"].get(
+                                                    parseInt(questionId)
+                                                ),
+                                                value_answer_id: this.pos.models[
+                                                    "event.question.answer"
+                                                ].get(parseInt(answer)),
+                                            },
+                                        ])
+                                    );
+                                    return createValues;
+                                })
+                                .flat()
+                        ),
                 });
             }
         }

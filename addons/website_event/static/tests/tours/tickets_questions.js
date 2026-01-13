@@ -67,8 +67,8 @@ registry.category("web_tour.tours").add("test_tickets_questions", {
             trigger: ".modal.modal_shown.show form[id=attendee_registration]",
         },
         {
-            trigger: 'div.o_wevent_registration_question_global select[name*="0-simple_choice"]',
-            run: "selectByLabel A friend",
+            trigger: 'div.o_wevent_registration_question_global .form-check:contains("A friend") input',
+            run: "click",
         },
         {
             trigger: 'div:contains("Ticket #1").modal-body input[name*="name"]',
@@ -87,6 +87,14 @@ registry.category("web_tour.tours").add("test_tickets_questions", {
             run: "selectByLabel Vegetarian",
         },
         {
+            trigger: 'div:contains("Ticket #1").modal-body .form-check:contains("First edition") input',
+            run: "click",
+        },
+        {
+            trigger: 'div:contains("Ticket #1").modal-body .form-check:contains("Second edition") input',
+            run: "click",
+        },
+            {
             trigger: 'div:contains("Ticket #1").modal-body textarea[name*="1-text_box"]',
             run: "edit Fish and Nuts",
         },
@@ -107,8 +115,12 @@ registry.category("web_tour.tours").add("test_tickets_questions", {
             run: "selectByLabel Pastafarian",
         },
         {
+            trigger: 'div:contains("Ticket #2").modal-body .form-check:contains("Second edition") input',
+            run: "click",
+        },
+        {
             trigger:
-                ".modal#modal_attendees_registration:not(.o_inactive_modal) button[type=submit].btn-primary",
+                ".modal#modal_attendees_registration:not(.o_inactive_modal) .o_event_registration_validate_submit_btn",
             run: "click",
             expectUnloadPage: true,
         },

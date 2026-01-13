@@ -50,7 +50,7 @@ registry.category("web_tour.tours").add("event_sale_pricelists_different_currenc
         {
             content: "Validate attendees details",
             trigger:
-                ".modal#modal_attendees_registration:not(.o_inactive_modal) button[type=submit]",
+                ".modal#modal_attendees_registration:not(.o_inactive_modal) .o_event_registration_validate_submit_btn",
             run: "click",
             expectUnloadPage: true,
         },

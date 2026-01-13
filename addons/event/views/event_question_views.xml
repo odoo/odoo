@@ -45,7 +45,7 @@
                                 type="object"
                                 class="oe_stat_button"
                                 icon="fa-line-chart"
-                                invisible="question_type not in ['simple_choice', 'text_box']">
+                                invisible="question_type not in ['simple_choice', 'radio', 'checkbox', 'text_box']">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">
                                     Attendee answers
@@ -74,7 +74,7 @@
                             <field name="is_reusable" readonly="is_default"/>
                         </group>
                     </group>
-                    <notebook invisible="question_type != 'simple_choice'">
+                    <notebook invisible="question_type not in ['simple_choice', 'radio', 'checkbox']">
                         <page string="Answers" name="answers">
                             <field name="answer_ids">
                                 <list editable="bottom">
@@ -102,7 +102,7 @@
                 <field name="once_per_order" string="Once per Order"/>
                 <field name="question_type" string="Type"/>
                 <field name="answer_ids" widget="many2many_tags"
-                    invisible="question_type != 'simple_choice'"/>
+                    invisible="question_type not in ['simple_choice', 'radio', 'checkbox']"/>
                 <field name="is_default"/>
                 <field name="is_reusable" optional="hide"/>
                 <button name="action_view_question_answers"
@@ -111,7 +111,7 @@
                         icon="fa-bar-chart pe-1"
                         string="Stats"
                         title="Answer Breakdown"
-                        invisible="question_type not in ['simple_choice', 'text_box']"/>
+                        invisible="question_type not in ['simple_choice', 'radio', 'checkbox', 'text_box']"/>
             </list>
         </field>
     </record>

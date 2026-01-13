@@ -28,5 +28,6 @@ class EventRegistrationAnswer(models.Model):
     # for displaying selected answers by attendees in attendees list view
     @api.depends('value_answer_id', 'question_type', 'value_text_box')
     def _compute_display_name(self):
-        for reg in self:
-            reg.display_name = reg.value_answer_id.name if reg.question_type == "simple_choice" else reg.value_text_box
+        for reg_answer in self:
+            is_selection_question = reg_answer.question_type in ['simple_choice', 'radio', 'checkbox']
+            reg_answer.display_name = reg_answer.value_answer_id.name if is_selection_question else reg_answer.value_text_box

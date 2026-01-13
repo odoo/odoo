@@ -39,15 +39,20 @@
                         </div>
                         <h2 class="lh-1" t-if="attendee" t-field="attendee.name"/>
                         <h2 class="lh-1" t-elif="not attendee">John Doe</h2>
+                        <t t-set="answer_badge_classes" t-value="'px-2 py-1 d-inline-block bg-200 text-black m-1 o_event_foldable_badge_answer'"/>
                         <div t-if="attendee" class="mt-3 py-2">
-                            <span t-foreach="attendee.registration_answer_choice_ids"
-                                class="px-2 py-1 d-inline-block bg-200 text-black m-1 o_event_foldable_badge_answer"
+                            <span t-foreach="attendee.registration_answer_choice_ids" t-att-class="answer_badge_classes"
                                 t-as="answer" t-out="answer.display_name"/>
                         </div>
                         <div t-else="">
-                            <span t-foreach="event.question_ids.filtered(lambda q: q.question_type == 'simple_choice' and q.answer_ids)"
-                                class="px-2 py-1 d-inline-block bg-200 text-black m-1 o_event_foldable_badge_answer"
-                                t-as="question" t-out="question.answer_ids[0].name"/>
+                            <t t-foreach="event.question_ids.filtered(lambda q: q.question_type in ['simple_choice', 'radio', 'checkbox'] and q.answer_ids)"
+                                t-as="question">
+                                <t t-if="question.question_type == 'checkbox'">
+                                    <span t-foreach="question.answer_ids[:2]" t-att-class="answer_badge_classes"
+                                        t-as="cb_answer" t-out="cb_answer.name"/>
+                                </t>
+                                <span t-else="" t-att-class="answer_badge_classes" t-out="question.answer_ids[0].name"/>
+                            </t>
                         </div>
                     </div>
                 </div>
@@ -170,9 +175,14 @@
                                         t-as="answer" t-out="answer.display_name"/>
                                 </div>
                                 <div t-else="" class="mb-3">
-                                    <span t-foreach="event.question_ids.filtered(lambda q: q.question_type == 'simple_choice' and q.answer_ids)"
-                                        t-att-class="answer_badge_classes"
-                                        t-as="question" t-out="question.answer_ids[0].name"/>
+                                    <t t-foreach="event.question_ids.filtered(lambda q: q.question_type in ['simple_choice', 'radio', 'checkbox'] and q.answer_ids)"
+                                        t-as="question">
+                                        <t t-if="question.question_type == 'checkbox'">
+                                            <span t-foreach="question.answer_ids[:2]" t-att-class="answer_badge_classes"
+                                                t-out="cb_answer.name" t-as="cb_answer"/>
+                                        </t>
+                                        <span t-else="" t-att-class="answer_badge_classes" t-out="question.answer_ids[0].name"/>
+                                    </t>
                                 </div>
                             </div>
                             <div t-attf-class="row gy-0 gx-2 #{'o_event_full_page_left_details_bottom_qr_only' if not event.use_barcode else ''}">

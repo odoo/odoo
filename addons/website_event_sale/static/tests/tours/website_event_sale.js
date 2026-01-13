@@ -105,7 +105,7 @@ registry.category("web_tour.tours").add("event_buy_tickets", {
         },
         {
             content: "Validate attendees details",
-            trigger: ".modal#modal_attendees_registration button[type=submit]",
+            trigger: ".modal#modal_attendees_registration:not(.o_inactive_modal) .o_event_registration_validate_submit_btn",
             run: "click",
             expectUnloadPage: true,
         },

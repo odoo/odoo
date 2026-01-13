@@ -296,7 +296,7 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
                 continue
             for answer in registration.registration_answer_ids:
                 self.assertIn(answer.question_id.title, lead.description)
-                if answer.question_type == 'simple_choice':
+                if answer.question_type in ['simple_choice', 'radio', 'checkbox']:
                     self.assertIn(answer.value_answer_id.name, lead.description)
                 else:
                     self.assertIn(answer.value_text_box, lead.description)  # better: check multi line
