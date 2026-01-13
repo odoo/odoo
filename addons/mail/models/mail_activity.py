@@ -265,16 +265,11 @@ class MailActivity(models.Model):
             # create / read: just check rights on related document
             activity_to_documents.setdefault(activity.res_model, list()).append(activity.res_id)
         for doc_model, doc_ids in activity_to_documents.items():
-            if hasattr(self.env[doc_model], '_mail_post_access'):
-                doc_operation = self.env[doc_model]._mail_post_access
-            elif operation == 'read':
-                doc_operation = 'read'
-            else:
-                doc_operation = 'write'
-            right = self.env[doc_model].check_access_rights(doc_operation, raise_exception=False)
-            if right:
-                valid_doc_ids = getattr(self.env[doc_model].browse(doc_ids), filter_access_rules_method)(doc_operation)
-                valid += remaining.filtered(lambda activity: activity.res_model == doc_model and activity.res_id in valid_doc_ids.ids)
+            allowed = self.env['mail.message']._filter_records_for_message_operation(
+                doc_model, doc_ids, operation, filter_python=True,
+            )
+            if allowed:
+                valid += remaining.filtered(lambda activity: activity.res_model == doc_model and activity.res_id in allowed.ids)
 
         return valid
 
