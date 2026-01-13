@@ -19,6 +19,9 @@ registerWebsitePreviewTour('website_sale.enable_extra_info',
             trigger: "[data-action-param='{\"views\":[\"website_sale.extra_info\"]}'] input[type='checkbox']",
             run: "click",
         },
+        {
+            trigger: ":iframe .o_wizard [name=step_name]:contains(extra)",
+        },
         ...clickOnSave(),
     ],
 );
