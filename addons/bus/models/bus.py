@@ -12,6 +12,7 @@ import time
 from psycopg2 import InterfaceError
 
 import odoo
+from ..tools import orjson
 from odoo import api, fields, models
 from odoo.service.server import CommonServer
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
@@ -175,7 +176,7 @@ class ImBus(models.Model):
         for notif in notifications:
             result.append({
                 'id': notif['id'],
-                'message': json.loads(notif['message']),
+                'message': orjson.loads(notif['message']),
             })
         return result
 
@@ -239,7 +240,7 @@ class ImDispatch(threading.Thread):
                     conn.poll()
                     channels = []
                     while conn.notifies:
-                        channels.extend(json.loads(conn.notifies.pop().payload))
+                        channels.extend(orjson.loads(conn.notifies.pop().payload))
                     # relay notifications to websockets that have
                     # subscribed to the corresponding channels.
                     websockets = set()
