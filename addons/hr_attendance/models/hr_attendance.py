@@ -4,7 +4,7 @@ import pytz
 
 from calendar import monthrange
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from dateutil.relativedelta import relativedelta, MO, SU
 from operator import itemgetter
 from pytz import timezone
@@ -418,6 +418,15 @@ class HrAttendance(models.Model):
             is_weekly_flexible = is_flexible and has_weekly_cap
             weekly_limit = calendar.full_time_required_hours if is_weekly_flexible else 0.0
 
+            tz = timezone(emp.tz) if emp.tz else None
+            if is_flexible:
+                leave_intervals = emp.resource_calendar_id._leave_intervals_batch(
+                    start,
+                    stop,
+                    tz=tz,
+                    resources=emp.resource_id,
+                    domain=[('company_id', 'in', [False, emp.company_id.id])])[emp.resource_id.id]
+
             weekly_expected_hours = defaultdict(float)
 
             for day_data in sorted(attendance_dates, key=lambda x: x[1]):
@@ -430,7 +439,23 @@ class HrAttendance(models.Model):
                 # this could happen when deleting attendances.
 
                 if not unfinished_shifts and attendances:
+                    if working_times:
+                        # Count time before, during and after 'working hours'
+                        pre_work_time, work_duration, post_work_time, planned_work_duration = attendances._get_pre_post_work_time(
+                            emp, working_times, attendance_date)
                     if is_weekly_flexible:
+                        day_start = datetime.combine(attendance_date, time.min, tzinfo=tz)
+                        day_end = datetime.combine(attendance_date, time.max, tzinfo=tz)
+
+                        work_start = working_times[attendance_date][-1][0]
+                        work_end = working_times[attendance_date][-1][-1]
+
+                        after_work_interval = Intervals([(work_end, day_end, self.env['resource.calendar.attendance'])])
+                        before_work_interval = Intervals(
+                            [(day_start, work_start, self.env['resource.calendar.attendance'])])
+
+                        planned_work_duration -= sum_intervals(
+                            (after_work_interval | before_work_interval) & leave_intervals)
                         # For flexible schedules with weekly limits, calculate overtime based on weekly cap
                         week_key = attendance_date + relativedelta(weekday=MO(-1))
                         expected_hours_so_far_this_week = weekly_expected_hours[week_key]
@@ -440,7 +465,7 @@ class HrAttendance(models.Model):
                         # 1. hours_per_day from calendar
                         # 2. remaining weekly hours allowed - weekly cap based on expected hours
                         # Expected is the minimum of these two (what they should work, capped by weekly limit)
-                        hours_per_day = calendar.hours_per_day or 0.0
+                        hours_per_day = planned_work_duration or 0.0
                         hours_remaining_this_week = max(0.0, weekly_limit - expected_hours_so_far_this_week)
                         expected_hours_today = min(hours_per_day, hours_remaining_this_week)
                         weekly_expected_hours[week_key] = expected_hours_so_far_this_week + expected_hours_today
@@ -449,7 +474,7 @@ class HrAttendance(models.Model):
                     # For flexible schedules without weekly limits, calculate based on hours_per_day
                     elif is_flexible:
                         hours_today = sum(attendances.mapped('worked_hours'))
-                        hours_per_day = calendar.hours_per_day or 8.0
+                        hours_per_day = planned_work_duration or 8.0
                         overtime_duration = hours_today - hours_per_day
                         overtime_duration_real = overtime_duration
                     # For non-flexible schedules: check if it's a weekend/non-working day
@@ -458,8 +483,6 @@ class HrAttendance(models.Model):
                         overtime_duration = sum(attendances.mapped('worked_hours'))
                         overtime_duration_real = overtime_duration
                     else:
-                        # Count time before, during and after 'working hours'
-                        pre_work_time, work_duration, post_work_time, planned_work_duration = attendances._get_pre_post_work_time(emp, working_times, attendance_date)
                         # Overtime within the planned work hours + overtime before/after work hours is > company threshold
                         total_overtime_duration = pre_work_time + work_duration + post_work_time - planned_work_duration
                         if total_overtime_duration > company_threshold and total_overtime_duration > 0:
