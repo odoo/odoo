@@ -960,7 +960,7 @@ class AccountJournal(models.Model):
         else:
             default_account_vals = {}
 
-        default_account = self.env['account.account'].create(default_account_vals)
+        default_account = self.env['account.account'].with_context(skip_auto_account_journal_creation=True).create(default_account_vals)
         if default_account:
             self.env['ir.model.data']._update_xmlids([
                 {
@@ -997,7 +997,7 @@ class AccountJournal(models.Model):
 
             # === Fill missing accounts ===
             if not has_liquidity_accounts:
-                vals['default_account_id'] = self._create_default_account(company, journal_type, vals)
+                vals['default_account_id'] = self.with_context(skip_auto_account_journal_creation=True)._create_default_account(company, journal_type, vals)
             if journal_type in ('cash', 'bank') and not has_profit_account:
                 vals['profit_account_id'] = company.default_cash_difference_income_account_id.id
             if journal_type in ('cash', 'bank') and not has_loss_account:
@@ -1018,7 +1018,7 @@ class AccountJournal(models.Model):
                     limit=1,
                 ).id
                 if not default_account_id:
-                    default_account_id = self._create_default_account(company, journal_type, vals)
+                    default_account_id = self.with_context(skip_auto_account_journal_creation=True)._create_default_account(company, journal_type, vals)
                 vals['default_account_id'] = default_account_id
 
         if is_import and not vals.get('code'):

@@ -636,6 +636,53 @@ class TestAccountAccount(TestAccountMergeCommon):
         account.action_validate_opening_move()
         self.assertTrue(company.account_opening_move_id.posted_before)
 
+    def test_create_opening_balance_bank_statements(self):
+        """ Posting the company's opening move should create an 'Opening Balance'
+        bank statement for each liquidity journal whose default account has a
+        non zero opening balance, with the unaffected earnings account as counterpart.
+        """
+        company = self.env.company
+        statement = self.env['account.bank.statement']
+
+        bank_journal = self.company_data['default_journal_bank']
+        bank_account = bank_journal.default_account_id
+        unaffected_earnings_account = company.get_unaffected_earnings_account()
+
+        bank_account.opening_debit = 1000.0
+        self.cr.flush()
+
+        opening_move = company.account_opening_move_id
+        self.assertRecordValues(opening_move.line_ids.sorted(), [
+            {'account_id': bank_account.id, 'balance': 1000.0},
+            {'account_id': unaffected_earnings_account.id, 'balance': -1000.0},
+        ])
+
+        # No statement should exist before the opening move is posted.
+        self.assertFalse(statement.search([('journal_id', '=', bank_journal.id)]))
+
+        # Posting the opening move creates the opening balance statement.
+        opening_move.action_post()
+
+        statement = statement.search([('journal_id', '=', bank_journal.id)])
+        self.assertRecordValues(statement, [{
+            'name': 'Opening Balance',
+            'date': opening_move.date,
+            'journal_id': bank_journal.id,
+        }])
+        self.assertRecordValues(statement.line_ids, [{
+            'payment_ref': 'Opening balance',
+            'amount': 1000.0,
+            'journal_id': bank_journal.id,
+        }])
+
+        # The statement line's counterpart is the unaffected earnings account.
+        counterpart_line = statement.line_ids.move_id.line_ids.filtered(lambda line: line.account_id != bank_account)
+        self.assertEqual(counterpart_line.account_id, unaffected_earnings_account)
+
+        # The unaffected earnings account is not a liquidity journal's default account,
+        # so no statement is created for it.
+        self.assertFalse(statement.search([('journal_id.default_account_id', '=', unaffected_earnings_account.id)]))
+
     def test_unmerge(self):
         company_1 = self.company_data['company']
         company_2 = self.company_data_2['company']
@@ -947,3 +994,54 @@ class TestAccountAccount(TestAccountMergeCommon):
         not_found = self.env["account.account"].search([("code", "=ilike", example_account.code)])
         self.assertEqual(found, example_account)
         self.assertFalse(not_found)
+
+    def test_create_default_journals(self):
+        """ Creating an account of type 'asset_cash' or 'liability_credit_card' should
+        automatically create a matching journal, while other account types should not,
+        and no duplicate journal should be created if one already points to the account.
+        """
+        Journal = self.env['account.journal']
+
+        # A bank account creates a 'bank' journal.
+        bank_account = self.env['account.account'].create({
+            'code': '123',
+            'name': 'My Bank Account',
+            'account_type': 'asset_cash',
+        })
+        bank_journals = Journal.search([('default_account_id', '=', bank_account.id)])
+        self.assertRecordValues(bank_journals, [{
+            'type': 'bank',
+            'name': 'My Bank Account',
+            'default_account_id': bank_account.id,
+            'company_id': self.env.company.id,
+        }])
+
+        # A credit card account creates a 'credit' journal.
+        credit_card_account = self.env['account.account'].create({
+            'code': '1234',
+            'name': 'My Credit Card Account',
+            'account_type': 'liability_credit_card',
+        })
+        credit_journals = Journal.search([('default_account_id', '=', credit_card_account.id)])
+        self.assertRecordValues(credit_journals, [{
+            'type': 'credit',
+            'name': 'My Credit Card Account',
+            'default_account_id': credit_card_account.id,
+        }])
+
+        # Other account types do not create any journal.
+        expense_account = self.env['account.account'].create({
+            'code': '12345',
+            'name': 'My Expense Account',
+            'account_type': 'expense',
+        })
+        self.assertFalse(Journal.search([('default_account_id', '=', expense_account.id)]))
+
+        # Calling _create_default_journals again for an account that already has a
+        # journal must not create a duplicate
+        bank_account._create_default_journals()
+        self.assertEqual(
+            Journal.search_count([('default_account_id', '=', bank_account.id)]),
+            1,
+            "No extra journal should be created for an account already used as a journal default account.",
+        )

@@ -343,24 +343,10 @@ class AccountChartTemplate(models.AbstractModel):
         )
         return {
             'demo_bank_statement_1': {
-                'name': "Opening Statement: First Synchronization",
-                'balance_end_real': 4253.0,
-                'balance_start': 5103.0,
-                'attachment_ids': [Command.set(['ir_attachment_bank_statement_1'])],
-                'line_ids': [
-                    Command.create({
-                        'journal_id': bnk_journal.id,
-                        'payment_ref': 'Office rent',
-                        'amount': -850.0,
-                        'date': (fields.Date.today() + relativedelta(months=-2)).strftime('%Y-%m-%d'),
-                    }),
-                ]
-            },
-            'demo_bank_statement_2': {
                 'name': f'{bnk_journal.name} - {(fields.Date.today() + relativedelta(months=-1)).strftime("%Y-%m-%d")}',
                 'balance_end_real': 6678.0,
                 'balance_start': 4253.0,
-                'attachment_ids': [Command.set(['ir_attachment_bank_statement_2'])],
+                'attachment_ids': [Command.set(['ir_attachment_bank_statement_1'])],
                 'line_ids': [
                     Command.create({
                         'journal_id': bnk_journal.id,
@@ -492,16 +478,9 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'ir_attachment_bank_statement_1': {
                 'type': 'binary',
-                'name': 'bank_opening_statement.pdf',
-                'res_model': 'account.bank.statement',
-                'res_id': 'demo_bank_statement_1',
-                'raw': file_read('account/static/demo/bank_opening_statement.pdf'),
-            },
-            'ir_attachment_bank_statement_2': {
-                'type': 'binary',
                 'name': 'bank_statement_one_month_old.pdf',
                 'res_model': 'account.bank.statement',
-                'res_id': 'demo_bank_statement_2',
+                'res_id': 'demo_bank_statement_1',
                 'raw': file_read('account/static/demo/bank_statement_one_month_old.pdf'),
             },
         }
@@ -537,16 +516,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'author_id': 'base.partner_demo',
                 'attachment_ids': [Command.set([
                     'ir_attachment_bank_statement_1',
-                ])]
-            },
-            'mail_message_bank_statement_2': {
-                'model': 'account.bank.statement',
-                'res_id': 'demo_bank_statement_2',
-                'body': 'Bank Statement attachment',
-                'message_type': 'comment',
-                'author_id': 'base.partner_demo',
-                'attachment_ids': [Command.set([
-                    'ir_attachment_bank_statement_2',
                 ])]
             },
         }

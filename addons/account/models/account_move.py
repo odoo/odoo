@@ -2948,6 +2948,12 @@ class AccountMove(models.Model):
             ):
                 raise ValidationError(_("The currency rate must be strictly positive."))
 
+    @api.constrains('journal_id')
+    def _check_statement_journal(self):
+        for move in self:
+            if move.statement_id and move.journal_id.type not in {'bank', 'cash', 'credit'}:
+                raise ValidationError(self.env._("Bank statements must be linked to a journal of type Bank, Cash or Credit."))
+
     # -------------------------------------------------------------------------
     # CATALOG
     # -------------------------------------------------------------------------
@@ -6519,6 +6525,9 @@ class AccountMove(models.Model):
             self._post(soft=False)
         if autopost_bills_wizard := self._show_autopost_bills_wizard():
             return autopost_bills_wizard
+        # Only the company's opening move should create opening balance statement lines
+        if self and self == self.company_id.account_opening_move_id:
+            self._create_opening_balance_bank_statements()
         return False
 
     def _get_moves_requiring_confirmation(self):
@@ -7390,6 +7399,56 @@ class AccountMove(models.Model):
             and self.amount_residual > 0
             and self.invoice_date_due < fields.Date.context_today(self)
         )
+
+    def _create_opening_balance_bank_statements(self):
+        """Create opening balance statement lines for impacted liquidity journals."""
+        self.ensure_one()
+
+        journals = self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(self.company_id),
+            ('type', 'in', {'bank', 'cash', 'credit'}),
+            ('default_account_id', 'in', self.line_ids.account_id.ids),
+        ])
+        journal_by_account_id = {}
+        for journal in journals:
+            # If several bank/cash journals share the same default account,
+            # keep the first one so behavior is deterministic
+            journal_by_account_id.setdefault(journal.default_account_id.id, journal)
+        if not journal_by_account_id:
+            return
+
+        unaffected_earnings_account = self.company_id.get_unaffected_earnings_account().id
+        lines_by_journal = defaultdict(lambda: self.env['account.move.line'])
+        for line in self.line_ids:
+            if journal := journal_by_account_id.get(line.account_id.id):
+                lines_by_journal[journal] += line
+
+        for journal, opening_lines in lines_by_journal.items():
+            balance = sum(opening_lines.mapped('balance'))
+            if self.company_id.currency_id.is_zero(balance):
+                continue
+
+            if journal.currency_id:
+                amount = sum(opening_lines.mapped('amount_currency'))
+                if journal.currency_id.is_zero(amount):
+                    continue
+            else:
+                amount = balance
+
+            self.env['account.bank.statement'].create({
+                'name': self.env._("Opening Balance"),
+                'date': self.date,
+                'journal_id': journal.id,
+                'line_ids': [
+                    Command.create({
+                        'date': self.date,
+                        'payment_ref': self.env._("Opening balance"),
+                        'amount': amount,
+                        'journal_id': journal.id,
+                        'counterpart_account_id': unaffected_earnings_account,
+                    }),
+                ],
+            })
 
     # -------------------------------------------------------------------------
     # TOOLING

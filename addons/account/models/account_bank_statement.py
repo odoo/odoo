@@ -210,9 +210,15 @@ class AccountBankStatement(models.Model):
         for stmt in self:
             description = None
             if not stmt.is_valid:
-                description = _("The starting balance doesn't match the ending balance of the previous statement, or an earlier statement is missing.")
+                description = self.env._(
+                    'Initial balance (%s) does not match previous statement',
+                    formatLang(self.env, stmt.balance_start, currency_obj=stmt.currency_id),
+                )
             elif not stmt.is_complete:
-                description = _("The running balance (%s) doesn't match the specified ending balance.", formatLang(self.env, stmt.balance_end, currency_obj=stmt.currency_id))
+                description = self.env._(
+                    'Incorrect ending balance, expected %s',
+                    formatLang(self.env, stmt.balance_end, currency_obj=stmt.currency_id),
+                )
             stmt.problem_description = description
 
     def _search_is_valid(self, operator, value):
@@ -224,10 +230,10 @@ class AccountBankStatement(models.Model):
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
-    def _get_statement_validity(self):
-        """ Compares the balance_start to the previous statements balance_end_real """
+    def _get_previous_statement(self):
+        """Get the previous statement based on first_line_index ordering."""
         self.ensure_one()
-        previous = self.env['account.bank.statement'].search(
+        return self.env['account.bank.statement'].search(
             [
                 ('first_line_index', '<', self.first_line_index),
                 ('first_line_index', '!=', False),
@@ -236,6 +242,11 @@ class AccountBankStatement(models.Model):
             limit=1,
             order='first_line_index DESC',
         )
+
+    def _get_statement_validity(self):
+        """ Compares the balance_start to the previous statements balance_end_real """
+        self.ensure_one()
+        previous = self._get_previous_statement()
         return not previous or self.currency_id.compare_amounts(self.balance_start, previous.balance_end_real) == 0
 
     def _get_invalid_statement_ids(self, all_statements=None):
@@ -272,6 +283,27 @@ class AccountBankStatement(models.Model):
         })
         res = self.env.cr.fetchall()
         return [r[0] for r in res]
+
+    def action_open_statements_to_review(self):
+        self.ensure_one()
+
+        statement_ids = self.ids
+        if not self.is_valid and (previous_statement := self._get_previous_statement()):
+            statement_line_ids = self.line_ids + previous_statement.line_ids
+            statement_ids += previous_statement.ids
+        else:
+            statement_line_ids = self.line_ids
+
+        return statement_line_ids._get_records_action(
+            name=self.env._("Review Statements"),
+            domain=[],  # We use a filter to allow users to quickly switch back to all statement lines
+            views=[[False, 'kanban'], [False, 'list']],
+            context={
+                **self.env.context,
+                'review_statement_ids': statement_ids,
+                'search_default_statement_to_review': 1,
+            },
+        )
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
