@@ -64,7 +64,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_signup_invitation_scope(self):
-        current_website = self.env['website'].sudo().get_current_website()
+        current_website = self.env['website'].sudo().get_current_website(fallback=True)
         return current_website.auth_signup_uninvited or super(ResUsers, self)._get_signup_invitation_scope()
 
     def authenticate(self, credential, user_agent_env):
