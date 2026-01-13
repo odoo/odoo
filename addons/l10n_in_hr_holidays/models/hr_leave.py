@@ -35,7 +35,12 @@ class HrLeave(models.Model):
         self.ensure_one()
         default_hours = default_hours or self._l10n_in_get_default_leave_hours()
         hours = hours if hours is not None else (self.number_of_hours or 0.0)
-        if self.leave_type_request_unit != 'hour' or not default_hours:
+        if self.leave_type_request_unit == 'hour':
+            return bool(default_hours) and float_compare(hours, default_hours, precision_digits=2) >= 0
+        if (
+            self.request_date_from_period != self.request_date_to_period
+            and (self.request_date_from_period != "pm" or self.request_date_to_period != "am")
+        ) or not default_hours:
             return True
         return float_compare(hours, default_hours, precision_digits=2) >= 0
 
@@ -93,7 +98,7 @@ class HrLeave(models.Model):
             if self._l10n_in_is_working(current_date, public_holiday_dates, resource_calendar):
                 break
         linked_leave = leaves_by_date.get(current_date, self.env["hr.leave"])
-        if linked_leave and linked_leave.leave_type_request_unit == 'half_day':
+        if linked_leave and not linked_leave._l10n_in_is_full_day_request():
             return self.env["hr.leave"]
         return linked_leave
 
@@ -122,7 +127,6 @@ class HrLeave(models.Model):
         indian_leaves = self.filtered(
             lambda leave: leave.company_id.country_id.code == "IN"
             and leave.holiday_status_id.l10n_in_is_sandwich_leave
-            and leave.leave_type_request_unit != 'half_day'
         )
         if not indian_leaves:
             return (indian_leaves, {}, {})
@@ -133,7 +137,6 @@ class HrLeave(models.Model):
                 ('id', 'not in', self.ids),
                 ('employee_id', 'in', self.employee_id.ids),
                 ('state', 'not in', ['cancel', 'refuse']),
-                ('leave_type_request_unit', '!=', 'half_day'),
                 ('holiday_status_id.l10n_in_is_sandwich_leave', '=', True),
             ],
             groupby=['employee_id'],
