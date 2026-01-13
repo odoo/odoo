@@ -1,11 +1,7 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<Invoice
-	xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-	xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-	xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
 	<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
 	<cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.rs:srbdt:2022#conformant#urn:mfin.gov.rs:srbdtext:2022</cbc:CustomizationID>
-	<cbc:ID>INV/2017/00001</cbc:ID>
+	<cbc:ID>___ignore___</cbc:ID>
 	<cbc:IssueDate>2017-01-01</cbc:IssueDate>
 	<cbc:DueDate>2017-02-28</cbc:DueDate>
 	<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
@@ -15,7 +11,7 @@
 		<cbc:DescriptionCode>3</cbc:DescriptionCode>
 	</cac:InvoicePeriod>
 	<cac:OrderReference>
-		<cbc:ID>ref_move</cbc:ID>
+		<cbc:ID>___ignore___</cbc:ID>
 	</cac:OrderReference>
 	<cac:AccountingSupplierParty>
 		<cac:Party>
@@ -131,12 +127,17 @@
 				</cac:Country>
 			</cac:Address>
 		</cac:DeliveryLocation>
+		<cac:DeliveryParty>
+			<cac:PartyName>
+				<cbc:Name>Serbian Customer</cbc:Name>
+			</cac:PartyName>
+		</cac:DeliveryParty>
 	</cac:Delivery>
 	<cac:PaymentMeans>
 		<cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
 		<cbc:PaymentDueDate>2017-02-28</cbc:PaymentDueDate>
 		<cbc:InstructionID>INV/2017/00001</cbc:InstructionID>
-		<cbc:PaymentID>INV/2017/00001</cbc:PaymentID>
+		<cbc:PaymentID>___ignore___</cbc:PaymentID>
 		<cac:PayeeFinancialAccount>
 			<cbc:ID>RS1234123456123456123456</cbc:ID>
 		</cac:PayeeFinancialAccount>
@@ -167,7 +168,7 @@
 		<cbc:PayableAmount currencyID="RSD">1800.00</cbc:PayableAmount>
 	</cac:LegalMonetaryTotal>
 	<cac:InvoiceLine>
-		<cbc:ID>1</cbc:ID>
+		<cbc:ID>___ignore___</cbc:ID>
 		<cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
 		<cbc:LineExtensionAmount currencyID="RSD">500.00</cbc:LineExtensionAmount>
 		<cac:TaxTotal>
@@ -201,7 +202,7 @@
 		</cac:Price>
 	</cac:InvoiceLine>
 	<cac:InvoiceLine>
-		<cbc:ID>2</cbc:ID>
+		<cbc:ID>___ignore___</cbc:ID>
 		<cbc:InvoicedQuantity unitCode="DZN">1.0</cbc:InvoicedQuantity>
 		<cbc:LineExtensionAmount currencyID="RSD">1000.00</cbc:LineExtensionAmount>
 		<cac:TaxTotal>

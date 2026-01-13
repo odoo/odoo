@@ -1,7 +1,6 @@
 from odoo import Command
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.tests import tagged
-from odoo.tools import misc
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -63,25 +62,12 @@ class TestUBLRS(TestUBLCommon):
             **invoice_kwargs,
         )
 
-    def _read_xml_test_file(self, file_name):
-        with misc.file_open(f'{self.test_module}/tests/test_files/{file_name}.xml', 'rb') as file:
-            xml_file = file.read()
-        return xml_file
-
     def test_export_invoice(self):
         invoice = self.create_invoice("out_invoice")
         invoice_xml, _ = self.env['account.edi.xml.ubl.rs']._export_invoice(invoice)
-        expected_xml = self._read_xml_test_file('export_invoice')
-        self.assertXmlTreeEqual(
-            self.get_xml_tree_from_string(invoice_xml),
-            self.get_xml_tree_from_string(expected_xml)
-        )
+        self.assert_xml(invoice_xml, 'l10n_rs_edi_export_invoice')
 
     def test_export_credit_note(self):
         refund = self.create_invoice("out_refund")
         refund_xml, _ = self.env['account.edi.xml.ubl.rs']._export_invoice(refund)
-        expected_xml = self._read_xml_test_file('export_credit_note')
-        self.assertXmlTreeEqual(
-            self.get_xml_tree_from_string(refund_xml),
-            self.get_xml_tree_from_string(expected_xml)
-        )
+        self.assert_xml(refund_xml, 'l10n_rs_edi_export_credit_note')

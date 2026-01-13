@@ -355,7 +355,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             for tax_amount, discount_amount in epd_tax_to_discount.items():
                 vals_list.append({
                     'charge_indicator': 'false',
-                    'allowance_charge_reason_code': '66',
+                    'allowance_charge_reason_code': '64',
                     'allowance_charge_reason': _("Conditional cash/payment discount"),
                     'amount': discount_amount,
                     'currency_dp': 2,
@@ -411,11 +411,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         fixed_tax_charge_vals_list = []
 
         for tax_key, tax_details in fixed_taxes_charge_list:
+            if 'bebat' in tax_key['tax_name'].lower():
+                charge_reason_code = 'CAV'
+            else:
+                charge_reason_code = 'AEO'
             fixed_tax_charge_vals_list.append({
                 'currency_name': line.currency_id.name,
                 'currency_dp': self._get_currency_decimal_places(line.currency_id),
                 'charge_indicator': 'true',
-                'allowance_charge_reason_code': 'AEO',
+                'allowance_charge_reason_code': charge_reason_code,
                 'allowance_charge_reason': tax_details['tax_name'],
                 'amount': tax_details['tax_amount_currency'],
             })
@@ -434,6 +438,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         allowance_vals = {
             'currency_name': line.currency_id.name,
             'currency_dp': self._get_currency_decimal_places(line.currency_id),
+            'multiplier_factor': abs(line.discount),
 
             # Must be 'false' since this method is for allowances.
             'charge_indicator': 'false',
@@ -442,9 +447,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             # Full code list is available here:
             # https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
             'allowance_charge_reason_code': 95,
+            'allowance_charge_reason': 'Discount',
 
             # The discount should be provided as an amount.
             'amount': gross_price_subtotal - net_price_subtotal,
+            'base_amount': gross_price_subtotal,
         }
 
         return [allowance_vals] + fixed_tax_charge_vals_list
