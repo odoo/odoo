@@ -67,6 +67,14 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
+        cls.regular_leave_type = cls.env['hr.work.entry.type'].create({
+            'name': 'Regular Leave Type',
+            'code': 'Regular Leave Type',
+            'requires_allocation': False,
+            'count_as': 'absence',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
 
         cls.ruleset = cls.env['hr.attendance.overtime.ruleset'].create({
             'name': 'Ruleset schedule quantity',
@@ -77,6 +85,24 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
                     'expected_hours_from_contract': True,
                     'quantity_period': 'day',
                     'compensable_as_leave': True,
+                }),
+            ],
+        })
+
+        cls.ruleset_with_timing_rule = cls.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Ruleset schedule quantity',
+            'rule_ids': [
+                Command.create({
+                    'name': 'Rule schedule quantity',
+                    'base_off': 'quantity',
+                    'expected_hours_from_contract': True,
+                    'quantity_period': 'day',
+                    'compensable_as_leave': True,
+                }),
+                Command.create({
+                    'name': 'Rule employee is off',
+                    'base_off': 'timing',
+                    'timing_type': 'leave',
                 }),
             ],
         })
@@ -189,24 +215,7 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
         self._check_deductible(16)
 
     def test_public_leave_overtime_with_timing_rule(self):
-        ruleset_with_timing_rule = self.env['hr.attendance.overtime.ruleset'].create({
-            'name': 'Ruleset schedule quantity',
-            'rule_ids': [
-                Command.create({
-                    'name': 'Rule schedule quantity',
-                    'base_off': 'quantity',
-                    'expected_hours_from_contract': True,
-                    'quantity_period': 'day',
-                    'compensable_as_leave': True,
-                }),
-                Command.create({
-                    'name': 'Rule employee is off',
-                    'base_off': 'timing',
-                    'timing_type': 'leave',
-                }),
-            ],
-        })
-        (self.employee.version_ids + self.manager.version_ids).ruleset_id = ruleset_with_timing_rule
+        (self.employee.version_ids + self.manager.version_ids).ruleset_id = self.ruleset_with_timing_rule
         self.manager.company_id = self.env.company
         leave = self.env['resource.calendar.leaves'].with_company(self.manager.company_id).create([{
             'name': 'Public Holiday',
@@ -439,3 +448,24 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
             11.0,
             "Employee should have 11 hours of deductible overtime after requesting leave",
         )
+
+    def test_overtime_update_after_leave(self):
+        self.employee.ruleset_id = self.ruleset_with_timing_rule
+
+        self.new_attendance(check_in=datetime(2026, 1, 13, 8), check_out=datetime(2026, 1, 13, 16))
+        self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime')
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Vacation Yippie',
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.regular_leave_type.id,
+            'request_date_from': datetime(2026, 1, 13),
+            'request_date_to': datetime(2026, 1, 13),
+        })
+        self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime as the leave has not been approved yet.')
+
+        leave.action_approve()
+        self.assertEqual(self.employee.total_overtime, 8, 'Should have 8 hours of overtime as the leave has been approved.')
+
+        leave.action_refuse()
+        self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime as the leave has been refused.')
