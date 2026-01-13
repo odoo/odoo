@@ -51,13 +51,6 @@ class PeppolRegistration(models.TransientModel):
     )
     use_parent_connection = fields.Boolean(compute='_compute_use_parent_connection')
 
-    # TODO: remove in master
-    is_branch_company = fields.Boolean(store=False)
-    active_parent_company = fields.Many2one(string="Active Parent Company", related='parent_company_id')
-    active_parent_company_name = fields.Char(string="Active Parent Company Name", related='parent_company_name')
-    can_use_parent_connection = fields.Boolean(string="Can Use Parent Connection", related='display_use_parent_connection_selection')
-    # TODO END: remove in master
-
     edi_mode = fields.Selection(
         string='EDI mode',
         selection=[('demo', 'Demo'), ('test', 'Test'), ('prod', 'Live')],
