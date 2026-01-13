@@ -2962,13 +2962,19 @@ class IrQweb(models.AbstractModel):
         """
         _logger.runbot('Pregenerating assets bundles')
 
-        js_bundles, css_bundles = self._get_bundles_to_pregenarate()
+        js_bundles, css_bundles, bin_bundles = self._get_bundles_to_pregenarate()
 
         links = []
         start = time.time()
         for bundle in sorted(js_bundles):
             links += self._get_asset_bundle(bundle, css=False, js=True).js()
         _logger.info('JS Assets bundles generated in %s seconds', time.time()-start)
+        start = time.time()
+        for bundle in sorted(bin_bundles):
+            binary_bundle = self._get_asset_bundle(bundle, binary=True)
+            for bin in binary_bundle.binaries:
+                links.extend(binary_bundle.bin(bin.extension))
+        _logger.info('Binary Assets bundles generated in %s seconds', time.time() - start)
         start = time.time()
         for bundle in sorted(css_bundles):
             links += self._get_asset_bundle(bundle, css=True, js=False).css()
@@ -2983,16 +2989,20 @@ class IrQweb(models.AbstractModel):
         views = self.env['ir.ui.view'].search([('type', '=', 'qweb'), ('arch_db', 'like', 't-call-assets')])
         js_bundles = set()
         css_bundles = set()
+        bin_bundles = set()
         for view in views:
             for call_asset in etree.fromstring(view.arch_db).xpath("//*[@t-call-assets]"):
                 asset = call_asset.get('t-call-assets')
                 js = str2bool(call_asset.get('t-js', 'True'))
                 css = str2bool(call_asset.get('t-css', 'True'))
+                binary = str2bool(call_asset.get('t-binary', 'False'))
                 if js:
                     js_bundles.add(asset)
                 if css:
                     css_bundles.add(asset)
-        return (js_bundles, css_bundles)
+                if binary:
+                    bin_bundles.add(asset)
+        return (js_bundles, css_bundles, bin_bundles)
 
 def render(template_name, values, load, **options):
     """ Rendering of a qweb template without database and outside the registry.
