@@ -1,7 +1,7 @@
 import { Component, useExternalListener, useRef } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { useBackButton, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 
 class MessageSeenIndicatorDialog extends Component {
@@ -22,6 +22,7 @@ class MessageSeenIndicatorDialog extends Component {
             },
             true
         );
+        useBackButton(() => this.props.close());
     }
 }
 

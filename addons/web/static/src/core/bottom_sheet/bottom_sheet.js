@@ -3,9 +3,9 @@
  *
  * @class
  */
-import { Component, useState, useRef, onMounted, useExternalListener } from "@odoo/owl";
+import { Component, useState, useRef, onMounted } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
+import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { compensateScrollbar } from "@web/core/utils/scrolling";
 import { getViewportDimensions, useViewportChange } from "@web/core/utils/dvu";
@@ -73,17 +73,10 @@ export class BottomSheet extends Component {
         // Handle "ESC" key press.
         useHotkey("escape", () => this.slideOut());
 
-        // Handle mobile "back" gesture and "back" navigation button.
-        // Push a history state when the BottomSheet opens, intercept the browser's
-        // history events, prevents navigation by pushing another state and closes the sheet.
-        window.history.pushState({ bottomSheet: true }, "");
-        this.handlePopState = () => {
-            if (this.state.isPositionedReady && !this.state.isDismissing) {
-                window.history.pushState({ bottomSheet: true }, "");
-                this.slideOut();
-            }
-        };
-        useExternalListener(window, "popstate", this.handlePopState);
+        useBackButton(
+            () => this.slideOut(),
+            () => this.state.isPositionedReady && !this.state.isDismissing
+        );
 
         onMounted(() => {
             const isReduced =

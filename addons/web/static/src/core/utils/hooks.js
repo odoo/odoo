@@ -1,6 +1,17 @@
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
-import { status, useComponent, useEffect, useRef, onWillUnmount, useState, toRaw } from "@odoo/owl";
+import {
+    status,
+    useComponent,
+    useEffect,
+    useRef,
+    onWillUnmount,
+    useState,
+    toRaw,
+    onMounted,
+    onPatched,
+} from "@odoo/owl";
+import { router } from "@web/core/browser/router";
 
 /**
  * This file contains various custom hooks.
@@ -284,4 +295,139 @@ export function useRefListener(ref, ...listener) {
         },
         () => [ref.el]
     );
+}
+
+/**
+ * Error related to the registration of a listener
+ */
+class BackButtonListenerError extends Error {}
+
+/**
+ * By using the back button feature the default back button behavior from the
+ * app is actually overridden so it is important to keep count to restore the
+ * default when no custom listener are remaining.
+ */
+export class BackButtonManager {
+    constructor() {
+        this._listeners = new Map();
+        this._onPopstate = this._onPopstate.bind(this);
+        this._performLatestBackAction = this._performLatestBackAction.bind(this);
+        this._trapState = { trapState: true, nextState: router.current, skipRouteChange: true };
+        this._cleanupPending = false;
+    }
+
+    /**
+     * Enables the func listener, overriding default back button behavior.
+     *
+     * @param {Component} listener
+     * @param {function} func
+     * @throws {BackButtonListenerError} if the listener has already been registered
+     */
+    addListener(listener, func) {
+        if (this._listeners.has(listener)) {
+            throw new BackButtonListenerError("This listener was already registered.");
+        }
+        this._listeners.set(listener, func);
+        if (this._listeners.size === 1) {
+            this._activate();
+        }
+    }
+
+    /**
+     * Disables the func listener, restoring the default back button behavior if
+     * no other listeners are present.
+     *
+     * @param {Component} listener
+     * @throws {BackButtonListenerError} if the listener has already been unregistered
+     */
+    removeListener(listener) {
+        if (!this._listeners.has(listener)) {
+            throw new BackButtonListenerError("This listener has already been unregistered.");
+        }
+        this._listeners.delete(listener);
+        if (this._listeners.size === 0) {
+            this._deactivate();
+        }
+    }
+
+    _activate() {
+        this._cleanupPending = false;
+        window.addEventListener("popstate", this._onPopstate);
+        if (!window.history.state?.trapState) {
+            router.skipLoad = true;
+            window.history.pushState(this._trapState, "");
+        }
+    }
+
+    _deactivate() {
+        this._cleanupPending = true;
+        // Defer cleanup so that if we are swapping between two components that both use
+        // the hook, we don't destroy and recreate the trap history entry unnecessarily,
+        // as this may lead to flickering and/or extra unwanted history entries.
+        Promise.resolve().then(() => {
+            if (this._cleanupPending) {
+                this._cleanupPending = false;
+                window.removeEventListener("popstate", this._onPopstate);
+                if (window.history.state?.trapState) {
+                    router.skipLoad = true;
+                    window.history.back();
+                }
+            }
+        });
+    }
+
+    _performLatestBackAction() {
+        const [listener, func] = [...this._listeners].pop();
+        if (listener) {
+            func.apply(listener, arguments);
+        }
+    }
+
+    _onPopstate() {
+        this._performLatestBackAction();
+        if (this._listeners.size > 0) {
+            router.skipLoad = true;
+            window.history.pushState(this._trapState, "");
+        }
+    }
+}
+
+const backButtonManager = new BackButtonManager();
+
+/**
+ * Hook to override default back button behavior.
+ * @param {Function} handler - The function to run when back is pressed.
+ * @param {Function} [shouldEnable] - Optional callback returning boolean.
+ */
+export function useBackButton(handler, shouldEnable) {
+    if (!isMobileOS()) {
+        return;
+    }
+    const component = useComponent();
+    let isRegistered = false;
+
+    const register = () => {
+        if (isRegistered) {
+            return;
+        }
+        backButtonManager.addListener(component, handler);
+        isRegistered = true;
+    };
+
+    const unregister = () => {
+        if (!isRegistered) {
+            return;
+        }
+        backButtonManager.removeListener(component);
+        isRegistered = false;
+    };
+
+    const updateRegistration = () => {
+        const isActive = shouldEnable ? shouldEnable() : true;
+        isActive ? register() : unregister();
+    };
+
+    onMounted(updateRegistration);
+    onPatched(updateRegistration);
+    onWillUnmount(unregister);
 }

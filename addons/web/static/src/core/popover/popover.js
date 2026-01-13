@@ -5,7 +5,7 @@ import { usePosition } from "@web/core/position/position_hook";
 import { reverseForRTL } from "@web/core/position/utils";
 import { useActiveElement } from "@web/core/ui/ui_service";
 import { mergeClasses } from "@web/core/utils/classname";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
+import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
 
 /**
  * @param {EventTarget} target
@@ -155,6 +155,11 @@ export class Popover extends Component {
         } else {
             this.props.close();
         }
+
+        useBackButton(
+            () => this.props.close(),
+            () => this.props.target.isConnected
+        );
     }
 
     get defaultClassObj() {
