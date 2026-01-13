@@ -1,0 +1,342 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_test
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 08:16+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
+#, fuzzy
+msgid ""
+"<br/>\n"
+"                        <strong>Description:</strong>"
+msgstr "<br/> <strong>Tavsif:</strong>"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
+#, fuzzy
+msgid "<strong>Name:</strong>"
+msgstr "<strong>Nomi:</strong>"
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_report_account_test_report_accounttest
+#, fuzzy
+msgid "Account Test Report"
+msgstr "Hisob-kitob sinovi hisoboti"
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_accounting_assert_test
+#, fuzzy
+msgid "Accounting Assert Test"
+msgstr "Buxgalteriya tasdiq sinovi"
+
+#. module: account_test
+#: model:ir.actions.act_window,name:account_test.action_accounting_assert
+#: model:ir.actions.report,name:account_test.account_assert_test_report
+#: model:ir.ui.menu,name:account_test.menu_action_license
+#, fuzzy
+msgid "Accounting Tests"
+msgstr "Buxgalteriya sinovlari"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
+#, fuzzy
+msgid "Accounting tests on"
+msgstr "Buxgalteriya sinovlari bo‘yicha"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__active
+#, fuzzy
+msgid "Active"
+msgstr "Faol"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+#, fuzzy
+msgid "Archived"
+msgstr "Arxivlangan"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_03
+#, fuzzy
+msgid "Check if movement lines are balanced and have the same date and period"
+msgstr ""
+"Harakat qatorlari muvozanatlangan va bir xil sana hamda davrga ega "
+"ekanligini tekshirish"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_07
+#, fuzzy
+msgid ""
+"Check on bank statement that the Closing Balance = Starting Balance + sum of "
+"statement lines"
+msgstr ""
+"Bank ko‘chirmasida yakuniy qoldiq = boshlang‘ich qoldiq + ko‘chirma "
+"qatorlari yig‘indisi ekanligini tekshirish"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_06
+#, fuzzy
+msgid "Check that paid/reconciled invoices are not in 'Open' state"
+msgstr ""
+"To‘langan/solishtirma qilingan hisob-fakturalar \"Ochiq\" holatda emasligini "
+"tekshirish"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05_2
+#, fuzzy
+msgid ""
+"Check that reconciled account moves, that define Payable and Receivable "
+"accounts, are belonging to reconciled invoices"
+msgstr ""
+"To‘lanadigan va olinadigan hisoblarni belgilovchi solishtirma qilingan hisob "
+"harakatlari solishtirma qilingan hisob-fakturalarga tegishli ekanligini "
+"tekshirish"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05
+#, fuzzy
+msgid ""
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
+"Payable and Receivable Accounts"
+msgstr ""
+"Sotish/xarid bo‘yicha solishtirma qilingan hisob-fakturada kreditorlik va "
+"debitorlik qarzlari bo‘yicha solishtirma qilingan yozuvlar mavjudligini "
+"tekshirish"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_01
+#, fuzzy
+msgid "Check the balance: Debit sum = Credit sum"
+msgstr "Balansni tekshirish: Debet summasi = Kredit summasi"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#, fuzzy
+msgid "Code Help"
+msgstr "Kod bo‘yicha yordam"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#, fuzzy
+msgid ""
+"Code should always set a variable named `result` with the result of your "
+"test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was "
+"successful. Otherwise it will\n"
+"try to translate and print what is inside `result`.\n"
+"\n"
+"If the result of your test is a dictionary, you can set a variable named "
+"`column_order` to choose in\n"
+"what order you want to print `result`'s content.\n"
+"\n"
+"Should you need them, you can also use the following variables into your "
+"code:\n"
+"    * cr: cursor to the database\n"
+"    * uid: ID of the current user\n"
+"\n"
+"In any ways, the code must be legal python statements with correct "
+"indentation (if needed).\n"
+"\n"
+"Example: \n"
+"    sql = '''SELECT id, name, ref, date\n"
+"             FROM account_move_line \n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
+"= 'view')\n"
+"          '''\n"
+"    cr.execute(sql)\n"
+"    result = cr.dictfetchall()"
+msgstr ""
+"Kod har doim testingiz natijasi bilan \"result\" deb nomlangan o‘zgaruvchini "
+"o‘rnatishi kerak, bu ro‘yxat yoki lug‘at bo‘lishi mumkin. Agar 'result' "
+"bo‘sh ro‘yxat bo‘lsa, demak, test muvaffaqiyatli o‘tgan. Aks holda, u "
+"\"result\" ichidagi ma'lumotlarni tarjima qilishga va chop etishga harakat "
+"qiladi.  Agar testingiz natijasi lug‘at bo‘lsa, 'result'ning mazmunini "
+"qanday tartibda chop etishni tanlash uchun 'column_order' nomli "
+"o‘zgaruvchini o‘rnatishingiz mumkin.  Agar sizga kerak bo‘lsa, kodingizda "
+"quyidagi o‘zgaruvchilardan ham foydalanishingiz mumkin: * cr: ma'lumotlar "
+"bazasiga kursor * uid: joriy foydalanuvchining ID raqami.  Har qanday "
+"holatda ham kod to‘g‘ri xatboshi bilan qonuniy Python bayonotlari bo‘lishi "
+"kerak (agar kerak bo‘lsa). Misol: sql = '''SELECT id, name, ref, date FROM "
+"account_move_line WHERE account_id IN (SELECT id FROM account_account WHERE "
+"type = 'view')''' cr.execute(sql) result = cr.dictfetchall()"
+
+#. module: account_test
+#: model_terms:ir.actions.act_window,help:account_test.action_accounting_assert
+#, fuzzy
+msgid "Create a new accounting test"
+msgstr "Yangi buxgalteriya sinovi yaratish"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_uid
+#, fuzzy
+msgid "Created by"
+msgstr "Yaratuvchi"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_date
+#, fuzzy
+msgid "Created on"
+msgstr "Yaratilgan sana"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+#, fuzzy
+msgid "Description"
+msgstr "Tavsif"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__display_name
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatish nomi"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#, fuzzy
+msgid "Expression"
+msgstr "Ifoda"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__id
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test____last_update
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest____last_update
+#, fuzzy
+msgid "Last Modified on"
+msgstr "Oxirgi o‘zgartirilgan sana"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_uid
+#, fuzzy
+msgid "Last Updated by"
+msgstr "Oxirgi yangilovchi"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_date
+#, fuzzy
+msgid "Last Updated on"
+msgstr "Oxirgi yangilangan sana"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+#, fuzzy
+msgid "Name"
+msgstr "Nomi"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#, fuzzy
+msgid "Python Code"
+msgstr "Python kodi"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__code_exec
+#, fuzzy
+msgid "Python code"
+msgstr "Python kodi"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+#, fuzzy
+msgid "Search Account Test"
+msgstr "Hisob sinovini qidirish"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__sequence
+#, fuzzy
+msgid "Sequence"
+msgstr "Ketma-ketlik"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_01
+#, fuzzy
+msgid "Test 1: General balance"
+msgstr "1-sinov: Umumiy balans"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_03
+#, fuzzy
+msgid "Test 3: Movement lines"
+msgstr "3-sinov: Harakat qatorlari"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_05
+#, fuzzy
+msgid ""
+"Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
+msgstr ""
+"5.1-sinov: Solishtirma qilingan hisob-fakturalarning to‘lanadigan va "
+"olinadigan buxgalteriya qatorlari"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_05_2
+#, fuzzy
+msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
+msgstr ""
+"5.2-sinov: Solishtirma qilingan hisob-fakturalar va to‘lanadigan/olinadigan "
+"hisoblar"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_06
+#, fuzzy
+msgid "Test 6 : Invoices status"
+msgstr "6-sinov: Hisob-fakturalar holati"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_07
+#, fuzzy
+msgid "Test 7 : Closing balance on bank statements"
+msgstr "7-sinov: Bank ko‘chirmalari yakuniy qoldig‘i"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__desc
+#, fuzzy
+msgid "Test Description"
+msgstr "Sinov tavsifi"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__name
+#, fuzzy
+msgid "Test Name"
+msgstr "Sinov nomi"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_tree
+#, fuzzy
+msgid "Tests"
+msgstr "Sinovlar"
+
+#. module: account_test
+#: code:addons/account_test/report/report_account_test.py:0
+#, fuzzy
+msgid "The test was passed successfully"
+msgstr "Sinov muvaffaqiyatli yakunlandi"

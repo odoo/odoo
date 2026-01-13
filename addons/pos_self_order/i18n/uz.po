@@ -1,0 +1,2054 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_self_order
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-30 18:37+0000\n"
+"PO-Revision-Date: 2025-10-08 18:38+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_self_order
+#: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
+#, fuzzy
+msgid "\"QR codes\""
+msgstr "\"QR kodlar\""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#, fuzzy
+msgid "(require Odoo Enterprise)"
+msgstr "(Odoo Enterprise talab qilinadi)"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid ""
+"<br/>\n"
+"                    URL:"
+msgstr "<br/> URL:"
+
+#. module: pos_self_order
+#: model:mail.template,body_html:pos_self_order.delivery_email_template
+#, fuzzy
+msgid ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+"                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hello <t t-"
+"out=\"client_name\">Client name</t>,</t>\n"
+"                        <t t-else=\"\">Hello,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Your order <t t-out=\"object.tracking_number\">...</"
+"t> amounting in <t t-out=\"object.amount_total\">$xx.xx</t> has been "
+"confirmed. <span t-if=\"object.preset_time or client.street\">It will be "
+"ready</span> <span t-if=\"object.preset_time\">at <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client.street\">at <t t-"
+"out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t t-"
+"out=\"client.zip or ''\">zip</t>, <t t-out=\"city\">city</t>, <t t-"
+"out=\"country\">country</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>Thank you,</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>Attached, you will find your receipt</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Store name</t>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\"> <t t-set=\"client\" "
+"t-value=\"object.partner_id\"/> <t t-set=\"client_name\" t-"
+"value=\"client.name\"/> <t t-set=\"street\" t-value=\"client.street or ''\"/"
+"> <t t-set=\"state\" t-value=\"client.state_id.name or ''\"/> <t t-"
+"set=\"city\" t-value=\"client.city or ''\"/> <t t-set=\"country\" t-"
+"value=\"client.country_id.name or ''\"/> <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/> <t t-set=\"tz\" t-"
+"value=\"object.env.user.tz\"/> <t t-set=\"lg\" t-"
+"value=\"object.partner_id.lang or user.lang\"/> <div> <t t-"
+"if=\"client_name\">Salom <t t-out=\"client_name\">Mijoz ismi</t>,</t> <t t-"
+"else=\"\">Salom,</t> </div> <br/> <div><t t-"
+"out=\"object.tracking_number\">...</t> raqamli buyurtmangiz <t t-"
+"out=\"object.amount_total\">$xx.xx</t> miqdorida tasdiqlandi. <span t-"
+"if=\"object.preset_time or client.street\">U tayyor bo‘ladi</span> <span t-"
+"if=\"object.preset_time\"><t t-out=\"format_time(time=object.preset_time, "
+"tz=tz, time_format='short', lang_code=lg)\">12:00</t> da</span> <span t-"
+"if=\"client.street\"><t t-out=\"street\">ko‘cha</t>, <t t-"
+"out=\"state\">viloyat</t>, <t t-out=\"client.zip or ''\">pochta indeksi</t>, "
+"<t t-out=\"city\">shahar</t>, <t t-out=\"country\">mamlakat</t> manzilida</"
+"span></div> <br/> <div>Rahmat,</div> <br/> <div t-if=\"object.state == "
+"'paid'\"> <div>Ilova qilingan hujjatda chekingizni topasiz</div> <br/> </"
+"div> <t t-out=\"store_name\">Do‘kon nomi</t> </div>"
+
+#. module: pos_self_order
+#: model:mail.template,body_html:pos_self_order.takeout_email_template
+#, fuzzy
+msgid ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hello <t t-"
+"out=\"client_name\">Client name</t>,</t>\n"
+"                        <t t-else=\"\">Hello,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Your order <t t-out=\"object.tracking_number\">...</"
+"t> amounting in <t t-out=\"object.amount_total\">$xx.xx</t> has been "
+"confirmed. <span t-if=\"object.preset_time\">It will be ready at <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>Thank you,</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>Attached, you will find your receipt</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Store name</t>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\"> <t t-"
+"set=\"store_name\" t-value=\"object.config_id.name\"/> <t t-set=\"tz\" t-"
+"value=\"object.env.user.tz\"/> <t t-set=\"lg\" t-"
+"value=\"object.partner_id.lang yoki user.lang\"/> <div> <t t-"
+"if=\"client_name\">Assalomu alaykum, <t t-out=\"client_name\">Mijoz ismi</t>,"
+"</t> <t t-else=\"\">Assalomu alaykum,</t> </div> <br/> <div>Sizning <t t-"
+"out=\"object.tracking_number\">...</t> raqamli, <t t-"
+"out=\"object.amount_total\">$xx.xx</t> miqdoridagi buyurtmangiz tasdiqlandi. "
+"<span t-if=\"object.preset_time\">U soat <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00</t> da tayyor bo‘ladi</span></div> <br/> "
+"<div>Tashakkur,</div> <br/> <div t-if=\"object.state == 'paid'\"> <div>Ilova "
+"qilingan hujjatda chekingizni topasiz</div> <br/> </div> <t t-"
+"out=\"store_name\">Do‘kon nomi</t> </div>"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_default_user_id
+#, fuzzy
+msgid ""
+"Access rights of this user will be used when visiting self order website "
+"when no session is open."
+msgstr ""
+"Ushbu foydalanuvchining kirish huquqlari seans ochilmaganda o‘ziga xizmat "
+"ko‘rsatish veb-saytiga kirilganda qo‘llaniladi."
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
+#, fuzzy
+msgid "Active"
+msgstr "Faol"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#, fuzzy
+msgid "Add"
+msgstr "Qo‘shish"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Add Languages"
+msgstr "Tillarni qo‘shish"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_home_ids
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
+#, fuzzy
+msgid "Add images"
+msgstr "Rasmlar qo‘shish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+#, fuzzy
+msgid "Add to cart"
+msgstr "Savatga qo‘shish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
+#, fuzzy
+msgid "All"
+msgstr "Hammasi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+#, fuzzy
+msgid "An error has occurred"
+msgstr "Xatolik yuz berdi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
+#, fuzzy
+msgid "Are you sure you want to cancel this order?"
+msgstr "Haqiqatan ham bu buyurtmani bekor qilmoqchimisiz?"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Available"
+msgstr "Mavjud"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_available_language_ids
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_available_language_ids
+#, fuzzy
+msgid "Available Languages"
+msgstr "Mavjud tillar"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
+#, fuzzy
+msgid "Available in Self"
+msgstr "O‘ziga xizmat ko‘rsatishda mavjud"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_available
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
+#, fuzzy
+msgid "Available in Self Order"
+msgstr "O‘ziga xizmat ko‘rsatish buyurtmalarida mavjud"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__available_in_self
+#, fuzzy
+msgid "Available in self"
+msgstr "O‘ziga xizmat ko‘rsatishda mavjud"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Available interface languages"
+msgstr "Mavjud interfeys tillari"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
+#, fuzzy
+msgid "Back"
+msgstr "Orqaga"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Background"
+msgstr "Fon"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+#, fuzzy
+msgid "Cancel"
+msgstr "Bekor qilish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
+#, fuzzy
+msgid "Cancel Order"
+msgstr "Buyurtmani bekor qilish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
+#, fuzzy
+msgid "Cancel order"
+msgstr "Buyurtmani bekor qilish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
+#, fuzzy
+msgid "Cancelled"
+msgstr "Bekor qilindi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/category_list_popup/category_list_popup.xml:0
+#, fuzzy
+msgid "Categories"
+msgstr "Toifalar"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#, fuzzy
+msgid "Checkout"
+msgstr "To‘lov"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_service_mode
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
+#, fuzzy
+msgid "Choose the kiosk mode"
+msgstr "Kiosk rejimini tanlang"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_mode
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_mode
+#, fuzzy
+msgid "Choose the self ordering mode"
+msgstr "O‘ziga xizmat ko‘rsatish rejimini tanlang"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_pay_after
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
+#, fuzzy
+msgid "Choose when the customer will pay"
+msgstr "Mijoz qachon to‘lashini tanlang"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#, fuzzy
+msgid "Choose your"
+msgstr "Tanlang"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
+msgid "Choose your time"
+msgstr "Vaqtni tanlang"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
+msgid "City"
+msgstr "Shahar"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/category_list_popup/category_list_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/product_info_popup/product_info_propup.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, fuzzy
+msgid "Close"
+msgstr "Yopish"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+#, fuzzy
+msgid "Close Session"
+msgstr "Seansni yopish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#, fuzzy
+msgid "Combo"
+msgstr "Kombo"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
+#, fuzzy
+msgid "Combo reference"
+msgstr "Kombo havolasi"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_res_config_settings
+#, fuzzy
+msgid "Config Settings"
+msgstr "Konfiguratsiya sozlamalari"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+#, fuzzy
+msgid "Connection restored"
+msgstr "Aloqa tiklandi"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_res_partner
+#, fuzzy
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
+#, fuzzy
+msgid "Continue"
+msgstr "Davom etish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#, fuzzy
+msgid "Continue with table"
+msgstr "Stol bilan davom etish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#, fuzzy
+msgid "Could you please confirm your table number?"
+msgstr "Iltimos, stol raqamingizni tasdiqlang"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_res_country
+#, fuzzy
+msgid "Country"
+msgstr "Mamlakat"
+
+#. module: pos_self_order
+#: model:ir.model,website_form_label:pos_self_order.model_res_partner
+#, fuzzy
+msgid "Create a Customer"
+msgstr "Mijoz yaratish"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__create_uid
+#, fuzzy
+msgid "Created by"
+msgstr "Yaratuvchi"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__create_date
+#, fuzzy
+msgid "Created on"
+msgstr "Yaratilgan sana"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.js:0
+#, fuzzy
+msgid "Current"
+msgstr "Joriy"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
+#, fuzzy
+msgid "Custom Links"
+msgstr "Maxsus havolalar"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_self_order_custom_link
+#, fuzzy
+msgid ""
+"Custom links that the restaurant can configure to be displayed on the self "
+"order screen"
+msgstr ""
+"Restoran o‘z-o‘zini buyurtma qilish ekranida ko‘rsatilishi uchun sozlashi "
+"mumkin bo‘lgan maxsus havolalar"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__danger
+#, fuzzy
+msgid "Danger"
+msgstr "Xavf"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__dark
+#, fuzzy
+msgid "Dark"
+msgstr "Qora"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Default"
+msgstr "Standart"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_default_language_id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_default_language_id
+#, fuzzy
+msgid "Default Language"
+msgstr "Asosiy til"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_default_user_id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_default_user_id
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Default User"
+msgstr "Standart foydalanuvchi"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_language_id
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_default_language_id
+#, fuzzy
+msgid "Default language for the kiosk mode"
+msgstr "Kiosk rejimi uchun standart til"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__delivery
+#, fuzzy
+msgid "Delivery"
+msgstr "Yetkazib berish"
+
+#. module: pos_self_order
+#: model:mail.template,name:pos_self_order.delivery_email_template
+#, fuzzy
+msgid "Delivery: Confirmation order for self"
+msgstr "Yetkazib berish: o‘zingiz uchun buyurtmani tasdiqlash"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
+#, fuzzy
+msgid "Disable"
+msgstr "O‘chirish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/language_popup/language_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+#, fuzzy
+msgid "Discard"
+msgstr "Bekor qilish"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_http__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_mail_template__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_load_mixin__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_product_tag__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_country__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_partner__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_floor__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatiladigan nom"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+#, fuzzy
+msgid "Do not refresh the page."
+msgstr "Sahifani yangilamang."
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Download QR Codes"
+msgstr "QR kodlarni yuklab olish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, fuzzy
+msgid "Download your receipt here"
+msgstr "Chekingizni bu yerdan yuklab oling"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#, fuzzy
+msgid "Each Order"
+msgstr "Har bir buyurtma"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid ""
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
+msgstr ""
+"Pol rejasidagi har bir stol sizning konfiguratsiyangizga asosan noyob QR-"
+"kodga ega bo‘ladi. Xavfsizlik maqsadida, yaratilgan URL manzilida ham savdo "
+"nuqtasi, ham stol nomlari quyidagi misolda ko‘rsatilganidek shifrlanadi:."
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_preset
+#, fuzzy
+msgid "Easily load a set of configuration options"
+msgstr "Sozlamalar to‘plamini osongina yuklang"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
+msgid "Email"
+msgstr "Elektron pochta"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__mail_template_id
+#, fuzzy
+msgid "Email Confirmation"
+msgstr "Elektron pochta orqali tasdiqlash"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_mail_template
+#, fuzzy
+msgid "Email Templates"
+msgstr "Elektron pochta shablonlari"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
+#, fuzzy
+msgid ""
+"Enable QR menu in the Restaurant settings to get QR codes for free on tables."
+msgstr ""
+"Restoran sozlamalarida QR menyuni yoqing va stollar uchun bepul QR kodlar "
+"oling."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
+#, fuzzy
+msgid "Enter your custom value"
+msgstr "O‘z qiymatingizni kiriting"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
+#, fuzzy
+msgid "Enter your tracker number"
+msgstr "Kuzatish raqamingizni kiriting"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid ""
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
+msgstr ""
+"Ushbu QR kodni ehtiyojingizga ko‘ra xohlagancha ishlatishingiz va chop "
+"etishingiz mumkin."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+#, fuzzy
+msgid "Follow instructions on the terminal"
+msgstr "Terminaldagi ko‘rsatmalarga amal qiling"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Free Metal / Wood Stands"
+msgstr "Bepul metall / yog‘och tagliklar"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#, fuzzy
+msgid "Generic"
+msgstr "Umumiy"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/navbar/navbar.xml:0
+#: code:addons/pos_self_order/static/src/overrides/screens/floor_screen/floor_screen.xml:0
+#, fuzzy
+msgid "Get QR Codes"
+msgstr "QR kodlarni olish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
+#, fuzzy
+msgid "Get QR codes"
+msgstr "QR kodlarni olish"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_ir_http
+#, fuzzy
+msgid "HTTP Routing"
+msgstr "HTTP yo‘naltirish"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__has_paper
+#, fuzzy
+msgid "Has paper"
+msgstr "Qog‘oz mavjud"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
+#, fuzzy
+msgid ""
+"Hey, looks like you forgot to create products or add them to pos_config. "
+"Please add them before using the Self Order"
+msgstr ""
+"Salom, mahsulotlar yaratish yoki ularni pos_config ga qo‘shishni unutgan "
+"ko‘rinasiz. Iltimos, O‘z-o‘ziga buyurtma berishdan oldin ularni qo‘shing"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Home buttons"
+msgstr "Bosh sahifa tugmalari"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, fuzzy
+msgid "Hope you enjoyed your meal!"
+msgstr "Ovqatdan maza qilgan bo‘lsangiz xursandmiz!"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid "How to customize"
+msgstr "Qanday sozlash mumkin"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid "How to use"
+msgstr "Qanday foydalanish kerak"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_http__id
+#: model:ir.model.fields,field_description:pos_self_order.field_mail_template__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_load_mixin__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__id
+#: model:ir.model.fields,field_description:pos_self_order.field_product_tag__id
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_country__id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_partner__id
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_floor__id
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_product_product__self_order_available
+#: model:ir.model.fields,help:pos_self_order.field_product_template__self_order_available
+#, fuzzy
+msgid "If this product is available in the Self Order screens"
+msgstr "Agar bu mahsulot O‘z-o‘ziga buyurtma berish ekranlarida mavjud bo‘lsa"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid ""
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
+msgstr ""
+"Agar sizga maxsus QR kodlar kerak bo‘lsa, avval tegishli QR kodni skanerlab "
+"URL manzilni oling. So‘ngra https://www.qrcode-monkey.com yoki https://"
+"www.qr-code-generator.com kabi QR kod generatoridan foydalaning"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_background_ids
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
+#, fuzzy
+msgid "Image to be displayed in the background"
+msgstr "Fonda ko‘rsatiladigan rasm"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_home_ids
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
+#, fuzzy
+msgid "Image to display on the self order screen"
+msgstr "O‘z-o‘ziga buyurtma berish ekranida ko‘rsatiladigan rasm"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+#, fuzzy
+msgid ""
+"In Self-Order mode, you must have at least one table to generate QR codes"
+msgstr ""
+"O‘z-o‘ziga buyurtma berish rejimida QR kodlarni yaratish uchun kamida bitta "
+"stol bo‘lishi kerak"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
+#, fuzzy
+msgid "Inactive"
+msgstr "Faol emas"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__info
+#, fuzzy
+msgid "Info"
+msgstr "Ma'lumot"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+#, fuzzy
+msgid "Internet Connection Lost"
+msgstr "Internet aloqasi uzildi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
+#, fuzzy
+msgid "Invoiced"
+msgstr "Hisob-faktura qilingan"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+#, fuzzy
+msgid "It seems that"
+msgstr "Shunday ko‘rinadiki"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+#, fuzzy
+msgid "It seems that the network connection was lost."
+msgstr "Tarmoq aloqasi uzilgan ko‘rinadi."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#: model:ir.actions.act_window,name:pos_self_order.action_pos_self_order_search_view
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__kiosk
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_search_view
+#, fuzzy
+msgid "Kiosk"
+msgstr "Kiosk"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Kiosk T"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
+#, fuzzy
+msgid "Label"
+msgstr "Yorliq"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Language"
+msgstr "Til"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_available_language_ids
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_available_language_ids
+#, fuzzy
+msgid "Languages available for the kiosk mode"
+msgstr "Kiosk rejimi uchun mavjud tillar"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__write_uid
+#, fuzzy
+msgid "Last Updated by"
+msgstr "Oxirgi yangilagan shaxs"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__write_date
+#, fuzzy
+msgid "Last Updated on"
+msgstr "Oxirgi yangilangan sana"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Let your customers order using their mobile or a kiosk."
+msgstr ""
+"Mijozlaringizga mobil telefon yoki kiosk orqali buyurtma berishga imkon "
+"yarating."
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__light
+#, fuzzy
+msgid "Light"
+msgstr "Och rang"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__pos_config_ids
+#, fuzzy
+msgid "Linked PoS Configurations"
+msgstr "Bog‘langan POS sozlamalari"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, fuzzy
+msgid "Loading..."
+msgstr "Yuklanmoqda..."
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid ""
+"Make it easy for your customers to explore your menu\n"
+"                online or order with the QR codes on your tables"
+msgstr ""
+"Mijozlaringizga menyuni onlayn ko‘rib chiqish yoki stollardagi QR kodlar "
+"orqali buyurtma berishni osonlashtiring"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid ""
+"Make it easy for your customers to explore your menu\n"
+"                online with the QR codes on your tables"
+msgstr ""
+"Mijozlaringizga stollardagi QR kodlar yordamida menyuni onlayn ko‘rib "
+"chiqishni osonlashtiring"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/missing_required_details/missing_required_details.xml:0
+#, fuzzy
+msgid ""
+"Make sure you choose all your options for this item. You're alomost there."
+msgstr ""
+"Bu mahsulot uchun barcha variantlarni tanlaganingizga ishonch hosil qiling. "
+"Siz deyarli tugatdingiz."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#, fuzzy
+msgid "Meal"
+msgstr "Taom"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+#, fuzzy
+msgid "Mobile Menu"
+msgstr "Mobil menyu"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Mobile self-order & Kiosk"
+msgstr "Mobil o‘ziga xizmat va kiosk"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/landing_page/landing_page.xml:0
+#, fuzzy
+msgid "My Order"
+msgstr "Mening buyurtmam"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/landing_page/landing_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#, fuzzy
+msgid "My Orders"
+msgstr "Mening buyurtmalarim"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, fuzzy
+msgid "NEW"
+msgstr "YANGI"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, fuzzy
+msgid "NOTE"
+msgstr "ESLATMA"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
+msgid "Name"
+msgstr "Nom"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
+#, fuzzy
+msgid "Name of the image to display on the self order screen"
+msgstr "O‘ziga xizmat ekranida ko‘rsatiladigan rasm nomi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#, fuzzy
+msgid "Next"
+msgstr "Keyingi"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid "No"
+msgstr "Yo‘q"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#, fuzzy
+msgid "No order found"
+msgstr "Buyurtma topilmadi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#, fuzzy
+msgid "No, thanks"
+msgstr "Yo‘q, rahmat"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#, fuzzy
+msgid "Not available"
+msgstr "Mavjud emas"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
+#, fuzzy
+msgid "Not available in Self"
+msgstr "O‘ziga xizmatda mavjud emas"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+#, fuzzy
+msgid "OK"
+msgstr "OK"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, fuzzy
+msgid "Ok"
+msgstr "Mayli"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
+#, fuzzy
+msgid "Ongoing"
+msgstr "Davom etmoqda"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+#, fuzzy
+msgid "Online"
+msgstr "Onlayn"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+#, fuzzy
+msgid "Only pay after each is available with kiosk mode."
+msgstr "Faqat kiosk rejimida har bir buyurtmadan keyin to‘lash mumkin."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+#, fuzzy
+msgid "Oops..."
+msgstr "Voy..."
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+#, fuzzy
+msgid "Open Kiosk"
+msgstr "Kioskni ochish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, fuzzy
+msgid "Order"
+msgstr "Buyurtma"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#, fuzzy
+msgid "Order Now"
+msgstr "Hozir buyurtma berish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+#, fuzzy
+msgid "Orders not found on server"
+msgstr "Buyurtmalar serverda topilmadi"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__source
+#, fuzzy
+msgid "Origin"
+msgstr "Kelib chiqishi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
+#, fuzzy
+msgid "Out of stock"
+msgstr "Tugagan"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
+#, fuzzy
+msgid "Paid"
+msgstr "To‘langan"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
+#, fuzzy
+msgid "Pay"
+msgstr "To‘lash"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_pay_after
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
+#, fuzzy
+msgid "Pay After:"
+msgstr "To‘lov vaqti:"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Pay after"
+msgstr "Keyin to‘lash"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Personalize the Kiosk background"
+msgstr "Kiosk fonini moslashtirish"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid ""
+"Personalize your splash screen by adding one or multiple images to create a "
+"slideshow"
+msgstr ""
+"Slayd-shou yaratish uchun bir yoki bir nechta rasm qo‘shib, boshlang‘ich "
+"ekranni moslashtiring"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
+#, fuzzy
+msgid "Pickup At Counter"
+msgstr "Peshtaxtadan olish"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__counter
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__counter
+#, fuzzy
+msgid "Pickup zone"
+msgstr "Olish hududi"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_load_mixin
+#, fuzzy
+msgid "PoS data loading mixin"
+msgstr "POS ma'lumotlarini yuklash miksini"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_category
+#, fuzzy
+msgid "Point of Sale Category"
+msgstr "Sotuv nuqtasi toifasi"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_config
+#, fuzzy
+msgid "Point of Sale Configuration"
+msgstr "Sotuv nuqtasi sozlamasi"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_order_line
+#, fuzzy
+msgid "Point of Sale Order Lines"
+msgstr "Sotuv nuqtasi buyurtma satrlari"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_order
+#, fuzzy
+msgid "Point of Sale Orders"
+msgstr "Sotuv nuqtasi buyurtmalari"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_payment_method
+#, fuzzy
+msgid "Point of Sale Payment Methods"
+msgstr "Sotuv nuqtasi to‘lov usullari"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_session
+#, fuzzy
+msgid "Point of Sale Session"
+msgstr "Sotuv nuqtasi sessiyasi"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid "Point of sale:"
+msgstr "Sotuv nuqtasi:"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
+#, fuzzy
+msgid "Points of Sale"
+msgstr "Sotuv nuqtalari"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
+#, fuzzy
+msgid "Preview"
+msgstr "Oldindan ko‘rish"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Preview Web interface"
+msgstr "Veb-interfeysni oldindan ko‘rish"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__primary
+#, fuzzy
+msgid "Primary"
+msgstr "Asosiy"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Print QR Codes"
+msgstr "QR kodlarni chop etish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/printing_failure_popup/printing_failure_popup.js:0
+#, fuzzy
+msgid "Printing failed"
+msgstr "Chop etish amalga oshmadi"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_product_template
+#, fuzzy
+msgid "Product"
+msgstr "Mahsulot"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_product_tag
+#, fuzzy
+msgid "Product Tag"
+msgstr "Mahsulot tegi"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_product_product
+#, fuzzy
+msgid "Product Variant"
+msgstr "Mahsulot varianti"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+#, fuzzy
+msgid "Product is not available"
+msgstr "Mahsulot mavjud emas"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+#, fuzzy
+msgid "Product not found"
+msgstr "Mahsulot topilmadi"
+
+#. module: pos_self_order
+#: model:ir.actions.report,name:pos_self_order.report_self_order_qr_codes_page
+#, fuzzy
+msgid "QR Codes"
+msgstr "QR kodlar"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+#, fuzzy
+msgid "QR codes can only be generated in mobile or consultation mode."
+msgstr "QR kodlarni faqat mobil yoki maslahat rejimida yaratish mumkin."
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__consultation
+#, fuzzy
+msgid "QR menu"
+msgstr "QR menyu"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "QR menu & Kiosk activation"
+msgstr "QR menyu va kioskni faollashtirish"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__mobile
+#, fuzzy
+msgid "QR menu + Ordering"
+msgstr "QR menyu + Buyurtma berish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/quantity_widget/quantity_widget.xml:0
+#, fuzzy
+msgid "Quantity select"
+msgstr "Miqdorni tanlash"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
+msgid "Required"
+msgstr ""
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Reset QR Codes"
+msgstr "QR kodlarni qayta o‘rnatish"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_restaurant_floor
+#, fuzzy
+msgid "Restaurant Floor"
+msgstr "Restoran qavati"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_restaurant_table
+#, fuzzy
+msgid "Restaurant Table"
+msgstr "Restoran stoli"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+#, fuzzy
+msgid "Retry"
+msgstr "Qayta urinish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.js:0
+#, fuzzy
+msgid "Retrying in %s second..."
+msgstr "%s soniyadan so‘ng qayta uriniladi..."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.js:0
+#, fuzzy
+msgid "Retrying in %s seconds..."
+msgstr "%s soniyadan so‘ng qayta uriniladi..."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+#, fuzzy
+msgid "Retrying..."
+msgstr "Qayta urinilmoqda..."
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__secondary
+#, fuzzy
+msgid "Secondary"
+msgstr "Ikkinchi darajali"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__identifier
+#, fuzzy
+msgid "Security Token"
+msgstr "Xavfsizlik belgisi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/missing_required_details/missing_required_details.xml:0
+#, fuzzy
+msgid "See what you missed"
+msgstr "O‘tkazib yuborgan narsalaringizni ko‘ring"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
+msgid "Select"
+msgstr "Tanlash"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
+msgid "Select a country"
+msgstr "Mamlakatni tanlang"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+#, fuzzy
+msgid "Select a hour"
+msgstr "Soatni tanlang"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
+msgid "Select a state"
+msgstr "Shtatni tanlang"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#, fuzzy
+msgid "Select a table"
+msgstr "Stolni tanlang"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
+#, fuzzy
+msgid ""
+"Select for which points of sale you want to display this link. Leave empty "
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
+msgstr ""
+"Ushbu havolani qaysi sotuv nuqtalarida ko‘rsatishni tanlang. Barcha sotuv "
+"nuqtalarida ko‘rsatish uchun bo‘sh qoldiring. \"QR kod menyusi\" funksiyasi "
+"yoqilgan sotuv nuqtalari orasidan tanlashingiz kerak."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
+msgid "Select your address"
+msgstr "Manzilingizni tanlang"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+#, fuzzy
+msgid "Selection"
+msgstr "Tanlov"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#, fuzzy
+msgid "Self Order"
+msgstr "O‘ziga xizmat buyurtmasi"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
+#, fuzzy
+msgid "Self Order Kiosk Image Brand"
+msgstr "O‘ziga xizmat kiosk rasmi brendi"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
+#, fuzzy
+msgid "Self Order Kiosk Image Brand Name"
+msgstr "O‘ziga xizmat kiosk rasmi brend nomi"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_visible
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_visible
+#, fuzzy
+msgid "Self Order Visible"
+msgstr "O‘ziga xizmat ko‘rinadi"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid "Self Order:"
+msgstr "O‘ziga xizmat buyurtmasi:"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#: model_terms:ir.ui.view,arch_db:pos_self_order.view_pos_preset_form
+#, fuzzy
+msgid "Self Ordering"
+msgstr "O‘ziga xizmat buyurtma berish"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_mode
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_mode
+#, fuzzy
+msgid "Self Ordering Mode"
+msgstr "O‘ziga xizmat buyurtma rejimi"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_service_mode
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
+#, fuzzy
+msgid "Self Ordering Service Mode"
+msgstr "O‘ziga xizmat buyurtma xizmati rejimi"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
+#, fuzzy
+msgid "Self Ordering Url"
+msgstr "O‘ziga xizmat buyurtma URL manzili"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__kiosk
+#, fuzzy
+msgid "Self-Order Kiosk"
+msgstr "O‘z-o‘ziga xizmat ko‘rsatish kioski"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__mobile
+#, fuzzy
+msgid "Self-Order Mobile"
+msgstr "O‘z-o‘ziga xizmat ko‘rsatish mobil ilovasi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Self-Order T"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
+#, fuzzy
+msgid "Self-Order T %s"
+msgstr "O‘z-o‘ziga xizmat ko‘rsatish T %s"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#, fuzzy
+msgid "Self-ordering:"
+msgstr "O‘z-o‘ziga xizmat ko‘rsatish:"
+
+#. module: pos_self_order
+#: model:mail.template,description:pos_self_order.delivery_email_template
+#: model:mail.template,description:pos_self_order.takeout_email_template
+#, fuzzy
+msgid "Sent to customers with the receipt in attachment"
+msgstr "Chek ilova qilingan holda mijozlarga yuborildi"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
+#, fuzzy
+msgid "Sequence"
+msgstr "Ketma-ketlik"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__service_at
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Service at"
+msgstr "Xizmat ko‘rsatish joyi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
+#, fuzzy
+msgid "Service at Table"
+msgstr "Stol ustida xizmat ko‘rsatish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
+#, fuzzy
+msgid "Session Inactive"
+msgstr "Seans faol emas"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_background_ids
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
+#, fuzzy
+msgid "Set background image"
+msgstr "Orqa fon rasmini o‘rnatish"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, fuzzy
+msgid "Splash screens"
+msgstr "Ochilish ekranlari"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+#, fuzzy
+msgid "Start Kiosk"
+msgstr "Kioskni ishga tushirish"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__status
+#, fuzzy
+msgid "Status"
+msgstr "Holat"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
+msgid "Street and Number"
+msgstr "Ko‘cha va uy raqami"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
+#, fuzzy
+msgid "Style"
+msgstr "Uslub"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__success
+#, fuzzy
+msgid "Success"
+msgstr "Muvaffaqiyat"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__table
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__table
+#, fuzzy
+msgid "Table"
+msgstr "Stol"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__table_stand_number
+#, fuzzy
+msgid "Table Stand Number"
+msgstr "Stol raqami"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
+#, fuzzy
+msgid "Table Tracker:"
+msgstr "Stol kuzatuvchisi:"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__self_ordering_table_id
+#, fuzzy
+msgid "Table reference"
+msgstr "Stol ma'lumotnomasi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#, fuzzy
+msgid "Table selection"
+msgstr "Stol tanlash"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid "Table:"
+msgstr "Stol:"
+
+#. module: pos_self_order
+#: model:mail.template,name:pos_self_order.takeout_email_template
+#, fuzzy
+msgid "Takeout: Confirmation order for self"
+msgstr "Olib ketish: o‘zingiz uchun buyurtmani tasdiqlash"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#, fuzzy
+msgid "Tax:"
+msgstr "Soliq:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+#, fuzzy
+msgid "Taxes:"
+msgstr "Soliqlar:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+#, fuzzy
+msgid "Thanks a lot!"
+msgstr "Katta rahmat!"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#, fuzzy
+msgid "The Self-Order default user must be a POS user"
+msgstr ""
+"O‘z-o‘ziga xizmat ko‘rsatish tizimining standart foydalanuvchisi POS "
+"foydalanuvchisi bo‘lishi kerak"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+#, fuzzy
+msgid "The mail template with xmlid %s has been deleted."
+msgstr "%s xmlid bilan xat andozasi o‘chirildi."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+#, fuzzy
+msgid "The user must be a POS user"
+msgstr "Foydalanuvchi POS foydalanuvchisi bo‘lishi kerak"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+#, fuzzy
+msgid "This combination does not exist."
+msgstr "Bu kombinatsiya mavjud emas."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.xml:0
+#, fuzzy
+msgid "Total"
+msgstr "Jami"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#, fuzzy
+msgid "Total:"
+msgstr "Jami:"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__url
+#, fuzzy
+msgid "URL"
+msgstr "URL"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid "URL:"
+msgstr "URL:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
+#, fuzzy
+msgid "Unavailable"
+msgstr "Mavjud emas"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+#, fuzzy
+msgid "Uncategorised"
+msgstr "Toifasiz"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#, fuzzy
+msgid "Validate your selection"
+msgstr "Tanlovingizni tasdiqlang"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
+#, fuzzy
+msgid "Warning"
+msgstr "Ogohlantirish"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/printing_failure_popup/printing_failure_popup.xml:0
+#, fuzzy
+msgid ""
+"We invite you to get the receipt at the counter. Please remember your order "
+"number:"
+msgstr ""
+"Chekni kassadan olishingizni so‘raymiz. Iltimos, buyurtma raqamingizni eslab "
+"qoling:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
+msgid "We need more info"
+msgstr "Qo‘shimcha ma'lumot kerak"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+#, fuzzy
+msgid "We'll do everything to be on time!"
+msgstr "Vaqtida bo‘lish uchun barcha harakatni qilamiz!"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+#, fuzzy
+msgid "We're currently closed"
+msgstr "Hozirda yopiqmiz"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
+#, fuzzy
+msgid "We're currently closed."
+msgstr "Ayni paytda yopiqmiz."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, fuzzy
+msgid "We're preparing your order!"
+msgstr "Buyurtmangizni tayyorlayapmiz!"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+#, fuzzy
+msgid "When would you like to receive your orders ?"
+msgstr "Buyurtmangizni qachon olishni xohlaysiz?"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
+#, fuzzy
+msgid "Where do you want to eat?"
+msgstr "Qayerda ovqatlanmoqchisiz?"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
+#, fuzzy
+msgid "Would you like to continue?"
+msgstr "Davom etishni xohlaysizmi?"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+#, fuzzy
+msgid "Yes"
+msgstr "Ha"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+#, fuzzy
+msgid "You are back online. You can complete your order now."
+msgstr "Siz yana onlaynsiz. Endi buyurtmangizni yakunlashingiz mumkin."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, fuzzy
+msgid "You are not authorized to remove this order"
+msgstr "Bu buyurtmani olib tashlash huquqiga ega emassiz"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+#, fuzzy
+msgid "You cannot add cash payment methods in kiosk mode."
+msgstr "Kiosk rejimida naqd to‘lov usullarini qo‘shib bo‘lmaydi."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+#, fuzzy
+msgid "You're not authorized to perform this action"
+msgstr "Ushbu amalni bajarishga ruxsatingiz yo‘q"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+#, fuzzy
+msgid "Your Order"
+msgstr "Sizning buyurtmangiz"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, fuzzy
+msgid "Your order does not exist or has been removed"
+msgstr "Sizning buyurtmangiz mavjud emas yoki olib tashlangan"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+#, fuzzy
+msgid "Your order has been paid"
+msgstr "Sizning buyurtmangiz to‘langan"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, fuzzy
+msgid "Your order number"
+msgstr "Sizning buyurtma raqamingiz"
+
+#. module: pos_self_order
+#: model:mail.template,subject:pos_self_order.delivery_email_template
+#: model:mail.template,subject:pos_self_order.takeout_email_template
+#, fuzzy
+msgid "Your {{ object.config_id.name }} receipt"
+msgstr "Sizning {{ object.config_id.name }} chekingiz"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
+msgid "Zip"
+msgstr "Pochta indeksi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+#, fuzzy
+msgid "are"
+msgstr "hisoblanadi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, fuzzy
+msgid "at the counter"
+msgstr "peshtaxta oldida"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#, fuzzy
+msgid "close"
+msgstr "yopish"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#, fuzzy
+msgid "each"
+msgstr "har bir"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
+#, fuzzy
+msgid "empty = all points of sale"
+msgstr "bo‘sh = barcha savdo nuqtalari"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
+#, fuzzy
+msgid "https://odoo.com"
+msgstr "https://odoo.com"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#, fuzzy
+msgid "included"
+msgstr "kiritilgan"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+#, fuzzy
+msgid "is"
+msgstr "hisoblanadi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+#, fuzzy
+msgid "no longer available. Please go back and edit your order."
+msgstr ""
+"endi mavjud emas. Iltimos, orqaga qayting va buyurtmangizni tahrirlang."
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
+#, fuzzy
+msgid "odoo"
+msgstr "odoo"
