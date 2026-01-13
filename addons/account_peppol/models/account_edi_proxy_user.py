@@ -127,7 +127,7 @@ class AccountEdiProxyClientUser(models.Model):
         :param partner_endpoint: DEPRECATED - to be removed in master
         :param peppol_state: the state of the received Peppol document
         :param uuid: the UUID of the Peppol document
-        :return: `True` if the document was saved, `False` if it was not
+        :return: the created invoice if the document was saved, `False` if it was not
         """
         self.ensure_one()
         journal, move_type = self._peppol_get_import_journal_and_move_type(attachment)
@@ -156,7 +156,7 @@ class AccountEdiProxyClientUser(models.Model):
             _logger.exception("Unexpected error occurred during the import of bill with id %s", move.id)
 
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
-        return True
+        return move
 
     def _peppol_get_import_journal_and_move_type(self, attachment):
         self.ensure_one()
@@ -217,39 +217,53 @@ class AccountEdiProxyClientUser(models.Model):
             need_retrigger = need_retrigger or len(message_uuids) > job_count
             message_uuids = message_uuids[:job_count]
 
-            proxy_acks = []
             # retrieve attachments for filtered messages
             all_messages = edi_user._call_peppol_proxy(
                 "/api/peppol/1/get_document",
                 params={'message_uuids': message_uuids},
             )
 
-            for uuid, content in all_messages.items():
-                enc_key = content["enc_key"]
-                document_content = content["document"]
-                filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
-                decoded_document = edi_user._decrypt_data(document_content, enc_key)
-                attachment = self.env["ir.attachment"].create(
-                    {
-                        "name": f"{filename}.xml",
-                        "raw": decoded_document,
-                        "type": "binary",
-                        "mimetype": "application/xml",
-                    }
-                )
-                if edi_user._peppol_import_invoice(attachment, None, content["state"], uuid):
-                    # Only acknowledge when we saved the document somewhere
-                    proxy_acks.append(uuid)
+            processed_uuids, moves = edi_user._peppol_process_new_messages(all_messages)
 
             if not tools.config['test_enable']:
                 self.env.cr.commit()
-            if proxy_acks:
+            if processed_uuids:
                 edi_user._call_peppol_proxy(
                     "/api/peppol/1/ack",
-                    params={'message_uuids': proxy_acks},
+                    params={'message_uuids': processed_uuids},
                 )
+                edi_user._peppol_post_process_new_messages(moves)
+
         if need_retrigger:
             self.env.ref('account_peppol.ir_cron_peppol_get_new_documents')._trigger()
+
+    def _peppol_process_new_messages(self, messages):
+        self.ensure_one()
+        processed_uuids = []
+        moves = self.env['account.move']
+        for uuid, content in messages.items():
+            enc_key = content["enc_key"]
+            document_content = content["document"]
+            filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
+            decoded_document = self._decrypt_data(document_content, enc_key)
+            attachment = self.env["ir.attachment"].create(
+                {
+                    "name": f"{filename}.xml",
+                    "raw": decoded_document,
+                    "type": "binary",
+                    "mimetype": "application/xml",
+                }
+            )
+            if move := self._peppol_import_invoice(attachment, None, content['state'], uuid):
+                # Only acknowledge when we saved the document somewhere
+                processed_uuids.append(uuid)
+                moves += move
+        return processed_uuids, moves
+
+    def _peppol_post_process_new_messages(self, moves):
+        self.ensure_one()
+        for partner in moves.partner_id.filtered(lambda partner: partner.peppol_verification_state in ('not_verified', False)):
+            partner.button_account_peppol_check_partner_endpoint()
 
     def _peppol_get_message_status(self):
         # Context added to not break stable policy: useful to tweak on databases processing large invoices
@@ -257,52 +271,56 @@ class AccountEdiProxyClientUser(models.Model):
         need_retrigger = False
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
-            edi_user_moves = self.env['account.move'].search(
-                [
-                    ('peppol_move_state', '=', 'processing'),
-                    ('company_id', '=', edi_user.company_id.id),
-                ],
-                limit=job_count + 1,
-            )
-            if not edi_user_moves:
+            documents = edi_user._peppol_get_documents_for_status(job_count)
+            if not documents:
                 continue
-
-            need_retrigger = need_retrigger or len(edi_user_moves) > job_count
-            message_uuids = {move.peppol_message_uuid: move for move in edi_user_moves[:job_count]}
+            need_retrigger = need_retrigger or len(documents) > job_count
+            uuid_to_record = {document.peppol_message_uuid: document for document in documents[:job_count]}
             messages_to_process = edi_user._call_peppol_proxy(
                 "/api/peppol/1/get_document",
-                params={'message_uuids': list(message_uuids.keys())},
+                params={'message_uuids': list(uuid_to_record)},
             )
 
-            for uuid, content in messages_to_process.items():
-                if uuid == 'error':
-                    # this rare edge case can happen if the participant is not active on the proxy side
-                    # in this case we can't get information about the invoices
-                    edi_user_moves.peppol_move_state = 'error'
-                    log_message = _("Peppol error: %s", content['message'])
-                    edi_user_moves._message_log_batch(bodies={move.id: log_message for move in edi_user_moves})
-                    break
+            processed_message_uuids = edi_user._peppol_process_messages_status(messages_to_process, uuid_to_record)
 
-                move = message_uuids[uuid]
-                if content.get('error'):
-                    # "Peppol request not ready" error:
-                    # thrown when the IAP is still processing the message
-                    if content['error'].get('code') == 702:
-                        continue
-
-                    move.peppol_move_state = 'error'
-                    move._message_log(body=_("Peppol error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
-                    continue
-
-                move.peppol_move_state = content['state']
-                move._message_log(body=_('Peppol status update: %s', content['state']))
-
-            edi_user._call_peppol_proxy(
-                "/api/peppol/1/ack",
-                params={'message_uuids': list(message_uuids.keys())},
-            )
+            if processed_message_uuids:
+                edi_user._call_peppol_proxy(
+                    "/api/peppol/1/ack",
+                    params={'message_uuids': processed_message_uuids},
+                )
         if need_retrigger:
             self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger()
+
+    def _peppol_get_documents_for_status(self, batch_size):
+        self.ensure_one()
+        edi_user_moves = self.env['account.move'].search(
+            [
+                ('peppol_move_state', '=', 'processing'),
+                ('company_id', '=', self.company_id.id),
+            ],
+            limit=batch_size + 1,
+        )
+        return list(edi_user_moves)
+
+    def _peppol_process_messages_status(self, messages, uuid_to_record):
+        self.ensure_one()
+        processed_message_uuids = []
+        for uuid, content in messages.items():
+            move = uuid_to_record[uuid]
+            if content.get('error'):
+                if content['error'].get('code') == 702:
+                    # "Peppol request not ready" error:
+                    # thrown when the IAP is still processing the message
+                    continue
+                move._message_log(body=self.env._("Peppol error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
+                move.peppol_move_state = 'error'
+                processed_message_uuids.append(uuid)
+                continue
+
+            move.peppol_move_state = content['state']
+            move._message_log(body=self.env._('Peppol status update: %s', content['state']))
+            processed_message_uuids.append(uuid)
+        return processed_message_uuids
 
     def _peppol_get_participant_status(self):
         for edi_user in self:
