@@ -141,7 +141,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 }
                 return response
 
-            if peppol_identifier == '0198:dk16356706':
+            if peppol_identifier in '0198:dk16356706':
                 response.status_code = 200
                 response.json = lambda: {"result": {
                         'identifier': peppol_identifier,
@@ -196,6 +196,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
         if url == '/api/peppol/1/get_document':
             uuid = body['params']['message_uuids'][0]
+            response_content = {}
             if uuid == FAKE_UUID[0]:
                 response_content = {
                     'accounting_supplier_party': False,
@@ -215,9 +216,20 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                     'state': 'done' if not cls.env.context.get('error') else 'error',
                     'direction': 'incoming',
                     'document_type': 'Invoice',
+                    'origin_message_uuid': FAKE_UUID[1],
                 }
 
             response.json = lambda: {'result': {uuid: response_content}}
+            return response
+
+        if url == '/api/peppol/1/send_response':
+            # This will be called if account_peppol_response is installed, to be overridden in that module
+            num_responses = len(body['params']['reference_uuids'])
+            response.json = lambda: {
+                'result': {
+                    'messages': [{'message_uuid': 'rrrrrrrr-rrrr-rrrr-rrrr-rrrrrrrrrrrr'}] * num_responses,
+                },
+            }
             return response
 
         return super()._request_handler(s, r, **kw)
