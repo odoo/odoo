@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_peppol_rejection_wizard_view_form" model="ir.ui.view">
+        <field name="name">account.peppol.rejection.wizard.view.form</field>
+        <field name="model">account.peppol.rejection.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reject Peppol Document">
+                <group>
+                    <field
+                        string="Reasons"
+                        name="reason_ids" 
+                        widget="many2many_tags"
+                        options="{'create': False}"
+                        required="1"/>
+                    <field
+                        string="Actions to suggest"
+                        name="action_ids"
+                        widget="many2many_tags"
+                        options="{'create': False}"/>
+                </group>
+                <footer>
+                    <button name="button_send" string="Send Rejection" type="object" class="btn-primary" data-hotkey="q"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
