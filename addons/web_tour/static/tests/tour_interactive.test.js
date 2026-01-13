@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { after, beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryFirst, waitFor, press, Deferred } from "@odoo/hoot-dom";
+import { queryFirst, waitFor, press, Deferred, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import {
@@ -15,6 +15,7 @@ import {
     defineModels,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
@@ -732,4 +733,40 @@ test("check rainbowManMessage", async () => {
     expect(rainbowMan.getBoundingClientRect().width).toBe(400);
     expect(rainbowMan.getBoundingClientRect().height).toBe(400);
     expect(".o_reward_msg_content").toHaveText("Congratulations !");
+});
+
+test("pointer hidden when trigger is behind overlay", async () => {
+    registry.category("web_tour.tours").add("tour1", {
+        steps: () => [{ trigger: "button.foo", run: "click" }],
+    });
+
+    class DummyDialog extends Component {
+        static props = ["*"];
+        static components = { Dialog };
+        static template = xml`
+            <Dialog>
+                <button class="a">A</button>
+            </Dialog>
+        `;
+    }
+
+    class Dummy extends Component {
+        static props = ["*"];
+        static components = {};
+        static template = xml`
+            <button class="foo w-100">Foo</button>
+        `;
+    }
+
+    await mountWithCleanup(Dummy);
+
+    await getService("tour_service").startTour("tour1", { mode: "manual" });
+    await waitFor(".o_tour_pointer");
+    getService("dialog").add(DummyDialog, {});
+    await waitFor(".modal");
+    await waitForNone(".o_tour_pointer");
+    await contains(".modal .btn-close").click();
+    await waitFor(".o_tour_pointer");
+    // Finalize the dummy tour to avoid leaving in a dirty state
+    await contains("button.foo").click();
 });
