@@ -43,6 +43,7 @@ import { edit, press, queryFirst } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { MailComposerFormController } from "@mail/chatter/web/mail_composer_form";
 import { useSubEnv } from "@odoo/owl";
+import { url } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1941,4 +1942,31 @@ test("mentions can be correctly cut with ctrl+A and ctrl+X", async () => {
     cut(editor);
     await contains(editor.editable.querySelector("i.fa-hashtag"), { count: 0 });
     await contains(editor.editable, { textContent: "" });
+});
+
+test.tags("html composer");
+test("Paste message link should be prettified", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "channel1" });
+    const messageId_1 = pyEnv["mail.message"].create({
+        body: "Message on partner",
+        res_id: channelId,
+        model: "discuss.channel",
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    pasteText(editor, `${url(`/mail/message/${messageId_1} `)}`);
+    await contains(".o-mail-Composer-html.odoo-editor-editable:text('channel1')");
+    await press("Enter");
+    await contains(".o-mail-Message:text('channel1')");
+    pasteText(editor, `${url(`/mail/message/100`)}`);
+    await press("Enter");
+    await contains(`.o-mail-Message:text('${url(`/mail/message/100`)}')`);
 });
