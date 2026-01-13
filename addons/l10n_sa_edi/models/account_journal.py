@@ -139,7 +139,7 @@ class AccountJournal(models.Model):
 
     def _l10n_sa_csr_required_fields(self):
         """ Return the list of fields required to generate a valid CSR as per ZATCA requirements """
-        return ['l10n_sa_private_key_id', 'vat', 'name', 'city', 'country_id', 'state_id']
+        return ['l10n_sa_private_key_id', 'vat', 'name', 'city', 'country_id', 'state_id', 'street']
 
     def _l10n_sa_generate_csr(self):
         """
