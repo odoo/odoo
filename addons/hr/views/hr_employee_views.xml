@@ -691,9 +691,9 @@
                                     <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
                                     <field name="work_phone" />
                                 </div>
-                                <div t-if="record.contract_date_start.raw_value" groups="hr.group_hr_manager" t-att-class="{'text-danger': record.contract_date_end.raw_value &lt; luxon.DateTime.now().toISO()}">
+                                <div t-if="record.first_contract_in_company.raw_value" groups="hr.group_hr_manager" t-att-class="{'text-danger': record.contract_date_end.raw_value &lt; luxon.DateTime.now().toISO()}">
                                     <i class="fa fa-fw me-2 fa-briefcase text-primary" title="Contract"/>
-                                    <field name="contract_date_start"/>
+                                    <field name="first_contract_in_company"/>
                                     <span t-if="record.contract_date_end.raw_value"> - </span>
                                     <field t-if="record.contract_date_end.raw_value" name="contract_date_end"/>
                                 </div>

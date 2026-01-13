@@ -210,6 +210,7 @@ class HrEmployee(models.Model):
     # All version fields needing a specific group to be accessible should also have `inherited=True` set on its definition to make sure those fields are linked to `_inherits` on `hr.version`
     contract_date_start = fields.Date(readonly=False, related="version_id.contract_date_start", inherited=True, groups="hr.group_hr_manager")
     contract_date_end = fields.Date(readonly=False, related="version_id.contract_date_end", inherited=True, groups="hr.group_hr_manager")
+    first_contract_in_company = fields.Date(compute='_compute_first_contract_in_company', groups="hr.group_hr_manager", store=True)
     trial_date_end = fields.Date(readonly=False, related="version_id.trial_date_end", inherited=True, groups="hr.group_hr_manager")
     date_start = fields.Date(related='version_id.date_start', inherited=True, groups="hr.group_hr_manager")
     date_end = fields.Date(related='version_id.date_end', inherited=True, groups="hr.group_hr_manager")
@@ -534,6 +535,20 @@ class HrEmployee(models.Model):
             ('doctor', self.env._('Doctor')),
             ('other', self.env._('Other')),
         ]
+
+    @api.depends('version_ids.contract_date_start')
+    def _compute_first_contract_in_company(self):
+        earliest_contract = self.env['hr.version']._read_group(
+            domain=[
+                ('employee_id', 'in', self.ids),
+                ('active', '!=', False),
+            ],
+            groupby=['employee_id'],
+            aggregates=['contract_date_start:min'],
+        )
+        earliest_by_employee = {employee.id: earliest for employee, earliest in earliest_contract}
+        for employee in self:
+            employee.first_contract_in_company = earliest_by_employee.get(employee.id)
 
     def _get_first_versions(self):
         self.ensure_one()
