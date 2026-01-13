@@ -1458,7 +1458,10 @@ We can redirect you to the public employee list."""
 
     def unlink(self):
         resources = self.mapped('resource_id')
+        # TODO: [XBO] (in master) would be better to define ondelete='cascade' on employee_id field in `hr.version`
+        versions = self.with_context(active_test=False).version_ids
         super().unlink()
+        versions.unlink()
         return resources.unlink()
 
     def _get_employee_m2o_to_empty_on_archived_employees(self):
