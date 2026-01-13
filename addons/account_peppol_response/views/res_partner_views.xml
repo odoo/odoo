@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_account_peppol_response" model="ir.ui.view">
+        <field name="name">res.partner.form.account.peppol.response</field>
+            <field name="model">res.partner</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="account_peppol.res_partner_form_account_peppol"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//div/field[@name='peppol_verification_state']/.." position="replace">
+                    <div class="col-6" title="Supports Invoice Responses" invisible="not peppol_response_support">
+                        <field name="peppol_verification_state" readonly="1"/>
+                    </div>
+                    <div class="col-6" title="Does not support Invoice Responses" invisible="peppol_response_support">
+                        <field name="peppol_verification_state" readonly="1"/>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>
