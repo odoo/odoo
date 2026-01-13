@@ -6,21 +6,17 @@
             t-if="is_storable and !prevent_sale"
             id="product_stock_availability"
         >
-            <div t-if="free_qty lte 0 and !cart_qty" t-attf-class="availability_message_#{product_template} d-flex flex-column gap-2">
-                <div id="out_of_stock_message" class="mb-3">
-                    <t t-if="has_out_of_stock_message">
-                        <div class="d-flex align-items-center badge text-start text-bg-danger text-wrap">
-                            <i class="fa fa-circle text-danger me-2"/>
-                            <span>
-                                <t t-out="out_of_stock_message"/>
-                            </span>
-                        </div>
-                    </t>
-                    <t t-elif="!allow_out_of_stock_order">
+            <div
+                t-if="free_qty lte 0 and !cart_qty"
+                t-attf-class="availability_message_#{product_template} d-flex flex-column gap-2 mb-2"
+            >
+                <div id="out_of_stock_message" class="d-flex flex-column gap-1 align-items-start">
+                    <t t-if="!allow_out_of_stock_order">
                         <div class="badge text-bg-danger">
-                            <i class="fa fa-circle text-danger me-2"/>Out of Stock
+                            <i class="fa fa-circle me-2 text-danger"/>Out of Stock
                         </div>
                     </t>
+                    <t t-if="has_out_of_stock_message" t-out="out_of_stock_message"/>
                 </div>
                 <div id="stock_notification_div" t-if="!allow_out_of_stock_order">
                     <div class="btn btn-link px-0" t-if="!has_stock_notification"
@@ -79,7 +75,7 @@
         <div
             t-if="is_storable and !free_qty and !allow_out_of_stock_order and !prevent_sale"
             id="stock_wishlist_message"
-            t-attf-class="availability_message_#{product_template} my-2 d-flex align-items-center flex-column flex-md-row"
+            t-attf-class="availability_message_#{product_template} d-flex align-items-center flex-column flex-md-row mb-2"
         >
             <button
                 t-if="!is_in_wishlist"
