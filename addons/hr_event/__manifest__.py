@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Skills Events',
+    'name': 'HR - Events',
     'category': 'Hidden',
     'summary': 'Link training events to resume of your employees',
     'description':
