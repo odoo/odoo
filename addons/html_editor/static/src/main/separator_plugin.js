@@ -87,8 +87,11 @@ export class SeparatorPlugin extends Plugin {
         }
     }
 
-    handleSelectionInHr() {
+    handleSelectionInHr(selectionData) {
         this.deselectHR();
+        if (!selectionData.documentSelectionIsInEditable) {
+            return;
+        }
         const traversedNodes = this.dependencies.selection.getTraversedNodes({ deep: true });
         for (const node of traversedNodes) {
             if (node.nodeName === "HR") {

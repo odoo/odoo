@@ -3,7 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { bold, resetSize, setColor, insertText } from "../_helpers/user_actions";
 import { getContent, setSelection } from "../_helpers/selection";
-import { press, queryAll, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
+import { press, queryAll, manuallyDispatchProgrammaticEvent, click } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { nodeSize } from "@html_editor/utils/position";
 
@@ -2031,6 +2031,59 @@ describe("deselecting table", () => {
             el,
             `<p>[abc]</p>
             <table class="table table-bordered o_table">
+                <tbody>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+    });
+    test("deselect table when clicking outside of editor", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>[]<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        const BORDER_SENSITIVITY = 5;
+        const firstTd = el.querySelector("td");
+        const offset = BORDER_SENSITIVITY + 5;
+
+        await manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
+            detail: 2,
+            clientX: offset,
+            clientY: offset,
+        });
+        await manuallyDispatchProgrammaticEvent(firstTd, "mouseup", {
+            detail: 2,
+            clientX: offset,
+            clientY: offset,
+        });
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+
+        const selection = document.getSelection();
+        await click(document.body);
+        selection.setPosition(document.body);
+        await tick();
+
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table">
                 <tbody>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
