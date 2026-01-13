@@ -131,7 +131,7 @@
     <t t-if="allow_biography and object.can_display_biography and env.user.karma >= website.karma_profile_min" t-set="bio_popover_data">
         <div class="o_wforum_bio_popover_wrap d-flex transition-fade">
             <div class="d-flex flex-column">
-                <img class="o_wforum_avatar flex-shrink-0 rounded me-3" t-att-src="request.website.image_url(object.create_uid, 'avatar_128', '128x128')" alt="Avatar"/>
+                <img class="o_wforum_avatar flex-shrink-0 rounded me-3" t-att-src="website.image_url(object.create_uid, 'avatar_128', '128x128')" alt="Avatar"/>
             </div>
             <div>
                 <h5 class="o_wforum_bio_popover_name mb-0" t-field="object.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name"]}'/>

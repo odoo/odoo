@@ -98,7 +98,7 @@
                                                 <div class="form-check">
                                                     <input type="checkbox" t-att-value="create_user.id" class="form-check-input" t-attf-id="user_#{ create_user.id }"/>
                                                     <label class="form-check-label" t-attf-for="user_#{ create_user.id }">
-                                                        <img class="d-inline img o_wforum_avatar" t-att-src="request.website.image_url(create_user, 'avatar_128', '40x40')" alt="Avatar"/>
+                                                        <img class="d-inline img o_wforum_avatar" t-att-src="website.image_url(create_user, 'avatar_128', '40x40')" alt="Avatar"/>
                                                         <span t-out="create_user.name" class="d-inline"/>
                                                     </label>
                                                 </div>

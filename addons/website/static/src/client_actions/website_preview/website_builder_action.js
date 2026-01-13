@@ -140,7 +140,7 @@ export class WebsiteBuilderClientAction extends Component {
             }
             if (!this.ui.isSmall) {
                 // preload builder and snippets so clicking on "edit" is faster
-                loadBundle("website.website_builder_assets").then(() => {
+                loadBundle("website.website_builder_assets?website_id=" + this.websiteId).then(() => {
                     this.env.services["html_builder.snippets"]
                         .getSnippetModel(this.snippetsTemplate)
                         .reload({
@@ -311,7 +311,7 @@ export class WebsiteBuilderClientAction extends Component {
         // properly wait for the iframe to be completely ready.
         await this.waitForIframeReady();
         await Promise.all([
-            loadBundle("website.assets_inside_builder_iframe", {
+            loadBundle("website.assets_inside_builder_iframe?website_id=" + this.websiteId, {
                 targetDoc: this.websiteContent.el.contentDocument,
             }),
         ]);
@@ -513,7 +513,7 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     get websiteId() {
-        return this.props.websiteId || router.current.website_id || false;
+        return this.props.websiteId || router.current.website_id || this.websiteService.currentWebsiteId || false;
     }
 
     waitForIframeReady() {
@@ -727,7 +727,7 @@ export class WebsiteBuilderClientAction extends Component {
         const path = this.websiteService.contentWindow.location;
         const debugMode = this.env.debug ? `&debug=${this.env.debug}` : "";
         redirect(
-            `/odoo/action-website.website_preview?path=${encodeURIComponent(path)}${debugMode}`
+            `/odoo/action-website.website_preview?website_id=${this.websiteId}&path=${encodeURIComponent(path)}${debugMode}`
         );
     }
 

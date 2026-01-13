@@ -23,9 +23,10 @@ class TestWebsiteEventAutocomplete(TestAutoComplete):
     def test_autocomplete_search_for_multiple_spaces(self):
         """Tests that autocomplete handles multiple spaces in the search term correctly."""
         with MockRequest(self.env, website=self.website):
+            website = request.env["website"].get_current_website()
             options = {
                 "allowFuzzy": True,
-                "display_currency": request.website.company_id.currency_id.id,
+                "display_currency": website.company_id.currency_id.id,
                 "order": "name asc",
             }
             result = self.WebsiteController.autocomplete(

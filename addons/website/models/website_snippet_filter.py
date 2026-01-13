@@ -66,7 +66,8 @@ class WebsiteSnippetFilter(models.Model):
         if search_domain is None:
             search_domain = []
 
-        if self.website_id and self.env['website'].get_current_website() != self.website_id:
+        website = self.env["website"].get_current_website()
+        if self.website_id and website != self.website_id:
             return ''
 
         if self.model_name and self.model_name.replace('.', '_') not in template_key:
@@ -78,7 +79,9 @@ class WebsiteSnippetFilter(models.Model):
             records = self._prepare_sample(limit, res_model=res_model)
         content = self.env['ir.qweb'].with_context(inherit_branding=False)._render(template_key, dict(
             records=records,
+            website=website,
             is_sample=is_sample,
+            is_view_active=website.is_view_active,
             **custom_template_data,
         ))
         return [etree.tostring(el, encoding='unicode', method='html') for el in html.fromstring('<root>%s</root>' % str(content)).getchildren()]

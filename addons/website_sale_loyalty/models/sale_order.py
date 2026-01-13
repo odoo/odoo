@@ -208,9 +208,10 @@ class SaleOrder(models.Model):
         return self.order_line.filtered(lambda line: line.reward_id.reward_type == "shipping")
 
     def _allow_nominative_programs(self):
-        if not request or not hasattr(request, "website"):
+        website = self.env["website"].get_current_website(fallback=False)
+        if not website:
             return super()._allow_nominative_programs()
-        return not request.website.is_public_user() and super()._allow_nominative_programs()
+        return not website.is_public_user() and super()._allow_nominative_programs()
 
     @api.autovacuum
     def _gc_abandoned_coupons(self, *_args, **_kwargs):

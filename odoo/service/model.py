@@ -48,6 +48,10 @@ def call_kw(model: BaseModel, name: str, args: list, kwargs: Mapping):
     # after a serialization error: the retry is done without context!
     kwargs = dict(kwargs)
     context = kwargs.pop('context', None) or {}
+    if 'website_id' not in context and (website_id := recs.env.context.get('website_id')):
+        context['website_id'] = website_id
+    if 'fallback_website_id' not in context and (fallback_website_id := recs.env.context.get('fallback_website_id')):
+        context['fallback_website_id'] = fallback_website_id
     recs = recs.with_context(context)
 
     # call

@@ -15,8 +15,8 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         tax = self.env["account.tax"].create({"name": "Test tax", "amount": 10})
         product = self._create_product(list_price=100, taxes_id=[Command.link(tax.id)])
 
-        with self.mock_request():
-            configurator_price = self.env["product.template"]._get_configurator_display_price(
+        with self.mock_request() as request:
+            configurator_price = request.env["product.template"]._get_configurator_display_price(
                 product_or_template=product,
                 quantity=3,
                 date=datetime(2000, 1, 1),

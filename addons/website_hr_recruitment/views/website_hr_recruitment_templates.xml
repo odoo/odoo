@@ -610,7 +610,7 @@
     <field name="arch" type="xml">
         <t name="Thank you (Recruitment)" t-name="website_hr_recruitment.thankyou">
             <t t-if="request.session.get('form_builder_model_model', '') == 'hr.applicant'">
-                <t t-set="job_sudo" t-value="request.website._website_form_last_record().sudo().job_id"/>
+                <t t-set="job_sudo" t-value="website._website_form_last_record().sudo().job_id"/>
             </t>
             <t t-call="website.layout">
                 <div id="wrap">

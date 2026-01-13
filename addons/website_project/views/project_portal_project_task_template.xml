@@ -6,7 +6,7 @@
                 <div class="container d-flex flex-column justify-content-center h-100">
                     <div class="d-flex flex-column align-items-center mb16 p-4 text-center">
                         <t t-if="request.session.get('form_builder_model_model', '') == 'project.task'">
-                            <t t-set="task" t-value="request.website._website_form_last_record()"/>
+                            <t t-set="task" t-value="website._website_form_last_record()"/>
                         </t>
                         <i class="fa fa-paper-plane fa-2x mb-3 rounded-circle text-bg-success" role="presentation"/>
                         <h1 class="fw-bolder">Thank you!</h1>

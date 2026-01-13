@@ -32,7 +32,7 @@ class WebsiteEventSaleController(WebsiteEventController):
             # all chosen tickets are free AND no existing SO -> skip SO and payment process
             return super()._create_attendees_from_registration_post(event, registration_data)
 
-        order_sudo = request.cart or request.website._create_cart()
+        order_sudo = request.cart or self.env["website"].get_current_website()._create_cart()
         tickets_data = defaultdict(int)
         for data in registration_data:
             event_slot_id = data.get('event_slot_id', False)
@@ -94,7 +94,8 @@ class WebsiteEventSaleController(WebsiteEventController):
             else:
                 # Free order -> auto confirmation without checkout
                 order_sudo.action_confirm()  # tde notsure: email sending ?
-                request.website.sale_reset()
+                website = request.env["website"].get_current_website()
+                website.sale_reset()
                 request.session['sale_last_order_id'] = order_sudo.id
                 return request.redirect("/shop/confirmation")
 

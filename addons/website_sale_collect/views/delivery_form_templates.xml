@@ -111,7 +111,7 @@
         </t>
         <span name="o_delivery_method_name" position="before">
             <i
-                t-if="request.website.sudo().in_store_dm_id"
+                t-if="website.sudo().in_store_dm_id"
                 t-attf-class="fa fa-fw {{'fa-map-marker' if dm.delivery_type == 'in_store' else 'fa-truck'}} me-1"
                 role="presentation"
                 aria-label="Delivery method"

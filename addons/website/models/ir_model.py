@@ -41,7 +41,7 @@ class Base(models.AbstractModel):
 
     def _get_base_lang(self):
         """ Returns the default language of the website as the base language if the record is bound to it """
-        website = self.env['website'].get_current_website(fallback=True)
+        website = self.env["website"].get_current_website(fallback=False)
         if website:
             return website.default_lang_id.code
         return super()._get_base_lang()

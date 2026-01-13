@@ -5,9 +5,7 @@ from collections import OrderedDict
 
 from odoo import models
 from odoo.http import request
-from odoo.tools import lazy
 from odoo.addons.website.tools import add_form_signature
-from odoo.exceptions import AccessError
 
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")

@@ -118,7 +118,7 @@
                             </group>
                         </group>
                         <label for="child_id" string="Child Menus"/>
-                        <field name="child_id">
+                        <field name="child_id" context="{'default_website_id': website_id}">
                             <list>
                                 <field name="sequence" widget="handle"/>
                                 <field name="name"/>

@@ -1304,7 +1304,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         specific_view = self.base_view._get_specific_views() - self.base_view
 
         # generic view without website_id but with website for request
-        with patch('odoo.addons.website.models.ir_http.get_request_website', lambda: website):
+        with patch('odoo.addons.website.models.website.Website.get_current_website', lambda self, fallback=None: website):
             self.base_view.invalidate_recordset()
             self.assertIn('to_translate', self.base_view.with_context(lang='en_US', edit_translations=True).arch)
             self.assertIn('translated', self.base_view.with_context(lang='fr_BE', edit_translations=True).arch)
