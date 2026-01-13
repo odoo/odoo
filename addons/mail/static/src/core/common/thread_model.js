@@ -373,6 +373,10 @@ export class Thread extends Record {
         );
     }
 
+    get canPostMessage() {
+        return this.hasWriteAccess || (this.hasReadAccess && this.canPostOnReadonly);
+    }
+
     get hasMemberList() {
         return ["channel", "group"].includes(this.type);
     }

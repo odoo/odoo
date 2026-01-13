@@ -203,7 +203,7 @@ class MailTestMultiCompanyRead(models.Model):
     even if the user has no write access. """
     _description = 'Simple Chatter Model '
     _name = 'mail.test.multi.company.read'
-    _inherit = ['mail.test.multi.company']
+    _inherit = ['mail.test.multi.company', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
 

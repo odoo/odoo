@@ -265,16 +265,11 @@ class MailActivity(models.Model):
             # create / read: just check rights on related document
             activity_to_documents.setdefault(activity.res_model, list()).append(activity.res_id)
         for doc_model, doc_ids in activity_to_documents.items():
-            if hasattr(self.env[doc_model], '_mail_post_access'):
-                doc_operation = self.env[doc_model]._mail_post_access
-            elif operation == 'read':
-                doc_operation = 'read'
-            else:
-                doc_operation = 'write'
-            right = self.env[doc_model].check_access_rights(doc_operation, raise_exception=False)
-            if right:
-                valid_doc_ids = getattr(self.env[doc_model].browse(doc_ids), filter_access_rules_method)(doc_operation)
-                valid += remaining.filtered(lambda activity: activity.res_model == doc_model and activity.res_id in valid_doc_ids.ids)
+            allowed = self.env['mail.message']._filter_records_for_message_operation(
+                doc_model, doc_ids, operation, filter_python=True,
+            )
+            if allowed:
+                valid += remaining.filtered(lambda activity: activity.res_model == doc_model and activity.res_id in allowed.ids)
 
         return valid
 
@@ -455,7 +450,16 @@ class MailActivity(models.Model):
     def action_notify(self):
         if not self:
             return
+
+        classified = self._classify_by_model()
+        for model, activity_data in classified.items():
+            records_sudo = self.env[model].sudo().browse(activity_data['record_ids'])
+            activity_data['record_ids'] = records_sudo.exists().ids  # in case record was cascade-deleted in DB, skipping unlink override
+
         for activity in self:
+            if activity.res_id not in classified[activity.res_model]['record_ids']:
+                continue
+
             if activity.user_id.lang:
                 # Send the notification in the assigned user's language
                 activity = activity.with_context(lang=activity.user_id.lang)
@@ -551,6 +555,7 @@ class MailActivity(models.Model):
             # Allow user without access to the record to "mark as done" activities assigned to them. At the end of the
             # method, the activity is unlinked or archived which ensure the user has enough right on the activities.
             records_sudo = self.env[model].sudo().browse(activity_data['record_ids'])
+            existing = records_sudo.exists()  # in case record was cascade-deleted in DB, skipping unlink override
             for record_sudo, activity in zip(records_sudo, activity_data['activities']):
                 # extract value to generate next activities
                 if activity.chaining_type == 'trigger':
@@ -558,18 +563,22 @@ class MailActivity(models.Model):
                     next_activities_values.append(vals)
 
                 # post message on activity, before deleting it
-                activity_message = record_sudo.message_post_with_source(
-                    'mail.message_activity_done',
-                    attachment_ids=attachment_ids,
-                    author_id=self.env.user.partner_id.id,
-                    render_values={
-                        'activity': activity,
-                        'feedback': feedback,
-                        'display_assignee': activity.user_id != self.env.user
-                    },
-                    mail_activity_type_id=activity.activity_type_id.id,
-                    subtype_xmlid='mail.mt_activities',
-                )
+                if record_sudo in existing:
+                    activity_message = record_sudo.message_post_with_source(
+                        'mail.message_activity_done',
+                        attachment_ids=attachment_ids,
+                        author_id=self.env.user.partner_id.id,
+                        render_values={
+                            'activity': activity,
+                            'feedback': feedback,
+                            'display_assignee': activity.user_id != self.env.user
+                        },
+                        mail_activity_type_id=activity.activity_type_id.id,
+                        subtype_xmlid='mail.mt_activities',
+                    )
+                else:
+                    activity_message = self.env['mail.message']
+
                 if activity.activity_type_id.keep_done:
                     attachment_ids = (attachment_ids or []) + activity_attachments.get(activity.id, [])
                     if attachment_ids:
@@ -578,7 +587,7 @@ class MailActivity(models.Model):
                 # Moving the attachments in the message
                 # TODO: Fix void res_id on attachment when you create an activity with an image
                 # directly, see route /web_editor/attachment/add
-                if activity_attachments[activity.id]:
+                if activity_attachments[activity.id] and activity_message:
                     message_attachments = self.env['ir.attachment'].browse(activity_attachments[activity.id])
                     if message_attachments:
                         message_attachments.write({
@@ -586,6 +595,9 @@ class MailActivity(models.Model):
                             'res_model': activity_message._name,
                         })
                         activity_message.attachment_ids = message_attachments
+                # removing attachments linked to activity if record is missing
+                elif activity_attachments[activity.id]:
+                    self.env['ir.attachment'].browse(activity_attachments[activity.id]).unlink()
                 messages += activity_message
 
         next_activities = self.env['mail.activity']
