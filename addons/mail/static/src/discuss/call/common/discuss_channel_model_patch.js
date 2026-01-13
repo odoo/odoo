@@ -3,6 +3,8 @@ import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model"
 
 import { patch } from "@web/core/utils/patch";
 
+/** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
+
 export const CALL_PROMOTE_FULLSCREEN = Object.freeze({
     INACTIVE: "INACTIVE",
     ACTIVE: "ACTIVE",
