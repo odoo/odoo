@@ -513,3 +513,24 @@ test("sidebar: leave non-livechat channel removes it from sidebar", async () => 
     await click("button:text('Leave Conversation')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')", { count: 0 });
 });
+
+test("show visitor language and country flag in sidebar", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Batman" });
+    const countryId = pyEnv["res.country"].create({ code: "go", name: "Gotham" });
+    const languageId = pyEnv["res.lang"].create({ code: "gu_IN", name: "Gujarati" });
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ partner_id: partnerId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+        country_id: countryId,
+        livechat_lang_id: languageId,
+    });
+    await start();
+    await openDiscuss();
+    await contains(
+        ".o-mail-DiscussSidebarChannel-itemName:text('Batman GU') .o-mail-DiscussSidebarChannel-country[title='Gotham']"
+    );
+});

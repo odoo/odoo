@@ -2,6 +2,7 @@ declare module "models" {
     export interface DiscussChannel {
         appAsLivechats: DiscussApp;
         livechat_expertise_ids: LivechatExpertise[];
+        livechat_lang_id: ResLang;
         livechat_status: "in_progress"|"waiting"|"need_help"|undefined;
         livechatStatusLabel: Readonly<string>;
         matchesSelfExpertise: Readonly<boolean>;

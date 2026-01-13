@@ -94,7 +94,7 @@
         <i class="fa fa-chevron-right o-xsmaller ms-1 mt-1 text-muted opacity-75"/>
     </t>
     <CountryFlag t-if="channel.showCorrespondentCountry" country="channel.correspondentCountry" class="'o-mail-ChatWindow-country border shadow-sm'"/>
-    <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent o-mx-0_5 my-0 py-1" t-att-title="props.chatWindow.channel.displayName" t-esc="props.chatWindow.channel.displayName" t-att-class="{ 'fs-4': ui.isSmall, 'fs-5': !ui.isSmall }"/>
+    <div t-if="!state.editingName" class="o-mail-ChatWindow-displayName text-truncate fw-bold border border-transparent o-mx-0_5 my-0 py-1" t-att-title="props.chatWindow.channel.displayName" t-esc="props.chatWindow.channel.displayName" t-att-class="{ 'fs-4': ui.isSmall, 'fs-5': !ui.isSmall }"/>
 </t>
 
 <t t-name="mail.ChatWindow.memberTyping">

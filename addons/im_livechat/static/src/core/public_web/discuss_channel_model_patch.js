@@ -16,6 +16,7 @@ const discussChannelPatch = {
             },
         });
         this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
+        this.livechat_lang_id = fields.One("res.lang");
         /** @type {"in_progress"|"waiting"|"need_help"|undefined} */
         this.livechat_status = fields.Attr(undefined, {
             onUpdate() {
