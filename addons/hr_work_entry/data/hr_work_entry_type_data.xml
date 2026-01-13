@@ -816,6 +816,45 @@
     </record>
 
 <!-- OM : Oman -->
+    <record id="l10n_om_work_entry_type_sick_leave_100" model="hr.work.entry.type">
+        <field name="name">Sick Leave (100% Paid)</field>
+        <field name="code">OMSICKLEAVE100</field>
+        <field name="is_leave" eval="True"/>
+        <field name="country_id" ref="base.om"/>
+    </record>
+
+    <record id="l10n_om_work_entry_type_sick_leave_75" model="hr.work.entry.type">
+        <field name="name">Sick Leave (75% Paid)</field>
+        <field name="code">OMSICKLEAVE75</field>
+        <field name="is_leave" eval="True"/>
+        <field name="country_id" ref="base.om"/>
+        <field name="amount_rate">0.75</field>
+    </record>
+
+    <record id="l10n_om_work_entry_type_sick_leave_50" model="hr.work.entry.type">
+        <field name="name">Sick Leave (50% Paid)</field>
+        <field name="code">OMSICKLEAVE50</field>
+        <field name="is_leave" eval="True"/>
+        <field name="country_id" ref="base.om"/>
+        <field name="amount_rate">0.50</field>
+    </record>
+
+    <record id="l10n_om_work_entry_type_sick_leave_35" model="hr.work.entry.type">
+        <field name="name">Sick Leave (35% Paid)</field>
+        <field name="code">OMSICKLEAVE35</field>
+        <field name="is_leave" eval="True"/>
+        <field name="country_id" ref="base.om"/>
+        <field name="amount_rate">0.35</field>
+    </record>
+
+    <record id="l10n_om_work_entry_type_sick_leave_0" model="hr.work.entry.type">
+        <field name="name">Sick Leave (Unpaid)</field>
+        <field name="code">OMSICKLEAVE0</field>
+        <field name="is_leave" eval="True"/>
+        <field name="country_id" ref="base.om"/>
+        <field name="amount_rate">0</field>
+    </record>
+
     <record id="l10n_om_work_entry_type_overtime_work_days_daytime" model="hr.work.entry.type">
         <field name="name">Week Days Daytime Overtime</field>
         <field name="code">OMOTWDD</field>
