@@ -40,6 +40,28 @@ test("livechat note is loaded when opening the channel info list", async () => {
     await contains(".o-livechat-ChannelInfoList textarea", { value: "Initial note\nSecond line" });
 });
 
+test("shows country and language in channel info list", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Batman" });
+    const countryId = pyEnv["res.country"].create({ code: "go", name: "Gotham" });
+    const languageId = pyEnv["res.lang"].create({ code: "gu_IN", name: "Gujarati" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ partner_id: partnerId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+        country_id: countryId,
+        livechat_lang_id: languageId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains("h6", { text: "Country & Language" });
+    await contains("span[title='Language']", { text: "Gujarati" });
+    const [country] = pyEnv["res.country"].search_read([["id", "=", countryId]]);
+    await contains(`.o_country_flag[data-src*='/country_flags/${country.code.toLowerCase()}.png']`);
+});
+
 test("editing livechat note is synced between tabs", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write([serverState.userId], {
