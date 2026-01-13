@@ -16,6 +16,13 @@ class RestaurantOrderCourse(models.Model):
     order_id = fields.Many2one('pos.order', string='Order Ref', required=True, index=True, ondelete='cascade')
     line_ids = fields.One2many('pos.order.line', 'course_id', string="Order Lines", readonly=True)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('fired') and not vals.get('fired_date'):
+                vals['fired_date'] = fields.Datetime.now()
+        return super().create(vals_list)
+
     def write(self, vals):
         if vals.get('fired') and not self.fired_date:
             vals['fired_date'] = fields.Datetime.now()
