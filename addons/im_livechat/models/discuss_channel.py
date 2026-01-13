@@ -438,6 +438,11 @@ class DiscussChannel(models.Model):
         fields = [
             "chatbot_current_step",
             Store.One("country_id", ["code", "name"], predicate=is_livechat_channel),
+            Store.One(
+                "livechat_lang_id",
+                ["name"],
+                predicate=is_livechat_channel,
+            ),
             Store.Attr("livechat_end_dt", predicate=is_livechat_channel),
             # sudo - res.partner: accessing livechat operator is allowed
             Store.One(
@@ -648,7 +653,12 @@ class DiscussChannel(models.Model):
         return Markup("").join(parts)
 
     def _get_livechat_session_fields_to_store(self):
-        return []
+        return [
+            Store.One(
+                "livechat_lang_id", ["name"],
+                predicate=is_livechat_channel,
+            ),
+        ]
 
     # =======================
     # Chatbot

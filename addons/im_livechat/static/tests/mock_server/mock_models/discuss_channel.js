@@ -7,6 +7,7 @@ import { ensureArray } from "@web/core/utils/arrays";
 
 export class DiscussChannel extends mailModels.DiscussChannel {
     livechat_channel_id = fields.Many2one({ relation: "im_livechat.channel", string: "Channel" }); // FIXME: somehow not fetched properly
+    livechat_lang_id = fields.Many2one({ relation: "res.lang", string: "Language" });
     livechat_note = fields.Html({ sanitize: true });
     livechat_status = fields.Selection({
         selection: [
@@ -66,6 +67,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
     _channel_basic_info_fields() {
         return [
             ...super._channel_basic_info_fields(),
+            "livechat_lang_id",
             "livechat_note",
             "livechat_status",
             "livechat_expertise_ids",
@@ -79,6 +81,8 @@ export class DiscussChannel extends mailModels.DiscussChannel {
     _to_store(store) {
         /** @type {import("mock_models").ResCountry} */
         const ResCountry = this.env["res.country"];
+        /** @type {import("mock_models").ResLang} */
+        const ResLang = this.env["res.lang"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
@@ -105,6 +109,12 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                 } else {
                     channelInfo.livechat_operator_id = false;
                 }
+                channelInfo.livechat_lang_id = channel.livechat_lang_id
+                    ? mailDataHelpers.Store.one(
+                          ResLang.browse(channel.livechat_lang_id),
+                          makeKwArgs({ fields: ["name"] })
+                      )
+                    : false;
                 channelInfo["livechat_end_dt"] = channel.livechat_end_dt;
                 channelInfo["livechat_note"] = ["markup", channel.livechat_note];
                 channelInfo["livechat_status"] = channel.livechat_status;
