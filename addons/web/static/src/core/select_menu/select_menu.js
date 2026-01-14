@@ -119,6 +119,7 @@ export class SelectMenu extends Component {
         slots: { type: Object, optional: true },
         disabled: { type: Boolean, optional: true },
         menuRef: { type: Function, optional: true },
+        canDeselect: { type: Boolean, optional: true },
     };
 
     static SCROLL_SETTINGS = {
@@ -214,6 +215,11 @@ export class SelectMenu extends Component {
     }
 
     get canDeselect() {
+        // Grant parent component ability to decide if
+        // we can deselect a selected option via props
+        if (this.props.canDeselect !== undefined) {
+            return this.props.canDeselect;
+        }
         return !this.props.required && this.selectedChoice !== undefined;
     }
 

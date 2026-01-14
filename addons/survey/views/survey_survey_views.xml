@@ -50,8 +50,18 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="background_image" widget="image" class="oe_avatar" filename="background_image_filename"/>
                     <field name="allowed_survey_types" invisible="True"/>
-                     <field name="survey_type" widget="selection_badge_icons" nolabel="1"
-                        options="{'allowed_selection_field': 'allowed_survey_types'}"/>
+                     <field name="survey_type" widget="badges_selection" nolabel="1"
+                        options="{
+                            'allowed_selection_field': 'allowed_survey_types',
+                            'icon_mapping': {
+                                'survey': 'fa-edit',
+                                'live_session': 'fa-bar-chart-o',
+                                'assessment': 'fa-mortar-board',
+                                'custom': 'fa-paint-brush',
+                                'recruitment': 'fa-suitcase',
+                                'appraisal': 'fa-star-half-empty'
+                            }
+                        }"/>
                     <div class="oe_title w-100">
                         <h1>
                             <field name="title" options="{'line_breaks': False}" widget="text" placeholder="e.g. Satisfaction Survey"/>
