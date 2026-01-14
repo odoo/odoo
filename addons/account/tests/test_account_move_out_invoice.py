@@ -350,11 +350,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 2760.0,
         })
 
-        # Check rounding.
-        decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
-        decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
-        decimal_precision.digits = 4
-
         product.lst_price = 90.0034
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -371,7 +366,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             ],
         })
         self.assertRecordValues(invoice.invoice_line_ids, [{
-            'price_unit': 163.6425, # 90.0034 / 1.10 * 2
+            'price_unit': 163.64254545454546,  # 90.0034 / 1.10 * 2
             'tax_ids': tax_price_exclude.ids,
             'price_subtotal': 163.643,
             'price_total': 188.189,
@@ -780,13 +775,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ''' Seek for rounding issue on the price_subtotal when dealing with a price_unit having more digits than the
         foreign currency one.
         '''
-        decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
-        decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
-
-        self.assertTrue(decimal_precision, "Decimal precision '%s' not found" % decimal_precision_name)
-
         self.other_currency.rounding = 0.01
-        decimal_precision.digits = 4
 
         def check_invoice_values(invoice):
             self.assertInvoiceValues(invoice, [
@@ -1633,7 +1622,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.product_line_vals_1,
                 'quantity': 0.1,
-                'price_unit': 0.05,
+                'price_unit': 0.045,
                 'price_subtotal': 0.005,
                 'price_total': 0.006,
                 'currency_id': self.other_currency.id,
@@ -1683,11 +1672,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.product_line_vals_1,
                 'quantity': 0.1,
-                'price_unit': 0.05,
-                'price_subtotal': 0.01,
-                'price_total': 0.01,
-                'amount_currency': -0.01,
-                'credit': 0.01,
+                'price_unit': 0.045,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
+                'amount_currency': -0.0,
+                'credit': 0.0,
             },
             self.product_line_vals_2,
             {
@@ -1698,17 +1687,17 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             self.tax_line_vals_2,
             {
                 **self.term_line_vals_1,
-                'amount_currency': 260.01,
-                'debit': 260.01,
+                'amount_currency': 260.0,
+                'debit': 260.0,
                 'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
             **self.move_vals,
             'currency_id': self.company_data['currency'].id,
             'date': fields.Date.from_string('2016-01-01'),
-            'amount_untaxed': 200.01,
+            'amount_untaxed': 200.0,
             'amount_tax': 60.0,
-            'amount_total': 260.01,
+            'amount_total': 260.0,
         })
 
     def test_out_invoice_line_tax_fixed_price_include_free_product(self):

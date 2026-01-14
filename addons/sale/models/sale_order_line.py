@@ -172,7 +172,7 @@ class SaleOrderLine(models.Model):
     price_unit = fields.Float(
         string="Unit Price",
         compute='_compute_price_unit',
-        digits='Product Price',
+        min_display_digits='Product Price',
         store=True, readonly=False, required=True, precompute=True)
     technical_price_unit = fields.Float()
 
