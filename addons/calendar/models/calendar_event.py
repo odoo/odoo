@@ -271,6 +271,11 @@ class CalendarEvent(models.Model):
     awaiting_count = fields.Integer(compute="_compute_attendees_count")
     user_can_edit = fields.Boolean(compute='_compute_user_can_edit')
 
+    @api.onchange("allday")
+    def _onchange_allday(self):
+        for event in self:
+            event.show_as = 'free' if event.allday else 'busy'
+
     @api.depends("attendee_ids")
     def _compute_should_show_status(self):
         for event in self:

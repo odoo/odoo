@@ -365,6 +365,8 @@
                         invisible="not allday"
                     />
                     <span class="ms-1 w-25">
+                        <!-- This is needed so that show_as can be set as 'free' when creating all day events -->
+                        <field name="show_as" invisible="1"/>
                         <field name="allday" class="mb-0" title="All Day" nolabel="1"/>
                         <span>All day</span>
                     </span>
