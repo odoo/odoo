@@ -774,11 +774,11 @@
                         <button name="action_print_pdf"
                                 type="object"
                                 class="oe_highlight"
-                                invisible="state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type == 'entry'"
+                                invisible="state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type in ('entry', 'in_invoice','in_refund','in_receipt')"
                                 string="Print"/>
                         <button name="action_print_pdf"
                                 type="object"
-                                invisible="state != 'posted' or (not is_being_sent and not invoice_pdf_report_id)"
+                                invisible="state != 'posted' or (not is_being_sent and not invoice_pdf_report_id) or move_type in ('in_invoice','in_refund','in_receipt')"
                                 string="Print"/>
                         <!-- Register Payment (only invoices / receipts) -->
                         <button name="action_register_payment" id="account_invoice_payment_btn"
@@ -855,9 +855,17 @@
                         <field name="alerts" class="o_field_html" widget="actionable_errors"/>
                     </div>
                     <!--Duplicate check-->
-                    <div class="alert alert-warning w-100 d-flex align-items-center gap-1" invisible="not duplicated_ref_ids"  role="alert">
+                    <div class="d-flex alert alert-warning w-100 d-flex align-items-center gap-1" invisible="not duplicated_ref_ids"  role="alert">
                         <span>This document might be a duplicate of</span>
-                        <field name="duplicated_ref_ids" widget="x2many_buttons" string="Duplicated Documents" context="{'name_as_amount_total': True}"/>
+                        <field name="duplicated_ref_ids" widget="x2many_buttons" nb_records_shown="1" string="Duplicated Documents" context="{'name_as_amount_total': True}"/>
+                        <button name="action_delete_duplicates"
+                                type="object"
+                                class="btn btn-link text-danger ms-auto d-flex align-items-center gap-1"
+                                invisible="not is_draft_duplicated_ref_ids">
+                            <i class="fa fa-trash text-danger"/>
+                            <span class="text-danger" invisible="duplicated_ref_ids.length == 1">Delete all duplicates</span>
+                            <span class="text-danger" invisible="duplicated_ref_ids.length &gt; 1">Delete duplicate</span>
+                        </button>
                     </div>
                     <!-- Invoice outstanding credits -->
                     <div groups="account.group_account_invoice,account.group_account_readonly"
@@ -1397,7 +1405,7 @@
                                             <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2"
                                                    readonly="state != 'draft' or (move_type not in ('in_invoice', 'in_refund', 'in_receipt') and not quick_edit_mode)"/>
 
-                                            <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
+                                            <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment" invisible="not invoice_payments_widget"/>
                                             <field name="amount_residual" class="oe_subtotal_footer_separator"/>
                                         </group>
                                         <group
