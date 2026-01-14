@@ -751,6 +751,7 @@ class AccountMove(models.Model):
         groups="account.group_account_invoice,account.group_account_readonly",
     )
     duplicated_ref_ids = fields.Many2many(comodel_name='account.move', compute='_compute_duplicated_ref_ids')
+    is_draft_duplicated_ref_ids = fields.Boolean(compute="_compute_is_draft_duplicated_ref_ids")
     need_cancel_request = fields.Boolean(compute='_compute_need_cancel_request')
 
     show_update_fpos = fields.Boolean(string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
@@ -1476,13 +1477,14 @@ class AccountMove(models.Model):
                     continue
 
                 payments_widget_vals['content'].append({
-                    'journal_name': line.ref or line.move_id.name,
+                    'move_name': line.ref or line.move_id.name,
                     'amount': amount,
                     'currency_id': move.currency_id.id,
                     'id': line.id,
                     'move_id': line.move_id.id,
                     'date': fields.Date.to_string(line.date),
                     'account_payment_id': line.payment_id.id,
+                    'move_ref': line.ref or "",
                 })
 
             if payments_widget_vals['content']:
@@ -2041,7 +2043,7 @@ class AccountMove(models.Model):
             move.duplicated_ref_ids = move_to_duplicate_move.get(move._origin, self.env['account.move'])
 
     def _fetch_duplicate_reference(self, matching_states=('draft', 'posted')):
-        moves = self.filtered(lambda m: m.is_sale_document() or m.is_purchase_document() and m.ref)
+        moves = self.filtered(lambda m: m.is_sale_document() or m.is_purchase_document())
 
         if not moves:
             return {}
@@ -2090,13 +2092,23 @@ class AccountMove(models.Model):
                 move.move_type in ('in_invoice', 'in_refund')
                 AND duplicate_move.move_type in ('in_invoice', 'in_refund')
                 AND (
-                   move.ref = duplicate_move.ref
-                   AND (
-                       move.invoice_date IS NULL
-                       OR
-                       duplicate_move.invoice_date IS NULL
-                       OR
-                       date_part('year', move.invoice_date) = date_part('year', duplicate_move.invoice_date)
+                   -- case 1: same ref and (no date or same year)
+                     (
+                         move.ref = duplicate_move.ref
+                         AND (
+                             move.invoice_date IS NULL
+                             OR
+                             duplicate_move.invoice_date IS NULL
+                             OR
+                             date_part('year', move.invoice_date) = date_part('year', duplicate_move.invoice_date)
+                         )
+                     )
+                     -- case 2: different refs, same partner, amount and date
+                     OR (
+                            move.commercial_partner_id = duplicate_move.commercial_partner_id
+                            AND move.amount_total = duplicate_move.amount_total
+                            AND move.amount_total != 0.0
+                            AND move.invoice_date = duplicate_move.invoice_date
                    )
                 )
             """)
@@ -2130,6 +2142,11 @@ class AccountMove(models.Model):
             self.env['account.move'].browse(move_id): self.env['account.move'].browse(duplicate_ids)
             for move_id, duplicate_ids in result
         }
+
+    @api.depends('duplicated_ref_ids')
+    def _compute_is_draft_duplicated_ref_ids(self):
+        for move in self:
+            move.is_draft_duplicated_ref_ids = any(duplicate_move.state == 'draft' for duplicate_move in move.duplicated_ref_ids)
 
     @api.depends('company_id')
     def _compute_display_qr_code(self):
@@ -5236,7 +5253,10 @@ class AccountMove(models.Model):
         if self.env.context.get('name_as_amount_total'):
             currency_amount = self.currency_id.format(self.amount_total)
             if self.state == 'posted':
-                return _("%(ref)s (%(currency_amount)s)", ref=(self.ref or self.name), currency_amount=currency_amount)
+                ref = f" - {self.ref}" if self.ref else ""
+                return _("%(name)s%(ref)s at %(currency_amount)s", name=(self.name), ref=ref, currency_amount=currency_amount)
+            if self.name:
+                return _("%(name)s - Draft at (%(currency_amount)s)", name=(self.name), currency_amount=currency_amount)
             else:
                 return _("Draft (%(currency_amount)s)", currency_amount=currency_amount)
         name = ''
@@ -6144,6 +6164,10 @@ class AccountMove(models.Model):
 
     def action_activate_currency(self):
         self.currency_id.filtered(lambda currency: not currency.active).write({'active': True})
+
+    def action_delete_duplicates(self):
+        for move in self:
+            move.duplicated_ref_ids.unlink()
 
     def _get_mail_template(self):
         """
