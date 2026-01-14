@@ -191,7 +191,7 @@ class TestMessageValues(MailCommon):
         self.assertEqual(len(message.sudo().notification_ids), 1)
         self.assertEqual(message.notified_partner_ids, self.partner_admin)
         self.assertEqual(message.starred_partner_ids, self.partner_admin)
-        self.assertFalse(message.sudo().tracking_value_ids)
+        self.assertFalse(message.sudo().tracking)
 
         # Reset body case
         record._message_update_content(

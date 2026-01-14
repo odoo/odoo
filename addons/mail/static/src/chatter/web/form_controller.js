@@ -14,6 +14,8 @@ FormController.props = {
 patch(FormController.prototype, {
     setup() {
         super.setup(...arguments);
+        this.fieldService = useService("field");
+        this.fieldService.setTrackedModels([this.props.resModel]);
         if (this.env.services["mail.store"]) {
             this.mailStore = useService("mail.store");
         }

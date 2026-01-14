@@ -329,9 +329,12 @@ class ResCompany(models.Model):
         ], ['date'], limit=1, order='date desc, id desc')
         if not closing:
             return False
-        am_state_field = self.env['ir.model.fields'].search([('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
-        state_tracking = closing.message_ids.tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
-        return state_tracking[-1:].create_date or fields.Datetime.to_datetime(closing.date)
+        last_state_track = self.env['mail.message'].search([
+            ('model', '=', 'account.move'),
+            ('res_id', '=', closing.id),
+            ('tracking.account.move,state', '!=', False),
+        ], order="id DESC", limit=1)
+        return last_state_track.create_date or fields.Datetime.to_datetime(closing.date)
 
     def _set_category_defaults(self):
         for company in self:

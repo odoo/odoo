@@ -120,6 +120,7 @@ class TestDoc(HttpCaseWithUserDemo):
             'sortable': True,
             'store': True,
             'string': 'ID',
+            'tracking': False,
             'type': 'integer',
         })
         self.assertGreater(set(methods), {'search'})

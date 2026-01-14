@@ -1,9 +1,5 @@
 import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
-import {
-    attClassObjectToString,
-    generateEmojisOnHtml,
-    prettifyMessageText,
-} from "@mail/utils/common/format";
+import { attClassObjectToString, generateEmojisOnHtml } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
@@ -677,12 +673,11 @@ export class Store extends BaseStore {
      * @param {number} before
      * @param {true|false|undefined} is_notification
      */
-    async searchMessagesInThread(searchTerm, thread, before, is_notification) {
+    async searchMessagesInThread(searchDomain, thread, before) {
         const { count, data, messages } = await rpc(thread.getFetchRoute(), {
             ...thread.getFetchParams(),
             fetch_params: {
-                is_notification,
-                search_term: await prettifyMessageText(searchTerm), // formatted like message_post
+                search_domain: searchDomain,
                 before,
             },
         });

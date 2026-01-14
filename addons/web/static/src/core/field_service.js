@@ -25,6 +25,7 @@ export const fieldService = {
         "loadPath",
         "loadPropertyDefinitions",
         "loadPathDescription",
+        "setTrackedModels",
     ],
     start(env, { orm }) {
         /**
@@ -32,6 +33,8 @@ export const fieldService = {
          * @param {LoadFieldsOptions} [options]
          * @returns {Promise<object>}
          */
+        let trackedModels;
+
         async function loadFields(resModel, options = {}) {
             if (typeof resModel !== "string" || !resModel) {
                 throw new Error(`Invalid model name: ${resModel}`);
@@ -113,13 +116,17 @@ export const fieldService = {
                 return { isInvalid: "path", names, modelsInfo: [] };
             }
 
-            const [name, ...remainingNames] = names;
+            let [name, ...remainingNames] = names;
             const modelsInfo = [{ resModel, fieldDefs }];
             if (resModel === "*" && remainingNames.length) {
                 return { isInvalid: "path", names, modelsInfo };
             }
 
             const fieldDef = fieldDefs[name];
+            if (fieldDef?.type === "tracking" && remainingNames.length !== 0) {
+                remainingNames = [remainingNames.join(".")];
+                names = [name, ...remainingNames];
+            }
             if ((name !== "*" && !fieldDef) || (name === "*" && remainingNames.length)) {
                 return { isInvalid: "path", names, modelsInfo };
             }
@@ -138,6 +145,29 @@ export const fieldService = {
                     await _loadPropertyDefinitions(resModel, fieldDefs, name),
                     remainingNames
                 );
+            } else if (fieldDef.type === "tracking" && trackedModels.length !== 0) {
+                const relatedResModel = trackedModels[0];
+                const relatedFields = await Promise.all(
+                    trackedModels.map(async (model) => {
+                        const relatedModelFields = await loadFields(model);
+                        return Object.values(relatedModelFields).filter((f) => f.tracking);
+                    })
+                );
+                subResult = {
+                    modelsInfo: [
+                        {
+                            resModel: relatedResModel,
+                            fieldDefs: Object.fromEntries(
+                                relatedFields.flat().map((f) => [
+                                    `${relatedResModel},${f.name}`,
+                                    Object.assign({}, f, {
+                                        name: `${relatedResModel},${f.name}`,
+                                    }),
+                                ])
+                            ),
+                        },
+                    ],
+                };
             }
 
             if (subResult) {
@@ -219,12 +249,17 @@ export const fieldService = {
             return result;
         }
 
+        function setTrackedModels(models) {
+            trackedModels = models;
+        }
+
         return {
             loadFieldInfo,
             loadFields,
             loadPath,
             loadPathDescription,
             loadPropertyDefinitions,
+            setTrackedModels,
         };
     },
 };

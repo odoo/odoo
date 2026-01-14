@@ -5,6 +5,7 @@ from odoo.addons.mail.tests.common import MailCase
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import tagged, new_test_user
+from odoo.tools import html2plaintext
 
 _logger = logging.getLogger(__name__)
 
@@ -49,7 +50,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
     def assertTrail(self, trail, expected):
         self.assertEqual(len(trail), len(expected))
         for message, expected_needle in zip(trail, expected[::-1]):
-            self.assertIn(expected_needle, message.account_audit_log_preview)
+            self.assertRegex(html2plaintext(message.account_audit_log_preview, include_references=False), expected_needle)
 
     def test_can_unlink_draft(self):
         self.env.company.restrictive_audit_trail = True

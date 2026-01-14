@@ -229,7 +229,7 @@ class TestTrackingAPI(TestTrackingCommon):
         # first record: tracking value should be hidden
         message_0 = records[0].message_ids[0]
         formatted = Store().add(message_0, "_store_message_fields").get_result()["mail.message"][0]
-        self.assertEqual(formatted['trackingValues'], [], 'Hidden values should not be formatted')
+        self.assertEqual(formatted['tracking_html'], False, 'Hidden values should not be formatted')
         mail_render = records[0]._notify_by_email_prepare_rendering_context(message_0, {})
         self.assertEqual(mail_render['tracking_values'], [])
 
@@ -647,7 +647,6 @@ class TestTrackingInternals(MailCommon):
                 (0, 0, {'name': False}),
             ],
         })
-        child4_tracking = f'Unnamed Sub-model: pseudo tags for tracking ({test_record.one2many_field[3].id})'
         self.flush_tracking()
         last_message = test_record.message_ids[0]
         self.assertMessageFields(
@@ -660,6 +659,7 @@ class TestTrackingInternals(MailCommon):
         )
 
         # remove from o2m
+        before_ids = test_record.one2many_field.ids
         test_record.write({'one2many_field': [(3, test_record.one2many_field[0].id)]})
         self.flush_tracking()
         last_message = test_record.message_ids[0]
@@ -680,7 +680,6 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(test_record.currency_id, self.env.ref('base.USD'))
         messages = test_record.message_ids
         today = fields.Date.today()
-        today_dt = fields.Datetime.to_datetime(today)
         now = fields.Datetime.now()
 
         test_record.write({
@@ -704,14 +703,14 @@ class TestTrackingInternals(MailCommon):
         tracking_value_list = [
             ('boolean_field', 'boolean', 0, 1),
             ('char_field', 'char', False, 'char_value'),
-            ('date_field', 'date', False, today_dt),
-            ('datetime_field', 'datetime', False, now),
+            ('date_field', 'date', False, str(today)),
+            ('datetime_field', 'datetime', False, str(now)),
             ('float_field', 'float', 0, 3.22),
             ('float_field_with_digits', 'float', 0, 3.00001),
             ('integer_field', 'integer', 0, 42),
             ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner),
             ('monetary_field', 'monetary', False, (42.42, self.env.ref('base.USD'))),
-            ('selection_field', 'selection', '', 'FIRST'),
+            ('selection_field', 'selection', '', 'first'),
             ('text_field', 'text', False, 'text_value'),
         ]
         self.assertMessageFields(
@@ -1056,28 +1055,28 @@ class TestTrackingInternals(MailCommon):
         # some custom code generates tracking values on main_track
         new_message = main_track.message_post(
             body='Custom Log with Tracking',
-            tracking_value_ids=[
-                (0, 0, {
-                    'field_id': self.env['ir.model.fields']._get(sub_track._name, 'secret').id,
-                    'new_value_char': 'secret',
-                    'old_value_char': False,
-                }),
-                (0, 0, {
-                    'field_id': False,
-                    'new_value_integer': self.env.uid,
-                    'old_value_integer': False,
-                }),
-                (0, 0, {
-                    'field_id': False,
+            tracking=[
+                {
+                    'f': self.env['ir.model.fields']._get(sub_track._name, 'secret').id,
+                    'n': 'secret',
+                    'o': False,
+                },
+                {
+                    'f': False,
+                    'n': self.env.uid,
+                    'o': False,
+                },
+                {
+                    'f': False,
                     'field_info': {
                         'desc': 'Old integer',
                         'name': 'Removed',
                         'sequence': 35,
                         'type': 'integer',
                     },
-                    'new_value_integer': 35,
-                    'old_value_integer': 30,
-                }),
+                    'n': 35,
+                    'o': 30,
+                },
             ],
         )
         self.assertMessageFields(new_message, {'tracking_values': [
@@ -1090,8 +1089,8 @@ class TestTrackingInternals(MailCommon):
         # check groups, as it depends on model
         for tracking, exp_groups in zip(trackings, ['base.group_user', 'base.group_system', 'base.group_system']):
             groups = 'base.group_system'
-            if tracking.field_id:
-                field = self.env[tracking.field_id.model]._fields[tracking.field_id.name]
+            if field_id := tracking.get('f'):
+                field = self.env['ir.model.fields']._from_id(field_id)
                 groups = field.groups
             self.assertEqual(groups, exp_groups)
 

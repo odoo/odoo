@@ -128,7 +128,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
     #   1: _get_last_messages
-    #   22: store add message:
+    #   21: store add message:
     #       - fetch mail_message
     #       - search mail_message_schedule
     #       - search mail_message_res_partner_starred_rel
@@ -139,7 +139,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search mail_poll (_compute_has_poll end_message_id)
     #       - search mail_message_link_preview
     #       - search mail_notification
-    #       - search mail_tracking_value
     #       - search rating_rating
     #       - fetch mail_notification
     #       - search mail_message_subtype
@@ -1347,7 +1346,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_note").id,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
-                "trackingValues": [],
+                "tracking_html": False,
                 "write_date": write_date,
             }
         if channel == self.channel_channel_public_1:
@@ -1384,7 +1383,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "starred": True,
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_note").id,
-                "trackingValues": [],
+                "tracking_html": False,
                 "write_date": write_date,
             }
         if channel == self.channel_channel_public_2:
@@ -1420,7 +1419,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "starred": False,
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_comment").id,
-                "trackingValues": [],
+                "tracking_html": False,
                 "write_date": write_date,
             }
         if channel == self.channel_channel_group_1:
@@ -1457,7 +1456,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "starred": False,
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_note").id,
-                "trackingValues": [],
+                "tracking_html": False,
                 "write_date": write_date,
             }
         if channel == self.channel_channel_group_2:
@@ -1493,7 +1492,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "starred": False,
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_comment").id,
-                "trackingValues": [],
+                "tracking_html": False,
                 "write_date": write_date,
             }
         if channel == self.channel_livechat_1:
@@ -1526,7 +1525,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "starred": False,
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_note").id,
-                "trackingValues": [],
+                "tracking_html": False,
                 "write_date": write_date,
             }
         if channel == self.channel_livechat_2:
@@ -1559,7 +1558,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "starred": False,
                 "subject": False,
                 "subtype_id": self.env.ref("mail.mt_note").id,
-                "trackingValues": [],
+                "tracking_html": False,
                 "write_date": write_date,
             }
         return {}

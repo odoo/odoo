@@ -112,7 +112,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     },
                     "subject": False,
                     "subtype_id": self.env.ref("mail.mt_comment").id,
-                    "trackingValues": [],
+                    "tracking_html": False,
                     "write_date": fields.Datetime.to_string(chatbot_message.write_date),
                 }
             ],
@@ -182,7 +182,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "starred": False,
                         "subject": False,
                         "subtype_id": self.env.ref("mail.mt_note").id,
-                        "trackingValues": [],
+                        "tracking_html": False,
                     },
                 ),
                 "mail.message.subtype": [
@@ -289,6 +289,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                         "subject": False,
                                         "subtype_id": self.env.ref("mail.mt_comment").id,
                                         "thread": {"id": channel.id, "model": "discuss.channel"},
+                                        'tracking_html': False,
                                         "write_date": fields.Datetime.to_string(message.write_date),
                                     },
                                 ),
