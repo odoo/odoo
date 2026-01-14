@@ -160,7 +160,6 @@ export class CartPage extends Component {
     selectTable(table) {
         if (table) {
             this.selectTableDependingOnMode(table);
-            this.selfOrder.currentTable = table;
             this.router.addTableIdentifier(table);
             this.pay();
         }
