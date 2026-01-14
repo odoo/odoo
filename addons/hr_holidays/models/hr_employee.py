@@ -45,6 +45,7 @@ class HrEmployee(models.Model):
     hr_icon_display = fields.Selection(selection_add=[
         ('presence_holiday_absent', 'On leave'),
         ('presence_holiday_present', 'Present but on leave')])
+    member_of_department = fields.Boolean('Member of Department', compute='_compute_member_of_department', search='_search_part_of_department')
 
     def _compute_current_leave(self):
         self.current_leave_id = False
@@ -232,6 +233,11 @@ class HrEmployee(models.Model):
             else:
                 employee.show_leaves = False
 
+    @api.depends('version_id.member_of_department')
+    def _compute_member_of_department(self):
+        for employee in self.sudo():
+            employee.member_of_department = employee.current_version_id.member_of_department
+
     def _search_absent_employee(self, operator, value):
         if operator != 'in':
             return NotImplemented
@@ -246,6 +252,10 @@ class HrEmployee(models.Model):
             ('date_to', '>=', today_start),
         ])
         return [('id', 'in', holidays.employee_id.ids)]
+
+    def _search_part_of_department(self, operator, value):
+        version_ids = self.env['hr.version'].sudo()._search([('member_of_department', operator, value)])
+        return [('version_ids', 'in', version_ids)]
 
     @api.model_create_multi
     def create(self, vals_list):
