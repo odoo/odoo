@@ -706,11 +706,6 @@ class AccountTax(models.Model):
         if self.amount_type == 'group':
             self.invoice_label = None
 
-    @api.onchange('price_include')
-    def onchange_price_include(self):
-        if self.price_include:
-            self.include_base_amount = True
-
     # -------------------------------------------------------------------------
     # HELPERS IN BOTH PYTHON/JAVASCRIPT (account_tax.js / account_tax.py)
 
