@@ -23,6 +23,10 @@ class SaleOrderLine(models.Model):
         reward = self.filtered('reward_id')
         super(SaleOrderLine, self - reward)._compute_name()
 
+    def _compute_discount(self):
+        rewards = self.filtered('reward_id')
+        return super(SaleOrderLine, self - rewards)._compute_discount()
+
     @api.depends('reward_id')
     def _compute_is_reward_line(self):
         for line in self:
