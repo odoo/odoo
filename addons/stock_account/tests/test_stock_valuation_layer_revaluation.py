@@ -105,7 +105,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         revaluation_wizard.save().action_validate_revaluation()
 
         # Check standard price change
-        self.assertEqual(self.product1.standard_price, 1.33)
+        self.assertAlmostEqual(self.product1.standard_price, 1.3333333)
         self.assertEqual(self.product1.quantity_svl, 3)
 
         # Check the creation of stock.valuation.layer
@@ -144,21 +144,21 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         self.product1.write({'standard_price': 0.022})
         self._make_in_move(self.product1, 10000)
 
-        self.assertEqual(self.product1.standard_price, 0.02)
+        self.assertAlmostEqual(self.product1.standard_price, 0.022)
         self.assertEqual(self.product1.quantity_svl, 10000)
 
         layer = self.product1.stock_valuation_layer_ids
-        self.assertEqual(layer.value, 200)
+        self.assertEqual(layer.value, 220.0)
 
         # Second Move
         self.product1.write({'standard_price': 0.053})
 
-        self.assertEqual(self.product1.standard_price, 0.05)
+        self.assertEqual(self.product1.standard_price, 0.053)
         self.assertEqual(self.product1.quantity_svl, 10000)
 
         layers = self.product1.stock_valuation_layer_ids
-        self.assertEqual(layers[0].value, 200)
-        self.assertEqual(layers[1].value, 300)
+        self.assertEqual(layers[0].value, 220.0)
+        self.assertEqual(layers[1].value, 280.0)
 
     def test_stock_valuation_layer_revaluation_avco_rounding_5_digits(self):
         """
@@ -337,13 +337,13 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         self._make_in_move(self.product1, 67104, unit_cost=0.00952)
         self._make_in_move(self.product1, 898, unit_cost=0.00952)
 
-        self.assertEqual(self.product1.standard_price, 0.01)
+        self.assertAlmostEqual(self.product1.standard_price, 0.00952)
         revaluation_wizard = Form(self.env['stock.valuation.layer.revaluation'].with_context(context))
         revaluation_wizard.added_value = 636  # triggers the rounding problem
         revaluation_wizard.account_id = self.stock_valuation_account
         revaluation_wizard.save().action_validate_revaluation()
 
-        self.assertEqual(self.product1.standard_price, 0.02)
+        self.assertAlmostEqual(self.product1.standard_price, 0.0193527)
 
     def test_multi_company_fifo_svl_negative_revaluation(self):
         """

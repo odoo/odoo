@@ -703,7 +703,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             {
                 **self.product_line_vals_1,
                 'quantity': 0.1,
-                'price_unit': 0.05,
+                'price_unit': 0.045,
                 'price_subtotal': 0.005,
                 'price_total': 0.006,
                 'currency_id': self.other_currency.id,
@@ -754,11 +754,11 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             {
                 **self.product_line_vals_1,
                 'quantity': 0.1,
-                'price_unit': 0.05,
-                'price_subtotal': 0.01,
-                'price_total': 0.01,
-                'amount_currency': -0.01,
-                'credit': 0.01,
+                'price_unit': 0.045,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
+                'amount_currency': -0.0,
+                'credit': 0.0,
             },
             self.product_line_vals_2,
             {
@@ -769,8 +769,8 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             self.tax_line_vals_2,
             {
                 **self.term_line_vals_1,
-                'amount_currency': 208.01,
-                'debit': 208.01,
+                'amount_currency': 208.0,
+                'debit': 208.0,
                 'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
@@ -778,9 +778,9 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.company_data['currency'].id,
             'date': fields.Date.from_string('2016-01-01'),
             'invoice_date': fields.Date.from_string('2016-01-01'),
-            'amount_untaxed': 160.01,
+            'amount_untaxed': 160.0,
             'amount_tax': 48.0,
-            'amount_total': 208.01,
+            'amount_total': 208.0,
         })
 
     def test_in_refund_onchange_past_invoice_1(self):

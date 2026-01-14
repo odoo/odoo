@@ -131,9 +131,7 @@ class TestStockValuation(TransactionCase):
         move.picked = True
         picking.button_validate()
 
-        self.assertEqual(move.stock_valuation_layer_ids.unit_cost,
-            last_po_id.currency_id.round(ap_price),
-            "Wrong Unit price")
+        self.assertAlmostEqual(move.stock_valuation_layer_ids.unit_cost, ap_price, msg="Wrong Unit price")
 
     def test_change_unit_cost_average_1(self):
         """ Confirm a purchase order and create the associated receipt, change the unit cost of the
@@ -1417,7 +1415,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         picking.button_validate()
         # 5 Units received at rate 0.7 = 42.86
-        self.assertAlmostEqual(product_avg.standard_price, 42.86)
+        self.assertAlmostEqual(product_avg.standard_price, 42.8571429)
 
         today = date_invoice
         inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
@@ -1645,7 +1643,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             picking.button_validate()
             picking._action_done()  # Create Backorder
         # 5 Units received at rate 0.7 = 42.86
-        self.assertAlmostEqual(product_avg.standard_price, 42.86)
+        self.assertAlmostEqual(product_avg.standard_price, 42.8571429)
 
         with freeze_time(date_invoice):
             inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
@@ -1700,7 +1698,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             })
             inv1.action_post()
         # 5 Units invoiced at rate 2 (10) + 5 Units invoiced at rate 2.2 and unit price 40 (18.18) = 14.09
-        self.assertAlmostEqual(product_avg.standard_price, 14.09)
+        self.assertAlmostEqual(product_avg.standard_price, 14.091)
         ##########################
         #       Invoice 0        #
         ##########################
