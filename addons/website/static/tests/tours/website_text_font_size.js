@@ -3,6 +3,7 @@ import {
     goToTheme,
     registerWebsitePreviewTour,
     clickToolbarButton,
+    goBackToBlocks,
 } from '@website/js/tours/tour_utils';
 import {FONT_SIZE_CLASSES} from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
@@ -39,6 +40,7 @@ function checkComputedFontSize(fontSizeClass, stage) {
 
 function getFontSizeTestSteps(fontSizeClass) {
     return [
+        goBackToBlocks(),
         ...insertSnippet({id: "s_text_block", name: "Text", groupName: "Text"}),
         ...clickToolbarButton(
             `text block first paragraph [${fontSizeClass}]`,

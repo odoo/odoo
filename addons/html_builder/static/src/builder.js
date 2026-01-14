@@ -142,7 +142,9 @@ export class Builder extends Component {
                         if (!currentOptionsContainers.length) {
                             // If there is no option, fallback on the current
                             // fallback tab.
-                            this.setTab(this.noSelectionTab);
+                            if (this.state.activeTab === "customize") {
+                                this.setTab(this.noSelectionTab);
+                            }
                             return;
                         }
                         this.setTab("customize");
@@ -279,8 +281,9 @@ export class Builder extends Component {
 
     setTab(tab) {
         this.state.activeTab = tab;
-        // Set the fallback tab on the "THEME" tab if it was selected.
-        this.noSelectionTab = tab === "theme" ? "theme" : "blocks";
+        if (tab !== "customize") {
+            this.noSelectionTab = tab;
+        }
     }
 
     undo() {
