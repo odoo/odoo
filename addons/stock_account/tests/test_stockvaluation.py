@@ -877,7 +877,7 @@ class TestStockValuation(TestStockValuationCommon):
         move5.picked = True
         move5._action_done()
 
-        self.assertEqual(move5.value, 477.60)
+        self.assertEqual(move5.value, 477.56)
 
         # Receives 10 units but assign them to an owner, the valuation should not be impacted.
         move6 = self.env['stock.move'].create({
@@ -912,7 +912,7 @@ class TestStockValuation(TestStockValuationCommon):
         move7.picked = True
         move7._action_done()
 
-        self.assertEqual(move7.value, 796.0)
+        self.assertEqual(move7.value, 795.94)
         self.assertAlmostEqual(product.qty_available, 10)
         self.assertAlmostEqual(product.total_value, 0.0)
 
@@ -937,7 +937,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         self.assertEqual(product.qty_available, 5)
         self.assertEqual(product.total_value, 66.67)
-        self.assertEqual(product.standard_price, 13.33)
+        self.assertAlmostEqual(product.standard_price, 13.3333333)
 
     def test_average_perpetual_3(self):
         product = self.product_avco
@@ -1157,7 +1157,7 @@ class TestStockValuation(TestStockValuationCommon):
         move2._action_done()
         move2.value_manual = 200.0
 
-        self.assertAlmostEqual(product.standard_price, 16.67)
+        self.assertAlmostEqual(product.standard_price, 16.66666667)
         self.assertAlmostEqual(move2.value, 200)
         self.assertAlmostEqual(product.qty_available, 15)
         self.assertAlmostEqual(product.total_value, 250)
@@ -1747,7 +1747,7 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertAlmostEqual(product.total_value, 240, delta=0.04)
         self.assertAlmostEqual(product.qty_available, 19)
 
-        self.assertEqual(product.standard_price, 12.63)
+        self.assertAlmostEqual(product.standard_price, 12.6315789)
 
     def test_fifo_sublocation_valuation_1(self):
         """ Set the main stock as a view location. Receive 2 units of a
@@ -2850,7 +2850,7 @@ class TestStockValuation(TestStockValuationCommon):
         move1.value_manual = 2
 
         # Check standard price change
-        self.assertEqual(product.standard_price, 1.33)
+        self.assertAlmostEqual(product.standard_price, 1.3333333)
         self.assertEqual(product.qty_available, 3)
         self.assertEqual(product.total_value, 4)
 
@@ -2887,7 +2887,7 @@ class TestStockValuation(TestStockValuationCommon):
         product.write({'standard_price': 0.022})
         self._make_in_move(product, 10000)
 
-        self.assertEqual(product.standard_price, 0.02)
+        self.assertEqual(product.standard_price, 0.022)
         self.assertEqual(product.qty_available, 10000)
 
         # Second Move

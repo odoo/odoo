@@ -3,6 +3,7 @@ import base64
 import binascii
 from datetime import time
 import logging
+import math
 import re
 from io import BytesIO
 
@@ -217,33 +218,42 @@ class IrQwebFieldFloat(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
+        min_precision = options.get('min_precision')
         if 'decimal_precision' in options:
             precision = self.env['decimal.precision'].precision_get(options['decimal_precision'])
+        elif options.get('precision') is None:
+            # We display maximum 6 decimal digits
+            precision = 6
+            min_precision = min_precision or 1
         else:
             precision = options['precision']
 
-        if precision is None:
-            fmt = '%f'
-        else:
-            value = float_utils.float_round(value, precision_digits=precision)
-            fmt = '%.{precision}f'.format(precision=precision)
+        # We use the precision or the maximum of relevent decimal digits if it's lower
+        int_digits = int(math.log10(abs(value))) + 1 if value != 0 else 1
+        max_dec_digits = max(15 - int_digits, 0)
+        precision = min(precision, max_dec_digits)
 
-        formatted = self.user_lang().format(fmt, value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
+        fmt = f'%.{precision}f'
+        if min_precision and min_precision < precision:
+            _, dec_part = float_utils.float_split_str(value, precision)
+            digits_count = len(dec_part.rstrip('0'))
+            if digits_count < min_precision:
+                fmt = f'%.{min_precision}f'
+            elif digits_count < precision:
+                fmt = f'%.{digits_count}f'
 
-        # %f does not strip trailing zeroes. %g does but its precision causes
-        # it to switch to scientific notation starting at a million *and* to
-        # strip decimals. So use %f and if no precision was specified manually
-        # strip trailing 0.
-        if precision is None:
-            formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
-
-        return formatted
+        value = float_utils.float_round(value, precision_digits=precision)
+        return self.user_lang().format(fmt, value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
 
     @api.model
     def record_to_html(self, record, field_name, options):
+        field = record._fields[field_name]
         if 'precision' not in options and 'decimal_precision' not in options:
-            _, precision = record._fields[field_name].get_digits(record.env) or (None, None)
+            _, precision = field.get_digits(record.env) or (None, None)
             options = dict(options, precision=precision)
+        if 'min_precision' not in options and hasattr(field, 'get_min_display_digits'):
+            min_precision = field.get_min_display_digits(record.env)
+            options = dict(options, min_precision=min_precision)
         return super().record_to_html(record, field_name, options)
 
 

@@ -198,7 +198,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         self.assertEqual(self.scrap_wood.standard_price, 30, "Initial price of the By-Product should be 30")
         # bom price is 871.25. Byproduct cost share is 12%+1% = 13% -> 113.26 for 8+12 units -> 5.66
         self.scrap_wood.button_bom_cost()
-        self.assertEqual(self.scrap_wood.standard_price, 5.66, "After computing price from BoM price should be 20.63")
+        self.assertAlmostEqual(self.scrap_wood.standard_price, 5.663125, "After computing price from BoM price should be 20.63")
 
     def test_wip_accounting_00(self):
         """ Test that posting a WIP accounting entry works as expected.
