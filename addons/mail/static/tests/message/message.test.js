@@ -2347,3 +2347,101 @@ test("should delete link preview along with message", async () => {
     await click(".modal button:text('Delete')");
     await contains(".o-mail-LinkPreviewCard", { count: 0 });
 });
+
+test("Editing message can change mentionned channel", async () => {
+    const pyEnv = await startServer();
+    const channelId1 = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["discuss.channel"].create({
+        name: "other",
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId1);
+    await insertText(".o-mail-Composer-input", "#");
+    await click(".o-mail-Composer-suggestion strong:text('other')");
+    await press("Enter");
+    await contains(".o_channel_redirect:text('other')");
+    await click(".o-mail-Message [title='Edit']");
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "#other" });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "#", { replace: true });
+    await click(".o-mail-Composer-suggestion strong:text('general')");
+    await click(".o-mail-Message button:text('save')");
+    await contains(".o-mail-Message-content:text('general (edited)')");
+    await click(".o_channel_redirect:text('general')");
+    await contains(".o-mail-DiscussContent-threadName", { value: "general" });
+});
+
+test("Editing message can change mentionned channel by a sub-channel", async () => {
+    const pyEnv = await startServer();
+    const channelId1 = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["discuss.channel"].create({
+        name: "other",
+        channel_type: "channel",
+        parent_channel_id: channelId1,
+    });
+    await start();
+    await openDiscuss(channelId1);
+    await insertText(".o-mail-Composer-input", "#");
+    await click(".o-mail-Composer-suggestion strong:text('general')");
+    await press("Enter");
+    await contains(".o_channel_redirect:text('general')");
+    await click(".o-mail-Message [title='Edit']");
+    await insertText(".o-mail-Message .o-mail-Composer-input", "#", { replace: true });
+    await click(".o-mail-Composer-suggestion strong:text('generalother')");
+    await click(".o-mail-Message button:text('save')");
+    await contains(".o-mail-Message-content:text('general > other (edited)')");
+    await click(".o_channel_redirect:text('general > other')");
+    await contains(".o-mail-DiscussContent-threadName", { value: "other" });
+});
+
+test("Should be able to mention parent and child channel in the same message", async () => {
+    const pyEnv = await startServer();
+    const channelId1 = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["discuss.channel"].create({
+        name: "other",
+        channel_type: "channel",
+        parent_channel_id: channelId1,
+    });
+    await start();
+    await openDiscuss(channelId1);
+    await insertText(".o-mail-Composer-input", "#");
+    await click(".o-mail-Composer-suggestion strong:text('general')");
+    await contains(".o-mail-Composer-input", { value: "#general " });
+    await insertText(".o-mail-Composer-input", "#");
+    await click(".o-mail-Composer-suggestion strong:text('generalother')");
+    await press("Enter");
+    await contains(".o_channel_redirect:text('general')");
+    await contains(".o_channel_redirect:text('general > other')");
+});
+
+test("Should be able to mention child before a parent in the same message", async () => {
+    const pyEnv = await startServer();
+    const channelId1 = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["discuss.channel"].create({
+        name: "other",
+        channel_type: "channel",
+        parent_channel_id: channelId1,
+    });
+    await start();
+    await openDiscuss(channelId1);
+    await insertText(".o-mail-Composer-input", "#");
+    await click(".o-mail-Composer-suggestion strong:text('generalother')");
+    await contains(".o-mail-Composer-input", { value: "#generalother " });
+    await insertText(".o-mail-Composer-input", "#");
+    await click(".o-mail-Composer-suggestion strong:text('general')");
+    await press("Enter");
+    await contains(".o_channel_redirect:text('general')");
+    await contains(".o_channel_redirect:text('general > other')");
+});

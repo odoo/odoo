@@ -21,6 +21,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { getOrigin } from "@web/core/utils/urls";
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
+import { createElementWithContent } from "@web/core/utils/html";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -475,23 +476,46 @@ export class Store extends BaseStore {
         }
     }
 
+    /**
+     * @param {string|ReturnType<markup>} body
+     * @param {Object} param0
+     * @param {import("models").Thread[]} [param0.mentionedChannels]
+     * @param {import("models").ResPartner[]} [param0.mentionedPartners]
+     * @param {import("models").ResRole[]} [param0.mentionedRoles]
+     * @param {import("models").Thread} [param0.thread]
+     * @return {Object}
+     */
     getMentionsFromText(
         body,
         { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [], thread } = {}
     ) {
+        // Make sure we dont have html
+        const textBody = createElementWithContent("div", body).textContent;
         const validMentions = {};
         validMentions.channels = mentionedChannels.filter((channel) => {
             if (channel.parent_channel_id) {
-                return body.includes(`#${channel.parent_channel_id.fullNameWithParent}`);
+                return textBody.includes(`#${channel.fullNameWithParent}`);
             }
-            return body.includes(`#${channel.displayName}`);
+            if (channel.sub_channel_ids.length > 0) {
+                const position = textBody.indexOf(`#${channel.displayName}`);
+                // Check that no subchannel is at this position
+                if (position >= 0) {
+                    for (const subchannel of channel.sub_channel_ids) {
+                        const childPosition = textBody.indexOf(`#${subchannel.fullNameWithParent}`);
+                        if (childPosition === position) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return textBody.includes(`#${channel.displayName}`);
         });
         validMentions.partners = mentionedPartners.filter((partner) =>
-            body.includes(`@${thread?.getPersonaName(partner) ?? partner.name}`)
+            textBody.includes(`@${thread?.getPersonaName(partner) ?? partner.name}`)
         );
-        validMentions.roles = mentionedRoles.filter((role) => body.includes(`@${role.name}`));
+        validMentions.roles = mentionedRoles.filter((role) => textBody.includes(`@${role.name}`));
         validMentions.specialMentions = this.specialMentions
-            .filter((special) => body.includes(`@${special.label}`))
+            .filter((special) => textBody.includes(`@${special.label}`))
             .map((special) => special.label);
         return validMentions;
     }
