@@ -2957,3 +2957,52 @@ class TestStockValuation(TestStockValuationCommon):
         product_value_form = Form(product_value)
 
         self.assertFalse(product_value_form.current_value_details)
+
+    def test_average_cost_in_negative_quantity(self):
+        self.product_avco.standard_price = 10
+
+        self._make_out_move(self.product_avco, 10)
+        self.assertEqual(self.product_avco.qty_available, -10)
+        self.assertEqual(self.product_avco.standard_price, 10)
+
+        # New IN cost while staying in negative ==>> standard_price updated to last IN cost (current move)
+        self._make_in_move(self.product_avco, 5, unit_cost=15)
+        self.assertEqual(self.product_avco.qty_available, -5)
+        self.assertEqual(self.product_avco.standard_price, 15)
+
+        # New IN cost while reaching 0 quantity ==>> standard_price updated to last IN cost (current move)
+        self._make_in_move(self.product_avco, 5, unit_cost=20)
+        self.assertEqual(self.product_avco.qty_available, 0)
+        self.assertEqual(self.product_avco.standard_price, 20)
+
+        # Going back to negative for last test
+        self._make_out_move(self.product_avco, 5)
+        self.assertEqual(self.product_avco.qty_available, -5)
+        self.assertEqual(self.product_avco.standard_price, 20)
+
+        # New IN cost while going back to positive ==>> standard_price updated to last IN cost (current move)
+        self._make_in_move(self.product_avco, 10, unit_cost=25)
+        self.assertEqual(self.product_avco.qty_available, 5)
+        self.assertEqual(self.product_avco.standard_price, 25)
+
+    def test_average_cost_dropship_in_negative_quantity(self):
+        self.product_avco.standard_price = 10
+
+        self._make_out_move(self.product_avco, 10)
+        self.assertEqual(self.product_avco.qty_available, -10)
+        self.assertEqual(self.product_avco.standard_price, 10)
+
+        # Make dropship move, where the quantity stay in negative
+        self._make_dropship_move(self.product_avco, 5, unit_cost=15)
+        self.assertEqual(self.product_avco.qty_available, -10)
+        self.assertEqual(self.product_avco.standard_price, 10)
+
+        # Make dropship move, where the quantity reach 0
+        self._make_dropship_move(self.product_avco, 10, unit_cost=15)
+        self.assertEqual(self.product_avco.qty_available, -10)
+        self.assertEqual(self.product_avco.standard_price, 10)
+
+        # Make dropship move, where the quantity do not go in positive
+        self._make_dropship_move(self.product_avco, 15, unit_cost=15)
+        self.assertEqual(self.product_avco.qty_available, -10)
+        self.assertEqual(self.product_avco.standard_price, 10)
