@@ -213,16 +213,15 @@ class ReportSaleDetails(models.AbstractModel):
                         payment['count'] = True
             if not is_cash_method:
                 cash_name = _('Cash %(session_name)s', session_name=session.name)
-                previous_session = self.env['pos.session'].search([('id', '<', session.id), ('state', '=', 'closed'), ('config_id', '=', session.config_id.id)], limit=1)
-                final_count = previous_session.cash_register_balance_end_real + session.cash_real_transaction
+                final_count = session.cash_register_balance_start + session.cash_real_transaction
                 cash_difference = session.cash_register_balance_end_real - final_count
                 cash_moves = self.env['account.bank.statement.line'].search([('pos_session_id', '=', session.id)], order='date asc')
                 cash_in_out_list = []
 
-                if previous_session.cash_register_balance_end_real > 0:
+                if session.cash_register_balance_start > 0:
                     cash_in_out_list.append({
                         'name': _('Cash Opening'),
-                        'amount': previous_session.cash_register_balance_end_real,
+                        'amount': session.cash_register_balance_start,
                     })
 
                 # If there is a cash difference, we remove the last cash move which is the cash difference
