@@ -22,7 +22,7 @@ class ProviderGelato(models.Model):
     # === BUSINESS METHODS === #
 
     def _is_available_for_order(self, order):
-        """ Override of `delivery` to exclude regular delivery methods from Gelato orders and Gelato
+        """Override of `delivery` to exclude regular delivery methods from Gelato orders and Gelato
         delivery methods from non-Gelato orders.
 
         :param sale.order order: The current order.
@@ -31,12 +31,14 @@ class ProviderGelato(models.Model):
         """
         is_gelato_order = any(order.order_line.product_id.mapped('gelato_product_uid'))
         is_gelato_delivery = self.delivery_type == 'gelato'
-        if is_gelato_order and not is_gelato_delivery or not is_gelato_order and is_gelato_delivery:
+        if (is_gelato_order and not is_gelato_delivery) or (
+            not is_gelato_order and is_gelato_delivery
+        ):
             return False
         return super()._is_available_for_order(order)
 
     def available_carriers(self, partner, source):
-        """ Override of `delivery` to filter out regular delivery methods from Gelato orders and
+        """Override of `delivery` to filter out regular delivery methods from Gelato orders and
         Gelato delivery methods from non-Gelato orders.
 
         :param res.partner partner: The partner to check.
@@ -53,11 +55,10 @@ class ProviderGelato(models.Model):
             raise UserError(_("Invalid source document type"))
         if is_gelato_order:
             return available_delivery_methods.filtered(lambda m: m.delivery_type == 'gelato')
-        else:
-            return available_delivery_methods.filtered(lambda m: m.delivery_type != 'gelato')
+        return available_delivery_methods.filtered(lambda m: m.delivery_type != 'gelato')
 
     def gelato_rate_shipment(self, order):
-        """ Fetch the Gelato delivery price based on products, quantity and address.
+        """Fetch the Gelato delivery price based on products, quantity and address.
 
         This method is called by `delivery`'s `rate_shipment` method.
 
@@ -70,11 +71,7 @@ class ProviderGelato(models.Model):
         try:
             order.partner_shipping_id._gelato_validate_address()
         except ValidationError as e:
-            return {
-                'success': False,
-                'price': 0,
-                'error_message': str(e),
-            }
+            return {'success': False, 'price': 0, 'error_message': str(e)}
 
         # Fetch the delivery price from Gelato.
         payload = {
@@ -89,11 +86,7 @@ class ProviderGelato(models.Model):
             api_key = order.company_id.sudo().gelato_api_key  # In sudo mode to read on the company.
             order_data = utils.make_request(api_key, 'order', 'v4', 'orders:quote', payload=payload)
         except UserError as e:
-            return {
-                'success': False,
-                'price': 0,
-                'error_message': str(e),
-            }
+            return {'success': False, 'price': 0, 'error_message': str(e)}
 
         # Find the total delivery price by summing all products' matching methods' minimum price.
         total_delivery_price = 0
@@ -109,10 +102,6 @@ class ProviderGelato(models.Model):
                     'price': 0,
                     'error_message': _("The delivery method is not available for this order."),
                 }
-            else:
-                total_delivery_price += min(matching_shipment_method_prices)
+            total_delivery_price += min(matching_shipment_method_prices)
 
-        return {
-            'success': True,
-            'price': total_delivery_price,
-        }
+        return {'success': True, 'price': total_delivery_price}

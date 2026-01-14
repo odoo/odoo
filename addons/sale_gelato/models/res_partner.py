@@ -35,10 +35,12 @@ class ResPartner(models.Model):
         ]
         if missing_fields:
             translated_field_names = [f._description_string(self.env) for f in missing_fields]
-            raise ValidationError(_(
-                "The following required address fields are missing: %s",
-                ", ".join(translated_field_names),
-            ))
+            raise ValidationError(
+                _(
+                    "The following required address fields are missing: %s",
+                    ", ".join(translated_field_names),
+                )
+            )
 
     def _gelato_check_address_length_limit(self):
         """Check that the address fields are compliant with Gelato maximum character limit.
@@ -80,5 +82,5 @@ class ResPartner(models.Model):
             'postCode': self.zip,
             'country': self.country_id.code,
             'email': self.email,
-            'phone': self.phone or ''
+            'phone': self.phone or '',
         }
