@@ -5,14 +5,13 @@ from odoo.exceptions import UserError
 
 
 class ProductDocument(models.Model):
-
     _inherit = 'product.document'
 
     # Technical field to tell apart Gelato print images from other product documents.
     is_gelato = fields.Boolean(readonly=True)
 
     def _gelato_prepare_file_payload(self):
-        """ Create the payload for a single file of an 'orders' request.
+        """Create the payload for a single file of an 'orders' request.
 
         :return: The file payload.
         :rtype: dict

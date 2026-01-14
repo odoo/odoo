@@ -9,7 +9,6 @@ from werkzeug.exceptions import Forbidden
 from odoo import SUPERUSER_ID, _
 from odoo.http import Controller, request, route
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -18,7 +17,7 @@ class GelatoController(Controller):
 
     @route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
     def gelato_webhook(self):
-        """ Process the notification data sent by Gelato to the webhook.
+        """Process the notification data sent by Gelato to the webhook.
 
         See https://dashboard.gelato.com/docs/orders/order_details/#order-statuses for the event
         codes.
@@ -59,7 +58,7 @@ class GelatoController(Controller):
                 # to ensure the values are saved in the correct format. However, the currency cannot
                 # be read directly during the flush due to access rights, necessitating manual
                 # caching.
-                order_sudo.order_line.currency_id
+                order_sudo.order_line.currency_id  # noqa: B018
 
                 # Log a message on the order.
                 log_message = _(
@@ -95,7 +94,7 @@ class GelatoController(Controller):
 
     @staticmethod
     def _verify_notification_signature(received_signature, order_sudo):
-        """ Check if the received signature matches the expected one.
+        """Check if the received signature matches the expected one.
 
         :param str received_signature: The received signature.
         :param sale.order order_sudo: The sales order for which the webhook notification was sent.
@@ -107,17 +106,18 @@ class GelatoController(Controller):
         if not expected_signature:
             _logger.warning(
                 "gelato_webhook_secret not set for this company %s (id: %s)",
-                company_sudo.name, company_sudo.id
+                company_sudo.name,
+                company_sudo.id,
             )
-            raise Forbidden()
+            raise Forbidden
 
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received notification with invalid signature.")
-            raise Forbidden()
+            raise Forbidden
 
     @staticmethod
     def _extract_tracking_data(item_data):
-        """ Extract the tracking URL and code from the item data.
+        """Extract the tracking URL and code from the item data.
 
         :param dict item_data: The item data.
         :return: The extracted tracking data.

@@ -9,12 +9,11 @@ from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.sale_gelato import const, utils
 
-
 _logger = logging.getLogger(__name__)
 
 
 def post_commit(func):
-    """ Wrap method to run in postcommit/postrollback hook with a separate cursor. """
+    """Wrap method to run in postcommit/postrollback hook with a separate cursor."""
 
     @wraps(func)
     def _post_commit_wrapper(self, *args, **kwargs):
@@ -31,7 +30,7 @@ class SaleOrder(models.Model):
     # === CRUD METHODS === #
 
     def _prevent_mixing_gelato_and_non_gelato_products(self):
-        """ Ensure that the order lines don't mix Gelato and non-Gelato products.
+        """Ensure that the order lines don't mix Gelato and non-Gelato products.
 
         This method is not a constraint and is called from the `create` and `write` methods of
         `sale.order.line` to cover the cases where adding/writing on order lines would not trigger a
@@ -41,23 +40,25 @@ class SaleOrder(models.Model):
         :raise ValidationError: If Gelato and non-Gelato products are mixed.
         """
         for order in self:
-            gelato_lines = order.order_line.filtered(lambda l: l.product_id.gelato_product_uid)
+            gelato_lines = order.order_line.filtered(
+                lambda line: line.product_id.gelato_product_uid
+            )
             non_gelato_lines = (order.order_line - gelato_lines).filtered(
-                lambda l: l.product_id.sale_ok and l.product_id.type != 'service'
+                lambda line: line.product_id.sale_ok and line.product_id.type != 'service'
             )  # Filter out non-saleable (sections, etc.) and non-deliverable products.
             if gelato_lines and non_gelato_lines:
                 raise ValidationError(
-                    _("You cannot mix Gelato products with non-Gelato products in the same order."))
+                    _("You cannot mix Gelato products with non-Gelato products in the same order.")
+                )
 
     # === ACTION METHODS === #
 
     def action_open_delivery_wizard(self):
-        """ Override of `delivery` to set a Gelato delivery method by default in the wizard. """
+        """Override of `delivery` to set a Gelato delivery method by default in the wizard."""
         res = super().action_open_delivery_wizard()
 
-        if (
-            not self.env.context.get('carrier_recompute')
-            and any(line.product_id.gelato_product_uid for line in self.order_line)
+        if not self.env.context.get('carrier_recompute') and any(
+            line.product_id.gelato_product_uid for line in self.order_line
         ):
             gelato_delivery_method = self.env['delivery.carrier'].search(
                 [('delivery_type', '=', 'gelato')], limit=1
@@ -66,7 +67,7 @@ class SaleOrder(models.Model):
         return res
 
     def action_confirm(self):
-        """ Override of `sale` to send the order to Gelato on confirmation. """
+        """Override of `sale` to send the order to Gelato on confirmation."""
         res = super().action_confirm()
         for order in self.filtered(
             lambda o: any(o.order_line.product_id.mapped('gelato_product_uid'))
@@ -89,7 +90,8 @@ class SaleOrder(models.Model):
             required_address_fields.append('zip')
         missing_fields = [
             self.partner_id._fields[field_name]
-            for field_name in required_address_fields if not self.partner_id[field_name]
+            for field_name in required_address_fields
+            if not self.partner_id[field_name]
         ]
         if missing_fields:
             translated_field_names = [f._description_string(self.env) for f in missing_fields]
@@ -99,12 +101,12 @@ class SaleOrder(models.Model):
             )
 
     def _create_order_on_gelato(self):
-        """ Send the order creation request to Gelato and log the request result on the chatter.
+        """Send the order creation request to Gelato and log the request result on the chatter.
 
         :return: None
         """
         delivery_line = self.order_line.filtered(
-            lambda l: l.is_delivery and l.product_id.default_code in ('normal', 'express')
+            lambda line: line.is_delivery and line.product_id.default_code in ('normal', 'express')
         )
         payload = {
             'orderType': 'draft',  # The order is confirmed/deleted later, see @post_commit hooks.
@@ -123,13 +125,15 @@ class SaleOrder(models.Model):
             # committed/rolled back. This prevents creating duplicate confirmed orders on Gelato.
             self.env.cr.postcommit.add(partial(self._confirm_order_on_gelato, data['id']))
             self.env.cr.postrollback.add(partial(self._delete_order_on_gelato, data['id']))
-        except UserError as e:
-            raise UserError(_(
-                "The order with reference %(order_reference)s was not sent to Gelato.\n"
-                "Reason: %(error_message)s",
-                order_reference=self.display_name,
-                error_message=str(e),
-            ))
+        except UserError as exc:
+            raise UserError(
+                _(
+                    "The order with reference %(order_reference)s was not sent to Gelato.\n"
+                    "Reason: %(error_message)s",
+                    order_reference=self.display_name,
+                    error_message=str(exc),
+                )
+            ) from exc
 
         _logger.info("Notification received from Gelato with data:\n%s", pprint.pformat(data))
         self.message_post(
@@ -138,13 +142,15 @@ class SaleOrder(models.Model):
         )
 
     def _gelato_prepare_items_payload(self):
-        """ Create the payload for the 'items' key of an 'orders' request.
+        """Create the payload for the 'items' key of an 'orders' request.
 
         :return: The items payload.
         :rtype: dict
         """
         items_payload = []
-        for gelato_line in self.order_line.filtered(lambda l: l.product_id.gelato_product_uid):
+        for gelato_line in self.order_line.filtered(
+            lambda line: line.product_id.gelato_product_uid
+        ):
             # Build the list of images to send as the set of defined variant images, plus the
             # template images that are not overridden by variant images.
             defined_variant_images = gelato_line.product_id.gelato_variant_image_ids.filtered('raw')
@@ -182,12 +188,7 @@ class SaleOrder(models.Model):
             api_key = self.company_id.sudo().gelato_api_key  # In sudo mode to read on the company.
             payload = {'orderType': 'order'}  # Confirm the order (draft -> order).
             data = utils.make_request(
-                api_key,
-                'order',
-                'v4',
-                f'orders/{gelato_order_id}',
-                payload=payload,
-                method='PATCH',
+                api_key, 'order', 'v4', f'orders/{gelato_order_id}', payload=payload, method='PATCH'
             )
         except UserError:
             self.message_post(
@@ -197,7 +198,8 @@ class SaleOrder(models.Model):
         finally:
             _logger.info(
                 "Received confirmation request response for Gelato order %s:\n%s",
-                gelato_order_id, pprint.pformat(data),
+                gelato_order_id,
+                pprint.pformat(data),
             )
 
     @post_commit
@@ -227,5 +229,6 @@ class SaleOrder(models.Model):
         finally:
             _logger.info(
                 "Received deletion request response for Gelato order %s:\n%s",
-                gelato_order_id, pprint.pformat(data),
+                gelato_order_id,
+                pprint.pformat(data),
             )

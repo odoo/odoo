@@ -11,7 +11,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     gelato_template_ref = fields.Char(
-        string="Gelato Template Reference", help="Synchronize to fetch variants from Gelato",
+        string="Gelato Template Reference", help="Synchronize to fetch variants from Gelato"
     )
     gelato_product_uid = fields.Char(
         string="Gelato Product UID",
@@ -29,7 +29,7 @@ class ProductTemplate(models.Model):
         readonly=True,
     )
     gelato_missing_images = fields.Boolean(
-        string="Missing Print Images", compute='_compute_gelato_missing_images',
+        string="Missing Print Images", compute='_compute_gelato_missing_images'
     )
 
     # === COMPUTE METHODS === #
@@ -51,7 +51,7 @@ class ProductTemplate(models.Model):
     # === ACTION METHODS === #
 
     def action_sync_gelato_template_info(self):
-        """ Fetch the template information from Gelato and update the product template accordingly.
+        """Fetch the template information from Gelato and update the product template accordingly.
 
         :return: The action to display a toast notification to the user.
         :rtype: dict
@@ -71,7 +71,7 @@ class ProductTemplate(models.Model):
                     'title': _("Could not synchronize with Gelato"),
                     'message': str(e),
                     'sticky': True,
-                }
+                },
             }
 
         # Apply the necessary changes on the product template.
@@ -87,18 +87,15 @@ class ProductTemplate(models.Model):
                 'title': _("Successfully synchronized with Gelato"),
                 'message': _("Missing product variants and images have been successfully created."),
                 'sticky': False,
-                'next': {
-                    'type': 'ir.actions.client',
-                    'tag': 'soft_reload'
-                }
-            }
+                'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
+            },
         }
 
     # === BUSINESS METHODS === #
 
     def _create_attributes_from_gelato_info(self, template_info):
-        """ Create attributes for the current product template.
-        
+        """Create attributes for the current product template.
+
         :param dict template_info: The template information fetched from Gelato.
         :return: None
         """
@@ -123,13 +120,17 @@ class ProductTemplate(models.Model):
                         })
 
                     # Search for the existing attribute value and create it if not found.
-                    attribute_value = ProductAttributeValue.search([
-                        ('name', '=', attribute_data['value']), ('attribute_id', '=', attribute.id)
-                    ], limit=1)
+                    attribute_value = ProductAttributeValue.search(
+                        [
+                            ('name', '=', attribute_data['value']),
+                            ('attribute_id', '=', attribute.id),
+                        ],
+                        limit=1,
+                    )
                     if not attribute_value:
                         attribute_value = ProductAttributeValue.create({
                             'name': attribute_data['value'],
-                            'attribute_id': attribute.id
+                            'attribute_id': attribute.id,
                         })
                     current_variant_pavs += attribute_value
 
@@ -142,7 +143,7 @@ class ProductTemplate(models.Model):
                         self.env['product.template.attribute.line'].create({
                             'product_tmpl_id': self.id,
                             'attribute_id': attribute.id,
-                            'value_ids': [Command.link(attribute_value.id)]
+                            'value_ids': [Command.link(attribute_value.id)],
                         })
                     else:  # The PTAL already exists.
                         ptal.value_ids = [Command.link(attribute_value.id)]  # Link the value.
@@ -165,12 +166,12 @@ class ProductTemplate(models.Model):
             # Delete the incompatible variants that were created but not allowed by Gelato.
             variants_without_gelato = self.env['product.product'].search([
                 ('product_tmpl_id', '=', self.id),
-                ('gelato_product_uid', '=', False)
+                ('gelato_product_uid', '=', False),
             ])
             variants_without_gelato.unlink()
 
     def _create_print_images_from_gelato_info(self, template_info):
-        """ Create print image for the current product template.
+        """Create print image for the current product template.
 
         :param dict template_info: The template information fetched from Gelato.
         :return: None
@@ -185,26 +186,30 @@ class ProductTemplate(models.Model):
 
             # Gelato might send several print images for the same placement if several layers were
             # defined, but we keep only one because their API only accepts one image per placement.
-            print_image_found = bool(self.env['product.document'].search_count([
-                ('name', 'ilike', print_image_data['printArea']),
-                ('res_id', '=', self.id),
-                ('res_model', '=', 'product.template'),
-                ('is_gelato', '=', True),  # Avoid finding regular documents with the same name.
-            ]))
+            print_image_found = bool(
+                self.env['product.document'].search_count([
+                    ('name', 'ilike', print_image_data['printArea']),
+                    ('res_id', '=', self.id),
+                    ('res_model', '=', 'product.template'),
+                    ('is_gelato', '=', True),  # Avoid finding regular documents with the same name.
+                ])
+            )
             if not print_image_found:
-                self.gelato_image_ids = [Command.create({
-                    'name': print_image_data['printArea'].lower(),
-                    'res_id': self.id,
-                    'res_model': 'product.template',
-                    'is_gelato': True,
-                })]
+                self.gelato_image_ids = [
+                    Command.create({
+                        'name': print_image_data['printArea'].lower(),
+                        'res_id': self.id,
+                        'res_model': 'product.template',
+                        'is_gelato': True,
+                    })
+                ]
 
     # === GETTER METHODS === #
 
     def _get_related_fields_variant_template(self):
-        """ Override of `product` to add `gelato_product_uid` as a related field. """
+        """Override of `product` to add `gelato_product_uid` as a related field."""
         return super()._get_related_fields_variant_template() + ['gelato_product_uid']
 
     def _get_product_document_domain(self):
-        """ Override of `product` to filter out gelato print images. """
+        """Override of `product` to filter out gelato print images."""
         return super()._get_product_document_domain() & Domain('is_gelato', '=', False)

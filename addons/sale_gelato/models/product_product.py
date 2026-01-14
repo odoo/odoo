@@ -28,12 +28,15 @@ class ProductProduct(models.Model):
         missing_placements = self.product_tmpl_id.gelato_image_ids.filtered(
             lambda image: image.name not in existing_placements
         )
-        self.gelato_variant_image_ids = [Command.create({
-            'name': image_placement.name,
-            'res_id': self.id,
-            'res_model': 'product.product',
-            'is_gelato': True,
-        }) for image_placement in missing_placements]
+        self.gelato_variant_image_ids = [
+            Command.create({
+                'name': image_placement.name,
+                'res_id': self.id,
+                'res_model': 'product.product',
+                'is_gelato': True,
+            })
+            for image_placement in missing_placements
+        ]
 
         return {
             'type': 'ir.actions.client',

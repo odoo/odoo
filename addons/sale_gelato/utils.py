@@ -7,12 +7,11 @@ import requests
 from odoo import _
 from odoo.exceptions import UserError
 
-
 _logger = logging.getLogger(__name__)
 
 
 def make_request(api_key, subdomain, version, endpoint, payload=None, method='POST'):
-    """ Make a request to the Gelato API and return the JSON-formatted content of the response.
+    """Make a request to the Gelato API and return the JSON-formatted content of the response.
 
     :param str api_key: The Gelato API key used for signing requests.
     :param str subdomain: The subdomain of the Gelato API.
@@ -24,9 +23,7 @@ def make_request(api_key, subdomain, version, endpoint, payload=None, method='PO
     :rtype: dict
     """
     url = f'https://{subdomain}.gelatoapis.com/{version}/{endpoint}'
-    headers = {
-        'X-API-KEY': api_key or None
-    }
+    headers = {'X-API-KEY': api_key or None}
     try:
         if method == 'GET':
             response = requests.get(url=url, params=payload, headers=headers, timeout=10)
@@ -39,10 +36,10 @@ def make_request(api_key, subdomain, version, endpoint, payload=None, method='PO
         response_content = response.json()
         try:
             response.raise_for_status()
-        except requests.exceptions.HTTPError:
+        except requests.exceptions.HTTPError as exc:
             _logger.exception("Invalid API request at %s with data %s", url, payload)
-            raise UserError(response_content.get('message', ''))
-    except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            raise UserError(response_content.get('message', '')) from exc
+    except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as exc:
         _logger.exception("Unable to reach endpoint at %s", url)
-        raise UserError(_("Could not establish the connection to the Gelato API."))
+        raise UserError(_("Could not establish the connection to the Gelato API.")) from exc
     return response.json()
