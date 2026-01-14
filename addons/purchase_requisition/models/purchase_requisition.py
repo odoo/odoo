@@ -173,7 +173,7 @@ class PurchaseRequisitionLine(models.Model):
     product_qty = fields.Float(string='Quantity', digits='Product Unit')
     product_description_variants = fields.Char('Description')
     price_unit = fields.Float(
-        string='Unit Price', digits='Product Price', default=0.0,
+        string='Unit Price', min_display_digits='Product Price', default=0.0,
         compute="_compute_price_unit", readonly=False, store=True)
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered')
     requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade', index=True)

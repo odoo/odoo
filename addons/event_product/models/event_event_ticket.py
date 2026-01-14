@@ -8,10 +8,10 @@ class EventEventTicket(models.Model):
 
     total_price_reduce_taxinc = fields.Float(
         string='Total Price Reduce Tax inc', compute='_compute_total_price_reduce_taxinc',
-        digits='Product Price', compute_sudo=True)
+        min_display_digits='Product Price', compute_sudo=True)
     total_price_incl = fields.Float(
         string='Total Price include', compute='_compute_total_price_incl',
-        digits='Product Price', compute_sudo=True)
+        min_display_digits='Product Price', compute_sudo=True)
 
     @api.depends('product_id.active')
     def _compute_sale_available(self):

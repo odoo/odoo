@@ -23,17 +23,17 @@ class EventTypeTicket(models.Model):
     currency_id = fields.Many2one(related="product_id.currency_id", string="Currency")
     price = fields.Float(
         string='Ticket Price', compute='_compute_price',
-        digits='Product Price', readonly=False, store=True)
+        min_display_digits='Product Price', readonly=False, store=True)
     price_reduce = fields.Float(
         string="Price Reduce", compute="_compute_price_reduce",
-        compute_sudo=True, digits='Product Price')
+        compute_sudo=True, min_display_digits='Product Price')
     additional_product_ids = fields.Many2many('product.product', string='Additional Products',
             domain=[('service_tracking', '!=', 'event')],
             help="Select products to include with each registration. They will also show up separately on Sale Orders.")
-    total_price = fields.Float(string='Total Price', compute='_compute_total_price', digits='Product Price',
+    total_price = fields.Float(string='Total Price', compute='_compute_total_price', min_display_digits='Product Price',
         help="Price at which this ticket will be sold, which takes into account the Ticket Price and the price of every Additional Product")
     total_price_reduce = fields.Float(string='Total Price Reduce', compute='_compute_price_reduce',
-        compute_sudo=True, digits='Product Price')
+        compute_sudo=True, min_display_digits='Product Price')
 
     @api.depends('product_id')
     def _compute_price(self):

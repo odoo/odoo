@@ -120,6 +120,8 @@ formatDateTime.extractOptions = ({ attrs, options }) => ({
  * @param {Object} [options]
  * @param {number[]} [options.digits] the number of digits that should be used,
  *   instead of the default digits precision in the field.
+ * @param {number} [options.minDigits] the minimum number of decimal digits to display.
+ *   Displays maximum 6 decimal places if no precision is provided.
  * @param {boolean} [options.humanReadable] if true, large numbers are formatted
  *   to a human readable format.
  * @param {string} [options.decimalPoint] decimal separating character
@@ -138,6 +140,9 @@ export function formatFloat(value, options = {}) {
     if (!options.digits && options.field) {
         options.digits = options.field.digits;
     }
+    if (!options.minDigits && options.field) {
+        options.minDigits = options.field.min_display_digits;
+    }
     return formatFloatNumber(value, options);
 }
 formatFloat.extractOptions = ({ attrs, options }) => {
@@ -149,10 +154,11 @@ formatFloat.extractOptions = ({ attrs, options }) => {
     } else if (options.digits) {
         digits = options.digits;
     }
+    const minDigits = options.minDigits;
     const humanReadable = !!options.human_readable;
     const decimals = options.decimals || 0;
     const trailingZeros = !options.hide_trailing_zeros;
-    return { decimals, digits, humanReadable, trailingZeros };
+    return { decimals, digits, minDigits, humanReadable, trailingZeros };
 };
 
 /**
