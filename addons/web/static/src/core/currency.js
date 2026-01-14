@@ -29,17 +29,20 @@ export function getCurrency(id) {
  * @param {[number, number]} [options.digits] the number of digits that should
  *   be used, instead of the default digits precision in the field.  The first
  *   number is always ignored (legacy constraint)
+ * @param {number} [options.minDigits] the minimum number of decimal digits to display.
+ *   Displays maximum 6 decimal places if no precision is provided.
  * @returns {string}
  */
 export function formatCurrency(amount, currencyId, options = {}) {
     const currency = getCurrency(currencyId);
-    const digits = options.digits || (currency && currency.digits);
+
+    const digits = (options.digits !== undefined)? options.digits : (currency && currency.digits)
 
     let formattedAmount;
     if (options.humanReadable) {
         formattedAmount = humanNumber(amount, { decimals: digits ? digits[1] : 2 });
     } else {
-        formattedAmount = formatFloat(amount, { digits, trailingZeros: options.trailingZeros });
+        formattedAmount = formatFloat(amount, { digits, minDigits: options.minDigits, trailingZeros: options.trailingZeros });
     }
 
     if (!currency || options.noSymbol) {

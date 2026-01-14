@@ -40,7 +40,7 @@ class PurchaseOrderSuggest(models.TransientModel):
     estimated_price = fields.Float(
         string="Expected",
         compute='_compute_estimated_price',
-        digits='Product Price')
+        min_display_digits='Product Price')
     product_count = fields.Integer(compute='_compute_estimated_price')
     hide_warehouse = fields.Boolean(compute='_compute_hide_warehouse')
     multiplier = fields.Float(compute='_compute_multiplier')
