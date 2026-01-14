@@ -204,7 +204,7 @@ def has_unaccent(cr: BaseCursor) -> FunctionStatus:
             LEFT JOIN pg_catalog.pg_namespace ns ON p.pronamespace = ns.oid
         WHERE p.proname = 'unaccent'
               AND p.pronargs = 1
-              AND ns.nspname = 'public'
+              AND ns.nspname = current_schema
     """)
     result = cr.fetchone()
     if not result:
