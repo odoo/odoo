@@ -278,6 +278,9 @@
                             <p t-field="o.note"/>
                             <div class="oe_structure"></div>
                         </div>
+                        <t t-if="not o_last">
+                            <p style="page-break-after: always;"/>
+                        </t>
                     </t>
                 </div>
             </t>
