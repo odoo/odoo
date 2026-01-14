@@ -1278,3 +1278,25 @@ class TestLoyalty(TestSaleCouponCommon):
         reward_line = sale_order.order_line.filtered('reward_id')
         self.assertEqual(reward_line.discount, 100)
         self.assertEqual(reward_line.price_total, 0)
+
+    def test_reapplying_reward_keeps_reward_price_unit(self):
+        """
+        Ensure that re-applying a reward doesn't reset the existing reward line unit price to zero
+        """
+        self.immediate_promotion_program.active = True
+        sale_order = self.empty_order
+        sale_order.write({
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+        sale_order._update_programs_and_rewards()
+        self._claim_reward(sale_order, self.immediate_promotion_program)
+        reward_line = sale_order.order_line.filtered('reward_id')
+        reward_line_price_unit = reward_line.price_unit
+        sale_order._update_programs_and_rewards()
+        self._claim_reward(sale_order, self.immediate_promotion_program)
+        self.assertEqual(reward_line.price_unit, reward_line_price_unit)
