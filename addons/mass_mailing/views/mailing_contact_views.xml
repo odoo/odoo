@@ -180,7 +180,25 @@
                 Create a mailing contact
             </p><p>
                 Mailing contacts allow you to separate your marketing audience from your business contact directory.
+            </p><p>
+                <!--
+                review note: the action_open_base_import_call action only exists because I have not been able
+                to call an object method from the nocontent helper;
+                is this workaround the only way to do it, or is there a shorter way?
+                -->
+                <a name="mass_mailing.action_open_base_import_call" type="action" class="btn btn-link">
+                    <i class="fa fa-upload"/> Upload Mailing Contacts
+                </a>
             </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_open_base_import_call">
+        <field name="name">Import Contacts</field>
+        <field name="model_id" ref="model_mailing_contact"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.action_open_base_import()
         </field>
     </record>
 
