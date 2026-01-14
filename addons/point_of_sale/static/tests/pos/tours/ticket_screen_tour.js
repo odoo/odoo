@@ -531,6 +531,11 @@ registry.category("web_tour.tours").add("test_order_invoice_search", {
             Dialog.confirm("Open Register"),
             Chrome.clickOrders(),
             TicketScreen.selectFilter("Paid"),
+            {
+                content:
+                    "Verify that the order is paid; this ensures that the RPC process is complete.",
+                trigger: ".orders .order-row:eq(0):has(.badge.rounded:contains(Paid))",
+            },
         ].flat(),
 });
 
