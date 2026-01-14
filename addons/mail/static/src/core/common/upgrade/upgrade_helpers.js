@@ -5,18 +5,19 @@ import { registry } from "@web/core/registry";
 /**
  * @typedef {Object} UpgradeData
  * @property {string} version
- * @property {string} key
+ * @property {string|RegExp} key
  * @property {((param: UpgradeFnParam) => UpgradeFnReturn)|UpgradeFnReturn} upgrade
  */
 /**
  * @typedef {Object} UpgradeDataWithoutVersion
- * @property {string} key
+ * @property {string|RegExp} key
  * @property {((param: UpgradeFnParam) => UpgradeFnReturn)|UpgradeFnReturn} upgrade
  */
 /**
  * @typedef {Object} UpgradeFnParam
  * @property {string} key
  * @property {any} value
+ * @property {ReturnType<typeof String.prototype.match>} [matchOfKey] Only when upgrade data has key as RegExp
  */
 /**
  * @typedef {Object} UpgradeFnReturn
@@ -61,8 +62,17 @@ export function upgradeFrom(version) {
         )
         .sort(([v1], [v2]) => (parseVersion(v1).isLowerThan(v2) ? -1 : 1));
     for (const [, keyMap] of orderedUpgradeList) {
+        const allKeys = [];
+        if (keyMap.values().some((i) => i.key instanceof RegExp)) {
+            for (const i in localStorage) {
+                // eslint-disable-next-line no-prototype-builtins
+                if (localStorage.hasOwnProperty(i)) {
+                    allKeys.push(i);
+                }
+            }
+        }
         for (const upgradeData of keyMap.values()) {
-            applyUpgrade(upgradeData);
+            applyUpgrade(upgradeData, { allKeys });
         }
     }
 }
@@ -101,17 +111,40 @@ function getUpgradeMap() {
  * i.e. call `upgradeData.upgrade` to get new key and value.
  *
  * @param {UpgradeData} upgradeData
+ * @param {Object} [param1={}]
+ * @param {string[]} [param1.allKeys] When upgrade to a given version has scripts with key as function,
+ *   all the keys in local storage are provided in this param. This allows to read all local storage keys only once
+ *   per upgrade step to a specific version.
  */
-function applyUpgrade(upgradeData) {
-    const oldEntry = new LocalStorageEntry(upgradeData.key);
+function applyUpgrade(upgradeData, { allKeys } = {}) {
+    if (upgradeData.key instanceof RegExp) {
+        allKeys
+            .map((k) => k.match(upgradeData.key))
+            .filter((matchOfKey) => matchOfKey)
+            .forEach((matchOfKey) =>
+                applyUpgradeOnKey(matchOfKey[0], upgradeData.upgrade, { matchOfKey })
+            );
+    } else {
+        applyUpgradeOnKey(upgradeData.key, upgradeData.upgrade);
+    }
+}
+
+/**
+ * @param {string} oldKey
+ * @type {((param: UpgradeFnParam) => UpgradeFnReturn)|UpgradeFnReturn} upgradeFn
+ * @param {Object} [param2={}]
+ * @param {ReturnType<typeof String.prototype.match>} [param2.matchOfKey]
+ */
+function applyUpgradeOnKey(oldKey, upgradeFn, { matchOfKey } = {}) {
+    const oldEntry = new LocalStorageEntry(oldKey);
     const oldValue = oldEntry.rawGet() ?? oldEntry.get();
     if (oldValue === undefined) {
         return; // could not upgrade (cannot parse or more recent version)
     }
     const { key, value } =
-        typeof upgradeData.upgrade === "function"
-            ? upgradeData.upgrade({ key: upgradeData.key, value: oldValue })
-            : upgradeData.upgrade;
+        typeof upgradeFn === "function"
+            ? upgradeFn({ key: oldKey, value: oldValue, matchOfKey })
+            : upgradeFn;
     oldEntry.remove();
     const newEntry = new LocalStorageEntry(key);
     newEntry.set(value);
