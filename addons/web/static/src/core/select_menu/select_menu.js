@@ -119,6 +119,7 @@ export class SelectMenu extends Component {
         slots: { type: Object, optional: true },
         disabled: { type: Boolean, optional: true },
         menuRef: { type: Function, optional: true },
+        alternativeChoiceItemTemplate: { type: String, optional: true },
     };
 
     static SCROLL_SETTINGS = {
