@@ -88,6 +88,9 @@ export class BuilderList extends Component {
         limit: t.number().optional(50),
         disableLastCheckedCheckbox: t.boolean().optional(false),
         withScrollbar: t.boolean().optional(true),
+        fullWidthDropdown: t.boolean().optional(false),
+        alternativeChoiceItemTemplate: t.string().optional(),
+        emptyListMessage: t.string().optional(),
     });
 
     tableRef = signal.ref();
@@ -170,6 +173,24 @@ export class BuilderList extends Component {
     getExcludedRecords() {
         const itemIds = new Set(this.includedRecords().map((r) => r.id));
         return this.allRecords().filter((record) => record.id && !itemIds.has(record.id));
+    }
+
+    get selectMenuProps() {
+        const excludedRecords = this.getExcludedRecords();
+        return {
+            choices: excludedRecords.map((record) => ({
+                value: record,
+                label: record.display_name,
+            })),
+            onSelect: (record) => this.addItem(record),
+            class: "o-hb-selectMany2X-wrapper min-w-0",
+            menuClass:
+                "o-hb-select-dropdown o-hb-selectMany2X-dropdown" +
+                (this.props.fullWidthDropdown ? " o-hb-full-width-dropdown" : ""),
+            togglerClass: "o-hb-selectMany2X-toggle btn-secondary",
+            disabled: !excludedRecords.length,
+            position: "bottom-end",
+        };
     }
 
     openRecordsDialog() {
