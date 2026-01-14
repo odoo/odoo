@@ -1781,6 +1781,7 @@ class AccountMoveLine(models.Model):
         lines._check_tax_lock_date()
 
         if not self.env.context.get('tracking_disable'):
+            message_subtype = self.env.ref('account.mt_journal_item_created')
             # Log changes to move lines on each move
             tracked_fields = [fname for fname, f in self._fields.items() if hasattr(f, 'tracking') and f.tracking and not (hasattr(f, 'related') and f.related)]
             ref_fields = self.env['account.move.line'].fields_get(tracked_fields)
@@ -1789,10 +1790,10 @@ class AccountMoveLine(models.Model):
                 if not move_id.posted_before:
                     continue
                 for line in modified_lines:
-                    if tracking_value_ids := line._mail_track(ref_fields, empty_values)[1]:
-                        line.move_id._message_log(
-                            body=_("Journal Item %s created", line._get_html_link(title=f"#{line.id}")),
-                            tracking_value_ids=tracking_value_ids
+                    if tracking := line._mail_track(ref_fields, empty_values)[1]:
+                        line.move_id.message_post(
+                            subtype_id=message_subtype.id,
+                            tracking=tracking,
                         )
 
         lines.move_id._synchronize_business_models(['line_ids'])
@@ -1911,15 +1912,15 @@ class AccountMoveLine(models.Model):
             self.browse(tax_lock_check_ids)._check_tax_lock_date()
 
             if not self.env.context.get('tracking_disable', False):
+                message_subtype = self.env.ref('account.mt_journal_item_updated')
                 # Log changes to move lines on each move
                 for move_id, modified_lines in move_initial_values.items():
                     for line in self.filtered(lambda l: l.move_id.id == move_id):
-                        tracking_value_ids = line._mail_track(ref_fields, modified_lines)[1]
-                        if tracking_value_ids:
-                            msg = _("Journal Item %s updated", line._get_html_link(title=f"#{line.id}"))
-                            line.move_id._message_log(
-                                body=msg,
-                                tracking_value_ids=tracking_value_ids
+                        tracking = line._mail_track(ref_fields, modified_lines)[1]
+                        if tracking:
+                            line.move_id.message_post(
+                                subtype_id=message_subtype.id,
+                                tracking=tracking,
                             )
             if 'analytic_line_ids' in vals:
                 self.filtered(lambda l: l.parent_state == 'draft').analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
@@ -1984,6 +1985,7 @@ class AccountMoveLine(models.Model):
         self._check_tax_lock_date()
 
         if not self.env.context.get('tracking_disable'):
+            message_subtype = self.env.ref('account.mt_journal_item_deleted')
             # Log changes to move lines on each move
             tracked_fields = [fname for fname, f in self._fields.items() if hasattr(f, 'tracking') and f.tracking and not (hasattr(f, 'related') and f.related)]
             ref_fields = self.env['account.move.line'].fields_get(tracked_fields)
@@ -1992,10 +1994,11 @@ class AccountMoveLine(models.Model):
                 if not move_id.posted_before:
                     continue
                 for line in modified_lines:
-                    if tracking_value_ids := empty_line._mail_track(ref_fields, line)[1]:
-                        line.move_id._message_log(
-                            body=_("Journal Item %s deleted", line._get_html_link(title=f"#{line.id}")),
-                            tracking_value_ids=tracking_value_ids
+                    if tracking := empty_line._mail_track(ref_fields, line)[1]:
+                        tracking = [t | {'r': line.id} for t in tracking]
+                        line.move_id.message_post(
+                            subtype_id=message_subtype.id,
+                            tracking=tracking,
                         )
 
         move_container = {'records': self.move_id}

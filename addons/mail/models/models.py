@@ -36,6 +36,20 @@ class Base(models.AbstractModel):
         never be considered as being the guest of the outside env."""
         return super().with_user(user).with_context(guest=None)
 
+    @api.model
+    def _get_view_field_attributes(self):
+        attrs = super()._get_view_field_attributes()
+        attrs.append('tracking')
+        return attrs
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super().fields_get(allfields, attributes)
+        if attributes is None or 'tracking' in attributes:
+            for fname, val in res.items():
+                val['tracking'] = hasattr(self._fields[fname], 'tracking') and bool(self._fields[fname].tracking)
+        return res
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -218,6 +232,31 @@ class Base(models.AbstractModel):
     # GENERIC MAIL FEATURES
     # ------------------------------------------------------------
 
+    def _format_tracking_line(self, fname, old, new, currency_id=None):
+        field = self._fields[fname]
+        tracking = {
+            'f': self.env['ir.model.fields']._get(self._name, fname).id,
+            'o': old,
+            'n': new,
+        }
+        if not isinstance(self, self.env.registry['mail.thread']):
+            tracking['r'] = self.id
+        if field.type == 'many2one':
+            tracking.update({
+                'o': old and old.id,
+                'n': new and new.id,
+                'ostr': old and old.display_name,
+                'nstr': new and new.display_name,
+            })
+        if field.type in ('one2many', 'many2many'):
+            tracking.update({
+                'o': old and old.ids,
+                'n': new and new.ids,
+            })
+        if field.type == 'monetary':
+            tracking['c'] = currency_id
+        return {k: v for k, v in tracking.items() if v}
+
     def _mail_track(self, tracked_fields, initial_values):
         """ For a given record, fields to check (tuple column name, column info)
         and initial values, return a valid command to create tracking values.
@@ -229,62 +268,63 @@ class Base(models.AbstractModel):
         :param dict initial_values: dict of initial values for each updated
           fields;
 
-        :return: a tuple (changes, tracking_value_ids) where
+        :return: a tuple (changes, tracking_values) where
           changes: set of updated column names; contains onchange tracked fields
           that changed;
-          tracking_value_ids: a list of ORM (0, 0, values) commands to create
-          ``mail.tracking.value`` records;
+          tracking_values: a list of dict; see ``mail.thread.tracking``;
 
         Override this method on a specific model to implement model-specific
         behavior. Also consider inheriting from ``mail.thread``. """
         if len(self) > 1:
             raise ValueError(f"Expected empty or single record: {self}")
         updated = set()
-        tracking_value_ids = []
+        tracking_values = []
 
         fields_track_info = self._mail_track_order_fields(tracked_fields)
         for col_name, _sequence in fields_track_info:
             if col_name not in initial_values:
                 continue
+            field = self._fields[col_name]
+            tracking_options = {}
             initial_value = initial_values[col_name]
             new_value = (
                 # get the properties definition with the value
                 # (not just the dict with the value)
                 field.convert_to_read(self[col_name], self)
-                if (field := self._fields[col_name]).type == 'properties'
+                if field.type == 'properties'
                 else self[col_name]
             )
             if new_value == initial_value or (not new_value and not initial_value):  # because browse null != False
                 continue
 
-            if self._fields[col_name].type == "properties":
-                definition_record_field = self._fields[col_name].definition_record
-                if self[definition_record_field] == initial_values[definition_record_field]:
-                    # track the change only if the parent changed
-                    continue
+            if field.type == "monetary":
+                currency_fname = field.get_currency_field(self)
+                tracking_options['currency_id'] = self[currency_fname].id or initial_values[currency_fname].id
 
-                updated.add(col_name)
-                tracking_value_ids.extend(
-                    [0, 0, self.env['mail.tracking.value']._create_tracking_values_property(
-                        property_, col_name, tracked_fields[col_name], self,
-                    )]
-                    # Show the properties in the same order as in the definition
-                    for property_ in initial_value[::-1]
-                    if property_['type'] not in ('separator', 'html') and property_.get('value')
-                )
+            if field.type == "properties":
+                # definition_record_field = self._fields[col_name].definition_record
+                # if self[definition_record_field] == initial_values[definition_record_field]:
+                #     # track the change only if the parent changed
+                #     continue
+
+                # updated.add(col_name)
+                # tracking_values.extend(
+                #     [0, 0, self.env['mail.tracking.value']._create_tracking_values_property(
+                #         property_, col_name, tracked_fields[col_name], self,
+                #     )]
+                #     # Show the properties in the same order as in the definition
+                #     for property_ in initial_value[::-1]
+                #     if property_['type'] not in ('separator', 'html') and property_.get('value')
+                # )
                 continue
 
             updated.add(col_name)
-            tracking_value_ids.append(
-                [0, 0, self.env['mail.tracking.value']._create_tracking_values(
-                    initial_value, new_value,
-                    col_name, tracked_fields[col_name],
-                    self
-                )])
+            tracking_values.append(self._format_tracking_line(col_name, initial_value, new_value, **tracking_options))
 
-        return updated, tracking_value_ids
+        return updated, tracking_values
 
     def _mail_track_order_fields(self, tracked_fields):
+        # TODO remove
         """ Order tracking, based on sequence found on field definition. When
         having several identical sequences, properties are added after,
         and then field name is used. """

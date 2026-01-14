@@ -124,6 +124,24 @@
             <field name="hidden" eval="True"/>
             <field name="description">Invoice Created</field>
         </record>
+        <record id="mt_journal_item_created" model="mail.message.subtype">
+            <field name="name">Line Created</field>
+            <field name="res_model">account.move</field>
+            <field name="default" eval="False"/>
+            <field name="description">Journal Item created</field>
+        </record>
+        <record id="mt_journal_item_updated" model="mail.message.subtype">
+            <field name="name">Line Updated</field>
+            <field name="res_model">account.move</field>
+            <field name="default" eval="False"/>
+            <field name="description">Journal Item updated</field>
+        </record>
+        <record id="mt_journal_item_deleted" model="mail.message.subtype">
+            <field name="name">Line Deleted</field>
+            <field name="res_model">account.move</field>
+            <field name="default" eval="False"/>
+            <field name="description">Journal Item deleted</field>
+        </record>
 
         <!-- Payment methods -->
         <record id="account_payment_method_manual_in" model="account.payment.method">

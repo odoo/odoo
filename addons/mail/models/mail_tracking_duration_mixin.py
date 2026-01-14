@@ -56,19 +56,17 @@ class MailTrackingDurationMixin(models.AbstractModel):
             ))
 
         if self.ids:
-            self.env['mail.tracking.value'].flush_model()
             self.env['mail.message'].flush_model()
             trackings = self.env.execute_query_dict(SQL("""
                    SELECT m.res_id,
-                          v.create_date,
-                          v.old_value_integer
-                     FROM mail_tracking_value v
-                LEFT JOIN mail_message m
-                       ON m.id = v.mail_message_id
-                      AND v.field_id = %(field_id)s
+                          m.create_date,
+                          COALESCE((v->>'o')::int, 0) AS old_value_integer
+                     FROM mail_message m
+               CROSS JOIN LATERAL jsonb_array_elements(m.tracking) v
                     WHERE m.model = %(model_name)s
                       AND m.res_id IN %(record_ids)s
-                 ORDER BY v.id
+                      AND (v->>'f')::int = %(field_id)s
+                 ORDER BY m.id
                 """,
                 field_id=field.id, model_name=self._name, record_ids=tuple(self.ids),
             ))

@@ -101,12 +101,12 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             track_msg, {
                 'tracking_values': [
                     ('amount', 'float', old_amount, 21.0),
-                    ('amount_type', 'selection', 'Percentage', 'Fixed'),
+                    ('amount_type', 'selection', 'percent', 'fixed'),
                     ('include_base_amount', 'boolean', False, True),
                     ('is_base_affected', 'boolean', True, False),
                     ('name', 'char', old_name, old_name + ' MODIFIED'),
-                    ('price_include_override', 'selection', '', 'Tax Included'),
-                    ('type_tax_use', 'selection', 'Sales', 'Purchases'),
+                    ('price_include_override', 'selection', '', 'tax_included'),
+                    ('type_tax_use', 'selection', 'sale', 'purchase'),
                 ],
             }
         )

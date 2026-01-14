@@ -43,6 +43,7 @@ export class Message extends Record {
         return this.author_id || this.author_guest_id;
     }
     body = fields.Html("");
+    tracking_html = fields.Html("");
     call_history_ids = fields.Many("discuss.call.history");
     richBody = fields.Html("", {
         compute() {
@@ -172,8 +173,6 @@ export class Message extends Record {
     pinned_at = fields.Datetime();
     /** @type {string} */
     subject;
-    /** @type {Object[]} */
-    trackingValues = [];
     /** @type {string|undefined} */
     translationValue;
     /** @type {string|undefined} */
@@ -369,7 +368,7 @@ export class Message extends Record {
         return (
             this.isBodyEmpty &&
             this.attachment_ids.length === 0 &&
-            this.trackingValues.length === 0 &&
+            this.tracking_html?.length === 0 &&
             !this.subtype_id?.description &&
             !this.poll
         );

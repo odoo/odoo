@@ -122,6 +122,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "subject": False,
                                         "subtype_id": self.env.ref("mail.mt_comment").id,
                                         "thread": {"id": test_group.id, "model": "discuss.channel"},
+                                        "tracking_html": False,
                                         "write_date": fields.Datetime.to_string(message.write_date),
                                     },
                                 ),

@@ -10,15 +10,174 @@ from collections import defaultdict
 from lxml import html
 from typing import Self
 
+from markupsafe import Markup
+
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, MissingError
-from odoo.fields import Command, Domain
+from odoo.fields import Command, Domain, parse_field_expr
 from odoo.tools import clean_context, groupby, SQL
-from odoo.tools.misc import OrderedSet
+from odoo.tools.misc import OrderedSet, format_date, format_datetime, parse_date
 from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
+
+
+class FieldTracking(fields.Json):
+    """
+    [{
+        'f': int,             # the id of the field
+        'fstr': str,          # optional name for the field, added i.e. when the field is deleted
+        'o': ?,               # old value, the type depends on the field
+        'n': ?,               # new value, same type as `o`
+        'ostr': str,          # old value str, always set for relational fields; added for selection of the option is removed
+        'nstr': str,          # new value str, similar to ostr
+        'c': int,             # the currency id, only set for monetary fields
+        'r': int,             # the id of the related record hacking the chatter (o2m)
+    }]
+    """
+    type = 'tracking'
+
+    def convert_to_record(self, value, record):
+        return super().convert_to_record(value, record) or []
+
+    def _condition_to_sql(self, table: models.TableSQL, field_expr: str, operator: str, value) -> SQL:
+        this_fname, field_id = parse_field_expr(field_expr)
+        model = table._model
+        env = model.env
+        if not field_id:
+            if not env.user.has_groups('base.group_system'):
+                raise AccessError(_("You can't access the full tracking"))
+            return super()._condition_to_sql(table, field_expr, operator, value)
+        operator_sql = {
+            'in': SQL("="),
+            'not in': SQL("!="),
+            '=': SQL("="),
+            '!=': SQL("!="),
+            'like': SQL("LIKE"),
+            'ilike': SQL("ILIKE"),
+            '<': SQL("<"),
+            '<=': SQL("<="),
+            '>': SQL(">"),
+            '>=': SQL(">="),
+        }.get(operator)
+        type_cast = SQL("text")
+        if not operator_sql:
+            raise NotImplementedError
+        if not isinstance(value, list | tuple | set | OrderedSet):
+            value = [value]
+        value = list(value)
+        try:
+            field_id = int(field_id)
+        except ValueError:
+            field_rec = env['ir.model.fields']._get(*field_id.split(','))
+            field_id = field_rec.id
+        field = env['ir.model.fields']._from_id(field_id)
+        model.check_field_access(field, 'read')
+        if operator == 'not in' and value == [False]:
+            return SQL(
+                """EXISTS(
+                    SELECT 1
+                      FROM jsonb_array_elements(%(tracking)s) AS track
+                     WHERE (track->>'f')::int = %(field_id)s
+                )""",
+                tracking=table[this_fname],
+                field_id=field_id,
+            )
+        if field.type in ('monetary', 'float', 'integer') and isinstance(value[0], str):
+            lang = env['res.lang']._lang_get(env.context.get('lang'))
+            value = [v.replace(lang.thousands_sep, '').replace(lang.decimal_point, '.') for v in value]
+        if field.type in ('monetary', 'float', 'integer') and isinstance(value[0], int | float):
+            type_cast = SQL("numeric")
+        if field.type in ('date', 'datetime') and isinstance(value[0], str):
+            value = [str(parse_date(env, v)) for v in value]
+        if operator in ('like', 'ilike'):
+            value = [f"%{v}%" for v in value]
+        if field.type == 'selection':
+            selection = field._description_selection(env)
+            value = [k for k, s in selection for v in value if k == v or re.match(v.replace('%', '.*'), s, re.IGNORECASE)]
+        if field.type == 'many2one' and isinstance(value[0], int):
+            return SQL(
+                """EXISTS(
+                    SELECT 1
+                      FROM jsonb_array_elements(%(tracking)s) AS track
+                     WHERE (track->>'f')::int = %(field_id)s
+                       AND (
+                               (NULLIF(track->>'n', 'false'))::int = ANY(%(value)s)
+                               OR (NULLIF(track->>'o', 'false'))::int = ANY(%(value)s)
+                           )
+                )""",
+                tracking=table[this_fname],
+                field_id=field_id,
+                value=value,
+            )
+        if field.type == 'many2one':
+            sub_query = env[field.comodel_name]._search([
+                Domain.custom(to_sql=lambda table: SQL(
+                    "%s IN (%s, %s)",
+                    table.id,
+                    SQL("(track->>'o')::int"),
+                    SQL("(track->>'n')::int"),
+                ))
+                & Domain('display_name', operator, value),
+            ], active_test=False)
+            return SQL(
+                """EXISTS(
+                    SELECT 1
+                      FROM jsonb_array_elements(%(tracking)s) AS track
+                     WHERE (track->>'f')::int = %(field_id)s
+                       AND (
+                               track->>'nstr' ILIKE ANY(%(value)s)
+                               OR track->>'ostr' ILIKE ANY(%(value)s)
+                               OR EXISTS(%(sub)s)
+                           )
+                )""",
+                tracking=table[this_fname],
+                field_id=field_id,
+                value=[f"%{v}%" for v in value],
+                sub=sub_query.select(sub_query.table.id),
+            )
+        if field.type in ('one2many', 'many2many'):
+            sub_query = env[field.comodel_name]._search([
+                Domain.custom(to_sql=lambda table: SQL(
+                    "((%s)::jsonb || (%s)::jsonb) @> to_jsonb(%s)",
+                    SQL("COALESCE(track->>'o', '[]')"),
+                    SQL("COALESCE(track->>'n', '[]')"),
+                    table.id,
+                ))
+                & Domain.OR(
+                    Domain('display_name', operator, val)
+                    for val in value
+                )
+            ], active_test=False)
+            return SQL(
+                """EXISTS(
+                    SELECT 1
+                      FROM jsonb_array_elements(%(tracking)s) AS track
+                     WHERE (track->>'f')::int = %(field_id)s
+                       AND EXISTS(%(sub)s)
+                )""",
+                tracking=table[this_fname],
+                field_id=field_id,
+                value=[f"%{v}%" for v in value],
+                sub=sub_query.select(sub_query.table.id),
+            )
+        return SQL(
+                """EXISTS(
+                    SELECT 1
+                      FROM jsonb_array_elements(%(tracking)s) AS track
+                     WHERE (track->>'f')::int = %(field_id)s
+                       AND (
+                               (track->>'n')::%(type_cast)s %(operator)s ANY(%(value)s)
+                               OR (track->>'o')::%(type_cast)s %(operator)s ANY(%(value)s)
+                           )
+                )""",
+                tracking=table[this_fname],
+                field_id=field_id,
+                value=value,
+                operator=operator_sql,
+                type_cast=type_cast,
+            )
 
 
 class MailMessage(models.Model):
@@ -178,12 +337,15 @@ class MailMessage(models.Model):
         'Starred', compute='_compute_starred', search='_search_starred', compute_sudo=False,
         help='Current user has a starred notification linked to this message')
     # tracking
-    tracking_value_ids = fields.One2many(
-        'mail.tracking.value', 'mail_message_id',
-        string='Tracking values',
-        groups="base.group_system",
-        help='Tracked values are stored in a separate model. This field allow to reconstruct '
-             'the tracking and to generate statistics on the model.')
+    tracking = FieldTracking(copy=False)  # groups='base.group_system' is hardcoded in the field per tracked field level
+    filtered_tracking = FieldTracking(compute='_compute_filtered_tracking')
+    tracking_html = fields.Html(
+        compute='_compute_tracking_html',
+        search='_search_tracking_html',
+        sanitize=False,
+    )
+    full_search = fields.Text(store=False, search='_search_full_search')
+
     # polls
     ended_poll_ids = fields.One2many('mail.poll', 'end_message_id')
     started_poll_ids = fields.One2many('mail.poll', 'start_message_id')
@@ -318,6 +480,82 @@ class MailMessage(models.Model):
     def _compute_has_poll(self):
         for message in self:
             message.has_poll = message.started_poll_ids or message.ended_poll_ids
+
+    @api.depends('tracking')
+    def _compute_filtered_tracking(self):
+        for message in self:
+            message.filtered_tracking = [
+                tracking
+                for tracking in message.sudo().tracking or []
+                if (field := self.env['ir.model.fields']._from_id(tracking['f']))
+                and (not field.groups or self.env.user.has_groups(field.groups))
+                and message._track_filter_for_display(field)
+            ]
+
+    def _track_filter_for_display(self, field):
+        return True
+
+    @api.depends('filtered_tracking')
+    def _compute_tracking_html(self):
+        # prefetch comodels to batch queries
+        model2ids = defaultdict(set)
+        for message in self:
+            for tracking in message.filtered_tracking or []:
+                field = self.env['ir.model.fields']._from_id(tracking['f'])
+                if field.type == 'monetary' and (currency := tracking.get('c')):
+                    model2ids['res.currency'].add(currency)
+                elif field.type == 'many2one':
+                    if old := tracking.get('o'):
+                        model2ids[field.comodel_name].add(old)
+                    if new := tracking.get('n'):
+                        model2ids[field.comodel_name].add(new)
+                elif field.type in ('one2many', 'many2many'):
+                    if old := tracking.get('o'):
+                        model2ids[field.comodel_name].update(old)
+                    if new := tracking.get('n'):
+                        model2ids[field.comodel_name].update(new)
+        for model, ids in model2ids.items():
+            self.env[model].browse(ids).sudo().mapped('display_name')
+
+        def get_sequence(tracking):
+            field = self.env['ir.model.fields']._from_id(tracking.get('f'))
+            field_sequence = 100 if not hasattr(field, 'tracking') or field.tracking is True else field.tracking
+            field_is_property = field.type == 'property'
+            field_name = field.name
+            return field_sequence, field_is_property, field_name
+
+        for message in self:
+            message.tracking_html = Markup("""<ul class="mb-0 list-unstyled d-flex flex-column gap-1">%s</ul>""") % Markup().join(
+                self._format_tracking_html(tracking)
+                for tracking in sorted(message.filtered_tracking, key=get_sequence)
+            ) if message.filtered_tracking else False
+
+    def _search_tracking_html(self, operator, value):
+        tracked_models = self.env.context.get('tracked_models', [])
+        return Domain.OR(
+            [(f'tracking.{field_id}', operator, value)]
+            for mname in tracked_models
+            for field_id in self.env['ir.model.fields']._get_ids(mname).values()
+            if (field := self.env['ir.model.fields']._from_id(field_id))
+            and hasattr(field, 'tracking') and field.tracking
+        ) | Domain.OR(
+            [(f'tracking.{field_rec.id}', "!=", False)]
+            for field_rec in self.env['ir.model.fields'].search([('model', 'in', tracked_models), ('display_name', operator, value)])
+            if (field := self.env['ir.model.fields']._from_id(field_rec.id))
+            and hasattr(field, 'tracking') and field.tracking
+        )
+
+    def _search_full_search(self, operator, value):
+        assert operator == 'ilike'
+        search_term = value.replace(" ", "%")
+        return Domain.OR([
+            # sudo: access to attachment is allowed if you have access to the parent model
+            [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
+            [("body", "ilike", search_term)],
+            [("subject", "ilike", search_term)],
+            [("subtype_id.description", "ilike", search_term)],
+            [("tracking_html", "ilike", search_term)],
+        ])
     # ------------------------------------------------------
     # CRUD / ORM
     # ------------------------------------------------------
@@ -677,7 +915,7 @@ class MailMessage(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        tracking_values_list = []
+        tracking_list = []
         for values in vals_list:
             if not (self.env.su or self.env.user.has_group('base.group_user')):
                 values.pop('author_id', None)
@@ -721,7 +959,7 @@ class MailMessage(models.Model):
                 values['body'] = _image_dataurl.sub(base64_to_boundary, values['body'] or '')
 
             # delegate creation of tracking after the create as sudo to avoid access rights issues
-            tracking_values_list.append(values.pop('tracking_value_ids', False))
+            tracking_list.append(values.pop('tracking', False))
 
         messages = super().create(vals_list)
 
@@ -763,14 +1001,9 @@ class MailMessage(models.Model):
         if attachments_tocheck:
             attachments_tocheck.check_access('read')
 
-        for message, values, tracking_values_cmd in zip(messages, vals_list, tracking_values_list):
-            if tracking_values_cmd:
-                vals_lst = [dict(cmd[2], mail_message_id=message.id) for cmd in tracking_values_cmd if len(cmd) == 3 and cmd[0] == 0]
-                other_cmd = [cmd for cmd in tracking_values_cmd if len(cmd) != 3 or cmd[0] != 0]
-                if vals_lst:
-                    self.env['mail.tracking.value'].sudo().create(vals_lst)
-                if other_cmd:
-                    message.sudo().write({'tracking_value_ids': tracking_values_cmd})
+        for message, values, tracking in zip(messages, vals_list, tracking_list):
+            if tracking:
+                message.sudo().write({'tracking': tracking})
 
             if message._is_thread_message_visible(vals=values):
                 message._invalidate_documents(values.get('model'), values.get('res_id'))
@@ -951,42 +1184,21 @@ class MailMessage(models.Model):
         return Store().add(self, ["starred"]).get_result()
 
     @api.model
-    def _message_fetch(self, domain, *, thread=None, search_term=None, is_notification=None, before=None, after=None, around=None, limit=30):
+    def _message_fetch(self, domain, *, thread=None, search_domain=None, before=None, after=None, around=None, limit=30):
         res = {}
-        domain = Domain(True if domain is None else domain)
+        search_domain = Domain(True if search_domain is None else search_domain)
+        domain = Domain(True if domain is None else domain) & search_domain
+        context = {}
+        if thread:
+            context = {'tracked_models': self.env.context.get('tracked_models', [thread._name])}
         if thread:
             domain &= (
                 Domain("res_id", "=", thread.id)
                 & Domain("model", "=", thread._name)
                 & Domain("message_type", "!=", "user_notification")
             )
-        if is_notification is True:
-            domain &= Domain("message_type", "=", "notification")
-        elif is_notification is False:
-            domain &= Domain("message_type", "!=", "notification")
-        if search_term:
-            # we replace every space by a % to avoid hard spacing matching
-            search_term = search_term.replace(" ", "%")
-            message_domain = Domain.OR([
-                # sudo: access to attachment is allowed if you have access to the parent model
-                [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
-                [("body", "ilike", search_term)],
-                [("subject", "ilike", search_term)],
-                [("subtype_id.description", "ilike", search_term)],
-            ])
-            if thread and is_notification is not False:
-                tracking_value_domain = (
-                    Domain("mail_message_id.res_id", "=", thread.id)
-                    & Domain("mail_message_id.model", "=", thread._name)
-                    & self._get_tracking_values_domain(search_term)
-                )
-                # sudo: mail.tracking.value - searching allowed tracking values for acessible records
-                tracking_values = self.env["mail.tracking.value"].sudo().search(tracking_value_domain)
-                accessible_tracking_value_ids = tracking_values._filter_has_field_access(self.env)
-                message_domain |= Domain("id", "in", accessible_tracking_value_ids.mail_message_id.ids)
-            domain &= message_domain
-        if search_term or is_notification is not None:
-            res["count"] = self.search_count(domain)
+        if search_domain:
+            res["count"] = self.with_context(**context).search_count(domain)
         if around is not None:
             messages_before = self.search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")
             messages_after = self.search(domain & Domain('id', '>', around), limit=limit // 2, order='id ASC')
@@ -995,43 +1207,10 @@ class MailMessage(models.Model):
             domain &= Domain('id', '<', before)
         if after:
             domain &= Domain('id', '>', after)
-        res["messages"] = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
+        res["messages"] = self.with_context(**context).search(domain, limit=limit, order='id ASC' if after else 'id DESC')
         if after:
             res["messages"] = res["messages"].sorted('id', reverse=True)
         return res
-
-    def _get_tracking_values_domain(self, search_term):
-        """Get the domain to search for tracking values."""
-        numeric_term = None
-        # try to convert the search term to a number
-        with contextlib.suppress(ValueError, TypeError):
-            numeric_term = float(search_term)
-        domain = Domain.OR(
-            Domain(field_name, "ilike", search_term)
-            for field_name in (
-                "old_value_char",
-                "new_value_char",
-                "old_value_text",
-                "new_value_text",
-                "old_value_datetime",
-                "new_value_datetime",
-                "field_id.name",
-                "field_id.field_description",
-            )
-        )
-        if numeric_term:
-            epsilon = 1e-9  # small epsilon to allow for floating point precision
-            domain |= Domain.OR(
-                Domain(field_name, ">=", numeric_term - epsilon)
-                & Domain(field_name, "<=", numeric_term + epsilon)
-                for field_name in ("old_value_float", "new_value_float")
-            )
-            if numeric_term.is_integer():
-                domain |= Domain.OR(
-                    Domain(field_name, "=", int(numeric_term))
-                    for field_name in ("old_value_integer", "new_value_integer")
-                )
-        return domain
 
     def _message_reaction(self, content, action, partner, guest, store: Store = None):
         self.ensure_one()
@@ -1247,6 +1426,7 @@ class MailMessage(models.Model):
             lambda message: tools.mail.email_split_tuples(message.incoming_email_to),
             predicate=lambda message: message.incoming_email_to,
         )
+        res.attr('tracking_html')
         if res.is_for_current_user():
 
             def needaction(message):
@@ -1259,16 +1439,6 @@ class MailMessage(models.Model):
                 )
 
             res.attr("needaction", needaction)
-
-            def tracking_values(message):
-                # sudo: mail.message - filtering allowed tracking values
-                trackings = message.sudo().tracking_value_ids._filter_has_field_access(message.env)
-                record = record_by_message.get(message)
-                if record and hasattr(record, "_track_filter_for_display"):
-                    trackings = record._track_filter_for_display(trackings)
-                return trackings._tracking_value_format()
-
-            res.attr("trackingValues", tracking_values)
         # Add extras at the end to guarantee order in result. In particular, the parent message
         # needs to be after the current message (client code assuming the first received message is
         # the one just posted for example, and not the message being replied to).
@@ -1389,8 +1559,8 @@ class MailMessage(models.Model):
             and (not self.subtype_id or not self.subtype_id.description)
             and not self.attachment_ids
             and not (
-                self.has_field_access(self._fields["tracking_value_ids"], "read")
-                and self.tracking_value_ids
+                self.has_field_access(self._fields["tracking"], "read")
+                and self.tracking
             )
             and not self.has_poll
         )
@@ -1466,3 +1636,50 @@ class MailMessage(models.Model):
             .with_prefetch(records_by_model_name[message.model]._prefetch_ids)
             for message in self.filtered(lambda m: m.model and m.res_id)
         }
+
+    def _format_tracking_field(self, field, value, value_str=None, *, currency_id=None, add_link=True):
+        if not value:
+            return ""
+        if field.type == 'many2one':
+            record = self.env[field.comodel_name].browse(value)
+            if add_link and record.has_access('read'):
+                formatted = record._get_html_link()
+            else:
+                formatted = record.display_name
+            if value_str and record.display_name != value_str:
+                return Markup("""%s <span class="text-muted" title="%s">(%s)</span>""") % (
+                    formatted,
+                    _("Value at input time"),
+                    value_str,
+                )
+            return formatted
+        if field.type in ('one2many', 'many2many'):
+            records = self.env[field.comodel_name].browse(value)
+            return Markup(", ").join(
+                record._get_html_link() if add_link and record.has_access('read') else record.display_name
+                for record in records
+            )
+        if field.type == 'monetary' and (currency := self.env['res.currency'].browse(currency_id)):
+            return currency.format(value)
+        if field.type == 'selection':
+            return dict(field._description_selection(self.env)).get(value, value)
+        if field.type == 'date':
+            return format_date(self.env, value)
+        if field.type == 'datetime':
+            return format_datetime(self.env, value)
+        return value
+
+    def _format_tracking_html(self, tracking):
+        field = self.env['ir.model.fields']._from_id(tracking['f'])
+        return Markup("""<li class="o-mail-Message-tracking" role="group">
+            <span class="o-mail-Message-trackingOld text-muted fw-bold">%s</span>
+            <i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-2 text-600"></i>
+            <span class="o-mail-Message-trackingNew text-muted fw-bold">%s</span>
+            <span class="o-mail-Message-trackingField ms-1 fst-italic text-muted">(%s)</span>
+            %s
+        </li>""") % (
+            self._format_tracking_field(field, tracking.get('o'), tracking.get('ostr'), currency_id=tracking.get('c')),
+            self._format_tracking_field(field, tracking.get('n'), tracking.get('nstr'), currency_id=tracking.get('c')),
+            field._description_string(self.env) or tracking.get(['fstr']),
+            self.env[field.model_name].browse(tracking['r'])._get_html_link(f"#{tracking['r']}") if 'r' in tracking else "",
+        )

@@ -36,16 +36,16 @@
                 <filter string="Partners" name="res_partner" domain="[('model', '=', 'res.partner')]"/>
                 <filter string="Company" name="res_company" domain="[('model', '=', 'res.company')]"/>
                 <separator/>
-                <field string="Field Value" name="tracking_value_ids" filter_domain="[
+                <!-- <field string="Field Value" name="tracking_value_ids" filter_domain="[
                     '|', ('tracking_value_ids.old_value_char', 'ilike', self),
                     '|', ('tracking_value_ids.new_value_char', 'ilike', self),
                     '|', ('tracking_value_ids.old_value_text', 'ilike', self),
                          ('tracking_value_ids.new_value_text', 'ilike', self),
-                ]"/>
-                <field string="Field" name="tracking_value_ids" filter_domain="[('tracking_value_ids.field_id', 'ilike', self)]"/>
+                ]"/> -->
+                <field string="Field" name="account_audit_log_field_id" domain="[('model', 'in', ['account.move', 'account.move.line', 'res.partner', 'account.account', 'account.tax', 'res.company']), ('tracking', '!=', False)]"/>
                 <separator/>
-                <filter string="Update" name="update_only" domain="[('tracking_value_ids', '!=', False)]" groups="base.group_system"/>
-                <filter string="Create" name="create_only" domain="[('tracking_value_ids', '=', False)]" groups="base.group_system"/>
+                <filter string="Update" name="update_only" domain="[('tracking', '!=', False)]" groups="base.group_system"/>
+                <filter string="Create" name="create_only" domain="[('tracking', '=', False)]" groups="base.group_system"/>
                 <filter string="Restricted" name="restricted_by_audit_trail" domain="[('account_audit_log_restricted', '=', True)]"/>
                 <separator/>
                 <filter name="date" string="Date" date="date"/>

@@ -419,6 +419,7 @@ class AccountTax(models.Model):
             for line in old_line_values_dict.keys() ^ new_line_values_dict.keys()
         ]
 
+        # TODO move this in tracking
         for (document_type, sequence), old_value, new_value in modified_lines:
             diff_keys = [key for key in old_value if old_value[key] != new_value[key]]
             if diff_keys:
@@ -471,12 +472,12 @@ class AccountTax(models.Model):
 
         if self.is_used:
             repartition_line_str_field_id = self.env['ir.model.fields']._get('account.tax', 'repartition_lines_str').id
-            for tracked_value_id in kwargs['tracking_value_ids']:
-                if tracked_value_id[2]['field_id'] == repartition_line_str_field_id:
-                    kwargs['tracking_value_ids'].remove(tracked_value_id)
-                    self._message_log_repartition_lines(tracked_value_id[2]['old_value_char'], tracked_value_id[2]['new_value_char'])
-
+            for track in list(kwargs['tracking']):
+                if track['f'] == repartition_line_str_field_id:
+                    kwargs['tracking'].remove(track)
+                    self._message_log_repartition_lines(track['o'], track['n'])
             return super()._message_log(**kwargs)
+        return self.env['mail.message']
 
     @api.depends('company_id')
     def _compute_invoice_repartition_line_ids(self):

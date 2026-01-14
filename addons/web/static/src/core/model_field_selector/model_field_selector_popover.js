@@ -167,7 +167,7 @@ export class ModelFieldSelectorPopover extends Component {
     }
 
     canFollowRelationFor(fieldDef) {
-        if (fieldDef.type === "properties") {
+        if (fieldDef.type === "properties" || fieldDef.type == "tracking") {
             return true;
         }
         if (!this.props.followRelations) {
@@ -263,7 +263,7 @@ export class ModelFieldSelectorPopover extends Component {
     }
 
     selectField(field) {
-        if (field.type === "properties") {
+        if (field.type === "properties" || field.type === "tracking") {
             return this.followRelation(field);
         }
         this.keepLast.add(Promise.resolve());

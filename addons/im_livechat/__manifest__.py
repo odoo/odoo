@@ -132,6 +132,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/scss/animation.scss',
             'web/static/src/webclient/webclient.scss',
             ('include', 'web._assets_core'),
+            'web/static/src/search/**/*.js',
             'web/static/src/views/fields/formatters.js',
             'web/static/src/views/fields/file_handler.*',
             'web/static/src/scss/mimetypes.scss',

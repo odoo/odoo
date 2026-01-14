@@ -113,26 +113,26 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
                                             pt.allocated_hours,
                                             pt.project_id,
                                             COALESCE(LAG(mm.date) OVER (PARTITION BY mm.res_id ORDER BY mm.id), pt.create_date) as date_begin,
-                                            CASE WHEN mtv.id IS NOT NULL THEN mm.date
+                                            CASE WHEN mtv IS NOT NULL THEN mm.date
                                                 ELSE (now() at time zone 'utc')::date + INTERVAL '%(interval)s'
                                             END as date_end,
-                                            CASE WHEN mtv.id IS NOT NULL THEN mtv.old_value_integer
+                                            CASE WHEN mtv IS NOT NULL THEN (mtv->>'o')::int
                                                ELSE pt.stage_id
                                             END as stage_id,
                                             CASE
-                                                WHEN mtv.id IS NOT NULL AND mtv.old_value_char IN ('1_done', '1_canceled') THEN 'closed'
-                                                WHEN mtv.id IS NOT NULL AND mtv.old_value_char NOT IN ('1_done', '1_canceled') THEN 'open'
-                                                WHEN mtv.id IS NULL AND pt.state IN ('1_done', '1_canceled') THEN 'closed'
+                                                WHEN mtv IS NOT NULL AND mtv->>'o' IN ('1_done', '1_canceled') THEN 'closed'
+                                                WHEN mtv IS NOT NULL AND mtv->>'o' NOT IN ('1_done', '1_canceled') THEN 'open'
+                                                WHEN mtv IS NULL AND pt.state IN ('1_done', '1_canceled') THEN 'closed'
                                                 ELSE 'open'
                                             END as is_closed
                                        FROM project_task pt
                                                 LEFT JOIN (
                                                     mail_message mm
-                                                        JOIN mail_tracking_value mtv ON mm.id = mtv.mail_message_id
-                                                                                     AND mtv.field_id = %(field_id)s
+                                                        CROSS JOIN LATERAL jsonb_array_elements(mm.tracking) mtv
+                                                        JOIN project_task_type ptt ON ptt.id = (mtv->>'o')::int
+                                                                                     AND (mtv->>'f')::int = %(field_id)s
                                                                                      AND mm.model='project.task'
                                                                                      AND mm.message_type = 'notification'
-                                                        JOIN project_task_type ptt ON ptt.id = mtv.old_value_integer
                                                 ) ON mm.res_id = pt.id
                                       WHERE pt.active=true AND pt.id IN (SELECT id from task_ids)
                                    ) task_stage_id_history
@@ -161,11 +161,14 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
                                    JOIN LATERAL (
                                        SELECT mm.date
                                        FROM mail_message mm
-                                       JOIN mail_tracking_value mtv ON mm.id = mtv.mail_message_id
-                                       AND mtv.field_id = %(field_id)s
-                                       AND mm.model='project.task'
+                                       WHERE mm.model='project.task'
                                        AND mm.message_type = 'notification'
                                        AND mm.res_id = pt.id
+                                       AND EXISTS (
+                                           SELECT 1
+                                           FROM jsonb_array_elements(mm.tracking) mtv
+                                           WHERE (mtv->>'f')::int = %(field_id)s
+                                       )
                                        ORDER BY mm.id DESC
                                        FETCH FIRST ROW ONLY
                                    ) AS last_stage_id_change_mail_message ON TRUE

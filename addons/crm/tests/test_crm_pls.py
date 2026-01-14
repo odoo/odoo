@@ -936,7 +936,7 @@ class TestLeadLost(TestCrmCommon):
                 'tracking_values': [
                     ('active', 'boolean', True, False),
                     ('lost_reason_id', 'many2one', False, self.lost_reason),
-                    ('won_status', 'selection', 'Pending', 'Lost'),
+                    ('won_status', 'selection', 'pending', 'lost'),
                 ],
             }
         )
@@ -974,7 +974,7 @@ class TestLeadLost(TestCrmCommon):
                     'tracking_values': [
                         ('active', 'boolean', True, False),
                         ('lost_reason_id', 'many2one', False, self.lost_reason),
-                        ('won_status', 'selection', 'Pending', 'Lost'),
+                        ('won_status', 'selection', 'pending', 'lost'),
                     ],
                 }
             )
