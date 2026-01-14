@@ -11,10 +11,16 @@ import { registry } from "@web/core/registry";
  */
 export class EmailDiscardedContentPlugin extends Plugin {
     static id = "trash";
+    static shared = ["add"];
 
-    resources = {};
+    setup() {
+        this.trashBin = {};
+    }
 
-    setup() {}
+    add(key, value) {
+        this.trashBin[key] = this.trashBin[key] ?? [];
+        this.trashBin[key].push(value);
+    }
 }
 
 registry

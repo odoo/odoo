@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 import { registry } from "@web/core/registry";
+import { uuid } from "@web/core/utils/strings";
 
 /**
  * @typedef { Object } NodeInfo
@@ -22,6 +23,7 @@ export class VDomPlugin extends Plugin {
     setup() {
         this.referenceToInfo = new WeakMap();
         this.vNodeToInfo = new WeakMap();
+        this.renderIdToInfo = new Map();
     }
 
     lazyNodeInfoProxyHandler(referenceNode) {
@@ -71,6 +73,7 @@ export class VDomPlugin extends Plugin {
                 const vNode = this.config.referenceDocument.createComment("");
                 nodeInfo = new Proxy(
                     {
+                        renderId: uuid(),
                         referenceNode: node,
                         vNode,
                         fragment: undefined,
@@ -80,8 +83,13 @@ export class VDomPlugin extends Plugin {
                 this.vNodeToInfo.set(vNode, nodeInfo);
                 this.referenceToInfo.set(node, nodeInfo);
             }
-        } else {
+        } else if (this.vNodeToInfo.has(node)) {
             nodeInfo = this.vNodeToInfo.get(node);
+        } else if (this.lastRenderTemplate?.contains(node)) {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const renderElement = node.closest("[data-render-id]");
+                nodeInfo = this.renderIdToInfo.get(renderElement.dataset.renderId);
+            }
         }
         if (!nodeInfo) {
             // TODO EGGMAIL: error handling
@@ -92,7 +100,9 @@ export class VDomPlugin extends Plugin {
         return nodeInfo;
     }
 
-    cloneReferenceFragment(fragment) {
+    cloneReferenceFragment(nodeInfo, options = {}) {
+        const { withRenderId } = options;
+        const fragment = nodeInfo.fragment;
         const renderFragment = fragment.cloneNode(true);
         const vWalker = fragment.ownerDocument.createTreeWalker(fragment, NodeFilter.SHOW_COMMENT);
         const renderWalker = renderFragment.ownerDocument.createTreeWalker(
@@ -103,33 +113,39 @@ export class VDomPlugin extends Plugin {
         while ((vNode = vWalker.nextNode()) && (renderNode = renderWalker.nextNode())) {
             if (this.vNodeToInfo.has(vNode)) {
                 this.vNodeToRenderNode.set(vNode, renderNode);
+                if (withRenderId && renderNode.nodeType === Node.ELEMENT_NODE) {
+                    renderNode.dataset.renderId = nodeInfo.renderId;
+                    this.renderIdToInfo.set(nodeInfo.renderId, nodeInfo);
+                }
             }
         }
         return renderFragment;
     }
 
-    renderReferenceFragment(nodeInfo) {
+    renderReferenceFragment(nodeInfo, options = {}) {
         const renderNode = this.vNodeToRenderNode.get(nodeInfo.vNode);
         if (!renderNode) {
             // TODO EGGMAIL: error management, a node in reference was not
             // planned to be rendered
             return;
         }
-        const renderFragment = this.cloneReferenceFragment(nodeInfo.fragment);
+        const renderFragment = this.cloneReferenceFragment(nodeInfo, options);
         renderNode.replaceWith(renderFragment);
         for (const descendant of childNodes(nodeInfo.referenceNode)) {
             const descendantInfo = this.getNodeInfo(descendant);
-            this.renderReferenceFragment(descendantInfo);
+            this.renderReferenceFragment(descendantInfo, options);
         }
     }
 
-    renderEmailHtml(template) {
+    renderEmailHtml(template, options = {}) {
+        this.lastRenderTemplate = template;
+        this.renderIdToInfo = new Map();
         this.vNodeToRenderNode = new WeakMap();
         const referenceInfo = this.getNodeInfo(this.config.reference);
         const renderNode = referenceInfo.vNode.cloneNode();
         this.vNodeToRenderNode.set(referenceInfo.vNode, renderNode);
         template.content.appendChild(renderNode);
-        this.renderReferenceFragment(referenceInfo);
+        this.renderReferenceFragment(referenceInfo, options);
         this.vNodeToRenderNode = undefined;
     }
 }
