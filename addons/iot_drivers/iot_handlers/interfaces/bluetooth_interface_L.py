@@ -1,4 +1,5 @@
 from gatt import DeviceManager as Gatt_DeviceManager
+from gatt.errors import NotReady
 import dbus
 from gi.repository import GLib
 import logging
@@ -63,8 +64,11 @@ class BtManager(Thread):
         dm = GattBtManager(adapter_name='hci0')
         for device in [device_con for device_con in dm.devices() if device_con.is_connected()]:
             device.disconnect()
-        dm.start_discovery()
-        dm.run()
+        try:
+            dm.start_discovery()
+            dm.run()
+        except NotReady:
+            _logger.error("Bluetooth adapter not ready. Set `is_adapter_powered` to `True` or run 'echo power on | sudo bluetoothctl'")
 
 
 class BTInterface(Interface):
