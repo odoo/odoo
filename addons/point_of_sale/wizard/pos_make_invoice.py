@@ -18,16 +18,11 @@ class PosMakeInvoice(models.TransientModel):
 
     def action_create_invoices(self):
         self.ensure_one()
-        selected_orders = self.env['pos.order'].browse(self.env.context.get('active_ids'))
-        is_single_order = len(selected_orders) == 1
+        selected_orders = self.env['pos.order'].browse(self.env.context.get('active_ids')).filtered(lambda o: o.invoice_status == 'to_invoice' and o.state != 'draft' and o.state != 'cancel')
+        if not selected_orders:
+            raise UserError(_("No valid orders were selected. No new invoices could be generated"))
 
-        uninvoiceable_orders = selected_orders.filtered(lambda o: o.invoice_status != 'to_invoice' or o.state == 'draft' or o.state == 'cancel' )
-        if uninvoiceable_orders:
-            order_names = "\n".join(uninvoiceable_orders.mapped('pos_reference'))
-            raise UserError(_(
-                "Unable to create consolidated invoice/s because the following orders can't be invoiced.\n\n%s",
-                order_names
-            ))
+        is_single_order = len(selected_orders) == 1
 
         invalid_refund_orders = selected_orders.filtered(lambda o: o.refunded_order_id.account_move)
         if (not is_single_order) and invalid_refund_orders:
