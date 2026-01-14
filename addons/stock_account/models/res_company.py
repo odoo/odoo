@@ -87,9 +87,11 @@ class ResCompany(models.Model):
         value_by_account: dict = defaultdict(float)
         if not accounts_by_product:
             accounts_by_product = self._get_accounts_by_product()
+        icp = self.env['ir.config_parameter'].sudo()
+        should_clear_cache = bool(icp.get_param('stock_account.stock_value_clear_cache', False))
         for product, accounts in accounts_by_product.items():
             account = accounts['valuation']
-            product_value = product.with_context(to_date=at_date).total_value
+            product_value = product.with_context(to_date=at_date, should_clear_cache=should_clear_cache).total_value
             value_by_account[account] += product_value
         return value_by_account
 
