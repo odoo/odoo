@@ -989,7 +989,11 @@ test("should be able to remove color applied by 'text-*' classes (1)", async () 
 test("should be able to remove color applied by 'text-*' classes (2)", async () => {
     await testEditor({
         contentBefore: '<p><a href="#" class="text-muted">[a]</a></p>',
+        contentBeforeEdit:
+            '<p>\ufeff<a href="#" class="text-muted o_link_in_selection">\ufeff[a]\ufeff</a>\ufeff</p>',
         stepFunction: setColor("", "color"),
+        contentAfterEdit:
+            '<p>\ufeff<a href="#" class="o_link_in_selection">\ufeff[a]\ufeff</a>\ufeff</p>',
         contentAfter: '<p><a href="#">[a]</a></p>',
     });
 });
