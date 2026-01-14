@@ -111,13 +111,19 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         }
 
     def _add_sale_order_seller_supplier_party_nodes(self, document_node, vals):
+        supplier_party = self._get_party_node({**vals, 'partner': vals['supplier'], 'role': 'supplier'})
+        supplier_party.pop('cac:PartyTaxScheme', None)
         document_node['cac:SellerSupplierParty'] = {
-            'cac:Party': self._get_party_node({**vals, 'partner': vals['supplier'], 'role': 'supplier'})
+            'cac:Party': supplier_party,
         }
 
     def _add_sale_order_delivery_nodes(self, document_node, vals):
+        delivery_party = self._get_party_node({**vals, 'partner': vals['partner_shipping'], 'role': 'delivery'})
+        delivery_party.pop('cbc:EndpointID', None)
+        delivery_party.pop('cac:PartyTaxScheme', None)
+        delivery_party.pop('cac:PartyLegalEntity', None)
         document_node['cac:Delivery'] = {
-            'cac:DeliveryParty': self._get_party_node({**vals, 'partner': vals['partner_shipping'], 'role': 'delivery'})
+            'cac:DeliveryParty': delivery_party,
         }
 
     def _add_sale_order_payment_terms_nodes(self, document_node, vals):
@@ -138,21 +144,11 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
     def _add_sale_order_tax_total_nodes(self, document_node, vals):
         # OVERRIDE
         ubl_values = vals['_ubl_values']
-        company = vals['company']
-        company_currency = company.currency_id
-        currency = vals['currency_id']
 
         tax_total_nodes = document_node['cac:TaxTotal'] = []
         for tax_total in ubl_values['tax_totals_currency'].values():
-            tax_total_node = self._ubl_get_tax_total_node(vals, tax_total)
+            tax_total_node = self._ubl_get_sale_order_tax_total_node(vals, tax_total)
             tax_total_nodes.append(tax_total_node)
-
-        # Only one subtotal expressed in foreign currency in case of multi currencies.
-        if currency != company_currency:
-            for tax_total in ubl_values['tax_totals'].values():
-                tax_total_node = self._ubl_get_tax_total_node(vals, tax_total)
-                tax_total_node['cac:TaxSubtotal'] = []
-                tax_total_nodes.append(tax_total_node)
 
     def _add_sale_order_monetary_total_nodes(self, document_node, vals):
         ubl_values = vals['_ubl_values']
@@ -326,6 +322,15 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         discount_node['cbc:MultiplierFactorNumeric'] = None
         discount_node['cbc:BaseAmount'] = None
         return discount_node
+
+    def _ubl_get_sale_order_tax_total_node(self, vals, tax_total):
+        currency = tax_total['currency']
+        return {
+            'cbc:TaxAmount': {
+                '_text': FloatFmt(tax_total['amount'], min_dp=currency.decimal_places),
+                'currencyID': currency.name,
+            },
+        }
 
     # -------------------------------------------------------------------------
     # Order EDI Import
