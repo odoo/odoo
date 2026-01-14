@@ -85,6 +85,14 @@ export class ImageField extends Component {
         return ["img", "img-fluid"].concat(this.props.imgClass.split(" ")).join(" ");
     }
 
+    get containerClass() {
+        let containerClass = "position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover";
+        if (this.isMobile) {
+            containerClass += " o_mobile_controls";
+        }
+        return containerClass;
+    }
+
     get fieldType() {
         return this.props.record.fields[this.props.name].type;
     }
