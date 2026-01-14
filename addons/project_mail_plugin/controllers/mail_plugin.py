@@ -15,12 +15,6 @@ _logger = logging.getLogger(__name__)
 
 class MailPluginController(mail_plugin.MailPluginController):
 
-    def _get_record_redirect_url(self, model, record_id):
-        if model == 'project.task':
-            return f'/odoo/all-tasks/{int(record_id)}'
-
-        return super()._get_record_redirect_url(model, record_id)
-
     @route()
     def search_records(self, model, query, limit=30):
         """An empty search on project should return them all."""

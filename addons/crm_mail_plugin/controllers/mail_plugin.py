@@ -14,12 +14,6 @@ _logger = logging.getLogger(__name__)
 
 
 class MailPluginController(mail_plugin.MailPluginController):
-    def _get_record_redirect_url(self, model, record_id):
-        if model == 'crm.lead':
-            return f'/odoo/crm/{int(record_id)}'
-
-        return super()._get_record_redirect_url(model, record_id)
-
     def _search_records(self, model, terms, limit=30):
         if model == "crm.lead":
             domain = Domain.OR([('name', 'ilike', term)] for term in terms)
