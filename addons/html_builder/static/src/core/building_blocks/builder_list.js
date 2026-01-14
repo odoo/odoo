@@ -88,6 +88,9 @@ export class BuilderList extends Component {
         limit: t.number().optional(50),
         disableLastCheckedCheckbox: t.boolean().optional(false),
         withScrollbar: t.boolean().optional(true),
+        fullWidthDropdown: t.boolean().optional(false),
+        alternativeChoiceItemTemplate: t.string().optional(),
+        emptyListMessage: t.string().optional(),
     });
 
     tableRef = signal.ref();
