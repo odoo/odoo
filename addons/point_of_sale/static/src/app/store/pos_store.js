@@ -512,6 +512,9 @@ export class PosStore extends Reactive {
     computeProductPricelistCache(data) {
         if (data) {
             data = this.models[data.model].readMany(data.ids);
+            if (data.length === 0) {
+                return;
+            }
         }
         computeProductPricelistCache(this, data);
     }
