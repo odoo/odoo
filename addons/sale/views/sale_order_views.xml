@@ -1056,6 +1056,8 @@
                 <filter string="Sales Orders" name="sales" domain="[('state', '=', 'sale')]"/>
                 <separator/>
                 <filter string="Create Date" name="filter_create_date" date="create_date"/>
+                <separator/>
+                <filter string="Expired" name="expired" domain="[('is_expired', '=', True)]"/>
             </filter>
         </field>
     </record>

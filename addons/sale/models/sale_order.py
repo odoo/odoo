@@ -332,7 +332,11 @@ class SaleOrder(models.Model):
         string="Expected Date",
         compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
         help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
-    is_expired = fields.Boolean(string="Is Expired", compute='_compute_is_expired')
+    is_expired = fields.Boolean(
+        string="Is Expired",
+        compute='_compute_is_expired',
+        search='_search_is_expired',
+    )
     partner_credit_warning = fields.Text(
         compute='_compute_partner_credit_warning')
     show_deliver_button = fields.Boolean(compute='_compute_show_deliver_button')
@@ -821,6 +825,13 @@ class SaleOrder(models.Model):
                 and order.validity_date
                 and order.validity_date < today
             )
+
+    def _search_is_expired(self, operator, value):
+        today = fields.Date.today()
+        expired_domain = [('state', 'in', ('draft', 'sent')), ('validity_date', '<', today)]
+        if operator == "in":
+            return expired_domain
+        return ['!', '&'] + expired_domain
 
     @api.depends('order_line.qty_delivered')
     def _compute_show_deliver_button(self):
