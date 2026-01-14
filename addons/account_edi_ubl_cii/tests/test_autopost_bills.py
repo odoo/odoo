@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from xml.etree import ElementTree as et
 
 from odoo import fields
@@ -11,13 +11,15 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 @tagged('post_install', '-at_install')
 class TestAutoPostBills(AccountTestInvoicingCommon):
 
-    def import_facturx(self, filename='facturx_out_invoice.xml', ref=None):
+    def import_facturx(self, filename='facturx_out_invoice.xml', ref=None, date=None):
         self.env.cr._now = datetime.now()  # reset transaction's NOW, otherwise all move will have the same create_date
         with (file_open(f"account_edi_ubl_cii/tests/test_files/{filename}", 'rb', filter_ext=('.xml',)) as file):
             file_read = file.read()
             tree = et.ElementTree(et.fromstring(file_read.decode()))
             if ref:
                 tree.find('./{*}ExchangedDocument/{*}ID').text = ref
+            if date:
+                tree.find('./{*}ExchangedDocument/{*}IssueDateTime/{*}DateTimeString').text = date
             attachment = self.env['ir.attachment'].create({
                 'name': 'test_file.xml',
                 'raw': et.tostring(tree.getroot()),
@@ -79,7 +81,7 @@ class TestAutoPostBills(AccountTestInvoicingCommon):
         wizard.action_automate_partner()
 
         # Create 4th bill without changes with automation enabled => should automatically post, no popup
-        move = self.import_facturx(ref="refbill4")  # new ref to avoid duplicates
+        move = self.import_facturx(ref="refbill4", date='20170102')  # new ref and date to avoid duplicates
         self.assertEqual(move.state, 'posted')
 
         # Reset
@@ -124,8 +126,9 @@ class TestAutoPostBills(AccountTestInvoicingCommon):
         self.assertEqual(move.state, "draft")
 
         # If there is a significant difference (see abnormal_amount), don't autopost even if 'always' is set
+        base_date = date(2018, 1, 1)
         for i in range(10):  # See test_unexpected_invoice
-            move = self.import_facturx(ref=f"ref{i}")  # automatically posted
+            move = self.import_facturx(ref=f"ref{i}", date=(base_date + timedelta(days=i)).strftime('%Y%m%d'))  # automatically posted
             self.assertEqual(move.state, "posted")
 
         move = self.import_facturx(filename='facturx_out_invoice_abnormal.xml')  # amounts * 100 here, a bit abnormal...
