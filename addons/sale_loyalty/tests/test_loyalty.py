@@ -1233,3 +1233,48 @@ class TestLoyalty(TestSaleCouponCommon):
         loyalty_card.action_archive()
         claimable_rewards = sale_order._get_claimable_rewards()
         self.assertFalse(claimable_rewards.get(loyalty_card))
+
+    def test_free_product_sol_is_zero_price(self):
+        self.env['res.config.settings'].create({
+            'group_discount_per_so_line': True,
+        }).execute()
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [
+                Command.create({
+                    'reward_point_mode': 'unit',
+                    'reward_point_amount': 1,
+                    'product_ids': [self.product_a.id],
+                }),
+            ],
+            'reward_ids': [
+                Command.create({
+                    'reward_type': 'product',
+                    'reward_product_id': self.product_B.id,
+                    'reward_product_qty': 1,
+                    'required_points': 1,
+                }),
+            ],
+        })
+        sale_order = self.empty_order
+        sale_order.write({
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+        sale_order._update_programs_and_rewards()
+        self._claim_reward(sale_order, loyalty_program)
+        # In real use case, so.plan_id is set to False in _verify_cart_after_update in
+        # sale_subscription module. Since discount depends on so.plan_id, this triggers
+        # a recomputation of the discount.
+        # Here we manually call the compute method to simulate the behavior
+        sale_order.order_line._compute_discount()
+        reward_line = sale_order.order_line.filtered('reward_id')
+        self.assertEqual(reward_line.discount, 100)
+        self.assertEqual(reward_line.price_total, 0)
