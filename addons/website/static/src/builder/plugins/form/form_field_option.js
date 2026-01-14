@@ -26,8 +26,6 @@ export class FormFieldOption extends BaseOptionComponent {
         const { loadFieldOptionData } = this.dependencies.websiteFormOption;
         this.state = useState({
             availableFields: [],
-            conditionInputs: [],
-            conditionValueList: [],
             dependencyEl: null,
             valueList: null,
         });
@@ -47,30 +45,6 @@ export class FormFieldOption extends BaseOptionComponent {
             datetime: (value) =>
                 value ? formatDateTime(DateTime.fromSeconds(parseInt(value))) : "",
         };
-
-        this.domStateDependency = useDomState((el) => {
-            const dependencyEl = getDependencyEl(el);
-            if (!dependencyEl) {
-                return {
-                    type: "",
-                    nodeName: "",
-                    isRecordField: false,
-                    isFormDate: false,
-                    isFormDateTime: false,
-                    hasDateTimePicker: false,
-                };
-            }
-
-            return {
-                type: dependencyEl.type,
-                nodeName: dependencyEl.nodeName,
-                isRecordField:
-                    dependencyEl.closest(".s_website_form_field")?.dataset.type === "record",
-                isFormDate: !!dependencyEl.closest(".s_website_form_date"),
-                isFormDateTime: !!dependencyEl.closest(".s_website_form_datetime"),
-                hasDateTimePicker: dependencyEl.classList.contains("datetimepicker-input"),
-            };
-        });
 
         this.domStateCurrentFieldInput = useDomState((el) => {
             const currentFieldInputEl = getCurrentFieldInputEl(el);
@@ -110,9 +84,7 @@ export class FormFieldOption extends BaseOptionComponent {
             const fieldOptionData = await loadFieldOptionData(el);
             this.state.fields = fieldOptionData.fields;
             this.state.availableFields.push(...fieldOptionData.availableFields);
-            this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
             this.state.valueList = fieldOptionData.valueList;
-            this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
         });
         onWillUpdateProps(async (props) => {
             const el = this.env.getEditingElement();
@@ -120,41 +92,12 @@ export class FormFieldOption extends BaseOptionComponent {
             this.state.fields = fieldOptionData.fields;
             this.state.availableFields.length = 0;
             this.state.availableFields.push(...fieldOptionData.availableFields);
-            this.state.conditionInputs.length = 0;
-            this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
             this.state.valueList = fieldOptionData.valueList;
-            this.state.conditionValueList.length = 0;
-            this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
         });
         // TODO select field's hack ?
     }
     get canHaveTextValidationCondition() {
         return ["text", "email", "tel", "url", "search", "password", "number"];
-    }
-    get isTextConditionValueVisible() {
-        const el = this.env.getEditingElement();
-        const dependencyEl = getDependencyEl(el);
-        if (
-            !el.classList.contains("s_website_form_field_hidden_if") ||
-            (dependencyEl &&
-                (["checkbox", "radio"].includes(dependencyEl.type) ||
-                    dependencyEl.nodeName === "SELECT"))
-        ) {
-            return false;
-        }
-        if (!dependencyEl) {
-            return true;
-        }
-        if (dependencyEl?.classList.contains("datetimepicker-input")) {
-            return el.dataset.visibilityComparator === "lessyears";
-        }
-        return (
-            (["text", "email", "tel", "url", "search", "password", "number"].includes(
-                dependencyEl.type
-            ) ||
-                dependencyEl.nodeName === "TEXTAREA") &&
-            !["set", "!set"].includes(el.dataset.visibilityComparator)
-        );
     }
     /**
      * Determines the visibility of the text condition input field used for
@@ -170,21 +113,6 @@ export class FormFieldOption extends BaseOptionComponent {
             !this.domStateCurrentFieldInput.hasDateTimePicker &&
             (this.domStateCurrentFieldInput.isTextArea ||
                 this.canHaveTextValidationCondition.includes(currentFieldInputEl.type))
-        );
-    }
-    get isTextConditionOperatorVisible() {
-        const el = this.env.getEditingElement();
-        const dependencyEl = getDependencyEl(el);
-        if (
-            !el.classList.contains("s_website_form_field_hidden_if") ||
-            dependencyEl?.classList.contains("datetimepicker-input")
-        ) {
-            return false;
-        }
-        return (
-            !dependencyEl ||
-            ["text", "email", "tel", "url", "search", "password"].includes(dependencyEl.type) ||
-            dependencyEl.nodeName === "TEXTAREA"
         );
     }
     get isExistingFieldSelectType() {
@@ -211,6 +139,104 @@ export class FormFieldOption extends BaseOptionComponent {
         return (
             fieldEl.classList.contains("s_website_form_custom") ||
             ["one2many", "many2many"].includes(fieldEl.dataset.type)
+        );
+    }
+}
+
+export class FormFieldVisibilityOption extends BaseOptionComponent {
+    static template = "website.s_website_form_field_visibility_option";
+    static dependencies = ["websiteFormOption"];
+    static selector = ".s_website_form_field";
+
+    setup() {
+        super.setup();
+        const { loadFieldOptionData } = this.dependencies.websiteFormOption;
+        this.state = useState({
+            conditionInputs: [],
+            conditionValueList: [],
+        });
+        this.domState = useDomState((el) => ({
+            elDataset: { ...el.dataset },
+        }));
+        this.domStateDependency = useDomState((el) => {
+            const dependencyEl = getDependencyEl(el);
+            if (!dependencyEl) {
+                return {
+                    type: "",
+                    nodeName: "",
+                    isRecordField: false,
+                    isFormDate: false,
+                    isFormDateTime: false,
+                    hasDateTimePicker: false,
+                };
+            }
+
+            return {
+                type: dependencyEl.type,
+                nodeName: dependencyEl.nodeName,
+                isRecordField:
+                    dependencyEl.closest(".s_website_form_field")?.dataset.type === "record",
+                isFormDate: !!dependencyEl.closest(".s_website_form_date"),
+                isFormDateTime: !!dependencyEl.closest(".s_website_form_datetime"),
+                hasDateTimePicker: dependencyEl.classList.contains("datetimepicker-input"),
+            };
+        });
+
+        onWillStart(async () => {
+            const el = this.env.getEditingElement();
+            const fieldOptionData = await loadFieldOptionData(el);
+            this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
+            this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
+        });
+        onWillUpdateProps(async (props) => {
+            const el = this.env.getEditingElement();
+            const fieldOptionData = await loadFieldOptionData(el);
+            this.state.fields = fieldOptionData.fields;
+            this.state.conditionInputs.length = 0;
+            this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
+            this.state.conditionValueList.length = 0;
+            this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
+        });
+        // TODO select field's hack ?
+    }
+    get isTextConditionValueVisible() {
+        const el = this.env.getEditingElement();
+        const dependencyEl = getDependencyEl(el);
+        if (
+            !el.classList.contains("s_website_form_field_hidden_if") ||
+            (dependencyEl &&
+                (["checkbox", "radio"].includes(dependencyEl.type) ||
+                    dependencyEl.nodeName === "SELECT"))
+        ) {
+            return false;
+        }
+        if (!dependencyEl) {
+            return true;
+        }
+        if (dependencyEl?.classList.contains("datetimepicker-input")) {
+            return el.dataset.visibilityComparator === "lessyears";
+        }
+        return (
+            (["text", "email", "tel", "url", "search", "password", "number"].includes(
+                dependencyEl.type
+            ) ||
+                dependencyEl.nodeName === "TEXTAREA") &&
+            !["set", "!set"].includes(el.dataset.visibilityComparator)
+        );
+    }
+    get isTextConditionOperatorVisible() {
+        const el = this.env.getEditingElement();
+        const dependencyEl = getDependencyEl(el);
+        if (
+            !el.classList.contains("s_website_form_field_hidden_if") ||
+            dependencyEl?.classList.contains("datetimepicker-input")
+        ) {
+            return false;
+        }
+        return (
+            !dependencyEl ||
+            ["text", "email", "tel", "url", "search", "password"].includes(dependencyEl.type) ||
+            dependencyEl.nodeName === "TEXTAREA"
         );
     }
 }
