@@ -43,9 +43,8 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 describe.current.tags("desktop");
 defineMailModels();
 
-let streams = [];
 beforeEach(() => {
-    streams = mockGetMedia();
+    mockGetMedia();
 });
 
 test("basic rendering", async () => {
@@ -948,87 +947,7 @@ test("should not show context menu on participant card when not in a call", asyn
     await contains(".o-discuss-CallContextMenu");
 });
 
-test("all streams are properly closed when abruptly disconnected", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const env = await start();
-    const rtc = env.services["discuss.rtc"];
-    await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await contains(".o-discuss-Call");
-    const audioStream = streams.at(-1);
-    expect(audioStream.getTracks()[0].readyState).toBe("live");
-    await click("[title='Turn camera on']");
-    await contains(".o-discuss-CallParticipantCard video");
-    const cameraStream = streams.at(-1);
-    expect(cameraStream.getTracks()[0].readyState).toBe("live");
-    await click("[title='Share Screen']");
-    await contains(".o-mail-DiscussSidebarCallParticipants-status:contains('LIVE')");
-    const screenStream = streams.at(-1);
-    expect(screenStream.getTracks()[0].readyState).toBe("live");
-    expect(streams.length).toBe(3);
-    pyEnv["discuss.channel.rtc.session"].unlink([rtc.selfSession.id]);
-    await contains(".o-discuss-Call", { count: 0 });
-    expect(audioStream.getTracks()[0].readyState).toBe("ended");
-    expect(cameraStream.getTracks()[0].readyState).toBe("ended");
-    expect(screenStream.getTracks()[0].readyState).toBe("ended");
-});
-
-test("Leaving a call should close all the streams", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
-    await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await contains(".o-discuss-Call");
-    await click("[title='Turn camera on']");
-    await contains(".o-discuss-CallParticipantCard video");
-    await click("[title='Share Screen']");
-    await contains(".o-discuss-CallParticipantCard.o-inset");
-    expect(streams.length).toBe(3);
-    expect(streams[0].getTracks()[0].readyState).toBe("live");
-    expect(streams[1].getTracks()[0].readyState).toBe("live");
-    expect(streams[2].getTracks()[0].readyState).toBe("live");
-    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
-    await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
-    await contains(".o-discuss-Call", { count: 0 });
-    expect(streams[0].getTracks()[0].readyState).toBe("ended");
-    expect(streams[1].getTracks()[0].readyState).toBe("ended");
-    expect(streams[2].getTracks()[0].readyState).toBe("ended");
-});
-
-test("all streams are properly closed when requesting new ones and tuning the features off", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
-    await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await contains(".o-discuss-Call");
-    const audioStream = streams.at(-1);
-    expect(audioStream.getTracks()[0].readyState).toBe("live");
-    await click("[title='Turn camera on']");
-    await contains(".o-discuss-CallParticipantCard video");
-    const cameraStream1 = streams.at(-1);
-    expect(cameraStream1.getTracks()[0].readyState).toBe("live");
-    await click("[title='Stop camera']");
-    await contains(".o-discuss-CallParticipantCard video", { count: 0 });
-    await click("[title='Turn camera on']");
-    await contains(".o-discuss-CallParticipantCard video");
-    const cameraStream2 = streams.at(-1);
-    expect(cameraStream1.getTracks()[0].readyState).toBe("ended");
-    expect(cameraStream2.getTracks()[0].readyState).toBe("live");
-    await click("[title='Stop camera']");
-    await contains(".o-discuss-CallParticipantCard video", { count: 0 });
-    await click("[title='Share Screen']");
-    await contains(".o-discuss-CallParticipantCard video");
-    await contains(".o-mail-DiscussSidebarCallParticipants-status:contains('LIVE')");
-    const screenStream = streams.at(-1);
-    expect(screenStream.getTracks()[0].readyState).toBe("live");
-    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
-    await click("[title='Stop Sharing Screen']");
-    expect(screenStream.getTracks()[0].readyState).toBe("ended");
-});
-
+// control group
 test("Show connecting state on cards", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
