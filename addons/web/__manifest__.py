@@ -66,7 +66,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/ui.scss',
             'web/static/src/views/fields/translation_dialog.scss',
 
-            'web/static/src/polyfills/clipboard.js',
+            'web/static/src/polyfills/**/*.js',
 
             'web/static/lib/popper/popper.js',
             'web/static/lib/bootstrap/js/dist/util/index.js',
@@ -152,6 +152,7 @@ This module provides the core of the Odoo Web Client.
         'web.assets_frontend_minimal': [
             'web/static/src/polyfills/object.js',
             'web/static/src/polyfills/array.js',
+            'web/static/src/polyfills/promise.js',
             'web/static/src/module_loader.js',
             'web/static/src/polyfills/set.js',
             'web/static/src/session.js',
