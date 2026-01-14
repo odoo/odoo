@@ -27,13 +27,13 @@ class ProductProduct(models.Model):
     # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
-        digits='Product Price',
+        min_display_digits='Product Price',
         help="This is the sum of the extra price of all attributes")
     # lst_price: catalog value + extra, or custom value
     lst_price = fields.Float(
         'Sales Price',
         compute='_compute_product_lst_price',
-        digits='Product Price',
+        min_display_digits='Product Price',
         readonly=False,
         store=True,
         help="The sale price can be set manually or computed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
@@ -67,7 +67,7 @@ class ProductProduct(models.Model):
 
     standard_price = fields.Float(
         'Cost', company_dependent=True,
-        digits='Product Price',
+        min_display_digits='Product Price',
         groups="base.group_user",
         help="""Value of the product (automatically computed in AVCO).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).

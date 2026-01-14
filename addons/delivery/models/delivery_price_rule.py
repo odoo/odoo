@@ -46,8 +46,8 @@ class DeliveryPriceRule(models.Model):
     variable = fields.Selection(selection=VARIABLE_SELECTION, required=True, default='quantity')
     operator = fields.Selection([('==', '='), ('<=', '<='), ('<', '<'), ('>=', '>='), ('>', '>')], required=True, default='<=')
     max_value = fields.Float('Maximum Value', required=True)
-    list_base_price = fields.Float(string='Sale Base Price', digits='Product Price', required=True, default=0.0)
-    list_price = fields.Float('Sale Price', digits='Product Price', required=True, default=0.0)
+    list_base_price = fields.Float(string='Sale Base Price', min_display_digits='Product Price', required=True, default=0.0)
+    list_price = fields.Float('Sale Price', min_display_digits='Product Price', required=True, default=0.0)
     variable_factor = fields.Selection(
         selection=VARIABLE_SELECTION, string="Variable Factor", required=True, default='weight'
     )

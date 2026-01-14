@@ -66,6 +66,14 @@ class Float(Field[float]):
         :class:`~odoo.addons.base.models.decimal_precision.DecimalPrecision` record name.
     :type digits: tuple(int,int) or str
 
+    :param min_display_digits: An int or a string referencing a
+        :class:`~odoo.addons.base.models.decimal_precision.DecimalPrecision` record name.
+        Represents the minimum number of decimal digits to display in the UI.
+        So if it's equal to 3:
+        - `3.1` will be shown as `'3.100'`.
+        - `3.1234` will be shown as `'3.1234'`.
+    :type min_display_digits: int or str
+
     When a float is a quantity associated with an unit of measure, it is important
     to use the right tool to compare or round values with the correct precision.
 
@@ -99,11 +107,20 @@ class Float(Field[float]):
 
     type = 'float'
     _digits: str | tuple[int, int] | None = None  # digits argument passed to class initializer
+    _min_display_digits: str | int | None = None
     falsy_value = 0.0
     aggregator = 'sum'
 
-    def __init__(self, string: str | Sentinel = SENTINEL, digits: str | tuple[int, int] | Sentinel | None = SENTINEL, **kwargs):
-        super().__init__(string=string, _digits=digits, **kwargs)
+    def __init__(
+        self,
+        string: str | Sentinel = SENTINEL,
+        digits: str | tuple[int, int] | typing.Literal[0, False] | Sentinel | None = SENTINEL,
+        min_display_digits: str | int | Sentinel | None = SENTINEL,
+        **kwargs,
+    ):
+        if digits is SENTINEL and min_display_digits is not SENTINEL:
+            digits = False
+        super().__init__(string=string, _digits=digits, _min_display_digits=min_display_digits, **kwargs)
 
     @property
     def _column_type(self):
@@ -122,10 +139,18 @@ class Float(Field[float]):
         else:
             return self._digits
 
+    def get_min_display_digits(self, env):
+        if isinstance(self._min_display_digits, str):
+            return env['decimal.precision'].precision_get(self._min_display_digits)
+        return self._min_display_digits
+
     _related__digits = property(attrgetter('_digits'))
 
     def _description_digits(self, env: Environment) -> tuple[int, int] | None:
         return self.get_digits(env)
+
+    def _description_min_display_digits(self, env):
+        return self.get_min_display_digits(env)
 
     def convert_to_column(self, value, record, values=None, validate=True):
         value_float = value = float(value or 0.0)
