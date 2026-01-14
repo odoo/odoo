@@ -182,33 +182,35 @@ class FloatConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
+        min_precision = options.get('min_precision')
         if 'decimal_precision' in options:
             precision = self.env['decimal.precision'].precision_get(options['decimal_precision'])
+        elif options.get('precision') is None:
+            precision = 6
+            min_precision = min_precision or 1
         else:
             precision = options['precision']
 
-        if precision is None:
-            fmt = '%f'
-        else:
-            value = float_utils.float_round(value, precision_digits=precision)
-            fmt = '%.{precision}f'.format(precision=precision)
+        fmt = f'%.{precision}f'
+        if min_precision and min_precision < precision:
+            _, dec_part = float_utils.float_split_str(value, precision)
+            digits_count = len(dec_part.rstrip('0'))
+            if digits_count < min_precision:
+                fmt = f'%.{min_precision}f'
+            elif digits_count < precision:
+                fmt = f'%.{digits_count}f'
 
-        formatted = self.user_lang().format(fmt, value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
-
-        # %f does not strip trailing zeroes. %g does but its precision causes
-        # it to switch to scientific notation starting at a million *and* to
-        # strip decimals. So use %f and if no precision was specified manually
-        # strip trailing 0.
-        if precision is None:
-            formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
-
-        return formatted
+        value = float_utils.float_round(value, precision_digits=precision)
+        return self.user_lang().format(fmt, value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
 
     @api.model
     def record_to_html(self, record, field_name, options):
         if 'precision' not in options and 'decimal_precision' not in options:
             _, precision = record._fields[field_name].get_digits(record.env) or (None, None)
             options = dict(options, precision=precision)
+        if 'min_precision' not in options:
+            min_precision = record._fields[field_name].get_min_display_digits(record.env)
+            options = dict(options, min_precision=min_precision)
         return super(FloatConverter, self).record_to_html(record, field_name, options)
 
 

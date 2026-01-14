@@ -23,10 +23,10 @@ class EventTemplateTicket(models.Model):
     currency_id = fields.Many2one(related="product_id.currency_id", string="Currency")
     price = fields.Float(
         string='Price', compute='_compute_price',
-        digits='Product Price', readonly=False, store=True)
+        min_display_digits='Product Price', readonly=False, store=True)
     price_reduce = fields.Float(
         string="Price Reduce", compute="_compute_price_reduce",
-        compute_sudo=True, digits='Product Price')
+        compute_sudo=True, min_display_digits='Product Price')
 
     @api.depends('product_id')
     def _compute_price(self):

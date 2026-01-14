@@ -16,6 +16,7 @@ export class FloatField extends Component {
         inputType: { type: String, optional: true },
         step: { type: Number, optional: true },
         digits: { type: Array, optional: true },
+        minDigits: {type: [Number, String], optional: true },
         placeholder: { type: String, optional: true },
         humanReadable: { type: Boolean, optional: true },
         decimals: { type: Number, optional: true },
@@ -60,6 +61,7 @@ export class FloatField extends Component {
         }
         const options = {
             digits: this.props.digits,
+            minDigits: this.props.minDigits,
             field: this.props.record.fields[this.props.name],
         };
         if (this.props.humanReadable && !this.state.hasFocus) {
@@ -94,6 +96,11 @@ export const floatField = {
         {
             label: _t("Digits"),
             name: "digits",
+            type: "digits",
+        },
+        {
+            label: _t("Minimum Digits"),
+            name: "minDigits",
             type: "digits",
         },
         {
@@ -141,6 +148,7 @@ export const floatField = {
             humanReadable: !!options.human_readable,
             step: options.step,
             digits,
+            minDigits: options.min_display_digits,
             placeholder: attrs.placeholder,
             decimals: options.decimals || 0,
         };
