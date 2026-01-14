@@ -453,7 +453,10 @@ export function createVideoStream() {
     canvas.width = 1;
     canvas.height = 1;
     const stream = canvas.captureStream();
-    after(() => closeStream(stream));
+    after(() => {
+        closeStream(stream);
+        canvas.remove();
+    });
     return stream;
 }
 
