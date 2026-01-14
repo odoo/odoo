@@ -34,6 +34,10 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         return this.userIsExpenseTeamApprover && records.length && records.every(record => record.data.state === 'submitted');
     }
 
+    displayRefuse() {
+        return this.displayApprove();
+    }
+
     displayPost() {
         const records = this.model.root.selection;
         return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'approved');

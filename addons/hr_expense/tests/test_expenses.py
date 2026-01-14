@@ -709,7 +709,7 @@ class TestExpenses(TestExpenseCommon):
     def test_update_expense_price_on_product_standard_price(self):
         """
         Tests that updating the standard price of a product will update all the un-submitted
-        expenses using that product as a category.
+        expenses using that product.
         """
         product = self.env['product.product'].create({
             'name': 'Product',
@@ -942,7 +942,7 @@ class TestExpenses(TestExpenseCommon):
         })
         expense.action_submit()
         expense.action_approve()
-        expense._post_without_wizard()
+        self.post_expenses_with_wizard(expense)
         self.assertRecordValues(
             expense.account_move_id,
             [{'amount_total': 500.0, 'currency_id': expense.account_move_id.company_currency_id.id}],

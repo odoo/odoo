@@ -8,6 +8,9 @@
             <button t-if="displayApprove()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_approve')">
                 Approve
             </button>
+            <button t-if="displayRefuse()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_refuse')">
+                Refuse
+            </button>
             <button t-if="displayPost()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_post')">
                 Post Entries
             </button>

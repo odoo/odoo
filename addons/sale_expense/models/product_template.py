@@ -17,7 +17,7 @@ class ProductTemplate(models.Model):
                 product_template.expense_policy_tooltip = False
             elif product_template.expense_policy == 'no':
                 product_template.expense_policy_tooltip = _(
-                    "Expenses of this category may not be added to a Sales Order."
+                    "Expenses of this product may not be added to a Sales Order."
                 )
             elif product_template.expense_policy == 'cost':
                 product_template.expense_policy_tooltip = _(

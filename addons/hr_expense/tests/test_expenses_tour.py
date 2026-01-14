@@ -15,7 +15,7 @@ class TestExpensesTour(TestExpenseCommon, HttpCase):
     def test_tour_expenses(self):
         self.start_tour("/odoo", "hr_expense_test_tour", login="admin")
 
-    def test_tour_expense_category(self):
+    def test_tour_expense_product(self):
         self.expense_user_manager.group_ids |= self.env.ref("product.group_product_manager")
 
         self.create_expenses([
@@ -30,20 +30,20 @@ class TestExpensesTour(TestExpenseCommon, HttpCase):
         ])
 
         self.env.flush_all()
-        self.start_tour("/odoo", "change_expense_category_price_tour", login=self.expense_user_manager.login)
+        self.start_tour("/odoo", "change_expense_product_price_tour", login=self.expense_user_manager.login)
 
         self.assertEqual(
             self.product_a.standard_price,
             2.0,
-            "The price of Category A should be updated to 2.0",
+            "The price of Product A should be updated to 2.0",
         )
         self.assertEqual(
             self.product_b.standard_price,
             6.0,
-            "The price of Category B should be updated to 6.0",
+            "The price of Product B should be updated to 6.0",
         )
         self.assertEqual(
             self.product_c.standard_price,
             3.0,
-            "The price of Category C should be updated to 3.0",
+            "The price of Product C should be updated to 3.0",
         )

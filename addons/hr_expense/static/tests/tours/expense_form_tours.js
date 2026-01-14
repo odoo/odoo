@@ -66,12 +66,12 @@ registry.category("web_tour.tours").add("do_not_create_zero_amount_expense", {
             run: "click",
         },
         {
-            content: "Select category to Expense",
+            content: "Select product to Expense",
             trigger: "div[name=product_id] input",
             run: "click",
         },
         {
-            content: "Choose category to Expense",
+            content: "Choose product to Expense",
             trigger:
                 ".o_field_widget[name=product_id] .o-autocomplete--dropdown-menu li:contains(EXP_GEN)",
             run: "click",

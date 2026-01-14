@@ -12,7 +12,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _get_line_batch_key(self, line):
         # OVERRIDE to set the bank account defined on the employee
         res = super()._get_line_batch_key(line)
-        expense = line.move_id.expense_ids.filtered(lambda expense: expense.payment_mode == 'own_account')
+        expense = line.move_id.expense_ids.filtered(lambda expense: expense.payment_mode != 'company_account')
         if expense and not line.move_id.partner_bank_id:
             res['partner_bank_id'] = (
                     expense.employee_id.sudo().primary_bank_account_id.id
