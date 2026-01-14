@@ -75,6 +75,7 @@ def setup_product_combo_items(self):
     self.desk_accessories_combo = self.env["product.combo"].create(
         {
             "name": "Desk Accessories Combo",
+            "qty_max": 3,
             "combo_item_ids": [
                 Command.create({
                     "product_id": combo_product_1.id,
