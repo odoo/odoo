@@ -19,6 +19,11 @@ export class DiscussApp extends Record {
     });
     hasRestoredThread = false;
 
+    /** @param {import("@mail/core/common/action").Action} [nextActiveAction] */
+    shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction) {
+        return true;
+    }
+
     _threadOnUpdate() {
         this.lastActiveId = this.store["mail.thread"].localIdToActiveId(this.thread?.localId);
     }

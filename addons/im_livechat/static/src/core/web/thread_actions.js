@@ -18,8 +18,10 @@ registerThreadAction("livechat-info", {
     actionPanelOpen: ({ store }) => {
         store.discuss.isLivechatInfoPanelOpenByDefault = true;
     },
-    actionPanelClose: ({ store }) => {
-        store.discuss.isLivechatInfoPanelOpenByDefault = false;
+    actionPanelClose: ({ action, store }) => {
+        if (action.condition) {
+            store.discuss.isLivechatInfoPanelOpenByDefault = false;
+        }
     },
     sequence: 10,
     sequenceGroup: 7,

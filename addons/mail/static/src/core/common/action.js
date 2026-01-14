@@ -19,8 +19,13 @@ export const ACTION_TAGS = Object.freeze({
 /** @typedef {Component|Record} ActionOwner */
 
 /**
+ * @typedef {Object} ActionPanelCloseSpecificParams
+ * @property {Action} nextActiveAction
+ */
+
+/**
  * @typedef {Object} ActionDefinition
- * @property {(action: Action) => void} [actionPanelClose]
+ * @property {(params: Action & ActionPanelCloseSpecificParams) => void} [actionPanelClose]
  * @property {Component} [actionPanelComponent]
  * @property {(action: Action) => Object} [actionPanelComponentProps]
  * @property {(action: Action) => void} [actionPanelOpen]
@@ -101,12 +106,21 @@ export class Action {
         return Boolean(this.definition.actionPanelComponent);
     }
 
-    /** Closes the action panel of this action. */
-    actionPanelClose() {
+    /**
+     * Closes the action panel of this action.
+     *
+     * @param {Object} [param0={}]
+     * @param {Action} [param0.nextActiveAction] When action panel is closed by opening another panel,
+     *   this param tells which is the next active action
+     */
+    actionPanelClose({ nextActiveAction } = {}) {
         if (this.actions) {
             this.actions.activeAction = this.actions.actionStack.pop();
         }
-        this.definition.actionPanelClose?.call(this, this.params);
+        this.definition.actionPanelClose?.call(
+            this,
+            Object.assign(this.params, { nextActiveAction })
+        );
     }
 
     /** Optional component that is used as action panel of this component, i.e. when action is active. */
@@ -138,7 +152,7 @@ export class Action {
                 if (keepPrevious) {
                     this.actions.actionStack.push(this.actions.activeAction);
                 } else {
-                    this.actions.activeAction.actionPanelClose();
+                    this.actions.activeAction.actionPanelClose({ nextActiveAction: this });
                 }
             }
             this.actions.activeAction = this;
