@@ -55,7 +55,6 @@ export class SelfOrder extends Reactive {
         this.access_token = this.config.access_token;
         this.lastEditedProductId = null;
         this.currentProduct = 0;
-        this.currentTable = null;
         this.priceLoading = false;
         this.rpcLoading = false;
         this.paymentError = false;
@@ -160,6 +159,18 @@ export class SelfOrder extends Reactive {
         } else {
             odoo.use_lna = false;
         }
+    }
+
+    /**
+     * Return the current table based on the URL identifier
+     * This is the only way to be sure of the table the user is using
+     * If we rely on the order table, there could be mismatches if the user
+     * scanned another QR code after creating the order.
+     */
+    get currentTable() {
+        const tableIdentifier = this.router.getTableIdentifier();
+        const table = this.models["restaurant.table"].find((t) => t.identifier === tableIdentifier);
+        return table || null;
     }
 
     get selfService() {
@@ -558,14 +569,6 @@ export class SelfOrder extends Reactive {
                 this.config.self_ordering_mode !== "consultation"
             ) {
                 await this.getUserDataFromServer();
-                const tableIdentifier = this.router.getTableIdentifier();
-
-                if (tableIdentifier) {
-                    this.currentTable = this.models["restaurant.table"].find(
-                        (t) => t.identifier === tableIdentifier
-                    );
-                }
-
                 this.ordering = true;
             }
 
@@ -648,15 +651,14 @@ export class SelfOrder extends Reactive {
 
         try {
             this.currentOrder.setOrderPrices();
-            const tableIdentifier = this.router.getTableIdentifier([]);
+            const tableIdentifier = this.router.getTableIdentifier();
             let uuid = this.selectedOrderUuid;
             const data = await rpc(
                 `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
                 {
                     order: this.currentOrder.serializeForORM(),
                     access_token: this.access_token,
-                    table_identifier:
-                        this.currentOrder?.self_ordering_table_id?.identifier || tableIdentifier,
+                    table_identifier: tableIdentifier, // Always trust URL one, is the one user scanned
                 }
             );
             const result = this.models.connectNewData(data);
