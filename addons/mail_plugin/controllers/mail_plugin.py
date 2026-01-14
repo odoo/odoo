@@ -7,6 +7,7 @@ from markupsafe import Markup
 from werkzeug.exceptions import BadRequest, Forbidden
 
 from odoo import http, tools, _
+from odoo.addons.portal.controllers.mail import MailController
 from odoo.fields import Domain
 from odoo.exceptions import AccessError
 from odoo.http import request
@@ -16,7 +17,7 @@ from odoo.tools.misc import format_date
 _logger = logging.getLogger(__name__)
 
 
-class MailPluginController(http.Controller):
+class MailPluginController(MailController):
     @http.route('/mail_plugin/partner/get', type="jsonrpc", auth="outlook", cors="*")
     def res_partner_get(self, email=None, partner_id=None, **kwargs):
         """
@@ -74,14 +75,7 @@ class MailPluginController(http.Controller):
     def redirect_to_record(self, model, record_id):
         if model not in self._mail_models_access_whitelist('read'):
             raise Forbidden()
-
-        cids = request.env.user.company_ids.ids
-        request.future_response.set_cookie('cids', '-'.join(map(str, cids)))
-
-        return request.redirect(self._get_record_redirect_url(model, record_id))
-
-    def _get_record_redirect_url(self, model, record_id):
-        return f'/odoo/{model}/{int(record_id)}'
+        return self._redirect_to_record(model, int(record_id))
 
     @http.route('/mail_plugin/search_records/<string:model>', type='jsonrpc', auth='outlook', cors='*')
     def search_records(self, model, query, limit=30):
