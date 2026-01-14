@@ -102,32 +102,13 @@ class StripeController(http.Controller):
                     stripe_object['payment_method'] = payment_method
                     self._include_setup_intent_in_payment_data(stripe_object, data)
                 elif event['type'] == 'charge.refunded':  # Refund operation (refund creation).
-                    refunds = stripe_object['refunds']['data']
 
-                    # The refunds linked to this charge are paginated, fetch the remaining refunds.
-                    has_more = stripe_object['refunds']['has_more']
-                    while has_more:
-                        payload = {
-                            'charge': stripe_object['id'],
-                            'starting_after': refunds[-1]['id'],
-                            'limit': 100,
-                        }
-                        additional_refunds = tx_sudo._send_api_request(
-                            'GET', 'refunds', data=payload
-                        )
-                        refunds += additional_refunds['data']
-                        has_more = additional_refunds['has_more']
-
-                    # Process the refunds for which a refund transaction has not been created yet.
-                    processed_refund_ids = tx_sudo.child_transaction_ids.filtered(
-                        lambda tx: tx.operation == 'refund'
-                    ).mapped('provider_reference')
-                    for refund in filter(lambda r: r['id'] not in processed_refund_ids, refunds):
-                        refund_tx_sudo = self._create_refund_tx_from_refund(tx_sudo, refund)
-                        self._include_refund_in_payment_data(refund, data)
-                        refund_tx_sudo._process('stripe', data)
-                    # Don't process the payment data for the source transaction.
+                    refund = stripe_object
+                    refund_tx_sudo = self._create_refund_tx_from_refund(tx_sudo, refund)
+                    self._include_refund_in_payment_data(refund, data)
+                    refund_tx_sudo._process('stripe', data)
                     return request.make_json_response('')
+
                 elif event['type'] == 'charge.refund.updated':  # Refund operation (with update).
                     # A refund was updated by Stripe after it was already processed (possibly to
                     # cancel it). This can happen when the customer's payment method can no longer
