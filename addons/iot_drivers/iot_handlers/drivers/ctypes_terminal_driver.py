@@ -256,3 +256,18 @@ class CtypesTerminalDriver(Driver, ABC):
         Method implementing the terminal balance request (only for Worldline "Six")
         Not an abstract method as it remains undefined for Worldline
         """
+
+    def status(self, _):
+        self._action_default({
+            "messageType": "Transaction",
+            "transactionType": "Payment",
+            "amount": 1,
+            "cid": 1,
+            "posId": 1,
+            "userId": 1,
+            "currency": "EUR",
+        })
+        self._action_default({
+            "messageType": "Cancel",
+            "cid": 2,
+        })

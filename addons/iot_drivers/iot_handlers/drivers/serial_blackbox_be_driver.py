@@ -77,7 +77,6 @@ class BlackBoxDriver(SerialDriver):
             'registerReceiptWeb': self._register_receipt_web,  # 'H' from server (websocket) so requires an answer
             'registerReceipt': self._register_receipt,  # 'H'
             'registerPIN': self._register_pin,  # 'P'
-            'status': self._request_status,  # 'S'
         })
 
     @classmethod
@@ -108,7 +107,7 @@ class BlackBoxDriver(SerialDriver):
             time.sleep(3)
         return False
 
-    def _request_status(self, data):
+    def status(self, data):
         """Request the status of the blackbox, used when clicking "Test" button in the UI."""
         blackbox_response = self._send_to_blackbox("S", data, self._connection)
         return self._parse_blackbox_response(blackbox_response)

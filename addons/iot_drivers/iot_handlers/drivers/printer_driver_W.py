@@ -141,7 +141,7 @@ class PrinterDriver(PrinterDriverBase):
         _logger.debug("_action_default finished with mimetype %s for printer %s", mimetype, self.device_name)
         return {'print_id': data['print_id']} if 'print_id' in data else {}
 
-    def print_status(self, _data=None):
+    def status(self, _data=None):
         """Prints the status ticket of the IoT Box on the current printer.
 
         :param _data: dict provided by the action route

@@ -43,7 +43,7 @@ class PrinterDriver(PrinterDriverBase):
         if self.device_subtype == "receipt_printer" and self.receipt_protocol == 'escpos':
             self._init_escpos(device)
 
-        self.print_status()
+        self.status()
 
     def _init_escpos(self, device):
         try:
@@ -134,7 +134,7 @@ class PrinterDriver(PrinterDriverBase):
 
         return {"identifier": identifier, "mac_address": mac_address, "pairing_code": pairing_code, "ssid": ssid, "ips": ips}
 
-    def print_status(self, data=None):
+    def status(self, data=None):
         """Prints the status ticket of the IoT Box on the current printer.
 
         :param data: If not None, it means that it has been called from the action route, meaning

@@ -73,7 +73,6 @@ class PrinterDriverBase(Driver, ABC):
         self._actions.update({
             'cashbox': self.open_cashbox,
             'print_receipt': self.print_receipt,
-            'status': self.print_status,
             '': self._action_default,
         })
 
@@ -279,11 +278,6 @@ class PrinterDriverBase(Driver, ABC):
         :param data: The data to send to the printer
         :param str action_unique_id: The unique identifier of the action
         """
-        pass
-
-    @abstractmethod
-    def print_status(self, data):
-        """Method called to test a printer, printing a status page."""
         pass
 
     @abstractmethod
