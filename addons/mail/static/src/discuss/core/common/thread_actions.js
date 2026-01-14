@@ -187,8 +187,12 @@ registerThreadAction("invite-people", {
     },
 });
 registerThreadAction("member-list", {
-    actionPanelClose: ({ owner, store }) => {
-        if (owner.env.inDiscussApp) {
+    actionPanelClose: ({ action, owner, store, nextActiveAction }) => {
+        if (
+            action.condition &&
+            owner.env.inDiscussApp &&
+            store.discuss?.shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction)
+        ) {
             store.discuss.isMemberPanelOpenByDefault = false;
         }
     },
