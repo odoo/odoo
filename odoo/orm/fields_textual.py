@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import collections.abc
+import itertools
 import logging
 import typing
 from collections import defaultdict
@@ -15,16 +16,77 @@ from psycopg2.extras import Json as PsycopgJson
 from odoo.exceptions import AccessError, UserError
 from odoo.netsvc import COLOR_PATTERN, DEFAULT, GREEN, RED, ColoredFormatter
 from odoo.tools import SQL, html_normalize, html_sanitize, html2plaintext, is_html_empty, plaintext2html, sql
+from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import OrderedSet, SENTINEL, Sentinel
 from odoo.tools.sql import pattern_to_translated_trigram_pattern, pg_varchar, value_to_translated_trigram_pattern
 from odoo.tools.translate import html_translate
 
 from .fields import Field, _logger
-from .utils import COLLECTION_TYPES, SQL_OPERATORS
+from .utils import COLLECTION_TYPES, SQL_OPERATORS, expand_ids
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
     from .query import TableSQL
+
+
+"""
+Cache value for translated fields:
+
+- `None`: Database value is NULL and no translation exists.
+- `dict`: Partial translations with fallback values. Values for untranslated languages
+  may be filled with the `en_US` value after `fetch`.
+  e.g. `{'fr_FR': 'French', 'nl_NL': 'English'}`.
+- `StoredTranslations`: Complete translations. Values for untranslated languages will
+  fallback to the `en_US` value when accessed via `__getitem__` from cache.
+  e.g. `StoredTranslations({'en_US': 'English', 'fr_FR': 'French'})`.
+"""
+
+
+class StoredTranslations(dict):
+    """Dictionary-based cache value that stores the raw JSON translations from the database.
+
+    This provides easier write operations at the cost of slower cache reads, as it implements
+    custom fallback logic in `__getitem__`. The `'en_US'` key is expected to be present as the
+    default fallback language.
+    """
+    __slots__ = ()
+
+    def __getitem__(self, key):
+        """ Retrieve the translation for the specified language code with automatic fallback.
+
+        :param key: Language code (non-empty string).
+                    Fallback logic:
+                    - For normal language codes (e.g., 'fr_FR'):
+                    Tries: key -> 'en_US'
+                    - For technical language codes (prefixed with '_', e.g., '_fr_FR'):
+                    Tries: key -> key[1:] -> '_en_US' -> 'en_US'
+
+                    Note: This fallback behavior is consistent with ``field.to_sql``
+                    when ``prefetch_lang=False`` for translated fields
+
+        :return: The translation value for the language code.
+        """
+        # Direct dict method calls for performance optimization (bypass super())
+        if (res := dict.get(self, key)) is not None:
+            return res
+        if key[0] == '_':
+            if (res := dict.get(self, key[1:])) is not None:
+                return res
+            if (res := dict.get(self, '_en_US')) is not None:
+                return res
+        try:
+            return dict.__getitem__(self, 'en_US')
+        except KeyError:
+            _logger.warning("StoredTranslations %s has no translation for 'en_US'", dict(self))
+            # return the same behavior as ``field.to_sql`` when ``prefetch_lang=False``
+            # if 'en_US' is missing for a NOT NULL value
+            return None
+
+    def __contains__(self, key):
+        return True
+
+    def get(self, key, default=None):
+        return self[key]
 
 
 class BaseString(Field[str | typing.Literal[False]]):
@@ -192,16 +254,27 @@ class BaseString(Field[str | typing.Literal[False]]):
         : return: {'en_US': 'value_en_US', 'fr_FR': 'French'}
         """
         # assert (self.translate and self.store and record)
-        record.flush_recordset([self.name])
-        cr = record.env.cr
-        cr.execute(SQL(
-            "SELECT %s FROM %s WHERE id = %s",
-            SQL.identifier(self.name),
-            SQL.identifier(record._table),
-            record.id,
-        ))
-        res = cr.fetchone()
-        return res[0] if res else None
+        if self.compute and self.store:
+            self.recompute(record)
+        field_cache = record.env.transaction.field_data[self]
+        value = field_cache.get(record.id, SENTINEL)
+        if value is None:
+            return None
+        if isinstance(value, StoredTranslations):
+            return dict(value)
+        complete_translations_types = (type(None), StoredTranslations)
+        records_to_fetch = record.browse(itertools.islice((
+            id_ for id_ in expand_ids(record.id, record._prefetch_ids)
+            if not isinstance(field_cache.get(id_, SENTINEL), complete_translations_types)
+        ), PREFETCH_MAX))
+        # refetch field values for all languages
+        records_to_fetch.invalidate_recordset([self.name])
+        records_to_fetch.with_context(prefetch_langs=True).fetch([self.name])
+        value = field_cache.get(record.id, SENTINEL)
+        if isinstance(value, StoredTranslations):
+            return dict(value)
+        # column value is NULL or the record row doesn't exist in database
+        return None
 
     def translation_lang(self, env):
         return (env.lang or 'en_US') if self.translate is True else env._lang
@@ -244,20 +317,11 @@ class BaseString(Field[str | typing.Literal[False]]):
         env = records.env
         field_cache = env.transaction.field_data[self]
         if env.context.get('prefetch_langs'):
-            installed = [lang for lang, _ in env['res.lang'].get_installed()]
-            langs = OrderedSet[str](installed + ['en_US'])
-            u_langs: list[str] = [f'_{lang}' for lang in langs] if self.translate is not True and env._lang.startswith('_') else []
             for id_, val in zip(records._ids, values):
                 if val is None:
                     field_cache.setdefault(id_, None)
                 else:
-                    if u_langs:  # fallback missing _lang to lang if exists
-                        val.update({f'_{k}': v for k, v in val.items() if k in langs and f'_{k}' not in val})
-                    field_cache[id_] = {
-                        **dict.fromkeys(langs, val['en_US']),  # fallback missing lang to en_US
-                        **dict.fromkeys(u_langs, val.get('_en_US')),  # fallback missing _lang to _en_US
-                        **val
-                    }
+                    field_cache[id_] = StoredTranslations(val)
         else:
             lang = self.translation_lang(env)
             for id_, val in zip(records._ids, values):
@@ -382,7 +446,7 @@ class BaseString(Field[str | typing.Literal[False]]):
                 new_store_translations.pop('_en_US', None)
             new_translations_list.append(new_store_translations)
         for record, new_translation in zip(records.with_context(prefetch_langs=True), new_translations_list, strict=True):
-            self._update_cache(record, new_translation, dirty=True)
+            self._update_cache(record, StoredTranslations(new_translation), dirty=True)
 
     def to_sql(self, table: TableSQL) -> SQL:
         if not self.translate or table._model.env.context.get('prefetch_langs'):
