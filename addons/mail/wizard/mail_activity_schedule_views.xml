@@ -21,6 +21,7 @@
                             nolabel="1"/>
                         <br/>
                         <field name="activity_type_id"
+                            domain="[('id', 'in', activity_type_available_ids)]"
                             required="not plan_id"
                             widget="selection_badge_icons"
                             options="{'related_icon_field': 'icon'}"
