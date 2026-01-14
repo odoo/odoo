@@ -93,13 +93,9 @@ for (let snippet of snippetsNames) {
             run: "click",
         });
     } else if (isModal) {
-        snippetSteps.splice(5, 2, {
+        snippetSteps.splice(5, 0, {
             content: `Make sure ${snippet.name} is shown`,
             trigger: ":iframe body.modal-open",
-        }, {
-            content: `Hide the ${snippet.name} popup`,
-            trigger: `:iframe [data-snippet='${snippet.name}'] .s_popup_close`,
-            run: "click",
         });
     } else if (isDropInOnlySnippet) {
         // The 'drop in only' snippets have their 'data-snippet' attribute
