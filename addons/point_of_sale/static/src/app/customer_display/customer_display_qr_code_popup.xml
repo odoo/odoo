@@ -26,14 +26,14 @@
                             <p class="popup-text w-100">You can either use it on this device or scan the QR code to display it on another device</p>
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex gap-3 flex-grow-1">
-                                    <button t-on-click="openOnThisDevice" class="button btn btn-primary h1 mb-3 rounded-3">
-                                        This device 
+                                    <button t-on-click="openOnThisDevice" class="button button-qr-popup btn btn-primary h1 mb-3 rounded-3">
+                                        This device
                                     </button>
-                                    <button t-on-click="showQr" class="button btn btn-secondary h1 mb-3 rounded-3">
+                                    <button t-on-click="showQr" class="button button-qr-popup btn btn-secondary h1 mb-3 rounded-3">
                                         Display QR
                                     </button>
                                 </div>
-                                <button t-on-click="() => this.props.close()" class="button btn btn-secondary h1 mb-3 rounded-3">
+                                <button t-on-click="() => this.props.close()" class="button button-qr-popup btn btn-secondary h1 mb-3 rounded-3">
                                     Close
                                 </button>
                             </div>

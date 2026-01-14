@@ -45,7 +45,7 @@ class QrDialog extends Component {
         <Dialog header="false" footer="false" size="'sm'">
             <div class="d-flex flex-column align-items-center">
                 <img id="CustomerDisplayqrCode" t-att-src="props.qrData" alt="Customer QR Code" class="img-fluid mb-3 square w-100"/>
-                <button t-on-click="close" class="button btn btn-secondary h1 mb-3 rounded-3">
+                <button t-on-click="close" class="button button-qr-popup btn btn-secondary h1 mb-3 rounded-3">
                     Close
                 </button>
             </div>
