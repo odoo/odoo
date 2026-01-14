@@ -55,7 +55,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
     def test_basic_flow_with_rating(self):
         channel = self._common_basic_flow()
 
-        self._send_rating(channel, self.visitor, 5, "This deboulonnage was fine but not topitop.")
+        self._send_rating(channel, self.visitor, 3, "This deboulonnage was fine but not topitop.")
 
         channel._close_livechat_session(message=channel._get_visitor_leave_message())
 

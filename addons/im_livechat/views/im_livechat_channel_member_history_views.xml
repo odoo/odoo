@@ -58,9 +58,9 @@
                     <filter name="escalated" string="Escalated" domain="[('session_outcome', '=', 'escalated')]"/>
                     <filter name="no_answer" string="Not Answered" domain="[('session_outcome', '=', 'no_answer')]"/>
                     <separator/>
-                    <filter name="rating_happy" string="Happy" domain="[('rating_text','=', 'top')]"/>
-                    <filter name="rating_neutral" string="Neutral" domain="[('rating_text','=', 'ok')]"/>
-                    <filter name="rating_unhappy" string="Unhappy" domain="[('rating_text','=', 'ko')]"/>
+                    <filter name="rating_happy" string="Happy" domain="[('rating','=', 3)]"/>
+                    <filter name="rating_neutral" string="Neutral" domain="[('rating','=', 2)]"/>
+                    <filter name="rating_unhappy" string="Unhappy" domain="[('rating','=', 1)]"/>
                     <separator />
                     <filter name="filter_start_date" string="Date" date="create_date"/>
                     <filter name="filter_date_last_month" invisible="1" string="Date: Last month"

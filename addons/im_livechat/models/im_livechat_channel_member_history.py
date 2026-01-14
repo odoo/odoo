@@ -51,9 +51,10 @@ class ImLivechatChannelMemberHistory(models.Model):
         aggregator="avg",
         store=True,
     )
-    rating_id = fields.Many2one("rating.rating", compute="_compute_rating_id", store=True)
-    rating = fields.Float(related="rating_id.rating")
-    rating_text = fields.Selection(string="Rating text", related="rating_id.rating_text")
+    rating = fields.Integer("Rating", related="channel_id.livechat_rating", aggregator="avg")
+    rating_text = fields.Selection(
+        related="channel_id.livechat_rating_text"
+    )
     call_history_ids = fields.Many2many("discuss.call.history")
     has_call = fields.Float(compute="_compute_has_call", store=True)
     call_count = fields.Float("# of Sessions with Calls", related="has_call", aggregator="sum")
@@ -155,15 +156,6 @@ class ImLivechatChannelMemberHistory(models.Model):
                 history.help_status = "requested"
             elif history.channel_id.livechat_agent_providing_help_history == history:
                 history.help_status = "provided"
-
-    @api.depends("channel_id.rating_ids")
-    def _compute_rating_id(self):
-        agent_histories = self.filtered(lambda h: h.livechat_member_type in ("agent", "bot"))
-        (self - agent_histories).rating_id = None
-        for history in agent_histories:
-            history.rating_id = history.channel_id.rating_ids.filtered(
-                lambda r: r.rated_partner_id == history.partner_id
-            )[:1]  # Live chats only allow one rating.
 
     @api.depends("create_date", "channel_id.livechat_end_dt", "channel_id.message_ids")
     def _compute_session_duration_hour(self):

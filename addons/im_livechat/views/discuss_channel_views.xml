@@ -16,10 +16,10 @@
                     <separator/>
                     <filter name="ongoing" string="Ongoing" domain="[('livechat_end_dt', '=', False)]"/>
                     <separator/>
-                    <filter name="filter_session_rating_happy" domain="[('rating_ids', '!=', False), ('rating_avg', '&gt;=', 3.66)]" string="Happy"/>
-                    <filter name="filter_session_rating_neutral" domain="[('rating_ids', '!=', False), ('rating_avg', '&gt;=', 2.33), ('rating_avg', '&lt;', 3.66)]" string="Neutral"/>
-                    <filter name="fiter_session_rating_unhappy" domain="[('rating_ids', '!=', False), ('rating_avg', '&lt;', 2.33) ]" string="Unhappy"/>
-                    <filter name="filter_session_unrated" domain="[('rating_ids', '=', False)]" string="Unrated"/>
+                    <filter name="filter_session_rating_happy" domain="[('livechat_rating', '!=', False), ('livechat_rating', '=', 3)]" string="Happy"/>
+                    <filter name="filter_session_rating_neutral" domain="[('livechat_rating', '!=', False), ('livechat_rating', '=', 2)]" string="Neutral"/>
+                    <filter name="fiter_session_rating_unhappy" domain="[('livechat_rating', '!=', False), ('livechat_rating', '=', 1) ]" string="Unhappy"/>
+                    <filter name="filter_session_unrated" domain="[('livechat_rating', '=', False)]" string="Unrated"/>
                     <separator />
                     <filter name="filter_session_date" date="create_date" string="Session Date">
                         <filter name="rated_on_last_24_hours" string="Last 24 Hours" domain="[('create_date', '&gt;', '-1d')]"/>
@@ -31,7 +31,7 @@
                     <group>
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
                         <filter name="group_by_agent" string="Agent" domain="[]" context="{'group_by':'livechat_agent_partner_ids'}"/>
-                        <filter name="group_by_rating" string="Rating" domain="[]" context="{'group_by':'rating_last_text'}"/>
+                        <filter name="group_by_rating" string="Rating" domain="[]" context="{'group_by':'livechat_rating_text'}"/>
                         <filter name="group_by_country" string="Country" domain="[]" context="{'group_by':'country_id'}"/>
                         <filter name="group_by_customer_partner" string="Customer" domain="[]" context="{'group_by':'livechat_customer_partner_ids'}"/>
                         <separator orientation="vertical"/>
@@ -64,10 +64,10 @@
                     <field name="livechat_channel_id" optional="hide"/>
                     <field name="duration" widget="float_time" options="{'displaySeconds': True}" optional="show"/>
                     <field name="message_count" string="Messages" optional="show"/>
-                    <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
-                        decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
+                    <field name="livechat_rating_text" string="Rating" decoration-danger="livechat_rating_text == 'unhappy'"
+                        decoration-warning="livechat_rating_text == 'neutral'" decoration-success="livechat_rating_text == 'happy'"
                         widget="badge" optional="show"/>
-                    <field name="rating_last_feedback" string="Comment" optional="hide"/>
+                    <field name="livechat_rating_feedback" string="Comment" optional="hide"/>
                 </list>
             </field>
         </record>
@@ -96,7 +96,7 @@
                                         </span>
                                     </span>
                                 </div>
-                                <field name="rating_last_image" string="Rating" widget="image" options='{"size": [40, 40], "img_class": "bg-transparent"}' class="ms-auto" invisible="not rating_last_image"/>
+                                <field name="livechat_rating_image" string="Rating" widget="image" options='{"size": [40, 40], "img_class": "bg-transparent"}' class="ms-auto" invisible="not livechat_rating_image"/>
                             </div>
                             <footer class="pt-0">
                                 <t t-if="record.country_id.raw_value">
@@ -125,7 +125,7 @@
                 <pivot string="Sessions" display_quantity="1" sample="1">
                     <field name="livechat_agent_partner_ids" type="row"/>
                     <field name="create_date" interval="day" type="col"/>
-                    <field name="rating_last_value" type="measure" string="Rating (%)" widget="im_livechat.rating_percentage"/>
+                    <field name="livechat_rating" type="measure" string="Rating (%)" widget="im_livechat.rating_percentage"/>
                 </pivot>
             </field>
         </record>
@@ -136,7 +136,7 @@
             <field name="arch" type="xml">
                 <graph string="Sessions" sample="1">
                     <field name="create_date" interval="day"/>
-                    <field name="rating_last_value" type="measure" string="Rating (%)" widget="im_livechat.rating_percentage"/>
+                    <field name="livechat_rating" type="measure" string="Rating (%)" widget="im_livechat.rating_percentage"/>
                 </graph>
             </field>
         </record>

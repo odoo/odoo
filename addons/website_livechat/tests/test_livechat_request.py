@@ -13,7 +13,7 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         guest = channel_1.channel_member_ids.filtered(lambda member: member.guest_id).guest_id
         self.opener.cookies[guest._cookie_name] = guest._format_auth_cookie()
         # Visitor Rates the conversation (Good)
-        self._send_rating(channel_1, self.visitor, 5)
+        self._send_rating(channel_1, self.visitor, 3)
 
         # Operator Re-Send a chat request
         channel_2 = self._common_chat_request_flow()

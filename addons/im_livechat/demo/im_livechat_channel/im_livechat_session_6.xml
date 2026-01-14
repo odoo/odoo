@@ -84,16 +84,7 @@
             <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=12)" name="date"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-5, minutes=12)" name="create_date"/>
         </record>
-        <record id="livechat_channel_session_6_rating" model="rating.rating">
-            <field name="access_token">LIVECHAT_6</field>
-            <field name="res_id" ref="im_livechat.livechat_channel_session_6"/>
-            <field name="res_model_id" ref="mail.model_discuss_channel"/>
-            <field name="message_id" ref="livechat_channel_session_6_rating_message"/>
-            <field name="rated_partner_id" ref="base.partner_admin"/>
-            <field eval="False" name="partner_id"/>
-            <field eval="True" name="consumed"/>
-        </record>
         <function model="discuss.channel" name="_apply_livechat_feedback"
-            eval="([ref('im_livechat.livechat_channel_session_6')], 5, 'Good Job')"/>
+            eval="([ref('im_livechat.livechat_channel_session_6')], 3, 'Good Job')"/>
     </data>
 </odoo>

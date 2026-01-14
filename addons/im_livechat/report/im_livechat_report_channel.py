@@ -119,12 +119,12 @@ class Im_LivechatReportChannel(models.Model):
                     ELSE C.livechat_failure
                 END AS session_outcome,
                 C.country_id,
-                NULLIF(C.rating_last_value, 0) AS rating,
+                NULLIF(C.livechat_rating, 0) as rating,
                 CASE
-                    WHEN C.rating_last_value = 1 THEN 'Unhappy'
-                    WHEN C.rating_last_value = 5 THEN 'Happy'
-                    WHEN C.rating_last_value = 3 THEN 'Neutral'
-                    ELSE null
+                    WHEN C.livechat_rating = 1 THEN 'Unhappy'
+                    WHEN C.livechat_rating = 2 THEN 'Neutral'
+                    WHEN C.livechat_rating = 3 THEN 'Happy'
+                    ELSE 'Not Rated Yet'
                 END as rating_text,
                 COALESCE(livechat_agent.partner_id, livechat_bot.partner_id) as partner_id,
                 CASE WHEN livechat_agent.partner_id IS NOT NULL THEN 1 ELSE 0 END as handled_by_agent,

@@ -24,6 +24,11 @@ export class FeedbackPanel extends Component {
         THANKS: "thanks",
     });
     RATING = RATING;
+    RATING_URL = {
+        GOOD: url(`/rating/static/src/img/rating_5.png`),
+        OK: url(`/rating/static/src/img/rating_3.png`),
+        BAD: url(`/rating/static/src/img/rating_1.png`),
+    };
 
     setup() {
         this.session = session;

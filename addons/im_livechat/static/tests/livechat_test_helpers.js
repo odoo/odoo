@@ -1,7 +1,6 @@
 import { IrWebSocket } from "@im_livechat/../tests/mock_server/mock_models/ir_websocket";
 
 import { mailModels, startServer } from "@mail/../tests/mail_test_helpers";
-import { RatingRating } from "@rating/../tests/mock_server/models/rating_rating";
 import {
     defineModels,
     serverState,
@@ -33,7 +32,6 @@ export const livechatModels = {
     LivechatChannelRule,
     Im_LivechatExpertise,
     IrWebSocket,
-    RatingRating,
     ResPartner,
     ResUsers,
     ResGroupsPrivilege,

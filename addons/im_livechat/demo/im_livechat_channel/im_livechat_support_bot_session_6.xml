@@ -141,16 +141,7 @@
             <field name="date" eval="datetime.now() - timedelta(seconds=10)"/>
             <field name="create_date" eval="datetime.now() - timedelta(seconds=10)"/>
         </record>
-        <record id="support_bot_session_6_rating" model="rating.rating">
-            <field name="access_token">BOT_SESSION_6</field>
-            <field name="res_id" ref="support_bot_session_6_demo"/>
-            <field name="res_model_id" ref="mail.model_discuss_channel"/>
-            <field name="message_id" ref="support_bot_session_6_rating_message"/>
-            <field name="rated_partner_id" ref="base.partner_admin"/>
-            <field eval="False" name="partner_id"/>
-            <field eval="True" name="consumed"/>
-        </record>
         <function model="discuss.channel" name="_apply_livechat_feedback"
-            eval="[ref('im_livechat.support_bot_session_6_demo')], 3, 'OK'"/>
+            eval="[ref('im_livechat.support_bot_session_6_demo')], 2, 'OK'"/>
     </data>
 </odoo>

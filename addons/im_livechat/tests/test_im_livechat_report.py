@@ -74,10 +74,14 @@ class TestImLivechatReport(TestImLivechatCommon):
         self.assertEqual(result[0]["time_to_answer:avg"], 7800 / 3600)
         self.assertEqual(int(result[0]['duration:avg']), 195)
         channel = self.env["discuss.channel"].search([("livechat_channel_id", "=", self.livechat_channel.id)])
-        rated_channel = channel.copy({"rating_last_value": 5})
+        rated_channel = channel.copy()
+        rated_channel._apply_livechat_feedback(3)
+
         self._create_message(rated_channel, self.operator, "2023-03-18 11:00:00")
+        # flush channel, rating and message before custom sql query
+        self.env.flush_all()
         result = self.env["im_livechat.report.channel"].formatted_read_group([], aggregates=["rating:avg"])
-        self.assertEqual(result[0]["rating:avg"], 5, "Rating average should be 5, excluding unrated sessions")
+        self.assertEqual(result[0]["rating:avg"], 3, "Rating average should be 3, excluding unrated sessions")
 
     @classmethod
     def _create_message(cls, channel, author, date):

@@ -9,8 +9,8 @@ import { session } from "@web/session";
 import { canLoadLivechat } from "@im_livechat/embed/common/misc";
 
 export const RATING = Object.freeze({
-    GOOD: 5,
-    OK: 3,
+    GOOD: 3,
+    OK: 2,
     BAD: 1,
 });
 

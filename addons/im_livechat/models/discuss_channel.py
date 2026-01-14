@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import json
 from zoneinfo import ZoneInfo
 
@@ -8,11 +9,18 @@ from markupsafe import Markup
 from odoo import api, fields, models, _, tools
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
+from odoo.exceptions import UserError
 from odoo.tools import email_split, format_list, html2plaintext
 from odoo.tools.mimetypes import get_extension
+from odoo.tools.misc import file_open
+from odoo.tools.sql import SQL
 from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
+
+RATING_UNHAPPY = 1
+RATING_NEUTRAL = 2
+RATING_HAPPY = 3
 
 
 def is_livechat_channel(channel):
@@ -31,7 +39,7 @@ class DiscussChannel(models.Model):
     """
 
     _name = 'discuss.channel'
-    _inherit = ['rating.mixin', 'discuss.channel']
+    _inherit = ['discuss.channel']
 
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')], ondelete={'livechat': 'cascade'})
     duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
@@ -175,7 +183,15 @@ class DiscussChannel(models.Model):
         string="Live Chat Session Failure",
     )
     livechat_is_escalated = fields.Boolean("Is session escalated", compute="_compute_livechat_is_escalated", store=True)
-    rating_last_text = fields.Selection(store=True)
+    livechat_rating = fields.Integer(aggregator="avg")
+    livechat_rating_feedback = fields.Text(string="Livechat Rating Feedback")
+    livechat_rating_image = fields.Binary(string="Livechat Rating Image", compute="_compute_livechat_rating_image")
+    livechat_rating_text = fields.Selection(selection=[
+        ("no_rating", "Not Rated Yet"),
+        ("unhappy", "Unhappy"),
+        ("neutral", "Neutral"),
+        ("happy", "Happy"),
+    ], string="Livechat Rating Text", compute="_compute_livechat_rating_text", compute_sql="_compute_sql_livechat_rating_text", compute_sudo=True)
 
     _livechat_end_dt_status_constraint = models.Constraint(
         "CHECK(livechat_end_dt IS NULL or livechat_status IS NULL)",
@@ -192,6 +208,10 @@ class DiscussChannel(models.Model):
         """,
         "Looking for help date should only be set if the channel is looking for help and must be empty otherwise.",
     )
+    _rating_range = models.Constraint(
+        'check(livechat_rating >= 0 and livechat_rating <= 3)',
+        'Livechat rating should be between 0 and 3',
+    )
     _livechat_end_dt_idx = models.Index("(livechat_end_dt) WHERE livechat_end_dt IS NULL")
     _livechat_failure_idx = models.Index(
         "(livechat_failure) WHERE livechat_failure IN ('no_answer', 'no_agent')"
@@ -204,6 +224,15 @@ class DiscussChannel(models.Model):
     )
 
     def write(self, vals):
+        if (
+            "livechat_rating" in vals or "livechat_rating_feedback" in vals
+        ) and not self.env.user.has_group("base.group_system"):
+            user, guest = self.env["res.users"]._get_current_persona()
+            if self.filtered(
+                lambda c: user not in c.livechat_customer_partner_ids.user_ids
+                and guest not in c.livechat_customer_guest_ids
+            ):
+                raise UserError(self.env._("Only customers can rate a livechat session."))
         if "livechat_status" not in vals and "livechat_expertise_ids" not in vals:
             return super().write(vals)
         need_help_before = self.filtered(lambda c: c.livechat_status == "need_help")
@@ -234,6 +263,50 @@ class DiscussChannel(models.Model):
     def _compute_livechat_is_escalated(self):
         for channel in self:
             channel.livechat_is_escalated = len(channel.livechat_agent_history_ids) > 1
+
+    @api.depends("livechat_rating")
+    def _compute_livechat_rating_text(self):
+        for channel in self:
+            if channel.livechat_rating == RATING_UNHAPPY:
+                rating_text = "unhappy"
+            elif channel.livechat_rating == RATING_NEUTRAL:
+                rating_text = "neutral"
+            elif channel.livechat_rating == RATING_HAPPY:
+                rating_text = "happy"
+            else:
+                rating_text = "no_rating"
+            channel.livechat_rating_text = rating_text
+
+    def _compute_sql_livechat_rating_text(self, table):
+        return SQL(
+            """
+            CASE
+                WHEN %(livechat_rating)s = %(happy)s THEN 'happy'
+                WHEN %(livechat_rating)s = %(neutral)s THEN 'neutral'
+                WHEN %(livechat_rating)s = %(unhappy)s THEN 'unhappy'
+                ELSE 'no_rating'
+            END
+        """,
+            livechat_rating=SQL.identifier(table._alias, 'livechat_rating'),
+            happy=RATING_HAPPY,
+            neutral=RATING_NEUTRAL,
+            unhappy=RATING_UNHAPPY,
+        )
+
+    @api.depends("livechat_rating")
+    def _compute_livechat_rating_image(self):
+        for channel in self:
+            if not channel.livechat_rating:
+                channel.livechat_rating_image = False
+                continue
+            image = self._rating_image_filepath(
+                channel.livechat_rating
+            )
+            try:
+                with file_open(image, 'rb', filter_ext=('.png',)) as f:
+                    channel.livechat_rating_image = base64.b64encode(f.read())
+            except OSError:
+                channel.livechat_rating_image = False
 
     @api.depends("livechat_channel_member_history_ids.livechat_member_type")
     def _compute_livechat_agent_history_ids(self):
@@ -542,11 +615,6 @@ class DiscussChannel(models.Model):
                 subtype_xmlid='mail.mt_comment'
             )
 
-    # Rating Mixin
-
-    def _rating_get_parent_field_name(self):
-        return 'livechat_channel_id'
-
     def _email_livechat_transcript(self, email):
         company = self.env.user.company_id
         # sudo: discuss.channel - access partner's/guest's timezone
@@ -657,38 +725,24 @@ class DiscussChannel(models.Model):
         :type reason: str
         """
         self.ensure_one()
-        # sudo - rating.rating: live chat customers are allowed to update their rating
-        if rating_sudo := self.sudo().rating_ids[:1]:
-            rating_sudo.write({"rating": rate, "feedback": reason})
-        else:
-            user, _ = self.env["res.users"]._get_current_persona()
-            # sudo: rating.rating - live chat customers can create ratings
-            rating_values = {
-                "rating": rate,
-                "consumed": True,
-                "feedback": reason,
-                "is_internal": False,
-                "res_id": self.id,
-                "res_model_id": self.env["ir.model"]._get_id("discuss.channel"),
-                # sudo: res.partner - visitor can access the agent record to add a rating
-                "rated_partner_id": self.sudo().livechat_agent_partner_ids[:1].id,
-                "partner_id": user.partner_id.id,
-            }
-            rating_sudo = self.env["rating.rating"].sudo().create(rating_values)
+        # sudo: discuss.channel - visitor giving a rating to the session is allowed
+        self.sudo().write({
+            "livechat_rating": rate,
+            "livechat_rating_feedback": reason,
+        })
         rating_body = Markup(
             """<div class="o_mail_notification o_hide_author">"""
             """%(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(reason)s"""
             """</div>""",
         ) % {
             "rating": self.env._("Rating"),
-            "rating_url": rating_sudo.rating_image_url,
+            "rating_url": f"/{self._rating_image_filepath(rate)}",
             "reason": nl2br("\n" + reason) if reason else "",
         }
         # sudo: discuss.channel - live chat customers can post the rating message
         self.sudo().message_post(
             body=rating_body,
             message_type="notification",
-            rating_id=rating_sudo.id,
             subtype_xmlid="mail.mt_comment",
         )
 
@@ -1009,3 +1063,15 @@ class DiscussChannel(models.Model):
 
     def _allow_invite_by_email(self):
         return self.channel_type == "livechat" or super()._allow_invite_by_email()
+
+    @api.model
+    def _rating_image_filepath(self, rating):
+        if rating == RATING_UNHAPPY:
+            rating_rating = 1
+        elif rating == RATING_NEUTRAL:
+            rating_rating = 3
+        elif rating == RATING_HAPPY:
+            rating_rating = 5
+        else:
+            rating_rating = 0
+        return f"rating/static/src/img/rating_{rating_rating}.png"
