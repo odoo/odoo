@@ -335,7 +335,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         member = channel.with_user(operator).self_member_id
         self.assertEqual(member.partner_id, operator.partner_id, "operator should be member of channel")
         self.assertFalse(member.is_pinned, "channel should not be pinned for operator initially")
-        channel.message_post(body="cc")
+        channel.message_post(body="cc", message_type="comment")
         self.assertTrue(member.is_pinned, "channel should be pinned for operator after visitor sent a message")
         self.authenticate(operator.login, self.password)
         data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["channels_as_member"]})
@@ -352,7 +352,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 ("partner_id", "in", self.operators.partner_id.ids),
             ]
         )
-        message = self.env["discuss.channel"].browse(data["channel_id"]).message_post(body="cc")
+        message = self.env["discuss.channel"].browse(data["channel_id"]).message_post(body="cc", message_type="comment")
         member_of_operator._mark_as_read(message.id)
         with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             member_of_operator._gc_unpin_livechat_sessions()
@@ -369,7 +369,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 ("partner_id", "in", self.operators.partner_id.ids),
             ]
         )
-        self.env["discuss.channel"].browse(data["channel_id"]).message_post(body="cc")
+        self.env["discuss.channel"].browse(data["channel_id"]).message_post(body="cc", message_type="comment")
         with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             member_of_operator._gc_unpin_livechat_sessions()
         self.assertTrue(member_of_operator.is_pinned, "unread channel should not be unpinned after autovacuum")

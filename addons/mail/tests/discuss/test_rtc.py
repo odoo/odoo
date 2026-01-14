@@ -149,8 +149,6 @@ class TestChannelRTC(MailCommon, HttpCase):
         channel_member._rtc_leave_call()
         with self.assertBus(
             [
-                # update of last interest (message_post) (not asserted below)
-                (self.cr.dbname, "discuss.channel", channel.id),
                 # update new message separator (message_post) (not asserted below)
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
                 # message_post "started a live conference" (not asserted below)
@@ -260,8 +258,6 @@ class TestChannelRTC(MailCommon, HttpCase):
 
         with self.assertBus(
             [
-                # update of last interest (not asserted below)
-                (self.cr.dbname, "discuss.channel", channel.id),
                 # update new message separator (not asserted below)
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
                 # message_post "started a live conference" (not asserted below)
@@ -905,8 +901,6 @@ class TestChannelRTC(MailCommon, HttpCase):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # discuss.channel/joined
                 (self.cr.dbname, "res.partner", test_user.partner_id.id),
-                # mail.record/insert - discuss.channel (last_interest_dt)
-                (self.cr.dbname, "discuss.channel", channel.id),
                 # mail.record/insert - discuss.channel.member (message_unread_counter, new_message_separator, …)
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
                 # discuss.channel/new_message
