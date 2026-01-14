@@ -46,6 +46,17 @@ export class BillGuide extends Component {
             type: 'object',
         });
     }
+
+    openVendorBill() {
+        return this.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: "account.move",
+            views: [[false, "form"]],
+            context: {
+                default_move_type: "in_invoice",
+            },
+        });
+    }
 }
 
 
