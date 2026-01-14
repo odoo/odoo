@@ -37,7 +37,8 @@ export class ImageFormatPlugin extends Plugin {
         promises.push(...this.forEachSvg((svg) => this.sanitizeSvg(svg)));
         promises.push(...this.forEachImg((img) => this.sanitizeImage(img)));
         promises.push(...this.forEachBackgroundImg((el) => this.sanitizeImage(el)));
-        await Promise.all(promises);
+        // TODO EGGMAIL: handle promise failures, should we accept them and ignore and continue?
+        await Promise.allSettled(promises);
         await this.dependencies.imageSave.savePendingImages();
         // Register images in a cache, to avoid handling unchanged src.
         this.forEachImg((img) => {
@@ -123,7 +124,7 @@ export class ImageFormatPlugin extends Plugin {
     }
 
     async sanitizeImage(el) {
-        const src = getImageSrc(el).trimStart();
+        const src = getImageSrc(el)?.trimStart();
         if (!src) {
             return;
         }

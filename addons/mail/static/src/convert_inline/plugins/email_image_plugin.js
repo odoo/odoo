@@ -29,9 +29,12 @@ export class EmailImagePlugin extends Plugin {
     loadImages(root) {
         const promises = [];
         for (const img of root.querySelectorAll("img")) {
-            promises.push(loadImage(getImageSrc(img)));
+            const src = getImageSrc(img);
+            if (src) {
+                promises.push(loadImage(src));
+            }
         }
-        return promises;
+        return Promise.allSettled(promises);
     }
 
     /**
