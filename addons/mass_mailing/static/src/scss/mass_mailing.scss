@@ -24,6 +24,12 @@
         }
     }
 
+    .o_field_char_emojis[name="subject"] button.fa-magic {
+        border-top: 0;
+        border-bottom: 0;
+        height: 100%;
+    }
+
     .o_field_mass_mailing_boolean_favorite i {
         font-size: inherit;
     }
@@ -156,12 +162,20 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
                 }
             }
         }
-        .o_dropdown_kanban {
+        &.o_kanban_ungrouped .o_dropdown_kanban {
             visibility: visible;
             @include media-breakpoint-up(lg) {
                 top: 50% !important;
                 transform: translateY(-50%) !important;
             }
+        }
+
+        &.o_kanban_grouped .o_dropdown_kanban {
+            visibility: visible;
+            button.dropdown-toggle {
+                padding-top: 9px;
+            }
+
         }
     }
 }

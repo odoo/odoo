@@ -177,10 +177,32 @@
         <field name="context">{'search_default_filter_not_email_bl': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a mailing contact
+                Create mailing contacts
             </p><p>
                 Mailing contacts allow you to separate your marketing audience from your business contact directory.
+            </p><p>
+                <!--
+                review note: the action_open_base_import_call action only exists because I have not been able
+                to call an object method from the nocontent helper;
+                is this workaround the only way to do it, or is there a shorter way?
+                -->
+                <!-- this next link is for testing purposes, todelete -->
+                <a name="action_open_base_import" type="object" class="btn btn-link">
+                    <i class="fa fa-upload"/> This is a temporary button for the convenience of the review process. Click it!
+                </a>
+                <a name="mass_mailing.action_open_base_import_call" type="action" class="btn btn-link">
+                    <i class="fa fa-upload"/> Upload a file
+                </a>
             </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_open_base_import_call">
+        <field name="name">Import Contacts</field>
+        <field name="model_id" ref="model_mailing_contact"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.action_open_base_import()
         </field>
     </record>
 
