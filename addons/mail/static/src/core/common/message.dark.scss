@@ -10,56 +10,27 @@
     opacity: 50%;
 }
 
-.o-mail-Message-bubble {
-    &.o-blue {
-        background-color: mix($gray-100, darken($info, 10%), 85.5%) !important;
-        border-color: mix(lighten(mix($gray-100, darken($info, 10%), 85.5%), 2.5%), black, 75%) !important;
-    
-        &.o-muted {
-            background-color: darken(mix($gray-100, darken($info, 10%), 87.5%), 5%) !important;
-        }
-    }
-    &.o-green {
-        background-color: mix($gray-100, darken($success, 2.5%), 85.5%) !important;
-        border-color: mix(lighten(mix($gray-100, darken($success, 2.5%), 85.5%), 2.5%), black, 75%) !important;
-    
-        &.o-muted {
-            background-color: darken(mix($gray-100, darken($success, 2.5%), 85.5%), 5%) !important;
-        }
-    }
-    &.o-orange {
-        background-color: mix($gray-100, darken($warning, 5%), 70.5%) !important;
-        border-color: mix(lighten(mix($gray-100, darken($warning, 5%), 70.5%), 2.5%), black, 75%) !important;
-    
-        &.o-muted {
-            background-color: darken(mix($gray-100,  darken($warning, 5%), 70.5%), 10%) !important;
-        }
-    }
-}
+.o-mail-Message-bubble, .o-mail-Message-bubbleTail {
+    $_bubble_colors_map: (
+        'o-blue': darken($info, 10%),
+        'o-green': darken($success, 2.5%),
+        'o-orange': $warning,
+    );
 
-.o-mail-Message-bubbleTail {
-     &.o-blue {
-        .o-mail-Message-bubbleTailBg {
-            color: mix($gray-100, darken($info, 10%), 85.5%) !important;
-        }
-        .o-mail-Message-bubbleTailBorder {
-            color: mix(lighten(mix($gray-100, darken($info, 10%), 85.5%), 2.5%), black, 75%) !important;
-        }
-    }
-    &.o-green {
-        .o-mail-Message-bubbleTailBg {
-            color: mix($gray-100, darken($success, 2.5%), 85.5%) !important;
-        }
-        .o-mail-Message-bubbleTailBorder {
-            color: mix(lighten(mix($gray-100, darken($success, 2.5%), 85.5%), 2.5%), black, 75%) !important;
-        }
-    }
-    &.o-orange {
-        .o-mail-Message-bubbleTailBg {
-            color: mix($gray-100, darken($warning, 5%), 70.5%) !important;
-        }
-        .o-mail-Message-bubbleTailBorder {
-            color: mix(lighten(mix($gray-100, darken($warning, 5%), 70.5%), 2.5%), black, 75%) !important;
+    @each $_type, $_color in $_bubble_colors_map {
+        &.#{$_type} {
+            $_border-base: mix($_color, $body-color, 75%);
+            $_base_bg: mix($white, $gray-100, 15%);
+            $_base_bg_muted: mix($white, $gray-100, 85%);
+            @if $_type == 'o-orange' {
+                --o-message-bubble-bg: #{mix($_base_bg, $_color, 72.5%)};
+                --o-message-bubble-bg-muted: #{mix($_base_bg_muted, $_color, 82.5%)};
+            } @else {
+                --o-message-bubble-bg: #{mix($_base_bg, $_color, 82.5%)};
+                --o-message-bubble-bg-muted: #{mix($_base_bg_muted, $_color, 82.5%)};
+            }
+            --o-message-bubble-border-color: #{mix($_base_bg, $_border-base, 82.5%)};
+            --o-message-bubble-color-base: #{$_color};
         }
     }
 }

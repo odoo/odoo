@@ -74,7 +74,7 @@
     border-color: var(--o-message-bubble-border-color) !important;
 
     &.o-muted {
-        background-color: $o-view-background-color !important;
+        background-color: var(--o-message-bubble-bg-muted) !important;
     }
 }
 
@@ -103,6 +103,7 @@
         &.#{$_type} {
             $_border-base: mix($_color, $body-color, 75%);
             --o-message-bubble-bg: #{mix($o-view-background-color, $_color, 90%)};
+            --o-message-bubble-bg-muted: #{$o-view-background-color};
             --o-message-bubble-border-color: #{mix($o-view-background-color, $_border-base, 80%)};
             --o-message-bubble-color-base: #{$_color};
         }
