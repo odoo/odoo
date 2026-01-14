@@ -1012,7 +1012,9 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         action_values = wizard.create_invoices()
         dp_invoice = self.env['account.move'].browse(action_values['res_id'])
         dp_invoice.action_post()
+        self.assertAlmostEqual(dp_invoice.invoice_line_ids[0].price_unit, 1070.7142857)
+        self.assertAlmostEqual(dp_invoice.invoice_line_ids[1].price_unit, -70.7142857)
         self.assertRecordValues(dp_invoice.invoice_line_ids, [
-            {'price_unit': 1070.71, 'price_subtotal': 1070.71, 'balance': -1070.71},
-            {'price_unit': -70.71, 'price_subtotal': -70.71, 'balance': 70.71},
+            {'price_subtotal': 1070.71, 'balance': -1070.71},
+            {'price_subtotal': -70.71, 'balance': 70.71},
         ])
