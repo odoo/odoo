@@ -13,7 +13,7 @@
                     <field name="percentage_of_calls" type="measure" widget="percentage"/>
                     <field name="time_to_answer" string="Response Time" type="measure" widget="float_time" options="{'show_seconds': true}"/>
                     <field name="duration" type="measure"/>
-                    <field name="rating" string="Rating (%)" type="measure" widget="im_livechat.rating_percentage"/>
+                    <field name="rating_percentage" type="measure"/>
                     <field name="number_of_calls" string="# of calls" type="measure" widget="integer"/>
                 </pivot>
             </field>
@@ -31,7 +31,7 @@
                     <field name="session_expertise_ids" string="Expertises" widget="many2many_tags"/>
                     <field name="duration" widget="float_time"/>
                     <field name="nbr_message" string="# Messages"/>
-                    <field name="rating_text" string="Rating Text"/>
+                    <field name="rating" string="Rating Text"/>
                 </list>
             </field>
         </record>
@@ -53,8 +53,8 @@
                     <field name="has_call" invisible="1"/>
                     <field name="percentage_of_calls" type="measure" widget="percentage"/>
                     <field name="start_date" interval="day"/>
-                    <field name="rating_text"/>
-                    <field name="rating" string="Rating (%)" type="measure" widget="im_livechat.rating_percentage"/>
+                    <field name="rating"/>
+                    <field name="rating_percentage" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -79,9 +79,9 @@
                     <filter name="no_answer" string="Not Answered" domain="[('session_outcome', '=', 'no_answer')]"/>
                     <filter name="no_agent" string="No one Available" domain="[('session_outcome', '=', 'no_agent')]"/>
                     <separator/>
-                    <filter name="rating_happy" string="Happy" domain="[('rating_text','=', 'Happy')]"/>
-                    <filter name="rating_neutral" string="Neutral" domain="[('rating_text','=', 'Neutral')]"/>
-                    <filter name="rating_unhappy" string="Unhappy" domain="[('rating_text','=', 'Unhappy')]"/>
+                    <filter name="rating_happy" string="Happy" domain="[('rating','=', 5)]"/>
+                    <filter name="rating_neutral" string="Neutral" domain="[('rating','=', 3)]"/>
+                    <filter name="rating_unhappy" string="Unhappy" domain="[('rating','=', 1)]"/>
                     <separator />
                     <filter name="filter_start_date" string="Date" date="start_date"/>
                     <filter name="filter_date_last_month" invisible="1" string="Date: Last month"
@@ -93,7 +93,7 @@
                         <filter name="group_by_operator" string="Agent" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter name="group_by_agent_requesting_help" domain="[]" context="{'group_by': 'agent_requesting_help_history'}"/>
                         <filter name="group_by_agent_providing_help" domain="[]" context="{'group_by': 'agent_providing_help_history'}"/>
-                        <filter name="group_by_rating" string="Rating" domain="[]" context="{'group_by':'rating_text'}"/>
+                        <filter name="group_by_rating" string="Rating" domain="[]" context="{'group_by':'rating'}"/>
                         <filter name="group_by_country" string="Country" domain="[]" context="{'group_by':'country_id'}"/>
                         <filter name="group_by_outcome" string="Status" domain="[]" context="{'group_by':'session_outcome'}"/>
                         <filter name="group_by_chatbot" string="Chatbot" domain="[]" context="{'group_by':'chatbot_script_id'}"/>
@@ -116,7 +116,7 @@
             <field name="context">
                 {
                     "search_default_filter_date_last_month": 1,
-                    "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
+                    "pivot_measures": ["__count", "time_to_answer", "duration", "rating_percentage", "number_of_calls"],
                     "graph_measure": "__count__",
                     "im_livechat_hide_partner_company": True,
                 }

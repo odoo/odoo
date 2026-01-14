@@ -40,9 +40,17 @@ class Im_LivechatReportChannel(models.Model):
     nbr_message = fields.Integer("Messages per Session", readonly=True, aggregator="avg", help="Number of message in the conversation")
     country_id = fields.Many2one('res.country', 'Country of the visitor', readonly=True)
     lang_id = fields.Many2one("res.lang", related="channel_id.livechat_lang_id", string="Language", readonly=True)
-    rating = fields.Integer('Rating', aggregator="avg", readonly=True)
-    # TODO DBE : Use Selection field - Need : Pie chart must show labels, not keys.
-    rating_text = fields.Char('Satisfaction Rate', readonly=True)
+    rating = fields.Selection(
+        selection=[
+            ("1", "Unhappy"),
+            ("3", "Neutral"),
+            ("5", "Happy"),
+        ],
+        string="Satisfaction Rate",
+        readonly=True,
+        falsy_value_label="Not Rated Yet",
+    )
+    rating_percentage = fields.Float('Rating (%)', aggregator="avg", readonly=True)
     partner_id = fields.Many2one("res.partner", "Agent", readonly=True)
     handled_by_bot = fields.Integer("Handled by Bot", readonly=True, aggregator="sum")
     handled_by_agent = fields.Integer("Handled by Agent", readonly=True, aggregator="sum")
@@ -119,13 +127,8 @@ class Im_LivechatReportChannel(models.Model):
                     ELSE C.livechat_failure
                 END AS session_outcome,
                 C.country_id,
-                NULLIF(C.rating_last_value, 0) AS rating,
-                CASE
-                    WHEN C.rating_last_value = 1 THEN 'Unhappy'
-                    WHEN C.rating_last_value = 5 THEN 'Happy'
-                    WHEN C.rating_last_value = 3 THEN 'Neutral'
-                    ELSE null
-                END as rating_text,
+                C.livechat_rating as rating,
+                %(rating_percentage)s as rating_percentage,
                 COALESCE(livechat_agent.partner_id, livechat_bot.partner_id) as partner_id,
                 CASE WHEN livechat_agent.partner_id IS NOT NULL THEN 1 ELSE 0 END as handled_by_agent,
                 CASE WHEN livechat_bot.partner_id IS NOT NULL AND livechat_agent.partner_id IS NULL THEN 1 ELSE 0 END as handled_by_bot,
@@ -136,6 +139,9 @@ class Im_LivechatReportChannel(models.Model):
                 chatbot_answer_history.chatbot_answers_path_str,
                 expertise_history.expertises session_expertises
             """,
+            rating_percentage=self.env["discuss.channel"]._rating_selection_to_percentage_sql(
+                SQL("C.livechat_rating")
+            ),
         )
 
     def _from(self) -> SQL:

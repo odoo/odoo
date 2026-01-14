@@ -70,7 +70,7 @@ Help your customers with this chat, and analyse their feedback.
         "demo/im_livechat_channel/im_livechat_support_bot_session_6.xml",
         "demo/im_livechat_channel/im_livechat_support_bot_session_7.xml",
     ],
-    'depends': ["mail", "rating", "digest", "utm", "phone_validation"],
+    'depends': ["mail", "digest", "utm", "phone_validation"],
     'application': True,
     'assets': {
         'web.assets_frontend': [
@@ -115,7 +115,6 @@ Help your customers with this chat, and analyse their feedback.
             'mail/static/src/discuss/typing/**/*',
             'mail/static/src/utils/common/**/*',
             ('remove', 'mail/static/src/**/*.dark.scss'),
-            "rating/static/src/core/common/**/*",
             'im_livechat/static/src/core/common/**/*',
             'im_livechat/static/src/embed/common/**/*',
         ],
@@ -165,7 +164,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/tests/livechat_test_helpers.js',
             'bus/static/tests/mock_server/**/*',
             'mail/static/tests/mock_server/**/*',
-            'rating/static/tests/mock_server/**/*',
             'im_livechat/static/tests/mock_server/**/*',
             'bus/static/tests/mock_*.js',
         ],

@@ -133,21 +133,11 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                 },
             )["channel_id"]
         )
-        record_rating = self.env['rating.rating'].create({
-            'res_model_id': self.env['ir.model']._get('discuss.channel').id,
-            'res_id': channel_livechat_1.id,
-            'parent_res_model_id': self.env['ir.model']._get('im_livechat.channel').id,
-            'parent_res_id': im_livechat_channel.id,
-            'rated_partner_id': self.users[0].partner_id.id,
-            'partner_id': self.users[1].partner_id.id,
-            'rating': 5,
-            'consumed': True,
-        })
         message = channel_livechat_1.message_post(
-            author_id=record_rating.partner_id.id,
-            body=Markup("<img src='%s' alt=':%s/5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s")
-            % (record_rating.rating_image_url, record_rating.rating, record_rating.feedback),
-            rating_id=record_rating.id,
+            author_id=self.users[1].partner_id.id,
+            body=Markup(
+                "<img src='/rating/static/src/img/rating_5.png' alt='5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>Amazing services"
+            ),
         )
         self.assertEqual(
             Store().add(message, "_store_message_fields").get_result(),
@@ -177,7 +167,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "parent_id": False,
                         "partner_ids": [],
                         "pinned_at": False,
-                        "rating_id": record_rating.id,
+                        "rating_id": False,
                         "record_name": "test1 Ernest Employee",
                         "reply_to": '"test1" <catchall.test@test.mycompany.com>',
                         "res_id": channel_livechat_1.id,
@@ -195,18 +185,8 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "display_name": "test1 Ernest Employee",
                         "id": channel_livechat_1.id,
                         "model": "discuss.channel",
-                        "rating_avg": 5.0,
-                        "rating_count": 1,
                     },
                 ),
-                "rating.rating": [
-                    {
-                        "id": record_rating.id,
-                        "rating": 5.0,
-                        "rating_image_url": record_rating.rating_image_url,
-                        "rating_text": "top",
-                    },
-                ],
                 "res.partner": self._filter_partners_fields(
                     {
                         "avatar_128_access_token": self.users[
@@ -250,7 +230,6 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
 
         def _get_feedback_bus():
             message = self.env["mail.message"].sudo().search([], order="id desc", limit=1)
-            rating = self.env["rating.rating"].sudo().search([], order="id desc", limit=1)
             return (
                 [
                     self.env.user,  # unread counter/new message separator (not asserted below)
@@ -284,7 +263,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                         "parent_id": False,
                                         "partner_ids": [],
                                         "pinned_at": False,
-                                        "rating_id": rating.id,
+                                        "rating_id": False,
                                         "reactions": [],
                                         "record_name": "Chell Gladys Ernest Employee",
                                         "res_id": channel.id,
@@ -303,18 +282,8 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                         "display_name": "Chell Gladys Ernest Employee",
                                         "id": channel.id,
                                         "model": "discuss.channel",
-                                        "rating_avg": 5.0,
-                                        "rating_count": 1,
                                     },
                                 ),
-                                "rating.rating": [
-                                    {
-                                        "id": rating.id,
-                                        "rating": 5.0,
-                                        "rating_image_url": rating.rating_image_url,
-                                        "rating_text": "top",
-                                    },
-                                ],
                                 "res.partner": self._filter_partners_fields(
                                     {
                                         "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),

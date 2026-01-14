@@ -58,9 +58,9 @@
                     <filter name="escalated" string="Escalated" domain="[('session_outcome', '=', 'escalated')]"/>
                     <filter name="no_answer" string="Not Answered" domain="[('session_outcome', '=', 'no_answer')]"/>
                     <separator/>
-                    <filter name="rating_happy" string="Happy" domain="[('rating_text','=', 'top')]"/>
-                    <filter name="rating_neutral" string="Neutral" domain="[('rating_text','=', 'ok')]"/>
-                    <filter name="rating_unhappy" string="Unhappy" domain="[('rating_text','=', 'ko')]"/>
+                    <filter name="rating_happy" string="Happy" domain="[('rating','=', 5)]"/>
+                    <filter name="rating_neutral" string="Neutral" domain="[('rating','=', 3)]"/>
+                    <filter name="rating_unhappy" string="Unhappy" domain="[('rating','=', 1)]"/>
                     <separator />
                     <filter name="filter_start_date" string="Date" date="create_date"/>
                     <filter name="filter_date_last_month" invisible="1" string="Date: Last month"
@@ -71,7 +71,7 @@
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'session_livechat_channel_id'}"/>
                         <filter name="group_by_agent" string="Agent" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter name="group_by_help_status" domain="[]" context="{'group_by': 'help_status'}"/>
-                        <filter name="group_by_rating_text" string="Rating" domain="[]" context="{'group_by':'rating_text'}"/>
+                        <filter name="group_by_rating" string="Rating" domain="[]" context="{'group_by':'rating'}"/>
                         <filter name="group_by_country" string="Country" domain="[]" context="{'group_by':'session_country_id'}"/>
                         <filter name="group_by_outcome" string="Status" domain="[]" context="{'group_by':'session_outcome'}"/>
                         <filter name="group_by_expertise" string="Expertise" domain="[]" context="{'group_by':'agent_expertise_ids'}"/>
@@ -94,7 +94,7 @@
                     <field name="session_week_day" invisible="1"/>
                     <field name="call_duration_hour" type="measure" widget="float_time"/>
                     <field name="call_percentage" type="measure" widget="percentage"/>
-                    <field name="rating" string="Rating (%)" type="measure" widget="im_livechat.rating_percentage"/>
+                    <field name="rating_percentage" type="measure"/>
                     <field name="response_time_hour" string="Response Time" type="measure" widget="float_time" />
                     <field name="session_duration_hour" type="measure" widget="float_time"/>
                 </graph>
@@ -114,7 +114,7 @@
                     <field name="call_percentage" type="measure" widget="percentage"/>
                     <field name="response_time_hour" string="Response Time" type="measure" widget="float_time" options="{'show_seconds': true}"/>
                     <field name="session_duration_hour" type="measure" widget="float_time" options="{'show_seconds': true}"/>
-                    <field name="rating" string="Rating (%)" type="measure" widget="im_livechat.rating_percentage"/>
+                    <field name="rating_percentage" type="measure"/>
                     <field name="call_count" type="measure" widget="integer"/>
                 </pivot>
             </field>
@@ -129,7 +129,7 @@
                     "search_default_group_by_agent": 1,
                     "search_default_filter_date_last_month": 1,
                     "graph_measure": "__count__",
-                    "pivot_measures": ["__count", "response_time_hour", "session_duration_hour", "rating", "call_count"],
+                    "pivot_measures": ["__count", "response_time_hour", "session_duration_hour", "rating_percentage", "call_count"],
                     "im_livechat_hide_partner_company": True
                 }
             </field>

@@ -8,8 +8,10 @@ from markupsafe import Markup
 from odoo import api, fields, models, _, tools
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
+from odoo.exceptions import UserError
 from odoo.tools import email_split, format_list, html2plaintext
 from odoo.tools.mimetypes import get_extension
+from odoo.tools.sql import SQL
 from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -31,7 +33,7 @@ class DiscussChannel(models.Model):
     """
 
     _name = 'discuss.channel'
-    _inherit = ['rating.mixin', 'discuss.channel']
+    _inherit = ['discuss.channel']
 
     channel_type = fields.Selection(selection_add=[("livechat", "Live Chat")], ondelete={"livechat": "cascade"})
     duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
@@ -174,7 +176,22 @@ class DiscussChannel(models.Model):
         string="Live Chat Session Failure",
     )
     livechat_is_escalated = fields.Boolean("Is session escalated", compute="_compute_livechat_is_escalated", store=True)
-    rating_last_text = fields.Selection(store=True)
+    livechat_rating = fields.Selection(
+        selection=[
+            ("1", "Unhappy"),
+            ("3", "Neutral"),
+            ("5", "Happy"),
+        ],
+        string="Livechat Rating Text",
+        falsy_value_label="Not Rated Yet",
+    )
+    livechat_rating_percentage = fields.Float(
+        string="Rating (%)",
+        aggregator="avg",
+        compute="_compute_livechat_rating_percentage",
+        compute_sql="_compute_sql_livechat_rating_percentage",
+        compute_sudo=True,
+    )
 
     _livechat_end_dt_status_constraint = models.Constraint(
         "CHECK(livechat_end_dt IS NULL or livechat_status IS NULL)",
@@ -191,6 +208,18 @@ class DiscussChannel(models.Model):
         """,
         "Looking for help date should only be set if the channel is looking for help and must be empty otherwise.",
     )
+    _livechat_rating_constraint = models.Constraint(
+        """
+        CHECK (
+            livechat_rating IS NULL
+            OR (channel_type = 'livechat' AND livechat_rating IN ('1', '3', '5'))
+        )
+        """,
+        """
+        Live chat rating should be either 1 (Unhappy), 3 (Neutral), 5 (Happy)
+        or empty and can only be set on live chat channels.
+        """,
+    )
     _livechat_end_dt_idx = models.Index("(livechat_end_dt) WHERE livechat_end_dt IS NULL")
     _livechat_failure_idx = models.Index(
         "(livechat_failure) WHERE livechat_failure IN ('no_answer', 'no_agent')"
@@ -203,6 +232,15 @@ class DiscussChannel(models.Model):
     )
 
     def write(self, vals):
+        if (
+            self.filtered(
+                lambda c: (
+                    "livechat_rating" in vals and c.livechat_rating != vals["livechat_rating"]
+                )
+                and c.self_member_id.livechat_member_type != "visitor"
+            )
+        ) and not self.env.user.has_group("base.group_system"):
+            raise UserError(self.env._("Only customers can rate a live chat conversation."))
         if "livechat_status" not in vals and "livechat_expertise_ids" not in vals:
             return super().write(vals)
         need_help_before = self.filtered(lambda c: c.livechat_status == "need_help")
@@ -240,6 +278,32 @@ class DiscussChannel(models.Model):
     def _compute_livechat_is_escalated(self):
         for channel in self:
             channel.livechat_is_escalated = len(channel.livechat_agent_history_ids) > 1
+
+    @api.model
+    def _rating_selection_to_percentage(self, rating):
+        if not rating:
+            return False
+        return (float(rating) - 1.0) * 100.0 / 4.0
+
+    @api.model
+    def _rating_selection_to_percentage_sql(self, rating_field):
+        return SQL(
+            "((%(rating_field)s::double precision) - 1.0) * 100.0 / 4.0",
+            rating_field=rating_field,
+        )
+
+    @api.depends("livechat_rating")
+    def _compute_livechat_rating_percentage(self):
+        for channel in self:
+            channel.livechat_rating_percentage = self._rating_selection_to_percentage(
+                channel.livechat_rating
+            )
+
+    def _compute_sql_livechat_rating_percentage(self, table):
+        # This method allows to filter out non-rated sessions of the aggregation
+        return self._rating_selection_to_percentage_sql(
+            SQL.identifier(table._alias, "livechat_rating")
+        )
 
     @api.depends("livechat_channel_member_history_ids.livechat_member_type")
     def _compute_livechat_agent_history_ids(self):
@@ -548,11 +612,6 @@ class DiscussChannel(models.Model):
                 subtype_xmlid='mail.mt_comment'
             )
 
-    # Rating Mixin
-
-    def _rating_get_parent_field_name(self):
-        return 'livechat_channel_id'
-
     def _email_livechat_transcript(self, email):
         company = self.env.user.company_id
         # sudo: discuss.channel - access partner's/guest's timezone
@@ -666,49 +725,35 @@ class DiscussChannel(models.Model):
         """
         self.ensure_one()
         user, guest = self.env["res.users"]._get_current_persona()
-        # sudo - rating.rating: live chat customers are allowed to update their rating
-        if rating_sudo := self.sudo().rating_ids[:1]:
-            rating_sudo.write({"rating": rate, "feedback": reason})
-        else:
-            # sudo: rating.rating - live chat customers can create ratings
-            rating_values = {
-                "rating": rate,
-                "consumed": True,
-                "feedback": reason,
-                "is_internal": False,
-                "res_id": self.id,
-                "res_model_id": self.env["ir.model"]._get_id("discuss.channel"),
-                # sudo: res.partner - visitor can access the agent record to add a rating
-                "rated_partner_id": self.sudo().livechat_agent_partner_ids[:1].id,
-                "partner_id": user.partner_id.id,
-            }
-            rating_sudo = self.env["rating.rating"].sudo().create(rating_values)
+        rated_partner = self.sudo().livechat_agent_partner_ids[:1]
+        # sudo: discuss.channel - visitor giving a rating to the session is allowed
+        self.sudo().write({"livechat_rating": str(rate)})
+        rating_url = f"/rating/static/src/img/rating_{rate}.png"
         rating_body = Markup(
             """<div class="o_mail_notification o_hide_author">"""
             """%(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(reason)s"""
             """</div>""",
         ) % {
             "rating": self.env._("Rating"),
-            "rating_url": rating_sudo.rating_image_url,
+            "rating_url": rating_url,
             "reason": nl2br("\n" + reason) if reason else "",
         }
         # sudo: discuss.channel - live chat customers can post the rating message
         self.sudo().message_post(
             body=rating_body,
             message_type="notification",
-            rating_id=rating_sudo.id,
             subtype_xmlid="mail.mt_comment",
         )
-        if rating_sudo.rated_partner_id not in self.channel_member_ids.partner_id:
-            store = Store(bus_channel=rating_sudo.rated_partner_id.sudo().user_ids)
+        if rated_partner not in self.channel_member_ids.partner_id:
+            store = Store(bus_channel=rated_partner.sudo().user_ids)
             store.add(user, lambda res: res.one("partner_id", ["name"]))
             store.add(guest, ["name"]).add(self, [])
-            store.add(rating_sudo, ["feedback", "rating_image_url"])
-            rating_sudo.rated_partner_id.sudo().user_ids._bus_send(
+            rated_partner.sudo().user_ids._bus_send(
                 "livechat_rating_notification", {
                     "guest_id": guest.id,
                     "user_id": user.id,
-                    "rating_id": rating_sudo.id,
+                    "feedback": reason,
+                    "rating_image_url": rating_url,
                     "channel_id": self.id,
                     "store_data": store.get_result(),
                 },

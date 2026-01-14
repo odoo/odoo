@@ -23,9 +23,7 @@ class Im_LivechatChannel(models.Model):
     """
 
     _name = 'im_livechat.channel'
-    _inherit = ['rating.parent.mixin']
     _description = 'Livechat Channel'
-    _rating_satisfaction_days = 30  # include only last 30 days to compute satisfaction
 
     def _default_user_ids(self):
         return [(6, 0, [self.env.uid])]
@@ -70,6 +68,8 @@ class Im_LivechatChannel(models.Model):
     )
     script_external = fields.Html('Script (external)', compute='_compute_script_external', store=False, readonly=True, sanitize=False)
     nbr_channel = fields.Integer('Number of conversations in the past 30 days', compute='_compute_nbr_channel', store=False, readonly=True)
+    rating_percentage_satisfaction = fields.Float("Rating Satisfaction", compute="_compute_rating_percentage_satisfaction")
+    rating_count = fields.Integer(string='# Ratings', compute="_compute_rating_percentage_satisfaction")
 
     # relationnal fields
     user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Agents', default=_default_user_ids)
@@ -249,6 +249,37 @@ class Im_LivechatChannel(models.Model):
         )
         for record in self:
             record.nbr_channel = count_by_channel.get(record, 0)
+
+    @api.depends("channel_ids.livechat_rating")
+    def _compute_rating_percentage_satisfaction(self):
+        read_group_data = (
+            self.env["discuss.channel"]
+            ._read_group(
+                [
+                    Domain("livechat_channel_id", "in", self.ids)
+                    & Domain("livechat_rating", "!=", False)
+                    & Domain("create_date", ">=", "-30d")
+
+                ],
+                ["livechat_channel_id", "livechat_rating"],
+                ["__count"],
+            )
+        )
+        ratings_count_by_channel = defaultdict(dict)
+        for livechat_channel, rating, count in read_group_data:
+            ratings_count_by_channel[livechat_channel.id][rating] = count
+        rating_to_percentage = self.env["discuss.channel"]._rating_selection_to_percentage
+        for channel in self:
+            count_by_rating = ratings_count_by_channel[channel.id]
+            rating_count = sum(count_by_rating.values())
+            channel.rating_count = rating_count
+            if not rating_count:
+                channel.rating_percentage_satisfaction = 0
+                continue
+            rating_sum = sum(
+                rating_to_percentage(rating) * count for rating, count in count_by_rating.items()
+            )
+            channel.rating_percentage_satisfaction = rating_sum / rating_count
 
     # --------------------------
     # Action Methods
