@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
@@ -36,10 +37,40 @@ export class PopupVisibilityPlugin extends Plugin {
         this.unpatchModal = this.window.Modal // null in tests without loadAssetsFrontendJS
             ? patch(this.window.Modal.prototype, {
                   _hideModal() {
-                      return history.ignoreDOMMutations(() => super._hideModal());
+                      return history.ignoreDOMMutations(() => {
+                          // Due to a limitation in the current history
+                          // implementation, reverting a change that modified
+                          // the `style` attribute may also revert other older
+                          // changes to the same attribute made inside a
+                          // `ignoreDOMMutations`.
+                          // As the `_hideModal` (and `show`) function of
+                          // bootstrap modal change the `display` style
+                          // property, we fall in that case if the user changes
+                          // other properties of the style (for example through
+                          // the option "Backdrop" of the popup), and then undo
+                          // (or revert a preview)
+                          // To workaround that limitation, we avoid changing
+                          // the `style` attribute here in `ignoreDOMMutations`.
+                          // To do so, we restore the value of the `display`
+                          // style property after the call to the bootstrap
+                          // function that changed it. To actually hide and show
+                          // the modal, we use classes (that we remove on
+                          // clean for save) that have the same effect.
+                          const oldDisplay = this._element.style.display;
+                          super._hideModal();
+                          this._element.style.display = oldDisplay;
+                          this._element.classList.add("o_force_hide_popup_modal");
+                          this._element.classList.remove("o_force_show_popup_modal");
+                      });
                   },
                   show() {
-                      return history.ignoreDOMMutations(() => super.show());
+                      return history.ignoreDOMMutations(() => {
+                          const oldDisplay = this._element.style.display;
+                          super.show();
+                          this._element.style.display = oldDisplay;
+                          this._element.classList.add("o_force_show_popup_modal");
+                          this._element.classList.remove("o_force_hide_popup_modal");
+                      });
                   },
                   hide() {
                       return history.ignoreDOMMutations(() => super.hide());
@@ -80,6 +111,15 @@ export class PopupVisibilityPlugin extends Plugin {
             modalEl.classList.remove("show");
             this.window.Modal.getOrCreateInstance(modalEl)._hideModal();
             this.window.Modal.getInstance(modalEl).dispose();
+        }
+        for (const el of selectElements(
+            rootEl,
+            ".o_force_show_popup_modal, .o_force_hide_popup_modal"
+        )) {
+            this._element.style.display = el.classList.contains("o_force_show_popup_modal")
+                ? "block"
+                : "none";
+            el.classList.remove("o_force_show_popup_modal", "o_force_hide_popup_modal");
         }
     }
 
