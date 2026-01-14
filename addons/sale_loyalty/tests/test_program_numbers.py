@@ -754,13 +754,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self._apply_promo_code(order, 'test_10pc')
         self._auto_rewards(order, self.all_programs)
         self.assertAlmostEqual(order.amount_tax, 1.14, 2)
-        self.assertEqual(order.amount_untaxed, 22.72)
-        self.assertEqual(order.amount_total, 23.86, "The promotion program should not make the order total go below 0be altered after recomputation")
+        self.assertEqual(order.amount_untaxed, 22.71)
+        self.assertEqual(order.amount_total, 23.85, "The promotion program should not make the order total go below 0be altered after recomputation")
         # It should stay the same after a recompute, order matters
         self._auto_rewards(order, self.all_programs)
         self.assertAlmostEqual(order.amount_tax, 1.14, 2)
-        self.assertEqual(order.amount_untaxed, 22.72)
-        self.assertEqual(order.amount_total, 23.86, "The promotion program should not make the order total go below 0be altered after recomputation")
+        self.assertEqual(order.amount_untaxed, 22.71)
+        self.assertEqual(order.amount_total, 23.85, "The promotion program should not make the order total go below 0be altered after recomputation")
 
     def test_coupon_and_coupon_discount_fixed_amount_tax_incl(self):
         """ Ensure multiple coupon can cohexists without making

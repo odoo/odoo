@@ -35,10 +35,10 @@ class PurchaseOrderLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null', ondelete='restrict')
     product_type = fields.Selection(related='product_id.type', readonly=True)
     price_unit = fields.Float(
-        string='Unit Price', required=True, digits='Product Price', aggregator='avg',
+        string='Unit Price', required=True, min_display_digits='Product Price', aggregator='avg',
         compute="_compute_price_unit_and_date_planned_and_name", readonly=False, store=True)
     price_unit_product_uom = fields.Float(
-        string='Unit Price Product UoM', digits='Product Price', compute="_compute_price_unit_product_uom",
+        string='Unit Price Product UoM', min_display_digits='Product Price', compute="_compute_price_unit_product_uom",
         help="The Price of one unit of the product's Unit of Measure", aggregator='avg', store=True)
     price_unit_discounted = fields.Float('Unit Price (Discounted)', compute='_compute_price_unit_discounted')
 

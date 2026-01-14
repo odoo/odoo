@@ -203,7 +203,7 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
 
         self.assertEqual(out_svl.value, -250)
         # 15 * 16.66
-        self.assertAlmostEqual(in_svl.value, 249.9)
+        self.assertAlmostEqual(in_svl.value, 250.0, 2)
 
     def test_rounding_1(self):
         """3@100, out 1, out 1, out 1"""
