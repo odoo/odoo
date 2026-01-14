@@ -31,7 +31,7 @@ class DiscussChannel(models.Model):
     """
 
     _name = 'discuss.channel'
-    _inherit = ['rating.mixin', 'discuss.channel']
+    _inherit = ['discuss.channel']
 
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')], ondelete={'livechat': 'cascade'})
     duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
@@ -177,7 +177,11 @@ class DiscussChannel(models.Model):
         string="Live Chat Session Failure",
     )
     livechat_is_escalated = fields.Boolean("Is session escalated", compute="_compute_livechat_is_escalated", store=True)
-    rating_last_text = fields.Selection(store=True)
+    livechat_rating = fields.Many2one("rating.rating", string="Livechat Rating", ondelete="cascade")
+    livechat_rating_text = fields.Selection(related="livechat_rating.rating_text", string="Livechat Rating Text")
+    livechat_rating_image = fields.Binary(compute="_compute_livechat_rating_image", string="Livechat Rating Image")
+    livechat_rating_rating = fields.Float(related="livechat_rating.rating", string="Livechat Rating Value")
+    livechat_rating_feedback = fields.Text(related="livechat_rating.feedback", string="Livechat Rating Feedback")
 
     _livechat_operator_id = models.Constraint(
         "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
@@ -211,17 +215,25 @@ class DiscussChannel(models.Model):
 
     def write(self, vals):
         if "livechat_status" not in vals and "livechat_expertise_ids" not in vals:
-            return super().write(vals)
-        need_help_before = self.filtered(lambda c: c.livechat_status == "need_help")
-        result = super().write(vals)
-        need_help_after = self.filtered(lambda c: c.livechat_status == "need_help")
-        group_livechat_user = self.env.ref("im_livechat.im_livechat_group_user")
-        store = Store(bus_channel=group_livechat_user, bus_subchannel="LOOKING_FOR_HELP")
-        store.add(need_help_after - need_help_before, "_store_channel_fields")
-        store.add(need_help_before - need_help_after, ["livechat_status"])
-        if "livechat_expertise_ids" in vals:
-            store.add(need_help_after, lambda res: res.many("livechat_expertise_ids", ["name"]))
-        store.bus_send()
+            result = super().write(vals)
+        else:
+            need_help_before = self.filtered(lambda c: c.livechat_status == "need_help")
+            result = super().write(vals)
+            need_help_after = self.filtered(lambda c: c.livechat_status == "need_help")
+            group_livechat_user = self.env.ref("im_livechat.im_livechat_group_user")
+            store = Store(bus_channel=group_livechat_user, bus_subchannel="LOOKING_FOR_HELP")
+            store.add(need_help_after - need_help_before, "_store_channel_fields")
+            store.add(need_help_before - need_help_after, ["livechat_status"])
+            if "livechat_expertise_ids" in vals:
+                store.add(need_help_after, lambda res: res.many("livechat_expertise_ids", ["name"]))
+            store.bus_send()
+        if "name" in vals:
+            res_name_field = self.env['rating.rating']._fields['res_name']
+            self.env.add_to_compute(res_name_field, self.livechat_rating)
+        if "livechat_channel_id" in vals:
+            self.livechat_rating.sudo().write({
+                "parent_res_id": vals["livechat_channel_id"],
+            })
         return result
 
     @api.depends("livechat_end_dt")
@@ -240,6 +252,12 @@ class DiscussChannel(models.Model):
     def _compute_livechat_is_escalated(self):
         for channel in self:
             channel.livechat_is_escalated = len(channel.livechat_agent_history_ids) > 1
+
+    @api.depends("livechat_rating.rating_image")
+    def _compute_livechat_rating_image(self):
+        # compute instead of related to avoid sudo security issues on binary field
+        for channel in self:
+            channel.livechat_rating_image = channel.livechat_rating.rating_image
 
     @api.depends("livechat_channel_member_history_ids.livechat_member_type")
     def _compute_livechat_agent_history_ids(self):
@@ -553,8 +571,6 @@ class DiscussChannel(models.Model):
                 subtype_xmlid='mail.mt_comment'
             )
 
-    # Rating Mixin
-
     def _rating_get_parent_field_name(self):
         return 'livechat_channel_id'
 
@@ -662,11 +678,10 @@ class DiscussChannel(models.Model):
         """
         self.ensure_one()
         # sudo - rating.rating: live chat customers are allowed to update their rating
-        if rating_sudo := self.sudo().rating_ids[:1]:
+        if rating_sudo := self.sudo().livechat_rating:
             rating_sudo.write({"rating": rate, "feedback": reason})
         else:
             user, _ = self.env["res.users"]._get_current_persona()
-            # sudo: rating.rating - live chat customers can create ratings
             rating_values = {
                 "rating": rate,
                 "consumed": True,
@@ -674,11 +689,15 @@ class DiscussChannel(models.Model):
                 "is_internal": False,
                 "res_id": self.id,
                 "res_model_id": self.env["ir.model"]._get_id("discuss.channel"),
+                "parent_res_id": self.livechat_channel_id.id,
                 # sudo: res.partner - visitor can access the agent record to add a rating
                 "rated_partner_id": self.sudo().livechat_agent_partner_ids[:1].id,
                 "partner_id": user.partner_id.id,
             }
+            # sudo: rating.rating - livechat visitors can create ratings
             rating_sudo = self.env["rating.rating"].sudo().create(rating_values)
+            # sudo: discuss.channel - livechat visitors can add the rating to the channel
+            self.sudo().livechat_rating = rating_sudo
         rating_body = Markup(
             """<div class="o_mail_notification o_hide_author">"""
             """%(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(reason)s"""

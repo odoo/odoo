@@ -11,6 +11,7 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.rating.models import rating_data
 
 BUFFER_TIME = 120  # Time in seconds between two sessions assigned to the same operator. Not enforced if the operator is the best suited.
 
@@ -23,7 +24,6 @@ class Im_LivechatChannel(models.Model):
     """
 
     _name = 'im_livechat.channel'
-    _inherit = ['rating.parent.mixin']
     _description = 'Livechat Channel'
     _rating_satisfaction_days = 14  # include only last 14 days to compute satisfaction
 
@@ -70,6 +70,8 @@ class Im_LivechatChannel(models.Model):
     )
     script_external = fields.Html('Script (external)', compute='_compute_script_external', store=False, readonly=True, sanitize=False)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
+    rating_percentage_satisfaction = fields.Float("Rating Satisfaction", compute="_compute_rating_percentage_satisfaction")
+    rating_count = fields.Integer(string='# Ratings', compute="_compute_rating_percentage_satisfaction")
 
     # relationnal fields
     user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Agents', default=_default_user_ids)
@@ -247,6 +249,33 @@ class Im_LivechatChannel(models.Model):
         channel_count = {livechat_channel.id: count for livechat_channel, count in data}
         for record in self:
             record.nbr_channel = channel_count.get(record.id, 0)
+
+    @api.depends("channel_ids.livechat_rating")
+    def _compute_rating_percentage_satisfaction(self):
+        read_group_data = self.env["rating.rating"]._read_group(
+            [
+                ("parent_res_model", "=", "im_livechat.channel"),
+                ("parent_res_id", "in", self.ids),
+                ("rating", ">=", rating_data.RATING_LIMIT_MIN),
+                ("consumed", "=", True),
+                ("write_date", ">=", fields.Datetime.now() - timedelta(days=self._rating_satisfaction_days)),
+            ],
+            ["parent_res_id", "rating"],
+            ["__count"],
+        )
+        grades_per_channel = {
+            channel.id: {"great": 0, "okay": 0, "bad": 0} for channel in self
+        }
+        for parent_id, rating, count in read_group_data:
+            grade = rating_data._rating_to_grade(rating)
+            grades_per_channel[parent_id][grade] += count
+        for channel in self:
+            repartition = grades_per_channel.get(channel.id)
+            rating_count = sum(repartition.values())
+            channel.rating_count = rating_count
+            channel.rating_percentage_satisfaction = (
+                repartition["great"] * 100 / rating_count if rating_count else 0
+            )
 
     # --------------------------
     # Action Methods

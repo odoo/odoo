@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons.rating.models.rating import rating_data
 
 
 class DigestDigest(models.Model):
@@ -19,10 +20,22 @@ class DigestDigest(models.Model):
         channels = self.env['discuss.channel'].search([('channel_type', '=', 'livechat')])
         start, end, __ = self._get_kpi_compute_parameters()
         domain = [
-            ('create_date', '>=', start),
-            ('create_date', '<', end),
+            ("res_model", "=", "discuss.channel"),
+            ("res_id", "in", channels.ids),
+            ("consumed", "=", True),
+            ("rating", ">=", 1),
+            ("create_date", ">=", start),
+            ("create_date", "<", end),
         ]
-        ratings = channels.rating_get_grades(domain)
+        ratings_data = self.env["rating.rating"]._read_group(
+            domain,
+            ["rating"],
+            ["__count"],
+        )
+        ratings = {'great': 0, 'okay': 0, 'bad': 0}
+        for rating, count in ratings_data:
+            grade = rating_data._rating_to_grade(rating)
+            ratings[grade] += count
         self.kpi_livechat_rating_value = (
             ratings['great'] * 100 / sum(ratings.values())
             if sum(ratings.values()) else 0

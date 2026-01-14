@@ -126,11 +126,11 @@ class Im_LivechatReportChannel(models.Model):
                     ELSE C.livechat_failure
                 END AS session_outcome,
                 C.country_id,
-                NULLIF(C.rating_last_value, 0) AS rating,
+                NULLIF(R.rating, 0) AS rating,
                 CASE
-                    WHEN C.rating_last_value = 1 THEN 'Unhappy'
-                    WHEN C.rating_last_value = 5 THEN 'Happy'
-                    WHEN C.rating_last_value = 3 THEN 'Neutral'
+                    WHEN R.rating = 1 THEN 'Unhappy'
+                    WHEN R.rating = 5 THEN 'Happy'
+                    WHEN R.rating = 3 THEN 'Neutral'
                     ELSE null
                 END as rating_text,
                 C.livechat_operator_id as partner_id,
@@ -149,6 +149,7 @@ class Im_LivechatReportChannel(models.Model):
         return SQL(
             """
             FROM discuss_channel C
+            LEFT JOIN rating_rating R ON R.id = C.livechat_rating
        LEFT JOIN LATERAL (
                 SELECT BOOL_OR(livechat_member_type = 'agent') AS has_agent,
                        BOOL_OR(livechat_member_type = 'bot') AS has_bot,
