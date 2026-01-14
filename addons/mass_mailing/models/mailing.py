@@ -82,7 +82,7 @@ class MailingMailing(models.Model):
     email_from = fields.Char(
         string='Send From',
         compute='_compute_email_from', readonly=False, store=True, precompute=True)
-    favorite = fields.Boolean('Favorite', copy=False, tracking=True)
+    favorite = fields.Boolean('Favorite', copy=False)
     favorite_date = fields.Datetime(
         'Favorite Date',
         compute='_compute_favorite_date', store=True,
