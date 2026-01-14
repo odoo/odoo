@@ -61,9 +61,21 @@ class ImageGalleryOption extends Plugin {
         on_image_updated_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
         on_image_saved_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
         on_snippet_dropped_handlers: ({ snippetEl }) => {
-            const carousels = snippetEl.querySelectorAll(".s_image_gallery .carousel");
-            this.addCarouselListener(carousels);
-            this.addUniqueIds(carousels);
+            const galleries = this.document.querySelectorAll(".s_image_gallery");
+            for (const galleryEl of galleries) {
+                const container = this.getContainer(galleryEl);
+                const images = this.getImages(container);
+                const mode = this.getMode(galleryEl);
+                // Use setImages to rebuild the proper structure for the current mode.
+                // For masonry this will dispatch items into columns and initialize DnD.
+                this.setImages(galleryEl, mode, images);
+                // Ensure carousel listeners/ids are in place when rebuilt.
+                const carouselEl = galleryEl.querySelector(".carousel");
+                if (carouselEl) {
+                    this.addCarouselListener([carouselEl]);
+                    this.addUniqueIds([carouselEl]);
+                }
+            }
         },
         on_cloned_handlers: ({ cloneEl }) => {
             const carousels = cloneEl.querySelectorAll(".s_image_gallery .carousel");
@@ -192,13 +204,34 @@ class ImageGalleryOption extends Plugin {
 
         for (let i = 0; i < columnsNumber; i++) {
             const column = document.createElement("div");
-            column.classList.add("o_masonry_col", "o_snippet_not_selectable", colClass);
+            column.classList.add("o_masonry_col", colClass);
             row.append(column);
             columns.push(column);
         }
 
+        // Unwrap images if they're already wrapped
+        const unwrappedImages = images.map((img) => {
+            if (
+                img.parentElement &&
+                img.parentElement.classList.contains("o_masonry_image_wrapper")
+            ) {
+                const wrapper = img.parentElement;
+                const parent = wrapper.parentElement;
+                if (parent) {
+                    parent.insertBefore(img, wrapper);
+                    wrapper.remove();
+                }
+            }
+            return img;
+        });
+
+        // Add data-index to track order
+        unwrappedImages.forEach((img, index) => {
+            img.dataset.imageIndex = index;
+        });
+
         // Dispatch images in columns by always putting the next one in the smallest height column
-        for (const imageEl of images) {
+        for (const imageEl of unwrappedImages) {
             let min = Infinity;
             let smallestColEl;
             for (const colEl of columns) {
@@ -216,6 +249,166 @@ class ImageGalleryOption extends Plugin {
             }
             smallestColEl.append(imageEl);
         }
+
+        // After layout is complete, wrap images for drag and drop
+        const allImages = imageGalleryElement.querySelectorAll("img");
+        allImages.forEach((img) => {
+            if (!img.parentElement.classList.contains("o_masonry_image_wrapper")) {
+                this.createDraggableWrapper(img);
+            }
+        });
+
+        // Initialize drag and drop
+        this.initializeDragAndDrop(imageGalleryElement);
+        this.dependencies.history.addStep();
+    }
+
+    createDraggableWrapper(imageEl) {
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("o_masonry_image_wrapper");
+        wrapper.style.position = "relative";
+        wrapper.style.cursor = "move";
+        wrapper.style.display = "inline-block";
+        wrapper.style.width = "100%";
+
+        // Store the image index on the wrapper too
+        wrapper.dataset.imageIndex = imageEl.dataset.imageIndex;
+
+        // Create overlay for drag handle
+        const overlay = document.createElement("div");
+        overlay.classList.add("o_masonry_drag_overlay");
+        overlay.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            transition: background 0.2s;
+            z-index: 10;
+            cursor: move;
+        `;
+
+        // Show overlay on hover
+        wrapper.addEventListener("mouseenter", () => {
+            overlay.style.background = "rgba(0, 0, 0, 0.3)";
+        });
+
+        wrapper.addEventListener("mouseleave", () => {
+            overlay.style.background = "rgba(0, 0, 0, 0)";
+        });
+
+        // Wrap the image in place
+        const parent = imageEl.parentElement;
+        parent.insertBefore(wrapper, imageEl);
+        wrapper.append(imageEl);
+        wrapper.append(overlay);
+
+        return wrapper;
+    }
+
+    initializeDragAndDrop(imageGalleryElement) {
+        let draggedWrapper = null;
+
+        const wrappers = imageGalleryElement.querySelectorAll(".o_masonry_image_wrapper");
+
+        wrappers.forEach((wrapper) => {
+            const overlay = wrapper.querySelector(".o_masonry_drag_overlay");
+            overlay.setAttribute("draggable", "true");
+
+            overlay.addEventListener("dragstart", (e) => {
+                draggedWrapper = wrapper;
+                wrapper.style.opacity = "0.5";
+                e.dataTransfer.effectAllowed = "move";
+                e.dataTransfer.setData("text/plain", wrapper.dataset.imageIndex);
+            });
+
+            overlay.addEventListener("dragend", (e) => {
+                wrapper.style.opacity = "1";
+                draggedWrapper = null;
+            });
+
+            // Allow dropping on other wrappers
+            wrapper.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = "move";
+
+                // Visual feedback - highlight the target
+                if (draggedWrapper && wrapper !== draggedWrapper) {
+                    wrapper.style.outline = "3px solid #007bff";
+                }
+            });
+
+            wrapper.addEventListener("dragleave", (e) => {
+                wrapper.style.outline = "";
+            });
+
+            wrapper.addEventListener("drop", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                wrapper.style.outline = "";
+
+                if (!draggedWrapper || wrapper === draggedWrapper) {
+                    return;
+                }
+
+                // Get indices
+                const draggedIndex = parseInt(draggedWrapper.dataset.imageIndex);
+                const targetIndex = parseInt(wrapper.dataset.imageIndex);
+
+                console.log(`Swapping image ${draggedIndex} with image ${targetIndex}`);
+
+                // Get all images in order by their data-index
+                const allWrappers = Array.from(
+                    imageGalleryElement.querySelectorAll(".o_masonry_image_wrapper")
+                );
+
+                // Sort by current index to get ordered array
+                allWrappers.sort(
+                    (a, b) => parseInt(a.dataset.imageIndex) - parseInt(b.dataset.imageIndex)
+                );
+
+                // Swap the two items in the array
+                const draggedPos = allWrappers.findIndex(
+                    (w) => parseInt(w.dataset.imageIndex) === draggedIndex
+                );
+                const targetPos = allWrappers.findIndex(
+                    (w) => parseInt(w.dataset.imageIndex) === targetIndex
+                );
+
+                if (draggedPos !== -1 && targetPos !== -1) {
+                    // Swap in array
+                    [allWrappers[draggedPos], allWrappers[targetPos]] = [
+                        allWrappers[targetPos],
+                        allWrappers[draggedPos],
+                    ];
+
+                    // Extract images from wrappers
+                    const reorderedImages = allWrappers.map((w) => {
+                        const img = w.querySelector("img");
+                        w.replaceChildren();
+                        return img;
+                    });
+
+                    // Update indices to match new order
+                    reorderedImages.forEach((img, index) => {
+                        img.dataset.imageIndex = index;
+                    });
+
+                    // Rebuild masonry with swapped order
+                    this.masonry(imageGalleryElement, reorderedImages);
+                }
+            });
+        });
+    }
+
+    // Helper method to get current image order
+    getImageOrder(imageGalleryElement) {
+        const images = Array.from(
+            imageGalleryElement.querySelectorAll(".o_masonry_image_wrapper img")
+        );
+        // Sort by current visual order and return indices
+        return images.map((img) => parseInt(img.dataset.imageIndex));
     }
 
     /**
