@@ -60,7 +60,7 @@ from .domains import Domain
 from .fields import Field, determine
 from .fields_misc import Id
 from .fields_temporal import Date, Datetime
-from .fields_textual import Char
+from .fields_textual import Char, StoredTranslations
 
 from .identifiers import NewId
 from .query import Query, TableSQL
@@ -2849,7 +2849,6 @@ class BaseModel(metaclass=MetaModel):
                 value=Json(translations),
                 id=self.id,
             ))
-            self.modified([field_name])
         else:
             old_values = field._get_stored_translations(self)
             if not old_values:
@@ -2892,7 +2891,7 @@ class BaseModel(metaclass=MetaModel):
                 _old_translations = {src: values[lang] for src, values in old_translation_dictionary.items() if lang in values}
                 _new_translations = {**_old_translations, **_translations}
                 new_values[lang] = field.convert_to_cache(field.translate(_new_translations.get, old_source_lang_value), self)
-            field._update_cache(self.with_context(prefetch_langs=True), new_values, dirty=True)
+            field._update_cache(self.with_context(prefetch_langs=True), StoredTranslations(new_values), dirty=True)
 
         # the following write is incharge of
         # 1. mark field as modified

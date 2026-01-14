@@ -597,6 +597,49 @@ class TestTranslation(TransactionCase):
             self.assertEqual(category_nl.name, 'Klanten')
             self.assertEqual(category_en.name, 'Customers')
 
+    def test_get_stored_translations(self):
+        self.env.ref('base.lang_nl').active = True
+
+        industries = self.env['res.partner.industry'].create([
+            {'name': 'Industry1'},
+            {'name': 'Industry2'},
+            {'name': 'Industry3'},
+        ])
+        industries[0].with_context(lang='nl_NL').name = 'Industry1_NL'
+        industries[1].with_context(lang='nl_NL').name = None
+        field = industries._fields['name']
+
+        industries.invalidate_recordset()
+        self.assertEqual(
+            industries.with_context(lang='nl_NL').mapped('name'),
+            ['Industry1_NL', False, 'Industry3']
+        )
+
+        with self.assertQueryCount(0):
+            # None value in cache means no translation and should not trigger a query
+            self.assertEqual(
+                field._get_stored_translations(industries[1]),
+                None
+            )
+
+        with self.assertQueryCount(1):
+            # prefetch all translaitons for all industries
+            self.assertEqual(
+                field._get_stored_translations(industries[0]),
+                {
+                    'en_US': 'Industry1',
+                    'nl_NL': 'Industry1_NL',
+                }
+            )
+
+        with self.assertQueryCount(0):
+            # no extra query is needed since all translaitons are cached
+            self.assertEqual(
+                field._get_stored_translations(industries[2]),
+                {
+                    'en_US': 'Industry3',
+                }
+            )
 
     # TODO Currently, the unique constraint doesn't work for translatable field
     # def test_111_unique_en(self):
