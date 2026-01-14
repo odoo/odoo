@@ -9,7 +9,7 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.addons.mail.tools.discuss import Store
@@ -239,7 +239,13 @@ class MailActivity(models.Model):
             doc_operation = getattr(
                 documents, '_mail_post_access', 'read' if operation == 'read' else 'write'
             )
-            if doc_result := documents._check_access(doc_operation):
+            try:
+                doc_result = documents._check_access(doc_operation)
+            except MissingError:
+                existing = documents.exists()
+                forbidden_ids.extend((documents - existing).ids)
+                doc_result = existing._check_access(doc_operation)
+            if doc_result:
                 for document in doc_result[0]:
                     forbidden_ids.extend(docid_actids[document.id])
 
