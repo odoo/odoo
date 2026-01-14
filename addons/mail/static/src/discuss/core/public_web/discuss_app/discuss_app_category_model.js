@@ -42,20 +42,8 @@ export class DiscussAppCategory extends Record {
         },
     });
     discussCategoryAsAppCategory = fields.One("discuss.category", { inverse: "appCategory" });
-    // Hide categories from the devtools if really bothered.
-    hidden = fields.Attr(undefined, {
-        compute() {
-            return Boolean(localStorage.getItem(`mail.sidebar_category_${this.id}_hidden`));
-        },
-        onUpdate() {
-            if (!this.hidden && this.hidden !== undefined) {
-                localStorage.removeItem(`mail.sidebar_category_${this.id}_hidden`);
-            } else {
-                localStorage.setItem(`mail.sidebar_category_${this.id}_hidden`, true);
-            }
-        },
-        eager: true,
-    });
+    /** Hide categories from the devtools if really bothered. */
+    hidden = fields.Attr(undefined, { localStorage: true, eager: true });
     hideWhenEmpty = false;
     canView = false;
     app = fields.One("DiscussApp", {
