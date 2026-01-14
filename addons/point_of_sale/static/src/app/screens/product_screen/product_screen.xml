@@ -27,7 +27,7 @@
                     <CategorySelector t-if="!ui.isSmall || !pos.scanning" />
                     <BarcodeVideoScanner t-if="pos.scanning" t-props="barcodeVideoScannerProps" />
                     <div t-elif="pos.productToDisplayByCateg.length > 0" class="overflow-y-auto" t-on-scroll="onScroll">
-                        <div t-foreach="pos.productToDisplayByCateg" t-as="productCateg" t-key="productCateg[0]" class="product-list d-grid gap-1 gap-lg-2 px-2 pt-0 pb-2">
+                        <div t-foreach="pos.productToDisplayByCateg" t-as="productCateg" t-key="productCateg[0]" class="product-list d-grid gap-1 gap-lg-2 px-2 py-2">
                             <ProductCard
                                 t-foreach="productCateg[1]" t-as="product" t-key="product.id"
                                 productId="product.id"
