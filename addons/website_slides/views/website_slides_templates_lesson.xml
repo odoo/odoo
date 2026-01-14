@@ -4,8 +4,7 @@
 <!-- Slide: main template: detailed view -->
 <template id="slide_main" name="Slide Detailed View" track="1">
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
-    <t t-call="website.layout"
-        can_access_channel="slide.channel_id.is_member or slide.channel_id.can_publish">
+    <t t-call="website.layout">
         <div id="wrap" class="wrap o_wslides_wrap">
             <t t-call="website.record_cover"
                 _record="slide.channel_id"
@@ -47,6 +46,7 @@
             </t>
             <div class="container o_wslides_lesson_main">
                 <div class="row">
+                    <t t-set="can_access_channel" t-value="slide.channel_id.is_member or slide.channel_id.can_publish"/>
                     <div t-attf-class="o_wslides_lesson_aside col-lg-3 #{'order-2' if slide.channel_id.channel_type == 'documentation' else ''}">
                         <t t-if="slide.channel_id.channel_type == 'training'" t-call="website_slides.slide_aside_training"/>
                         <t t-if="slide.channel_id.channel_type == 'documentation'" t-call="website_slides.slide_aside_documentation"/>
