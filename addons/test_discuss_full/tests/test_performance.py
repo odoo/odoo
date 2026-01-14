@@ -247,7 +247,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 },
             )["channel_id"]
         )
-        self.channel_livechat_1.with_user(self.users[1]).message_post(body="test")
+        self.channel_livechat_1.with_user(self.users[1]).message_post(body="test", message_type="comment")
         self.authenticate(None, None)
         with patch(
             "odoo.http.GeoIP.country_code",
@@ -505,7 +505,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": "starred",
                     "model": "mail.box",
                 },
-                "initChannelsUnreadCounter": 2,
+                "initChannelsUnreadCounter": 3,
             },
         }
 
@@ -1213,7 +1213,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_favorite": False,
                 "livechat_member_type": "agent",
                 "last_interest_dt": member_0_last_interest_dt,
-                "message_unread_counter": 0,
+                "message_unread_counter": 1,
                 "message_unread_counter_bus_id": bus_last_id,
                 "mute_until_dt": False,
                 "last_seen_dt": member_0_last_seen_dt,
@@ -1517,7 +1517,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "incoming_email_cc": False,
                 "incoming_email_to": False,
                 "message_link_preview_ids": [],
-                "message_type": "notification",
+                "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": False,
                 "notification_ids": [],
