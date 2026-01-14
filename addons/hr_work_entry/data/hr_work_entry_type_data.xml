@@ -1453,6 +1453,67 @@
         <field name="amount_rate">0.8</field>
     </record>
 
+<!-- OM : Oman -->
+    <record id="l10n_om_work_entry_type_overtime_work_days_daytime" model="hr.work.entry.type">
+        <field name="name">Week Days Daytime Overtime</field>
+        <field name="code">OMOTWDD</field>
+        <field name="color">4</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">1.25</field>
+        <field name="country_id" ref="base.om"/>
+    </record>
+
+    <record id="l10n_om_work_entry_type_overtime_work_days_nighttime" model="hr.work.entry.type">
+        <field name="name">Week Days Daytime Overtime</field>
+        <field name="code">OMOTWDN</field>
+        <field name="color">4</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">1.5</field>
+        <field name="country_id" ref="base.om"/>
+    </record>
+
+    <record id="l10n_om_work_entry_type_overtime_rest_days" model="hr.work.entry.type">
+        <field name="name">Rest Days &amp; public holidays Overtime</field>
+        <field name="code">OMOTPHD</field>
+        <field name="color">4</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">2</field>
+        <field name="country_id" ref="base.om"/>
+    </record>
+
+    <record id="l10n_om_work_entry_type_overtime_special_work_days_daytime" model="hr.work.entry.type">
+        <field name="name">Week Days Daytime Special Overtime</field>
+        <field name="code">OMSOTWDD</field>
+        <field name="color">4</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">1.5</field>
+        <field name="country_id" ref="base.om"/>
+    </record>
+
+    <record id="l10n_om_work_entry_type_overtime_special_work_days_nighttime" model="hr.work.entry.type">
+        <field name="name">Week Days Daytime Special Overtime</field>
+        <field name="code">OMSOTWDN</field>
+        <field name="color">4</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">1.75</field>
+        <field name="country_id" ref="base.om"/>
+    </record>
+
+    <record id="l10n_om_work_entry_type_overtime_special_rest_days" model="hr.work.entry.type">
+        <field name="name">Rest Days &amp; public holidays Special Overtime</field>
+        <field name="code">OMSOTPHD</field>
+        <field name="color">4</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">3</field>
+        <field name="country_id" ref="base.om"/>
+    </record>
+
 <!-- SA : Saudi Arabia -->
     <record id="l10n_sa_work_entry_type_maternity" model="hr.work.entry.type">
         <field name="name">Maternity Leave</field>
