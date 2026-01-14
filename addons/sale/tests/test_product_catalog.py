@@ -101,10 +101,8 @@ class TestProductCatalog(HttpCase, SaleCommon):
             catalog_context['product_catalog_currency_id'],
             self.empty_order.currency_id.id,
         )
-        self.assertEqual(
-            catalog_context['product_catalog_digits'],
-            (16, self.env['decimal.precision'].precision_get('Product Price')),
-        )
+        # Equal to false, as `price_unit` doesn't have a precision set.
+        self.assertFalse(catalog_context['product_catalog_digits'])
 
     def test_empty_order_data(self):
         self.check_catalog_data(self.products)
