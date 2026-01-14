@@ -190,6 +190,15 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+    <record id="hr_work_entry.l10n_be_work_entry_type_phc" model="hr.work.entry.type">
+        <field name="name">Public Holiday Compensation</field>
+        <field name="requires_allocation">yes</field>
+        <field name="employee_requests">no</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
 <!-- CH: Switzerland -->
 
     <record id="hr_work_entry.l10n_ch_swissdec_unpaid_wt" model="hr.work.entry.type">
