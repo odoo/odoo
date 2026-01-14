@@ -371,3 +371,30 @@ class TestAccountMove(TestStockValuationCommon):
         self.assertFalse(move.invoice_line_ids.name)
         # ensure the invoice is posted successfully
         self.assertEqual(move.state, 'posted')
+
+    def test_fifo_cogs_creation(self):
+        """Simple test to check COGS lines are correctly created with FIFO valuation."""
+        product = self.product_fifo_auto
+        in_move = self.env['stock.move'].create({
+            'product_id': product.id,
+            'product_uom_qty': 10,
+            'product_uom': product.uom_id.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'value': 100,
+        })
+        in_move._action_confirm()
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': product.id,
+                    'quantity': 10,
+                }),
+            ],
+        })
+        move._post()
+        cogs_line = move.line_ids.filtered(lambda line: line.display_type == 'cogs')
+        self.assertEqual(len(cogs_line), 2)
+        self.assertEqual(sorted(cogs_line.mapped('balance')), [-100.0, 100.0])

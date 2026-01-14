@@ -69,7 +69,8 @@ class AccountMoveLine(models.Model):
         # FIFO
         moves = self._get_stock_moves().filtered(lambda m: m.state == 'done')
         if not moves:
-            return self.product_id._run_fifo(self.quantity)
+            fifo_value = self.product_id._run_fifo(self.quantity)
+            return fifo_value / self.quantity if self.quantity else fifo_value
 
         price_unit = moves._get_price_unit()
         valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
