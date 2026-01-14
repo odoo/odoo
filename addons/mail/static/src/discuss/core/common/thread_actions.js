@@ -134,8 +134,12 @@ registerThreadAction("member-list", {
     panelOuterClass: "o-discuss-ChannelMemberList bg-inherit",
     icon: "oi oi-fw oi-users",
     name: _t("Members"),
-    close: ({ owner, store }) => {
-        if (owner.env.inDiscussApp) {
+    close: ({ action, nextActiveAction, owner, store }) => {
+        if (
+            action.condition &&
+            owner.env.inDiscussApp &&
+            store.discuss?.shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction)
+        ) {
             store.discuss.isMemberPanelOpenByDefault = false;
         }
     },

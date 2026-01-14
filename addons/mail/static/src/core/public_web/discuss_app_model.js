@@ -84,6 +84,11 @@ export class DiscussApp extends Record {
         }
     }
 
+    /** @param {import("@mail/core/common/action").Action} [nextActiveAction] */
+    shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction) {
+        return true;
+    }
+
     _threadOnUpdate() {
         this.lastActiveId = this.store.Thread.localIdToActiveId(this.thread?.localId);
     }
