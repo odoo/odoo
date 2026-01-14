@@ -117,6 +117,7 @@ test("[text composer] can @user in restricted (group_public_id) channels", async
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await click("button[title='Invite People']");
     await contains(
         ".o-discuss-ChannelInvitation-invitationBox:text('Access restricted to group \"Custom Channel Group\"')"
@@ -148,6 +149,7 @@ test("can @user in restricted (group_public_id) channels", async () => {
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
     await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await click("button[title='Invite People']");
     await contains(
         ".o-discuss-ChannelInvitation-invitationBox:text('Access restricted to group \"Custom Channel Group\"')"
