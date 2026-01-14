@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import contextmanager
 from lxml import etree
 from unittest import SkipTest
 from unittest.mock import patch
@@ -46,6 +47,20 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'qdt': "urn:un:unece:uncefact:data:standard:QualifiedDataType:100",
             'xsi': "http://www.w3.org/2001/XMLSchema-instance",
         }
+
+    @contextmanager
+    def avoiding_predictions(self):
+        model = self.env.registry['account.move.line']
+        if self.env['ir.module.module']._get('account_accountant').state == 'installed':
+            with (
+                patch.object(model, '_predict_product', return_value=False) as _pp,
+                patch.object(model, '_predict_account', return_value=False) as _pa,
+            ):
+                yield
+                _pp.assert_not_called()
+                _pa.assert_not_called()
+        else:
+            yield
 
     def import_attachment(self, attachment, journal=None):
         journal = journal or self.company_data["default_journal_purchase"]
@@ -201,7 +216,8 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             })
 
         # Import the document for the first time
-        bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
+        with self.avoiding_predictions():
+            bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
 
         # Ensure the first tax is retrieved as there isn't any prediction that could be leverage
         self.assertEqual(bill.invoice_line_ids.tax_ids, new_tax_1)
@@ -425,7 +441,8 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
                 'raw': file.read(),
             })
 
-        bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
+        with self.avoiding_predictions():
+            bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
 
         self.assertRecordValues(bill.partner_id, [{
             'name': "ALD Automotive LU",
@@ -456,7 +473,8 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         })
         self.company_data['default_account_expense'].tax_ids = purchase_tax.ids
 
-        bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
+        with self.avoiding_predictions():
+            bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
 
         self.assertRecordValues(bill.invoice_line_ids, [{
             'amount_currency': 100.00,
