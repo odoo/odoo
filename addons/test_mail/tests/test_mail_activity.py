@@ -473,6 +473,24 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             ('res_model', '=', self.test_lead_records._name),
         ])
         self.assertEqual(len(test_with_removed), 4, 'Without ACL check, activities linked to removed records are kept')
+
+        self.env.invalidate_all()
+        test_with_removed_as_admin = self.env['mail.activity'].with_user(self.user_admin).search([
+            ('id', 'in', self.test_activities.ids),
+            ('res_model', '=', self.test_lead_records._name),
+        ])
+        self.assertEqual(len(test_with_removed_as_admin), 3, 'With ACL check, activities linked to removed records are not kept is not assigned to the user')
+
+        self.env.invalidate_all()
+        self.assertFalse(
+            self.test_activities_removed.with_user(self.user_admin).has_access('read'),
+            'No access to an activity linked to someone and whose record has been removed '
+            '(considered as no access to record); and should not crash (no MissingError)'
+        )
+        with self.assertRaises(exceptions.AccessError):  # should not raise a MissingError
+            self.test_activities_removed.with_user(self.user_admin).read(['summary'])
+
+        self.env.invalidate_all()
         test_with_removed = self.env['mail.activity'].search([
             ('id', 'in', self.test_activities.ids),
             ('res_model', '=', self.test_lead_records._name),
@@ -480,6 +498,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
         self.assertEqual(len(test_with_removed), 4, 'Even with ACL check, activities linked to removed records are kept if assigned to the user (see odoo/odoo#112126)')
 
         # if not assigned -> should filter out
+        self.env.invalidate_all()
         self.test_activities_removed.write({'user_id': self.user_admin.id})
         self.test_activities_removed.write({'user_id': self.user_employee.id})
 
