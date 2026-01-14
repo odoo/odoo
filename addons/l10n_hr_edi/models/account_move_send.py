@@ -115,9 +115,12 @@ class AccountMoveSend(models.AbstractModel):
                 addendum.mer_document_status = '50'
                 invoice_data['error'] = e.message
             else:
-                if not isinstance(response, list) and response.get('File'):
+                if not isinstance(response, list) and not response.get('ElectronicId'):
                     addendum.mer_document_status = '50'
-                    invoice_data['error'] = response.get('File')['Messages']
+                    errors = []
+                    for key in response:
+                        errors.append(' '.join(response[key].get('Messages', [])))
+                    invoice_data['error'] = {'error_title': "Error", 'errors': errors}
                 else:
                     addendum.mer_document_eid = response['ElectronicId']
                     addendum.mer_document_status = '20'
