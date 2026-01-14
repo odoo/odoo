@@ -25,7 +25,7 @@ class Driver(Thread):
         self.device_type = ''
         self.device_manufacturer = ''
         self.data = {'value': '', 'result': ''}  # TODO: deprecate "value"?
-        self._actions = {}
+        self._actions = {"status": self.status}
         self._stopped = Event()
         self._recent_action_ids = LRU(256)
 
@@ -86,3 +86,6 @@ class Driver(Thread):
     def disconnect(self):
         self._stopped.set()
         del iot_devices[self.device_identifier]
+
+    def status(self, _):
+        return self.supported(self.dev)
