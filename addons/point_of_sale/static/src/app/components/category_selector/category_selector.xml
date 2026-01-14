@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.CategorySelector">
-        <div t-attf-class="{{this.pos.config.show_category_images ? 'category-list' : 'product-list'}} d-grid gap-1 gap-lg-2 p-2">
+        <div t-attf-class="{{this.pos.config.show_category_images ? 'category-list' : 'product-list'}} d-grid gap-1 gap-lg-2 p-2 height-category-selector">
             <t t-foreach="this.getCategoriesAndSub()" t-as="category" t-key="category.id">
                 <button t-on-click="() => this.pos.setSelectedCategory(category.id)"
                     t-attf-class="o_colorlist_item_color_{{category.color or 'none'}}"
