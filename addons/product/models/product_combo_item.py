@@ -22,10 +22,10 @@ class ProductComboItem(models.Model):
     currency_id = fields.Many2one(comodel_name='res.currency', related='product_id.currency_id')
     lst_price = fields.Float(
         string="Original Price",
-        digits='Product Price',
+        min_display_digits='Product Price',
         related='product_id.lst_price',
     )
-    extra_price = fields.Float(string="Extra Price", digits='Product Price', default=0.0)
+    extra_price = fields.Float(string="Extra Price", min_display_digits='Product Price', default=0.0)
 
     @api.constrains('product_id')
     def _check_product_id_no_combo(self):

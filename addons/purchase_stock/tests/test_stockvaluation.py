@@ -1413,7 +1413,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         picking.button_validate()
         # 5 Units received at rate 0.7 = 42.86
-        self.assertAlmostEqual(product_avg.standard_price, 42.86)
+        self.assertAlmostEqual(product_avg.standard_price, 42.8571429)
 
         today = date_invoice
         inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
@@ -1641,7 +1641,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             picking.button_validate()
             picking._action_done()  # Create Backorder
         # 5 Units received at rate 0.7 = 42.86
-        self.assertAlmostEqual(product_avg.standard_price, 42.86)
+        self.assertAlmostEqual(product_avg.standard_price, 42.8571429)
 
         with freeze_time(date_invoice):
             inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
@@ -1696,7 +1696,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             })
             inv1.action_post()
         # 5 Units invoiced at rate 2 (10) + 5 Units invoiced at rate 2.2 and unit price 40 (18.18) = 14.09
-        self.assertAlmostEqual(product_avg.standard_price, 14.09)
+        self.assertAlmostEqual(product_avg.standard_price, 14.091)
         ##########################
         #       Invoice 0        #
         ##########################
