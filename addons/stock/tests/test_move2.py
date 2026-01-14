@@ -3401,6 +3401,38 @@ class TestRoutes(TestStockCommon):
         pushed_move = move1.move_dest_ids
         self.assertEqual(pushed_move.location_dest_id.id, push_location_2.id)
 
+    def test_location_final_id_in_push(self):
+        """
+        Check that the location_final_id is propagated as location_dest_id
+        at the end of a push chain.
+        """
+        warehouse = self.warehouse_1
+        warehouse.delivery_steps = 'pick_ship'
+        final_location = self.env['stock.location'].create({
+            'name': 'Partner Stock',
+            'location_id': self.partner.property_stock_customer.id,
+        })
+        pick = self.env['stock.picking'].create({
+            'partner_id': self.partner.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': warehouse.wh_output_stock_loc_id.id,
+            'picking_type_id': warehouse.pick_type_id.id,
+            'move_ids': [Command.create({
+                'name': 'pick move to ship',
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': warehouse.wh_output_stock_loc_id.id,
+                'location_final_id': final_location.id,
+                'product_id': self.product.id,
+                'product_uom': self.product.uom_id.id,
+                'product_uom_qty': 1.0,
+            })]
+        })
+        pick.action_confirm()
+        pick.button_validate()
+        ship = pick.move_ids.move_dest_ids.picking_id
+        self.assertEqual(ship.location_dest_id, final_location)
+        self.assertEqual(ship.move_ids.location_dest_id, final_location)
+
 
 class TestAutoAssign(TestStockCommon):
     def create_pick_ship(self):
