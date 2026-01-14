@@ -88,7 +88,7 @@ class TestAccountMoveDuplicate(AccountTestInvoicingCommon):
         # reassign to trigger the compute method
         invoices_new.ref = invoice_1.ref
         self.assertRecordValues(invoices_new, [
-            {'duplicated_ref_ids': []},
+            {'duplicated_ref_ids': (invoices_new[1]).ids},
             {'duplicated_ref_ids': (invoices_new[0]).ids},
         ])
 
@@ -100,8 +100,8 @@ class TestAccountMoveDuplicate(AccountTestInvoicingCommon):
         # Same ref but different year -> Not duplicated
         bill2 = bill1.copy({'invoice_date': '2020-01-01'})
         bill2.ref = bill1.ref
-        self.assertFalse(bill1.duplicated_ref_ids)
-        self.assertFalse(bill2.duplicated_ref_ids)
+        self.assertNotIn(bill1, bill2.duplicated_ref_ids)
+        self.assertNotIn(bill2, bill1.duplicated_ref_ids)
 
         # Same ref and same year -> Duplicated
         bill3 = bill1.copy({'invoice_date': f"{bill1.invoice_date.year}-04-11"})
@@ -118,3 +118,29 @@ class TestAccountMoveDuplicate(AccountTestInvoicingCommon):
         bill5 = bill4.copy()
         bill5.ref = bill4.ref
         self.assertEqual(bill5.duplicated_ref_ids, bill4)
+
+    def test_in_invoice_single_duplicate_no_reference(self):
+        """ Ensure duplicated bills are recognized with or without
+            a reference when the amount, date, partner are equal"""
+        bill1 = self.invoice.copy({'invoice_date': '2020-01-01'})
+        bill2 = bill1.copy()
+
+        # trigger compute method
+        all_bills = bill1 + bill2
+        all_bills.invoice_date = self.invoice.invoice_date
+
+        # Assert duplicates when there is no ref
+        self.assertIn(bill1, bill2.duplicated_ref_ids)
+        self.assertIn(bill2, bill1.duplicated_ref_ids)
+
+        # Assert duplicates when there is one ref
+        bill1.update({'ref': "bill1 ref"})
+        bill2.update({'ref': bill2.ref})
+        self.assertIn(bill1, bill2.duplicated_ref_ids)
+        self.assertIn(bill2, bill1.duplicated_ref_ids)
+
+        # Assert duplicated when different refs
+        bill1.update({'ref': bill1.ref})
+        bill2.update({'ref': "bill2 ref"})
+        self.assertIn(bill1, bill2.duplicated_ref_ids)
+        self.assertIn(bill2, bill1.duplicated_ref_ids)
