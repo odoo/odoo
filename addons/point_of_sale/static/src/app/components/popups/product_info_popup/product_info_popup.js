@@ -20,7 +20,7 @@ export class ProductInfoPopup extends Component {
         this.dialog = useService("dialog");
         this.state = useState({
             countdown: "",
-            activeSnooze: this.props.productTemplate.getSnooze(this.pos.config.pos_snooze_ids),
+            activeSnooze: this.getActiveSnooze(),
         });
 
         useEffect(
@@ -97,7 +97,11 @@ export class ProductInfoPopup extends Component {
             pos_config_id: this.pos.config.id,
             product_template_id: this.props.productTemplate.id,
         };
-        const record = (await this.pos.data.create("pos.product.template.snooze", [snooze]))[0];
+        const record = (
+            await this.pos.data.create("pos.product.template.snooze", [snooze], true, {
+                syncData: true,
+            })
+        )[0];
         this.state.activeSnooze = record;
     }
     openSnoozeDialog() {
@@ -109,9 +113,13 @@ export class ProductInfoPopup extends Component {
                 ),
                 confirmLabel: _t("Yes"),
                 confirm: () => {
-                    this.pos.data.delete("pos.product.template.snooze", [
-                        this.state.activeSnooze.id,
-                    ]);
+                    this.pos.data.delete(
+                        "pos.product.template.snooze",
+                        [this.state.activeSnooze.id],
+                        {
+                            syncData: true,
+                        }
+                    );
                     this.state.activeSnooze = undefined;
                     this.state.countdown = "";
                 },
@@ -127,5 +135,10 @@ export class ProductInfoPopup extends Component {
                 await this.snooze(hours);
             },
         });
+    }
+
+    getActiveSnooze() {
+        const product = this.props.productTemplate;
+        return this.pos.getActiveSnooze(product);
     }
 }

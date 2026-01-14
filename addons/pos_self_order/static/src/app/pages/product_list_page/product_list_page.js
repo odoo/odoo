@@ -116,12 +116,13 @@ export class ProductListPage extends Component {
         );
     }
 
+    isProductSnoozed(product) {
+        return this.selfOrder.isProductSnoozed(product);
+    }
+
     isProductAvailable(product) {
         if (product.pos_categ_ids.length === 0) {
             return true;
-        }
-        if (this.selfOrder.snoozedProducts.has(product.id)) {
-            return false;
         }
         return product.pos_categ_ids.some((categ) => this.selfOrder.isCategoryAvailable(categ.id));
     }

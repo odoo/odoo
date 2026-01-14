@@ -7,25 +7,30 @@ class PosSnooze(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
-        for record in records:
-            # Notify open self orders that a product is now snoozed
-            record._notify_availability_updated()
-
+        records._notify_snooze_updated()
         return records
 
     def write(self, vals):
-        res = super().write(vals)
-        for record in self:
-            record._notify_availability_updated()
-        return res
+        result = super().write(vals)
+        self._notify_snooze_updated()
+        return result
 
     @api.ondelete(at_uninstall=False)
-    def _notify_availability_deleted(self):
+    def _notify_snooze_deleted(self):
         config = self.mapped('pos_config_id')
-        payload = {'deleted': [self.ids]}
+        payload = {'deleted_ids': [self.ids]}
         config._notify('SNOOZE_CHANGED', payload)
 
-    def _notify_availability_updated(self):
-        config = self.pos_config_id
-        payload = {'pos.product.template.snooze': self._load_pos_self_data_read(self, config)}
-        config._notify('SNOOZE_CHANGED', payload)
+    def _notify_snooze_updated(self):
+        snoozes_by_config = {}
+        for snooze in self:
+            snoozes_by_config.setdefault(snooze.pos_config_id, self.env['pos.product.template.snooze'])
+            snoozes_by_config[snooze.pos_config_id] |= snooze
+
+        for config, snoozes in snoozes_by_config.items():
+            payload = {
+                'records': {
+                    'pos.product.template.snooze': self._load_pos_self_data_read(snoozes, config)
+                }
+            }
+            config._notify('SNOOZE_CHANGED', payload)

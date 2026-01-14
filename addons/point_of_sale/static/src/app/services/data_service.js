@@ -32,6 +32,7 @@ export class PosData extends Reactive {
         this.relations = [];
         this.custom = {};
         this.syncInProgress = false;
+        this.dataLoadedFromServer = false;
         this.mutex = markRaw(new Mutex());
         this.records = {};
         this.opts = new DataServiceOptions();
@@ -277,6 +278,7 @@ export class PosData extends Reactive {
         let localData = await this.getCachedServerDataFromIndexedDB();
         const session = localData?.["pos.session"]?.[0];
         await this.fetchReceiptTemplate();
+        this.dataLoadedFromServer = false;
 
         if (
             (!this.network.offline && session?.state !== "opened") ||
@@ -340,6 +342,7 @@ export class PosData extends Reactive {
                 }
 
                 this.synchronizeServerDataInIndexedDB(localData);
+                this.dataLoadedFromServer = true;
             } catch (error) {
                 let message = _t("An error occurred while loading the Point of Sale: \n");
                 if (error instanceof RPCError) {
@@ -348,6 +351,7 @@ export class PosData extends Reactive {
                     message += error.message;
                 }
                 window.alert(message);
+                this.dataLoadedFromServer = false;
                 return localData;
             }
         }
@@ -878,7 +882,7 @@ export class PosData extends Reactive {
         return records;
     }
 
-    delete(model, ids) {
+    delete(model, ids, options = {}) {
         const deleted = [];
         for (const id of ids) {
             const record = this.models[model].get(id);
@@ -886,7 +890,7 @@ export class PosData extends Reactive {
             record.delete();
         }
 
-        this.ormDelete(model, ids);
+        this.ormDelete(model, ids, true, options);
         return deleted;
     }
 
@@ -942,8 +946,12 @@ export class PosData extends Reactive {
         return false;
     }
 
-    async create(model, values, queue = true) {
-        return await this.execute({ type: "create", model, values, queue });
+    async create(model, values, queue = true, options = {}) {
+        const result = await this.execute({ type: "create", model, values, queue });
+        if (options.syncData) {
+            this.deviceSync?.dispatch && this.deviceSync.dispatch({ [model]: result });
+        }
+        return result;
     }
 
     async ormWrite(model, ids, values, queue = true) {
@@ -953,8 +961,12 @@ export class PosData extends Reactive {
         return result;
     }
 
-    async ormDelete(model, ids, queue = true) {
-        return await this.execute({ type: "delete", model, ids, queue });
+    async ormDelete(model, ids, queue = true, options = {}) {
+        const result = await this.execute({ type: "delete", model, ids, queue });
+        if (result && options.syncData) {
+            this.deviceSync.dispatch({ [model]: ids.map((id) => ({ id })) });
+        }
+        return result;
     }
 
     localDeleteCascade(record, removeFromServer = false) {
@@ -991,6 +1003,10 @@ export class PosData extends Reactive {
         }
 
         return limitedLoading;
+    }
+
+    isDataLoadedFromServer() {
+        return this.dataLoadedFromServer;
     }
 }
 

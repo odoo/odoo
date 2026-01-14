@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.SnoozeDialog">
         <Dialog size="'sm'">
             <t t-set-slot="header">
-                <h3> <t t-esc="this.props.headerTitle " /> </h3>
+                <h3> <t t-esc="this.headerTitle " /> </h3>
             </t>
             <div class="btn-group d-flex flex-column gap-2" role="group">
                 <t t-foreach="getSnoozeOptions()" t-as="option" t-key="option.value">

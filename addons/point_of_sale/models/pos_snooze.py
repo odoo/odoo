@@ -37,3 +37,14 @@ class PosSnooze(models.Model):
         ]
 
         return self.search_read(domain)
+
+    @api.model
+    def _load_pos_data_fields(self, config):
+        params = super()._load_pos_data_fields(config)
+        params += ['id', 'product_template_id', 'pos_config_id', 'start_time', 'end_time']
+        return params
+
+    def _cron_clean_records(self):
+        now = Datetime.now()
+        expired_snoozes = self.search([('end_time', '!=', False), ('end_time', '<', now)])
+        expired_snoozes.unlink()

@@ -12,6 +12,7 @@ registry.category("web_tour.tours").add("test_pos_snooze", {
             ProductScreen.clickInfoProduct("Desk Organizer", [
                 ProductInfoScreen.productIsAvailable(),
                 ProductInfoScreen.clickSnoozeButton(),
+                ProductInfoScreen.clickSnoozeDuration("1 Hour"),
                 Dialog.confirm("Apply"),
                 ProductInfoScreen.productIsSnoozed(),
                 Dialog.confirm("Close"),

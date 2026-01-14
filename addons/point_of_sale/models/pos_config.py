@@ -222,13 +222,19 @@ class PosConfig(models.Model):
     def notify_synchronisation(self, session_id, device_identifier, records={}):
         self.ensure_one()
         static_records = {}
+        deleted_record_ids = {}
 
         for model, ids in records.items():
-            records = self.env[model].browse(ids).exists()
-            static_records[model] = self.env[model]._load_pos_data_read(records, self)
+            records = self.env[model].browse(ids)
+            existing_records = records.exists()
+            static_records[model] = self.env[model]._load_pos_data_read(existing_records, self)
+            deleted_ids = list(set(records.ids) - set(existing_records.ids))
+            if deleted_ids:
+                deleted_record_ids[model] = deleted_ids
 
         self._notify('SYNCHRONISATION', {
             'static_records': static_records,
+            'deleted_record_ids': deleted_record_ids,
             'session_id': session_id,
             'device_identifier': device_identifier,
             'records': records

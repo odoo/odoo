@@ -2,7 +2,7 @@ import { Reactive } from "@web/core/utils/reactive";
 import { ConnectionLostError, RPCError, rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { formatCurrency as webFormatCurrency } from "@web/core/currency";
-import { markup } from "@odoo/owl";
+import { markup, markRaw } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
@@ -24,6 +24,7 @@ import {
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import { initLNA } from "@point_of_sale/app/utils/init_lna";
 import { GeneratePrinterData } from "@point_of_sale/app/utils/generate_printer_data";
+import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -70,7 +71,7 @@ export class SelfOrder extends Reactive {
         this.currentCategory = null;
         this.productByCategIds = {};
         this.availableCategories = [];
-        this.snoozedProducts = new Set();
+        this.snoozedProductTracker = new SnoozedProductTracker();
 
         this.initData();
         if (this.config.self_ordering_mode === "kiosk") {
@@ -81,14 +82,16 @@ export class SelfOrder extends Reactive {
 
         this.data.connectWebSocket("ORDER_STATE_CHANGED", () => this.getUserDataFromServer());
         this.data.connectWebSocket("SNOOZE_CHANGED", async (payload) => {
-            const { deleted, ...updates } = payload;
-            if (deleted) {
+            const { deleted_ids, records } = payload;
+            if (deleted_ids) {
                 const snoozeModel = this.models["pos.product.template.snooze"];
-                const toDelete = deleted.map((id) => snoozeModel.get(id)).filter(Boolean);
+                const toDelete = deleted_ids.map((id) => snoozeModel.get(id)).filter(Boolean);
                 this.models["pos.product.template.snooze"].deleteMany(toDelete);
             }
-            await this.models.connectNewData(updates);
-            this.initSnoozedProducts();
+            if (records) {
+                await this.models.connectNewData(records);
+            }
+            this.snoozedProductTracker.setSnoozes(this.config.pos_snooze_ids);
         });
         this.data.connectWebSocket("PRODUCT_CHANGED", (payload) => {
             const productTemplateIds = payload["product.template"].map((tmpl) => tmpl.id);
@@ -484,8 +487,8 @@ export class SelfOrder extends Reactive {
     }
 
     initData() {
+        this.snoozedProductTracker.setSnoozes(this.config.pos_snooze_ids);
         this.initProducts();
-        this.initSnoozedProducts();
         this._initLanguages();
         this.initHardware();
     }
@@ -503,23 +506,8 @@ export class SelfOrder extends Reactive {
         cookie.set("frontend_lang", this.currentLanguage?.code || "en_US");
     }
 
-    initSnoozedProducts() {
-        if (!this.config.pos_snooze_ids || this.config.pos_snooze_ids.length == 0) {
-            return;
-        }
-        const snoozes = this.config.pos_snooze_ids.filter(
-            (snooze) => snooze.end_time > luxon.DateTime.now()
-        );
-        this.snoozedProducts = new Set(snoozes.map((snooze) => snooze.product_template_id.id));
-        const earliest = Math.min(...snoozes.map((snooze) => snooze.end_time.toMillis()));
-
-        if (earliest) {
-            const delay = earliest - luxon.DateTime.now().toMillis();
-
-            this.snoozeUpdateTimer = setTimeout(() => {
-                this.initSnoozedProducts();
-            }, Math.max(0, delay) + 1000);
-        }
+    isProductSnoozed(product) {
+        return this.snoozedProductTracker.isProductSnoozed(product);
     }
 
     createPrinter(printer) {
