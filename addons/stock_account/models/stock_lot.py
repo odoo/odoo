@@ -18,7 +18,7 @@ class StockLot(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'lot_id')
     standard_price = fields.Float(
         "Cost", company_dependent=True,
-        digits='Product Price', groups="base.group_user",
+        min_display_digits='Product Price', groups="base.group_user",
         help="""Value of the lot (automatically computed in AVCO).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders."""

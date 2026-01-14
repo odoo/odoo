@@ -1271,8 +1271,8 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         # The standard price of the component is updated to $10 because the kit cost
         # is $60, there are 6 units of different components used in this BoM, and since
         # the cost_share is equal, 60/6 = $10.
-        self.assertEqual(self.component_a.standard_price, 10)
-        self.assertEqual(lot_a.standard_price, 10)
+        self.assertAlmostEqual(self.component_a.standard_price, 9.99899999)
+        self.assertAlmostEqual(lot_a.standard_price, 9.99899999)
         self.assertEqual(lot_a.quantity_svl, 4)
         self.assertEqual(lot_a.value_svl, 40)
 

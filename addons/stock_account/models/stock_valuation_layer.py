@@ -26,7 +26,7 @@ class StockValuationLayer(models.Model):
     quantity = fields.Float('Quantity', readonly=True, digits='Product Unit of Measure')
     uom_id = fields.Many2one(related='product_id.uom_id', readonly=True, required=True)
     currency_id = fields.Many2one('res.currency', 'Currency', related='company_id.currency_id', readonly=True, required=True)
-    unit_cost = fields.Float('Unit Value', digits='Product Price', readonly=True, aggregator=None)
+    unit_cost = fields.Float('Unit Value', min_display_digits='Product Price', readonly=True, aggregator=None)
     value = fields.Monetary('Total Value', readonly=True)
     remaining_qty = fields.Float(readonly=True, digits='Product Unit of Measure')
     remaining_value = fields.Monetary('Remaining Value', readonly=True)

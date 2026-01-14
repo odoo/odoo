@@ -515,19 +515,22 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
         ])
         receipt = purchase_order.picking_ids
         receipt.button_validate()
-        self.assertRecordValues(components.stock_valuation_layer_ids.sorted(lambda l: l.product_id.id), [
-            {'product_id': component01.id, 'unit_cost':  33.3},
-            {'product_id': component02.id, 'unit_cost': 100.0},
-            {'product_id': component02.id, 'unit_cost': 150.0},
-            {'product_id': component02.id, 'unit_cost':  33.3},
-            {'product_id': component03.id, 'unit_cost': 150.0},
-            {'product_id': component03.id, 'unit_cost':  33.4},
-            {'product_id': component04.id, 'unit_cost': 150.0},
-            {'product_id': component04.id, 'unit_cost': 100.0},
-            {'product_id': component05.id, 'unit_cost': 150.0},
-            {'product_id': component05.id, 'unit_cost': 100.0},
-            {'product_id': component05.id, 'unit_cost': 0.0},
+        svls_ordered = components.stock_valuation_layer_ids.sorted(lambda l: l.product_id.id)
+        self.assertRecordValues(svls_ordered, [
+            {'product_id': component01.id},
+            {'product_id': component02.id},
+            {'product_id': component02.id},
+            {'product_id': component02.id},
+            {'product_id': component03.id},
+            {'product_id': component03.id},
+            {'product_id': component04.id},
+            {'product_id': component04.id},
+            {'product_id': component05.id},
+            {'product_id': component05.id},
+            {'product_id': component05.id},
         ])
+        for svl, expected_unit_cost in zip(svls_ordered, [33.3, 100.0, 150.0, 33.3, 150.0, 33.4, 150.0, 100.0, 150.0, 100.0, 0.0]):
+            self.assertAlmostEqual(svl.unit_cost, expected_unit_cost)
 
     def test_kit_bom_cost_share_constraint_with_variants(self):
         """
