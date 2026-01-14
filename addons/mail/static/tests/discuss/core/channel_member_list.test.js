@@ -157,6 +157,7 @@ test("Channel member count update after user joined", async () => {
     pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 1" });
     await click("[title='Invite People']");
     await click(".o-discuss-ChannelInvitation-selectable", { text: "Harry" });
