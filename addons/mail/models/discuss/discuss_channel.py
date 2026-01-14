@@ -1000,8 +1000,9 @@ class DiscussChannel(models.Model):
         return partners.ids
 
     def message_post(self, *, message_type="notification", partner_ids=None, **kwargs):
-        # sudo: discuss.channel - write to discuss.channel is not accessible for most users
-        self.sudo().last_interest_dt = fields.Datetime.now()
+        if message_type not in ["notification", "user_notification"]:
+            # sudo: discuss.channel - write to discuss.channel is not accessible for most users
+            self.sudo().last_interest_dt = fields.Datetime.now()
         if "everyone" in kwargs.pop("special_mentions", []):
             partner_ids = list(OrderedSet((partner_ids or []) + self.channel_member_ids.partner_id.ids))
         if partner_ids:
