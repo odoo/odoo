@@ -3,13 +3,12 @@ import { patch } from "@web/core/utils/patch";
 
 patch(DiscussContent.prototype, {
     actionPanelAutoOpenFn() {
-        if (!this.threadActions.activeAction) {
-            if (this.store.discuss.isLivechatInfoPanelOpenByDefault) {
-                this.threadActions.actions.find((a) => a.id === "livechat-info")?.actionPanelOpen();
-            }
-            return;
+        const livechatInfoAction = this.threadActions.actions.find((a) => a.id === "livechat-info");
+        if (livechatInfoAction && this.store.discuss.isLivechatInfoPanelOpenByDefault) {
+            livechatInfoAction.actionPanelOpen();
+        } else {
+            super.actionPanelAutoOpenFn();
         }
-        super.actionPanelAutoOpenFn();
     },
     get threadDescriptionAttClass() {
         return {

@@ -2,10 +2,9 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("discuss.invite_by_email", {
     steps: () => [
-        {
-            trigger: "button[title='Members']",
-            run: "click",
-        },
+        // Wait for the auto-open of the memberlist. Otherwise, it will
+        // conflict with the opening of the invite panel.
+        { trigger: ".o-discuss-ChannelMemberList" },
         {
             trigger: "button[title='Invite People']",
             run: "click",
