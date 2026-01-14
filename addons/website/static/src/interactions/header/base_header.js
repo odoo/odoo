@@ -24,6 +24,9 @@ export class BaseHeader extends Interaction {
                 o_header_is_scrolled: this.isScrolled,
                 o_header_no_transition: !this.transitionActive,
             }),
+            "t-att-style": () => ({
+                transform: this.transformValue,
+            }),
         },
         ".offcanvas": {
             "t-on-show.bs.offcanvas": this.disableScroll,
@@ -54,6 +57,8 @@ export class BaseHeader extends Interaction {
         this.isVisible = true;
         this.isScrolled = false;
         this.forcedScroll = 0;
+
+        this.transformValue = "";
 
         this.isOverlay = !!this.el.closest(".o_header_overlay, .o_header_overlay_theme");
 
@@ -183,7 +188,7 @@ export class BaseHeader extends Interaction {
 
     transformShow() {
         this.isVisible = true;
-        this.el.style.transform = this.atTop
+        this.transformValue = this.atTop
             ? ""
             : `translate(0, -${this.forcedScroll + this.topGap}px)`;
         this.adaptToHeaderChangeLoop(1);
@@ -191,7 +196,7 @@ export class BaseHeader extends Interaction {
 
     transformHide() {
         this.isVisible = false;
-        this.el.style.transform = "translate(0, -100%)";
+        this.transformValue = "translate(0, -100%)";
         this.adaptToHeaderChangeLoop(1);
     }
 
