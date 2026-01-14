@@ -285,7 +285,7 @@ class AccountMove(models.Model):
                     else:
                         invoice.message_post(body=_("The invoice status couldn't be retrieved from Nilvera."))
 
-    def _get_nilvera_last_fetch_date(self, invoice_channel):
+    def _get_nilvera_last_fetch_date(self, invoice_channel, journal_type):
         """
         Fetches the last fetched date for Nilvera e-invoice synchronization specific to the
         current company. If no value exists, it sets a default date of one month prior to
@@ -293,7 +293,7 @@ class AccountMove(models.Model):
         """
         # A config param is used to be able to store the date in stable. One for einvoice and one for earchive.
         # Should be removed in master and replaced with two date fields on the company.
-        param_key = f"l10n_tr_nilvera_{invoice_channel}.last_fetched_date.{self.env.company.id}"
+        param_key = f"l10n_tr_nilvera_{invoice_channel}_{journal_type}.last_fetched_date.{self.env.company.id}"
         last_fetched_date = self.env['ir.config_parameter'].sudo().get_param(param_key)
         if not last_fetched_date:
             last_fetched_date = (fields.Date.today() - relativedelta(months=1)).strftime("%Y-%m-%d")
@@ -303,7 +303,7 @@ class AccountMove(models.Model):
     def _l10n_tr_nilvera_get_documents(self, invoice_channel="einvoice", document_category="Purchase", journal_type="in_invoice"):
         with _get_nilvera_client(self.env.company) as client:
             endpoint = f"/{invoice_channel}/{quote(document_category)}"
-            start_date = self._get_nilvera_last_fetch_date(invoice_channel)
+            start_date = self._get_nilvera_last_fetch_date(invoice_channel, journal_type)
             end_date = fields.Datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
             page = 1
 
@@ -327,7 +327,7 @@ class AccountMove(models.Model):
 
             moves = self.env['account.move']
             journal = self._l10n_tr_get_nilvera_invoice_journal(journal_type)
-            date_param_key = f"l10n_tr_nilvera_{invoice_channel}.last_fetched_date.{self.env.company.id}"
+            date_param_key = f"l10n_tr_nilvera_{invoice_channel}_{journal_type}.last_fetched_date.{self.env.company.id}"
             while page <= total_pages:
                 # Reuse first response, fetch subsequent pages.
                 if page > 1:
