@@ -565,6 +565,7 @@ export class PosStore extends WithLazyGetterTrap {
         return true;
     }
 
+<<<<<<< 099e87446bbfda821106578f9f6f7584a3024a7c:addons/point_of_sale/static/src/app/services/pos_store.js
     /**
      * This method is used to load new products from the server.
      * It also load pricelists, attributes and packagings
@@ -583,6 +584,22 @@ export class PosStore extends WithLazyGetterTrap {
         );
         this.productAttributesExclusion = this.computeProductAttributesExclusion();
         return result;
+||||||| 34a49485cd201b36b3646777ce0ae69c0ec12ed2:addons/point_of_sale/static/src/app/store/pos_store.js
+    computeProductPricelistCache(data) {
+        if (data) {
+            data = this.models[data.model].readMany(data.ids);
+        }
+        computeProductPricelistCache(this, data);
+=======
+    computeProductPricelistCache(data) {
+        if (data) {
+            data = this.models[data.model].readMany(data.ids);
+            if (data.length === 0) {
+                return;
+            }
+        }
+        computeProductPricelistCache(this, data);
+>>>>>>> 433122f3c89925919e8d56d5308bfb88aa2260f1:addons/point_of_sale/static/src/app/store/pos_store.js
     }
 
     // FIXME Dead code to be deleted in master
