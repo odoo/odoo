@@ -26,7 +26,7 @@ export class ExpenseFormController extends FormController {
             return new Promise((resolve) => {
                 this.dialogService.add(ConfirmationDialog, {
                     title: _t("Duplicate Expense found"),
-                    body: _t("An expense with the same category, amount, and date already exists.\nAre you sure you want to submit this one as well?"),
+                    body: _t("An expense with the same product, amount, and date already exists.\nAre you sure you want to submit this one as well?"),
                     confirmLabel: _t("Submit Expense"),
                     confirm: async () => {
                         await this.orm.call("hr.expense", "action_approve_duplicates", [record.resId]);

@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("hr_expense_test_tour", {
             run: "click",
         },
         {
-            content: "Enter category for new expense in Many2One field",
+            content: "Enter product for new expense in Many2One field",
             trigger: ".o_field_widget.o_field_many2one[name=product_id] input",
             run: "edit [COMM] Communication",
         },

@@ -18,7 +18,7 @@ class ProductProduct(models.Model):
             rounded_price = self.env.company.currency_id.round(new_standard_price)
             if (len(unit_amounts_no_warning) > 1 or (len(unit_amounts_no_warning) == 1 and rounded_price not in unit_amounts_no_warning)):
                 return self.env._(
-                    "There are draft expenses linked to this category. Updating the category cost will change expense amounts. "
+                    "There are draft expenses linked to this product. Updating the product cost will change expense amounts. "
                     "Make sure it is what you want to do.",
                 )
         return False

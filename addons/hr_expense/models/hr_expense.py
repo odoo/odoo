@@ -3,6 +3,7 @@
 import re
 
 from markupsafe import Markup
+import ast
 import logging
 import werkzeug
 
@@ -58,7 +59,7 @@ class HrExpense(models.Model):
         compute='_compute_name', precompute=True, store=True, readonly=False,
         copy=True,
     )
-    date = fields.Date(string="Expense Date", default=fields.Date.context_today)
+    date = fields.Date(string="Date", default=fields.Date.context_today)
     employee_id = fields.Many2one(
         comodel_name='hr.employee',
         string="Employee",
@@ -94,7 +95,7 @@ class HrExpense(models.Model):
     # product_id is not required to allow to create an expense without product via mail alias, but should be required on the view.
     product_id = fields.Many2one(
         comodel_name='product.product',
-        string="Category",
+        string="Product",
         tracking=True,
         check_company=True,
         domain=[('can_be_expensed', '=', True)],
@@ -151,6 +152,7 @@ class HrExpense(models.Model):
         string="Origin Split Expense",
         help="Original expense from a split.",
     )
+    split_expense_count = fields.Integer(string="Number of Split Expenses", compute='_compute_split_expense_count')
     # Amount fields
     tax_amount_currency = fields.Monetary(
         string="Tax amount in Currency",
@@ -244,10 +246,10 @@ class HrExpense(models.Model):
     )
     payment_mode = fields.Selection(
         selection=[
-            ('own_account', "Employee (to reimburse)"),
-            ('company_account', "Company")
+            ('own_account', "Employee"),
+            ('company_account', "None (company)")
         ],
-        string="Paid By",
+        string="Reimbursement",
         default='own_account',
         required=True,
         tracking=True,
@@ -292,11 +294,11 @@ class HrExpense(models.Model):
 
             # Check for required fields 'name' and 'product_id'
             if not expense.name and not expense.product_id:
-                errors.append(self.env._("Enter a description and select a category to proceed."))
+                errors.append(self.env._("Enter a description and select a product to proceed."))
             elif not expense.name:
                 errors.append(self.env._("Enter a description to proceed."))
             elif not expense.product_id:
-                errors.append(self.env._("Select a category to proceed."))
+                errors.append(self.env._("Select a product to proceed."))
 
             # Check for non-zero amounts
             total_amount_is_zero = expense.company_currency_id.is_zero(expense.total_amount)
@@ -586,6 +588,22 @@ class HrExpense(models.Model):
             expense = _expense.with_company(_expense.company_id)
             # taxes only from the same company
             expense.tax_ids = expense.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(expense.company_id))
+
+    @api.depends('split_expense_origin_id')
+    def _compute_split_expense_count(self):
+        if not self.split_expense_origin_id:
+            self.split_expense_count = 0
+            return
+        count_per_expense_origin_id = {
+            expense.id: count
+            for expense, count in self.env['hr.expense']._read_group(
+                domain=[('split_expense_origin_id', 'in', self.split_expense_origin_id.ids)],
+                groupby=['split_expense_origin_id'],
+                aggregates=['__count'],
+            )
+        }
+        for expense in self:
+            expense.split_expense_count = count_per_expense_origin_id.get(expense.split_expense_origin_id.id, 0)
 
     @api.depends('total_amount_currency', 'tax_ids')
     def _compute_tax_amount_currency(self):
@@ -1215,7 +1233,9 @@ class HrExpense(models.Model):
     def action_refuse(self):
         """ Refuse an expense with a reason """
         self._check_can_refuse()
-        return self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_refuse_wizard_action')
+        refuse_wizard = self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_refuse_wizard_action')
+        refuse_wizard['context'] = dict(ast.literal_eval(refuse_wizard['context']), default_expense_ids=self.ids)
+        return refuse_wizard
 
     def action_post(self):
         """
@@ -1336,7 +1356,7 @@ class HrExpense(models.Model):
             [
                 ('employee_id', 'in', self.env.user.employee_ids.ids),
                 '|', ('state', 'in', ('draft', 'submitted')),
-                     '&', ('payment_mode', '=', 'own_account'), ('state', '=', 'approved')
+                     '&', ('payment_mode', '!=', 'company_account'), ('state', '=', 'approved')
             ], ['state'], ['total_amount:sum'])
         for state, total_amount_sum in fetched_expenses:
             expense_state[state]['amount'] += total_amount_sum
@@ -1376,12 +1396,12 @@ class HrExpense(models.Model):
 
     def action_open_account_move(self):
         self.ensure_one()
-        if self.payment_mode == 'own_account':
-            res_model = 'account.move'
-            record_id = self.account_move_id
-        else:
+        if self.payment_mode == 'company_account':
             res_model = 'account.payment'
             record_id = self.account_move_id.origin_payment_id
+        else:
+            res_model = 'account.move'
+            record_id = self.account_move_id
 
         return {
             'type': 'ir.actions.act_window',
@@ -1470,7 +1490,7 @@ class HrExpense(models.Model):
             raise UserError(_("You can only generate an accounting entry for approved expense(s)."))
 
         if False in self.mapped('payment_mode'):
-            raise UserError(_("Please specify if the expenses were paid by the company, or the employee."))
+            raise UserError(self.env._("Please specify if the expenses were paid by the company, reimbursed to the employee directly, or in a payslip."))
 
     def _do_approve(self, check=True):
         if check:
@@ -1571,32 +1591,6 @@ class HrExpense(models.Model):
             'target': 'new',
             'context': self.with_context(active_ids=self.ids).env.context,
         }
-
-    def _post_without_wizard(self):
-        """ Post an employee expense without any direct call for the wizard, should never be called unless in very specific flows """
-        # When a move has been deleted
-        self._check_can_create_move()
-        today = fields.Date.context_today(self)
-        employee_expenses = self.filtered(lambda expense: expense.payment_mode == 'own_account')
-
-        for company, expenses in employee_expenses.grouped('company_id').items():
-            expenses = expenses.with_company(company)
-            company_domain = self.env['account.journal']._check_company_domain(company)
-            journal = (
-                    company.expense_journal_id
-                    or expenses.env['account.journal'].search([*company_domain, ('type', '=', 'purchase')], limit=1))
-            expense_receipt_vals_list = [
-                {
-                    **new_receipt_vals,
-                    'journal_id': journal.id,
-                    'invoice_date': today,
-                }
-                for new_receipt_vals in expenses._prepare_receipts_vals()
-            ]
-            moves = self.env['account.move'].sudo().create(expense_receipt_vals_list)
-            for move in moves:
-                move._message_set_main_attachment_id(move.attachment_ids, force=True, filter_xml=False)
-            moves.action_post()
 
     def _create_company_paid_moves(self):
         """

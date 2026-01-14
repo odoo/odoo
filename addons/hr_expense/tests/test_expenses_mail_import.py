@@ -227,7 +227,7 @@ class TestExpensesMailImport(TestExpenseCommon):
         }
 
         expense = self.env['hr.expense'].message_new(message)
-        self.assertRaisesRegex(ValidationError, "Select a category to proceed.", expense.action_submit)
+        self.assertRaisesRegex(ValidationError, "Select a product to proceed.", expense.action_submit)
 
     def test_import_expense_from_email_several_companies_one_employee(self):
         """ Import an expense for a user who has access to several companies,

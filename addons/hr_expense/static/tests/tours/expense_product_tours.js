@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
-registry.category("web_tour.tours").add("change_expense_category_price_tour", {
+registry.category("web_tour.tours").add("change_expense_product_price_tour", {
     steps: () => [
         ...stepUtils.goToAppSteps("hr_expense.menu_hr_expense_root", "Go to the Expenses app"),
         {
@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add("change_expense_category_price_tour", {
             run: "click",
         },
         {
-            content: "Open the Expense Categories",
+            content: "Open the Expense Products",
             trigger: ".o-dropdown-item[data-menu-xmlid='hr_expense.menu_hr_product']",
             run: "click",
         },
@@ -45,8 +45,8 @@ registry.category("web_tour.tours").add("change_expense_category_price_tour", {
             run: "click",
         },
         {
-            content: "Go back to the list of categories",
-            trigger: ".breadcrumb-item:contains('Expense Categories')",
+            content: "Go back to the list of products",
+            trigger: ".breadcrumb-item:contains('Expense Products')",
             run: "click",
         },
         {
@@ -79,8 +79,8 @@ registry.category("web_tour.tours").add("change_expense_category_price_tour", {
             run: "click",
         },
         {
-            content: "Go back to the list of categories",
-            trigger: ".breadcrumb-item:contains('Expense Categories')",
+            content: "Go back to the list of products",
+            trigger: ".breadcrumb-item:contains('Expense Products')",
             run: "click",
         },
         {
@@ -116,8 +116,8 @@ registry.category("web_tour.tours").add("change_expense_category_price_tour", {
             },
         },
         {
-            content: "Go back to the list of categories",
-            trigger: ".breadcrumb-item:contains('Expense Categories')",
+            content: "Go back to the list of products",
+            trigger: ".breadcrumb-item:contains('Expense Products')",
             run: "click",
         },
         {
