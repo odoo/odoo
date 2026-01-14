@@ -77,6 +77,7 @@ export const selectMenuProps = {
     slots: t.object().optional(),
     disabled: t.boolean().optional(false),
     menuRef: t.function().optional(),
+    alternativeChoiceItemTemplate: t.string().optional(),
 };
 
 export class SelectMenu extends Component {
