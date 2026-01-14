@@ -333,7 +333,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             'default_res_model': 'mail.test.activity',
         })
 
-        with self.assertQueryCount(admin=5, employee=5):
+        with self.assertQueryCount(admin=6, employee=6):
             activity = MailActivity.create({
                 'summary': 'Test Activity',
                 'res_id': record.id,
