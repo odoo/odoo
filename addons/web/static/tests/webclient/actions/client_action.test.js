@@ -498,3 +498,27 @@ test("test home client action", async () => {
     await animationFrame();
     expect.verifySteps(["/web/webclient/version_info", "assign /"]);
 });
+
+test("test display_exception client action", async () => {
+    expect.errors(1);
+    await mountWithCleanup(WebClient);
+    getService("action").doAction({
+        type: "ir.actions.client",
+        tag: "display_exception",
+        params: {
+            code: 0,
+            message: "Odoo Server Error",
+            data: {
+                name: `odoo.exceptions.UserError`,
+                debug: "traceback",
+                arguments: [],
+                context: {},
+                message: "This is an error",
+            },
+        },
+    });
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+    expect("header .modal-title").toHaveText("Invalid Operation");
+    expect.verifyErrors([/RPC_ERROR/]);
+});

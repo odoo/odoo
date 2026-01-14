@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { htmlSprintf } from "@web/core/utils/html";
 
 import { markup } from "@odoo/owl";
+import { makeErrorFromResponse } from "../../core/network/rpc";
 
 export function displayNotificationAction(env, action) {
     const params = action.params || {};
@@ -23,6 +24,15 @@ export function displayNotificationAction(env, action) {
 }
 
 registry.category("actions").add("display_notification", displayNotificationAction);
+
+/**
+ * Client action to trigger an Exception on the interface.
+ */
+function displayException(env, action) {
+    throw makeErrorFromResponse(action.params);
+}
+
+registry.category("actions").add("display_exception", displayException);
 
 /**
  * Client action to reload the whole interface.
