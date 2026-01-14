@@ -99,6 +99,13 @@ patch(DiscussApp.prototype, {
         });
     },
 
+    shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction) {
+        if (nextActiveAction?.id === "livechat-info") {
+            return false;
+        }
+        return super.shouldDisableMemberPanelAutoOpenFromClose(...arguments);
+    },
+
     _threadOnUpdate() {
         if (
             this.lastThread?.notEq(this.thread) &&
