@@ -65,6 +65,10 @@ class MailActivitySchedule(models.TransientModel):
         'Plan Date', compute='_compute_plan_date',
         store=True, readonly=False)
     # activity-based
+    activity_type_available_ids = fields.Many2many(
+        'mail.activity.type',
+        compute='_compute_activity_type_available_ids',
+        compute_sudo=True)
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
         compute='_compute_activity_type_id', store=True, readonly=False,
@@ -227,6 +231,13 @@ class MailActivitySchedule(models.TransientModel):
 
                 scheduler.plan_schedule_line_ids = [(5,)] + [(0, 0, values) for values in schedule_line_values_list]
 
+    @api.depends("res_model")
+    def _compute_activity_type_available_ids(self):
+        for scheduler in self:
+            scheduler.activity_type_available_ids = self.env["mail.activity.type"].search(
+                scheduler._get_activity_type_available_base_domain()
+            )
+
     @api.depends('res_model')
     def _compute_activity_type_id(self):
         for scheduler in self:
@@ -319,6 +330,7 @@ class MailActivitySchedule(models.TransientModel):
                     summary=template.summary,
                     note=template.note,
                     user_id=responsible.id,
+                    activity_template_id=template.id,
                 )
                 activity_descriptions.append(
                     _('%(activity)s, assigned to %(name)s, due on the %(deadline)s',
@@ -428,6 +440,13 @@ class MailActivitySchedule(models.TransientModel):
 
     def _plan_filter_activity_templates_to_schedule(self):
         return self.plan_id.template_ids
+
+    def _get_activity_type_available_base_domain(self):
+        self.ensure_one()
+        return Domain.OR([
+            [('res_model', '=', False)],
+            [('res_model', '=', self.res_model)],
+        ])
 
     @api.onchange('activity_user_id', 'activity_type_id')
     def _onchange_activity_user_id(self):
