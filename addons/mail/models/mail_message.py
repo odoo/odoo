@@ -270,14 +270,18 @@ class Message(models.Model):
         ids uid could not see according to our custom rules. Please refer to
         _check_access() for more details about those rules.
 
-        Non employees users see only message with subtype (aka do not see
-        internal logs).
+        Non employees users see only message with subtype, and cannot see
+        internal messages, either coming from message 'is_internal' flag,
+        subtype 'internal' flag, or being pure logs (no subtype). See
+        `_get_search_domain_share` which generates the domain.
 
         After having received ids of a classic search, keep only:
         - if author_id == pid, uid is the author, OR
         - uid belongs to a notified channel, OR
         - uid is in the specified recipients, OR
-        - uid has a notification on the message
+        - uid has a notification on the message, OR
+        - uid has acces to the message linked document for messages that are not
+          'user_notification'
         - otherwise: remove the id
         """
         # Rules do not apply to administrator
@@ -341,14 +345,56 @@ class Message(models.Model):
         allowed = self.browse(id_ for id_ in ids if id_ in allowed_ids)
         return allowed._as_query(order)
 
+    def _filter_records_for_message_operation(self, doc_model, doc_res_ids, operation):
+        """ Helper returning records on which 'operation' on mail.message is
+        allowed, based on '_get_mail_message_access' behavior and potential
+        model override. """
+        documents_all = self.env[doc_model].with_context(active_test=False).browse(doc_res_ids)
+        documents_per_operation = defaultdict(self.env[doc_model].browse)
+        for document in documents_all:
+            if hasattr(document, '_get_mail_message_access'):
+                doc_operation = self.env[document._name]._get_mail_message_access(document.ids, operation)  # why not giving model here?
+            else:
+                doc_operation = self.env['mail.thread']._get_mail_message_access(document.ids, operation, model_name=document._name)
+            documents_per_operation[doc_operation] |= document
+
+        forbidden_doc_ids = set()
+        for record_operation, records in documents_per_operation.items():
+            try:
+                operation_result = records._check_access(record_operation)
+            except MissingError:
+                existing = records.exists()
+                forbidden_doc_ids |= set((records - existing).ids)
+                operation_result = existing._check_access(record_operation)
+            forbidden_doc_ids |= set(operation_result[0]._ids) if operation_result else set()
+
+        return self.env[doc_model].browse([doc_id for doc_id in doc_res_ids if doc_id not in forbidden_doc_ids])
+
     @api.model
     def _find_allowed_model_wise(self, doc_model, doc_dict):
-        doc_ids = list(doc_dict)
-        allowed_doc_ids = self.env[doc_model].with_context(active_test=False).search([('id', 'in', doc_ids)]).ids
-        return set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
+        # filter for each operation
+        allowed = self._filter_records_for_message_operation(doc_model, list(doc_dict), 'read')
+        allowed_ids = {
+            msg_id for document_id in allowed.ids for msg_id in doc_dict[document_id]
+        }
+        return allowed_ids
 
     @api.model
     def _find_allowed_doc_ids(self, model_ids):
+        """ Filters out message user cannot read due to missing document access.
+
+        :param dict model_ids: dictionary giving messages IDs per document id,
+            for each model, like {
+                'document_model_name': {
+                    'document_id_1': set(message IDs),
+                    'document_id_2': set(message IDs),
+                },
+                [...]
+            }
+
+        :return: set of allowed message IDs to read, based on document check
+        :rtype: set
+        """
         IrModelAccess = self.env['ir.model.access']
         allowed_ids = set()
         for doc_model, doc_dict in model_ids.items():
@@ -381,8 +427,8 @@ class Message(models.Model):
                 - uid has write or create access on the related document
                 - otherwise: raise
 
-        Specific case: non employee users see only messages with subtype (aka do
-        not see internal logs).
+        Specific case: non employee users cannot see internal messages (aka logs):
+        'is_internal' flag on message, 'internal' flag on subtype.
         """
         result = super()._check_access(operation)
         if not self:
@@ -405,14 +451,16 @@ class Message(models.Model):
 
         # Non employees see only messages with a subtype (aka, not internal logs)
         if not self.env.user._is_internal():
+            message_type_condition = ''
+            if operation in ('create', 'read'):
+                message_type_condition = "message.message_type = 'comment' AND"
             rows = self.env.execute_query(SQL(
                 ''' SELECT message.id
                     FROM "mail_message" AS message
                     LEFT JOIN "mail_message_subtype" as subtype ON message.subtype_id = subtype.id
-                    WHERE message.id = ANY (%s)
-                        AND message.message_type = 'comment'
+                    WHERE %s message.id = ANY (%%s)
                         AND (message.is_internal IS TRUE OR message.subtype_id IS NULL OR subtype.internal IS TRUE)
-                ''',
+                ''' % message_type_condition,
                 self.ids,
             ))
             if rows:
@@ -495,17 +543,10 @@ class Message(models.Model):
             if (message.get('model') and message.get('res_id') and
                     message.get('message_type') != 'user_notification'):
                 model_docid_msgids[message['model']][message['res_id']].append(mid)
-
         for model, docid_msgids in model_docid_msgids.items():
-            documents = self.env[model].browse(docid_msgids)
-            if hasattr(documents, '_get_mail_message_access'):
-                doc_operation = documents._get_mail_message_access(docid_msgids, operation)  # why not giving model here?
-            else:
-                doc_operation = self.env['mail.thread']._get_mail_message_access(docid_msgids, operation, model_name=model)
-            doc_result = documents._check_access(doc_operation)
-            forbidden_doc_ids = set(doc_result[0]._ids) if doc_result else set()
+            allowed = self._filter_records_for_message_operation(model, docid_msgids, operation)
             for doc_id, msg_ids in docid_msgids.items():
-                if doc_id not in forbidden_doc_ids:
+                if doc_id in allowed.ids:
                     for mid in msg_ids:
                         messages_to_check.pop(mid)
 
@@ -697,6 +738,12 @@ class Message(models.Model):
             by the ORM. It instead directly fetches ir.rules and apply them. """
         self.check_access('read')
         return super(Message, self).read(fields=fields, load=load)
+
+    def copy_data(self, default=None):
+        """ Make is symmetric to read, to avoid spurious issues with recordsets
+        differences. """
+        self.check_access('read')
+        return super().copy_data(default=default)
 
     def fetch(self, field_names):
         # This freaky hack is aimed at reading data without the overhead of

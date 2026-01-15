@@ -9,11 +9,12 @@ from unittest.mock import patch
 from werkzeug.urls import url_parse
 
 from odoo.addons.mail.models.mail_message import Message
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.test_mail.models.test_mail_corner_case_models import MailTestMultiCompanyWithActivity
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, users, HttpCase
+from odoo.tests.common import JsonRpcException
 from odoo.tools import mute_logger
 
 
@@ -58,6 +59,15 @@ class TestMailMCCommon(MailCommon, TestRecipients):
             'author_id': cls.partner_1.id,
             'message_id': '<123456-openerp-%s-mail.test.gateway@%s>' % (cls.test_record.id, socket.gethostname()),
         })
+
+        cls._create_portal_user()
+        cls.user_portal_c2 = mail_new_test_user(
+            cls.env,
+            groups='base.group_portal',
+            login='portal_user_c2',
+            company_id=cls.company_2.id,
+            name="Portal User C2",
+        )
 
     def setUp(self):
         super().setUp()
@@ -270,7 +280,78 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
 
 
 @tagged('-at_install', 'post_install', 'multi_company', 'mail_controller')
-class TestMultiCompanyRedirect(MailCommon, HttpCase):
+class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
+
+    @mute_logger('odoo.http')
+    def test_mail_thread_data(self):
+        """ Test returned thread data, in MC environment, to test notably MC
+        access issues on partner, ACL support, ... """
+        customer_c3 = self.env["res.partner"].create({
+            "company_id": self.company_3.id,
+            "name": "C3 Customer",
+        })
+        record = self.env["mail.test.multi.company.read"].with_user(self.user_employee_c2).create({
+            "company_id": self.user_employee_c2.company_id.id,
+            "name": "Multi Company Record",
+        })
+        self.assertEqual(record.company_id, self.company_2)
+
+        record.message_subscribe(partner_ids=customer_c3.ids)
+        with self.assertRaises(AccessError):
+            customer_c3.with_user(self.user_employee_c2).check_access("read")
+
+        self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
+        result = self.make_jsonrpc_request(
+            "/mail/thread/data",
+            {
+                "thread_id": record.id,
+                "thread_model": record._name,
+                "request_list": ["followers"],
+            },
+        )
+        self.assertEqual(len(result["mail.followers"]), 2)
+        self.assertEqual(result["mail.followers"][0]["partner"]["id"], customer_c3.id)
+        self.assertEqual(result["mail.thread"][0]["followersCount"], 2)
+        self.assertTrue(result["mail.thread"][0]["hasWriteAccess"])
+        self.assertTrue(result["mail.thread"][0]["hasReadAccess"])
+        self.assertTrue(result["mail.thread"][0]["canPostOnReadonly"])
+
+        # check read / write / post access info
+        for test_user, (has_w, has_r, can_post) in zip(
+            (self.user_portal, self.user_portal_c2, self.user_employee, self.user_admin),
+            (
+                (False, True, True),  # currently not really supported actually, should go through portal controllers
+                (False, True, True),  # currently not really supported actually, should go through portal controllers
+                (False, True, True),
+                (True, True, True),
+            ),
+        ):
+            with self.subTest(user_name=test_user.name):
+                self.authenticate(test_user.login, test_user.login)
+                # crash if calling using portal users -> dedicated portal routes currently
+                if test_user in self.user_portal + self.user_portal_c2:
+                    with self.assertRaises(JsonRpcException):
+                        result = self.make_jsonrpc_request(
+                            "/mail/thread/data",
+                            {
+                                "thread_id": record.id,
+                                "thread_model": record._name,
+                                "request_list": ["followers"],
+                            },
+                        )
+                else:
+                    result = self.make_jsonrpc_request(
+                        "/mail/thread/data",
+                        {
+                            "thread_id": record.id,
+                            "thread_model": record._name,
+                            "request_list": ["followers"],
+                        },
+                    )
+                    self.assertEqual(result["mail.thread"][0]["followersCount"], 2)
+                    self.assertEqual(result["mail.thread"][0]["hasWriteAccess"], has_w)
+                    self.assertEqual(result["mail.thread"][0]["hasReadAccess"], has_r)
+                    self.assertEqual(result["mail.thread"][0]["canPostOnReadonly"], can_post)
 
     def test_redirect_to_records(self):
         """ Test mail/view redirection in MC environment, notably cids being
@@ -391,26 +472,3 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                 )
                 self.assertEqual(response.status_code, 200)
                 self.assertNotIn('cids', response.request._cookies)
-
-
-@tagged("-at_install", "post_install", "multi_company", "mail_controller")
-class TestMultiCompanyThreadData(MailCommon, HttpCase):
-
-    def test_mail_thread_data_follower(self):
-        partner_portal = self.env["res.partner"].create(
-            {"company_id": self.company_3.id, "name": "portal partner"}
-        )
-        record = self.env["mail.test.multi.company"].create({"name": "Multi Company Record"})
-        record.message_subscribe(partner_ids=partner_portal.ids)
-        self.assertFalse(partner_portal.with_user(self.user_employee_c2).has_access("read"))
-        self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
-        data = self.make_jsonrpc_request(
-            "/mail/thread/data",
-            {
-                "thread_id": record.id,
-                "thread_model": "mail.test.multi.company",
-                "request_list": ["followers"],
-            },
-        )
-        self.assertEqual(len(data["mail.followers"]), 1)
-        self.assertEqual(data["mail.followers"][0]["partner"]["id"], partner_portal.id)
