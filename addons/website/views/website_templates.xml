@@ -2531,9 +2531,9 @@
 <!-- Cookie Policy Link -->
 <template id="footer_cookie_policy_link" inherit_id="website.layout" name="Footer Cookie Policy Link">
     <xpath expr="//div[@id='footer']" position="after">
-        <div t-if="website.cookies_bar" class="o_cookie_policy_link_container container text-center text-md-start">
+        <div t-if="website.cookies_bar" class="o_cookie_policy_link_container container text-center text-md-start" t-ignore="true">
             <p class="m-0">
-                <a href="/cookie-policy" class="oe_unremovable btn btn-link btn-sm px-0 o_translate_inline">Cookie Policy</a>
+                <a t-att-href="website.get_cookie_policy_url()" data-link-not-editable="true" class="oe_unremovable btn btn-link btn-sm px-0 o_translate_inline">Cookie Policy</a>
             </p>
         </div>
     </xpath>
@@ -2557,7 +2557,8 @@
 <!-- Cookie Bar -->
 <template id="cookies_bar" inherit_id="website.layout" name="Cookies Bar">
     <xpath expr="//footer" position="after">
-        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible d-none o_no_save" data-name="Cookies Bar" data-vcss="001" data-invisible="1">
+        <t t-set="cookie_policy_url" t-value="website.get_cookie_policy_url()"/>
+        <div id="website_cookies_bar" t-ignore="true" t-if="website.cookies_bar" class="s_popup o_snippet_invisible d-none o_no_save" data-name="Cookies Bar" data-vcss="001" data-invisible="1">
             <div class="modal s_popup_bottom s_popup_no_backdrop o_cookies_discrete"
                  data-show-after="500"
                  data-display="afterDelay"
@@ -2576,7 +2577,7 @@
                                     <div class="col-lg-8 pt16">
                                         <p>
                                             <span class="pe-1">We use cookies to provide you a better user experience on this website.</span>
-                                            <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm px-0 o_translate_inline">Cookie Policy</a>
+                                            <a t-att-href="cookie_policy_url" data-link-not-editable="true" class="o_cookies_bar_text_policy btn btn-link btn-sm px-0 o_translate_inline">Cookie Policy</a>
                                         </p>
                                     </div>
                                     <div class="col-lg-4 text-end pt16 pb16">

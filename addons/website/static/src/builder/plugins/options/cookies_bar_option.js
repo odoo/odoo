@@ -37,10 +37,24 @@ class CookiesBarOptionPlugin extends Plugin {
 export class SelectLayoutAction extends BuilderAction {
     static id = "selectLayout";
     static dependencies = ["CookiesBarOptionPlugin"];
-    apply({ editingElement, value: layout }) {
+    async load() {
+        try {
+            return {
+                cookiePolicyUrl: await this.services.orm.call("website", "get_cookie_policy_url", [
+                    [this.services.website.currentWebsite.id],
+                ]),
+            };
+        } catch {
+            // Fallback to a default URL
+            return { cookiePolicyUrl: "/cookie-policy" };
+        }
+    }
+    apply({ editingElement, value: layout, loadResult }) {
         const savedSelectors = this.dependencies.CookiesBarOptionPlugin.getSavedSelectors();
+        const { cookiePolicyUrl } = loadResult;
         const templateEl = renderToElement(`website.cookies_bar.${layout}`, {
             websiteId: this.services.website.currentWebsite.id,
+            cookiePolicyUrl,
         });
         const contentEl = editingElement.querySelector(".modal-content");
 

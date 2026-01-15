@@ -233,6 +233,12 @@
                                         string="Add domains to the block list" class="btn-link"
                                         icon="fa-ban" noSaveDialog="true"/>
                                 </div>
+                                <div class="content-group mt16" invisible="not cookie_policy_id">
+                                    <div class="row">
+                                        <label class="col-lg-3 o_light_label" string="Cookie policy page" for="cookie_policy_id"/>
+                                        <field name="cookie_policy_id" class="oe_inline" widget="many2one" options="{'no_create': True}" domain="[('website_id', '=', website_id)]"/>
+                                    </div>
+                                </div>
                             </div>
                         </setting>
                     </block>
