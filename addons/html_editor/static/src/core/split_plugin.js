@@ -21,6 +21,7 @@ import {
     ancestors,
     createDOMPathGenerator,
     descendants,
+    findUpTo,
 } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
@@ -161,8 +162,12 @@ export class SplitPlugin extends Plugin {
      * @returns {[HTMLElement|undefined, HTMLElement|undefined]}
      */
     splitElementBlock({ targetNode, targetOffset, blockToSplit }) {
-        // If the block is unsplittable, insert a line break instead.
-        if (this.isUnsplittable(blockToSplit)) {
+        // If the block is unsplittable or the targetNode is within an
+        // unsplittable element, insert a line break instead.
+        if (
+            this.isUnsplittable(blockToSplit) ||
+            findUpTo(targetNode, blockToSplit, (el) => this.isUnsplittable(el))
+        ) {
             // @todo: t-if, t-else etc are not blocks, but they are
             // unsplittable.  The check must be done from the targetNode up to
             // the block for unsplittables. There are apparently no tests for
