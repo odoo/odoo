@@ -119,13 +119,3 @@ class TestDeparture(TestHrCommon):
                 self.emp_A.contract_date_end,
                 date(2025, 6, 1),
                 "The employee should have a contract date end.")
-
-    @freeze_time('2025-06-01')
-    def test_departure_wizard(self):
-        """ Test the archiving wizard in the case of multiple employees """
-        archiving_employees = [employee.id for employee in (self.emp_A, self.emp_C)]
-        wizard = self.env['hr.departure.wizard'].with_context(active_ids=archiving_employees).create({})
-        wizard.action_register_departure()
-
-        all_employees = self.emp_A | self.emp_B | self.emp_C
-        self.assertEqual(all_employees.filtered(lambda e: e.active), self.emp_B, "Employees A and C should have been archived")

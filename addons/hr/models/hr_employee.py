@@ -2168,18 +2168,6 @@ class HrEmployee(models.Model):
             },
         }
 
-    def action_departure_multi(self):
-        return {
-            'name': self.env._('End of collaboration'),
-            'res_model': 'hr.departure.wizard',
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {
-                'default_employee_ids': self.ids,
-            },
-        }
-
     def action_reopen(self):
         if any(not emp.departure_id for emp in self):
             raise ValidationError(self.env._("You can't reopen employees that are still employed"))
