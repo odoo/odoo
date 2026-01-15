@@ -1578,6 +1578,9 @@ class MailThread(models.AbstractModel):
                 if part.get_content_type() == 'binary/octet-stream':
                     _logger.warning("Message containing an unexpected Content-Type 'binary/octet-stream', assuming 'application/octet-stream'")
                     part.replace_header('Content-Type', 'application/octet-stream')
+                if part.get_content_type() == '*/*':
+                    _logger.warning("Message containing an unexpected Content-Type '*/*', assuming 'application/octet-stream'")
+                    part.replace_header('Content-Type', 'application/octet-stream')
                 if part.get_content_type() == 'multipart/alternative':
                     alternative = True
                 if part.get_content_type() == 'multipart/mixed':

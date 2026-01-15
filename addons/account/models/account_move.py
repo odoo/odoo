@@ -5097,6 +5097,7 @@ class AccountMove(models.Model):
                     validation_msgs.add(_("The Bill/Refund date is required to validate this document."))
 
         for move in self:
+            move.line_ids._check_constrains_account_id_journal_id()
             if move.state in ['posted', 'cancel']:
                 validation_msgs.add(_('The entry %(name)s (id %(id)s) must be in draft.', name=move.name, id=move.id))
             if not move.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
@@ -5125,6 +5126,12 @@ class AccountMove(models.Model):
         if validation_msgs:
             msg = "\n".join([line for line in validation_msgs])
             raise UserError(msg)
+
+        if inactive_analytic_ids := self.line_ids.with_context(active_test=False).distribution_analytic_account_ids.filtered(lambda a: not a.active):
+            raise UserError(_(
+                "You cannot post an entry with an archived analytic account: %s",
+                ', '.join(inactive_analytic_ids.mapped('name')),
+            ))
 
         if soft:
             future_moves = self.filtered(lambda move: move.date > fields.Date.context_today(self))

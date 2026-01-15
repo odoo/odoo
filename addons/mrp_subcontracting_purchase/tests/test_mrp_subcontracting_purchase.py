@@ -411,6 +411,72 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         price_diff_line = invoice.line_ids.filtered(lambda m: m.account_id == stock_price_diff_acc_id)
         self.assertEqual(price_diff_line.credit, 20)
 
+    def test_subcontracting_multi_currency_price_diff(self):
+        """ Ensure the price difference lines are computed correctly when the company
+            currency and invoice currency differ
+        """
+        currency_grp = self.env.ref('base.group_multi_currency')
+        self.env.user.write({'groups_id': [(4, currency_grp.id)]})
+
+        self.env.company.anglo_saxon_accounting = True
+        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all.property_cost_method = 'standard'
+        product_category_all.property_valuation = 'real_time'
+        self._setup_category_stock_journals()
+
+        stock_price_diff_acc_id = self.env['account.account'].create({
+            'name': 'default_account_stock_price_diff',
+            'code': 'STOCKDIFF',
+            'reconcile': True,
+            'account_type': 'asset_current',
+        })
+        product_category_all.property_account_creditor_price_difference_categ = stock_price_diff_acc_id
+
+        self.comp1.standard_price = 10.0
+        self.comp2.standard_price = 20.0
+        self.finished.standard_price = 100
+
+        mock_currency = self.env['res.currency'].create({
+            'name': 'MOCK',
+            'symbol': 'MC',
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2023-01-01',
+            'company_rate': 2.0,
+            'currency_id': mock_currency.id,
+            'company_id': self.env.company.id,
+        })
+
+        # Create a PO for 1 finished product.
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.subcontractor_partner1
+        po_form.currency_id = mock_currency
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.finished
+            po_line.product_qty = 1
+            # Ideally, 100 - 10 - 20 = 70 USD
+            # We will create a price diff of 10 USD
+            # 60 USD * 2 = 120 MC
+            po_line.price_unit = 120
+        po = po_form.save()
+        po.button_confirm()
+
+        action = po.action_view_picking()
+        final_picking = self.env[action['res_model']].browse(action['res_id'])
+        final_picking.move_ids.quantity = 1
+        final_picking.move_ids.picked = True
+        final_picking.button_validate()
+
+        action = po.action_create_invoice()
+        invoice = self.env['account.move'].browse(action['res_id'])
+        invoice.invoice_date = Date.today()
+        invoice.invoice_line_ids.quantity = 1
+        invoice.action_post()
+
+        # price diff line should be 100 - 60 - 10 - 20
+        price_diff_line = invoice.line_ids.filtered(lambda m: m.account_id == stock_price_diff_acc_id)
+        self.assertEqual(price_diff_line.credit, 10)
+
     def test_subcontract_product_price_change(self):
         """ Create a PO for subcontracted product, receive the product (finish MO),
             create vendor bill and edit the product price, confirm the bill.

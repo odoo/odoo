@@ -1797,6 +1797,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         }])
 
     def test_out_invoice_create_refund(self):
+        self.invoice.write({'invoice_origin': 'S00001'})
         self.invoice.action_post()
 
         bank1 = self.env['res.partner.bank'].create({
@@ -1865,6 +1866,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
             'payment_state': 'not_paid',
             'partner_bank_id': bank1.id,
+            'invoice_origin': 'S00001'
         })
 
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({

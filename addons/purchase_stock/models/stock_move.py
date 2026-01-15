@@ -225,7 +225,8 @@ class StockMove(models.Model):
             unit_diff = layer._get_layer_price_unit() - returned_layer._get_layer_price_unit() if returned_layer else 0
         elif returned_move and returned_move._is_out() and returned_move._is_returned(valued_type='out'):
             returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
-            unit_diff = returned_layer._get_layer_price_unit() - self.purchase_line_id._get_gross_price_unit()
+            origin_layer = returned_move.origin_returned_move_id.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
+            unit_diff = returned_layer._get_layer_price_unit() - origin_layer._get_layer_price_unit() if returned_layer and origin_layer else 0
         else:
             return am_vals_list
 

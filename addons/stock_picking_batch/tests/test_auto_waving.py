@@ -411,3 +411,43 @@ class TestAutoWaving(TransactionCase):
         self.all_pickings.action_assign()
         waves = self.env['stock.picking.batch'].search([('is_wave', '=', True)])
         self.assertEqual(len(waves), 4)
+
+    def test_auto_wave_skip_current_batch(self):
+        """ Check that validating a wave with partial quantities (one line empty, one partial)
+            correctly creates a backorder in a *new* wave, rather than attempting to merge
+            back into the current wave (which causes a UserError as it hasn't closed yet). """
+        self.picking_type_out.write({
+            'create_backorder': 'always',
+            'auto_batch': True,
+            'batch_group_by_destination': False,
+            'batch_group_by_partner': False,
+            'batch_group_by_src_loc': False,
+            'batch_group_by_dest_loc': False,
+            'wave_group_by_category': False,
+            'wave_group_by_location': False,
+            'wave_group_by_product': True,
+        })
+
+        # We specifically test Product 2 that has a line in both Picking 1 and Picking 2
+        (self.picking_1 | self.picking_2).action_assign()
+        wave_domain = [
+            ('is_wave', '=', True), ('move_line_ids.product_id', "=", self.product_2.id), ('state', '=', 'in_progress')
+        ]
+        wave = self.env['stock.picking.batch'].search(wave_domain)
+        self.assertEqual(len(wave), 1)
+        self.assertEqual(len(wave.move_line_ids), 2)
+        self.assertEqual(wave.move_line_ids.mapped('quantity'), [2, 2])
+
+        wave.move_line_ids[0].write({'quantity': 0})
+        wave.move_line_ids[1].write({'quantity': 1})
+
+        wave.action_done()
+
+        self.assertEqual(wave.state, 'done')
+
+        # Verify the backorder created a new, separate wave, with the remaining quantities
+        new_wave = self.env['stock.picking.batch'].search(wave_domain)
+        self.assertEqual(len(new_wave), 1)
+        self.assertEqual(len(new_wave.move_line_ids), 2)
+        new_wave.action_assign()
+        self.assertEqual(new_wave.move_line_ids.mapped('quantity'), [1, 2])

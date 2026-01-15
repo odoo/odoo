@@ -45,7 +45,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(UserError, "entries linked to it"), self.cr.savepoint():
             self.company_data['default_journal_sale'].company_id = self.company_data_2['company']
 
-    def test_account_control_create_journal_entry(self):
+    def test_account_control_post_journal_entry(self):
         move_vals = {
             'line_ids': [
                 (0, 0, {
@@ -66,11 +66,11 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         # Should fail because 'default_account_expense' is not allowed.
         self.company_data['default_journal_misc'].account_control_ids |= self.company_data['default_account_revenue']
         with self.assertRaises(UserError), self.cr.savepoint():
-            self.env['account.move'].create(move_vals)
+            self.env['account.move'].create(move_vals).action_post()
 
         # Should be allowed because both accounts are accepted.
         self.company_data['default_journal_misc'].account_control_ids |= self.company_data['default_account_expense']
-        self.env['account.move'].create(move_vals)
+        self.env['account.move'].create(move_vals).action_post()
 
     def test_account_control_existing_journal_entry(self):
         self.env['account.move'].create({

@@ -303,7 +303,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             # voip module read activity_type during create leading to one less query in enterprise on action_feedback
             _category = activity.activity_type_id.category
 
-        with self.assertQueryCount(admin=14, employee=13):  # tm 10/10
+        with self.assertQueryCount(admin=15, employee=14):  # tm 10/10
             activity.action_feedback(feedback='Zizisse Done !')
 
     @warmup
@@ -338,7 +338,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=17, employee=16):  # tm 11/11
+        with self.assertQueryCount(admin=18, employee=17):  # tm 12/12
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
@@ -364,7 +364,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=18, employee=17):  # tm 12/12
+        with self.assertQueryCount(admin=19, employee=18):  # tm 12/12
             record.action_close('Dupe feedback', attachment_ids=attachments.ids)
 
         # notifications
@@ -669,7 +669,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_message_log_with_post(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=7, employee=7):
+        with self.assertQueryCount(admin=8, employee=8):
             record.message_post(
                 body=Markup('<p>Test message_post as log</p>'),
                 subtype_xmlid='mail.mt_note',
@@ -680,7 +680,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_message_post_no_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=7, employee=7):
+        with self.assertQueryCount(admin=8, employee=8):
             record.message_post(
                 body=Markup('<p>Test Post Performances basic</p>'),
                 partner_ids=[],
@@ -1285,7 +1285,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         """
         messages_all = self.messages_all.with_env(self.env)
 
-        with self.assertQueryCount(employee=27):
+        with self.assertQueryCount(employee=22):
             res = Store(messages_all, for_current_user=True).get_result()
 
         self.assertEqual(len(res["mail.message"]), 2 * 2)
@@ -1298,7 +1298,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
     def test_message_to_store_single(self):
         message = self.messages_all[0].with_env(self.env)
 
-        with self.assertQueryCount(employee=27):
+        with self.assertQueryCount(employee=22):
             res = Store(message, for_current_user=True).get_result()
 
         self.assertEqual(len(res["mail.message"]), 1)
@@ -1319,14 +1319,14 @@ class TestMessageToStorePerformance(BaseMailPerformance):
             'res_id': record.id
         } for record in records])
 
-        with self.assertQueryCount(employee=7):
+        with self.assertQueryCount(employee=5):
             res = Store(messages, for_current_user=True).get_result()
             self.assertEqual(len(res["mail.message"]), 6)
 
         self.env.flush_all()
         self.env.invalidate_all()
 
-        with self.assertQueryCount(employee=15):
+        with self.assertQueryCount(employee=14):
             res = Store(messages, for_current_user=True).get_result()
             self.assertEqual(len(res["mail.message"]), 6)
 

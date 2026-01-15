@@ -66,7 +66,10 @@ class AccountEdiUBL(models.AbstractModel):
             return {
                 'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, tax),
                 **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
-                'percent': tax.amount,
+                # Reverse-charge taxes with +100/-100% repartition lines are used in vendor bills.
+                # In a self-billed invoice, we report them from the seller's perspective, so
+                # we change their percentage to 0%.
+                'percent': tax.amount if not tax.has_negative_factor else 0.0,
                 'scheme_id': 'VAT',
                 'is_withholding': tax.amount < 0.0,
                 'currency': currency,
@@ -721,10 +724,14 @@ class AccountEdiUBL(models.AbstractModel):
         currency = recycling_contribution_values['currency']
         amount = recycling_contribution_values['amount']
         tax = recycling_contribution_values['tax']
+        if 'bebat' in tax.name.lower():
+            charge_reason_code = 'CAV'
+        else:
+            charge_reason_code = 'AEO'
         return {
             '_currency': currency,
             'cbc:ChargeIndicator': {'_text': 'true' if amount > 0.0 else 'false'},
-            'cbc:AllowanceChargeReasonCode': {'_text': 'AEO'},
+            'cbc:AllowanceChargeReasonCode': {'_text': charge_reason_code},
             'cbc:AllowanceChargeReason': {'_text': tax.name},
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
@@ -774,7 +781,7 @@ class AccountEdiUBL(models.AbstractModel):
         return {
             '_currency': currency,
             'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
-            'cbc:AllowanceChargeReasonCode': {'_text': 'ZZZ' if is_charge else '66'},
+            'cbc:AllowanceChargeReasonCode': {'_text': 'ZZZ' if is_charge else '64'},
             'cbc:AllowanceChargeReason': {'_text': _("Conditional cash/payment discount")},
             'cbc:Amount': {
                 '_text': currency.round(abs(amount)),
