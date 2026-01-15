@@ -100,6 +100,9 @@ SUPPORTED_CURRENCIES = [
     "ZAR",
 ]
 
+# The codes of the countries where OAuth is enabled
+OAUTH_SUPPORTED_COUNTRY_CODES = ["IN"]
+
 # The codes of the payment methods to activate when Razorpay is activated.
 DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.

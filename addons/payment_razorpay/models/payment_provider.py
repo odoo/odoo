@@ -51,6 +51,7 @@ class PaymentProvider(models.Model):
     razorpay_access_token_expiry = fields.Datetime(
         string="Razorpay Access Token Expiry", copy=False, groups="base.group_system"
     )
+    razorpay_is_oauth_supported = fields.Boolean(compute="_compute_razorpay_is_oauth_supported")
 
     # === COMPUTE METHODS === #
 
@@ -72,6 +73,15 @@ class PaymentProvider(models.Model):
             )
         return supported_currencies
 
+    @api.depends("company_id.country_id")
+    def _compute_razorpay_is_oauth_supported(self):
+        self.razorpay_is_oauth_supported = False
+        for provider in self.filtered(lambda p: p.code == "razorpay"):
+            country_code = provider.company_id.country_id.code
+            provider.razorpay_is_oauth_supported = (
+                country_code in const.OAUTH_SUPPORTED_COUNTRY_CODES
+            )
+
     # === CONSTRAINT METHODS === #
 
     @api.constrains("state")
@@ -83,10 +93,18 @@ class PaymentProvider(models.Model):
         for provider in self.filtered(lambda p: p.code == "razorpay" and p.state != "disabled"):
             if not provider.razorpay_account_id:
                 if not provider.razorpay_key_id or not provider.razorpay_key_secret:
+                    if provider.razorpay_is_oauth_supported:
+                        raise ValidationError(
+                            _(
+                                "Razorpay credentials are missing. Please set the state back to"
+                                " 'Disabled' and click the \"Connect\" button to set up your"
+                                " account."
+                            )
+                        )
                     raise ValidationError(
                         _(
-                            'Razorpay credentials are missing. Click the "Connect" button to set'
-                            " up your account."
+                            "Razorpay credentials are missing. Please fill them to set up your"
+                            " account."
                         )
                     )
 
@@ -147,6 +165,7 @@ class PaymentProvider(models.Model):
             "razorpay_refresh_token": None,
             "razorpay_access_token": None,
             "razorpay_access_token_expiry": None,
+            "razorpay_webhook_secret": None,
         }
 
     def action_razorpay_create_webhook(self):
