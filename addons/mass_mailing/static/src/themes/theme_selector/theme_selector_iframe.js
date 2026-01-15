@@ -111,17 +111,21 @@ export class ThemeSelectorIframe extends Component {
             props: this.getThemeSelectorProps(),
         });
         await Promise.all([
-            loadBundle("mass_mailing.assets_iframe_theme_selector", {
-                targetDoc: this.iframeRef.el.contentDocument,
-                css: true,
-                js: false,
-            }),
+            this.loadIframeAssets(),
             this.themeSelectorRoot.mount(this.iframeRef.el.contentDocument.body),
         ]);
         browser.requestAnimationFrame(() => {
             if (status(this) !== "destroyed") {
                 this.state.show = true;
             }
+        });
+    }
+
+    loadIframeAssets() {
+        return loadBundle("mass_mailing.assets_iframe_theme_selector", {
+            targetDoc: this.iframeRef.el.contentDocument,
+            css: true,
+            js: false,
         });
     }
 
