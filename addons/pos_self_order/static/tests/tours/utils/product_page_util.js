@@ -1,7 +1,7 @@
 export function clickProduct(productName) {
     return {
         content: `Click on product '${productName}'`,
-        trigger: `.o_self_product_box span:contains('${productName}')`,
+        trigger: `.product_list .o_self_product_box span:contains('${productName}')`,
         run: "click",
     };
 }
