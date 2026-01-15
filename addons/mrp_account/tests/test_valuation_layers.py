@@ -323,3 +323,15 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         comp_move = mo.unbuild_ids.produce_line_ids.filtered(lambda move: move.product_id.id == self.glass.id)
         with Form(comp_move.move_line_ids[0]) as form:
             form.quantity = 0
+
+    def test_kit_valuation_cost(self):
+        """
+        Verify that kit product costs are excluded from inventory valuation.
+        """
+        table_head = self.table_head
+        self.assertTrue(table_head.is_kits)
+        table_head.action_bom_cost()
+        self.assertEqual(table_head.standard_price, 468.75)
+        self.assertEqual(table_head.qty_available, 1)
+        self.assertEqual(table_head.total_value, 0, "Total Value should be considered 0 for valuation.")
+        self.assertEqual(table_head.avg_cost, 0, "Average unit cost should be considered 0 for valuation.")
