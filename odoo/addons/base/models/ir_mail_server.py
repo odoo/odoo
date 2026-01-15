@@ -200,7 +200,7 @@ class IrMailServer(models.Model):
                 server.smtp_authentication_info = _(
                     'Use the SMTP configuration set in the "Command Line Interface" arguments.')
             else:
-                server.smtp_authentication = False
+                server.smtp_authentication_info = False
 
     @api.constrains('smtp_authentication', 'smtp_ssl_certificate', 'smtp_ssl_private_key')
     def _check_smtp_ssl_files(self):
