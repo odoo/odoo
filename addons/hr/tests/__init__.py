@@ -21,3 +21,7 @@ from . import test_flexible_resource_calendar
 from . import test_multiple_bank_accounts
 from . import test_hr_org_chart
 from . import test_utils
+from . import test_skills_resource
+from . import test_skills_ui
+from . import test_certification_activities
+from . import test_employee_skill

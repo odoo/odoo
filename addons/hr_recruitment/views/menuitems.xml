@@ -131,7 +131,7 @@
                     action="utm.utm_campaign_action"
                     groups="base.group_no_one"
                     sequence="15"/>
-                    
+
             <menuitem
                 id="menu_hr_recruitment_config_applications"
                 name="Applications"
@@ -170,6 +170,14 @@
                     id="menu_hr_department"
                     parent="menu_hr_recruitment_config_employees"
                     action="action_hr_department"/>
+
+                <menuitem
+                    id="hr_recruitment_skill_type_menu"
+                    name="Skill Types"
+                    action="hr.hr_skill_type_action"
+                    parent="menu_hr_recruitment_config_employees"
+                    sequence="35"
+                />
 
             <menuitem
                 id="menu_hr_recruitment_config_activities"

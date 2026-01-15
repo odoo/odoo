@@ -36,6 +36,13 @@
             groups="group_hr_user"
             sequence="95"/>
 
+            <menuitem
+                id="hr_employee_skill_inventory_report_menu"
+                name="Skills Inventory"
+                action="hr_employee_skill_report_action"
+                parent="hr.hr_menu_hr_reports"
+                sequence="15"/>
+
         <menuitem
                 id="menu_hr_department_kanban"
                 action="hr_department_kanban_action"
@@ -82,6 +89,14 @@
                 sequence="7"/>
 
             <menuitem
+                id="hr_skill_type_menu"
+                name="Skill Types"
+                action="hr_skill_type_action"
+                parent="hr.menu_config_employee"
+                sequence="7"
+                groups="hr.group_hr_user"/>
+
+            <menuitem
                 id="menu_view_employee_category_form"
                 name="Tags"
                 action="open_view_categ_form"
@@ -94,6 +109,13 @@
                 name="Recruitment"
                 parent="menu_human_resources_configuration"
                 sequence="20"/>
+
+                <menuitem id="hr_menu_configuration"
+                    name="Settings"
+                    parent="menu_human_resources_configuration"
+                    sequence="0"
+                    action="hr_config_settings_action"
+                    groups="base.group_system"/>
 
                 <menuitem
                     id="menu_view_hr_job"
@@ -116,6 +138,42 @@
                     sequence="3"
                     groups="group_hr_user"
                     active="0"/>
+
+        <menuitem
+            id="menu_human_resources_configuration_resume"
+            name="Resume"
+            parent="menu_human_resources_configuration"
+            sequence="15"
+            groups="base.group_no_one"/>
+
+            <menuitem
+                id="hr_resume_line_type_menu"
+                name="Sections"
+                action="hr_resume_type_action"
+                parent="hr.menu_human_resources_configuration_resume"
+                sequence="3"
+                groups="base.group_no_one"/>
+
+        <menuitem
+            id="hr_skill_learning_menu"
+            name="Learning"
+            parent="menu_hr_root"
+            sequence="93"
+            groups="group_hr_user"/>
+
+        <menuitem
+            id="hr_certification_menu"
+            name="Certifications"
+            parent="hr_skill_learning_menu"
+            action="action_hr_employee_skill_certification"
+            sequence="94"/>
+
+        <menuitem
+            id="menu_learnings_training_attendances"
+            name="Training Attendances"
+            action="hr_resume_lines_training_action"
+            parent="hr_skill_learning_menu"
+            sequence="95"/>
 
     </data>
 </odoo>
