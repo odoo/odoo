@@ -463,28 +463,17 @@ class HrVersion(models.Model):
                 if field in whitelist and not self.env['hr.version']._fields[field].related
         }
 
-    def _get_contract_wage(self):
-        if not self:
-            return 0
-        self.ensure_one()
-        return self[self._get_contract_wage_field()]
-
-    def _get_contract_wage_field(self):
-        self.ensure_one()
-        return 'wage'
-
     def _get_normalized_wage(self):
         """ This method is overridden in hr_payroll, as without that module, nothing allows to know
         there's no way to determine the employee's pay frequency.
         """
-        wage = self._get_contract_wage()
         # without payroll installed, we suppose that the employee with a specific schedule has a monthly salary
         if self.resource_calendar_id:
             if not self.resource_calendar_id.hours_per_week:
                 return 0
-            return wage * 12 / 52 / self.resource_calendar_id.hours_per_week
+            return self.wage * 12 / 52 / self.resource_calendar_id.hours_per_week
         # without any calendar, the employee has a fully flexible schedule and is supposedly working on an hourly wage
-        return wage
+        return self.wage
 
     def _get_valid_employee_for_user(self):
         user = self.env.user
