@@ -82,7 +82,8 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         """
         query = """
             SELECT cl1.relname as table, att1.attname as column
-            FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, pg_attribute as att1, pg_attribute as att2
+            FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, pg_attribute as att1, pg_attribute as att2,
+                 pg_namespace n
             WHERE con.conrelid = cl1.oid
                 AND con.confrelid = cl2.oid
                 AND array_lower(con.conkey, 1) = 1
@@ -94,6 +95,8 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                 AND con.confkey[1] = att2.attnum
                 AND att2.attrelid = cl2.oid
                 AND con.contype = 'f'
+                AND cl2.relnamespace = n.oid
+                AND n.nspname = current_schema
         """
         self.env.cr.execute(query, (table,))
         return self.env.cr.fetchall()
@@ -103,11 +106,13 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             SELECT 1
             FROM pg_constraint c
             JOIN pg_class r ON (c.conrelid = r.oid)
+            JOIN pg_namespace n ON r.relnamespace = n.oid
             CROSS JOIN LATERAL unnest(c.conkey) AS cattr(attnum)
             JOIN pg_attribute a ON (a.attrelid = c.conrelid AND a.attnum = cattr.attnum)
             WHERE c.contype IN ('c', 'u')
                 AND r.relname = %s
                 AND a.attname = %s
+                AND n.nspname = current_schema
             LIMIT 1
         """, (table, column))
         return bool(self.env.cr.rowcount)
